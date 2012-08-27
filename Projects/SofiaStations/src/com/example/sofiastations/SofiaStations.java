@@ -10,8 +10,8 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.gps.HtmlRequestSumc;
 import com.example.gps_map.MyLocation;
@@ -25,7 +25,7 @@ public class SofiaStations extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_sofia_stations);
+		setContentView(R.layout.home_screen);
 
 		// DatabaseUtils.copyDatabase(context);
 		// DatabaseUtils.generateStations(context);
@@ -34,17 +34,17 @@ public class SofiaStations extends Activity implements OnClickListener {
 		// Copy station.db from the APK to the internal memory (if not exists)
 		DatabaseUtils.createStationsDatabase(context);
 
-		Button btn_gps = (Button) findViewById(R.id.btn_gps);
+		ImageView btn_gps = (ImageView) findViewById(R.id.btn_gps);
 		btn_gps.setOnClickListener(this);
-		Button btn_map = (Button) findViewById(R.id.btn_map);
+		ImageView btn_map = (ImageView) findViewById(R.id.btn_map);
 		btn_map.setOnClickListener(this);
-		Button btn_schedule = (Button) findViewById(R.id.btn_schedule);
+		ImageView btn_schedule = (ImageView) findViewById(R.id.btn_schedule);
 		btn_schedule.setOnClickListener(this);
-		Button btn_favourite = (Button) findViewById(R.id.btn_favourite);
+		ImageView btn_favourite = (ImageView) findViewById(R.id.btn_favourite);
 		btn_favourite.setOnClickListener(this);
-		Button btn_about = (Button) findViewById(R.id.btn_about);
+		ImageView btn_about = (ImageView) findViewById(R.id.btn_about);
 		btn_about.setOnClickListener(this);
-		Button btn_exit = (Button) findViewById(R.id.btn_exit);
+		ImageView btn_exit = (ImageView) findViewById(R.id.btn_exit);
 		btn_exit.setOnClickListener(this);
 	}
 

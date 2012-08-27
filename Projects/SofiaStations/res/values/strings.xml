@@ -1,7 +1,7 @@
 <resources>
 
     <!-- MAIN -->
-    <string name="app_name">Градски Транспорт</string>
+    <string name="app_name">СОФИЙСКИ ГРАДСКИ ТРАНСПОРТ</string>
     <string name="btn_gps">Виртуални табла</string>
     <string name="gps_msg">Моля въведете номер на спирка:</string>
     <string name="btn_map">GPS времена - Google Maps</string>

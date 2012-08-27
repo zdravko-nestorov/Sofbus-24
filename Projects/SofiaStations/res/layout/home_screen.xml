@@ -3,28 +3,29 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="center"
-    android:paddingLeft="20dip"
-    android:paddingRight="20dip"
-    android:paddingTop="50dip"
+    android:background="#F5F5F5"
+    android:paddingLeft="30dip"
+    android:paddingRight="30dip"
+    android:paddingTop="35dip"
     android:stretchColumns="*" >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="35dip"
+        android:layout_marginBottom="30dip"
         android:gravity="center"
         android:text="@string/app_name"
         android:textSize="26sp"
         android:textStyle="bold" />
 
-    <TableRow android:layout_height="wrap_content">
+    <TableRow android:layout_height="wrap_content" >
 
         <ImageView
             android:id="@+id/btn_gps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button1_selector"
+            android:background="@drawable/button_gps"
             android:clickable="true"
             android:contentDescription="@string/hs_button1" />
 
@@ -32,18 +33,18 @@
             android:id="@+id/btn_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button1_selector"
+            android:background="@drawable/button_gps_map"
             android:clickable="true"
             android:contentDescription="@string/hs_button2" />
     </TableRow>
 
-    <TableRow>
+    <TableRow android:layout_height="wrap_content" >
 
         <ImageView
             android:id="@+id/btn_schedule"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button1_selector"
+            android:background="@drawable/button_sch"
             android:clickable="true"
             android:contentDescription="@string/hs_button3" />
 
@@ -51,18 +52,18 @@
             android:id="@+id/btn_favourite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button1_selector"
+            android:background="@drawable/button_fav"
             android:clickable="true"
             android:contentDescription="@string/hs_button4" />
     </TableRow>
 
-    <TableRow>
+    <TableRow android:layout_height="wrap_content" >
 
         <ImageView
             android:id="@+id/btn_about"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button1_selector"
+            android:background="@drawable/button_info"
             android:clickable="true"
             android:contentDescription="@string/hs_button5" />
 
@@ -70,7 +71,7 @@
             android:id="@+id/btn_exit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button1_selector"
+            android:background="@drawable/button_exit"
             android:clickable="true"
             android:contentDescription="@string/hs_button6" />
     </TableRow>
