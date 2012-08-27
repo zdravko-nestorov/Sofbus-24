@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center"
+    android:paddingLeft="20dip"
+    android:paddingRight="20dip"
+    android:paddingTop="50dip"
+    android:stretchColumns="*" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="35dip"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <TableRow android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/btn_gps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button1_selector"
+            android:clickable="true"
+            android:contentDescription="@string/hs_button1" />
+
+        <ImageView
+            android:id="@+id/btn_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button1_selector"
+            android:clickable="true"
+            android:contentDescription="@string/hs_button2" />
+    </TableRow>
+
+    <TableRow>
+
+        <ImageView
+            android:id="@+id/btn_schedule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button1_selector"
+            android:clickable="true"
+            android:contentDescription="@string/hs_button3" />
+
+        <ImageView
+            android:id="@+id/btn_favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button1_selector"
+            android:clickable="true"
+            android:contentDescription="@string/hs_button4" />
+    </TableRow>
+
+    <TableRow>
+
+        <ImageView
+            android:id="@+id/btn_about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button1_selector"
+            android:clickable="true"
+            android:contentDescription="@string/hs_button5" />
+
+        <ImageView
+            android:id="@+id/btn_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button1_selector"
+            android:clickable="true"
+            android:contentDescription="@string/hs_button6" />
+    </TableRow>
+
+</TableLayout>
