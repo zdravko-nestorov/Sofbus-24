@@ -13,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,7 +21,6 @@ import com.example.gps.GPSStationAdapter;
 import com.example.gps.HtmlResultSumc;
 import com.example.station_database.FavouritesDataSource;
 import com.example.station_database.GPSStation;
-import com.example.utils.LoadingDialog;
 
 public class VirtualBoards extends ListActivity {
 
@@ -188,7 +186,7 @@ public class VirtualBoards extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		GPSStation gpsStation = station_list.get(1);
+		final GPSStation gpsStation = station_list.get(1);
 
 		switch (item.getItemId()) {
 		case R.id.menu_add_favourite:
@@ -210,26 +208,27 @@ public class VirtualBoards extends ListActivity {
 					&& !gpsStation.getLon().equals("EMPTY")) {
 
 				// Showing a ProgressDialog
-				Context context = VirtualBoards.this;
-				ProgressDialog progressDialog = new ProgressDialog(context);
+				final Context context = VirtualBoards.this;
+				final ProgressDialog progressDialog = new ProgressDialog(
+						context);
 				progressDialog.setMessage("Loading...");
 				progressDialog.show();
 
-				try {
-					new LoadingDialog(progressDialog).execute().get();
-				} catch (Exception e) {
-					Log.d("VirtualBoards", "Грешка при AsyncTask!");
-				}
+				new Thread(new Runnable() {
+					public void run() {
+						// Setting the needed info in the GPSObject
+						setInfo();
 
-				// Setting the needed info in the GPSObject
-				setInfo();
-
-				Bundle bundle = new Bundle();
-				Intent stationInfoIntent = new Intent(context,
-						VirtualBoardsMap.class);
-				bundle.putSerializable("GPSStation", gpsStation);
-				stationInfoIntent.putExtras(bundle);
-				startActivityForResult(stationInfoIntent, 1);
+						// Starting activity VirtualBoardsMap
+						Bundle bundle = new Bundle();
+						Intent stationInfoIntent = new Intent(context,
+								VirtualBoardsMap.class);
+						bundle.putSerializable("GPSStation", gpsStation);
+						stationInfoIntent.putExtras(bundle);
+						startActivityForResult(stationInfoIntent, 1);
+						progressDialog.dismiss();
+					}
+				}).start();
 			} else {
 				showInfoDialog(getString(R.string.gps_err_dialog_title),
 						getString(R.string.gps_error_noCoordinates));

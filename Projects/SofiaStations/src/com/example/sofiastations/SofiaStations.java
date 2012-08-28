@@ -28,6 +28,9 @@ public class SofiaStations extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_screen);
 
+		// Setting activity title
+		this.setTitle(getString(R.string.ss_name));
+
 		// Allowing HTTP connections in the UI thread
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 				.permitAll().build();

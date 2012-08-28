@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,7 +17,6 @@ import android.widget.TabHost.TabSpec;
 
 import com.example.schedule_stations.Direction;
 import com.example.schedule_stations.DirectionTransfer;
-import com.example.utils.LoadingDialog;
 
 public class StationTabView extends TabActivity {
 
@@ -107,7 +105,8 @@ public class StationTabView extends TabActivity {
 
 				// Showing a ProgressDialog
 				Context context = StationTabView.this;
-				ProgressDialog progressDialog = new ProgressDialog(context);
+				final ProgressDialog progressDialog = new ProgressDialog(
+						context);
 				progressDialog.setMessage("Loading...");
 				progressDialog.show();
 
@@ -121,15 +120,9 @@ public class StationTabView extends TabActivity {
 										+ th_direction.getVehicleNumber() + "$"
 										+ coordinates);
 						startActivity(intent);
+						progressDialog.dismiss();
 					}
 				}).start();
-
-				try {
-					new LoadingDialog(progressDialog).execute().get();
-				} catch (Exception e) {
-					Log.d("StationTabView", "Грешка при AsyncTask!");
-				}
-
 			} else {
 				new AlertDialog.Builder(this)
 						.setTitle(R.string.st_ch_menu_err_title)

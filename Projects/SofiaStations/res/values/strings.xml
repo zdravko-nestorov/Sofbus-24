@@ -13,6 +13,9 @@
     <string name="ss_gps_map_msg_title">Грешка</string>
     <string name="ss_gps_map_msg_body">Моля включете поне едно от устройствата (GPS или WiFi), за да бъде засечено текущото ви местоположение.</string>
 
+    <!-- Sofia Stations -->
+    <string name="ss_name">Софийски градски транспорт</string>
+    
     <!-- Vehicle Choice -->
     <string name="veh_ch_name">Разписание на колите</string>
     <string name="veh_ch_image">Изображение на превозното средство</string>

@@ -10,9 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autoLink="web"
-        android:textSize="15dip"
         android:clickable="false"
-        android:text="@string/about_text" />
+        android:text="@string/about_text"
+        android:textSize="15dip" />
 
     <Button
         android:id="@+id/about_ok_button"
