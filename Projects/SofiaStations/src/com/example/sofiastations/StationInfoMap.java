@@ -93,6 +93,7 @@ public class StationInfoMap extends MapActivity {
 		// Switching between satellite and street view
 		ImageView satellite = (ImageView) findViewById(R.id.satelite_img_button);
 		satellite.setOnClickListener(new OnClickListener() {
+			@SuppressWarnings("deprecation")
 			public void onClick(View v) {
 				if (mapView.isSatellite()) {
 					mapView.setSatellite(false);
@@ -138,11 +139,14 @@ public class StationInfoMap extends MapActivity {
 				Toast.makeText(this, R.string.st_inf_fav_ok, Toast.LENGTH_SHORT)
 						.show();
 			} else {
-				Toast.makeText(this, R.string.st_inf_fav_err, Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(this, R.string.st_inf_fav_err,
+						Toast.LENGTH_SHORT).show();
 				;
 			}
 			datasource.close();
+			break;
+		case R.id.menu_focus:
+			mapController.animateTo(geoPoint);
 			break;
 		}
 

@@ -12,12 +12,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.info_station.LoadingStationInfo;
+import com.example.info_station.HtmlRequestStation;
+import com.example.info_station.HtmlResultStation;
 import com.example.schedule_stations.Direction;
 import com.example.schedule_stations.DirectionTransfer;
 import com.example.schedule_stations.Station;
@@ -74,58 +76,93 @@ public class StationListView extends ListActivity {
 		Context context = StationListView.this;
 		ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setMessage("Loading...");
-		progressDialog.show();
-		String time_stamp;
+		LoadStationAsyncTask loadStationAsyncTask = new LoadStationAsyncTask(
+				context, progressDialog, station, stationCode);
+		loadStationAsyncTask.execute();
 
-		try {
-			time_stamp = new LoadingStationInfo(station, progressDialog)
-					.execute().get();
-		} catch (Exception e) {
-			time_stamp = null;
+	}
+
+	// AsyncTask capable of loading the HttpRequestTimeStamp
+	private class LoadStationAsyncTask extends AsyncTask<Void, Void, String> {
+		Context context;
+		ProgressDialog progressDialog;
+		Station station;
+		String stationCode;
+
+		public LoadStationAsyncTask(Context context,
+				ProgressDialog progressDialog, Station station,
+				String stationCode) {
+			this.context = context;
+			this.progressDialog = progressDialog;
+			this.station = station;
+			this.stationCode = stationCode;
 		}
 
-		// Getting the coordinates of the station
-		String[] coordinates = getLocation(context, stationCode);
+		@Override
+		protected void onPreExecute() {
+			progressDialog.show();
+		}
 
-		// Creating AlertDialog with the information, if TimeStamp and
-		// Coordinates exists, otherwise showing an error message
-		Builder dialog = new AlertDialog.Builder(this);
+		@Override
+		protected String doInBackground(Void... params) {
+			HtmlRequestStation htmlRequestStation = new HtmlRequestStation(
+					station);
+			String htmlResult = htmlRequestStation.getInformation();
 
-		if (time_stamp != null && !"".equals(time_stamp)
-				&& time_stamp.length() > 2 && coordinates != null
-				&& !"".equals(coordinates) && coordinates.length > 0) {
+			return htmlResult;
+		}
 
-			// Fixing the time_stamp
-			time_stamp = time_stamp.substring(1, time_stamp.length() - 1);
-			station.setTime_stamp(time_stamp);
+		@Override
+		protected void onPostExecute(String result) {
+			progressDialog.dismiss();
 
-			// Setting the map coordinates into the station object
-			station.setCoordinates(coordinates);
+			// HtmlResult processing and creating an time_stamp
+			String time_stamp = HtmlResultStation.showResult(result);
 
-			Bundle bundle = new Bundle();
-			Intent stationInfoIntent = new Intent(context, StationInfoMap.class);
-			bundle.putSerializable("Station", station);
-			stationInfoIntent.putExtras(bundle);
-			startActivityForResult(stationInfoIntent, 1);
-		} else if (coordinates == null || "".equals(coordinates)
-				|| coordinates.length == 0) {
-			dialog.setTitle(R.string.veh_ch_direction_choice_error)
-					.setMessage(R.string.veh_ch_coordinates_error)
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setPositiveButton("OK", new OnClickListener() {
-						public void onClick(DialogInterface dialoginterface,
-								int i) {
-						}
-					}).show();
-		} else {
-			dialog.setTitle(R.string.veh_ch_direction_choice_error)
-					.setMessage(R.string.veh_ch_direction_choice_error_msg)
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setPositiveButton("OK", new OnClickListener() {
-						public void onClick(DialogInterface dialoginterface,
-								int i) {
-						}
-					}).show();
+			// Getting the coordinates of the station
+			String[] coordinates = getLocation(context, stationCode);
+
+			// Creating AlertDialog with the information, if TimeStamp and
+			// Coordinates exists, otherwise showing an error message
+			Builder dialog = new AlertDialog.Builder(context);
+
+			if (time_stamp != null && !"".equals(time_stamp)
+					&& time_stamp.length() > 2 && coordinates != null
+					&& !"".equals(coordinates) && coordinates.length > 0) {
+
+				// Fixing the time_stamp
+				time_stamp = time_stamp.substring(1, time_stamp.length() - 1);
+				station.setTime_stamp(time_stamp);
+
+				// Setting the map coordinates into the station object
+				station.setCoordinates(coordinates);
+
+				Bundle bundle = new Bundle();
+				Intent stationInfoIntent = new Intent(context,
+						StationInfoMap.class);
+				bundle.putSerializable("Station", station);
+				stationInfoIntent.putExtras(bundle);
+				startActivityForResult(stationInfoIntent, 1);
+			} else if (coordinates == null || "".equals(coordinates)
+					|| coordinates.length == 0) {
+				dialog.setTitle(R.string.veh_ch_direction_choice_error)
+						.setMessage(R.string.veh_ch_coordinates_error)
+						.setIcon(android.R.drawable.ic_dialog_alert)
+						.setPositiveButton("OK", new OnClickListener() {
+							public void onClick(
+									DialogInterface dialoginterface, int i) {
+							}
+						}).show();
+			} else {
+				dialog.setTitle(R.string.veh_ch_direction_choice_error)
+						.setMessage(R.string.veh_ch_direction_choice_error_msg)
+						.setIcon(android.R.drawable.ic_dialog_alert)
+						.setPositiveButton("OK", new OnClickListener() {
+							public void onClick(
+									DialogInterface dialoginterface, int i) {
+							}
+						}).show();
+			}
 		}
 	}
 }

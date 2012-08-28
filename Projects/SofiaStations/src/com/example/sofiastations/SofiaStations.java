@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,6 +27,11 @@ public class SofiaStations extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_screen);
+
+		// Allowing HTTP connections in the UI thread
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+				.permitAll().build();
+		StrictMode.setThreadPolicy(policy);
 
 		// DatabaseUtils.copyDatabase(context);
 		// DatabaseUtils.generateStations(context);
@@ -119,19 +125,8 @@ public class SofiaStations extends Activity implements OnClickListener {
 
 			break;
 		case R.id.btn_schedule:
-			// Showing a ProgressDialog
-			progressDialog.setMessage("Loading...");
-			progressDialog.show();
-
-			new Thread(new Runnable() {
-				public void run() {
-					Intent listVehicleChoice = new Intent(context,
-							VehicleTabView.class);
-					context.startActivity(listVehicleChoice);
-					progressDialog.dismiss();
-				}
-			}).start();
-
+			Intent listVehicleChoice = new Intent(context, VehicleTabView.class);
+			context.startActivity(listVehicleChoice);
 			break;
 		case R.id.btn_favourite:
 			Intent favourites = new Intent(context, Favourites.class);

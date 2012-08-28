@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -115,67 +117,15 @@ public class VehicleListView extends Activity {
 						position);
 
 				// Getting the information from the clicked item
-				final String choice = vehicle.getType() + "$"
-						+ vehicle.getNumber();
+				String choice = vehicle.getType() + "$" + vehicle.getNumber();
 
 				// Getting the HtmlResult and showing a ProgressDialog
-				final Context context = VehicleListView.this;
-				// TODO Make loading screen
-				HtmlRequestDirection htmlStation = new HtmlRequestDirection(
-						choice);
-				HtmlResultDirection htmlResult = new HtmlResultDirection(
-						choice, htmlStation.getInformation());
-				ArrayList<Direction> resultList = htmlResult.showResult();
-
-				// Creating AlertDialog with the directions, if HtmlResult !=
-				// null, otherwise showing an error message
-				Builder dialog = new AlertDialog.Builder(context);
-
-				if (resultList != null && resultList.size() > 1) {
-					String[] directions = new String[2];
-					directions[0] = resultList.get(0).getDirection();
-					directions[1] = resultList.get(1).getDirection();
-					ArrayAdapter<CharSequence> itemsAdapter = new ArrayAdapter<CharSequence>(
-							context,
-							R.layout.activity_vehicle_direction_choice,
-							directions);
-
-					// Creating DirectionTransfer object, so transfer the
-					// HtmlResult to the next activity
-					final DirectionTransfer directionTransfer = new DirectionTransfer(
-							resultList);
-
-					dialog.setTitle(R.string.veh_ch_direction_choice)
-							.setAdapter(itemsAdapter,
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialoginterface,
-												int i) {
-											directionTransfer.setChoice(i);
-											Bundle bundle = new Bundle();
-											Intent stationIntent = new Intent(
-													context,
-													StationTabView.class);
-											bundle.putSerializable(
-													"DirectionTransfer",
-													directionTransfer);
-											stationIntent.putExtras(bundle);
-											editText.setText("");
-											startActivityForResult(
-													stationIntent, i);
-										}
-									}).show();
-				} else {
-					dialog.setTitle(R.string.veh_ch_direction_choice_error)
-							.setMessage(
-									R.string.veh_ch_direction_choice_error_msg)
-							.setIcon(android.R.drawable.ic_dialog_alert)
-							.setPositiveButton("OK", new OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-								}
-							}).show();
-				}
+				Context context = VehicleListView.this;
+				ProgressDialog progressDialog = new ProgressDialog(context);
+				progressDialog.setMessage("Loading...");
+				LoadStationsAsyncTask loadStationsAsyncTask = new LoadStationsAsyncTask(
+						context, progressDialog, choice);
+				loadStationsAsyncTask.execute();
 			}
 
 		});
@@ -196,6 +146,92 @@ public class VehicleListView extends Activity {
 		}
 
 		return output;
+	}
+
+	// AsyncTask capable of loading the HttpRequestDirection
+	private class LoadStationsAsyncTask extends AsyncTask<Void, Void, String> {
+		Context context;
+		ProgressDialog progressDialog;
+		String vehicleChoice;
+
+		public LoadStationsAsyncTask(Context context,
+				ProgressDialog progressDialog, String vehicleChoice) {
+			this.context = context;
+			this.progressDialog = progressDialog;
+			this.vehicleChoice = vehicleChoice;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog.show();
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+			HtmlRequestDirection htmlRequestDirection = new HtmlRequestDirection(
+					vehicleChoice);
+			String htmlResult = htmlRequestDirection.getInformation();
+
+			return htmlResult;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			progressDialog.dismiss();
+
+			// HtmlResult processing and creating an ArrayList
+			HtmlResultDirection htmlResultDirection = new HtmlResultDirection(
+					vehicleChoice, result);
+			ArrayList<Direction> directionList = htmlResultDirection
+					.showResult();
+			ArrayList<Direction> resultList = directionList;
+
+			// Creating AlertDialog with the directions, if HtmlResult !=
+			// null, otherwise showing an error message
+			Builder dialog = new AlertDialog.Builder(context);
+
+			if (resultList != null && resultList.size() > 1) {
+				String[] directions = new String[2];
+				directions[0] = resultList.get(0).getDirection();
+				directions[1] = resultList.get(1).getDirection();
+				ArrayAdapter<CharSequence> itemsAdapter = new ArrayAdapter<CharSequence>(
+						context, R.layout.activity_vehicle_direction_choice,
+						directions);
+
+				// Creating DirectionTransfer object, so transfer the
+				// HtmlResult to the next activity
+				final DirectionTransfer directionTransfer = new DirectionTransfer(
+						resultList);
+
+				dialog.setTitle(R.string.veh_ch_direction_choice)
+						.setAdapter(itemsAdapter,
+								new DialogInterface.OnClickListener() {
+									public void onClick(
+											DialogInterface dialoginterface,
+											int i) {
+										directionTransfer.setChoice(i);
+										Bundle bundle = new Bundle();
+										Intent stationIntent = new Intent(
+												context, StationTabView.class);
+										bundle.putSerializable(
+												"DirectionTransfer",
+												directionTransfer);
+										stationIntent.putExtras(bundle);
+										editText.setText("");
+										startActivityForResult(stationIntent, i);
+									}
+								}).show();
+			} else {
+				dialog.setTitle(R.string.veh_ch_direction_choice_error)
+						.setMessage(R.string.veh_ch_direction_choice_error_msg)
+						.setIcon(android.R.drawable.ic_dialog_alert)
+						.setPositiveButton("OK", new OnClickListener() {
+							public void onClick(
+									DialogInterface dialoginterface, int i) {
+							}
+						}).show();
+			}
+		}
 	}
 
 }

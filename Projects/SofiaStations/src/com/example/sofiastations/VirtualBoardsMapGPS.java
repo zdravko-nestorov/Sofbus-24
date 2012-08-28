@@ -151,6 +151,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		// Switching between satellite and street view
 		ImageView satellite = (ImageView) findViewById(R.id.satelite_img_button);
 		satellite.setOnClickListener(new OnClickListener() {
+			@SuppressWarnings("deprecation")
 			public void onClick(View v) {
 				if (mapView.isSatellite()) {
 					mapView.setSatellite(false);
