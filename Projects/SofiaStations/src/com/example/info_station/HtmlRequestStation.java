@@ -31,6 +31,8 @@ public class HtmlRequestStation {
 	private static final String QUERY_VT = "vt";
 	private static final String QUERY_LID = "lid";
 	private static final String QUERY_RID = "rid";
+
+	// Constructor parameters
 	private Station station;
 
 	// Getting the station
@@ -45,14 +47,16 @@ public class HtmlRequestStation {
 		try {
 			// Setting timeout parameters
 			HttpParams httpParameters = new BasicHttpParams();
-			// Set the timeout in milliseconds until a connection is established.
+			// Set the timeout in milliseconds until a connection is
+			// established.
 			int timeoutConnection = 1000;
-			HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
-			// Set the default socket timeout (SO_TIMEOUT) 
+			HttpConnectionParams.setConnectionTimeout(httpParameters,
+					timeoutConnection);
+			// Set the default socket timeout (SO_TIMEOUT)
 			// in milliseconds which is the timeout for waiting for data.
-			int timeoutSocket = 1000;
+			int timeoutSocket = 3000;
 			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
-			
+
 			HttpClient client = new DefaultHttpClient(httpParameters);
 			HttpGet request = new HttpGet();
 			request.setURI(new URI(createURL()));
@@ -80,5 +84,5 @@ public class HtmlRequestStation {
 
 		return returnURL;
 	}
-	
+
 }

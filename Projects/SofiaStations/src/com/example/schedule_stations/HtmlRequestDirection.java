@@ -30,11 +30,13 @@ public class HtmlRequestDirection {
 	private static final String QUERY_BUS_TYPE = "tt";
 	private static final String QUERY_LINE = "ln";
 	private static final String QUERY_SEARCH = "s";
+
 	private String vehicleType;
 	private String vehicleNumber;
 
 	// Getting the vehicle type and number
 	public HtmlRequestDirection(String vehicleChoice) {
+
 		this.vehicleType = getValueBefore(vehicleChoice, "$");
 
 		if (this.vehicleType.equals("Автобус")) {
@@ -45,7 +47,7 @@ public class HtmlRequestDirection {
 			this.vehicleType = "3";
 		}
 
-		vehicleNumber = getValueAfter(vehicleChoice, "$");
+		this.vehicleNumber = getValueAfter(vehicleChoice, "$");
 	}
 
 	// Getting the source file of the HTTP request
@@ -62,7 +64,7 @@ public class HtmlRequestDirection {
 					timeoutConnection);
 			// Set the default socket timeout (SO_TIMEOUT)
 			// in milliseconds which is the timeout for waiting for data.
-			int timeoutSocket = 1000;
+			int timeoutSocket = 3000;
 			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
 			HttpClient client = new DefaultHttpClient(httpParameters);

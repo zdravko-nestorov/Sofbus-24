@@ -5,5 +5,9 @@
         android:id="@+id/menu_add_favourite"
         android:icon="@drawable/favourite_add"
         android:title="@string/gps_favourite_add"/>
+    <item
+        android:id="@+id/menu_focus"
+        android:icon="@drawable/map_position"
+        android:title="@string/st_inf_menu_position"/>
 
 </menu>

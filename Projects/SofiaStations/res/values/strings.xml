@@ -1,7 +1,7 @@
 <resources>
 
     <!-- MAIN -->
-    <string name="app_name">СОФИЙСКИ ГРАДСКИ ТРАНСПОРТ</string>
+    <string name="app_name">Stations 24</string>
     <string name="btn_gps">Виртуални табла</string>
     <string name="gps_msg">Моля въведете номер на спирка:</string>
     <string name="btn_map">GPS времена - Google Maps</string>
@@ -34,6 +34,7 @@
     <string name="st_inf_satelite_image">Изглед на картата</string>
     <string name="st_inf_fav_ok">Спирката беше добавено успешно в любими.</string>
     <string name="st_inf_fav_err">Спирката вече е била добавена в любими.</string>
+    <string name="st_inf_menu_position">Позиционирай</string>
 
     <!-- Favourites -->
     <string name="fav_info">Избрани спирки</string>
