@@ -181,16 +181,17 @@ public final class R {
         public static final int gps_see_map=0x7f06002c;
         /**  HOME SCREEN BUTTONS 
          */
-        public static final int hs_button1=0x7f060037;
-        public static final int hs_button2=0x7f060038;
-        public static final int hs_button3=0x7f060039;
-        public static final int hs_button4=0x7f06003a;
-        public static final int hs_button5=0x7f06003b;
-        public static final int hs_button6=0x7f06003c;
+        public static final int hs_button1=0x7f060038;
+        public static final int hs_button2=0x7f060039;
+        public static final int hs_button3=0x7f06003a;
+        public static final int hs_button4=0x7f06003b;
+        public static final int hs_button5=0x7f06003c;
+        public static final int hs_button6=0x7f06003d;
         public static final int map_gps_menu_item=0x7f060036;
         /**  MAP GPS 
          */
         public static final int map_gps_name=0x7f060035;
+        public static final int map_gps_no_last_location=0x7f060037;
         public static final int ss_gps_map_msg_body=0x7f06000a;
         public static final int ss_gps_map_msg_title=0x7f060009;
         /**  Sofia Stations 

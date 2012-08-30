@@ -77,6 +77,7 @@
     <!-- MAP GPS -->
     <string name="map_gps_name">Виртуални табла - Google Maps</string>
     <string name="map_gps_menu_item">Позиционирай на текущата позиция</string>
+    <string name="map_gps_no_last_location">Моля изчакайте координати Ви да бъдат засечени.</string>
 
     <!-- HOME SCREEN BUTTONS -->
     <string name="hs_button1">Бутон 1</string>

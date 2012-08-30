@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.gps_map.CurrentLocationOverlay;
 import com.example.gps_map.MyItemizedOverlay;
@@ -270,8 +271,13 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_gps_map:
-			mapController.animateTo(menuGeoPoint);
-			mapController.setZoom(17);
+			try {
+				mapController.animateTo(menuGeoPoint);
+				mapController.setZoom(17);
+			} catch (Exception e) {
+				Toast.makeText(this, R.string.map_gps_no_last_location,
+						Toast.LENGTH_SHORT).show();
+			}
 			break;
 		}
 		return true;
@@ -290,7 +296,6 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	public void onPause() {
 		super.onPause();
 		myLocationOverlay.disableCompass();
-		myLocationOverlay.disableMyLocation();
 		datasource.close();
 	}
 

@@ -28,6 +28,7 @@ import org.apache.http.params.HttpParams;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -36,6 +37,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.text.InputType;
 import android.util.Log;
 import android.widget.EditText;
@@ -111,20 +113,16 @@ public class HtmlRequestSumc {
 		// HTTP Client - created once and using cookies
 		final DefaultHttpClient client = new DefaultHttpClient(httpParameters);
 
-		String htmlSourceCode = null;
 		Log.d(TAG, stationCode);
 
-		loadCookiesFromPreferences(context, client);
-		try {
-			final HttpPost request = createRequest(stationCode, null, null);
-			htmlSourceCode = client
-					.execute(request, new BasicResponseHandler());
-			checkCaptchaText(client, context, stationCode, htmlSourceCode);
-		} catch (Exception e) {
-			Log.e(TAG, "Could not get data for station " + stationCode, e);
-			startNewActivity(client, context, stationCode,
-					VirtualBoards.htmlErrorMessage);
-		}
+		 loadCookiesFromPreferences(context, client);
+
+		// Making HttpRequest and showing a progress dialog
+		ProgressDialog progressDialog = new ProgressDialog(context);
+		progressDialog.setMessage("Loading...");
+		LoadingSumc loadingSumc = new LoadingSumc(context, progressDialog,
+				client, stationCode, null, null);
+		loadingSumc.execute();
 	}
 
 	// Saving cookies
@@ -338,21 +336,12 @@ public class HtmlRequestSumc {
 
 		Log.d(TAG, "RESULT: " + captchaText);
 
-		String htmlSourceCode = null;
-
-		try {
-			final HttpPost request = createRequest(stationCode, captchaText,
-					captchaId);
-			htmlSourceCode = client
-					.execute(request, new BasicResponseHandler());
-		} catch (Exception e) {
-			Log.e(TAG, "Could not get data for station " + stationCode, e);
-			startNewActivity(client, context, stationCode,
-					VirtualBoards.htmlErrorMessage);
-		}
-
-		Log.d(TAG, "CaptchaID: " + getCaptchaId(htmlSourceCode));
-		checkCaptchaText(client, context, stationCode, htmlSourceCode);
+		// Making HttpRequest and showing a progress dialog
+		ProgressDialog progressDialog = new ProgressDialog(context);
+		progressDialog.setMessage("Loading...");
+		LoadingSumc loadingSumc = new LoadingSumc(context, progressDialog,
+				client, stationCode, captchaText, captchaId);
+		loadingSumc.execute();
 	}
 
 	// Starting new activity
@@ -366,6 +355,60 @@ public class HtmlRequestSumc {
 		Intent intent = new Intent(context, VirtualBoards.class);
 		intent.putExtra(VirtualBoards.keyHtmlResult, text);
 		context.startActivity(intent);
+	}
+
+	private class LoadingSumc extends AsyncTask<Void, Void, String> {
+		Context context;
+		ProgressDialog progressDialog;
+		DefaultHttpClient client;
+		String stationCode;
+		String captchaText;
+		String captchaId;
+
+		public LoadingSumc(Context context, ProgressDialog progressDialog,
+				DefaultHttpClient client, String stationCode,
+				String captchaText, String captchaId) {
+			this.context = context;
+			this.progressDialog = progressDialog;
+			this.client = client;
+			this.stationCode = stationCode;
+			this.captchaText = captchaText;
+			this.captchaId = captchaId;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog.show();
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+			String htmlSourceCode = null;
+
+			try {
+				final HttpPost request = createRequest(stationCode,
+						captchaText, captchaId);
+				htmlSourceCode = client.execute(request,
+						new BasicResponseHandler());
+			} catch (Exception e) {
+				Log.e(TAG, "Could not get data for station " + stationCode, e);
+				htmlSourceCode = "EXCEPTION";
+			}
+
+			return htmlSourceCode;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			progressDialog.dismiss();
+
+			if (result.equals("EXCEPTION")) {
+				startNewActivity(client, context, stationCode,
+						VirtualBoards.htmlErrorMessage);
+			} else {
+				checkCaptchaText(client, context, stationCode, result);
+			}
+		}
 	}
 
 }
