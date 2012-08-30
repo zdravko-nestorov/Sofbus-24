@@ -2,8 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menu_gps_map"
+        android:id="@+id/menu_gps_distance"
+        android:icon="@drawable/distance"
+        android:title="@string/map_gps_menu_item_distance"/>
+    <item
+        android:id="@+id/menu_gps_focus"
         android:icon="@drawable/map_position"
-        android:title="@string/map_gps_menu_item"/>
+        android:title="@string/map_gps_menu_item_focus"/>
 
 </menu>

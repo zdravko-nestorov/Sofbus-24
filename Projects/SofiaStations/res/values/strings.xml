@@ -1,7 +1,7 @@
 <resources>
 
     <!-- MAIN -->
-    <string name="app_name">Stations 24</string>
+    <string name="app_name">Софбус 24</string>
     <string name="btn_gps">Виртуални табла</string>
     <string name="gps_msg">Моля въведете номер на спирка:</string>
     <string name="btn_map">GPS времена - Google Maps</string>
@@ -15,7 +15,7 @@
 
     <!-- Sofia Stations -->
     <string name="ss_name">Софийски градски транспорт</string>
-    
+
     <!-- Vehicle Choice -->
     <string name="veh_ch_name">Разписание на колите</string>
     <string name="veh_ch_image">Изображение на превозното средство</string>
@@ -76,8 +76,11 @@
 
     <!-- MAP GPS -->
     <string name="map_gps_name">Виртуални табла - Google Maps</string>
-    <string name="map_gps_menu_item">Позиционирай на текущата позиция</string>
+    <string name="map_gps_menu_item_distance">Разстояние</string>
+    <string name="map_gps_menu_item_focus">Позиционирай</string>
     <string name="map_gps_no_last_location">Моля изчакайте координати Ви да бъдат засечени.</string>
+    <string name="map_gps_distance_OK" formatted="false">Разтоянието от текущата Ви позиция до избраната спирка е %s метра.</string>
+    <string name="map_gps_distance_ERR">Моля изберете спирка.</string>
 
     <!-- HOME SCREEN BUTTONS -->
     <string name="hs_button1">Бутон 1</string>

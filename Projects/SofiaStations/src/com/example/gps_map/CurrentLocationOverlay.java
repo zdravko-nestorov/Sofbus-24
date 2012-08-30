@@ -16,7 +16,7 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 	private MapController mc;
 	private Point currentPoint = new Point();
 
-	private boolean centerOnCurrentLocation = true;
+	private boolean centerOnCurrentLocation = false;
 
 	private int height;
 	private int width;

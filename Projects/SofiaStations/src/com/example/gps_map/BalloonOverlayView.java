@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.sofiastations.R;
+import com.example.sofiastations.VirtualBoardsMapGPS;
 import com.google.android.maps.OverlayItem;
 
 // Creating the balloon layout
@@ -36,6 +37,7 @@ public class BalloonOverlayView extends FrameLayout {
 		close.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				layout.setVisibility(GONE);
+				VirtualBoardsMapGPS.tapGeoPoint = null;
 			}
 		});
 

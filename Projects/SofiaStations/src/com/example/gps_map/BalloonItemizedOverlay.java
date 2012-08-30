@@ -11,6 +11,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 
 import com.example.sofiastations.R;
+import com.example.sofiastations.VirtualBoardsMapGPS;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapController;
@@ -87,6 +88,8 @@ public abstract class BalloonItemizedOverlay<Item> extends
 		}
 
 		mc.animateTo(point);
+
+		VirtualBoardsMapGPS.tapGeoPoint = point;
 
 		return true;
 	}

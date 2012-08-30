@@ -1,5 +1,6 @@
 package com.example.sofiastations;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,10 +59,15 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	// Database
 	StationsDataSource datasource;
 
+	// On tap variable
+	public static GeoPoint tapGeoPoint;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_station_info_map);
+
+		tapGeoPoint = null;
 
 		context = VirtualBoardsMapGPS.this;
 		datasource = new StationsDataSource(context);
@@ -270,7 +276,32 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.menu_gps_map:
+		case R.id.menu_gps_distance:
+			try {
+				Location locTap = new Location("");
+				locTap.setLatitude(tapGeoPoint.getLatitudeE6() / 1E6);
+				locTap.setLongitude(tapGeoPoint.getLongitudeE6() / 1E6);
+
+				Location locCurr = new Location("");
+				locCurr.setLatitude(menuGeoPoint.getLatitudeE6() / 1E6);
+				locCurr.setLongitude(menuGeoPoint.getLongitudeE6() / 1E6);
+
+				Float distanceTo = locTap.distanceTo(locCurr);
+				BigDecimal bd = new BigDecimal(distanceTo);
+				BigDecimal rounded = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+				distanceTo = rounded.floatValue();
+
+				Toast.makeText(
+						this,
+						String.format(getString(R.string.map_gps_distance_OK),
+								distanceTo.toString()), Toast.LENGTH_SHORT)
+						.show();
+			} catch (Exception e) {
+				Toast.makeText(this, R.string.map_gps_distance_ERR,
+						Toast.LENGTH_SHORT).show();
+			}
+			break;
+		case R.id.menu_gps_focus:
 			try {
 				mapController.animateTo(menuGeoPoint);
 				mapController.setZoom(17);
@@ -280,6 +311,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 			}
 			break;
 		}
+
 		return true;
 	}
 
@@ -295,6 +327,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
+		myLocationOverlay.disableMyLocation();
 		myLocationOverlay.disableCompass();
 		datasource.close();
 	}
