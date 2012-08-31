@@ -135,11 +135,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		};
 
 		Log.d(TAG, m_BestProvider);
-		// Set the listener to the current LocationManager
-		m_LocationManager.requestLocationUpdates("network", 20000, 20,
-				m_NetworkLocationListener);
-		m_LocationManager.requestLocationUpdates("gps", 20000, 20,
-				m_GPSLocationListener);
+		requestUpdates();
 
 		m_Location = m_LocationManager.getLastKnownLocation(m_BestProvider);
 
@@ -318,18 +314,44 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (!myLocationOverlay.isMyLocationEnabled()) {
-			myLocationOverlay.enableMyLocation();
-		}
+
+		// Request updates using LocationMenager
+		requestUpdates();
+
+		// Enable MyLocation and Compass
+		myLocationOverlay.enableMyLocation();
 		myLocationOverlay.enableCompass();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
+
+		// Remove listeners
+		m_LocationManager.removeUpdates(m_NetworkLocationListener);
+		m_LocationManager.removeUpdates(m_GPSLocationListener);
+
+		// Disable MyLocation, Compass and DB
 		myLocationOverlay.disableMyLocation();
 		myLocationOverlay.disableCompass();
 		datasource.close();
 	}
 
+	// Request updates
+	public void requestUpdates() {
+		// Set the listener to the current LocationManager
+		try {
+			m_LocationManager.requestLocationUpdates("network", 20000, 10f,
+					m_NetworkLocationListener);
+		} catch (Exception e) {
+			Log.d(TAG, "Network problem.");
+		}
+
+		try {
+			m_LocationManager.requestLocationUpdates("gps", 20000, 10f,
+					m_GPSLocationListener);
+		} catch (Exception e) {
+			Log.d(TAG, "GPS problem.");
+		}
+	}
 }

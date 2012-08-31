@@ -111,7 +111,17 @@ public class SofiaStations extends Activity implements OnClickListener {
 						.setTitle(R.string.ss_gps_map_msg_title)
 						.setMessage(R.string.ss_gps_map_msg_body)
 						.setCancelable(false)
-						.setPositiveButton("OK",
+						.setPositiveButton("ОК",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int i) {
+										Intent intent = new Intent(
+												android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+										startActivity(intent);
+									}
+
+								})
+						.setNegativeButton("Отказ",
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int i) {
