@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_gps_distance"
+        android:icon="@drawable/distance"
+        android:title="@string/map_gps_menu_item_distance"/>
+    <item
+        android:id="@+id/menu_gps_focus"
+        android:icon="@drawable/map_position"
+        android:title="@string/map_gps_menu_item_focus"/>
+    <item
+        android:id="@+id/menu_gps_clean"
+        android:icon="@drawable/clean"
+        android:title="@string/map_gps_menu_item_clean"/>
+    <item
+        android:id="@+id/menu_gps_help"
+        android:icon="@drawable/help"
+        android:title="@string/map_gps_menu_item_help"/>
+
+</menu>
