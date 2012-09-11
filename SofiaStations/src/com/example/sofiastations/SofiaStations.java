@@ -31,7 +31,8 @@ public class SofiaStations extends Activity implements OnClickListener {
 		this.setTitle(getString(R.string.ss_name));
 
 		// DatabaseUtils.copyDatabase(context);
-		// DatabaseUtils.generateStations(context);
+		// DatabaseUtils.generateStationsXML(context);
+		// DatabaseUtils.generateStationsTEXT(context);
 		// DatabaseUtils.deleteFavouriteDatabase(context);
 
 		// Copy station.db from the APK to the internal memory (if not exists)

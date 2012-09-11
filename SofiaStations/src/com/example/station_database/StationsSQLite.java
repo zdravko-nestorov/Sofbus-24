@@ -1,5 +1,6 @@
 package com.example.station_database;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +9,6 @@ import java.io.OutputStream;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class StationsSQLite extends SQLiteOpenHelper {
@@ -42,7 +42,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 		boolean dbExist = checkDataBase();
 
 		if (!dbExist) {
-			this.getReadableDatabase();
+			this.getReadableDatabase().close();
 
 			try {
 				copyDataBase();
@@ -55,21 +55,9 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	// Check if the database already exist to avoid re-copying the file each
 	// time the application is opened
 	private boolean checkDataBase() {
-		SQLiteDatabase checkDB = null;
+		File dbFile = new File(DB_PATH + DB_NAME);
 
-		try {
-			String myPath = DB_PATH + DB_NAME;
-			checkDB = SQLiteDatabase.openDatabase(myPath, null,
-					SQLiteDatabase.OPEN_READONLY);
-		} catch (SQLiteException e) {
-			// database does't exist yet.
-		}
-
-		if (checkDB != null) {
-			checkDB.close();
-		}
-
-		return checkDB != null ? true : false;
+		return dbFile.exists();
 	}
 
 	// Copies your database from your local assets-folder to the just created
@@ -99,11 +87,13 @@ public class StationsSQLite extends SQLiteOpenHelper {
 		myInput.close();
 	}
 
-	public void openDataBase() throws SQLException {
+	public SQLiteDatabase openDataBase() throws SQLException {
 		// Open the database
 		String myPath = DB_PATH + DB_NAME;
 		myDataBase = SQLiteDatabase.openDatabase(myPath, null,
 				SQLiteDatabase.OPEN_READONLY);
+
+		return myDataBase;
 	}
 
 	@Override
