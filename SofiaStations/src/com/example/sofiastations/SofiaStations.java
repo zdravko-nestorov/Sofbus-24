@@ -26,6 +26,9 @@ public class SofiaStations extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_screen);
 
+		// Setting activity title
+		this.setTitle(getString(R.string.ss_name));
+
 		// DatabaseUtils.copyDatabase(context);
 		// DatabaseUtils.generateStationsXML(context);
 		// DatabaseUtils.generateStationsTEXT(context);
