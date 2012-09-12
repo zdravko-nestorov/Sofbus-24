@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 
 import com.example.gps.GPSStationAdapter;
 import com.example.gps.HtmlResultSumc;
+import com.example.schedule_stations.Direction;
 import com.example.station_database.FavouritesDataSource;
 import com.example.station_database.GPSStation;
 
@@ -202,37 +204,28 @@ public class VirtualBoards extends ListActivity {
 						getString(R.string.st_inf_fav_err));
 			}
 			datasource.close();
+
 			break;
+
 		case R.id.menu_see_map:
 			if (!gpsStation.getLat().equals("EMPTY")
 					&& !gpsStation.getLon().equals("EMPTY")) {
 
 				// Showing a ProgressDialog
-				final Context context = VirtualBoards.this;
-				final ProgressDialog progressDialog = new ProgressDialog(
-						context);
+				Bundle bundle = new Bundle();
+				Context context = VirtualBoards.this;
+				ProgressDialog progressDialog = new ProgressDialog(context);
 				progressDialog.setMessage("Loading...");
 				progressDialog.show();
 
-				new Thread(new Runnable() {
-					public void run() {
-						// Setting the needed info in the GPSObject
-						setInfo();
-
-						// Starting activity VirtualBoardsMap
-						Bundle bundle = new Bundle();
-						Intent stationInfoIntent = new Intent(context,
-								VirtualBoardsMap.class);
-						bundle.putSerializable("GPSStation", gpsStation);
-						stationInfoIntent.putExtras(bundle);
-						startActivityForResult(stationInfoIntent, 1);
-						progressDialog.dismiss();
-					}
-				}).start();
+				LoadMapAsyncTask loadMap = new LoadMapAsyncTask(bundle,
+						context, progressDialog, gpsStation);
+				loadMap.execute();
 			} else {
 				showInfoDialog(getString(R.string.gps_err_dialog_title),
 						getString(R.string.gps_error_noCoordinates));
 			}
+
 			break;
 		}
 
@@ -289,4 +282,43 @@ public class VirtualBoards extends ListActivity {
 
 		station_list.get(1).setTime_stamp(stationInfo.toString());
 	}
+
+	// AsyncTask capable for loading the map
+	private class LoadMapAsyncTask extends AsyncTask<Void, Void, Intent> {
+		Bundle bundle;
+		Context context;
+		ProgressDialog progressDialog;
+		GPSStation gpsStation;
+
+		public LoadMapAsyncTask(Bundle bundle, Context context,
+				ProgressDialog progressDialog, GPSStation gpsStation) {
+			this.bundle = bundle;
+			this.context = context;
+			this.progressDialog = progressDialog;
+			this.gpsStation = gpsStation;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog.show();
+		}
+
+		@Override
+		protected Intent doInBackground(Void... params) {
+			Intent stationInfoIntent = new Intent(context,
+					VirtualBoardsMap.class);
+			bundle.putSerializable("GPSStation", gpsStation);
+			stationInfoIntent.putExtras(bundle);
+
+			return stationInfoIntent;
+		}
+
+		@Override
+		protected void onPostExecute(Intent result) {
+			progressDialog.dismiss();
+
+			startActivityForResult(result, 1);
+		}
+	}
+
 }

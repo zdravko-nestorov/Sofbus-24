@@ -164,7 +164,13 @@ public class VirtualBoardsMapGPS extends MapActivity {
 			getPosition(m_Location, false);
 
 		} catch (Exception e) {
-			Log.d(TAG, "Ќ€ма предишни координати.");
+			m_Location.setLatitude(Double.parseDouble("42.696492") * 1E6);
+			m_Location.setLongitude(Double.parseDouble("23.326011") * 1E6);
+
+			focusCurrentPosition(m_Location, true);
+			
+			Toast.makeText(this, R.string.map_gps_no_last_location,
+					Toast.LENGTH_SHORT).show();
 		}
 
 		// Switching between satellite and street view

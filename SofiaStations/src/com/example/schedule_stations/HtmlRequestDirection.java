@@ -11,8 +11,14 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -67,7 +73,16 @@ public class HtmlRequestDirection {
 			int timeoutSocket = 3000;
 			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
-			HttpClient client = new DefaultHttpClient(httpParameters);
+			// Creating ThreadSafeClientConnManager
+			SchemeRegistry schemeRegistry = new SchemeRegistry();
+			schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+			final SSLSocketFactory sslSocketFactory = SSLSocketFactory.getSocketFactory();
+			schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
+			ClientConnectionManager cm = new ThreadSafeClientConnManager(httpParameters, schemeRegistry);
+			
+			// HTTP Client - created once and using cookies
+			DefaultHttpClient client = new DefaultHttpClient(cm, httpParameters);
+			
 			HttpGet request = new HttpGet();
 			request.setURI(new URI(createURL()));
 			htmlResult = client.execute(request, new BasicResponseHandler());

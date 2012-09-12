@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -97,7 +98,7 @@ public class StationTabView extends TabActivity {
 		switch (item.getItemId()) {
 		case R.id.menu_route:
 			// Getting the coordinates of the whole route
-			final String coordinates = getRoute(StationTabView.this,
+			String coordinates = getRoute(StationTabView.this,
 					direction.getStations());
 
 			// Checking if even one station has coordinates in the DB
@@ -105,24 +106,14 @@ public class StationTabView extends TabActivity {
 
 				// Showing a ProgressDialog
 				Context context = StationTabView.this;
-				final ProgressDialog progressDialog = new ProgressDialog(
-						context);
+				ProgressDialog progressDialog = new ProgressDialog(context);
 				progressDialog.setMessage("Loading...");
 				progressDialog.show();
 
-				final Direction th_direction = direction;
-				new Thread(new Runnable() {
-					public void run() {
-						Intent intent = new Intent(StationTabView.this,
-								StationInfoRouteMap.class);
-						intent.putExtra(StationInfoRouteMap.ROUTE_MAP,
-								th_direction.getVehicleType() + ";"
-										+ th_direction.getVehicleNumber() + "$"
-										+ coordinates);
-						startActivity(intent);
-						progressDialog.dismiss();
-					}
-				}).start();
+				LoadMapAsyncTask loadMap = new LoadMapAsyncTask(context,
+						progressDialog, direction, coordinates);
+				loadMap.execute();
+
 			} else {
 				new AlertDialog.Builder(this)
 						.setTitle(R.string.st_ch_menu_err_title)
@@ -134,9 +125,49 @@ public class StationTabView extends TabActivity {
 							}
 						}).show();
 			}
+
 			break;
 		}
 		return true;
+	}
+
+	// AsyncTask capable for loading the map
+	private class LoadMapAsyncTask extends AsyncTask<Void, Void, Intent> {
+		Context context;
+		ProgressDialog progressDialog;
+		Direction direction;
+		String coordinates;
+
+		public LoadMapAsyncTask(Context context, ProgressDialog progressDialog,
+				Direction direction, String coordinates) {
+			this.context = context;
+			this.progressDialog = progressDialog;
+			this.direction = direction;
+			this.coordinates = coordinates;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog.show();
+		}
+
+		@Override
+		protected Intent doInBackground(Void... params) {
+			Intent intent = new Intent(context, StationInfoRouteMap.class);
+			intent.putExtra(
+					StationInfoRouteMap.ROUTE_MAP,
+					direction.getVehicleType() + ";"
+							+ direction.getVehicleNumber() + "$" + coordinates);
+
+			return intent;
+		}
+
+		@Override
+		protected void onPostExecute(Intent result) {
+			progressDialog.dismiss();
+
+			startActivity(result);
+		}
 	}
 
 }

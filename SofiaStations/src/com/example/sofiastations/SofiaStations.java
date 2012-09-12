@@ -53,7 +53,6 @@ public class SofiaStations extends Activity implements OnClickListener {
 	}
 
 	public void onClick(View v) {
-		final ProgressDialog progressDialog = new ProgressDialog(context);
 
 		switch (v.getId()) {
 		case R.id.btn_gps:
@@ -78,7 +77,7 @@ public class SofiaStations extends Activity implements OnClickListener {
 						}
 					});
 
-			alert.setNegativeButton("Cancel",
+			alert.setNegativeButton("Отказ",
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
@@ -91,20 +90,11 @@ public class SofiaStations extends Activity implements OnClickListener {
 		case R.id.btn_map:
 			MyLocation myLocation = new MyLocation();
 
-			// Showing a ProgressDialog
-			progressDialog.setMessage("Loading...");
-			progressDialog.show();
-
 			// Check to see if at least one provider is enabled
 			if (myLocation.getLocation(context)) {
-				new Thread(new Runnable() {
-					public void run() {
-						Intent gps_location = new Intent(context,
-								VirtualBoardsMapGPS.class);
-						context.startActivity(gps_location);
-						progressDialog.dismiss();
-					}
-				}).start();
+				Intent gps_location = new Intent(context,
+						VirtualBoardsMapGPS.class);
+				context.startActivity(gps_location);
 
 			} else {
 				new AlertDialog.Builder(this)
@@ -129,7 +119,6 @@ public class SofiaStations extends Activity implements OnClickListener {
 									}
 
 								}).show();
-				progressDialog.dismiss();
 			}
 
 			break;
@@ -156,7 +145,7 @@ public class SofiaStations extends Activity implements OnClickListener {
 		new AlertDialog.Builder(this)
 				.setIcon(android.R.drawable.ic_dialog_alert)
 				.setTitle(R.string.btn_exit).setMessage(R.string.exit_msg)
-				.setCancelable(false)
+				.setCancelable(true)
 				.setPositiveButton("Да", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int i) {
 						finish();
