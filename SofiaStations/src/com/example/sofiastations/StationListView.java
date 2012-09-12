@@ -100,6 +100,7 @@ public class StationListView extends ListActivity {
 
 		@Override
 		protected void onPreExecute() {
+			progressDialog.setCancelable(false);
 			progressDialog.show();
 		}
 

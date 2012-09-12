@@ -163,6 +163,7 @@ public class VehicleListView extends Activity {
 
 		@Override
 		protected void onPreExecute() {
+			progressDialog.setCancelable(false);
 			progressDialog.show();
 		}
 

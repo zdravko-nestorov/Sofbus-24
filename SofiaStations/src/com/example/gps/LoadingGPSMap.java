@@ -20,6 +20,7 @@ public class LoadingGPSMap extends AsyncTask<Void, Void, ArrayList<GPSStation>> 
 
 	@Override
 	protected void onPreExecute() {
+		progressDialog.setCancelable(false);
 		progressDialog.show();
 	}
 

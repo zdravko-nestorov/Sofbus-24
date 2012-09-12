@@ -31,9 +31,9 @@ public class VehicleAdapter extends ArrayAdapter<Vehicle> {
 
 		final Vehicle vehicle = (Vehicle) list_values.get(position);
 		final String vehicleType = vehicle.getType();
-		
+
 		View rowView = convertView;
-		
+
 		// Checking what to put - vehicle or separator row
 		if (vehicle.getNumber().equals("0")) {
 			rowView = setSeparatorRow(inflater, parent, vehicle, vehicleType);
@@ -47,8 +47,8 @@ public class VehicleAdapter extends ArrayAdapter<Vehicle> {
 	// Vehicle row in the ListView
 	public View setVehicleRow(LayoutInflater inflater, ViewGroup parent,
 			Vehicle vehicle, String vehicleType) {
-		View rowView = inflater.inflate(
-				R.layout.activity_vehicle, parent, false);
+		View rowView = inflater.inflate(R.layout.activity_vehicle, parent,
+				false);
 
 		TextView vehicleNumber = (TextView) rowView
 				.findViewById(R.id.vehicle_text_view);
@@ -77,13 +77,13 @@ public class VehicleAdapter extends ArrayAdapter<Vehicle> {
 	// Separator row in the ListView
 	public View setSeparatorRow(LayoutInflater inflater, ViewGroup parent,
 			Vehicle vehicle, String vehicleType) {
-		View rowView = inflater.inflate(
-				R.layout.activity_vehicle_separator, parent, false);
+		View rowView = inflater.inflate(R.layout.activity_vehicle_separator,
+				parent, false);
 
 		rowView.setOnClickListener(null);
 		rowView.setOnLongClickListener(null);
 		rowView.setLongClickable(false);
-        
+
 		TextView separator = (TextView) rowView
 				.findViewById(R.id.list_item_section_text);
 

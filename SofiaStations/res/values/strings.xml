@@ -45,7 +45,7 @@
     <string name="fav_delete_all">Изтрий всички</string>
     <string name="fav_menu_rename">Преименувай</string>
     <string name="fav_menu_rename_title">Преименувай</string>
-    <string name="fav_menu_rename_msg">Въведете новото име на спирката</string>
+    <string name="fav_menu_rename_msg">Въведете новото име на спирката:</string>
     <string name="fav_menu_delete">Изтрий</string>
 
     <!-- About -->
@@ -80,8 +80,8 @@
     <string name="map_gps_menu_item_focus">Позиционирай</string>
     <string name="map_gps_menu_item_help">Помощ</string>
     <string name="map_gps_menu_item_clean">Изчисти</string>
-    <string name="map_gps_no_last_location">Моля изчакайте координати Ви да бъдат засечени.</string>
-    <string name="map_gps_distance_OK" formatted="false">Разтоянието от текущата Ви позиция до избраната спирка е %s метра.</string>
+    <string name="map_gps_no_last_location">Моля изчакайте координатите Ви да бъдат засечени.</string>
+    <string name="map_gps_distance_OK" formatted="false">Разтоянието от текущата позиция до избраната от Вас спирка е %s метра.</string>
     <string name="map_gps_distance_ERR">Моля изберете спирка.</string>
 
     <!-- MAP GPS HELP -->

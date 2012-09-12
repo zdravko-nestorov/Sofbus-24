@@ -9,11 +9,11 @@ public class DirectionTransfer implements Serializable {
 	private int choice;
 	private Direction direction1;
 	private Direction direction2;
-	
+
 	public DirectionTransfer(ArrayList<Direction> list) {
 		if (list.size() > 1) {
 			this.direction1 = list.get(0);
-			this.direction2 = list.get(1);			
+			this.direction2 = list.get(1);
 		} else {
 			this.direction1 = null;
 			this.direction2 = null;
@@ -35,7 +35,7 @@ public class DirectionTransfer implements Serializable {
 	public Direction getDirection2() {
 		return direction2;
 	}
-	
+
 	// Just for testing purposes
 	public String toString() {
 		return getChoice() + "\n" + getDirection1() + "\n" + getDirection2();

@@ -148,6 +148,7 @@ public class StationTabView extends TabActivity {
 
 		@Override
 		protected void onPreExecute() {
+			progressDialog.setCancelable(false);
 			progressDialog.show();
 		}
 

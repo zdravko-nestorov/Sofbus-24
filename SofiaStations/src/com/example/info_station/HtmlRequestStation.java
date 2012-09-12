@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.ClientConnectionManager;
@@ -65,14 +64,17 @@ public class HtmlRequestStation {
 
 			// Creating ThreadSafeClientConnManager
 			SchemeRegistry schemeRegistry = new SchemeRegistry();
-			schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-			final SSLSocketFactory sslSocketFactory = SSLSocketFactory.getSocketFactory();
+			schemeRegistry.register(new Scheme("http", PlainSocketFactory
+					.getSocketFactory(), 80));
+			final SSLSocketFactory sslSocketFactory = SSLSocketFactory
+					.getSocketFactory();
 			schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
-			ClientConnectionManager cm = new ThreadSafeClientConnManager(httpParameters, schemeRegistry);
-			
+			ClientConnectionManager cm = new ThreadSafeClientConnManager(
+					httpParameters, schemeRegistry);
+
 			// HTTP Client - created once and using cookies
 			DefaultHttpClient client = new DefaultHttpClient(cm, httpParameters);
-			
+
 			HttpGet request = new HttpGet();
 			request.setURI(new URI(createURL()));
 			htmlResult = client.execute(request, new BasicResponseHandler());

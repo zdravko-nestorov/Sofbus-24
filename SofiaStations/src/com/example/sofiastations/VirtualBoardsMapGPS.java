@@ -164,11 +164,12 @@ public class VirtualBoardsMapGPS extends MapActivity {
 			getPosition(m_Location, false);
 
 		} catch (Exception e) {
-			m_Location.setLatitude(Double.parseDouble("42.696492") * 1E6);
-			m_Location.setLongitude(Double.parseDouble("23.326011") * 1E6);
+			m_Location = new Location("");
+			m_Location.setLatitude(Double.parseDouble("42.696492"));
+			m_Location.setLongitude(Double.parseDouble("23.326011"));
 
-			focusCurrentPosition(m_Location, true);
-			
+			focusCurrentPosition(m_Location, false);
+
 			Toast.makeText(this, R.string.map_gps_no_last_location,
 					Toast.LENGTH_SHORT).show();
 		}
@@ -351,14 +352,18 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_gps_distance:
-			try {
-				Location locTap = new Location("");
-				locTap.setLatitude(tapGeoPoint.getLatitudeE6() / 1E6);
-				locTap.setLongitude(tapGeoPoint.getLongitudeE6() / 1E6);
+			boolean check = false;
 
+			try {
 				Location locCurr = new Location("");
 				locCurr.setLatitude(menuGeoPoint.getLatitudeE6() / 1E6);
 				locCurr.setLongitude(menuGeoPoint.getLongitudeE6() / 1E6);
+
+				check = true;
+
+				Location locTap = new Location("");
+				locTap.setLatitude(tapGeoPoint.getLatitudeE6() / 1E6);
+				locTap.setLongitude(tapGeoPoint.getLongitudeE6() / 1E6);
 
 				Float distanceTo = locTap.distanceTo(locCurr);
 				BigDecimal bd = new BigDecimal(distanceTo);
@@ -371,8 +376,13 @@ public class VirtualBoardsMapGPS extends MapActivity {
 								distanceTo.toString()), Toast.LENGTH_SHORT)
 						.show();
 			} catch (Exception e) {
-				Toast.makeText(this, R.string.map_gps_distance_ERR,
-						Toast.LENGTH_SHORT).show();
+				if (check) {
+					Toast.makeText(this, R.string.map_gps_distance_ERR,
+							Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(this, R.string.map_gps_no_last_location,
+							Toast.LENGTH_SHORT).show();
+				}
 			}
 			break;
 		case R.id.menu_gps_focus:

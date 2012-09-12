@@ -43,13 +43,12 @@ public class HtmlResultDirection {
 				&& htmlResult.contains(DIRECTION_BEGIN)
 				&& htmlResult.contains(DIRECTION_END)
 				&& htmlResult.contains(VAR_BEGIN)
-				&& htmlResult.contains(LID_END)
-				&& htmlResult.contains(RID_END)
+				&& htmlResult.contains(LID_END) && htmlResult.contains(RID_END)
 				&& htmlResult.contains(STOP_BEGIN)
 				&& htmlResult.contains(STOP_END)
 				&& htmlResult.contains(SPLITTER)
-				&& htmlResult.contains(STOP_ID_BEGIN)
-				&& htmlResult.contains(STOP_ID_END));
+				&& htmlResult.contains(STOP_ID_BEGIN) && htmlResult
+				.contains(STOP_ID_END));
 
 		if (checkHtmlResult) {
 			directionList = new ArrayList<Direction>(2);
@@ -63,7 +62,7 @@ public class HtmlResultDirection {
 	private ArrayList<Direction> setValues(ArrayList<Direction> directionList) {
 		ArrayList<Direction> list = new ArrayList<Direction>(2);
 		int br = 0;
-		
+
 		// String containing both direction of the vehicle
 		String[] localResult = new String[2];
 		localResult[0] = getValueAfter(htmlResult, INFO_BEGIN);
@@ -73,7 +72,7 @@ public class HtmlResultDirection {
 
 		do {
 			Direction dir = new Direction();
-			
+
 			dir.setVehicleType(vehicleType);
 			dir.setVehicleNumber(vehicleNumber);
 

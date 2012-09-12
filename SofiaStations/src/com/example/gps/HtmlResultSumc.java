@@ -124,13 +124,14 @@ public class HtmlResultSumc {
 					}
 					gpsStation.setNumber(split[3].trim());
 					gpsStation.setTime_stamp(split[5].trim());
-					gpsStation.setDirection(getValueBefore(split[6], "(").trim());
+					gpsStation.setDirection(getValueBefore(split[6], "(")
+							.trim());
 					listOfVehicles.add(gpsStation);
 				}
 			}
 			end = htmlBody.indexOf(INFO_BEGIN, start);
 		}
-		
+
 		return listOfVehicles;
 	}
 
@@ -140,7 +141,7 @@ public class HtmlResultSumc {
 		stationName = getValueBefore(stationName, "(").trim();
 		stationName = getValueAfter(stationName, "&nbsp;");
 		stationName = getValueBefore(stationName, "&nbsp;");
-		
+
 		return stationName;
 	}
 

@@ -78,8 +78,8 @@ public class FavouritesDataSource {
 	public void deleteStation(GPSStation station) {
 		String id = station.getId();
 		Log.d(TAG, "Station deleted with id: " + id);
-		database.delete(FavouritesSQLite.TABLE_FAVOURITES, FavouritesSQLite.COLUMN_ID
-				+ " = " + id, null);
+		database.delete(FavouritesSQLite.TABLE_FAVOURITES,
+				FavouritesSQLite.COLUMN_ID + " = " + id, null);
 	}
 
 	// Get all stations from the database

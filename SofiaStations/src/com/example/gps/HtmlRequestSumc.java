@@ -118,17 +118,20 @@ public class HtmlRequestSumc {
 
 		// Creating ThreadSafeClientConnManager
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
-		schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-		final SSLSocketFactory sslSocketFactory = SSLSocketFactory.getSocketFactory();
+		schemeRegistry.register(new Scheme("http", PlainSocketFactory
+				.getSocketFactory(), 80));
+		final SSLSocketFactory sslSocketFactory = SSLSocketFactory
+				.getSocketFactory();
 		schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
-		ClientConnectionManager cm = new ThreadSafeClientConnManager(httpParameters, schemeRegistry);
-		
+		ClientConnectionManager cm = new ThreadSafeClientConnManager(
+				httpParameters, schemeRegistry);
+
 		// HTTP Client - created once and using cookies
 		DefaultHttpClient client = new DefaultHttpClient(cm, httpParameters);
 
 		Log.d(TAG, stationCode);
 
-		 loadCookiesFromPreferences(context, client);
+		loadCookiesFromPreferences(context, client);
 
 		// Making HttpRequest and showing a progress dialog
 		ProgressDialog progressDialog = new ProgressDialog(context);
@@ -391,6 +394,7 @@ public class HtmlRequestSumc {
 
 		@Override
 		protected void onPreExecute() {
+			progressDialog.setCancelable(false);
 			progressDialog.show();
 		}
 

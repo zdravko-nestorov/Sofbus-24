@@ -20,7 +20,6 @@ import android.view.MenuItem;
 
 import com.example.gps.GPSStationAdapter;
 import com.example.gps.HtmlResultSumc;
-import com.example.schedule_stations.Direction;
 import com.example.station_database.FavouritesDataSource;
 import com.example.station_database.GPSStation;
 
@@ -300,11 +299,13 @@ public class VirtualBoards extends ListActivity {
 
 		@Override
 		protected void onPreExecute() {
+			progressDialog.setCancelable(false);
 			progressDialog.show();
 		}
 
 		@Override
 		protected Intent doInBackground(Void... params) {
+			setInfo();
 			Intent stationInfoIntent = new Intent(context,
 					VirtualBoardsMap.class);
 			bundle.putSerializable("GPSStation", gpsStation);

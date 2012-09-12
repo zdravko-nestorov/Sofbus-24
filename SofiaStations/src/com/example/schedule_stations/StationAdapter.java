@@ -44,8 +44,8 @@ public class StationAdapter extends ArrayAdapter<Station> {
 	// Direction row in the ListView
 	public View setDirectionRow(LayoutInflater inflater, ViewGroup parent,
 			Station station) {
-		View rowView = inflater.inflate(
-				R.layout.activity_station, parent, false);
+		View rowView = inflater.inflate(R.layout.activity_station, parent,
+				false);
 
 		TextView vehicleStation = (TextView) rowView
 				.findViewById(R.id.list_item_section_text);
@@ -57,8 +57,8 @@ public class StationAdapter extends ArrayAdapter<Station> {
 	// Separator row in the ListView
 	public View setSeparatorRow(LayoutInflater inflater, ViewGroup parent,
 			Station station) {
-		View rowView = inflater.inflate(
-				R.layout.activity_station_separator, parent, false);
+		View rowView = inflater.inflate(R.layout.activity_station_separator,
+				parent, false);
 
 		rowView.setOnClickListener(null);
 		rowView.setOnLongClickListener(null);
@@ -68,11 +68,11 @@ public class StationAdapter extends ArrayAdapter<Station> {
 				.findViewById(R.id.vehicle_text_view);
 		TextView vehicleDirection = (TextView) rowView
 				.findViewById(R.id.direction_text_view);
-		
+
 		String vehicleType = station.getVehicleType();
 		String vehicleNumberText = station.getVehicleNumber();
 		String vehicleDirectionText = station.getDirection();
-		
+
 		if (vehicleType.equals("Автобус")) {
 			vehicleNumber.setText(vehicleType + " № " + vehicleNumberText);
 			vehicleDirection.setText(vehicleDirectionText);

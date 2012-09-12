@@ -6,7 +6,7 @@ import java.util.ArrayList;
 // Class containing the information from "http://m.sumc.bg/schedules?tt=xxx&ln=xxx&s=Search" for the chosen vehicle
 // Implementing Serializable, so can transfer the object from one activity to another
 public class Direction implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String vehicleType;

@@ -10,7 +10,7 @@ import com.google.android.maps.OverlayItem;
 public class MyItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
 
 	private ArrayList<OverlayItem> m_overlays = new ArrayList<OverlayItem>();
-	
+
 	public MyItemizedOverlay(Drawable defaultMarker, MapView mapView) {
 		super(boundCenter(defaultMarker), mapView);
 	}
