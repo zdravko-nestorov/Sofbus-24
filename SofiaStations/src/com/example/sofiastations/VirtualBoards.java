@@ -215,7 +215,6 @@ public class VirtualBoards extends ListActivity {
 				Context context = VirtualBoards.this;
 				ProgressDialog progressDialog = new ProgressDialog(context);
 				progressDialog.setMessage("Loading...");
-				progressDialog.show();
 
 				LoadMapAsyncTask loadMap = new LoadMapAsyncTask(bundle,
 						context, progressDialog, gpsStation);

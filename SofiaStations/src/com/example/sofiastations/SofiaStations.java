@@ -2,9 +2,11 @@ package com.example.sofiastations;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -91,10 +93,12 @@ public class SofiaStations extends Activity implements OnClickListener {
 
 			// Check to see if at least one provider is enabled
 			if (myLocation.getLocation(context)) {
-				Intent gps_location = new Intent(context,
-						VirtualBoardsMapGPS.class);
-				context.startActivity(gps_location);
+				ProgressDialog progressDialog = new ProgressDialog(context);
+				progressDialog.setMessage("Loading...");
 
+				LoadMapAsyncTask loadMap = new LoadMapAsyncTask(context,
+						progressDialog);
+				loadMap.execute();
 			} else {
 				new AlertDialog.Builder(this)
 						.setIcon(android.R.drawable.ic_dialog_alert)
@@ -151,6 +155,36 @@ public class SofiaStations extends Activity implements OnClickListener {
 					}
 
 				}).setNegativeButton("Не", null).show();
+	}
+
+	// AsyncTask capable for loading the map
+	private class LoadMapAsyncTask extends AsyncTask<Void, Void, Void> {
+		Context context;
+		ProgressDialog progressDialog;
+
+		public LoadMapAsyncTask(Context context, ProgressDialog progressDialog) {
+			this.context = context;
+			this.progressDialog = progressDialog;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog.setCancelable(false);
+			progressDialog.show();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			Intent gps_location = new Intent(context, VirtualBoardsMapGPS.class);
+			context.startActivity(gps_location);
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			progressDialog.dismiss();
+		}
 	}
 
 }

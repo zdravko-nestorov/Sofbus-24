@@ -54,12 +54,12 @@ public class HtmlRequestStation {
 			HttpParams httpParameters = new BasicHttpParams();
 			// Set the timeout in milliseconds until a connection is
 			// established.
-			int timeoutConnection = 1000;
+			int timeoutConnection = 3000;
 			HttpConnectionParams.setConnectionTimeout(httpParameters,
 					timeoutConnection);
 			// Set the default socket timeout (SO_TIMEOUT)
 			// in milliseconds which is the timeout for waiting for data.
-			int timeoutSocket = 3000;
+			int timeoutSocket = 5000;
 			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
 			// Creating ThreadSafeClientConnManager
