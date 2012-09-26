@@ -21,7 +21,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.gps_map.CurrentLocationOverlay;
 import com.example.gps_map.MyItemizedOverlay;
 import com.example.station_database.FavouritesDataSource;
 import com.example.station_database.GPSStation;
@@ -91,7 +90,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		mapOverlays = mapView.getOverlays();
 
 		// Creating an Overlay with current location
-		myLocationOverlay = new CurrentLocationOverlay(this, mapView);
+		myLocationOverlay = new MyLocationOverlay(this, mapView);
 		myLocationOverlay.enableMyLocation();
 		mapOverlays.add(myLocationOverlay);
 
@@ -188,8 +187,6 @@ public class VirtualBoardsMapGPS extends MapActivity {
 				}
 			}
 		});
-
-		mapView.invalidate();
 	}
 
 	@Override
@@ -417,7 +414,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 
 		// Enable MyLocation and Compass
 		myLocationOverlay.enableMyLocation();
-		myLocationOverlay.enableCompass();
+//		myLocationOverlay.enableCompass();
 	}
 
 	@Override
@@ -430,7 +427,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 
 		// Disable MyLocation, Compass and DB
 		myLocationOverlay.disableMyLocation();
-		myLocationOverlay.disableCompass();
+//		myLocationOverlay.disableCompass();
 		datasource.close();
 	}
 
