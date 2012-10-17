@@ -24,7 +24,7 @@ public class DatabaseUtils {
 			File data = Environment.getDataDirectory();
 
 			if (sd.canWrite()) {
-				String currentDBPath = "//data//com.example.sofiastations//databases//stations.db";
+				String currentDBPath = "//data//bg.znestorov.sofbus24.main//databases//stations.db";
 				String backupDBPath = "stations.db";
 				File currentDB = new File(data, currentDBPath);
 				File backupDB = new File(sd, backupDBPath);

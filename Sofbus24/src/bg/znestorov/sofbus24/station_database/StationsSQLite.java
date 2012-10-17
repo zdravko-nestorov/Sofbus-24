@@ -21,7 +21,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	public static final String COLUMN_LON = "longitude";
 
 	// The Android's default system path of the database
-	private static String DB_PATH = "//data//data//com.example.sofiastations//databases//";
+	private static String DB_PATH = "//data//data//bg.znestorov.sofbus24.main//databases//";
 	private static String DB_NAME = "stations.db";
 
 	private SQLiteDatabase myDataBase;
