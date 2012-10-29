@@ -229,11 +229,12 @@ public class HtmlRequestSumc {
 				Log.d(TAG, "Captcha ID: " + captchaId);
 
 				if (captchaId != null) {
-					Bitmap captchaImage = getCaptchaImage(client, captchaId);
-					if (captchaImage != null) {
-						getCaptchaText(client, context, stationCode, captchaId,
-								captchaImage);
-					}
+					// Making HttpRequest and showing a progress dialog
+					ProgressDialog progressDialog = new ProgressDialog(context);
+					progressDialog.setMessage("Loading...");
+					LoadingCaptcha loadingCaptcha = new LoadingCaptcha(context,
+							progressDialog, client, stationCode, captchaId);
+					loadingCaptcha.execute();
 				} else {
 					startNewActivity(client, context, stationCode, src);
 				}
@@ -427,4 +428,50 @@ public class HtmlRequestSumc {
 		}
 	}
 
+	private class LoadingCaptcha extends AsyncTask<Void, Void, Bitmap> {
+		Context context;
+		ProgressDialog progressDialog;
+		DefaultHttpClient client;
+		String stationCode;
+		String captchaId;
+
+		public LoadingCaptcha(Context context, ProgressDialog progressDialog,
+				DefaultHttpClient client, String stationCode, String captchaId) {
+			this.context = context;
+			this.progressDialog = progressDialog;
+			this.client = client;
+			this.stationCode = stationCode;
+			this.captchaId = captchaId;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog.setCancelable(false);
+			progressDialog.show();
+		}
+
+		@Override
+		protected Bitmap doInBackground(Void... params) {
+			Bitmap captchaImage;
+			try {
+				captchaImage = getCaptchaImage(client, captchaId);
+			} catch (Exception e) {
+				captchaImage = null;
+			}
+
+			return captchaImage;
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			progressDialog.dismiss();
+
+			if (result != null) {
+				getCaptchaText(client, context, stationCode, captchaId, result);
+			} else {
+				startNewActivity(client, context, stationCode,
+						VirtualBoards.htmlErrorMessage);
+			}
+		}
+	}
 }
