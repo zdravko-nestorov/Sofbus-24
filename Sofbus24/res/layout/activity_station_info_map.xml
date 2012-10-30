@@ -7,7 +7,7 @@
         android:id="@+id/mapView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:apiKey="0-wpgZAq9PQEET2f7fD75ruZ9yNYVObIGnXVxWA"
+        android:apiKey="0SWTiW-MuEPFQTxeyW7zIF1mDBoEGo2FZ-458Hg"
         android:clickable="true"
         android:enabled="true" />
 
@@ -26,4 +26,12 @@
         android:paddingTop="6dip"
         android:src="@drawable/satellite" />
 
-</RelativeLayout><!-- android:apiKey="0X9a7CtzKt06jxvnZwBZZi2BhftGQYlZol1BtpA" -->
+</RelativeLayout>
+<!-- DEBUG KEY HOME -->
+<!-- android:apiKey="0-wpgZAq9PQEET2f7fD75ruZ9yNYVObIGnXVxWA" -->
+<!-- REAL KEY HOME -->
+<!-- android:apiKey="0X9a7CtzKt06jxvnZwBZZi2BhftGQYlZol1BtpA" -->
+<!-- DEBUG KEY OFFICE -->
+<!-- android:apiKey="0SWTiW-MuEPFQTxeyW7zIF1mDBoEGo2FZ-458Hg" -->
+<!-- REAL KEY OFFICE -->
+<!-- android:apiKey="0SWTiW-MuEPHpERcBic-xyvcp-TRASkGIQ2g01g" -->
