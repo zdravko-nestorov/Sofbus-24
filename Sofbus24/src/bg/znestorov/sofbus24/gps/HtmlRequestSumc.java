@@ -290,7 +290,10 @@ public class HtmlRequestSumc {
 		bos.close();
 
 		entity.consumeContent();
-		return BitmapFactory.decodeByteArray(result, 0, result.length);
+
+		Bitmap sumcBitmap = BitmapFactory.decodeByteArray(result, 0,
+				result.length);
+		return Bitmap.createScaledBitmap(sumcBitmap, 180, 60, false);
 	}
 
 	// Showing an AlertDialog to enter the CAPTCHA text
