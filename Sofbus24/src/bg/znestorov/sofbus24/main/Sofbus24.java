@@ -2,13 +2,15 @@ package bg.znestorov.sofbus24.main;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputType;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -63,7 +65,7 @@ public class Sofbus24 extends Activity implements OnClickListener {
 
 			// Set an EditText view to get user input
 			final EditText input = new EditText(Sofbus24.this);
-			input.setInputType(InputType.TYPE_CLASS_NUMBER);
+			// input.setInputType(InputType.TYPE_CLASS_NUMBER);
 			alert.setView(input);
 
 			alert.setPositiveButton("Œ ",
@@ -84,7 +86,34 @@ public class Sofbus24 extends Activity implements OnClickListener {
 						}
 					});
 
-			alert.show();
+			final AlertDialog dialog = alert.create();
+			dialog.show();
+
+			// Add Text listener on input field
+			input.addTextChangedListener(new TextWatcher() {
+				public void afterTextChanged(Editable s) {
+				}
+
+				public void beforeTextChanged(CharSequence s, int start,
+						int count, int after) {
+				}
+
+				public void onTextChanged(CharSequence s, int start,
+						int before, int count) {
+					String inputText = input.getText().toString();
+
+					if ((inputText.length() == 0)
+							|| (inputText.length() <= 3 && !inputText
+									.equals(inputText.replaceAll("\\D+", "")))) {
+						dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(
+								false);
+					} else {
+						dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(
+								true);
+					}
+				}
+			});
+
 			break;
 		case R.id.btn_map:
 			MyLocation myLocation = new MyLocation();
