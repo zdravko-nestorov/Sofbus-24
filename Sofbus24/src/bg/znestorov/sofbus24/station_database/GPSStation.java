@@ -15,6 +15,14 @@ public class GPSStation implements Serializable {
 	private String lat;
 	private String lon;
 
+	public GPSStation() {
+	}
+
+	public GPSStation(String id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
 	public String getId() {
 		return id;
 	}

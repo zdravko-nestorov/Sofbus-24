@@ -88,6 +88,7 @@ public class Sofbus24 extends Activity implements OnClickListener {
 
 			final AlertDialog dialog = alert.create();
 			dialog.show();
+			dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
 
 			// Add Text listener on input field
 			input.addTextChangedListener(new TextWatcher() {

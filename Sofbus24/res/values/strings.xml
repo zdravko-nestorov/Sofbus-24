@@ -30,6 +30,9 @@
     <string name="st_ch_menu_item">Вижте спирките върху картата</string>
     <string name="st_ch_menu_err_title">Грешка</string>
     <string name="st_ch_menu_err_msg">Спирките по тази линия не могат да бъдат визуализирани, тъй като не са намерени в базата от данни.</string>
+    <string name="st_list_schedule">Разписание</string>
+    <string name="st_list_gps">Виртуални табла</string>
+    <string name="st_list_fav">Добави в любими</string>
 
     <!-- Station Info -->
     <string name="st_inf_name" formatted="false">Информация за %s</string>

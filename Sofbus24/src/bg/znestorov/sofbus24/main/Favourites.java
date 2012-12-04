@@ -3,10 +3,13 @@ package bg.znestorov.sofbus24.main;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -172,7 +175,33 @@ public class Favourites extends ListActivity {
 						}
 					});
 
-			alert.show();
+			final AlertDialog dialog = alert.create();
+			dialog.show();
+			dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
+
+			// Add Text listener on input field
+			input.addTextChangedListener(new TextWatcher() {
+				public void afterTextChanged(Editable s) {
+				}
+
+				public void beforeTextChanged(CharSequence s, int start,
+						int count, int after) {
+				}
+
+				public void onTextChanged(CharSequence s, int start,
+						int before, int count) {
+					String inputText = input.getText().toString();
+
+					if (inputText.length() == 0) {
+						dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(
+								false);
+					} else {
+						dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(
+								true);
+					}
+				}
+			});
+
 			break;
 		case R.id.fav_menu_delete:
 			GPSStation station = (GPSStation) getListAdapter().getItem(

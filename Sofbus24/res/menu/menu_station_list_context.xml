@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/st_list_schedule"
+        android:title="@string/st_list_schedule"/>
+    <item
+        android:id="@+id/st_list_gps"
+        android:title="@string/st_list_gps"/>
+    <item
+        android:id="@+id/st_list_fav"
+        android:title="@string/st_list_fav"/>
+
+</menu>

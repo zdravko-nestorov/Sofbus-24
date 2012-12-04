@@ -51,11 +51,13 @@ public class StationsDataSource {
 				values.put(StationsSQLite.COLUMN_LAT, station.getLat());
 			} else {
 				station.setLat("EMPTY");
+				values.put(StationsSQLite.COLUMN_LAT, station.getLat());
 			}
 			if (station.getLon() != null && !"".equals(station.getLon())) {
 				values.put(StationsSQLite.COLUMN_LON, station.getLon());
 			} else {
 				station.setLon("EMPTY");
+				values.put(StationsSQLite.COLUMN_LON, station.getLon());
 			}
 
 			// Insert the ContentValues data into the database

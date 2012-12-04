@@ -1,6 +1,7 @@
 package bg.znestorov.sofbus24.main;
 
 import static bg.znestorov.sofbus24.utils.StationCoordinates.getLocation;
+import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
 import java.util.ArrayList;
 
@@ -14,23 +15,35 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.info_station.HtmlRequestStation;
 import bg.znestorov.sofbus24.info_station.HtmlResultStation;
 import bg.znestorov.sofbus24.schedule_stations.Direction;
 import bg.znestorov.sofbus24.schedule_stations.DirectionTransfer;
 import bg.znestorov.sofbus24.schedule_stations.Station;
 import bg.znestorov.sofbus24.schedule_stations.StationAdapter;
+import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
+import bg.znestorov.sofbus24.station_database.GPSStation;
 
 public class StationListView extends ListActivity {
+
+	FavouritesDataSource datasource;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Context context = StationListView.this;
+		datasource = new FavouritesDataSource(context);
+
 		DirectionTransfer directionTransfer;
 		try {
 			directionTransfer = (DirectionTransfer) getIntent()
@@ -48,6 +61,7 @@ public class StationListView extends ListActivity {
 			}
 
 			setListAdapter(new StationAdapter(context, stations));
+			registerForContextMenu(getListView());
 		} else {
 			Direction direction = directionTransfer.getDirection2();
 			for (int i = 0; i < direction.getStations().size(); i++) {
@@ -55,7 +69,20 @@ public class StationListView extends ListActivity {
 			}
 
 			setListAdapter(new StationAdapter(context, stations));
+			registerForContextMenu(getListView());
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		datasource.open();
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		datasource.close();
+		super.onPause();
 	}
 
 	@Override
@@ -64,7 +91,7 @@ public class StationListView extends ListActivity {
 		String selectedValue = station.getStation();
 		Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
 
-		// Getting the coordinates of the station
+		// Getting the station number
 		String stationCode = station.getStation();
 		if (stationCode.contains("(") && stationCode.contains(")")) {
 			stationCode = stationCode.substring(stationCode.indexOf("(") + 1,
@@ -78,7 +105,69 @@ public class StationListView extends ListActivity {
 		LoadStationAsyncTask loadStationAsyncTask = new LoadStationAsyncTask(
 				context, progressDialog, station, stationCode);
 		loadStationAsyncTask.execute();
+	}
 
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_station_list_context, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+
+		Station station = (Station) getListAdapter().getItem((int) info.id);
+		String selectedValue = station.getStation();
+
+		// Getting the name and the number of the station
+		String name = getValueBefore(selectedValue, "(").trim();
+		String stationCode = selectedValue;
+		if (stationCode.contains("(") && stationCode.contains(")")) {
+			stationCode = stationCode.substring(stationCode.indexOf("(") + 1,
+					stationCode.indexOf(")"));
+		}
+
+		switch (item.getItemId()) {
+		case R.id.st_list_schedule:
+			// Getting the HtmlResult and showing a ProgressDialog
+			Context context = StationListView.this;
+			ProgressDialog progressDialog = new ProgressDialog(context);
+			progressDialog.setMessage("Loading...");
+			LoadStationAsyncTask loadStationAsyncTask = new LoadStationAsyncTask(
+					context, progressDialog, station, stationCode);
+			loadStationAsyncTask.execute();
+
+			Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
+			break;
+		case R.id.st_list_gps:
+			new HtmlRequestSumc().getInformation(StationListView.this,
+					stationCode, null);
+
+			Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
+			break;
+		case R.id.st_list_fav:
+			datasource.open();
+
+			GPSStation gpsStationFav = new GPSStation(stationCode, name);
+
+			if (datasource.getStation(gpsStationFav) == null) {
+				datasource.createStation(gpsStationFav);
+				Toast.makeText(this, R.string.st_inf_fav_ok, Toast.LENGTH_SHORT)
+						.show();
+			} else {
+				Toast.makeText(this, R.string.st_inf_fav_err,
+						Toast.LENGTH_SHORT).show();
+			}
+			datasource.close();
+
+			break;
+		}
+
+		return true;
 	}
 
 	// AsyncTask capable of loading the HttpRequestTimeStamp
