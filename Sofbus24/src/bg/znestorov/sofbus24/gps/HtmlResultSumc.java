@@ -4,6 +4,8 @@ import static bg.znestorov.sofbus24.utils.Utils.getValueAfter;
 import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import bg.znestorov.sofbus24.station_database.GPSStation;
 
@@ -131,6 +133,39 @@ public class HtmlResultSumc {
 			}
 			end = htmlBody.indexOf(INFO_BEGIN, start);
 		}
+
+		Collections.sort(listOfVehicles, new Comparator<GPSStation>() {
+			public int compare(GPSStation station1, GPSStation station2) {
+				// Get first vehicle number (only digits)
+				String station1Number = station1.getNumber();
+				station1Number = station1Number.replaceAll("\\D+", "");
+
+				// Get second vehicle number (only digits)
+				String station2Number = station2.getNumber();
+				station2Number = station2Number.replaceAll("\\D+", "");
+
+				// Compare vehicles' numbers
+				try {
+					return Integer.valueOf(station1Number).compareTo(
+							Integer.valueOf(station2Number));
+				} catch (NumberFormatException e) {
+					return 0;
+				}
+			}
+		});
+
+		Collections.sort(listOfVehicles, new Comparator<GPSStation>() {
+			public int compare(GPSStation station1, GPSStation station2) {
+				// Get first vehicle type
+				String station1Type = station1.getType();
+
+				// Get second vehicle type
+				String station2Type = station2.getType();
+
+				// Compare vehicles' types
+				return station1Type.compareTo(station2Type);
+			}
+		});
 
 		return listOfVehicles;
 	}
