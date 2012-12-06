@@ -3,7 +3,7 @@
     <!-- MAIN -->
     <string name="app_name">Софбус 24</string>
     <string name="btn_gps">Виртуални табла</string>
-    <string name="gps_msg">Моля въведете номер на спирка:</string>
+    <string name="gps_msg">Моля въведете код или име на спирка:</string>
     <string name="btn_map">GPS времена - Google Maps</string>
     <string name="btn_schedule">Разписания</string>
     <string name="btn_favourite">Любими</string>
@@ -52,7 +52,7 @@
     <string name="fav_menu_delete">Изтрий</string>
 
     <!-- About -->
-    <string name="about_label">Софбус 24 (версия 1.0.0)</string>
+    <string name="about_label">Софбус 24 (версия 1.1.0)</string>
     <string name="about_text">\ \tAndroid системата предоставя подробна информация, свързана с използването на градския транпорт 
         в София, като часове на пристигане в реално време, разписания на превозните средства, разположения на спирките 
         на територията на София, както и локализиране на най-близките спирки, в зависимост от текущото местоположение.
@@ -73,9 +73,9 @@
     <string name="gps_error_noCoordinates">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
 
     <!-- GPS Station Choice -->
-    <string name="gps_station_choice_name">Изберете спирка</string>
-    <string name="gps_station_choice_error_internet">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново</string>
-    <string name="gps_station_choice_error_info">Няма намерена информация</string>
+    <string name="gps_station_choice_name">Изберете спирка:</string>
+    <string name="gps_station_choice_error_internet">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
+    <string name="gps_station_choice_error_info">Няма намерена информация.</string>
 
     <!-- SUMC GPS -->
     <string name="sumc_captcha">Тест за сигурност</string>

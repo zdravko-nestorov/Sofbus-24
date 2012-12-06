@@ -207,7 +207,7 @@ public class HtmlRequestSumc {
 
 		try {
 			final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(
-					parameters(stationCode, captchaText, captchaId));
+					parameters(stationCode, captchaText, captchaId), "UTF-8");
 			result.setEntity(entity);
 		} catch (UnsupportedEncodingException e) {
 			throw new IllegalStateException("Not supported default encoding?",
@@ -223,13 +223,14 @@ public class HtmlRequestSumc {
 		final List<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>(
 				5);
 		result.addAll(Arrays.asList(new BasicNameValuePair(QUERY_BUS_STOP_ID,
-				"000000" + stationCode), new BasicNameValuePair(QUERY_GO, "1"),
+				stationCode), new BasicNameValuePair(QUERY_GO, "1"),
 				new BasicNameValuePair(QUERY_O, "1")));
 
 		if (captchaText != null && captchaId != null) {
 			result.add(new BasicNameValuePair(QUERY_CAPTCHA_ID, captchaId));
 			result.add(new BasicNameValuePair(QUERY_CAPTCHA_TEXT, captchaText));
 		}
+
 		return result;
 	}
 

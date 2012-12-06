@@ -116,7 +116,7 @@ public class Sofbus24 extends Activity implements OnClickListener {
 					String inputText = input.getText().toString();
 
 					if ((inputText.length() == 0)
-							|| (inputText.length() <= 3 && !inputText
+							|| (inputText.length() <= 2 && !inputText
 									.equals(inputText.replaceAll("\\D+", "")))) {
 						dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(
 								false);
