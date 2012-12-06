@@ -53,6 +53,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.VirtualBoards;
+import bg.znestorov.sofbus24.main.VirtualBoardsStationChoice;
+import bg.znestorov.sofbus24.utils.Constants;
 
 public class HtmlRequestSumc {
 
@@ -92,6 +94,17 @@ public class HtmlRequestSumc {
 
 	// Coordinates of the station
 	private static String[] coordinates = new String[2];
+
+	// Search status - number or name of the station
+	private String searchType = null;
+
+	public HtmlRequestSumc() {
+		this.searchType = Constants.SEARCH_TYPE_NUMBER;
+	}
+
+	public HtmlRequestSumc(String searchType) {
+		this.searchType = searchType;
+	}
 
 	// Getting the source file of the HTTP request and opening a new Activity
 	public void getInformation(Context context, String stationCode,
@@ -371,7 +384,15 @@ public class HtmlRequestSumc {
 
 		saveCookiesToPreferences(context, client);
 		client.getConnectionManager().shutdown();
-		Intent intent = new Intent(context, VirtualBoards.class);
+
+		Intent intent = new Intent();
+		// Check what activity to start according to the search type - number or
+		// name of the station
+		if (searchType.equals(Constants.SEARCH_TYPE_NUMBER)) {
+			intent = new Intent(context, VirtualBoards.class);
+		} else {
+			intent = new Intent(context, VirtualBoardsStationChoice.class);
+		}
 		intent.putExtra(VirtualBoards.keyHtmlResult, text);
 		context.startActivity(intent);
 	}

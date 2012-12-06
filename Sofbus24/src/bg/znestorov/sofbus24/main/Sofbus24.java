@@ -17,12 +17,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.gps_map.MyLocation;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.DatabaseUtils;
 
 public class Sofbus24 extends Activity implements OnClickListener {
 
 	Context context = Sofbus24.this;
-	HtmlRequestSumc sumc = new HtmlRequestSumc();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,19 @@ public class Sofbus24 extends Activity implements OnClickListener {
 								int whichButton) {
 							String stationID = input.getText().toString();
 
-							sumc.getInformation(context, stationID, null);
+							try {
+								Integer.parseInt(stationID);
+
+								new HtmlRequestSumc(
+										Constants.SEARCH_TYPE_NUMBER)
+										.getInformation(context, stationID,
+												null);
+							} catch (NumberFormatException e) {
+								new HtmlRequestSumc(Constants.SEARCH_TYPE_NAME)
+										.getInformation(context, stationID,
+												null);
+							}
+
 						}
 					});
 

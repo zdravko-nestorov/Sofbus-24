@@ -72,6 +72,11 @@
     <string name="gps_error_noBusEmpty">Спирката не съществува</string>
     <string name="gps_error_noCoordinates">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
 
+    <!-- GPS Station Choice -->
+    <string name="gps_station_choice_name">Изберете спирка</string>
+    <string name="gps_station_choice_error_internet">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново</string>
+    <string name="gps_station_choice_error_info">Няма намерена информация</string>
+
     <!-- SUMC GPS -->
     <string name="sumc_captcha">Тест за сигурност</string>
     <string name="sumc_captcha_msg">Моля въведете символите от изображението:</string>
