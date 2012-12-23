@@ -24,6 +24,7 @@ import bg.znestorov.sofbus24.gps_map.MyItemizedOverlay;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.station_database.StationsDataSource;
+import bg.znestorov.sofbus24.utils.Constants;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -398,6 +399,8 @@ public class VirtualBoardsMapGPS extends MapActivity {
 			break;
 		case R.id.menu_gps_help:
 			Intent i = new Intent(this, Help.class);
+			i.putExtra(Constants.HELP_ACTIVITY,
+					getString(R.string.map_help_text));
 			startActivity(i);
 			break;
 		}

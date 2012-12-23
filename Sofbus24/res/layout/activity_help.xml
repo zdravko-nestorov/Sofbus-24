@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             android:autoLink="web"
             android:clickable="false"
-            android:text="@string/map_help_text"
             android:textSize="15dip" />
 
         <Button

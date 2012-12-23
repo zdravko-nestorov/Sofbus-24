@@ -10,4 +10,7 @@ public class Constants {
 	// Setting the size of the TextBox in VirtualBoardStationChoice
 	public static final int TEXT_BOX_SIZE = 18;
 
+	// Help activity
+	public static final String HELP_ACTIVITY = "HELP";
+
 }

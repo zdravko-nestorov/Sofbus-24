@@ -17,6 +17,7 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import bg.znestorov.sofbus24.schedule_stations.Direction;
 import bg.znestorov.sofbus24.schedule_stations.DirectionTransfer;
+import bg.znestorov.sofbus24.utils.Constants;
 
 public class StationTabView extends TabActivity {
 
@@ -123,7 +124,13 @@ public class StationTabView extends TabActivity {
 							}
 						}).show();
 			}
+			break;
 
+		case R.id.menu_help:
+			Intent i = new Intent(this, Help.class);
+			i.putExtra(Constants.HELP_ACTIVITY,
+					getString(R.string.st_ch_help_text));
+			startActivity(i);
 			break;
 		}
 		return true;

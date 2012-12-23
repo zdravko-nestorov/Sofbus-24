@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/vb_station_choice_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="7dip"
+        android:textSize="17dip"
+        android:visibility="visible" />
+
+</LinearLayout>

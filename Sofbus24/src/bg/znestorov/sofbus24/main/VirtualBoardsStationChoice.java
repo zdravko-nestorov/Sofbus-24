@@ -5,11 +5,14 @@ import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +20,7 @@ import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.gps.HtmlResultSumcChoice;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.vb_station_choice.VBStationChoiceAdapter;
 
 public class VirtualBoardsStationChoice extends ListActivity {
 
@@ -35,6 +39,7 @@ public class VirtualBoardsStationChoice extends ListActivity {
 		// Removing title of the window
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+		// Set Content View
 		setContentView(R.layout.activity_gps_station_choice);
 
 		context = VirtualBoardsStationChoice.this;
@@ -73,10 +78,10 @@ public class VirtualBoardsStationChoice extends ListActivity {
 			} else {
 				// Use the SimpleCursorAdapter to show the
 				// elements in a ListView
-				errorLabel.setText(getString(R.string.gps_station_choice_name));
-				ArrayAdapter<GPSStation> adapter = new ArrayAdapter<GPSStation>(
-						this, android.R.layout.simple_list_item_1, station_list);
-				setListAdapter(adapter);
+				errorLabel.setText(Html.fromHtml(String
+						.format(getString(R.string.gps_station_choice_name))));
+				errorLabel.setTypeface(null, Typeface.BOLD);
+				setListAdapter(new VBStationChoiceAdapter(context, station_list));
 			}
 		} else {
 			errorLabel.setTextSize(Constants.TEXT_BOX_SIZE
@@ -96,6 +101,19 @@ public class VirtualBoardsStationChoice extends ListActivity {
 		HtmlRequestSumc sumc = new HtmlRequestSumc();
 
 		sumc.getInformation(context, station.getId(), coordinates);
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		Rect dialogBounds = new Rect();
+		getWindow().getDecorView().getHitRect(dialogBounds);
+
+		// Tapped outside so we finish the activity
+		if (!dialogBounds.contains((int) event.getX(), (int) event.getY())) {
+			this.finish();
+		}
+
+		return super.dispatchTouchEvent(event);
 	}
 
 }

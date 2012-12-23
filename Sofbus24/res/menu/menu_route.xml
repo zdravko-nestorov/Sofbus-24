@@ -4,6 +4,10 @@
     <item
         android:id="@+id/menu_route"
         android:icon="@drawable/route"
-        android:title="@string/st_ch_menu_item"/>
+        android:title="@string/st_ch_menu_item_route"/>
+    <item
+        android:id="@+id/menu_help"
+        android:icon="@drawable/help"
+        android:title="@string/st_ch_menu_item_help"/>
 
 </menu>
