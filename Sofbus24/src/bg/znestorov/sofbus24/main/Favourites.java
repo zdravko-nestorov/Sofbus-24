@@ -2,6 +2,7 @@ package bg.znestorov.sofbus24.main;
 
 import java.util.List;
 
+import android.R.drawable;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -122,6 +123,10 @@ public class Favourites extends ListActivity {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_favourites_context, menu);
+
+		// Set menu title and header
+		menu.setHeaderTitle(getString(R.string.st_list_cont_menu_header));
+		menu.setHeaderIcon(drawable.ic_menu_info_details);
 	}
 
 	@SuppressWarnings("unchecked")

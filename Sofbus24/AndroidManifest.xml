@@ -78,6 +78,7 @@
         </activity>
         <activity
             android:name=".StationListView"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/st_ch_name"
             android:screenOrientation="portrait" >
         </activity>

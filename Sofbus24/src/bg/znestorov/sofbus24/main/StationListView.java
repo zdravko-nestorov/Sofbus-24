@@ -5,6 +5,7 @@ import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
 import java.util.ArrayList;
 
+import android.R.drawable;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
@@ -113,6 +114,10 @@ public class StationListView extends ListActivity {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_station_list_context, menu);
+		
+		// Set menu title and header
+		menu.setHeaderTitle(getString(R.string.st_list_cont_menu_header));
+		menu.setHeaderIcon(drawable.ic_menu_info_details);
 	}
 
 	@Override

@@ -40,6 +40,7 @@
          * &lt;b>Добави в любими&lt;/b> - добавяне на спирката към избрани;&lt;br/>&lt;br/>
         Посредством контекстно меню, се предоставя възможност и за визуализирането на маршрута на избраното превозното 
         средство.</string>
+    <string name="st_list_cont_menu_header">Изберете</string>
     <string name="st_list_schedule">Разписание</string>
     <string name="st_list_gps">Виртуални табла</string>
     <string name="st_list_fav">Добави в любими</string>
