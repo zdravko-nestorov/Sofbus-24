@@ -32,6 +32,7 @@ public class HtmlResultSumc {
 	// Constructor variables (passed through other class)
 	private final String stationCode;
 	private final String htmlSrc;
+	private final String tempHtmlSrc;
 
 	// Needed information for creating body
 	private static final String BODY_START = "<div class=\"arrivals\">";
@@ -47,6 +48,7 @@ public class HtmlResultSumc {
 	public HtmlResultSumc(String stationCode, String htmlSrc) {
 		this.stationCode = stationCode;
 		this.htmlSrc = htmlSrc;
+		this.tempHtmlSrc = htmlSrc;
 	}
 
 	// Define if the result contains needed data or not
@@ -107,6 +109,7 @@ public class HtmlResultSumc {
 						INFO_SPLITTER, INFO_SPLIT_SIZE);
 				if (split.length == INFO_SPLIT_SIZE) {
 					GPSStation gpsStation = new GPSStation();
+
 					gpsStation.setId(getStationId(htmlSrc));
 					gpsStation.setName(getStationName(htmlSrc));
 
@@ -177,6 +180,30 @@ public class HtmlResultSumc {
 		stationName = getValueAfter(stationName, "&nbsp;");
 		stationName = getValueBefore(stationName, "&nbsp;");
 
+		// Special case when the number of the station is in some stations'
+		// names
+		if (stationName.length() > 100) {
+			stationName = getValueBefore(tempHtmlSrc, "(" + stationCode + ")");
+
+			if (stationName.contains("&nbsp;")) {
+				stationName = stationName.substring(0,
+						stationName.lastIndexOf("&nbsp;"));
+			}
+
+			if (stationName.contains("&nbsp;")) {
+				stationName = stationName.substring(stationName
+						.lastIndexOf("&nbsp;") + 6);
+			}
+
+			if (stationName.contains("<b>")) {
+				stationName = stationName.substring(stationName
+						.lastIndexOf("<b>") + 3);
+				stationName = getValueAfter(stationName, ".");
+			}
+
+			stationName = stationName.trim();
+		}
+
 		return stationName;
 	}
 
@@ -184,6 +211,10 @@ public class HtmlResultSumc {
 		String stationId = getValueAfter(htmlSrc, "<b>спирка");
 		stationId = getValueAfter(stationId, "(");
 		stationId = getValueBefore(stationId, ")").trim();
+
+		if (stationId.length() > 100) {
+			stationId = stationCode;
+		}
 
 		return stationId;
 	}
