@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="bg.znestorov.sofbus24.main"
     android:configChanges="keyboardHidden|orientation"
-    android:versionCode="3"
+    android:versionCode="4"
     android:versionName="1.11" >
 
     <uses-permission android:name="android.permission.INTERNET" />
