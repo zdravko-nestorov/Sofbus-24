@@ -47,17 +47,31 @@ public class StationsDataSource {
 			ContentValues values = new ContentValues();
 			values.put(StationsSQLite.COLUMN_ID, station.getId());
 			values.put(StationsSQLite.COLUMN_NAME, station.getName());
+			
 			if (station.getLat() != null && !"".equals(station.getLat())) {
 				values.put(StationsSQLite.COLUMN_LAT, station.getLat());
 			} else {
-				station.setLat("EMPTY");
-				values.put(StationsSQLite.COLUMN_LAT, station.getLat());
+				// Check for the station in the DB
+				if (this.getStation(station.getId()) != null) {
+					values.put(StationsSQLite.COLUMN_LAT,
+							this.getStation(station.getId()).getLat());
+				} else {
+					station.setLat("EMPTY");
+					values.put(StationsSQLite.COLUMN_LAT, station.getLat());
+				}
 			}
+
 			if (station.getLon() != null && !"".equals(station.getLon())) {
 				values.put(StationsSQLite.COLUMN_LON, station.getLon());
 			} else {
-				station.setLon("EMPTY");
-				values.put(StationsSQLite.COLUMN_LON, station.getLon());
+				// Check for the station in the DB
+				if (this.getStation(station.getId()) != null) {
+					values.put(StationsSQLite.COLUMN_LON,
+							this.getStation(station.getId()).getLon());
+				} else {
+					station.setLon("EMPTY");
+					values.put(StationsSQLite.COLUMN_LON, station.getLon());
+				}
 			}
 
 			// Insert the ContentValues data into the database

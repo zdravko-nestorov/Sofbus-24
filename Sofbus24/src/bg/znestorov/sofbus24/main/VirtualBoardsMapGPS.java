@@ -312,13 +312,19 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	// Adding station marker according to GeoPoint coordinates
 	private void getFavouriteStations(GPSStation gpsStation) {
 		// Creating GeoPoint
-		double lat = Double.parseDouble(gpsStation.getLat());
-		double lng = Double.parseDouble(gpsStation.getLon());
-		GeoPoint geoPoint = new GeoPoint((int) (lat * 1E6), (int) (lng * 1E6));
+		try {
+			double lat = Double.parseDouble(gpsStation.getLat());
+			double lng = Double.parseDouble(gpsStation.getLon());
+			GeoPoint geoPoint = new GeoPoint((int) (lat * 1E6),
+					(int) (lng * 1E6));
 
-		OverlayItem overlayItem = new OverlayItem(geoPoint,
-				gpsStation.getName() + " (" + gpsStation.getId() + ")", "");
-		fItemizedOverlay.addOverlay(overlayItem);
+			OverlayItem overlayItem = new OverlayItem(geoPoint,
+					gpsStation.getName() + " (" + gpsStation.getId() + ")", "");
+			fItemizedOverlay.addOverlay(overlayItem);
+		} catch (Exception e) {
+			Log.d(TAG, "No such station - " + gpsStation.getName() + " ("
+					+ gpsStation.getId() + ")");
+		}
 	}
 
 	// Set the favorite stations on the map
@@ -371,7 +377,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 				Toast.makeText(
 						this,
 						String.format(getString(R.string.map_gps_distance_OK),
-								distanceTo.toString()), Toast.LENGTH_SHORT)
+								distanceTo.toString()), Toast.LENGTH_LONG)
 						.show();
 			} catch (Exception e) {
 				if (check) {

@@ -21,9 +21,11 @@ public class FavouritesDataSource {
 	private String[] allColumns = { FavouritesSQLite.COLUMN_ID,
 			FavouritesSQLite.COLUMN_NAME, FavouritesSQLite.COLUMN_LAT,
 			FavouritesSQLite.COLUMN_LON };
+	private Context context;
 
 	public FavouritesDataSource(Context context) {
 		dbHelper = new FavouritesSQLite(context);
+		this.context = context;
 	}
 
 	public void open() throws SQLException {
@@ -39,20 +41,39 @@ public class FavouritesDataSource {
 		if (getStation(station) == null) {
 			// Creating ContentValues object and insert the station data in it
 			ContentValues values = new ContentValues();
+
 			values.put(FavouritesSQLite.COLUMN_ID, station.getId());
 			values.put(FavouritesSQLite.COLUMN_NAME, station.getName());
+
+			StationsDataSource stationDS = new StationsDataSource(context);
+			stationDS.open();
+
 			if (station.getLat() != null && !"".equals(station.getLat())) {
-				values.put(FavouritesSQLite.COLUMN_LAT, station.getLat());
+				values.put(StationsSQLite.COLUMN_LAT, station.getLat());
 			} else {
-				station.setLat("EMPTY");
-				values.put(FavouritesSQLite.COLUMN_LAT, station.getLat());
+				// Check for the station in the DB
+				if (stationDS.getStation(station) != null) {
+					values.put(StationsSQLite.COLUMN_LAT,
+							stationDS.getStation(station).getLat());
+				} else {
+					station.setLat("EMPTY");
+					values.put(StationsSQLite.COLUMN_LAT, station.getLat());
+				}
 			}
+
 			if (station.getLon() != null && !"".equals(station.getLon())) {
-				values.put(FavouritesSQLite.COLUMN_LON, station.getLon());
+				values.put(StationsSQLite.COLUMN_LON, station.getLon());
 			} else {
-				station.setLon("EMPTY");
-				values.put(FavouritesSQLite.COLUMN_LON, station.getLon());
+				// Check for the station in the DB
+				if (stationDS.getStation(station) != null) {
+					values.put(StationsSQLite.COLUMN_LON,
+							stationDS.getStation(station).getLon());
+				} else {
+					station.setLon("EMPTY");
+					values.put(StationsSQLite.COLUMN_LON, station.getLon());
+				}
 			}
+			stationDS.close();
 
 			// Insert the ContentValues data into the database
 			database.insert(FavouritesSQLite.TABLE_FAVOURITES, null, values);
