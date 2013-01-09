@@ -18,7 +18,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.gps_map.MyItemizedOverlay;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
@@ -69,10 +73,45 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	public static GeoPoint tapGeoPoint;
 	public static Location tapLocation;
 
+	// Sliding status bar parameters
+	private static Animation slideIn;
+	private static Animation slideOut;
+	private static TextView locationStatusView;
+	private static TextView locationStatusViewBackground;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_station_info_map);
+
+		// Sliding animations for the status bar
+		slideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
+		slideIn.setDuration(Constants.TIME_STATUS_BAR_SLIDE_IN);
+		slideOut = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
+		slideOut.setDuration(Constants.TIME_STATUS_BAR_SLIDE_OUT);
+
+		// Set the status bar slide out animation to start after the slide in
+		slideOut.setStartOffset(Constants.TIME_STATUS_BAR_SLIDE_IN);
+
+		// Set the status bar background invisible once it is gone
+		slideOut.setAnimationListener(new AnimationListener() {
+			public void onAnimationStart(Animation animation) {
+			}
+
+			public void onAnimationRepeat(Animation animation) {
+			}
+
+			public void onAnimationEnd(Animation animation) {
+				locationStatusViewBackground.setVisibility(View.INVISIBLE);
+			}
+		});
+
+		// Show the status bar
+		locationStatusView = (TextView) findViewById(R.id.message_location_status);
+		locationStatusViewBackground = (TextView) findViewById(R.id.message_location_background);
+		locationStatusView.startAnimation(slideIn);
+		locationStatusView.setVisibility(View.VISIBLE);
+		locationStatusViewBackground.setVisibility(View.VISIBLE);
 
 		tapGeoPoint = null;
 
@@ -111,6 +150,10 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		// Define a network listener that responds to location updates
 		m_NetworkLocationListener = new LocationListener() {
 			public void onLocationChanged(Location location) {
+				// Hide the status bar
+				locationStatusView.startAnimation(slideOut);
+				locationStatusView.setVisibility(View.INVISIBLE);
+
 				getPosition(location, false);
 			}
 
@@ -132,6 +175,10 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		// Define a GPS listener that responds to location updates
 		m_GPSLocationListener = new LocationListener() {
 			public void onLocationChanged(Location location) {
+				// Hide the status bar
+				locationStatusView.startAnimation(slideOut);
+				locationStatusView.setVisibility(View.INVISIBLE);
+
 				getPosition(location, false);
 			}
 

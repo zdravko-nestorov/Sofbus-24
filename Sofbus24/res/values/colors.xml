@@ -1,0 +1,6 @@
+<resources>
+
+    <drawable name="color_gps_map_status_bar_background">#ffea0a</drawable>
+    <drawable name="color_gps_map_status_bar_text">#000000</drawable>
+
+</resources>

@@ -102,6 +102,7 @@
     <string name="map_gps_no_last_location">Моля изчакайте координатите Ви да бъдат засечени.</string>
     <string name="map_gps_distance_OK" formatted="false">Разтоянието от текущата позиция до избраната от Вас спирка е %s метра.</string>
     <string name="map_gps_distance_ERR">Моля изберете спирка.</string>
+    <string name="map_gps_location_status">Изчисляване на текущите координати&#8230;</string>
 
     <!-- MAP GPS HELP -->
     <string name="map_help_label">Помощ</string>

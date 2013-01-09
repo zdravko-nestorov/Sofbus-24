@@ -11,6 +11,30 @@
         android:clickable="true"
         android:enabled="true" />
 
+    <TextView
+        android:id="@+id/message_location_background"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/color_gps_map_status_bar_background"
+        android:text="@string/map_gps_location_status"
+        android:textColor="@drawable/color_gps_map_status_bar_background"
+        android:textSize="15sp"
+        android:textStyle="bold|italic"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/message_location_status"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/color_gps_map_status_bar_background"
+        android:gravity="center"
+        android:text="@string/map_gps_location_status"
+        android:textColor="@drawable/color_gps_map_status_bar_text"
+        android:textSize="15sp"
+        android:textStyle="bold|italic"
+        android:visibility="invisible" />
+
     <ImageView
         android:id="@+id/satelite_img_button"
         android:layout_width="45dip"
@@ -18,7 +42,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="14dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="20dp"
         android:contentDescription="@string/st_inf_satelite_image"
         android:paddingBottom="6dip"
         android:paddingLeft="6dip"
@@ -26,8 +50,7 @@
         android:paddingTop="6dip"
         android:src="@drawable/satellite" />
 
-</RelativeLayout>
-<!-- DEBUG KEY HOME -->
+</RelativeLayout> <!-- DEBUG KEY HOME -->
 <!-- android:apiKey="0-wpgZAq9PQEET2f7fD75ruZ9yNYVObIGnXVxWA" -->
 <!-- REAL KEY HOME -->
 <!-- android:apiKey="0X9a7CtzKt05Y5wAVLgokBntS7pvCrrAA40Y5Nw" -->

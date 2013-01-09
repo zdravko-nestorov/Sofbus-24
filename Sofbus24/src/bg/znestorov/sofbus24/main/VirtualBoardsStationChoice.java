@@ -97,10 +97,8 @@ public class VirtualBoardsStationChoice extends ListActivity {
 		String selectedRow = station.getName();
 		Toast.makeText(this, selectedRow, Toast.LENGTH_SHORT).show();
 
-		String[] coordinates = { station.getLat(), station.getLon() };
 		HtmlRequestSumc sumc = new HtmlRequestSumc();
-
-		sumc.getInformation(context, station.getId(), coordinates);
+		sumc.getInformation(context, station.getId(), null);
 	}
 
 	@Override

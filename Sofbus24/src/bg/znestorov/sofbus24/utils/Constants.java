@@ -13,4 +13,8 @@ public class Constants {
 	// Help activity
 	public static final String HELP_ACTIVITY = "HELP";
 
+	// GPS Map - time for the status bar
+	public static final int TIME_STATUS_BAR_SLIDE_IN = 1000;
+	public static final int TIME_STATUS_BAR_SLIDE_OUT = 750;
+
 }
