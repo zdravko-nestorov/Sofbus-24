@@ -28,6 +28,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Preferences"
+            android:label="@string/gps_name" >
+        </activity>
         <!-- Виртуални табла -->
         <activity
             android:name=".VirtualBoards"
