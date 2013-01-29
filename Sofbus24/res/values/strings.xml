@@ -119,4 +119,17 @@
     <string name="hs_button5">Бутон 5</string>
     <string name="hs_button6">Бутон 6</string>
 
+    <!-- PREFERENCE -->
+    <string name="pref_category_common">ОБЩИ</string>
+    <string name="common_splash_screen_title">Splash Screen</string>
+    <string name="common_splash_screen_summary">Визуалзиране на Splash Screen при стартиране на програмата</string>
+    <string name="common_exit_title">Съобщение при изход</string>
+    <string name="common_exit_summary">Използване на диалогов прозорец при изход</string>
+    <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
+    <string name="stations_time_title">Час на пристигане</string>
+    <string name="stations_time_summary">(или оставащо време)</string>
+    <string name="pref_category_map">Карта</string>
+    <string name="map_satellite_title">Сателитна карта</string>
+    <string name="map_satellite_summary">(или Street View карта)</string>
+
 </resources>

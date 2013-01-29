@@ -1,52 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <PreferenceCategory android:title="First Category" >
-
+    <PreferenceCategory android:title="@string/pref_category_common" >
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="checkboxPref"
-            android:summary="This preference can be true or false"
-            android:title="Checkbox Preference" />
-
-        <ListPreference
-            android:defaultValue="digiGreen"
-            android:key="listPref"
-            android:summary="This preference allows to select an item in a array"
-            android:title="List Preference" />
+            android:key="spashScreen"
+            android:summary="@string/common_splash_screen_summary"
+            android:title="@string/common_splash_screen_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="exitAlert"
+            android:summary="@string/common_exit_summary"
+            android:title="@string/common_exit_title" />
     </PreferenceCategory>
-
-    <PreferenceCategory android:title="Second Category" >
-
-        <EditTextPreference
-            android:name="EditText Preference"
-            android:defaultValue="Nothing"
-            android:key="editTextPref"
-            android:summary="This allows you to enter a string"
-            android:title="Edit This Text" />
-
-        <RingtonePreference
-            android:name="Ringtone Preference"
-            android:key="ringtonePref"
-            android:summary="Select a ringtone"
-            android:title="Ringtones" />
-
-        <PreferenceScreen
-            android:key="SecondPrefScreen"
-            android:summary="This is a second PreferenceScreen"
-            android:title="Second PreferenceScreen" >
-
-            <EditTextPreference
-                android:name="An other EditText Preference"
-                android:key="SecondEditTextPref"
-                android:summary="This is a preference in the second PreferenceScreen"
-                android:title="Edit text" />
-        </PreferenceScreen>
-
-        <Preference
-            android:key="customPref"
-            android:summary="This works almost like a button"
-            android:title="Custom Preference" />
+    <PreferenceCategory android:title="@string/pref_category_stations" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="time"
+            android:summary="@string/stations_time_summary"
+            android:title="@string/stations_time_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_map" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="satellite"
+            android:summary="@string/map_satellite_summary"
+            android:title="@string/map_satellite_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

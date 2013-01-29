@@ -10,6 +10,8 @@
     android:paddingRight="20dp"
     android:paddingTop="15dp" >
 
+    <include layout="@layout/action_bar" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

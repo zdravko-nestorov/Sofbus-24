@@ -174,8 +174,9 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			context.startActivity(favourites);
 			break;
 		case R.id.btn_about:
-			Intent i = new Intent(this, About.class);
-			startActivity(i);
+			startActivity(new Intent(this, Preferences.class));
+			// Intent i = new Intent(this, About.class);
+			// startActivity(i);
 			break;
 		case R.id.btn_exit:
 			onBackPressed();
