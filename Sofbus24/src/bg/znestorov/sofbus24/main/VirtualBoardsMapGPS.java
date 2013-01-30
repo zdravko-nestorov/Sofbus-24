@@ -82,7 +82,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	private static TextView locationStatusViewBackground;
 
 	// Shared Preferences (option menu)
-	SharedPreferences sharedPreferences;
+	private SharedPreferences sharedPreferences;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

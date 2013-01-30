@@ -2,8 +2,6 @@ package bg.znestorov.sofbus24.utils;
 
 import java.math.BigDecimal;
 
-import android.util.Log;
-
 // Creating methods for easy processing data
 public class Utils {
 
@@ -54,23 +52,24 @@ public class Utils {
 		String[] differenceArr = difference.split(":");
 
 		if (differenceArr.length == 2) {
+
 			if ("".equals(differenceArr[0]) || "0".equals(differenceArr[0])) {
 				if (differenceArr[1].length() == 0) {
-					differenceArr[1] = "0ì.";
-				} else if (differenceArr[1].length() == 1) {
-					differenceArr[1] = differenceArr[1] + "ì.";
+					differenceArr[1] = "0ì";
+				} else {
+					differenceArr[1] = differenceArr[1] + "ì";
 				}
 
-				diff = differenceArr[1];
+				diff = "~" + differenceArr[1];
 			} else {
-				differenceArr[0] = differenceArr[0] + "÷.";
+				differenceArr[0] = differenceArr[0] + "÷";
 				if (differenceArr[1].length() == 0) {
-					differenceArr[1] = "0ì.";
-				} else if (differenceArr[1].length() == 1) {
-					differenceArr[1] = differenceArr[1] + "ì.";
+					differenceArr[1] = "0ì";
+				} else {
+					differenceArr[1] = differenceArr[1] + "ì";
 				}
 
-				diff = differenceArr[0] + " " + differenceArr[1];
+				diff = "~" + differenceArr[0] + " " + differenceArr[1];
 			}
 		}
 

@@ -19,7 +19,7 @@ public class GPSStationAdapter extends ArrayAdapter<GPSStation> {
 	private final Context context;
 	private final ArrayList<GPSStation> stations;
 
-	SharedPreferences sharedPreferences;
+	private SharedPreferences sharedPreferences;
 
 	public GPSStationAdapter(Context context, ArrayList<GPSStation> stations) {
 		super(context, R.layout.activity_gps_station, stations);

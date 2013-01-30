@@ -53,7 +53,7 @@ public class HtmlResultSumc {
 	private static final int INFO_SPLIT_SIZE = 7;
 
 	// Shared Preferences (option menu)
-	SharedPreferences sharedPreferences;
+	private SharedPreferences sharedPreferences;
 
 	public HtmlResultSumc(Context context, String stationCode, String htmlSrc) {
 		this.context = context;
@@ -249,17 +249,51 @@ public class HtmlResultSumc {
 
 		if (timeStamp != null && !"".equals(timeStamp) && timeGPS) {
 			String[] tempTimeStamp = timeStamp.split(",");
+			String[] tempTimeStampAM = new String[tempTimeStamp.length];
+			int br = 0;
 
 			for (int i = 0; i < tempTimeStamp.length; i++) {
+				if (tempTimeStamp[i].startsWith("00:")) {
+					tempTimeStamp[i] = tempTimeStamp[i]
+							.replaceAll("00:", "24:");
+
+					tempTimeStampAM[br] = tempTimeStamp[i];
+					br++;
+				} else {
+					remainingTime += ", "
+							+ Utils.getDifference(tempTimeStamp[i], currTime);
+				}
+			}
+
+			for (int i = 0; i < br; i++) {
 				remainingTime += ", "
-						+ Utils.getDifference(tempTimeStamp[i], currTime);
+						+ Utils.getDifference(tempTimeStampAM[i], currTime);
 			}
 
 			if (remainingTime.startsWith(",")) {
 				remainingTime = remainingTime.substring(1).trim();
 			}
 		} else {
-			remainingTime = timeStamp;
+			String[] tempTimeStamp = timeStamp.split(",");
+			String[] tempTimeStampAM = new String[tempTimeStamp.length];
+			int br = 0;
+
+			for (int i = 0; i < tempTimeStamp.length; i++) {
+				if (tempTimeStamp[i].startsWith("00:")) {
+					tempTimeStampAM[br] = tempTimeStamp[i];
+					br++;
+				} else {
+					remainingTime += ", " + tempTimeStamp[i];
+				}
+			}
+
+			for (int i = 0; i < br; i++) {
+				remainingTime += ", " + tempTimeStampAM[i];
+			}
+
+			if (remainingTime.startsWith(",")) {
+				remainingTime = remainingTime.substring(1).trim();
+			}
 		}
 
 		return remainingTime;

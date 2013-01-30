@@ -241,12 +241,12 @@ public final class R {
          */
         public static final int map_help_label=0x7f080047;
         public static final int map_help_text=0x7f080048;
-        public static final int map_satellite_summary=0x7f08005a;
-        public static final int map_satellite_title=0x7f080059;
+        public static final int map_satellite_summary=0x7f08005c;
+        public static final int map_satellite_title=0x7f08005b;
         /**  PREFERENCE 
          */
         public static final int pref_category_common=0x7f080050;
-        public static final int pref_category_map=0x7f080058;
+        public static final int pref_category_map=0x7f08005a;
         public static final int pref_category_stations=0x7f080055;
         public static final int ss_gps_map_msg_body=0x7f08000a;
         public static final int ss_gps_map_msg_title=0x7f080009;
@@ -275,6 +275,8 @@ public final class R {
         public static final int st_list_schedule=0x7f08001a;
         public static final int stations_timeGPS_summary=0x7f080057;
         public static final int stations_timeGPS_title=0x7f080056;
+        public static final int stations_timeSchedule_summary=0x7f080059;
+        public static final int stations_timeSchedule_title=0x7f080058;
         public static final int sumc_button_label=0x7f08003d;
         /**  SUMC GPS 
          */

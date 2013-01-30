@@ -36,13 +36,14 @@ import bg.znestorov.sofbus24.station_database.GPSStation;
 
 public class StationListView extends ListActivity {
 
+	Context context;
 	FavouritesDataSource datasource;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Context context = StationListView.this;
+		context = StationListView.this;
 		datasource = new FavouritesDataSource(context);
 
 		DirectionTransfer directionTransfer;
@@ -211,7 +212,7 @@ public class StationListView extends ListActivity {
 			progressDialog.dismiss();
 
 			// HtmlResult processing and creating an time_stamp
-			String time_stamp = HtmlResultStation.showResult(result);
+			String time_stamp = HtmlResultStation.showResult(context, result);
 
 			// Getting the coordinates of the station
 			String[] coordinates = getLocation(context, stationCode);
