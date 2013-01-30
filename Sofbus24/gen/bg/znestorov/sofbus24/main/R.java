@@ -273,8 +273,8 @@ public final class R {
         public static final int st_list_fav=0x7f08001c;
         public static final int st_list_gps=0x7f08001b;
         public static final int st_list_schedule=0x7f08001a;
-        public static final int stations_time_summary=0x7f080057;
-        public static final int stations_time_title=0x7f080056;
+        public static final int stations_timeGPS_summary=0x7f080057;
+        public static final int stations_timeGPS_title=0x7f080056;
         public static final int sumc_button_label=0x7f08003d;
         /**  SUMC GPS 
          */

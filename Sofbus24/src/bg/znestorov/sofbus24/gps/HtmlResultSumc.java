@@ -3,11 +3,17 @@ package bg.znestorov.sofbus24.gps;
 import static bg.znestorov.sofbus24.utils.Utils.getValueAfter;
 import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import bg.znestorov.sofbus24.station_database.GPSStation;
+import bg.znestorov.sofbus24.utils.Utils;
 
 public class HtmlResultSumc {
 
@@ -30,6 +36,7 @@ public class HtmlResultSumc {
 	private final ArrayList<GPSStation> listOfVehicles = new ArrayList<GPSStation>();
 
 	// Constructor variables (passed through other class)
+	private final Context context;
 	private final String stationCode;
 	private final String htmlSrc;
 	private final String tempHtmlSrc;
@@ -45,7 +52,11 @@ public class HtmlResultSumc {
 	private static final String INFO_SPLITTER = "<a href=\"|\">|<b>|</b>|</a>&nbsp;-&nbsp;|<br />";
 	private static final int INFO_SPLIT_SIZE = 7;
 
-	public HtmlResultSumc(String stationCode, String htmlSrc) {
+	// Shared Preferences (option menu)
+	SharedPreferences sharedPreferences;
+
+	public HtmlResultSumc(Context context, String stationCode, String htmlSrc) {
+		this.context = context;
 		this.stationCode = stationCode;
 		this.htmlSrc = htmlSrc;
 		this.tempHtmlSrc = htmlSrc;
@@ -128,7 +139,8 @@ public class HtmlResultSumc {
 						gpsStation.setType(vehicleType);
 					}
 					gpsStation.setNumber(split[3].trim());
-					gpsStation.setTime_stamp(split[5].trim());
+					gpsStation.setTime_stamp(setRemainingTimeStamp(split[5]
+							.trim()));
 					gpsStation.setDirection(getValueBefore(split[6], "(")
 							.trim());
 					listOfVehicles.add(gpsStation);
@@ -217,6 +229,40 @@ public class HtmlResultSumc {
 		}
 
 		return stationId;
+	}
+
+	private String setRemainingTimeStamp(String timeStamp) {
+		String remainingTime = "";
+
+		// Get current time
+		Calendar cal = Calendar.getInstance();
+		cal.getTime();
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		String currTime = sdf.format(cal.getTime());
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this.context);
+
+		// Get "exitAlert" value from the Shared Preferences
+		boolean timeGPS = sharedPreferences.getBoolean("timeGPS", false);
+
+		if (timeStamp != null && !"".equals(timeStamp) && timeGPS) {
+			String[] tempTimeStamp = timeStamp.split(",");
+
+			for (int i = 0; i < tempTimeStamp.length; i++) {
+				remainingTime += ", "
+						+ Utils.getDifference(tempTimeStamp[i], currTime);
+			}
+
+			if (remainingTime.startsWith(",")) {
+				remainingTime = remainingTime.substring(1).trim();
+			}
+		} else {
+			remainingTime = timeStamp;
+		}
+
+		return remainingTime;
 	}
 
 }

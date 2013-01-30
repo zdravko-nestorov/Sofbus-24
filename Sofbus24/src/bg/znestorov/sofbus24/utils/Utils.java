@@ -2,6 +2,8 @@ package bg.znestorov.sofbus24.utils;
 
 import java.math.BigDecimal;
 
+import android.util.Log;
+
 // Creating methods for easy processing data
 public class Utils {
 
@@ -24,7 +26,7 @@ public class Utils {
 	}
 
 	// Get the difference between two hours in format HH:MM
-	public static String getDiff(String afterTime, String currTime) {
+	public static String getDifference(String afterTime, String currTime) {
 		String diff = "";
 		int afterTimeMilis = 0;
 		int currTimeMilis = 0;
@@ -43,8 +45,6 @@ public class Utils {
 
 		}
 
-		diff = afterTimeMilis + " - " + currTimeMilis + " = " + diff;
-
 		return diff;
 	}
 
@@ -54,13 +54,24 @@ public class Utils {
 		String[] differenceArr = difference.split(":");
 
 		if (differenceArr.length == 2) {
-			if (differenceArr[1].length() == 0) {
-				differenceArr[1] = "00";
-			} else if (differenceArr[1].length() == 1) {
-				differenceArr[1] = "0" + differenceArr[1];
-			}
+			if ("".equals(differenceArr[0]) || "0".equals(differenceArr[0])) {
+				if (differenceArr[1].length() == 0) {
+					differenceArr[1] = "0ì.";
+				} else if (differenceArr[1].length() == 1) {
+					differenceArr[1] = differenceArr[1] + "ì.";
+				}
 
-			diff = differenceArr[0] + ":" + differenceArr[1];
+				diff = differenceArr[1];
+			} else {
+				differenceArr[0] = differenceArr[0] + "÷.";
+				if (differenceArr[1].length() == 0) {
+					differenceArr[1] = "0ì.";
+				} else if (differenceArr[1].length() == 1) {
+					differenceArr[1] = differenceArr[1] + "ì.";
+				}
+
+				diff = differenceArr[0] + " " + differenceArr[1];
+			}
 		}
 
 		return diff;

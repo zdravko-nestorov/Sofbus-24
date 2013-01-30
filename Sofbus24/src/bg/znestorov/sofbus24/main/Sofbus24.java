@@ -7,8 +7,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -23,6 +25,7 @@ import bg.znestorov.sofbus24.utils.DatabaseUtils;
 public class Sofbus24 extends Activity implements OnClickListener {
 
 	Context context = Sofbus24.this;
+	SharedPreferences sharedPreferences;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,10 @@ public class Sofbus24 extends Activity implements OnClickListener {
 
 		// Setting activity title
 		this.setTitle(getString(R.string.ss_name));
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
 
 		// DatabaseUtils.copyDatabase(context);
 		// DatabaseUtils.generateStationsXML(context);
@@ -179,7 +186,16 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			// startActivity(i);
 			break;
 		case R.id.btn_exit:
-			onBackPressed();
+			// Get "exitAlert" value from the Shared Preferences
+			boolean exitAlert = sharedPreferences
+					.getBoolean("exitAlert", false);
+
+			if (exitAlert) {
+				onBackPressed();
+			} else {
+				finish();
+			}
+
 			break;
 		}
 	}

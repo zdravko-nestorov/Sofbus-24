@@ -6,12 +6,14 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -78,6 +80,9 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	private static Animation slideOut;
 	private static TextView locationStatusView;
 	private static TextView locationStatusViewBackground;
+
+	// Shared Preferences (option menu)
+	SharedPreferences sharedPreferences;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -221,16 +226,28 @@ public class VirtualBoardsMapGPS extends MapActivity {
 					Toast.LENGTH_SHORT).show();
 		}
 
+		// Set default map view
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+
+		// Get "exitAlert" value from the Shared Preferences
+		boolean satellitePref = sharedPreferences
+				.getBoolean("satellite", false);
+
+		if (satellitePref) {
+			mapView.setSatellite(true);
+		} else {
+			mapView.setSatellite(false);
+		}
+
 		// Switching between satellite and street view
 		ImageView satellite = (ImageView) findViewById(R.id.satelite_img_button);
 		satellite.setOnClickListener(new OnClickListener() {
-			@SuppressWarnings("deprecation")
 			public void onClick(View v) {
 				if (mapView.isSatellite()) {
 					mapView.setSatellite(false);
-					mapView.setStreetView(true);
 				} else {
-					mapView.setStreetView(false);
 					mapView.setSatellite(true);
 				}
 			}

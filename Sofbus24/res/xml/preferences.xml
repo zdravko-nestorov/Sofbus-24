@@ -16,9 +16,9 @@
     <PreferenceCategory android:title="@string/pref_category_stations" >
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="time"
-            android:summary="@string/stations_time_summary"
-            android:title="@string/stations_time_title" />
+            android:key="timeGPS"
+            android:summary="@string/stations_timeGPS_summary"
+            android:title="@string/stations_timeGPS_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_map" >
         <CheckBoxPreference

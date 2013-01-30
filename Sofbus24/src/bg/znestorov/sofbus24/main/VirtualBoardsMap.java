@@ -2,8 +2,10 @@ package bg.znestorov.sofbus24.main;
 
 import java.util.List;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -19,10 +21,12 @@ import com.google.android.maps.OverlayItem;
 
 // Creating a MapActivity with the station position and info about the coming vehicle
 public class VirtualBoardsMap extends MapActivity {
+
 	MapView mapView;
 	MapController mapController;
 	GeoPoint geoPoint;
 	GPSStation station;
+	SharedPreferences sharedPreferences;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,16 +80,28 @@ public class VirtualBoardsMap extends MapActivity {
 
 		mapOverlays.add(itemizedOverlay);
 
+		// Set default map view
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+
+		// Get "exitAlert" value from the Shared Preferences
+		boolean satellitePref = sharedPreferences
+				.getBoolean("satellite", false);
+
+		if (satellitePref) {
+			mapView.setSatellite(true);
+		} else {
+			mapView.setSatellite(false);
+		}
+
 		// Switching between satellite and street view
 		ImageView satellite = (ImageView) findViewById(R.id.satelite_img_button);
 		satellite.setOnClickListener(new OnClickListener() {
-			@SuppressWarnings("deprecation")
 			public void onClick(View v) {
 				if (mapView.isSatellite()) {
 					mapView.setSatellite(false);
-					mapView.setStreetView(true);
 				} else {
-					mapView.setStreetView(false);
 					mapView.setSatellite(true);
 				}
 			}

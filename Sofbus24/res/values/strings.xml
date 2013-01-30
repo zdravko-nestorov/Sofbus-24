@@ -126,8 +126,8 @@
     <string name="common_exit_title">Съобщение при изход</string>
     <string name="common_exit_summary">Използване на диалогов прозорец при изход</string>
     <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
-    <string name="stations_time_title">Час на пристигане</string>
-    <string name="stations_time_summary">(или оставащо време)</string>
+    <string name="stations_timeGPS_title">Оставащо време</string>
+    <string name="stations_timeGPS_summary">(или времена на пристигане)</string>
     <string name="pref_category_map">Карта</string>
     <string name="map_satellite_title">Сателитна карта</string>
     <string name="map_satellite_summary">(или Street View карта)</string>

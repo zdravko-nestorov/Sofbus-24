@@ -6,12 +6,14 @@ import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 import java.util.Arrays;
 import java.util.List;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -33,6 +35,8 @@ public class StationInfoRouteMap extends MapActivity {
 	MapView mapView;
 	MapController mapController;
 	GeoPoint geoPoint;
+
+	SharedPreferences sharedPreferences;
 
 	class MapOverlay extends com.google.android.maps.Overlay {
 		@Override
@@ -116,16 +120,28 @@ public class StationInfoRouteMap extends MapActivity {
 			mapOverlays.add(itemizedOverlay);
 		}
 
+		// Set default map view
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+
+		// Get "exitAlert" value from the Shared Preferences
+		boolean satellitePref = sharedPreferences
+				.getBoolean("satellite", false);
+
+		if (satellitePref) {
+			mapView.setSatellite(true);
+		} else {
+			mapView.setSatellite(false);
+		}
+
 		// Switching between satellite and street view
 		ImageView satellite = (ImageView) findViewById(R.id.satelite_img_button);
 		satellite.setOnClickListener(new OnClickListener() {
-			@SuppressWarnings("deprecation")
 			public void onClick(View v) {
 				if (mapView.isSatellite()) {
 					mapView.setSatellite(false);
-					mapView.setStreetView(true);
 				} else {
-					mapView.setStreetView(false);
 					mapView.setSatellite(true);
 				}
 			}

@@ -3,6 +3,8 @@ package bg.znestorov.sofbus24.gps;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,8 @@ import bg.znestorov.sofbus24.station_database.GPSStation;
 public class GPSStationAdapter extends ArrayAdapter<GPSStation> {
 	private final Context context;
 	private final ArrayList<GPSStation> stations;
+
+	SharedPreferences sharedPreferences;
 
 	public GPSStationAdapter(Context context, ArrayList<GPSStation> stations) {
 		super(context, R.layout.activity_gps_station, stations);
@@ -85,8 +89,21 @@ public class GPSStationAdapter extends ArrayAdapter<GPSStation> {
 		String vehicleType = station.getType();
 		String vehicleNumberText = station.getNumber();
 		String vehicleDirectionText = station.getDirection();
-		String vehicleTimeStampText = "Времена на пристигане: "
-				+ station.getTime_stamp();
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this.context);
+
+		// Get "exitAlert" value from the Shared Preferences
+		boolean time = sharedPreferences.getBoolean("time", false);
+		String vehicleTimeStampText = "";
+
+		if (time) {
+			vehicleTimeStampText = "Оставащо време: " + station.getTime_stamp();
+		} else {
+			vehicleTimeStampText = "Времена на пристигане: "
+					+ station.getTime_stamp();
+		}
 
 		if (vehicleType.equals("Автобус")) {
 			imageView.setImageResource(R.drawable.bus_icon);

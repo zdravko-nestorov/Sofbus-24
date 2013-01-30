@@ -46,6 +46,8 @@ public class VirtualBoards extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		context = VirtualBoards.this;
+
 		dialog = new AlertDialog.Builder(VirtualBoards.this);
 
 		String stationCode = null;
@@ -64,7 +66,8 @@ public class VirtualBoards extends ListActivity {
 			lat = tempArray[2];
 			lon = tempArray[3];
 
-			HtmlResultSumc result = new HtmlResultSumc(stationCode, htmlSrc);
+			HtmlResultSumc result = new HtmlResultSumc(context, stationCode,
+					htmlSrc);
 			station_list = new ArrayList<GPSStation>();
 			station_list = result.showResult();
 			String time_stamp = station_list.get(0).getTime_stamp();
@@ -84,9 +87,6 @@ public class VirtualBoards extends ListActivity {
 			} else if (time_stamp.contains(noInfo)) {
 				showNoInfoDialog(station_list.get(0).getName());
 			} else {
-				// Setting activity title
-				context = VirtualBoards.this;
-
 				// Getting the coordinates from FAVOURITES
 				if (lat != null && !lat.equals("EMPTY") && lon != null
 						&& !lon.equals("EMPTY")) {
