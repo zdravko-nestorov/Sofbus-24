@@ -27,6 +27,9 @@ public class Sofbus24 extends Activity implements OnClickListener {
 	Context context = Sofbus24.this;
 	SharedPreferences sharedPreferences;
 
+	// Exit alert dialog
+	boolean exitAlert = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,6 +41,9 @@ public class Sofbus24 extends Activity implements OnClickListener {
 		// Get SharedPreferences from option menu
 		sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
+
+		// Get "exitAlert" value from the Shared Preferences
+		exitAlert = sharedPreferences.getBoolean("exitAlert", false);
 
 		// DatabaseUtils.copyDatabase(context);
 		// DatabaseUtils.generateStationsXML(context);
@@ -186,10 +192,6 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			// startActivity(i);
 			break;
 		case R.id.btn_exit:
-			// Get "exitAlert" value from the Shared Preferences
-			boolean exitAlert = sharedPreferences
-					.getBoolean("exitAlert", false);
-
 			if (exitAlert) {
 				onBackPressed();
 			} else {
@@ -202,16 +204,23 @@ public class Sofbus24 extends Activity implements OnClickListener {
 
 	@Override
 	public void onBackPressed() {
-		new AlertDialog.Builder(this)
-				.setIcon(android.R.drawable.ic_dialog_alert)
-				.setTitle(R.string.btn_exit).setMessage(R.string.exit_msg)
-				.setCancelable(true)
-				.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int i) {
-						finish();
-					}
+		if (exitAlert) {
+			new AlertDialog.Builder(this)
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setTitle(R.string.btn_exit)
+					.setMessage(R.string.exit_msg)
+					.setCancelable(true)
+					.setPositiveButton("Да",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int i) {
+									finish();
+								}
 
-				}).setNegativeButton("Не", null).show();
+							}).setNegativeButton("Не", null).show();
+		} else {
+			finish();
+		}
 	}
 
 	// AsyncTask capable for loading the map

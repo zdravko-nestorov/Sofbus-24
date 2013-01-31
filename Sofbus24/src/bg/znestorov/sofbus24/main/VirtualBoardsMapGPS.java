@@ -241,8 +241,27 @@ public class VirtualBoardsMapGPS extends MapActivity {
 			mapView.setSatellite(false);
 		}
 
+		// Get "compass" value from the Shared Preferences
+		boolean compass = sharedPreferences.getBoolean("compass", false);
+
+		if (compass) {
+			myLocationOverlay.enableCompass();
+		} else {
+			myLocationOverlay.disableCompass();
+		}
+
 		// Switching between satellite and street view
 		ImageView satellite = (ImageView) findViewById(R.id.satelite_img_button);
+
+		// Get "mapView" value from the Shared Preferences
+		boolean mapViewPref = sharedPreferences.getBoolean("mapView", true);
+
+		if (mapViewPref) {
+			satellite.setVisibility(View.VISIBLE);
+		} else {
+			satellite.setVisibility(View.INVISIBLE);
+		}
+
 		satellite.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (mapView.isSatellite()) {
@@ -292,6 +311,21 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		List<GPSStation> stations = new ArrayList<GPSStation>();
 
 		datasource.open();
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
+
+		// Get "closestStations" value from the Shared Preferences
+		String closestStations = sharedPreferences.getString("closestStations",
+				"8");
+		try {
+			StationsDataSource.stations_count = Integer
+					.parseInt(closestStations);
+		} catch (NumberFormatException e) {
+			StationsDataSource.stations_count = 8;
+		}
+
 		stations = datasource.getClosestStations(location);
 
 		return stations;

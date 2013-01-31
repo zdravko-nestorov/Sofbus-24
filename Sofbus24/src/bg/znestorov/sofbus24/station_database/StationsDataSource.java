@@ -26,7 +26,7 @@ public class StationsDataSource {
 			StationsSQLite.COLUMN_LON };
 
 	// Radius of stations
-	private static final int stations_count = 8;
+	public static int stations_count = 8;
 
 	public StationsDataSource(Context context) {
 		dbHelper = new StationsSQLite(context);
@@ -47,7 +47,7 @@ public class StationsDataSource {
 			ContentValues values = new ContentValues();
 			values.put(StationsSQLite.COLUMN_ID, station.getId());
 			values.put(StationsSQLite.COLUMN_NAME, station.getName());
-			
+
 			if (station.getLat() != null && !"".equals(station.getLat())) {
 				values.put(StationsSQLite.COLUMN_LAT, station.getLat());
 			} else {

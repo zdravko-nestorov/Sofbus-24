@@ -106,8 +106,8 @@
 
     <!-- MAP GPS HELP -->
     <string name="map_help_label">Помощ</string>
-    <string name="map_help_text">\ Първоначално визуализираните спирки са 8-те най-близки около вас (&lt;i>синият маркер&lt;/i>),
-        както и добавените в любими. Избирайки точка на карата ще се визуализират и 8-те най-близки около нея.&lt;br/>&lt;br/>Натискайки 
+    <string name="map_help_text">\ Първоначално визуализираните спирки са 8-те (по подразбиране) най-близки около вас (&lt;i>синият маркер&lt;/i>),
+        както и добавените в любими. Избирайки точка на карата ще се визуализират и 8-те (по подразбиране) най-близки около нея.&lt;br/>&lt;br/>Натискайки 
         върху всяка спирка, се появява балонче с информация относно нейното име и номер. Това балонче е &lt;b>линк&lt;/b>        към подробна информация относно разписанието на преминаващите коли през съответната спирка.</string>
     <string name="map_help_btn_label">OK</string>
 
@@ -124,14 +124,20 @@
     <string name="common_splash_screen_title">Splash Screen</string>
     <string name="common_splash_screen_summary">Визуалзиране на Splash Screen при стартиране на програмата</string>
     <string name="common_exit_title">Съобщение при изход</string>
-    <string name="common_exit_summary">Използване на диалогов прозорец при изход</string>
+    <string name="common_exit_summary">Използване на диалогов прозорец при изход (изисква рестарт)</string>
     <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
     <string name="stations_timeGPS_title">Виртуални табла</string>
     <string name="stations_timeGPS_summary">Оставащо време или времена на пристигане</string>
     <string name="stations_timeSchedule_title">Разписания</string>
     <string name="stations_timeSchedule_summary">Оставащо време или времена на пристигане</string>
+    <string name="stations_closestST_title">Брой най-близки спирки</string>
+    <string name="stations_closestST_summary">Колко спирки да се визуализират около текущото местоположение или избрана точка</string>
     <string name="pref_category_map">КАРТА</string>
     <string name="map_satellite_title">Сателитна карта</string>
     <string name="map_satellite_summary">(или Street View карта)</string>
+    <string name="map_compass_title">Компас</string>
+    <string name="map_compass_summary">Покажи стрелка за ориентация на посоката (в GPS GoogleMaps)</string>
+    <string name="map_mapView_title">Режим на картата</string>
+    <string name="map_mapView_summary">Покажи икона за смяна на режима на картата (в горния десен ъгъл)</string>
 
 </resources>

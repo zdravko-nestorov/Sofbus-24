@@ -7,7 +7,7 @@
         android:id="@+id/mapView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:apiKey="0SWTiW-MuEPFQTxeyW7zIF1mDBoEGo2FZ-458Hg"
+        android:apiKey="0-wpgZAq9PQEET2f7fD75ruZ9yNYVObIGnXVxWA"
         android:clickable="true"
         android:enabled="true" />
 
@@ -42,7 +42,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="14dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="14dp"
         android:contentDescription="@string/st_inf_satelite_image"
         android:paddingBottom="6dip"
         android:paddingLeft="6dip"

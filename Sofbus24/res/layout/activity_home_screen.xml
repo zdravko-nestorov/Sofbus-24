@@ -10,7 +10,7 @@
     android:paddingRight="20dp"
     android:paddingTop="15dp" >
 
-    <include layout="@layout/action_bar" />
+    <!-- <include layout="@layout/action_bar" /> -->
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,6 +19,7 @@
         android:layout_marginBottom="15dp"
         android:gravity="center"
         android:text="@string/app_name"
+        android:textColor="#000000"
         android:textSize="36sp"
         android:textStyle="bold" />
 

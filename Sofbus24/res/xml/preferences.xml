@@ -24,6 +24,14 @@
             android:key="timeSchedule"
             android:summary="@string/stations_timeSchedule_summary"
             android:title="@string/stations_timeSchedule_title" />
+
+        <ListPreference
+            android:defaultValue="8"
+            android:entries="@array/closestStations"
+            android:entryValues="@array/closestStationsValues"
+            android:key="closestStations"
+            android:summary="@string/stations_closestST_summary"
+            android:title="@string/stations_closestST_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_map" >
         <CheckBoxPreference
@@ -31,6 +39,16 @@
             android:key="satellite"
             android:summary="@string/map_satellite_summary"
             android:title="@string/map_satellite_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="compass"
+            android:summary="@string/map_compass_summary"
+            android:title="@string/map_compass_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="mapView"
+            android:summary="@string/map_mapView_summary"
+            android:title="@string/map_mapView_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

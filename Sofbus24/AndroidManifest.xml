@@ -19,7 +19,7 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity
-            android:name=".Sofbus24"
+            android:name=".SplashScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
@@ -30,8 +30,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".Sofbus24"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".Preferences"
-            android:label="@string/gps_name" >
+            android:label="@string/gps_name"
+            android:screenOrientation="portrait" >
         </activity>
         <!-- Виртуални табла -->
         <activity

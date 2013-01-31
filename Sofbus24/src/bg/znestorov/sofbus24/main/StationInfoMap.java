@@ -111,6 +111,16 @@ public class StationInfoMap extends MapActivity {
 
 		// Switching between satellite and street view
 		ImageView satellite = (ImageView) findViewById(R.id.satelite_img_button);
+
+		// Get "mapView" value from the Shared Preferences
+		boolean mapViewPref = sharedPreferences.getBoolean("mapView", true);
+
+		if (mapViewPref) {
+			satellite.setVisibility(View.VISIBLE);
+		} else {
+			satellite.setVisibility(View.INVISIBLE);
+		}
+
 		satellite.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				if (mapView.isSatellite()) {

@@ -263,4 +263,20 @@
         <item>МЛАДЕЖКИ ТЕАТЪР - УЛ. ОБИКОЛНА</item>
     </array>
 
+    <!-- Closest stations -->
+    <string-array name="closestStations">
+        <item name="6">6 спирки</item>
+        <item name="7">7 спирки</item>
+        <item name="8">8 спирки</item>
+        <item name="9">9 спирки</item>
+        <item name="10">10 спирки</item>
+    </string-array>
+    <string-array name="closestStationsValues">
+        <item name="6">6</item>
+        <item name="7">7</item>
+        <item name="8">8</item>
+        <item name="9">9</item>
+        <item name="10">10</item>
+    </string-array>
+
 </resources>

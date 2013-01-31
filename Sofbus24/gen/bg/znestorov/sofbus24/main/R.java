@@ -17,6 +17,10 @@ public final class R {
          */
         public static final int bus_numbers=0x7f060000;
         public static final int bus_stations=0x7f060001;
+        /**  Closest stations 
+         */
+        public static final int closestStations=0x7f060006;
+        public static final int closestStationsValues=0x7f060007;
         /**  TRAM STUFF 
          */
         public static final int tram_numbers=0x7f060004;
@@ -61,8 +65,8 @@ public final class R {
         public static final int button_sch_f=0x7f020018;
         public static final int button_sch_unf=0x7f020019;
         public static final int clean=0x7f02001a;
-        public static final int color_gps_map_status_bar_background=0x7f020031;
-        public static final int color_gps_map_status_bar_text=0x7f020032;
+        public static final int color_gps_map_status_bar_background=0x7f020032;
+        public static final int color_gps_map_status_bar_text=0x7f020033;
         public static final int current_location=0x7f02001b;
         public static final int distance=0x7f02001c;
         public static final int fav_delete=0x7f02001d;
@@ -78,13 +82,14 @@ public final class R {
         public static final int route=0x7f020027;
         public static final int satellite=0x7f020028;
         public static final int see_map=0x7f020029;
-        public static final int station=0x7f02002a;
-        public static final int tram_icon=0x7f02002b;
-        public static final int tram_station=0x7f02002c;
-        public static final int tram_tab=0x7f02002d;
-        public static final int trolley_icon=0x7f02002e;
-        public static final int trolley_station=0x7f02002f;
-        public static final int trolley_tab=0x7f020030;
+        public static final int splash_screen=0x7f02002a;
+        public static final int station=0x7f02002b;
+        public static final int tram_icon=0x7f02002c;
+        public static final int tram_station=0x7f02002d;
+        public static final int tram_tab=0x7f02002e;
+        public static final int trolley_icon=0x7f02002f;
+        public static final int trolley_station=0x7f020030;
+        public static final int trolley_tab=0x7f020031;
     }
     public static final class id {
         public static final int about_content=0x7f0b0002;
@@ -146,19 +151,20 @@ public final class R {
         public static final int activity_help=0x7f030005;
         public static final int activity_home_screen=0x7f030006;
         public static final int activity_sofia_stations=0x7f030007;
-        public static final int activity_station=0x7f030008;
-        public static final int activity_station_info=0x7f030009;
-        public static final int activity_station_info_map=0x7f03000a;
-        public static final int activity_station_separator=0x7f03000b;
-        public static final int activity_tab_view=0x7f03000c;
-        public static final int activity_text=0x7f03000d;
-        public static final int activity_vehicle=0x7f03000e;
-        public static final int activity_vehicle_direction_choice=0x7f03000f;
-        public static final int activity_vehicle_search=0x7f030010;
-        public static final int activity_vehicle_separator=0x7f030011;
-        public static final int balloon_map_overlay=0x7f030012;
-        public static final int gps_balloon_map_overlay=0x7f030013;
-        public static final int vb_station_choice_text=0x7f030014;
+        public static final int activity_splash_screen=0x7f030008;
+        public static final int activity_station=0x7f030009;
+        public static final int activity_station_info=0x7f03000a;
+        public static final int activity_station_info_map=0x7f03000b;
+        public static final int activity_station_separator=0x7f03000c;
+        public static final int activity_tab_view=0x7f03000d;
+        public static final int activity_text=0x7f03000e;
+        public static final int activity_vehicle=0x7f03000f;
+        public static final int activity_vehicle_direction_choice=0x7f030010;
+        public static final int activity_vehicle_search=0x7f030011;
+        public static final int activity_vehicle_separator=0x7f030012;
+        public static final int balloon_map_overlay=0x7f030013;
+        public static final int gps_balloon_map_overlay=0x7f030014;
+        public static final int vb_station_choice_text=0x7f030015;
     }
     public static final class menu {
         public static final int menu_favourites=0x7f0a0000;
@@ -225,6 +231,8 @@ public final class R {
         public static final int hs_button4=0x7f08004d;
         public static final int hs_button5=0x7f08004e;
         public static final int hs_button6=0x7f08004f;
+        public static final int map_compass_summary=0x7f080060;
+        public static final int map_compass_title=0x7f08005f;
         public static final int map_gps_distance_ERR=0x7f080045;
         public static final int map_gps_distance_OK=0x7f080044;
         public static final int map_gps_location_status=0x7f080046;
@@ -241,12 +249,14 @@ public final class R {
          */
         public static final int map_help_label=0x7f080047;
         public static final int map_help_text=0x7f080048;
-        public static final int map_satellite_summary=0x7f08005c;
-        public static final int map_satellite_title=0x7f08005b;
+        public static final int map_mapView_summary=0x7f080062;
+        public static final int map_mapView_title=0x7f080061;
+        public static final int map_satellite_summary=0x7f08005e;
+        public static final int map_satellite_title=0x7f08005d;
         /**  PREFERENCE 
          */
         public static final int pref_category_common=0x7f080050;
-        public static final int pref_category_map=0x7f08005a;
+        public static final int pref_category_map=0x7f08005c;
         public static final int pref_category_stations=0x7f080055;
         public static final int ss_gps_map_msg_body=0x7f08000a;
         public static final int ss_gps_map_msg_title=0x7f080009;
@@ -273,6 +283,8 @@ public final class R {
         public static final int st_list_fav=0x7f08001c;
         public static final int st_list_gps=0x7f08001b;
         public static final int st_list_schedule=0x7f08001a;
+        public static final int stations_closestST_summary=0x7f08005b;
+        public static final int stations_closestST_title=0x7f08005a;
         public static final int stations_timeGPS_summary=0x7f080057;
         public static final int stations_timeGPS_title=0x7f080056;
         public static final int stations_timeSchedule_summary=0x7f080059;
