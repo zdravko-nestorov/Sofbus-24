@@ -139,5 +139,8 @@
     <string name="map_compass_summary">Покажи стрелка за ориентация на посоката (в GPS GoogleMaps)</string>
     <string name="map_mapView_title">Режим на картата</string>
     <string name="map_mapView_summary">Покажи икона за смяна на режима на картата (в горния десен ъгъл)</string>
+    
+    <!-- ACTION BAR -->
+    <string name="action_bar_label">Софбус 24</string>
 
 </resources>

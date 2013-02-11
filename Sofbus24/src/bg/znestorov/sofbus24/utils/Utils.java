@@ -2,6 +2,8 @@ package bg.znestorov.sofbus24.utils;
 
 import java.math.BigDecimal;
 
+import android.widget.TextView;
+
 // Creating methods for easy processing data
 public class Utils {
 
@@ -75,4 +77,17 @@ public class Utils {
 
 		return diff;
 	}
+
+	// Set ActionBar label
+	public static void setActionBarLabel(TextView actionBarLabel,
+			String actionBarText) {
+		if (actionBarText != null && !"".equals(actionBarText)) {
+			if (actionBarText.length() > Constants.ACTION_BAR_LABEL_SIZE) {
+				actionBarText = actionBarText.substring(0,
+						Constants.ACTION_BAR_LABEL_SIZE - 3) + "...";
+			}
+			actionBarLabel.setText(actionBarText);
+		}
+	}
+
 }

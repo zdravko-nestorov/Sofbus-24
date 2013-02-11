@@ -17,4 +17,7 @@ public class Constants {
 	public static final int TIME_STATUS_BAR_SLIDE_IN = 1000;
 	public static final int TIME_STATUS_BAR_SLIDE_OUT = 750;
 
+	// Action Bar
+	public static final int ACTION_BAR_LABEL_SIZE = 26;
+
 }

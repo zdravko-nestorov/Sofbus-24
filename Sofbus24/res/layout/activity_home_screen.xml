@@ -4,11 +4,7 @@
     android:layout_height="fill_parent"
     android:layout_gravity="center"
     android:background="#F5F5F5"
-    android:orientation="vertical"
-    android:paddingBottom="20dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:paddingTop="15dp" >
+    android:orientation="vertical" >
 
     <!-- <include layout="@layout/action_bar" /> -->
 
@@ -18,6 +14,8 @@
         android:layout_gravity="center"
         android:layout_marginBottom="15dp"
         android:gravity="center"
+        android:paddingRight="20dp"
+        android:paddingTop="15dp"
         android:text="@string/app_name"
         android:textColor="#000000"
         android:textSize="36sp"
@@ -26,7 +24,9 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" >
+        android:paddingRight="20dp"
+        android:layout_weight="1"
+        android:paddingLeft="20dp" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -62,7 +62,9 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -98,7 +100,10 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" >
 
         <LinearLayout
             android:layout_width="fill_parent"

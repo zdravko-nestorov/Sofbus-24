@@ -37,6 +37,9 @@ public class Sofbus24 extends Activity implements OnClickListener {
 
 		// Setting activity title
 		this.setTitle(getString(R.string.ss_name));
+		// TextView actionBarLabel = (TextView)
+		// findViewById(R.id.action_bar_label);
+		// Utils.setActionBarLabel(actionBarLabel, getString(R.string.ss_name));
 
 		// Get SharedPreferences from option menu
 		sharedPreferences = PreferenceManager
@@ -187,9 +190,8 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			context.startActivity(favourites);
 			break;
 		case R.id.btn_about:
-			startActivity(new Intent(this, Preferences.class));
-			// Intent i = new Intent(this, About.class);
-			// startActivity(i);
+			Intent i = new Intent(this, About.class);
+			startActivity(i);
 			break;
 		case R.id.btn_exit:
 			if (exitAlert) {
