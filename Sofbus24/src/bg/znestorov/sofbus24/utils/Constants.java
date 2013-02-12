@@ -6,6 +6,9 @@ public class Constants {
 	// (connection with "HtmlRequestSumc" constructor)
 	public static final String SEARCH_TYPE_NUMBER = "NUMBER";
 	public static final String SEARCH_TYPE_NAME = "NAME";
+	public static final String SEARCH_TYPE_COUNT_RESULTS_1 = "Õ¿Ã≈–≈Õ» —¿";
+	public static final String SEARCH_TYPE_COUNT_RESULTS_2 = "—œ»– » «¿ &QUOT;";
+	public static boolean SEARCH_TYPE_FLAG = false;
 
 	// Setting the size of the TextBox in VirtualBoardStationChoice
 	public static final int TEXT_BOX_SIZE = 18;

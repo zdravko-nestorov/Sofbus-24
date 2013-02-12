@@ -93,14 +93,18 @@ public class Sofbus24 extends Activity implements OnClickListener {
 							try {
 								Integer.parseInt(stationID);
 
+								// Variable that ensure that the search is done
+								// for first time
+								Constants.SEARCH_TYPE_FLAG = true;
+
 								new HtmlRequestSumc(
 										Constants.SEARCH_TYPE_NUMBER)
 										.getInformation(context, stationID,
-												null);
+												stationID, null);
 							} catch (NumberFormatException e) {
 								new HtmlRequestSumc(Constants.SEARCH_TYPE_NAME)
 										.getInformation(context, stationID,
-												null);
+												stationID, null);
 							}
 
 						}

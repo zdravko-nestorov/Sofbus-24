@@ -151,7 +151,7 @@ public class StationListView extends ListActivity {
 			break;
 		case R.id.st_list_gps:
 			new HtmlRequestSumc().getInformation(StationListView.this,
-					stationCode, null);
+					stationCode, stationCode, null);
 
 			Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
 			break;

@@ -61,7 +61,8 @@ public class Favourites extends ListActivity {
 		String[] coordinates = { station.getLat(), station.getLon() };
 		HtmlRequestSumc sumc = new HtmlRequestSumc();
 
-		sumc.getInformation(context, station.getId(), coordinates);
+		sumc.getInformation(context, station.getId(), station.getName(),
+				coordinates);
 
 		datasource.close();
 	}

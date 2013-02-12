@@ -55,7 +55,8 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
 
 		Toast.makeText(context, balloonTitle, Toast.LENGTH_SHORT).show();
 
-		new HtmlRequestSumc().getInformation(context, stationID, null);
+		new HtmlRequestSumc().getInformation(context, stationID, stationID,
+				null);
 
 		return true;
 	}

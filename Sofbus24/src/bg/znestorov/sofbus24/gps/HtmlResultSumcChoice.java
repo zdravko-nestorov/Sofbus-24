@@ -93,7 +93,6 @@ public class HtmlResultSumcChoice {
 
 			if (name != null && !"".equals(name) && number != null
 					&& !"".equals(number)) {
-				Log.d("TAG", array[i]);
 				GPSStation tempGPSStation = new GPSStation(number, name);
 				tempGPSStation.setTime_stamp("OK");
 

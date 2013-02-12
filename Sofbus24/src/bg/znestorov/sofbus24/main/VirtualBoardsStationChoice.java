@@ -98,7 +98,22 @@ public class VirtualBoardsStationChoice extends ListActivity {
 		Toast.makeText(this, selectedRow, Toast.LENGTH_SHORT).show();
 
 		HtmlRequestSumc sumc = new HtmlRequestSumc();
-		sumc.getInformation(context, station.getId(), null);
+
+		// In case that the StationID is contained in some StationNAME
+		boolean flag = false;
+		for (int i = 0; i < station_list.size(); i++) {
+			if (station.getName().contains(station.getId())) {
+				flag = true;
+				break;
+			}
+		}
+
+		if (flag) {
+			sumc.getInformation(context, station.getId(), station.getName(),
+					null);
+		} else {
+			sumc.getInformation(context, station.getId(), station.getId(), null);
+		}
 	}
 
 	@Override
