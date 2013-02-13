@@ -7,7 +7,7 @@
     <string name="btn_map">GPS времена - Google Maps</string>
     <string name="btn_schedule">Разписания</string>
     <string name="btn_favourite">Любими</string>
-    <string name="btn_about">Информация</string>
+    <string name="btn_options">Настройки</string>
     <string name="btn_exit">Изход</string>
     <string name="exit_msg">Сигурни ли сте, че искате да излезете от приложението?</string>
     <string name="ss_gps_map_msg_title">Грешка</string>
@@ -133,6 +133,8 @@
     <string name="stations_timeSchedule_summary">Оставащо време или времена на пристигане</string>
     <string name="stations_closestST_title">Брой най-близки спирки</string>
     <string name="stations_closestST_summary">Колко спирки да се визуализират около текущото местоположение или избрана точка</string>
+    <string name="stations_timeInfoRetrieval_title">Време на извлечената информация</string>
+    <string name="stations_timeInfoRetrieval_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация (Виртуални табла)</string>
     <string name="pref_category_map">КАРТА</string>
     <string name="map_satellite_title">Сателитна карта</string>
     <string name="map_satellite_summary">(или Street View карта)</string>
@@ -140,7 +142,10 @@
     <string name="map_compass_summary">Покажи стрелка за ориентация на посоката (в GPS GoogleMaps)</string>
     <string name="map_mapView_title">Режим на картата</string>
     <string name="map_mapView_summary">Покажи икона за смяна на режима на картата (в горния десен ъгъл)</string>
-    
+    <string name="pref_category_other">ДРУГИ</string>
+    <string name="other_info_title">Информация</string>
+    <string name="other_info_summary">Информация за продукта</string>
+
     <!-- ACTION BAR -->
     <string name="action_bar_label">Софбус 24</string>
 

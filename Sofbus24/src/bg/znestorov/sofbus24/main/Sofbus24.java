@@ -64,8 +64,8 @@ public class Sofbus24 extends Activity implements OnClickListener {
 		btn_schedule.setOnClickListener(this);
 		ImageView btn_favourite = (ImageView) findViewById(R.id.btn_favourite);
 		btn_favourite.setOnClickListener(this);
-		ImageView btn_about = (ImageView) findViewById(R.id.btn_about);
-		btn_about.setOnClickListener(this);
+		ImageView btn_options = (ImageView) findViewById(R.id.btn_options);
+		btn_options.setOnClickListener(this);
 		ImageView btn_exit = (ImageView) findViewById(R.id.btn_exit);
 		btn_exit.setOnClickListener(this);
 	}
@@ -193,8 +193,8 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			Intent favourites = new Intent(context, Favourites.class);
 			context.startActivity(favourites);
 			break;
-		case R.id.btn_about:
-			Intent i = new Intent(this, About.class);
+		case R.id.btn_options:
+			Intent i = new Intent(this, Preferences.class);
 			startActivity(i);
 			break;
 		case R.id.btn_exit:

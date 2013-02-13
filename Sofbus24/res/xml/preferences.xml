@@ -2,11 +2,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/pref_category_common" >
-        <CheckBoxPreference
+
+        <!--
+             <CheckBoxPreference
             android:defaultValue="false"
             android:key="spashScreen"
             android:summary="@string/common_splash_screen_summary"
-            android:title="@string/common_splash_screen_title" />
+            android:title="@string/common_splash_screen_title" />        -->
+
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="exitAlert"
@@ -32,6 +35,13 @@
             android:key="closestStations"
             android:summary="@string/stations_closestST_summary"
             android:title="@string/stations_closestST_title" />
+        <ListPreference
+            android:defaultValue="time_skgt"
+            android:entries="@array/timeInfoRetrieval"
+            android:entryValues="@array/timeInfoRetrievalValues"
+            android:key="timeInfoRetrieval"
+            android:summary="@string/stations_timeInfoRetrieval_summary"
+            android:title="@string/stations_timeInfoRetrieval_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_map" >
         <CheckBoxPreference
@@ -49,6 +59,14 @@
             android:key="mapView"
             android:summary="@string/map_mapView_summary"
             android:title="@string/map_mapView_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_other" >
+        <PreferenceScreen
+            android:key="information"
+            android:summary="@string/other_info_summary"
+            android:title="@string/other_info_title" >
+            <intent android:action="android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS" />
+        </PreferenceScreen>
     </PreferenceCategory>
 
 </PreferenceScreen>

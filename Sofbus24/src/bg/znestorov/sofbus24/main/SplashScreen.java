@@ -24,7 +24,7 @@ public class SplashScreen extends Activity {
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		// Obtain the sharedPreference, default to true if not available
+		// Obtain the sharedPreference, default to false if not available
 		boolean spashScreen = sp.getBoolean("spashScreen", false);
 
 		if (spashScreen) {

@@ -55,6 +55,10 @@ public class HtmlResultSumc {
 	// Shared Preferences (option menu)
 	private SharedPreferences sharedPreferences;
 
+	// Time retrieval string from the source file
+	private static final String TIME_RETRIEVAL_BEGIN = "<b>Информация към ";
+	private static final String TIME_RETRIEVAL_END = "</b>";
+
 	public HtmlResultSumc(Context context, String stationCode, String htmlSrc) {
 		this.context = context;
 		this.stationCode = stationCode;
@@ -185,6 +189,30 @@ public class HtmlResultSumc {
 		return listOfVehicles;
 	}
 
+	public String getInformationTime(String htmlSrc) {
+		String infoTime = "";
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this.context);
+
+		// Get "timeInfoRetrieval" value from the Shared Preferences
+		String timeInfoRetrieval = sharedPreferences.getString(
+				"timeInfoRetrieval", "time_skgt");
+
+		if (htmlSrc.contains(TIME_RETRIEVAL_BEGIN)
+				&& "time_skgt".equals(timeInfoRetrieval)) {
+			infoTime = getValueAfter(htmlSrc, TIME_RETRIEVAL_BEGIN);
+			infoTime = getValueBefore(infoTime, TIME_RETRIEVAL_END);
+			infoTime = infoTime.trim();
+		} else {
+			infoTime = android.text.format.DateFormat.format("dd.MM.yyy kk:mm",
+					new java.util.Date()).toString();
+		}
+
+		return infoTime;
+	}
+
 	private String getStationName(String htmlSrc) {
 		String stationName = getValueAfter(htmlSrc, "<b>спирка");
 		stationName = getValueBefore(stationName, "</b>");
@@ -234,11 +262,11 @@ public class HtmlResultSumc {
 	private String setRemainingTimeStamp(String timeStamp) {
 		String remainingTime = "";
 
-		// Get current time
-		Calendar cal = Calendar.getInstance();
-		cal.getTime();
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		String currTime = sdf.format(cal.getTime());
+		// Get current time or the time from SGKT - according to the Preferences
+		String currTime = getInformationTime(htmlSrc);
+		while (currTime.contains(" ")) {
+			currTime = getValueAfter(currTime, " ");
+		}
 
 		// Get SharedPreferences from option menu
 		sharedPreferences = PreferenceManager

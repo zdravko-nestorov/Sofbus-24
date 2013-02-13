@@ -106,12 +106,11 @@ public class VirtualBoards extends ListActivity {
 				}
 
 				GPSStation gpsStation = new GPSStation();
-				String dateFormat = android.text.format.DateFormat.format(
-						"kk:mm, dd.MM.yyy", new java.util.Date()).toString();
 
 				gpsStation.setName("\"" + station_list.get(0).getName() + "\"");
 				gpsStation.setTime_stamp(String.format(
-						getString(R.string.st_inf_time), dateFormat));
+						getString(R.string.st_inf_time),
+						result.getInformationTime(htmlSrc)));
 				station_list.add(0, gpsStation);
 
 				setListAdapter(new GPSStationAdapter(context, station_list));

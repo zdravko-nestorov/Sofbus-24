@@ -486,9 +486,6 @@ public class VirtualBoardsMapGPS extends MapActivity {
 								distanceTo.toString()), Toast.LENGTH_LONG)
 						.show();
 
-				// Failed on drawing the route
-				check = 2;
-
 				// Make a RoutePath between current location and the chosen
 				// station
 				GeoPoint geoPoint1 = new GeoPoint(menuGeoPoint.getLatitudeE6(),
@@ -497,18 +494,12 @@ public class VirtualBoardsMapGPS extends MapActivity {
 						tapGeoPoint.getLongitudeE6());
 				doDrawPath(geoPoint1, geoPoint2);
 
-				if (Constants.ROUTE_NO_INTERNET) {
-					throw new Exception();
-				}
 			} catch (Exception e) {
 				if (check == 0) {
 					Toast.makeText(this, R.string.map_gps_no_last_location,
 							Toast.LENGTH_LONG).show();
 				} else if (check == 1) {
 					Toast.makeText(this, R.string.map_gps_distance_ERR,
-							Toast.LENGTH_LONG).show();
-				} else {
-					Toast.makeText(this, R.string.map_gps_route_error,
 							Toast.LENGTH_LONG).show();
 				}
 			}
@@ -598,7 +589,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 
 	// Draw RoutePath between two points
 	private void doDrawPath(GeoPoint gpSrc, GeoPoint gpDest) {
-		MapRoute oRoute = new MapRoute(gpSrc, gpDest);
+		MapRoute oRoute = new MapRoute(gpSrc, gpDest, context);
 
 		oRoute.getPoints(new RouteListener() {
 			public void onDetermined(ArrayList<GeoPoint> alPoint) {
@@ -609,14 +600,10 @@ public class VirtualBoardsMapGPS extends MapActivity {
 				// Special case - if Internet suddenly stop and come again
 				if (routePointsSize != -1
 						&& routePointsSize < mapView.getOverlays().size()) {
-					Constants.ROUTE_NO_INTERNET = false;
-
 					// If a route is drawn - clear it
 					for (int i = 1; i < routePointsSize - 1; i++) {
 						mapView.getOverlays().remove(0);
 					}
-				} else {
-					Constants.ROUTE_NO_INTERNET = true;
 				}
 
 				// Create the route

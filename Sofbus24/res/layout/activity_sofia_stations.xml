@@ -48,7 +48,7 @@
             android:id="@+id/btn_about"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_about" />
+            android:text="@string/btn_options" />
 
         <Button
             android:id="@+id/btn_exit"
