@@ -5,7 +5,6 @@ import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
 import java.util.ArrayList;
 
-import android.util.Log;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 
 public class HtmlResultSumcChoice {

@@ -26,6 +26,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.gps_map.MapRoute;
+import bg.znestorov.sofbus24.gps_map.MapRoute.RouteListener;
+import bg.znestorov.sofbus24.gps_map.MapRouteOverlay;
 import bg.znestorov.sofbus24.gps_map.MyItemizedOverlay;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.station_database.GPSStation;
@@ -83,6 +86,10 @@ public class VirtualBoardsMapGPS extends MapActivity {
 
 	// Shared Preferences (option menu)
 	private SharedPreferences sharedPreferences;
+
+	// Route variables
+	private MapRouteOverlay mapRouteOverlay;
+	private int routePointsSize = -1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -454,14 +461,15 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_gps_distance:
-			boolean check = false;
+			int check = 0;
 
 			try {
 				Location locCurr = new Location("");
 				locCurr.setLatitude(menuGeoPoint.getLatitudeE6() / 1E6);
 				locCurr.setLongitude(menuGeoPoint.getLongitudeE6() / 1E6);
 
-				check = true;
+				// Failed on current location
+				check = 1;
 
 				Location locTap = new Location("");
 				locTap.setLatitude(tapGeoPoint.getLatitudeE6() / 1E6);
@@ -477,13 +485,31 @@ public class VirtualBoardsMapGPS extends MapActivity {
 						String.format(getString(R.string.map_gps_distance_OK),
 								distanceTo.toString()), Toast.LENGTH_LONG)
 						.show();
+
+				// Failed on drawing the route
+				check = 2;
+
+				// Make a RoutePath between current location and the chosen
+				// station
+				GeoPoint geoPoint1 = new GeoPoint(menuGeoPoint.getLatitudeE6(),
+						menuGeoPoint.getLongitudeE6());
+				GeoPoint geoPoint2 = new GeoPoint(tapGeoPoint.getLatitudeE6(),
+						tapGeoPoint.getLongitudeE6());
+				doDrawPath(geoPoint1, geoPoint2);
+
+				if (Constants.ROUTE_NO_INTERNET) {
+					throw new Exception();
+				}
 			} catch (Exception e) {
-				if (check) {
-					Toast.makeText(this, R.string.map_gps_distance_ERR,
-							Toast.LENGTH_SHORT).show();
-				} else {
+				if (check == 0) {
 					Toast.makeText(this, R.string.map_gps_no_last_location,
-							Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_LONG).show();
+				} else if (check == 1) {
+					Toast.makeText(this, R.string.map_gps_distance_ERR,
+							Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(this, R.string.map_gps_route_error,
+							Toast.LENGTH_LONG).show();
 				}
 			}
 			break;
@@ -568,6 +594,50 @@ public class VirtualBoardsMapGPS extends MapActivity {
 
 			return true;
 		}
+	}
+
+	// Draw RoutePath between two points
+	private void doDrawPath(GeoPoint gpSrc, GeoPoint gpDest) {
+		MapRoute oRoute = new MapRoute(gpSrc, gpDest);
+
+		oRoute.getPoints(new RouteListener() {
+			public void onDetermined(ArrayList<GeoPoint> alPoint) {
+				GeoPoint oPointA = null;
+				GeoPoint oPointB = null;
+
+				// Check if a route is already drawn
+				// Special case - if Internet suddenly stop and come again
+				if (routePointsSize != -1
+						&& routePointsSize < mapView.getOverlays().size()) {
+					Constants.ROUTE_NO_INTERNET = false;
+
+					// If a route is drawn - clear it
+					for (int i = 1; i < routePointsSize - 1; i++) {
+						mapView.getOverlays().remove(0);
+					}
+				} else {
+					Constants.ROUTE_NO_INTERNET = true;
+				}
+
+				// Create the route
+				for (int i = 1; i < alPoint.size() - 1; i++) {
+					// Get the number of points of the route
+					routePointsSize = alPoint.size();
+
+					oPointA = alPoint.get(i - 1);
+					oPointB = alPoint.get(i);
+
+					mapRouteOverlay = new MapRouteOverlay(oPointA, oPointB,
+							Constants.ROUTE_MODE, Constants.ROUTE_COLOR);
+					mapView.getOverlays().add(0, mapRouteOverlay);
+				}
+
+				mapView.invalidate();
+			}
+
+			public void onError() {
+			}
+		});
 	}
 
 }

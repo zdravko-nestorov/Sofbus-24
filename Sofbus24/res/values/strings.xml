@@ -95,11 +95,12 @@
 
     <!-- MAP GPS -->
     <string name="map_gps_name">Виртуални табла - Google Maps</string>
-    <string name="map_gps_menu_item_distance">Разстояние</string>
+    <string name="map_gps_menu_item_distance">Маршрут</string>
     <string name="map_gps_menu_item_focus">Позиционирай</string>
     <string name="map_gps_menu_item_help">Помощ</string>
     <string name="map_gps_menu_item_clean">Изчисти</string>
     <string name="map_gps_no_last_location">Моля изчакайте координатите Ви да бъдат засечени.</string>
+    <string name="map_gps_route_error">Нужна е интернет връзка, за да се визуалзира маршрута (или има проблем със сървъра на GoogleMaps).</string>
     <string name="map_gps_distance_OK" formatted="false">Разтоянието от текущата позиция до избраната от Вас спирка е %s метра.</string>
     <string name="map_gps_distance_ERR">Моля изберете спирка.</string>
     <string name="map_gps_location_status">Изчисляване на текущите координати&#8230;</string>

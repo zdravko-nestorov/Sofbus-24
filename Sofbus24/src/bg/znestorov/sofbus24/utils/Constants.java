@@ -1,5 +1,7 @@
 package bg.znestorov.sofbus24.utils;
 
+import android.graphics.Color;
+
 public class Constants {
 
 	// Defining the search type - name or number
@@ -22,5 +24,13 @@ public class Constants {
 
 	// Action Bar
 	public static final int ACTION_BAR_LABEL_SIZE = 26;
+
+	// GPS GoogleMaps ROUTE
+	public static final int ROUTE_MODE = 2;
+	public static final int ROUTE_DEFAULT_COLOR = Color.RED;
+	public static final int ROUTE_COLOR = Color.RED;
+	public static final int ROUTE_STROKE_WIDTH = 6;
+	public static final int ROUTE_ALPHA = 180;
+	public static boolean ROUTE_NO_INTERNET = false;
 
 }

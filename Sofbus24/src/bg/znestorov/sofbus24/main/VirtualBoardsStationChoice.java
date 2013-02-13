@@ -102,7 +102,7 @@ public class VirtualBoardsStationChoice extends ListActivity {
 		// In case that the StationID is contained in some StationNAME
 		boolean flag = false;
 		for (int i = 0; i < station_list.size(); i++) {
-			if (station.getName().contains(station.getId())) {
+			if (station_list.get(i).getName().contains(station.getId())) {
 				flag = true;
 				break;
 			}
