@@ -10,7 +10,12 @@ public class Constants {
 	public static final String SEARCH_TYPE_NAME = "NAME";
 	public static final String SEARCH_TYPE_COUNT_RESULTS_1 = "Õ¿Ã≈–≈Õ» —¿";
 	public static final String SEARCH_TYPE_COUNT_RESULTS_2 = "—œ»– » «¿ &QUOT;";
+
+	// Indicating if the search is for the first time or not, and if so give
+	// multiple results (if exists)
 	public static boolean SEARCH_TYPE_FLAG = false;
+	// Indicating if the search is done in FAVOURITES or in SCHEDULE
+	public static boolean SEARCH_TYPE_FLAG_DIRECT = false;
 
 	// Setting the size of the TextBox in VirtualBoardStationChoice
 	public static final int TEXT_BOX_SIZE = 18;

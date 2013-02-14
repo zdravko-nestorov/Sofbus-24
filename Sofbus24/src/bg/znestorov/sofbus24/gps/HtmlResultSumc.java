@@ -3,9 +3,7 @@ package bg.znestorov.sofbus24.gps;
 import static bg.znestorov.sofbus24.utils.Utils.getValueAfter;
 import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 
