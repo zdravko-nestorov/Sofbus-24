@@ -113,6 +113,9 @@ public class VirtualBoards extends ListActivity {
 						result.getInformationTime(htmlSrc)));
 				station_list.add(0, gpsStation);
 
+				// Setting "o" code for the station
+				station_list.get(1).setCodeO(tempArray[4]);
+
 				setListAdapter(new GPSStationAdapter(context, station_list));
 			}
 

@@ -14,6 +14,7 @@ public class GPSStation implements Serializable {
 	private String time_stamp;
 	private String lat;
 	private String lon;
+	private String codeO;
 
 	public GPSStation() {
 	}
@@ -21,6 +22,12 @@ public class GPSStation implements Serializable {
 	public GPSStation(String id, String name) {
 		this.id = id;
 		this.name = name;
+	}
+
+	public GPSStation(String id, String name, String codeO) {
+		this.id = id;
+		this.name = name;
+		this.codeO = codeO;
 	}
 
 	public String getId() {
@@ -91,11 +98,19 @@ public class GPSStation implements Serializable {
 		return getName() + " (" + getId() + ")";
 	}
 
+	public String getCodeO() {
+		return codeO;
+	}
+
+	public void setCodeO(String codeO) {
+		this.codeO = codeO;
+	}
+
 	// Only for testing purpose
 	public String print() {
 		return getId() + "\n" + getName() + "\n" + getType() + "\n"
 				+ getNumber() + "\n" + getDirection() + "\n" + getTime_stamp()
-				+ "\n" + getLat() + "\n" + getLon();
+				+ "\n" + getLat() + "\n" + getLon() + "\n" + getCodeO();
 	}
 
 }

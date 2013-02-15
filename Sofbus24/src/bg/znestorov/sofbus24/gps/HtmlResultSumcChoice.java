@@ -92,7 +92,7 @@ public class HtmlResultSumcChoice {
 
 			if (name != null && !"".equals(name) && number != null
 					&& !"".equals(number)) {
-				GPSStation tempGPSStation = new GPSStation(number, name);
+				GPSStation tempGPSStation = new GPSStation(number, name, "1");
 				tempGPSStation.setTime_stamp("OK");
 
 				listOfVehicles.add(tempGPSStation);

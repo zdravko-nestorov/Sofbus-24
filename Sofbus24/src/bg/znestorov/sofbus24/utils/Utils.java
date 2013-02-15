@@ -90,4 +90,20 @@ public class Utils {
 		}
 	}
 
+	// Get "o" code using the station ID
+	public static String getCodeO(String htmlSrc, String stationCode) {
+		String codeO = "";
+		stationCode = "(" + stationCode + ")";
+
+		if (htmlSrc.contains(stationCode)) {
+			codeO = getValueBefore(htmlSrc, stationCode);
+
+			if (codeO.contains(Constants.SCHEDULE_GPS_FIND_CODEO)) {
+				codeO = Integer.toString(codeO
+						.split(Constants.SCHEDULE_GPS_FIND_CODEO).length);
+			}
+		}
+
+		return codeO;
+	}
 }

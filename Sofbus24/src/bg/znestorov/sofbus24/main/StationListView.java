@@ -151,14 +151,12 @@ public class StationListView extends ListActivity {
 			break;
 		case R.id.st_list_gps:
 			new HtmlRequestSumc().getInformation(StationListView.this,
-					stationCode, stationCode, null);
-
-			Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
+					stationCode, null, null);
 			break;
 		case R.id.st_list_fav:
 			datasource.open();
 
-			GPSStation gpsStationFav = new GPSStation(stationCode, name);
+			GPSStation gpsStationFav = new GPSStation(stationCode, name, "1");
 
 			if (datasource.getStation(gpsStationFav) == null) {
 				datasource.createStation(gpsStationFav);

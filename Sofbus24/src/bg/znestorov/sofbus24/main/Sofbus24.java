@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.gps_map.MyLocation;
-import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.DatabaseUtils;
 
 public class Sofbus24 extends Activity implements OnClickListener {
@@ -89,23 +88,8 @@ public class Sofbus24 extends Activity implements OnClickListener {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
 							String stationID = input.getText().toString();
-
-							try {
-								Integer.parseInt(stationID);
-
-								// Variable that ensure that the search is done
-								// for first time
-								Constants.SEARCH_TYPE_FLAG = true;
-
-								new HtmlRequestSumc(
-										Constants.SEARCH_TYPE_NUMBER)
-										.getInformation(context, stationID,
-												stationID, null);
-							} catch (NumberFormatException e) {
-								new HtmlRequestSumc(Constants.SEARCH_TYPE_NAME)
-										.getInformation(context, stationID,
-												stationID, null);
-							}
+							new HtmlRequestSumc().getInformation(context,
+									stationID, null, null);
 
 						}
 					});

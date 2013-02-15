@@ -95,26 +95,20 @@ public class HtmlRequestSumc {
 	// Coordinates of the station
 	private static String[] coordinates = new String[2];
 
-	// Search status - number or name of the station
-	private String searchType = null;
-
-	public HtmlRequestSumc() {
-		this.searchType = Constants.SEARCH_TYPE_NUMBER;
-	}
-
-	public HtmlRequestSumc(String searchType) {
-		this.searchType = searchType;
-	}
-
 	// Getting the source file of the HTTP request and opening a new Activity
 	public void getInformation(Context context, String stationCode,
-			String stationName, String[] transferCoordinates) {
+			String stationCodeO, String[] transferCoordinates) {
 		// Assigning the transfer coordinates to a global variable
 		if (transferCoordinates != null) {
 			coordinates = transferCoordinates;
 		} else {
 			coordinates[0] = "EMPTY";
 			coordinates[1] = "EMPTY";
+		}
+
+		// Check if stationCodeO is null or not
+		if (stationCodeO == null) {
+			stationCodeO = "1";
 		}
 
 		// Setting timeout parameters
@@ -149,7 +143,7 @@ public class HtmlRequestSumc {
 		ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setMessage("Loading...");
 		LoadingSumc loadingSumc = new LoadingSumc(context, progressDialog,
-				client, stationCode, stationName, null, null);
+				client, stationCode, stationCodeO, null, null);
 		loadingSumc.execute();
 	}
 
@@ -200,14 +194,15 @@ public class HtmlRequestSumc {
 
 	// Adding the User-Agent, the Referrer and the parameters to the HttpPost
 	private static HttpPost createRequest(String stationCode,
-			String captchaText, String captchaId) {
+			String stationCodeO, String captchaText, String captchaId) {
 		final HttpPost result = new HttpPost(URL);
 		result.addHeader("User-Agent", USER_AGENT);
 		result.addHeader("Referer", REFERER);
 
 		try {
 			final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(
-					parameters(stationCode, captchaText, captchaId), "UTF-8");
+					parameters(stationCode, stationCodeO, captchaText,
+							captchaId), "UTF-8");
 			result.setEntity(entity);
 		} catch (UnsupportedEncodingException e) {
 			throw new IllegalStateException("Not supported default encoding?",
@@ -219,12 +214,12 @@ public class HtmlRequestSumc {
 
 	// Adding parameters to a list (used in the HttpPost)
 	private static List<BasicNameValuePair> parameters(String stationCode,
-			String captchaText, String captchaId) {
+			String stationCodeO, String captchaText, String captchaId) {
 		final List<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>(
 				5);
 		result.addAll(Arrays.asList(new BasicNameValuePair(QUERY_BUS_STOP_ID,
 				stationCode), new BasicNameValuePair(QUERY_GO, "1"),
-				new BasicNameValuePair(QUERY_O, "1")));
+				new BasicNameValuePair(QUERY_O, stationCodeO)));
 
 		if (captchaText != null && captchaId != null) {
 			result.add(new BasicNameValuePair(QUERY_CAPTCHA_ID, captchaId));
@@ -236,7 +231,7 @@ public class HtmlRequestSumc {
 
 	// Check if CAPTCHA is required
 	private void checkCaptchaText(DefaultHttpClient client, Context context,
-			String stationCode, String stationName, String src) {
+			String stationCode, String stationCodeO, String src) {
 		try {
 			if (src.contains(REQUIRES_CAPTCHA)) {
 				String captchaId = getCaptchaId(src);
@@ -247,20 +242,21 @@ public class HtmlRequestSumc {
 					ProgressDialog progressDialog = new ProgressDialog(context);
 					progressDialog.setMessage("Loading...");
 					LoadingCaptcha loadingCaptcha = new LoadingCaptcha(context,
-							progressDialog, client, stationCode, stationName,
+							progressDialog, client, stationCode, stationCodeO,
 							captchaId);
 					loadingCaptcha.execute();
 				} else {
-					startNewActivity(client, context, stationCode, stationName,
-							src);
+					startNewActivity(client, context, stationCode,
+							stationCodeO, src);
 				}
 			} else {
-				startNewActivity(client, context, stationCode, stationName, src);
+				startNewActivity(client, context, stationCode, stationCodeO,
+						src);
 			}
 		} catch (Exception e) {
 			Log.e(TAG, "Could not get data for parameters for station: "
 					+ stationCode, e);
-			startNewActivity(client, context, stationCode, stationName,
+			startNewActivity(client, context, stationCode, stationCodeO,
 					VirtualBoards.captchaErrorMessage);
 		}
 	}
@@ -315,7 +311,7 @@ public class HtmlRequestSumc {
 	// Showing an AlertDialog to enter the CAPTCHA text
 	private void getCaptchaText(final DefaultHttpClient client,
 			final Context context, final String stationCode,
-			final String stationName, final String captchaId,
+			final String stationCodeO, final String captchaId,
 			Bitmap captchaImage) {
 		final Builder dialogBuilder = new AlertDialog.Builder(context);
 		dialogBuilder.setTitle(R.string.sumc_captcha);
@@ -350,7 +346,7 @@ public class HtmlRequestSumc {
 								dialogResult = input.getText().toString();
 
 								processCaptchaText(client, context,
-										stationCode, stationName, captchaId);
+										stationCode, stationCodeO, captchaId);
 								dialog.dismiss();
 							}
 						}).setView(view);
@@ -366,7 +362,7 @@ public class HtmlRequestSumc {
 
 	// Processing the CAPTCHA text, after clicking OK button
 	private void processCaptchaText(DefaultHttpClient client, Context context,
-			String stationCode, String stationName, String captchaId) {
+			String stationCode, String stationCodeO, String captchaId) {
 		String captchaText = dialogResult;
 		dialogResult = null;
 
@@ -376,37 +372,33 @@ public class HtmlRequestSumc {
 		ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setMessage("Loading...");
 		LoadingSumc loadingSumc = new LoadingSumc(context, progressDialog,
-				client, stationCode, stationName, captchaText, captchaId);
+				client, stationCode, stationCodeO, captchaText, captchaId);
 		loadingSumc.execute();
 	}
 
 	// Starting new activity
 	private void startNewActivity(DefaultHttpClient client, Context context,
-			String stationCode, String stationName, String src) {
+			String stationCode, String stationCodeO, String src) {
 		String text = stationCode + "SEPARATOR" + src + "SEPARATOR"
-				+ coordinates[0] + "SEPARATOR" + coordinates[1];
+				+ coordinates[0] + "SEPARATOR" + coordinates[1] + "SEPARATOR"
+				+ stationCodeO;
 
 		saveCookiesToPreferences(context, client);
 		client.getConnectionManager().shutdown();
+
+		Intent intent = new Intent();
 
 		// Check if the result is returning multiple results
 		if (src.toUpperCase().contains(Constants.SEARCH_TYPE_COUNT_RESULTS_1)
 				&& src.toUpperCase().contains(
 						Constants.SEARCH_TYPE_COUNT_RESULTS_2)
-				&& Constants.SEARCH_TYPE_FLAG) {
-			new HtmlRequestSumc(Constants.SEARCH_TYPE_NAME).getInformation(
-					context, stationCode, stationName, null);
-			Constants.SEARCH_TYPE_FLAG = false;
-		} else {
-			Intent intent = new Intent();
+				&& "1".equals(stationCodeO)) {
+			intent = new Intent(context, VirtualBoardsStationChoice.class);
 
-			// Check what activity to start according to the search type -
-			// number or name of the station
-			if (searchType.equals(Constants.SEARCH_TYPE_NUMBER)) {
-				intent = new Intent(context, VirtualBoards.class);
-			} else {
-				intent = new Intent(context, VirtualBoardsStationChoice.class);
-			}
+			intent.putExtra(VirtualBoards.keyHtmlResult, text);
+			context.startActivity(intent);
+		} else {
+			intent = new Intent(context, VirtualBoards.class);
 
 			intent.putExtra(VirtualBoards.keyHtmlResult, text);
 			context.startActivity(intent);
@@ -418,18 +410,18 @@ public class HtmlRequestSumc {
 		ProgressDialog progressDialog;
 		DefaultHttpClient client;
 		String stationCode;
-		String stationName;
+		String stationCodeO;
 		String captchaText;
 		String captchaId;
 
 		public LoadingSumc(Context context, ProgressDialog progressDialog,
 				DefaultHttpClient client, String stationCode,
-				String stationName, String captchaText, String captchaId) {
+				String stationCodeO, String captchaText, String captchaId) {
 			this.context = context;
 			this.progressDialog = progressDialog;
 			this.client = client;
 			this.stationCode = stationCode;
-			this.stationName = stationName;
+			this.stationCodeO = stationCodeO;
 			this.captchaText = captchaText;
 			this.captchaId = captchaId;
 		}
@@ -445,12 +437,12 @@ public class HtmlRequestSumc {
 			String htmlSourceCode = null;
 
 			try {
-				final HttpPost request = createRequest(stationName,
-						captchaText, captchaId);
+				final HttpPost request = createRequest(stationCode,
+						stationCodeO, captchaText, captchaId);
 				htmlSourceCode = client.execute(request,
 						new BasicResponseHandler());
 			} catch (Exception e) {
-				Log.e(TAG, "Could not get data for station " + stationName, e);
+				Log.e(TAG, "Could not get data for station " + stationCode, e);
 				htmlSourceCode = "EXCEPTION";
 			}
 
@@ -462,10 +454,10 @@ public class HtmlRequestSumc {
 			progressDialog.dismiss();
 
 			if (result.equals("EXCEPTION")) {
-				startNewActivity(client, context, stationCode, stationName,
+				startNewActivity(client, context, stationCode, stationCodeO,
 						VirtualBoards.htmlErrorMessage);
 			} else {
-				checkCaptchaText(client, context, stationCode, stationName,
+				checkCaptchaText(client, context, stationCode, stationCodeO,
 						result);
 			}
 		}
@@ -476,17 +468,17 @@ public class HtmlRequestSumc {
 		ProgressDialog progressDialog;
 		DefaultHttpClient client;
 		String stationCode;
-		String stationName;
+		String stationCodeO;
 		String captchaId;
 
 		public LoadingCaptcha(Context context, ProgressDialog progressDialog,
 				DefaultHttpClient client, String stationCode,
-				String stationName, String captchaId) {
+				String stationCodeO, String captchaId) {
 			this.context = context;
 			this.progressDialog = progressDialog;
 			this.client = client;
 			this.stationCode = stationCode;
-			this.stationName = stationName;
+			this.stationCodeO = stationCodeO;
 			this.captchaId = captchaId;
 		}
 
@@ -513,10 +505,10 @@ public class HtmlRequestSumc {
 			progressDialog.dismiss();
 
 			if (result != null) {
-				getCaptchaText(client, context, stationCode, stationName,
+				getCaptchaText(client, context, stationCode, stationCodeO,
 						captchaId, result);
 			} else {
-				startNewActivity(client, context, stationCode, stationName,
+				startNewActivity(client, context, stationCode, stationCodeO,
 						VirtualBoards.htmlErrorMessage);
 			}
 		}

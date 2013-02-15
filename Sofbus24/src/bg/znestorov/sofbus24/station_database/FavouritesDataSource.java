@@ -20,7 +20,7 @@ public class FavouritesDataSource {
 	private FavouritesSQLite dbHelper;
 	private String[] allColumns = { FavouritesSQLite.COLUMN_ID,
 			FavouritesSQLite.COLUMN_NAME, FavouritesSQLite.COLUMN_LAT,
-			FavouritesSQLite.COLUMN_LON };
+			FavouritesSQLite.COLUMN_LON, FavouritesSQLite.COLUMN_CODEO };
 	private Context context;
 
 	public FavouritesDataSource(Context context) {
@@ -74,6 +74,8 @@ public class FavouritesDataSource {
 				}
 			}
 			stationDS.close();
+
+			values.put(FavouritesSQLite.COLUMN_CODEO, station.getCodeO());
 
 			// Insert the ContentValues data into the database
 			database.insert(FavouritesSQLite.TABLE_FAVOURITES, null, values);
@@ -164,6 +166,7 @@ public class FavouritesDataSource {
 		station.setName(cursor.getString(1));
 		station.setLat(cursor.getString(2));
 		station.setLon(cursor.getString(3));
+		station.setCodeO(cursor.getString(4));
 
 		return station;
 	}

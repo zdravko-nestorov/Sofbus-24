@@ -4,10 +4,7 @@ import android.graphics.Color;
 
 public class Constants {
 
-	// Defining the search type - name or number
-	// (connection with "HtmlRequestSumc" constructor)
-	public static final String SEARCH_TYPE_NUMBER = "NUMBER";
-	public static final String SEARCH_TYPE_NAME = "NAME";
+	// Indicating if there are more than 1 result
 	public static final String SEARCH_TYPE_COUNT_RESULTS_1 = "Õ¿Ã≈–≈Õ» —¿";
 	public static final String SEARCH_TYPE_COUNT_RESULTS_2 = "—œ»– » «¿ &QUOT;";
 
@@ -38,4 +35,6 @@ public class Constants {
 	public static final int ROUTE_ALPHA = 180;
 	public static boolean ROUTE_NO_INTERNET = false;
 
+	// GPS times taken through SCHEDULE
+	public static final String SCHEDULE_GPS_FIND_CODEO = "&nbsp;ÒÔËÍ‡&nbsp;";
 }
