@@ -9,14 +9,10 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
-import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 
 public class StationsDataSource {
-
-	// LogCat TAG
-	private static final String TAG = "StationsDataSource";
 
 	// Database fields
 	private SQLiteDatabase database;
@@ -98,10 +94,10 @@ public class StationsDataSource {
 
 	// Delete station from the database
 	public void deleteStation(GPSStation station) {
-		String id = station.getId();
-		Log.d(TAG, "Station deleted with id: " + id);
-		database.delete(StationsSQLite.TABLE_STATIONS, StationsSQLite.COLUMN_ID
-				+ " = " + id, null);
+		String where = StationsSQLite.COLUMN_ID + " = ?";
+		String[] whereArgs = new String[] { String.valueOf(station.getId()) };
+
+		database.delete(StationsSQLite.TABLE_STATIONS, where, whereArgs);
 	}
 
 	// Get station gpsStation from the database

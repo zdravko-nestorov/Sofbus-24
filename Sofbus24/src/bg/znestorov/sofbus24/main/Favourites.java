@@ -25,6 +25,7 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.station_database.GPSStation;
+import bg.znestorov.sofbus24.utils.Constants;
 
 public class Favourites extends ListActivity {
 
@@ -61,8 +62,13 @@ public class Favourites extends ListActivity {
 		String[] coordinates = { station.getLat(), station.getLon() };
 		HtmlRequestSumc sumc = new HtmlRequestSumc();
 
-		sumc.getInformation(context, station.getId(), station.getCodeO(),
-				coordinates);
+		if ("-1".equals(station.getCodeO())) {
+			sumc.getInformation(context, station.getId(),
+					Constants.FAVORITES_GPS_PARAM, coordinates);
+		} else {
+			sumc.getInformation(context, station.getId(), station.getCodeO(),
+					coordinates);
+		}
 
 		datasource.close();
 	}

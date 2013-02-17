@@ -16,6 +16,15 @@ public class Utils {
 		}
 	}
 
+	// Get value BEFORE some REGEX (Last)
+	public static String getValueBeforeLast(String value, String regex) {
+		if (value.contains(regex)) {
+			return value.substring(0, value.lastIndexOf(regex));
+		} else {
+			return value;
+		}
+	}
+
 	// Get value AFTER some REGEX
 	public static String getValueAfter(String value, String regex) {
 		if (value.contains(regex)) {
@@ -92,15 +101,15 @@ public class Utils {
 
 	// Get "o" code using the station ID
 	public static String getCodeO(String htmlSrc, String stationCode) {
-		String codeO = "";
+		String codeO = "1";
 		stationCode = "(" + stationCode + ")";
 
 		if (htmlSrc.contains(stationCode)) {
-			codeO = getValueBefore(htmlSrc, stationCode);
+			codeO = getValueBeforeLast(htmlSrc, stationCode);
 
 			if (codeO.contains(Constants.SCHEDULE_GPS_FIND_CODEO)) {
 				codeO = Integer.toString(codeO
-						.split(Constants.SCHEDULE_GPS_FIND_CODEO).length);
+						.split(Constants.SCHEDULE_GPS_FIND_CODEO).length - 1);
 			}
 		}
 

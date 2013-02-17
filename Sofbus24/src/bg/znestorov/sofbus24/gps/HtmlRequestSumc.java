@@ -54,7 +54,9 @@ import android.widget.TextView;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.VirtualBoards;
 import bg.znestorov.sofbus24.main.VirtualBoardsStationChoice;
+import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.Utils;
 
 public class HtmlRequestSumc {
 
@@ -108,7 +110,7 @@ public class HtmlRequestSumc {
 
 		// Check if stationCodeO is null or not
 		if (stationCodeO == null) {
-			stationCodeO = "1";
+			stationCodeO = "-1";
 		}
 
 		// Setting timeout parameters
@@ -215,6 +217,12 @@ public class HtmlRequestSumc {
 	// Adding parameters to a list (used in the HttpPost)
 	private static List<BasicNameValuePair> parameters(String stationCode,
 			String stationCodeO, String captchaText, String captchaId) {
+		// Ensure that the search will return results
+		if ("-1".equals(stationCodeO)
+				|| Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO)) {
+			stationCodeO = "1";
+		}
+
 		final List<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>(
 				5);
 		result.addAll(Arrays.asList(new BasicNameValuePair(QUERY_BUS_STOP_ID,
@@ -392,11 +400,39 @@ public class HtmlRequestSumc {
 		if (src.toUpperCase().contains(Constants.SEARCH_TYPE_COUNT_RESULTS_1)
 				&& src.toUpperCase().contains(
 						Constants.SEARCH_TYPE_COUNT_RESULTS_2)
-				&& "1".equals(stationCodeO)) {
+				&& "-1".equals(stationCodeO)) {
 			intent = new Intent(context, VirtualBoardsStationChoice.class);
 
 			intent.putExtra(VirtualBoards.keyHtmlResult, text);
 			context.startActivity(intent);
+			// Check in case the user is requesting information from Schedule
+			// section
+		} else if (src.toUpperCase().contains(
+				Constants.SEARCH_TYPE_COUNT_RESULTS_1)
+				&& src.toUpperCase().contains(
+						Constants.SEARCH_TYPE_COUNT_RESULTS_2)
+				&& Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO)) {
+			stationCodeO = Utils.getCodeO(src, stationCode);
+			new HtmlRequestSumc().getInformation(context, stationCode,
+					stationCodeO, null);
+			// Check in case the user is requesting information from Favorites
+			// section
+		} else if (src.toUpperCase().contains(
+				Constants.SEARCH_TYPE_COUNT_RESULTS_1)
+				&& src.toUpperCase().contains(
+						Constants.SEARCH_TYPE_COUNT_RESULTS_2)
+				&& Constants.FAVORITES_GPS_PARAM.equals(stationCodeO)) {
+			stationCodeO = Utils.getCodeO(src, stationCode);
+
+			// Updating the Favorites DB with the CodeO
+			FavouritesDataSource datasource = new FavouritesDataSource(context);
+			datasource.open();
+			datasource.updateStation(stationCode, stationCodeO);
+			datasource.close();
+
+			new HtmlRequestSumc().getInformation(context, stationCode,
+					stationCodeO, null);
+			// Start VirtualBoards
 		} else {
 			intent = new Intent(context, VirtualBoards.class);
 

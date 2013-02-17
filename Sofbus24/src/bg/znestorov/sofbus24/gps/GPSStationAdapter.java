@@ -8,14 +8,17 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.VirtualBoards;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 
 // Class for creating the vehicles ListView
-public class GPSStationAdapter extends ArrayAdapter<GPSStation> {
+public class GPSStationAdapter extends ArrayAdapter<GPSStation> implements
+		OnClickListener {
 	private final Context context;
 	private final ArrayList<GPSStation> stations;
 
@@ -60,11 +63,27 @@ public class GPSStationAdapter extends ArrayAdapter<GPSStation> {
 				.findViewById(R.id.vehicle_text_view);
 		TextView listTime = (TextView) rowView
 				.findViewById(R.id.direction_text_view);
+		ImageView refreshButton = (ImageView) rowView
+				.findViewById(R.id.refresh_button);
 
 		listName.setText(station.getName());
 		listTime.setText(station.getTime_stamp());
 
+		// Refresh button functionality
+		refreshButton.setVisibility(View.VISIBLE);
+		refreshButton.setOnClickListener(this);
+
 		return rowView;
+	}
+
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.refresh_button:
+			new HtmlRequestSumc().getInformation(context, stations.get(0)
+					.getId(), stations.get(0).getCodeO(), null);
+			((VirtualBoards) context).finish();
+			break;
+		}
 	}
 
 	// Vehicle row in the ListView

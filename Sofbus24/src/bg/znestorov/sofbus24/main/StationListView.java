@@ -33,6 +33,7 @@ import bg.znestorov.sofbus24.schedule_stations.Station;
 import bg.znestorov.sofbus24.schedule_stations.StationAdapter;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.station_database.GPSStation;
+import bg.znestorov.sofbus24.utils.Constants;
 
 public class StationListView extends ListActivity {
 
@@ -151,12 +152,12 @@ public class StationListView extends ListActivity {
 			break;
 		case R.id.st_list_gps:
 			new HtmlRequestSumc().getInformation(StationListView.this,
-					stationCode, null, null);
+					stationCode, Constants.SCHEDULE_GPS_PARAM, null);
 			break;
 		case R.id.st_list_fav:
 			datasource.open();
 
-			GPSStation gpsStationFav = new GPSStation(stationCode, name, "1");
+			GPSStation gpsStationFav = new GPSStation(stationCode, name);
 
 			if (datasource.getStation(gpsStationFav) == null) {
 				datasource.createStation(gpsStationFav);

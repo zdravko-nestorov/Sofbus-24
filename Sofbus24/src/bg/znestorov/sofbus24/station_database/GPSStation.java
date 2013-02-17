@@ -22,12 +22,7 @@ public class GPSStation implements Serializable {
 	public GPSStation(String id, String name) {
 		this.id = id;
 		this.name = name;
-	}
-
-	public GPSStation(String id, String name, String codeO) {
-		this.id = id;
-		this.name = name;
-		this.codeO = codeO;
+		this.codeO = "-1";
 	}
 
 	public String getId() {

@@ -24,9 +24,9 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingRight="20dp"
         android:layout_weight="1"
-        android:paddingLeft="20dp" >
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -115,7 +115,7 @@
                 android:id="@+id/btn_options"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:background="@drawable/button_info"
+                android:background="@drawable/button_settings"
                 android:clickable="true"
                 android:contentDescription="@string/hs_button5" />
         </LinearLayout>

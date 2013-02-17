@@ -8,12 +8,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class FavouritesDataSource {
-
-	// LogCat TAG
-	private static final String TAG = "FavouritesDataSource";
 
 	// Database fields
 	private SQLiteDatabase database;
@@ -101,10 +97,22 @@ public class FavouritesDataSource {
 
 	// Delete station from the database
 	public void deleteStation(GPSStation station) {
-		String id = station.getId();
-		Log.d(TAG, "Station deleted with id: " + id);
-		database.delete(FavouritesSQLite.TABLE_FAVOURITES,
-				FavouritesSQLite.COLUMN_ID + " = " + id, null);
+		String where = FavouritesSQLite.COLUMN_ID + " = ?";
+		String[] whereArgs = new String[] { String.valueOf(station.getId()) };
+
+		database.delete(FavouritesSQLite.TABLE_FAVOURITES, where, whereArgs);
+	}
+
+	// Update station from the database
+	public void updateStation(String stationCode, String stationCodeO) {
+		ContentValues dataToInsert = new ContentValues();
+		dataToInsert.put(FavouritesSQLite.COLUMN_CODEO, stationCodeO);
+
+		String where = FavouritesSQLite.COLUMN_ID + " = ?";
+		String[] whereArgs = new String[] { String.valueOf(stationCode) };
+
+		database.update(FavouritesSQLite.TABLE_FAVOURITES, dataToInsert, where,
+				whereArgs);
 	}
 
 	// Get all stations from the database
