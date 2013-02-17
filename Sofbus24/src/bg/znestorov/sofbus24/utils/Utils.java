@@ -68,7 +68,11 @@ public class Utils {
 				if (differenceArr[1].length() == 0) {
 					differenceArr[1] = "0ì";
 				} else {
-					differenceArr[1] = differenceArr[1] + "ì";
+					if (differenceArr[1].contains("-")) {
+						differenceArr[1] = "0ì";
+					} else {
+						differenceArr[1] = differenceArr[1] + "ì";
+					}
 				}
 
 				diff = "~" + differenceArr[1];

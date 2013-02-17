@@ -133,7 +133,7 @@
     <string name="stations_timeSchedule_summary">Оставащо време или времена на пристигане</string>
     <string name="stations_closestST_title">Брой най-близки спирки</string>
     <string name="stations_closestST_summary">Колко спирки да се визуализират около текущото местоположение или избрана точка</string>
-    <string name="stations_timeInfoRetrieval_title">Време на извлечената информация</string>
+    <string name="stations_timeInfoRetrieval_title">Извлечена информация</string>
     <string name="stations_timeInfoRetrieval_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация (Виртуални табла)</string>
     <string name="pref_category_map">КАРТА</string>
     <string name="map_satellite_title">Сателитна карта</string>

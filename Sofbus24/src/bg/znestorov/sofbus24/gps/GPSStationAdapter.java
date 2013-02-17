@@ -7,13 +7,12 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.main.VirtualBoards;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 
 // Class for creating the vehicles ListView
@@ -81,7 +80,6 @@ public class GPSStationAdapter extends ArrayAdapter<GPSStation> implements
 		case R.id.refresh_button:
 			new HtmlRequestSumc().getInformation(context, stations.get(0)
 					.getId(), stations.get(0).getCodeO(), null);
-			((VirtualBoards) context).finish();
 			break;
 		}
 	}

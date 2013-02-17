@@ -317,7 +317,7 @@ public class VirtualBoards extends ListActivity {
 		protected void onPostExecute(Intent result) {
 			progressDialog.dismiss();
 
-			startActivityForResult(result, 1);
+			startActivity(result);
 		}
 	}
 

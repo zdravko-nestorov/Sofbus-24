@@ -396,6 +396,19 @@ public class HtmlRequestSumc {
 
 		Intent intent = new Intent();
 
+		// Check which activity calls this class and in case of "VirtualBoards"
+		// finish the previous activity
+		if (context.getClass().toString()
+				.equals("class bg.znestorov.sofbus24.main.VirtualBoards")) {
+			intent = new Intent(context, VirtualBoards.class);
+
+			intent.putExtra(VirtualBoards.keyHtmlResult, text);
+			context.startActivity(intent);
+			((VirtualBoards) context).finish();
+
+			return;
+		}
+
 		// Check if the result is returning multiple results
 		if (src.toUpperCase().contains(Constants.SEARCH_TYPE_COUNT_RESULTS_1)
 				&& src.toUpperCase().contains(
@@ -405,20 +418,26 @@ public class HtmlRequestSumc {
 
 			intent.putExtra(VirtualBoards.keyHtmlResult, text);
 			context.startActivity(intent);
-			// Check in case the user is requesting information from Schedule
-			// section
-		} else if (src.toUpperCase().contains(
-				Constants.SEARCH_TYPE_COUNT_RESULTS_1)
+
+			return;
+		}
+
+		// Check in case the user is requesting information from Schedule
+		// section
+		if (src.toUpperCase().contains(Constants.SEARCH_TYPE_COUNT_RESULTS_1)
 				&& src.toUpperCase().contains(
 						Constants.SEARCH_TYPE_COUNT_RESULTS_2)
 				&& Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO)) {
 			stationCodeO = Utils.getCodeO(src, stationCode);
 			new HtmlRequestSumc().getInformation(context, stationCode,
 					stationCodeO, null);
-			// Check in case the user is requesting information from Favorites
-			// section
-		} else if (src.toUpperCase().contains(
-				Constants.SEARCH_TYPE_COUNT_RESULTS_1)
+
+			return;
+		}
+
+		// Check in case the user is requesting information from Favorites
+		// section
+		if (src.toUpperCase().contains(Constants.SEARCH_TYPE_COUNT_RESULTS_1)
 				&& src.toUpperCase().contains(
 						Constants.SEARCH_TYPE_COUNT_RESULTS_2)
 				&& Constants.FAVORITES_GPS_PARAM.equals(stationCodeO)) {
@@ -432,13 +451,15 @@ public class HtmlRequestSumc {
 
 			new HtmlRequestSumc().getInformation(context, stationCode,
 					stationCodeO, null);
-			// Start VirtualBoards
-		} else {
-			intent = new Intent(context, VirtualBoards.class);
 
-			intent.putExtra(VirtualBoards.keyHtmlResult, text);
-			context.startActivity(intent);
+			return;
 		}
+
+		// Start VirtualBoards
+		intent = new Intent(context, VirtualBoards.class);
+
+		intent.putExtra(VirtualBoards.keyHtmlResult, text);
+		context.startActivity(intent);
 	}
 
 	private class LoadingSumc extends AsyncTask<Void, Void, String> {

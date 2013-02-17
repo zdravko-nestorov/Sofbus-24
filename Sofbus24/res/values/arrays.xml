@@ -272,7 +272,7 @@
     <!-- Virtual Borads (Information retrieval time) -->
     <string-array name="timeInfoRetrieval">
         <item name="time_skgt">От сайта на СКГТ</item>
-        <item name="time_real">Системно време на Android устройството</item>
+        <item name="time_real">Системно време</item>
     </string-array>
     <string-array name="timeInfoRetrievalValues">
         <item name="time_skgt">time_skgt</item>
