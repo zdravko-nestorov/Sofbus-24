@@ -133,6 +133,8 @@ public class FavouritesDataSource {
 
 			return station;
 		} else {
+			cursor.close();
+
 			return null;
 		}
 	}

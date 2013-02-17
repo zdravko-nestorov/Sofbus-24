@@ -118,6 +118,8 @@ public class StationsDataSource {
 
 			return station;
 		} else {
+			cursor.close();
+			
 			return null;
 		}
 	}
@@ -139,6 +141,8 @@ public class StationsDataSource {
 
 			return station;
 		} else {
+			cursor.close();
+			
 			return null;
 		}
 	}

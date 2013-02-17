@@ -17,6 +17,7 @@ public class GPSStation implements Serializable {
 	private String codeO;
 
 	public GPSStation() {
+		this.codeO = "-1";
 	}
 
 	public GPSStation(String id, String name) {

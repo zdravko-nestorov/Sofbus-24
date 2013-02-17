@@ -167,7 +167,6 @@ public class StationInfoMap extends MapActivity {
 			} else {
 				Toast.makeText(this, R.string.st_inf_fav_err,
 						Toast.LENGTH_SHORT).show();
-				;
 			}
 			datasource.close();
 			break;

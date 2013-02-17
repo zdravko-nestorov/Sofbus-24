@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="bg.znestorov.sofbus24.main"
     android:configChanges="keyboardHidden|orientation"
-    android:versionCode="7"
-    android:versionName="1.13" >
+    android:versionCode="9"
+    android:versionName="1.14" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

@@ -115,6 +115,8 @@ public class VirtualBoards extends ListActivity {
 				gpsStation.setCodeO(tempArray[4]);
 				station_list.add(0, gpsStation);
 
+				station_list.get(1).setCodeO(tempArray[4]);
+
 				setListAdapter(new GPSStationAdapter(context, station_list));
 			}
 
