@@ -121,6 +121,7 @@
     <string name="hs_button6">Бутон 6</string>
 
     <!-- PREFERENCE -->
+    <string name="pref_name">Настройки</string>
     <string name="pref_category_common">ОБЩИ</string>
     <string name="common_splash_screen_title">Splash Screen</string>
     <string name="common_splash_screen_summary">Визуалзиране на Splash Screen при стартиране на програмата</string>
