@@ -72,16 +72,18 @@ public class StationAdapter extends ArrayAdapter<Station> {
 		String vehicleNumberText = station.getVehicleNumber();
 		String vehicleDirectionText = station.getDirection();
 
-		if (vehicleType.equals("Автобус")) {
+		if (vehicleType.equals(context.getString(R.string.title_bus))) {
 			vehicleNumber.setText(vehicleType + " № " + vehicleNumberText);
 			vehicleDirection.setText(vehicleDirectionText);
-		} else if (vehicleType.equals("Тролейбус")) {
+		} else if (vehicleType
+				.equals(context.getString(R.string.title_trolley))) {
 			vehicleNumber.setText(vehicleType + " № " + vehicleNumberText);
 			vehicleDirection.setText(vehicleDirectionText);
 		} else {
 			vehicleNumber.setText(vehicleType + " № " + vehicleNumberText);
 			vehicleDirection.setText(vehicleDirectionText);
 		}
+
 		return rowView;
 	}
 }

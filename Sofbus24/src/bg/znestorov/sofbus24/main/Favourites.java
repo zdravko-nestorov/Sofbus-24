@@ -156,7 +156,8 @@ public class Favourites extends ListActivity {
 			final EditText input = new EditText(Favourites.this);
 			alert.setView(input);
 
-			alert.setPositiveButton("Œ ",
+			alert.setPositiveButton(
+					context.getString(R.string.button_title_ok),
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
@@ -179,7 +180,8 @@ public class Favourites extends ListActivity {
 						}
 					});
 
-			alert.setNegativeButton("Cancel",
+			alert.setNegativeButton(
+					context.getString(R.string.button_title_cancel),
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {

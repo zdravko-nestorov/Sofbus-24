@@ -2,7 +2,8 @@ package bg.znestorov.sofbus24.utils;
 
 import java.math.BigDecimal;
 
-import android.widget.TextView;
+import bg.znestorov.sofbus24.main.R;
+import android.content.Context;
 
 // Creating methods for easy processing data
 public class Utils {
@@ -35,7 +36,8 @@ public class Utils {
 	}
 
 	// Get the difference between two hours in format HH:MM
-	public static String getDifference(String afterTime, String currTime) {
+	public static String getDifference(Context context, String afterTime,
+			String currTime) {
 		String diff = "";
 		int afterTimeMilis = 0;
 		int currTimeMilis = 0;
@@ -49,7 +51,7 @@ public class Utils {
 			diff = (afterTimeMilis - currTimeMilis) + "";
 			diff = (new BigDecimal(diff).intValue() / 60) + ":"
 					+ (new BigDecimal(diff).intValue() % 60);
-			diff = formatTime(diff);
+			diff = formatTime(context, diff);
 		} catch (Exception e) {
 
 		}
@@ -58,7 +60,7 @@ public class Utils {
 	}
 
 	// Format Date (making the minutes in format :XX)
-	public static String formatTime(String difference) {
+	public static String formatTime(Context context, String difference) {
 		String diff = "";
 		String[] differenceArr = difference.split(":");
 
@@ -66,22 +68,31 @@ public class Utils {
 
 			if ("".equals(differenceArr[0]) || "0".equals(differenceArr[0])) {
 				if (differenceArr[1].length() == 0) {
-					differenceArr[1] = "0ì";
+					differenceArr[1] = "0"
+							+ context.getString(R.string.remaining_minutes);
 				} else {
 					if (differenceArr[1].contains("-")) {
-						differenceArr[1] = "0ì";
+						differenceArr[1] = "0"
+								+ context.getString(R.string.remaining_minutes);
 					} else {
-						differenceArr[1] = differenceArr[1] + "ì";
+						differenceArr[1] = differenceArr[1]
+								+ context.getString(R.string.remaining_minutes);
 					}
 				}
 
 				diff = "~" + differenceArr[1];
 			} else {
-				differenceArr[0] = differenceArr[0] + "÷";
+				differenceArr[0] = differenceArr[0]
+						+ context.getString(R.string.remaining_hours);
+				;
 				if (differenceArr[1].length() == 0) {
-					differenceArr[1] = "0ì";
+					differenceArr[1] = "0"
+							+ context.getString(R.string.remaining_minutes);
+					;
 				} else {
-					differenceArr[1] = differenceArr[1] + "ì";
+					differenceArr[1] = differenceArr[1]
+							+ context.getString(R.string.remaining_minutes);
+					;
 				}
 
 				diff = "~" + differenceArr[0] + " " + differenceArr[1];
@@ -89,18 +100,6 @@ public class Utils {
 		}
 
 		return diff;
-	}
-
-	// Set ActionBar label
-	public static void setActionBarLabel(TextView actionBarLabel,
-			String actionBarText) {
-		if (actionBarText != null && !"".equals(actionBarText)) {
-			if (actionBarText.length() > Constants.ACTION_BAR_LABEL_SIZE) {
-				actionBarText = actionBarText.substring(0,
-						Constants.ACTION_BAR_LABEL_SIZE - 3) + "...";
-			}
-			actionBarLabel.setText(actionBarText);
-		}
 	}
 
 	// Get "o" code using the station ID

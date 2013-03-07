@@ -5,6 +5,7 @@ import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
 import java.util.List;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -42,6 +43,8 @@ public class StationInfoMap extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_station_info_map);
 
+		Context context = StationInfoMap.this;
+
 		// Getting the information transfered from StationListView activity
 		try {
 			station = (Station) getIntent().getSerializableExtra("Station");
@@ -61,9 +64,11 @@ public class StationInfoMap extends MapActivity {
 		// Add a location marker and a balloon above it
 		List<Overlay> mapOverlays = mapView.getOverlays();
 		Drawable drawable;
-		if (station.getVehicleType().equals("Автобус")) {
+		if (station.getVehicleType().equals(
+				context.getString(R.string.title_bus))) {
 			drawable = getResources().getDrawable(R.drawable.bus_station);
-		} else if (station.getVehicleType().equals("Тролей")) {
+		} else if (station.getVehicleType().equals(
+				context.getString(R.string.title_trolley))) {
 			drawable = getResources().getDrawable(R.drawable.trolley_station);
 		} else {
 			drawable = getResources().getDrawable(R.drawable.tram_station);

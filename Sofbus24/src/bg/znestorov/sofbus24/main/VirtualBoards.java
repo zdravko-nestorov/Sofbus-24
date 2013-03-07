@@ -130,24 +130,32 @@ public class VirtualBoards extends ListActivity {
 
 	// Error dialog example with custom title and message
 	public void showErrorDialog(String title, String msg) {
-		dialog.setTitle(title).setMessage(msg).setCancelable(false)
+		dialog.setTitle(title)
+				.setMessage(msg)
+				.setCancelable(false)
 				.setIcon(android.R.drawable.ic_dialog_alert)
-				.setPositiveButton("OK", new OnClickListener() {
-					public void onClick(DialogInterface dialoginterface, int i) {
-						finish();
-					}
-				}).show();
+				.setPositiveButton(context.getString(R.string.button_title_ok),
+						new OnClickListener() {
+							public void onClick(
+									DialogInterface dialoginterface, int i) {
+								finish();
+							}
+						}).show();
 	}
 
 	// Info dialog example with custom title and message
 	public void showInfoDialog(String title, String msg) {
-		dialog.setTitle(title).setMessage(msg).setCancelable(false)
+		dialog.setTitle(title)
+				.setMessage(msg)
+				.setCancelable(false)
 				.setIcon(android.R.drawable.ic_dialog_alert)
-				.setPositiveButton("OK", new OnClickListener() {
-					public void onClick(DialogInterface dialoginterface, int i) {
+				.setPositiveButton(context.getString(R.string.button_title_ok),
+						new OnClickListener() {
+							public void onClick(
+									DialogInterface dialoginterface, int i) {
 
-					}
-				}).show();
+							}
+						}).show();
 	}
 
 	// Alert Dialog when UNKNOWN error happens
@@ -243,25 +251,30 @@ public class VirtualBoards extends ListActivity {
 		for (int i = 1; i < station_list.size(); i++) {
 			GPSStation vehicle = station_list.get(i);
 
-			if (vehicle.getType().equals("Автобус")) {
+			if (vehicle.getType().equals(context.getString(R.string.title_bus))) {
 				if (flag_a) {
 					stationInfo.append(", ").append(vehicle.getNumber());
 				} else {
 					flag_a = true;
-					stationInfo.append("Автобуси: ")
+					stationInfo.append(context.getString(R.string.title_buses))
 							.append(vehicle.getNumber());
 				}
-			} else if (vehicle.getType().equals("Тролей")) {
+			} else if (vehicle.getType().equals(
+					context.getString(R.string.title_trolley))) {
 				if (flag_tl) {
 					stationInfo.append(", ").append(vehicle.getNumber());
 				} else {
 					flag_tl = true;
 					if (flag_a) {
-						stationInfo.append("\nТролеи: ").append(
-								vehicle.getNumber());
+						stationInfo
+								.append("\n"
+										+ context
+												.getString(R.string.title_trolleys))
+								.append(vehicle.getNumber());
 					} else {
-						stationInfo.append("Тролеи: ").append(
-								vehicle.getNumber());
+						stationInfo.append(
+								context.getString(R.string.title_trolleys))
+								.append(vehicle.getNumber());
 					}
 				}
 			} else {
@@ -270,11 +283,13 @@ public class VirtualBoards extends ListActivity {
 				} else {
 					flag_tm = true;
 					if (flag_a || flag_tl) {
-						stationInfo.append("\nТрамаи: ").append(
-								vehicle.getNumber());
+						stationInfo.append(
+								"\n" + context.getString(R.string.title_trams))
+								.append(vehicle.getNumber());
 					} else {
-						stationInfo.append("Трамаи: ").append(
-								vehicle.getNumber());
+						stationInfo.append(
+								context.getString(R.string.title_trams))
+								.append(vehicle.getNumber());
 					}
 				}
 			}

@@ -1,6 +1,6 @@
 package bg.znestorov.sofbus24.schedule_vehicles;
 
-// Class containing the information from for each Vehicle
+// Class containing the information for each Vehicle
 public class Vehicle {
 
 	private String type;

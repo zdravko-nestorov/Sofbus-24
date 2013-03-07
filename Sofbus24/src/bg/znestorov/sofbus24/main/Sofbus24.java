@@ -83,7 +83,8 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			// input.setInputType(InputType.TYPE_CLASS_NUMBER);
 			alert.setView(input);
 
-			alert.setPositiveButton("ОК",
+			alert.setPositiveButton(
+					context.getString(R.string.button_title_ok),
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
@@ -94,7 +95,8 @@ public class Sofbus24 extends Activity implements OnClickListener {
 						}
 					});
 
-			alert.setNegativeButton("Отказ",
+			alert.setNegativeButton(
+					context.getString(R.string.button_title_cancel),
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
@@ -149,7 +151,8 @@ public class Sofbus24 extends Activity implements OnClickListener {
 						.setTitle(R.string.ss_gps_map_msg_title)
 						.setMessage(R.string.ss_gps_map_msg_body)
 						.setCancelable(false)
-						.setPositiveButton("ОК",
+						.setPositiveButton(
+								context.getString(R.string.button_title_ok),
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int i) {
@@ -159,7 +162,8 @@ public class Sofbus24 extends Activity implements OnClickListener {
 									}
 
 								})
-						.setNegativeButton("Отказ",
+						.setNegativeButton(
+								context.getString(R.string.button_title_cancel),
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int i) {
@@ -200,14 +204,18 @@ public class Sofbus24 extends Activity implements OnClickListener {
 					.setTitle(R.string.btn_exit)
 					.setMessage(R.string.exit_msg)
 					.setCancelable(true)
-					.setPositiveButton("Да",
+					.setPositiveButton(
+							context.getString(R.string.button_title_yes),
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int i) {
 									finish();
 								}
 
-							}).setNegativeButton("Не", null).show();
+							})
+					.setNegativeButton(
+							context.getString(R.string.button_title_no), null)
+					.show();
 		} else {
 			finish();
 		}

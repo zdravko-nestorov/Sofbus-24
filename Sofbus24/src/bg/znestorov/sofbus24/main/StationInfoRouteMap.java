@@ -6,6 +6,7 @@ import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 import java.util.Arrays;
 import java.util.List;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -61,6 +62,8 @@ public class StationInfoRouteMap extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_station_info_map);
 
+		Context context = StationInfoRouteMap.this;
+
 		// Getting the information transfered from StationTabView activity
 		String extraInfo = getIntent().getStringExtra(ROUTE_MAP);
 
@@ -72,8 +75,8 @@ public class StationInfoRouteMap extends MapActivity {
 				.split(";"));
 
 		// Setting activity title
-		this.setTitle("Информация за \"" + vehicleType + " № " + vehicleNumber
-				+ "\"");
+		this.setTitle(context.getString(R.string.st_inf_route_title)
+				+ vehicleType + " № " + vehicleNumber + "\"");
 
 		// Creating MapView, setting StreetView and adding zoom controls
 		mapView = (MapView) findViewById(R.id.mapView);
@@ -83,9 +86,10 @@ public class StationInfoRouteMap extends MapActivity {
 		// Add a location marker and a balloon above it
 		List<Overlay> mapOverlays = mapView.getOverlays();
 		Drawable drawable;
-		if (vehicleType.equals("Автобус")) {
+		if (vehicleType.equals(context.getString(R.string.title_bus))) {
 			drawable = getResources().getDrawable(R.drawable.bus_station);
-		} else if (vehicleType.equals("Тролей")) {
+		} else if (vehicleType
+				.equals(context.getString(R.string.title_trolley))) {
 			drawable = getResources().getDrawable(R.drawable.trolley_station);
 		} else {
 			drawable = getResources().getDrawable(R.drawable.tram_station);

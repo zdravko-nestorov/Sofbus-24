@@ -287,13 +287,15 @@ public class HtmlResultSumc {
 					br++;
 				} else {
 					remainingTime += ", "
-							+ Utils.getDifference(tempTimeStamp[i], currTime);
+							+ Utils.getDifference(this.context,
+									tempTimeStamp[i], currTime);
 				}
 			}
 
 			for (int i = 0; i < br; i++) {
 				remainingTime += ", "
-						+ Utils.getDifference(tempTimeStampAM[i], currTime);
+						+ Utils.getDifference(this.context, tempTimeStampAM[i],
+								currTime);
 			}
 
 			if (remainingTime.startsWith(",")) {

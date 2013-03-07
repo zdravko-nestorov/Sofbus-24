@@ -169,7 +169,7 @@ public class VehicleListView extends Activity {
 		@Override
 		protected String doInBackground(Void... params) {
 			HtmlRequestDirection htmlRequestDirection = new HtmlRequestDirection(
-					vehicleChoice);
+					VehicleListView.this, vehicleChoice);
 			String htmlResult = htmlRequestDirection.getInformation();
 
 			return htmlResult;
@@ -225,11 +225,14 @@ public class VehicleListView extends Activity {
 				dialog.setTitle(R.string.veh_ch_direction_choice_error)
 						.setMessage(R.string.veh_ch_direction_choice_error_msg)
 						.setIcon(android.R.drawable.ic_dialog_alert)
-						.setPositiveButton("OK", new OnClickListener() {
-							public void onClick(
-									DialogInterface dialoginterface, int i) {
-							}
-						}).show();
+						.setPositiveButton(
+								context.getString(R.string.button_title_ok),
+								new OnClickListener() {
+									public void onClick(
+											DialogInterface dialoginterface,
+											int i) {
+									}
+								}).show();
 			}
 		}
 	}

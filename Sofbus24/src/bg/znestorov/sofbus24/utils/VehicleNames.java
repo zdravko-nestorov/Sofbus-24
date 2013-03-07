@@ -34,19 +34,21 @@ public class VehicleNames {
 				R.array.tram_stations);
 
 		this.emptyArrays();
-		this.fillArrays();
+		this.fillArrays(context);
 	}
 
-	private void fillArrays() {
+	private void fillArrays(Context context) {
 		for (int i = 0; i < bus_number.length; i++) {
-			bus.add(new Vehicle("Автобус", bus_number[i], bus_stations[i]));
+			bus.add(new Vehicle(context.getString(R.string.title_bus),
+					bus_number[i], bus_stations[i]));
 		}
 		for (int i = 0; i < trolley_number.length; i++) {
-			trolley.add(new Vehicle("Тролейбус", trolley_number[i],
-					trolley_stations[i]));
+			trolley.add(new Vehicle(context.getString(R.string.title_trolley),
+					trolley_number[i], trolley_stations[i]));
 		}
 		for (int i = 0; i < tram_number.length; i++) {
-			tram.add(new Vehicle("Трамвай", tram_number[i], tram_stations[i]));
+			tram.add(new Vehicle(context.getString(R.string.title_tram),
+					tram_number[i], tram_stations[i]));
 		}
 	}
 

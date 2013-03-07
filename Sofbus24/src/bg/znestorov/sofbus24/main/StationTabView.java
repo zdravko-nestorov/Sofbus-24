@@ -29,12 +29,14 @@ public class StationTabView extends TabActivity {
 	private static final String direction2 = "DIRECTION-2";
 
 	DirectionTransfer directionTransfer;
+	Context context;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Bundle bundle = new Bundle();
+		context = StationTabView.this;
 
 		try {
 			directionTransfer = (DirectionTransfer) getIntent()
@@ -118,11 +120,14 @@ public class StationTabView extends TabActivity {
 						.setTitle(R.string.st_ch_menu_err_title)
 						.setMessage(R.string.st_ch_menu_err_msg)
 						.setIcon(android.R.drawable.ic_dialog_alert)
-						.setPositiveButton("OK", new OnClickListener() {
-							public void onClick(
-									DialogInterface dialoginterface, int i) {
-							}
-						}).show();
+						.setPositiveButton(
+								context.getString(R.string.button_title_ok),
+								new OnClickListener() {
+									public void onClick(
+											DialogInterface dialoginterface,
+											int i) {
+									}
+								}).show();
 			}
 			break;
 

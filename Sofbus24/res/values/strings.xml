@@ -1,21 +1,71 @@
 <resources>
 
-    <!-- MAIN -->
+    <!-- HOME SCREEN -->
+    <!-- Main -->
     <string name="app_name">Софбус 24</string>
+    <string name="ss_name">Софийски градски транспорт</string>
     <string name="btn_gps">Виртуални табла</string>
     <string name="gps_msg">Моля въведете код или име на спирка:</string>
     <string name="btn_map">GPS времена - Google Maps</string>
     <string name="btn_schedule">Разписания</string>
     <string name="btn_favourite">Любими</string>
     <string name="btn_options">Настройки</string>
-    <string name="btn_exit">Изход</string>
-    <string name="exit_msg">Сигурни ли сте, че искате да излезете от приложението?</string>
     <string name="ss_gps_map_msg_title">Грешка</string>
     <string name="ss_gps_map_msg_body">Моля включете поне едно от устройствата (GPS или WiFi), за да бъде засечено текущото ви местоположение.</string>
 
-    <!-- Sofia Stations -->
-    <string name="ss_name">Софийски градски транспорт</string>
+    <!-- Home Screen Buttons -->
+    <string name="hs_button1">Бутон 1</string>
+    <string name="hs_button2">Бутон 2</string>
+    <string name="hs_button3">Бутон 3</string>
+    <string name="hs_button4">Бутон 4</string>
+    <string name="hs_button5">Бутон 5</string>
+    <string name="hs_button6">Бутон 6</string>
 
+    <!-- SUMC GPS -->
+    <string name="sumc_captcha">Тест за сигурност</string>
+    <string name="sumc_captcha_msg">Моля въведете символите от изображението:</string>
+    <string name="sumc_button_label">OK</string>
+
+    <!-- GPS Station Choice -->
+    <string name="gps_station_choice_name">&lt;u>Изберете спирка&lt;/u></string>
+    <string name="gps_station_choice_error_internet">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
+    <string name="gps_station_choice_error_info">Няма намерена информация.</string>
+
+    <!-- VIRTUAL BOARDS -->
+    <!-- GPS -->
+    <string name="gps_name">Виртуални табла</string>
+    <string name="gps_err_dialog_title">Грешка</string>
+    <string name="gps_fav_dialog_title">Любими</string>
+    <string name="gps_err_dialog_msg">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
+    <string name="gps_favourite_add">Добави в любими</string>
+    <string name="gps_see_map">Виж на картата</string>
+    <string name="gps_error_unknown">Грешка при трансфера на информация</string>
+    <string name="gps_error_noInfo" formatted="false">Няма информация за спирка \"%s\"</string>
+    <string name="gps_error_noBus" formatted="false">Спирката \"%s\" не съществува</string>
+    <string name="gps_error_noBusEmpty">Спирката не съществува</string>
+    <string name="gps_error_noCoordinates">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
+
+    <!-- GPS GOOGLE MAPS -->
+    <!-- Map GPS -->
+    <string name="map_gps_name">Виртуални табла - Google Maps</string>
+    <string name="map_gps_menu_item_distance">Маршрут</string>
+    <string name="map_gps_menu_item_focus">Позиционирай</string>
+    <string name="map_gps_menu_item_help">Помощ</string>
+    <string name="map_gps_menu_item_clean">Изчисти</string>
+    <string name="map_gps_no_last_location">Моля изчакайте координатите Ви да бъдат засечени.</string>
+    <string name="map_gps_route_error">Нужна е интернет връзка, за да се визуалзира маршрута (или има проблем със сървъра на GoogleMaps).</string>
+    <string name="map_gps_distance_OK" formatted="false">Разтоянието от текущата позиция до избраната от Вас спирка е %s метра.</string>
+    <string name="map_gps_distance_ERR">Моля изберете спирка.</string>
+    <string name="map_gps_location_status">Изчисляване на текущите координати&#8230;</string>
+
+    <!-- Map GPS Help -->
+    <string name="map_help_label">Помощ</string>
+    <string name="map_help_text">\ Първоначално визуализираните спирки са 8-те (по подразбиране) най-близки около вас (&lt;i>синият маркер&lt;/i>),
+        както и добавените в любими. Избирайки точка на карата ще се визуализират и 8-те (по подразбиране) най-близки около нея.&lt;br/>&lt;br/>Натискайки 
+        върху всяка спирка, се появява балонче с информация относно нейното име и номер. Това балонче е &lt;b>линк&lt;/b>        към подробна информация относно разписанието на преминаващите коли през съответната спирка.</string>
+    <string name="map_help_btn_label">OK</string>
+
+    <!-- SCHEDULE -->
     <!-- Vehicle Choice -->
     <string name="veh_ch_name">Разписание на колите</string>
     <string name="veh_ch_image">Изображение на превозното средство</string>
@@ -53,6 +103,10 @@
     <string name="st_inf_fav_err">Спирката вече е била добавена в любими.</string>
     <string name="st_inf_menu_position">Позиционирай</string>
 
+    <!-- Station Info Route Mape -->
+    <string name="st_inf_route_title">Информация за "</string>
+
+    <!-- FAVOURITES -->
     <!-- Favourites -->
     <string name="fav_info">Избрани спирки</string>
     <string name="fav_delete">Изтрий първата</string>
@@ -62,65 +116,8 @@
     <string name="fav_menu_rename_msg">Въведете новото име на спирката:</string>
     <string name="fav_menu_delete">Изтрий</string>
 
-    <!-- About -->
-    <string name="about_label">Софбус 24 (версия 1.14)</string>
-    <string name="about_text">\ \tAndroid системата предоставя подробна информация, свързана с използването на градския транпорт 
-        в София, като часове на пристигане в реално време, разписания на превозните средства, разположения на спирките 
-        на територията на София, както и локализиране на най-близките спирки, в зависимост от текущото местоположение.
-        \n\n<i>Данните се извличат от: <b><u>http://m.sumc.bg</u></b></i> \n\n<b>Автор: Здравко Несторов</b></string>
-    <string name="about_btn_label">OK</string>
-
-    <!-- GPS -->
-    <string name="gps_name">Виртуални табла</string>
-    <string name="gps_err_dialog_title">Грешка</string>
-    <string name="gps_fav_dialog_title">Любими</string>
-    <string name="gps_err_dialog_msg">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
-    <string name="gps_favourite_add">Добави в любими</string>
-    <string name="gps_see_map">Виж на картата</string>
-    <string name="gps_error_unknown">Грешка при трансфера на информация</string>
-    <string name="gps_error_noInfo" formatted="false">Няма информация за спирка \"%s\"</string>
-    <string name="gps_error_noBus" formatted="false">Спирката \"%s\" не съществува</string>
-    <string name="gps_error_noBusEmpty">Спирката не съществува</string>
-    <string name="gps_error_noCoordinates">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
-
-    <!-- GPS Station Choice -->
-    <string name="gps_station_choice_name">&lt;u>Изберете спирка&lt;/u></string>
-    <string name="gps_station_choice_error_internet">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
-    <string name="gps_station_choice_error_info">Няма намерена информация.</string>
-
-    <!-- SUMC GPS -->
-    <string name="sumc_captcha">Тест за сигурност</string>
-    <string name="sumc_captcha_msg">Моля въведете символите от изображението:</string>
-    <string name="sumc_button_label">OK</string>
-
-    <!-- MAP GPS -->
-    <string name="map_gps_name">Виртуални табла - Google Maps</string>
-    <string name="map_gps_menu_item_distance">Маршрут</string>
-    <string name="map_gps_menu_item_focus">Позиционирай</string>
-    <string name="map_gps_menu_item_help">Помощ</string>
-    <string name="map_gps_menu_item_clean">Изчисти</string>
-    <string name="map_gps_no_last_location">Моля изчакайте координатите Ви да бъдат засечени.</string>
-    <string name="map_gps_route_error">Нужна е интернет връзка, за да се визуалзира маршрута (или има проблем със сървъра на GoogleMaps).</string>
-    <string name="map_gps_distance_OK" formatted="false">Разтоянието от текущата позиция до избраната от Вас спирка е %s метра.</string>
-    <string name="map_gps_distance_ERR">Моля изберете спирка.</string>
-    <string name="map_gps_location_status">Изчисляване на текущите координати&#8230;</string>
-
-    <!-- MAP GPS HELP -->
-    <string name="map_help_label">Помощ</string>
-    <string name="map_help_text">\ Първоначално визуализираните спирки са 8-те (по подразбиране) най-близки около вас (&lt;i>синият маркер&lt;/i>),
-        както и добавените в любими. Избирайки точка на карата ще се визуализират и 8-те (по подразбиране) най-близки около нея.&lt;br/>&lt;br/>Натискайки 
-        върху всяка спирка, се появява балонче с информация относно нейното име и номер. Това балонче е &lt;b>линк&lt;/b>        към подробна информация относно разписанието на преминаващите коли през съответната спирка.</string>
-    <string name="map_help_btn_label">OK</string>
-
-    <!-- HOME SCREEN BUTTONS -->
-    <string name="hs_button1">Бутон 1</string>
-    <string name="hs_button2">Бутон 2</string>
-    <string name="hs_button3">Бутон 3</string>
-    <string name="hs_button4">Бутон 4</string>
-    <string name="hs_button5">Бутон 5</string>
-    <string name="hs_button6">Бутон 6</string>
-
-    <!-- PREFERENCE -->
+    <!-- PREFERENCES -->
+    <!-- Preferences -->
     <string name="pref_name">Настройки</string>
     <string name="pref_category_common">ОБЩИ</string>
     <string name="common_splash_screen_title">Splash Screen</string>
@@ -147,7 +144,41 @@
     <string name="other_info_title">Информация</string>
     <string name="other_info_summary">Информация за продукта</string>
 
-    <!-- ACTION BAR -->
-    <string name="action_bar_label">Софбус 24</string>
+    <!-- About -->
+    <string name="about_label">Софбус 24 (версия 1.14)</string>
+    <string name="about_text">\ \tAndroid системата предоставя подробна информация, свързана с използването на градския транпорт 
+        в София, като часове на пристигане в реално време, разписания на превозните средства, разположения на спирките 
+        на територията на София, както и локализиране на най-близките спирки, в зависимост от текущото местоположение.
+        \n\n<i>Данните се извличат от: <b><u>http://m.sumc.bg</u></b></i> \n\n<b>Автор: Здравко Несторов</b></string>
+    <string name="about_btn_label">OK</string>
+
+    <!-- EXIT -->
+    <!-- Exit -->
+    <string name="btn_exit">Изход</string>
+    <string name="exit_msg">Сигурни ли сте, че искате да излезете от приложението?</string>
+
+    <!-- ADDITIONAL STRINGS -->
+    <!-- Format remaining time: "Utils.formatTime(context, difference)" -->
+    <string name="remaining_minutes">м</string>
+    <string name="remaining_hours">ч</string>
+
+    <!-- Vehicle names -->
+    <string name="title_bus">Автобус</string>
+    <string name="title_buses">Автобуси: </string>
+    <string name="title_trolley">Тролей</string>
+    <string name="title_trolleys">Тролеи: </string>
+    <string name="title_tram">Трамвай</string>
+    <string name="title_trams">Трамваи: </string>
+
+    <!-- Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" -->
+    <string name="choose_vehicle_number">Изберете номер на </string>
+
+    <!-- "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" -->
+    <string name="button_title_ok">ОК</string>
+    <string name="button_title_cancel">Отказ</string>
+
+    <!-- "YES" and "NO" button titles: "Sofbus24.onBackPressed()" -->
+    <string name="button_title_yes">Да</string>
+    <string name="button_title_no">Не</string>
 
 </resources>

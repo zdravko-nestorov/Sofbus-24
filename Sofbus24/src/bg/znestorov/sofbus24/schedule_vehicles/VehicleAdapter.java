@@ -56,11 +56,12 @@ public class VehicleAdapter extends ArrayAdapter<Vehicle> {
 		ImageView imageView = (ImageView) rowView
 				.findViewById(R.id.vehicle_image_view);
 
-		if (vehicleType.equals("Автобус")) {
+		if (vehicleType.equals(context.getString(R.string.title_bus))) {
 			vehicleNumber.setText(vehicleType + " № " + vehicle.getNumber());
 			vehicleDirection.setText(vehicle.getDirection());
 			imageView.setImageResource(R.drawable.bus_icon);
-		} else if (vehicleType.equals("Тролейбус")) {
+		} else if (vehicleType
+				.equals(context.getString(R.string.title_trolley))) {
 			vehicleNumber.setText(vehicleType + " № " + vehicle.getNumber());
 			vehicleDirection.setText(vehicle.getDirection());
 			imageView.setImageResource(R.drawable.trolley_icon);
@@ -86,7 +87,8 @@ public class VehicleAdapter extends ArrayAdapter<Vehicle> {
 		TextView separator = (TextView) rowView
 				.findViewById(R.id.list_item_section_text);
 
-		separator.setText("Изберете номер на " + vehicleType.toLowerCase());
+		separator.setText(context.getString(R.string.choose_vehicle_number)
+				+ vehicleType.toLowerCase());
 
 		return rowView;
 	}

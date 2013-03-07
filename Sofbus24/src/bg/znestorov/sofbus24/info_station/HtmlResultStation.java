@@ -68,8 +68,8 @@ public class HtmlResultStation {
 
 			if (time_stamp.size() > 0 && timeSchedule) {
 				for (int i = 0; i < time_stamp.size(); i++) {
-					time_stamp.set(i,
-							Utils.getDifference(time_stamp.get(i), currTime));
+					time_stamp.set(i, Utils.getDifference(context,
+							time_stamp.get(i), currTime));
 				}
 			} else {
 				for (int i = 0; i < time_stamp.size(); i++) {

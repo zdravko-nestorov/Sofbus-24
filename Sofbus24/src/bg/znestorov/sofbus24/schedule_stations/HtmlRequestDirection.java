@@ -23,7 +23,9 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import android.content.Context;
 import android.util.Log;
+import bg.znestorov.sofbus24.main.R;
 
 public class HtmlRequestDirection {
 
@@ -40,13 +42,14 @@ public class HtmlRequestDirection {
 	private String vehicleNumber;
 
 	// Getting the vehicle type and number
-	public HtmlRequestDirection(String vehicleChoice) {
+	public HtmlRequestDirection(Context context, String vehicleChoice) {
 
 		this.vehicleType = getValueBefore(vehicleChoice, "$");
 
-		if (this.vehicleType.equals("Автобус")) {
+		if (this.vehicleType.equals(context.getString(R.string.title_bus))) {
 			this.vehicleType = "1";
-		} else if (this.vehicleType.equals("Тролейбус")) {
+		} else if (this.vehicleType.equals(context
+				.getString(R.string.title_trolley))) {
 			this.vehicleType = "2";
 		} else {
 			this.vehicleType = "3";
