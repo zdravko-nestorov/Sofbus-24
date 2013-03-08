@@ -1,0 +1,185 @@
+<resources>
+
+    <!-- HOME SCREEN -->
+    <!-- Main -->
+    <string name="app_name">Sofbus 24</string>
+    <string name="ss_name">Sofia public transport</string>
+    <string name="btn_gps">Virtual boards</string>
+    <string name="gps_msg">Please enter the code or the name of a station:</string>
+    <string name="btn_map">GPS times - Google Maps</string>
+    <string name="btn_schedule">Schedules</string>
+    <string name="btn_favourite">Favorites</string>
+    <string name="btn_options">Settings</string>
+    <string name="ss_gps_map_msg_title">Error</string>
+    <string name="ss_gps_map_msg_body">Please turn on at least one of the devices (GPS or WiFi) to detect your current location.</string>
+
+    <!-- Home Screen Buttons -->
+    <string name="hs_button1">Button 1</string>
+    <string name="hs_button2">Button 2</string>
+    <string name="hs_button3">Button 3</string>
+    <string name="hs_button4">Button 4</string>
+    <string name="hs_button5">Button 5</string>
+    <string name="hs_button6">Button 6</string>
+
+    <!-- SUMC GPS -->
+    <string name="sumc_captcha">Security test</string>
+    <string name="sumc_captcha_msg">Please enter the characters from the image:</string>
+    <string name="sumc_button_label">OK</string>
+
+    <!-- GPS Station Choice -->
+    <string name="gps_station_choice_name">&lt;u>Please choose a station&lt;/u></string>
+    <string name="gps_station_choice_error_internet">An error occurred while retrieving the information. Please check your Internet connection and try again.</string>
+    <string name="gps_station_choice_error_info">No information found.</string>
+
+    <!-- VIRTUAL BOARDS -->
+    <!-- GPS -->
+    <string name="gps_name">Virtual boards</string>
+    <string name="gps_err_dialog_title">Error</string>
+    <string name="gps_fav_dialog_title">Favorites</string>
+    <string name="gps_err_dialog_msg">An error occurred while retrieving the information. Please check your Internet connection and try again.</string>
+    <string name="gps_favourite_add">Add to Favorites</string>
+    <string name="gps_see_map">See on the map</string>
+    <string name="gps_error_unknown">Information transfer error</string>
+    <string name="gps_error_noInfo" formatted="false">There is no information about the station \"%s\"</string>
+    <string name="gps_error_noBus" formatted="false">The station \"%s\" does not exist</string>
+    <string name="gps_error_noBusEmpty">The station does not exist</string>
+    <string name="gps_error_noCoordinates">The station could not be visualized (its coordinates are not found in the database).</string>
+
+    <!-- GPS GOOGLE MAPS -->
+    <!-- Map GPS -->
+    <string name="map_gps_name">Virtual boards - Google Maps</string>
+    <string name="map_gps_menu_item_distance">Route</string>
+    <string name="map_gps_menu_item_focus">Focus</string>
+    <string name="map_gps_menu_item_help">Help</string>
+    <string name="map_gps_menu_item_clean">Clear</string>
+    <string name="map_gps_no_last_location">Please wait to detect your coordinates.</string>
+    <string name="map_gps_route_error">An Internet connection is needed to visualize the route (or there is a problem with the GoogleMaps server).</string>
+    <string name="map_gps_distance_OK" formatted="false">The distance from the current position to the selected station is %s.</string>
+    <string name="map_gps_distance_ERR">Please select a station.</string>
+    <string name="map_gps_location_status">Calculating the current coordinates&#8230;</string>
+
+    <!-- Map GPS Help -->
+    <string name="map_help_label">Help</string>
+    <string name="map_help_text">\ The displayed stations by default are the 8th closest around you (&lt;i>the blue marker&lt;/i>) and these added to Favorites.
+        Choosing a point on the map will visualize the 8th closest stations around it (by default)&lt;br/>&lt;br/>
+        When a station is choosen, a bubble will appear with an information about its name and number. This bubble is a &lt;b>link&lt;/b>        
+        to a detailed information about the schedule of the vehicles passing through the corresponding station.</string>
+    <string name="map_help_btn_label">OK</string>
+
+    <!-- SCHEDULE -->
+    <!-- Vehicle Choice -->
+    <string name="veh_ch_name">Vehicles\' schedule</string>
+    <string name="veh_ch_image">Vehicle\'s image</string>
+    <string name="veh_ch_direction_choice">Select a direction</string>
+    <string name="veh_ch_direction_choice_error">Информация</string>
+    <string name="veh_ch_coordinates_error">The station could not be visualized (its coordinates are not found in the database).</string>
+    <string name="veh_ch_direction_choice_error_msg">There is no available information for this line at the moment or you have a problem with your Internet connection.</string>
+    <string name="veh_ch_search_box">Search by station number</string>
+
+    <!-- Station Choice -->
+    <string name="st_ch_name">Directions</string>
+    <string name="st_ch_menu_item_route">Route</string>
+    <string name="st_ch_menu_item_help">Help</string>
+    <string name="st_ch_menu_err_title">Error</string>
+    <string name="st_ch_menu_err_msg">The stations on this line cannot be visualized because they are not found in the database.</string>
+    <string name="st_ch_help_text">\ Each station on the list is a link to GoogleMaps, giving an information about the schedule and the location of the station. 
+        There is an additional menu, showing when long pressed on the desired station, with the following options:&lt;br/>
+         * &lt;b>Schedule&lt;/b> - an information about the schedule for the selected station;&lt;br/>
+         * &lt;b>Virtual boards&lt;/b> - an information about the arrival in real time for the selected station;&lt;br/>
+         * &lt;b>Add to Favorites&lt;/b> - adding the stations to Favorites;&lt;br/>&lt;br/>
+        It is possible to visualize the route of the selected vehicle using the shortcut menu.</string>
+    <string name="st_list_cont_menu_header">Select</string>
+    <string name="st_list_schedule">Schedule</string>
+    <string name="st_list_gps">Virtual boards</string>
+    <string name="st_list_fav">Add to Favorites</string>
+
+    <!-- Station Info -->
+    <string name="st_inf_name" formatted="false">Information about %s</string>
+    <string name="st_inf_time" formatted="false">Information to %s</string>
+    <string name="st_inf_satelite_image">Map view</string>
+    <string name="st_inf_fav_ok">The station was successfully added to Favorites.</string>
+    <string name="st_inf_fav_err">The station has been already added to Favorites.</string>
+    <string name="st_inf_menu_position">Focus</string>
+
+    <!-- Station Info Route Mape -->
+    <string name="st_inf_route_title">Information about "</string>
+
+    <!-- FAVOURITES -->
+    <!-- Favourites -->
+    <string name="fav_info">Favorites</string>
+    <string name="fav_delete">Delete first</string>
+    <string name="fav_delete_all">Delete all</string>
+    <string name="fav_menu_rename">Rename</string>
+    <string name="fav_menu_rename_title">Rename</string>
+    <string name="fav_menu_rename_msg">Please enter the new name of the station:</string>
+    <string name="fav_menu_delete">Delete</string>
+
+    <!-- PREFERENCES -->
+    <!-- Preferences -->
+    <string name="pref_name">Settings</string>
+    <string name="pref_category_common">GENERAL</string>
+    <string name="common_splash_screen_title">Splash Screen</string>
+    <string name="common_splash_screen_summary">Visualize a Splash Screen when the program starts</string>
+    <string name="common_exit_title">Exit message</string>
+    <string name="common_exit_summary">Using a dialog box on exit (restart required)</string>
+    <string name="pref_category_stations">STATION INFORMATION</string>
+    <string name="stations_timeGPS_title">Virtual boards</string>
+    <string name="stations_timeGPS_summary">Remaining time or time of arrival</string>
+    <string name="stations_timeSchedule_title">Schedules</string>
+    <string name="stations_timeSchedule_summary">Remaining time or time of arrival</string>
+    <string name="stations_closestST_title">Nearest stations count</string>
+    <string name="stations_closestST_summary">Number of stations that are displayed around your current location or a selected point</string>
+    <string name="stations_timeInfoRetrieval_title">Extracted information</string>
+    <string name="stations_timeInfoRetrieval_summary">What time to be used for displaying/calculating the extracted information (Virtual boards)</string>
+    <string name="pref_category_map">MAP</string>
+    <string name="map_satellite_title">Satelite map</string>
+    <string name="map_satellite_summary">(or Street View map)</string>
+    <string name="map_compass_title">Compass</string>
+    <string name="map_compass_summary">Show an orientation arrow in the upper left corner (in GPS GoogleMaps)</string>
+    <string name="map_mapView_title">Map mode</string>
+    <string name="map_mapView_summary">Show a map mode change icon (in the upper right corner)</string>
+    <string name="pref_category_other">OTHER</string>
+    <string name="other_info_title">Information</string>
+    <string name="other_info_summary">Product information</string>
+
+    <!-- About -->
+    <string name="about_label">Sofbus 24 (version 1.14)</string>
+    <string name="about_text">\ \tAn Android system, giving an information about the public transport in Sofia, as time of arrival in real time, 
+        schedule of the vehicles, positioning of the stations, as well as locating the closest stations, depending on the current location.
+        \n\n<i>The data are extracted from: <b><u>http://m.sumc.bg</u></b></i> \n\n<b>Author: Zdravko Nestorov</b></string>
+    <string name="about_btn_label">OK</string>
+
+    <!-- EXIT -->
+    <!-- Exit -->
+    <string name="btn_exit">Exit</string>
+    <string name="exit_msg">Are you sure you want to exit the application?</string>
+
+    <!-- ADDITIONAL STRINGS -->
+    <!-- Format remaining time: "Utils.formatTime(context, difference)" -->
+    <string name="remaining_minutes">m</string>
+    <string name="remaining_hours">h</string>
+
+    <!-- Vehicle names -->
+    <string name="title_bus">Bus</string>
+    <string name="title_buses">Buses: </string>
+    <string name="title_trolley">Trolley</string>
+    <string name="title_trolleys">Trolleys: </string>
+    <string name="title_tram">Tram</string>
+    <string name="title_trams">Trams: </string>
+
+    <!-- Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" -->
+    <string name="choose_vehicle_number">Choose number of </string>
+
+    <!-- "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" -->
+    <string name="button_title_ok">ОК</string>
+    <string name="button_title_cancel">Cancel</string>
+
+    <!-- "YES" and "NO" button titles: "Sofbus24.onBackPressed()" -->
+    <string name="button_title_yes">Yes</string>
+    <string name="button_title_no">No</string>
+
+    <!-- "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" -->
+    <string name="time_remaining">Remaining time: </string>
+    <string name="time_arrival">Time of arrival: </string>
+
+</resources>

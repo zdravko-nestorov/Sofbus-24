@@ -16,22 +16,30 @@ public final class R {
         /**  BUS STUFF 
          */
         public static final int bus_numbers=0x7f060000;
+        /**  BUS STUFF 
+         */
         public static final int bus_stations=0x7f060001;
         /**  Closest stations 
+ Closest stations 
          */
         public static final int closestStations=0x7f060006;
         public static final int closestStationsValues=0x7f060007;
         /**  Virtual Borads (Information retrieval time) 
+ Virtual Borads (Information retrieval time) 
          */
         public static final int timeInfoRetrieval=0x7f060008;
         public static final int timeInfoRetrievalValues=0x7f060009;
         /**  TRAM STUFF 
          */
         public static final int tram_numbers=0x7f060004;
+        /**  TRAM STUFF 
+         */
         public static final int tram_stations=0x7f060005;
         /**  TROLLEY STUFF 
          */
         public static final int trolley_numbers=0x7f060002;
+        /**  TROLLEY STUFF 
+         */
         public static final int trolley_stations=0x7f060003;
     }
     public static final class attr {
@@ -187,14 +195,19 @@ public final class R {
     public static final class string {
         public static final int about_btn_label=0x7f080068;
         /**  About 
+ About 
          */
         public static final int about_label=0x7f080066;
         public static final int about_text=0x7f080067;
         /**  HOME SCREEN 
  Main 
+ HOME SCREEN 
+ Main 
          */
         public static final int app_name=0x7f080000;
         /**  EXIT 
+ Exit 
+ EXIT 
  Exit 
          */
         public static final int btn_exit=0x7f080069;
@@ -206,12 +219,15 @@ public final class R {
         public static final int button_title_cancel=0x7f080075;
         public static final int button_title_no=0x7f080077;
         /**  "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" 
+ "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" 
          */
         public static final int button_title_ok=0x7f080074;
         /**  "YES" and "NO" button titles: "Sofbus24.onBackPressed()" 
+ "YES" and "NO" button titles: "Sofbus24.onBackPressed()" 
          */
         public static final int button_title_yes=0x7f080076;
         /**  Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" 
+ Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" 
          */
         public static final int choose_vehicle_number=0x7f080073;
         public static final int common_exit_summary=0x7f080052;
@@ -222,6 +238,8 @@ public final class R {
         public static final int fav_delete=0x7f080047;
         public static final int fav_delete_all=0x7f080048;
         /**  FAVOURITES 
+ Favourites 
+ FAVOURITES 
  Favourites 
          */
         public static final int fav_info=0x7f080046;
@@ -241,15 +259,19 @@ public final class R {
         public static final int gps_msg=0x7f080003;
         /**  VIRTUAL BOARDS 
  GPS 
+ VIRTUAL BOARDS 
+ GPS 
          */
         public static final int gps_name=0x7f080016;
         public static final int gps_see_map=0x7f08001b;
         public static final int gps_station_choice_error_info=0x7f080015;
         public static final int gps_station_choice_error_internet=0x7f080014;
         /**  GPS Station Choice 
+ GPS Station Choice 
          */
         public static final int gps_station_choice_name=0x7f080013;
         /**  Home Screen Buttons 
+ Home Screen Buttons 
          */
         public static final int hs_button1=0x7f08000a;
         public static final int hs_button2=0x7f08000b;
@@ -268,12 +290,15 @@ public final class R {
         public static final int map_gps_menu_item_help=0x7f080024;
         /**  GPS GOOGLE MAPS 
  Map GPS 
+ GPS GOOGLE MAPS 
+ Map GPS 
          */
         public static final int map_gps_name=0x7f080021;
         public static final int map_gps_no_last_location=0x7f080026;
         public static final int map_gps_route_error=0x7f080027;
         public static final int map_help_btn_label=0x7f08002d;
         /**  Map GPS Help 
+ Map GPS Help 
          */
         public static final int map_help_label=0x7f08002b;
         public static final int map_help_text=0x7f08002c;
@@ -289,10 +314,14 @@ public final class R {
         public static final int pref_category_stations=0x7f080053;
         /**  PREFERENCES 
  Preferences 
+ PREFERENCES 
+ Preferences 
          */
         public static final int pref_name=0x7f08004d;
         public static final int remaining_hours=0x7f08006c;
         /**  ADDITIONAL STRINGS 
+ Format remaining time: "Utils.formatTime(context, difference)" 
+ ADDITIONAL STRINGS 
  Format remaining time: "Utils.formatTime(context, difference)" 
          */
         public static final int remaining_minutes=0x7f08006b;
@@ -305,15 +334,18 @@ public final class R {
         public static final int st_ch_menu_item_help=0x7f080037;
         public static final int st_ch_menu_item_route=0x7f080036;
         /**  Station Choice 
+ Station Choice 
          */
         public static final int st_ch_name=0x7f080035;
         public static final int st_inf_fav_err=0x7f080043;
         public static final int st_inf_fav_ok=0x7f080042;
         public static final int st_inf_menu_position=0x7f080044;
         /**  Station Info 
+ Station Info 
          */
         public static final int st_inf_name=0x7f08003f;
         /**  Station Info Route Mape 
+ Station Info Route Mape 
          */
         public static final int st_inf_route_title=0x7f080045;
         public static final int st_inf_satelite_image=0x7f080041;
@@ -332,10 +364,17 @@ public final class R {
         public static final int stations_timeSchedule_title=0x7f080056;
         public static final int sumc_button_label=0x7f080012;
         /**  SUMC GPS 
+ SUMC GPS 
          */
         public static final int sumc_captcha=0x7f080010;
         public static final int sumc_captcha_msg=0x7f080011;
+        public static final int time_arrival=0x7f080079;
+        /**  "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" 
+ "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" 
+         */
+        public static final int time_remaining=0x7f080078;
         /**  Vehicle names 
+ Vehicle names 
          */
         public static final int title_bus=0x7f08006d;
         public static final int title_buses=0x7f08006e;
@@ -349,6 +388,8 @@ public final class R {
         public static final int veh_ch_direction_choice_error_msg=0x7f080033;
         public static final int veh_ch_image=0x7f08002f;
         /**  SCHEDULE 
+ Vehicle Choice 
+ SCHEDULE 
  Vehicle Choice 
          */
         public static final int veh_ch_name=0x7f08002e;

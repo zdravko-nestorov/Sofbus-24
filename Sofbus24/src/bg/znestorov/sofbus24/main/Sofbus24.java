@@ -1,5 +1,7 @@
 package bg.znestorov.sofbus24.main;
 
+import java.util.Locale;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,6 +36,9 @@ public class Sofbus24 extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_screen);
+
+		Configuration c = new Configuration(getResources().getConfiguration());
+		c.locale = Locale.ENGLISH;
 
 		// Setting activity title
 		this.setTitle(getString(R.string.ss_name));

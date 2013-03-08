@@ -10,6 +10,7 @@ import java.util.Comparator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.utils.Utils;
 
@@ -23,11 +24,11 @@ public class HtmlResultSumc {
 	public static final String incorrect_retrieve_data = "INCORRECT";
 
 	// Name of the vehicles
-	private static final String vehicle_Bus = "Автобус";
+	private static String vehicle_Bus;
 	private static final String vehicle_Bus_Check = "втоб";
-	private static final String vehicle_Trolley = "Тролей";
+	private static String vehicle_Trolley;
 	private static final String vehicle_Trolley_Check = "роле";
-	private static final String vehicle_Tram = "Трамвай";
+	private static String vehicle_Tram;
 	private static final String vehicle_Tram_Check = "рамв";
 
 	// List containing each vehicle with the information for it
@@ -62,6 +63,10 @@ public class HtmlResultSumc {
 		this.stationCode = stationCode;
 		this.htmlSrc = htmlSrc;
 		this.tempHtmlSrc = htmlSrc;
+
+		vehicle_Bus = context.getString(R.string.title_bus);
+		vehicle_Trolley = context.getString(R.string.title_trolley);
+		vehicle_Tram = context.getString(R.string.title_tram);
 	}
 
 	// Define if the result contains needed data or not
@@ -107,7 +112,7 @@ public class HtmlResultSumc {
 	// Getting the needed information from the HTML source code
 	private ArrayList<GPSStation> getInfo(String htmlBody) {
 		String vehicleInfo = new String();
-		String vehicleType = "Автобус";
+		String vehicleType = context.getString(R.string.title_bus);
 
 		int start = 0;
 		int end = htmlBody.indexOf(INFO_BEGIN);

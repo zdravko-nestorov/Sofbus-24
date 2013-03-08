@@ -32,4 +32,7 @@ public class Constants {
 
 	// GPS times taken through FAVORITES
 	public static final String FAVORITES_GPS_PARAM = "favorites";
+
+	// Indicating the needed zoom distance for focusing the current position
+	public static final int PADDING_ACTIVE_ZOOM = 50;
 }

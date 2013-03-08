@@ -116,18 +116,20 @@ public class GPSStationAdapter extends ArrayAdapter<GPSStation> implements
 		String vehicleTimeStampText = "";
 
 		if (time) {
-			vehicleTimeStampText = "Оставащо време: " + station.getTime_stamp();
+			vehicleTimeStampText = context.getString(R.string.time_remaining)
+					+ station.getTime_stamp();
 		} else {
-			vehicleTimeStampText = "Времена на пристигане: "
+			vehicleTimeStampText = context.getString(R.string.time_arrival)
 					+ station.getTime_stamp();
 		}
 
-		if (vehicleType.equals("Автобус")) {
+		if (vehicleType.equals(context.getString(R.string.title_bus))) {
 			imageView.setImageResource(R.drawable.bus_icon);
 			vehicleNumber.setText(vehicleType + " № " + vehicleNumberText);
 			vehicleDirection.setText(vehicleDirectionText);
 			vehicleTimeStamp.setText(vehicleTimeStampText);
-		} else if (vehicleType.equals("Тролейбус")) {
+		} else if (vehicleType
+				.equals(context.getString(R.string.title_trolley))) {
 			imageView.setImageResource(R.drawable.trolley_icon);
 			vehicleNumber.setText(vehicleType + " № " + vehicleNumberText);
 			vehicleDirection.setText(vehicleDirectionText);

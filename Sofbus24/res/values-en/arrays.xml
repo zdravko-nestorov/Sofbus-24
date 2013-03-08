@@ -1,0 +1,147 @@
+<resources>
+
+    <!-- BUS STUFF -->
+    <array name="bus_stations">
+        <item>СЕПАРАТОР</item>
+        <item>AVTOSTANTSIYA GEO MILEV - SELO KOKALYANE</item>
+        <item>AVTOSTANTSIYA GEO MILEV - SELO DOLNI PASAREL</item>
+        <item>ZH.K. MLADOST-1 - KOKALYANSKO HANCHE</item>
+        <item>AVTOSTANTSIYA GEO MILEV - SELO DOLNI LOZEN</item>
+        <item>AVTOSTANTSIYA GEO MILEV - SELO GERMAN</item>
+        <item>CHITALISHTE SVETLINA - GARA ISKAR</item>
+        <item>SELO KRIVINA - SELO GERMAN</item>
+        <item>UL. GEN. GURKO - AVTOBAZA ISKAR</item>
+        <item>KV. BUSMANTSI - KV. D. MILENKOV</item>
+        <item>AVTOSTANTSIYA GEO MILEV - ZH.K. OVCHA KUPEL-2</item>
+        <item>AVTOSTANTSIYA IZTOK - SELO DOLNI BOGOROV</item>
+        <item>AVTOSTANTSIYA IZTOK - GARA ISKAR</item>
+        <item>AVTOSTANTSIYA ORLANDOVTSI - MELNITSATA CHEPINTSI</item>
+        <item>AVTOSTANTSIYA ORLANDOVTSI - SELO LOKORSKO</item>
+        <item>SELO VOYNEGOVTSI - AVTOSTANTSIYA ORLANDOVTSI</item>
+        <item>GARA KURILO - AVTOSTANTSIYA ORLANDOVTSI</item>
+        <item>AVTOSTANTSIYA ORLANDOVTSI - KV. BENKOVSKI</item>
+        <item>SELO MIROVYANE - AVTOSTANTSIYA ILIYANTSI</item>
+        <item>KV. GNILYANE - KV. OBELYA</item>
+        <item>GARA SOFIYA SEVER - SELO KATINA</item>
+        <item>SELO LOKORSKO - TSENTAR S. MRAMOR</item>
+        <item>SELO BALSHA - AVTOSTANTSIYA ILIYANTSI</item>
+        <item>SELO BALSHA - KV. OBELYA</item>
+        <item>KV. OBELYA - SELO GOLYANOVTSI</item>
+        <item>UL. TARNOVO - AVTOSTANTSIYA BANKYA</item>
+        <item>KV. IVANYANE - AVTOSTANTSIYA BANKYA</item>
+        <item>KV.BUZEMA - METROSTANTSIYA VARDAR</item>
+        <item>KV. GRADOMAN - METROSTANTSIYA SLIVNITSA</item>
+        <item>KRAYA NA KV. MIHAYLOVO - METROSTANTSIYA SLIVNITSA</item>
+        <item>KV. KLISURA - METROSTANTSIYA SLIVNITSA</item>
+        <item>METROSTANTSIYA SLIVNITSA - PATEN VAZEL ZA KALOTINA</item>
+        <item>SELO MALO BUCHINO - METROSTANTSIYA VARDAR</item>
+        <item>AVTOSTANTSIYA KNYAZHEVO - S. MARCHAEVO-TOLUMSKA MAHALA</item>
+        <item>PL. TSENTRALNA GARA - ZH.K. OVCHA KUPEL-2</item>
+        <item>BUL. TSAR BORIS ІІІ - UL. BYALATA CHESHMA</item>
+        <item>AVTOSTANTSIYA HLADILNIKA - TSENTAR PO HIGIENA</item>
+        <item>KV. MANASTIRSKI LIVADI - ZH.K. GOTSE DELCHEV</item>
+        <item>SEMINARIYATA - KV. SIMEONOVO</item>
+        <item>TSAREVA MAHALA - SBAL PO ONKOLOGIYA</item>
+        <item>SBAL PO ONKOLOGIYA - SELO PLANA</item>
+        <item>ZH.K. ZAPADEN PARK - HOTEL PLISKA</item>
+        <item>ZH.K. OVCHA KUPEL-2 - ZH.K. GOTSE DELCHEV</item>
+        <item>PL. TSENTRALNA GARA - ZH.K. GOTSE DELCHEV</item>
+        <item>PL. ORLOV MOST - AVTOSTANTSIYA GEO MILEV</item>
+        <item>ZH.K. GOTSE DELCHEV - ZH.K. MLADOST-4</item>
+        <item>PL. TSENTRALNA GARA - ZH.K. ZAPADEN PARK</item>
+        <item>PL. TSENTRALNA GARA - PLOSHTADA KV. VRAZHDEBNA</item>
+        <item>KV. HRISTO BOTEV - STIND</item>
+        <item>GARA OBELYA - KV. IVANYANE</item>
+        <item>PL. TSENTRALNA GARA - ZH.K. LYULIN-5</item>
+        <item>ZOOPARKA - HYUNDAY BALGARIYA</item>
+        <item>UL. GEN. GURKO - LETISHTE SOFIYA TERMINAL 2</item>
+        <item>ZH.K. VRABNITSA-2 - ZH.K. STEFAN KARADZHA</item>
+        <item>AP MALASHEVTSI - ZH.K. SVOBODA</item>
+        <item>AVTOSTANTSIYA ILIYANTSI - KV. OBELYA</item>
+        <item>ZH.K. DRUZHBA-2 - ZOOPARKA</item>
+        <item>GRAD BUHOVO - AP MALASHEVTSI</item>
+        <item>AVTOSTANTSIYA HLADILNIKA - LIFTA DRAGALEVTSI</item>
+        <item>SU KLIMENT OHRIDSKI - STUDENTSKI GRAD</item>
+        <item>SEMINARIYATA - KMETSTVO ZHELEZNITSA</item>
+        <item>KV. BENKOVSKI - PATNOSTROITELNA TEHNIKA</item>
+        <item>PL. TSENTRALNA GARA - FONDOVI ZHILISHTA</item>
+        <item>ZH.K. OVCHA KUPEL-2 - STUDENTSKI GRAD</item>
+        <item>KV. KARPUZITSA - BOYANSKA TSARKVA</item>
+        <item>HYUNDAY BALGARIYA - ZH.K. LYULIN-5</item>
+        <item>ZH.K. MLADOST-1 - ZH.K. LYULIN-1,2</item>
+        <item>BL. 480 ZH.K. MLADOST-4 - ZH.K. MLADOST-1</item>
+        <item>BL. 255 ZH.K. DRUZHBA-2 - METROSTANTSIYA TSARIGRADSKO SHOSE</item>
+        <item>AVTOSTANTSIYA IZTOK - GRAD BUHOVO</item>
+        <item>AVTOSTANTSIYA IZTOK - SELO ZHELYAVA</item>
+        <item>AVTOSTANTSIYA IZTOK - SUPERMARKET</item>
+        <item>ZOOPARKA - ZH.K. LEVSKI G</item>
+        <item>AVTOSTANTSIYA HLADILNIKA - LIFTA SIMEONOVO</item>
+        <item>SBAL PO ONKOLOGIYA - LIFTA SIMEONOVO</item>
+        <item>PLODOHRANILISHTE - ZH.K. OBELYA-1</item>
+        <item>ZH.K. DRUZHBA-2 - ZH.K. BOROVO</item>
+        <item>PL. TSENTRALNA GARA - ZH.K. MLADOST-4</item>
+        <item>KV. GORNA BANYA - BUL. PRAGA</item>
+        <item>SU KLIMENT OHRIDSKI - STUDENTSKI GRAD</item>
+        <item>ZH.K. VRABNITSA-2 - ZH.K. STEFAN KARADZHA</item>
+        <item>PLOSHTAD NA AVIATSIYATA - STUDENTSKI GRAD</item>
+        <item>PL. TSENTRALNA GARA - KULINAREN K-T PEYFIL</item>
+        <item>ZH.K. MLADOST-2 - SU KLIMENT OHRIDSKI</item>
+        <item>ZH.K. LYULIN-1,2 - BUL. ILIYANTSI-PODLEZA</item>
+        <item>ZH.K. LYULIN-5 - PL. STOCHNA GARA</item>
+        <item>ZH.K.MLADOST-1/BL.70/ - ZH.K. SOFIYA PARK</item>
+        <item>ZH.K.MLADOST-1/BL.70/ - LETISHTE SOFIYA TERMINAL 2</item>
+        <item>AP DRUZHBA - PL. TSENTRALNA GARA</item>
+        <item>PL. TSENTRALNA GARA - TEHNOPOLIS ZH.K. MLADOST-4</item>
+        <item>MBALSM PIROGOV - GARA ISKAR</item>
+    </array>
+
+    <!-- TROLLEY STUFF -->
+    <array name="trolley_stations">
+        <item>СЕПАРАТОР</item>
+        <item>PETA GRADSKA BOLNITSA - ZH.K. LEVSKI G</item>
+        <item>ZH.K. HADZHI DIMITAR - ZH.K. BAKSTON</item>
+        <item>ZH.K. HADZHI DIMITAR - ZH.K. DRUZHBA-2</item>
+        <item>NADLEZ NADEZHDA - ZH.K. MLADOST-1</item>
+        <item>PL. STOCHNA GARA - ZH.K. LYULIN-3 - UHO</item>
+        <item>PL. STOCHNA GARA - ZH.K. LYULIN-3 - UHO</item>
+        <item>MBAL SV. ANNA-UHO - ZH.K. GOTSE DELCHEV</item>
+        <item>PL. STOCHNA GARA - ZH.K. BOROVO</item>
+        <item>PL. STOCHNA GARA - ZH.K. DRUZHBA -1</item>
+    </array>
+
+    <!-- TRAM STUFF -->
+    <array name="tram_stations">
+        <item>СЕПАРАТОР</item>
+        <item>NADLEZ NADEZHDA - ZH.K. IVAN VAZOV</item>
+        <item>GARA ZAHARNA FABRIKA - KV. ORLANDOVTSI</item>
+        <item>KV. ORLANDOVTSI - BUL. NIKOLA PETKOV</item>
+        <item>KV. KNYAZHEVO - SADEBNA PALATA</item>
+        <item>ZH.K. OBELYA-2 - ZH.K. LOZENETS</item>
+        <item>ZH.K. BOROVO - METROSTANTSIYA HAN KUBRAT</item>
+        <item>ZH.K. LYULIN-5 - SADEBNA PALATA</item>
+        <item>KV. HLADILNIKA - ZH.K. ZAPADEN PARK</item>
+        <item>BUL. NIKOLA PETKOV - KV. ILIYANTSI</item>
+        <item>KV. ILIYANTSI - PL. ZHURNALIST</item>
+        <item>KV. ORLANDOVTSI - RUSKO POSOLSTVO</item>
+        <item>GARA SOFIYA SEVER - KV. KNYAZHEVO</item>
+        <item>METROSTANTSIYA OPALCHENSKA - DEPO ISKAR</item>
+        <item>AVTOSTANTSIYA IZTOK - ZH.K. KRASNA POLYANA</item>
+        <item>MLADEZHKI TEATAR - UL. OBIKOLNA</item>
+    </array>
+
+    <!-- Closest stations -->
+    <string-array name="closestStations">
+        <item name="6">6 stations</item>
+        <item name="7">7 stations</item>
+        <item name="8">8 stations</item>
+        <item name="9">9 stations</item>
+        <item name="10">10 stations</item>
+    </string-array>
+
+    <!-- Virtual Borads (Information retrieval time) -->
+    <string-array name="timeInfoRetrieval">
+        <item name="time_skgt">From SKGT site</item>
+        <item name="time_real">System time</item>
+    </string-array>
+
+</resources>

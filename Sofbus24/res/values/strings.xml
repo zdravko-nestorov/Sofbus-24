@@ -181,4 +181,8 @@
     <string name="button_title_yes">Да</string>
     <string name="button_title_no">Не</string>
 
+    <!-- "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" -->
+    <string name="time_remaining">Оставащо време: </string>
+    <string name="time_arrival">Времена на пристигане: </string>
+
 </resources>

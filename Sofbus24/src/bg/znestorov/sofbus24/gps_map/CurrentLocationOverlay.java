@@ -3,6 +3,7 @@ package bg.znestorov.sofbus24.gps_map;
 import android.content.Context;
 import android.graphics.Point;
 import android.location.Location;
+import bg.znestorov.sofbus24.utils.Constants;
 
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
@@ -10,8 +11,6 @@ import com.google.android.maps.MyLocationOverlay;
 
 // Overwriting MyLocationOverlay, so include more functions
 public class CurrentLocationOverlay extends MyLocationOverlay {
-
-	private final static int PADDING_ACTIVE_ZOOM = 50;
 
 	private MapController mc;
 	private Point currentPoint = new Point();
@@ -36,10 +35,10 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 	}
 
 	private boolean inZoomActiveArea(Point currentPoint) {
-		if ((currentPoint.x > PADDING_ACTIVE_ZOOM && currentPoint.x < width
-				- PADDING_ACTIVE_ZOOM)
-				&& (currentPoint.y > PADDING_ACTIVE_ZOOM && currentPoint.y < height
-						- PADDING_ACTIVE_ZOOM)) {
+		if ((currentPoint.x > Constants.PADDING_ACTIVE_ZOOM && currentPoint.x < width
+				- Constants.PADDING_ACTIVE_ZOOM)
+				&& (currentPoint.y > Constants.PADDING_ACTIVE_ZOOM && currentPoint.y < height
+						- Constants.PADDING_ACTIVE_ZOOM)) {
 			return false;
 		}
 		return true;
