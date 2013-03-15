@@ -12,6 +12,9 @@ public class About extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
 
+		// Setting activity title
+		this.setTitle(getString(R.string.about_label));
+
 		// Set up click listeners for all the buttons
 		View aboutOKButton = findViewById(R.id.about_ok_button);
 		aboutOKButton.setOnClickListener(this);

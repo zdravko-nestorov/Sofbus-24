@@ -44,6 +44,9 @@ public class StationListView extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// Setting activity title
+		this.setTitle(getString(R.string.st_ch_name));
+
 		context = StationListView.this;
 		datasource = new FavouritesDataSource(context);
 

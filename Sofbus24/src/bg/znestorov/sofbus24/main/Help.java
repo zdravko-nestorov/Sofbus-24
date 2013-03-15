@@ -15,6 +15,9 @@ public class Help extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_help);
 
+		// Setting activity title
+		this.setTitle(getString(R.string.map_help_label));
+
 		String helpInfo = "";
 
 		// Getting the information transfered from "VirtualBoardsMapGPS" or

@@ -190,7 +190,7 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			break;
 		case R.id.btn_options:
 			Intent i = new Intent(this, Preferences.class);
-			startActivity(i);
+			startActivityForResult(i, 0);
 			break;
 		case R.id.btn_exit:
 			if (exitAlert) {
@@ -200,6 +200,17 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			}
 
 			break;
+		}
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 0) {
+			ProgressDialog progressDialog = new ProgressDialog(context);
+			progressDialog.setMessage("Loading...");
+
+			RecreateAsyncTask recreateActivity = new RecreateAsyncTask(context,
+					progressDialog);
+			recreateActivity.execute();
 		}
 	}
 
@@ -248,6 +259,38 @@ public class Sofbus24 extends Activity implements OnClickListener {
 		protected Void doInBackground(Void... params) {
 			Intent gps_location = new Intent(context, VirtualBoardsMapGPS.class);
 			context.startActivity(gps_location);
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			progressDialog.dismiss();
+		}
+	}
+
+	// AsyncTask capable for recreating the activity
+	private class RecreateAsyncTask extends AsyncTask<Void, Void, Void> {
+		Context context;
+		ProgressDialog progressDialog;
+
+		public RecreateAsyncTask(Context context, ProgressDialog progressDialog) {
+			this.context = context;
+			this.progressDialog = progressDialog;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog.setCancelable(false);
+			progressDialog.show();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			finish();
+			Intent homeScreenSelect = new Intent(context,
+					HomeScreenSelect.class);
+			context.startActivity(homeScreenSelect);
 
 			return null;
 		}

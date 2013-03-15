@@ -22,6 +22,9 @@ public class VehicleTabView extends TabActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tab_view);
 
+		// Setting activity title
+		this.setTitle(getString(R.string.veh_ch_name));
+
 		// Filling the vehicles' ArrayLists and showing a ProgressDialog
 		// (via AsyncTask)
 		Context context = VehicleTabView.this;

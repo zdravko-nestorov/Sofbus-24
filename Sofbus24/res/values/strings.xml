@@ -125,7 +125,7 @@
     <string name="common_language_title">Език</string>
     <string name="common_language_summary">Избор на език</string>
     <string name="common_exit_title">Съобщение при изход</string>
-    <string name="common_exit_summary">Използване на диалогов прозорец при изход (изисква рестарт)</string>
+    <string name="common_exit_summary">Използване на диалогов прозорец при изход</string>
     <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
     <string name="stations_timeGPS_title">Виртуални табла</string>
     <string name="stations_timeGPS_summary">Оставащо време или времена на пристигане</string>

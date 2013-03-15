@@ -96,6 +96,9 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_station_info_map);
 
+		// Setting activity title
+		this.setTitle(getString(R.string.map_gps_name));
+
 		// Sliding animations for the status bar
 		slideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
 		slideIn.setDuration(Constants.TIME_STATUS_BAR_SLIDE_IN);

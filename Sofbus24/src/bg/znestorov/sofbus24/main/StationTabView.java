@@ -35,6 +35,9 @@ public class StationTabView extends TabActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// Setting activity title
+		this.setTitle(getString(R.string.st_ch_name));
+
 		Bundle bundle = new Bundle();
 		context = StationTabView.this;
 

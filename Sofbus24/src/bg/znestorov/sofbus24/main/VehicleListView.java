@@ -45,6 +45,9 @@ public class VehicleListView extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_vehicle_search);
 
+		// Setting activity title
+		this.setTitle(getString(R.string.veh_ch_name));
+
 		// Getting the information from VehicleTabView
 		final String vehicleType = getIntent().getStringExtra(keyVehicleType);
 

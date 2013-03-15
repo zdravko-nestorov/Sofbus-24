@@ -38,6 +38,9 @@ public class Favourites extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_favourites);
 
+		// Setting activity title
+		this.setTitle(getString(R.string.fav_info));
+
 		datasource = new FavouritesDataSource(this);
 		datasource.open();
 

@@ -13,6 +13,9 @@ public class HomeScreenSelect extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_screen_choice);
+
+		// Setting activity title
+		this.setTitle(getString(R.string.app_name));
 	}
 
 	@Override
@@ -30,14 +33,14 @@ public class HomeScreenSelect extends Activity {
 
 		if ("version_1".equals(homeScreenVersion)) {
 			finish();
-			Intent mainIntent = new Intent(HomeScreenSelect.this,
+			Intent homeScreenVersion1 = new Intent(HomeScreenSelect.this,
 					Sofbus24.class);
-			HomeScreenSelect.this.startActivity(mainIntent);
+			HomeScreenSelect.this.startActivity(homeScreenVersion1);
 		} else {
 			finish();
-			Intent mainIntent = new Intent(HomeScreenSelect.this,
+			Intent homeScreenVersion2 = new Intent(HomeScreenSelect.this,
 					Sofbus24.class);
-			HomeScreenSelect.this.startActivity(mainIntent);
+			HomeScreenSelect.this.startActivity(homeScreenVersion2);
 		}
 	}
 

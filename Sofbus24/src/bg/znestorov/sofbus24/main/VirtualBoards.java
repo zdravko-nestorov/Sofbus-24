@@ -46,6 +46,9 @@ public class VirtualBoards extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// Setting activity title
+		this.setTitle(getString(R.string.gps_name));
+
 		context = VirtualBoards.this;
 
 		dialog = new AlertDialog.Builder(VirtualBoards.this);
