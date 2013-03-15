@@ -89,8 +89,8 @@ public final class R {
         public static final int button_settings_f=0x7f02001b;
         public static final int button_settings_unf=0x7f02001c;
         public static final int clean=0x7f02001d;
-        public static final int color_gps_map_status_bar_background=0x7f020037;
-        public static final int color_gps_map_status_bar_text=0x7f020038;
+        public static final int color_gps_map_status_bar_background=0x7f020036;
+        public static final int color_gps_map_status_bar_text=0x7f020037;
         public static final int current_location=0x7f02001e;
         public static final int distance=0x7f02001f;
         public static final int fav_delete=0x7f020020;
@@ -108,14 +108,13 @@ public final class R {
         public static final int route=0x7f02002c;
         public static final int satellite=0x7f02002d;
         public static final int see_map=0x7f02002e;
-        public static final int splash_screen=0x7f02002f;
-        public static final int station=0x7f020030;
-        public static final int tram_icon=0x7f020031;
-        public static final int tram_station=0x7f020032;
-        public static final int tram_tab=0x7f020033;
-        public static final int trolley_icon=0x7f020034;
-        public static final int trolley_station=0x7f020035;
-        public static final int trolley_tab=0x7f020036;
+        public static final int station=0x7f02002f;
+        public static final int tram_icon=0x7f020030;
+        public static final int tram_station=0x7f020031;
+        public static final int tram_tab=0x7f020032;
+        public static final int trolley_icon=0x7f020033;
+        public static final int trolley_station=0x7f020034;
+        public static final int trolley_tab=0x7f020035;
     }
     public static final class id {
         public static final int about_content=0x7f0b0000;
@@ -176,7 +175,7 @@ public final class R {
         public static final int activity_gps_station_choice=0x7f030003;
         public static final int activity_help=0x7f030004;
         public static final int activity_home_screen=0x7f030005;
-        public static final int activity_nome_screen_choice=0x7f030006;
+        public static final int activity_home_screen_choice=0x7f030006;
         public static final int activity_sofia_stations=0x7f030007;
         public static final int activity_station=0x7f030008;
         public static final int activity_station_info=0x7f030009;

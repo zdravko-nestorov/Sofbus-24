@@ -12,7 +12,7 @@ public class HomeScreenSelect extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_nome_screen_choice);
+		setContentView(R.layout.activity_home_screen_choice);
 	}
 
 	@Override
