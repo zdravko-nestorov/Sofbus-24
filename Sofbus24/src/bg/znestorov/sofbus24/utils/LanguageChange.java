@@ -2,7 +2,6 @@ package bg.znestorov.sofbus24.utils;
 
 import java.util.Locale;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -10,33 +9,34 @@ import android.preference.PreferenceManager;
 
 public class LanguageChange {
 
-	private static final String PREFERENCE_KEY_USER_LOCALE_ENGLISH = "userLocaleEnglish";
-	private static final boolean PREFERENCE_DEFAULT_VALUE_USER_LOCALE_ENGLISH = false;
-
 	private LanguageChange() {
 	}
 
 	private static String getUserLocale(Context context) {
-		final SharedPreferences settings = PreferenceManager
+		// Get SharedPreferences from option menu
+		final SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(context);
-		final boolean useEnglish = settings.getBoolean(
-				PREFERENCE_KEY_USER_LOCALE_ENGLISH,
-				PREFERENCE_DEFAULT_VALUE_USER_LOCALE_ENGLISH);
 
-		return (useEnglish) ? "en" : "bg";
+		// Get "language" value from the Shared Preferences
+		final String language = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_LANGUAGE,
+				Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
+
+		return language;
 	}
 
-	public static void selectLocale(Activity context) {
-		Locale locale = new Locale(getUserLocale(context));
-		Locale.setDefault(locale);
-		Configuration config = new Configuration();
-		config.locale = locale;
-		context.getBaseContext()
-				.getResources()
-				.updateConfiguration(
-						config,
-						context.getBaseContext().getResources()
-								.getDisplayMetrics());
-	}
+	public static void selectLocale(Context context) {
+		Configuration config = new Configuration(context.getResources()
+				.getConfiguration());
+		String language = getUserLocale(context);
 
+		if ("en".equals(language)) {
+			config.locale = Locale.CANADA;
+		} else {
+			config.locale = Locale.getDefault();
+		}
+
+		context.getResources().updateConfiguration(config,
+				context.getResources().getDisplayMetrics());
+	}
 }

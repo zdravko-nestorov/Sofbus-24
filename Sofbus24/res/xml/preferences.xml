@@ -2,13 +2,20 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/pref_category_common" >
-
-        <!--
-             <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="spashScreen"
-            android:summary="@string/common_splash_screen_summary"
-            android:title="@string/common_splash_screen_title" />        -->
+        <ListPreference
+            android:defaultValue="version_2"
+            android:entries="@array/versionChoice"
+            android:entryValues="@array/versionChoiceValues"
+            android:key="homeScreen"
+            android:summary="@string/common_home_screen_summary"
+            android:title="@string/common_home_screen_title" />
+        <ListPreference
+            android:defaultValue="bg"
+            android:entries="@array/languagenChoice"
+            android:entryValues="@array/languagenChoiceValues"
+            android:key="language"
+            android:summary="@string/common_language_summary"
+            android:title="@string/common_language_title" />
 
         <CheckBoxPreference
             android:defaultValue="false"

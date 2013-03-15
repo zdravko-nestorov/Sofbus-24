@@ -118,8 +118,10 @@
     <!-- Preferences -->
     <string name="pref_name">Settings</string>
     <string name="pref_category_common">GENERAL</string>
-    <string name="common_splash_screen_title">Splash Screen</string>
-    <string name="common_splash_screen_summary">Visualize a Splash Screen when the program starts</string>
+    <string name="common_home_screen_title">Home screen</string>
+    <string name="common_home_screen_summary">Select the home screen</string>
+    <string name="common_language_title">Language</string>
+    <string name="common_language_summary">Select a language</string>
     <string name="common_exit_title">Exit message</string>
     <string name="common_exit_summary">Using a dialog box on exit (restart required)</string>
     <string name="pref_category_stations">STATION INFORMATION</string>
@@ -143,7 +145,7 @@
     <string name="other_info_summary">Product information</string>
 
     <!-- About -->
-    <string name="about_label">Sofbus 24 (version 1.14)</string>
+    <string name="about_label">Sofbus 24 (version 1.15)</string>
     <string name="about_text">\ \tAn Android system, giving an information about the public transport in Sofia, as time of arrival in real time, 
         schedule of the vehicles, positioning of the stations, as well as locating the closest stations, depending on the current location.
         \n\n<i>The data are extracted from: <b><u>http://m.sumc.bg</u></b></i> \n\n<b>Author: Zdravko Nestorov</b></string>

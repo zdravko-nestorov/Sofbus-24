@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.station_database.GPSStation;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
 public class HtmlResultSumc {
@@ -201,7 +202,8 @@ public class HtmlResultSumc {
 
 		// Get "timeInfoRetrieval" value from the Shared Preferences
 		String timeInfoRetrieval = sharedPreferences.getString(
-				"timeInfoRetrieval", "time_skgt");
+				Constants.PREFERENCE_KEY_TIME_INFO_RETRIEVAL,
+				Constants.PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL);
 
 		if (htmlSrc.contains(TIME_RETRIEVAL_BEGIN)
 				&& "time_skgt".equals(timeInfoRetrieval)) {
@@ -276,7 +278,9 @@ public class HtmlResultSumc {
 				.getDefaultSharedPreferences(this.context);
 
 		// Get "exitAlert" value from the Shared Preferences
-		boolean timeGPS = sharedPreferences.getBoolean("timeGPS", false);
+		boolean timeGPS = sharedPreferences.getBoolean(
+				Constants.PREFERENCE_KEY_TIME_GPS,
+				Constants.PREFERENCE_DEFAULT_VALUE_TIME_GPS);
 
 		if (timeStamp != null && !"".equals(timeStamp) && timeGPS) {
 			String[] tempTimeStamp = timeStamp.split(",");

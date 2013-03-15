@@ -239,8 +239,9 @@ public class VirtualBoardsMapGPS extends MapActivity {
 				.getDefaultSharedPreferences(getBaseContext());
 
 		// Get "exitAlert" value from the Shared Preferences
-		boolean satellitePref = sharedPreferences
-				.getBoolean("satellite", false);
+		boolean satellitePref = sharedPreferences.getBoolean(
+				Constants.PREFERENCE_KEY_SATELLITE,
+				Constants.PREFERENCE_DEFAULT_VALUE_SATELLITE);
 
 		if (satellitePref) {
 			mapView.setSatellite(true);
@@ -249,7 +250,9 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		}
 
 		// Get "compass" value from the Shared Preferences
-		boolean compass = sharedPreferences.getBoolean("compass", false);
+		boolean compass = sharedPreferences.getBoolean(
+				Constants.PREFERENCE_KEY_COMPASS,
+				Constants.PREFERENCE_DEFAULT_VALUE_COMPASS);
 
 		if (compass) {
 			myLocationOverlay.enableCompass();
@@ -261,7 +264,9 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		ImageView satellite = (ImageView) findViewById(R.id.satelite_img_button);
 
 		// Get "mapView" value from the Shared Preferences
-		boolean mapViewPref = sharedPreferences.getBoolean("mapView", true);
+		boolean mapViewPref = sharedPreferences.getBoolean(
+				Constants.PREFERENCE_KEY_MAP_VIEW,
+				Constants.PREFERENCE_DEFAULT_VALUE_MAP_VIEW);
 
 		if (mapViewPref) {
 			satellite.setVisibility(View.VISIBLE);
@@ -324,8 +329,9 @@ public class VirtualBoardsMapGPS extends MapActivity {
 				.getDefaultSharedPreferences(getBaseContext());
 
 		// Get "closestStations" value from the Shared Preferences
-		String closestStations = sharedPreferences.getString("closestStations",
-				"8");
+		String closestStations = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_CLOSEST_STATIONS,
+				Constants.PREFERENCE_DEFAULT_VALUE_CLOSEST_STATIONS);
 		try {
 			StationsDataSource.stations_count = Integer
 					.parseInt(closestStations);

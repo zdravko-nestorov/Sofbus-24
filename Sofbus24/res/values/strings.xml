@@ -120,8 +120,10 @@
     <!-- Preferences -->
     <string name="pref_name">Настройки</string>
     <string name="pref_category_common">ОБЩИ</string>
-    <string name="common_splash_screen_title">Splash Screen</string>
-    <string name="common_splash_screen_summary">Визуалзиране на Splash Screen при стартиране на програмата</string>
+    <string name="common_home_screen_title">Начален екран</string>
+    <string name="common_home_screen_summary">Избор на начален екран</string>
+    <string name="common_language_title">Език</string>
+    <string name="common_language_summary">Избор на език</string>
     <string name="common_exit_title">Съобщение при изход</string>
     <string name="common_exit_summary">Използване на диалогов прозорец при изход (изисква рестарт)</string>
     <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
@@ -145,7 +147,7 @@
     <string name="other_info_summary">Информация за продукта</string>
 
     <!-- About -->
-    <string name="about_label">Софбус 24 (версия 1.14)</string>
+    <string name="about_label">Софбус 24 (версия 1.15)</string>
     <string name="about_text">\ \tAndroid системата предоставя подробна информация, свързана с използването на градския транпорт 
         в София, като часове на пристигане в реално време, разписания на превозните средства, разположения на спирките 
         на територията на София, както и локализиране на най-близките спирки, в зависимост от текущото местоположение.

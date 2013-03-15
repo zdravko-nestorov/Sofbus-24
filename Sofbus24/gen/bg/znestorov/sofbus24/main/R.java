@@ -24,6 +24,10 @@ public final class R {
          */
         public static final int closestStations=0x7f060006;
         public static final int closestStationsValues=0x7f060007;
+        /**  Language 
+         */
+        public static final int languagenChoice=0x7f06000c;
+        public static final int languagenChoiceValues=0x7f06000d;
         /**  Virtual Borads (Information retrieval time) 
  Virtual Borads (Information retrieval time) 
          */
@@ -41,6 +45,11 @@ public final class R {
         /**  TROLLEY STUFF 
          */
         public static final int trolley_stations=0x7f060003;
+        /**  Home Screen Choice 
+ Home Screen Choice 
+         */
+        public static final int versionChoice=0x7f06000a;
+        public static final int versionChoiceValues=0x7f06000b;
     }
     public static final class attr {
     }
@@ -167,8 +176,8 @@ public final class R {
         public static final int activity_gps_station_choice=0x7f030003;
         public static final int activity_help=0x7f030004;
         public static final int activity_home_screen=0x7f030005;
-        public static final int activity_sofia_stations=0x7f030006;
-        public static final int activity_splash_screen=0x7f030007;
+        public static final int activity_nome_screen_choice=0x7f030006;
+        public static final int activity_sofia_stations=0x7f030007;
         public static final int activity_station=0x7f030008;
         public static final int activity_station_info=0x7f030009;
         public static final int activity_station_info_map=0x7f03000a;
@@ -193,12 +202,12 @@ public final class R {
         public static final int menu_station_list_context=0x7f0a0006;
     }
     public static final class string {
-        public static final int about_btn_label=0x7f080068;
+        public static final int about_btn_label=0x7f08006a;
         /**  About 
  About 
          */
-        public static final int about_label=0x7f080066;
-        public static final int about_text=0x7f080067;
+        public static final int about_label=0x7f080068;
+        public static final int about_text=0x7f080069;
         /**  HOME SCREEN 
  Main 
  HOME SCREEN 
@@ -210,31 +219,33 @@ public final class R {
  EXIT 
  Exit 
          */
-        public static final int btn_exit=0x7f080069;
+        public static final int btn_exit=0x7f08006b;
         public static final int btn_favourite=0x7f080006;
         public static final int btn_gps=0x7f080002;
         public static final int btn_map=0x7f080004;
         public static final int btn_options=0x7f080007;
         public static final int btn_schedule=0x7f080005;
-        public static final int button_title_cancel=0x7f080075;
-        public static final int button_title_no=0x7f080077;
+        public static final int button_title_cancel=0x7f080077;
+        public static final int button_title_no=0x7f080079;
         /**  "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" 
  "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" 
          */
-        public static final int button_title_ok=0x7f080074;
+        public static final int button_title_ok=0x7f080076;
         /**  "YES" and "NO" button titles: "Sofbus24.onBackPressed()" 
  "YES" and "NO" button titles: "Sofbus24.onBackPressed()" 
          */
-        public static final int button_title_yes=0x7f080076;
+        public static final int button_title_yes=0x7f080078;
         /**  Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" 
  Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" 
          */
-        public static final int choose_vehicle_number=0x7f080073;
-        public static final int common_exit_summary=0x7f080052;
-        public static final int common_exit_title=0x7f080051;
-        public static final int common_splash_screen_summary=0x7f080050;
-        public static final int common_splash_screen_title=0x7f08004f;
-        public static final int exit_msg=0x7f08006a;
+        public static final int choose_vehicle_number=0x7f080075;
+        public static final int common_exit_summary=0x7f080054;
+        public static final int common_exit_title=0x7f080053;
+        public static final int common_home_screen_summary=0x7f080050;
+        public static final int common_home_screen_title=0x7f08004f;
+        public static final int common_language_summary=0x7f080052;
+        public static final int common_language_title=0x7f080051;
+        public static final int exit_msg=0x7f08006c;
         public static final int fav_delete=0x7f080047;
         public static final int fav_delete_all=0x7f080048;
         /**  FAVOURITES 
@@ -279,8 +290,8 @@ public final class R {
         public static final int hs_button4=0x7f08000d;
         public static final int hs_button5=0x7f08000e;
         public static final int hs_button6=0x7f08000f;
-        public static final int map_compass_summary=0x7f080060;
-        public static final int map_compass_title=0x7f08005f;
+        public static final int map_compass_summary=0x7f080062;
+        public static final int map_compass_title=0x7f080061;
         public static final int map_gps_distance_ERR=0x7f080029;
         public static final int map_gps_distance_OK=0x7f080028;
         public static final int map_gps_location_status=0x7f08002a;
@@ -302,29 +313,29 @@ public final class R {
          */
         public static final int map_help_label=0x7f08002b;
         public static final int map_help_text=0x7f08002c;
-        public static final int map_mapView_summary=0x7f080062;
-        public static final int map_mapView_title=0x7f080061;
-        public static final int map_satellite_summary=0x7f08005e;
-        public static final int map_satellite_title=0x7f08005d;
-        public static final int other_info_summary=0x7f080065;
-        public static final int other_info_title=0x7f080064;
+        public static final int map_mapView_summary=0x7f080064;
+        public static final int map_mapView_title=0x7f080063;
+        public static final int map_satellite_summary=0x7f080060;
+        public static final int map_satellite_title=0x7f08005f;
+        public static final int other_info_summary=0x7f080067;
+        public static final int other_info_title=0x7f080066;
         public static final int pref_category_common=0x7f08004e;
-        public static final int pref_category_map=0x7f08005c;
-        public static final int pref_category_other=0x7f080063;
-        public static final int pref_category_stations=0x7f080053;
+        public static final int pref_category_map=0x7f08005e;
+        public static final int pref_category_other=0x7f080065;
+        public static final int pref_category_stations=0x7f080055;
         /**  PREFERENCES 
  Preferences 
  PREFERENCES 
  Preferences 
          */
         public static final int pref_name=0x7f08004d;
-        public static final int remaining_hours=0x7f08006c;
+        public static final int remaining_hours=0x7f08006e;
         /**  ADDITIONAL STRINGS 
  Format remaining time: "Utils.formatTime(context, difference)" 
  ADDITIONAL STRINGS 
  Format remaining time: "Utils.formatTime(context, difference)" 
          */
-        public static final int remaining_minutes=0x7f08006b;
+        public static final int remaining_minutes=0x7f08006d;
         public static final int ss_gps_map_msg_body=0x7f080009;
         public static final int ss_gps_map_msg_title=0x7f080008;
         public static final int ss_name=0x7f080001;
@@ -354,34 +365,34 @@ public final class R {
         public static final int st_list_fav=0x7f08003e;
         public static final int st_list_gps=0x7f08003d;
         public static final int st_list_schedule=0x7f08003c;
-        public static final int stations_closestST_summary=0x7f080059;
-        public static final int stations_closestST_title=0x7f080058;
-        public static final int stations_timeGPS_summary=0x7f080055;
-        public static final int stations_timeGPS_title=0x7f080054;
-        public static final int stations_timeInfoRetrieval_summary=0x7f08005b;
-        public static final int stations_timeInfoRetrieval_title=0x7f08005a;
-        public static final int stations_timeSchedule_summary=0x7f080057;
-        public static final int stations_timeSchedule_title=0x7f080056;
+        public static final int stations_closestST_summary=0x7f08005b;
+        public static final int stations_closestST_title=0x7f08005a;
+        public static final int stations_timeGPS_summary=0x7f080057;
+        public static final int stations_timeGPS_title=0x7f080056;
+        public static final int stations_timeInfoRetrieval_summary=0x7f08005d;
+        public static final int stations_timeInfoRetrieval_title=0x7f08005c;
+        public static final int stations_timeSchedule_summary=0x7f080059;
+        public static final int stations_timeSchedule_title=0x7f080058;
         public static final int sumc_button_label=0x7f080012;
         /**  SUMC GPS 
  SUMC GPS 
          */
         public static final int sumc_captcha=0x7f080010;
         public static final int sumc_captcha_msg=0x7f080011;
-        public static final int time_arrival=0x7f080079;
+        public static final int time_arrival=0x7f08007b;
         /**  "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" 
  "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" 
          */
-        public static final int time_remaining=0x7f080078;
+        public static final int time_remaining=0x7f08007a;
         /**  Vehicle names 
  Vehicle names 
          */
-        public static final int title_bus=0x7f08006d;
-        public static final int title_buses=0x7f08006e;
-        public static final int title_tram=0x7f080071;
-        public static final int title_trams=0x7f080072;
-        public static final int title_trolley=0x7f08006f;
-        public static final int title_trolleys=0x7f080070;
+        public static final int title_bus=0x7f08006f;
+        public static final int title_buses=0x7f080070;
+        public static final int title_tram=0x7f080073;
+        public static final int title_trams=0x7f080074;
+        public static final int title_trolley=0x7f080071;
+        public static final int title_trolleys=0x7f080072;
         public static final int veh_ch_coordinates_error=0x7f080032;
         public static final int veh_ch_direction_choice=0x7f080030;
         public static final int veh_ch_direction_choice_error=0x7f080031;

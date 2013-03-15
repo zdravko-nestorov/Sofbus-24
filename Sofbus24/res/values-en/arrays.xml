@@ -144,4 +144,10 @@
         <item name="time_real">System time</item>
     </string-array>
 
+    <!-- Home Screen Choice -->
+    <string-array name="versionChoice">
+        <item name="version_1">Version 1</item>
+        <item name="version_2">Version 2</item>
+    </string-array>
+
 </resources>

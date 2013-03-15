@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import bg.znestorov.sofbus24.info_station.MyItemizedOverlay;
+import bg.znestorov.sofbus24.utils.Constants;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -130,8 +131,9 @@ public class StationInfoRouteMap extends MapActivity {
 				.getDefaultSharedPreferences(getBaseContext());
 
 		// Get "exitAlert" value from the Shared Preferences
-		boolean satellitePref = sharedPreferences
-				.getBoolean("satellite", false);
+		boolean satellitePref = sharedPreferences.getBoolean(
+				Constants.PREFERENCE_KEY_SATELLITE,
+				Constants.PREFERENCE_DEFAULT_VALUE_SATELLITE);
 
 		if (satellitePref) {
 			mapView.setSatellite(true);
@@ -143,7 +145,9 @@ public class StationInfoRouteMap extends MapActivity {
 		ImageView satellite = (ImageView) findViewById(R.id.satelite_img_button);
 
 		// Get "mapView" value from the Shared Preferences
-		boolean mapViewPref = sharedPreferences.getBoolean("mapView", true);
+		boolean mapViewPref = sharedPreferences.getBoolean(
+				Constants.PREFERENCE_KEY_MAP_VIEW,
+				Constants.PREFERENCE_DEFAULT_VALUE_MAP_VIEW);
 
 		if (mapViewPref) {
 			satellite.setVisibility(View.VISIBLE);

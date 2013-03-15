@@ -279,4 +279,24 @@
         <item name="time_real">time_real</item>
     </string-array>
 
+    <!-- Home Screen Choice -->
+    <string-array name="versionChoice">
+        <item name="version_1">Версия 1</item>
+        <item name="version_2">Версия 2</item>
+    </string-array>
+    <string-array name="versionChoiceValues">
+        <item name="version_1">version_1</item>
+        <item name="version_2">version_2</item>
+    </string-array>
+
+    <!-- Language -->
+    <string-array name="languagenChoice">
+        <item name="bg">Български</item>
+        <item name="en">English</item>
+    </string-array>
+    <string-array name="languagenChoiceValues">
+        <item name="bg">bg</item>
+        <item name="en">en</item>
+    </string-array>
+
 </resources>

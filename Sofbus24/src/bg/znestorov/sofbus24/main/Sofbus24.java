@@ -1,7 +1,5 @@
 package bg.znestorov.sofbus24.main;
 
-import java.util.Locale;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -22,7 +19,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.gps_map.MyLocation;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.DatabaseUtils;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 
 public class Sofbus24 extends Activity implements OnClickListener {
 
@@ -37,8 +36,8 @@ public class Sofbus24 extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_screen);
 
-		Configuration c = new Configuration(getResources().getConfiguration());
-		c.locale = Locale.ENGLISH;
+		// Set the language
+		LanguageChange.selectLocale(context);
 
 		// Setting activity title
 		this.setTitle(getString(R.string.ss_name));
@@ -51,7 +50,9 @@ public class Sofbus24 extends Activity implements OnClickListener {
 				.getDefaultSharedPreferences(getBaseContext());
 
 		// Get "exitAlert" value from the Shared Preferences
-		exitAlert = sharedPreferences.getBoolean("exitAlert", false);
+		exitAlert = sharedPreferences.getBoolean(
+				Constants.PREFERENCE_KEY_EXIT_ALERT,
+				Constants.PREFERENCE_DEFAULT_VALUE_EXIT_ALERT);
 
 		// DatabaseUtils.copyDatabase(context);
 		// DatabaseUtils.generateStationsXML(context);

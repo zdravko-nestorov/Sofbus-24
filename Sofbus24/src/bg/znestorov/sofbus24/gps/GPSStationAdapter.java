@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.station_database.GPSStation;
+import bg.znestorov.sofbus24.utils.Constants;
 
 // Class for creating the vehicles ListView
 public class GPSStationAdapter extends ArrayAdapter<GPSStation> implements
@@ -112,7 +113,9 @@ public class GPSStationAdapter extends ArrayAdapter<GPSStation> implements
 				.getDefaultSharedPreferences(this.context);
 
 		// Get "exitAlert" value from the Shared Preferences
-		boolean time = sharedPreferences.getBoolean("time", false);
+		boolean time = sharedPreferences.getBoolean(
+				Constants.PREFERENCE_KEY_TIME,
+				Constants.PREFERENCE_DEFAULT_VALUE_TIME);
 		String vehicleTimeStampText = "";
 
 		if (time) {

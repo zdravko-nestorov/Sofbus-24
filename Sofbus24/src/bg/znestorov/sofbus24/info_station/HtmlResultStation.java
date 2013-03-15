@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
 import android.content.Context;
@@ -63,8 +64,9 @@ public class HtmlResultStation {
 					.getDefaultSharedPreferences(context);
 
 			// Get "exitAlert" value from the Shared Preferences
-			boolean timeSchedule = sharedPreferences.getBoolean("timeSchedule",
-					false);
+			boolean timeSchedule = sharedPreferences.getBoolean(
+					Constants.PREFERENCE_KEY_TIME_SCHEDULE,
+					Constants.PREFERENCE_DEFAULT_VALUE_TIME_SCHEDULE);
 
 			if (time_stamp.size() > 0 && timeSchedule) {
 				for (int i = 0; i < time_stamp.size(); i++) {
