@@ -2,7 +2,6 @@
 
     <!-- HOME SCREEN -->
     <!-- Main -->
-    <string name="app_name">Sofbus 24</string>
     <string name="ss_name">Sofia public transport</string>
     <string name="btn_gps">Virtual boards</string>
     <string name="gps_msg">Please enter the code or the name of a station:</string>
@@ -71,7 +70,7 @@
     <string name="veh_ch_name">Vehicles\' schedule</string>
     <string name="veh_ch_image">Vehicle\'s image</string>
     <string name="veh_ch_direction_choice">Select a direction</string>
-    <string name="veh_ch_direction_choice_error">Информация</string>
+    <string name="veh_ch_direction_choice_error">Information</string>
     <string name="veh_ch_coordinates_error">The station could not be visualized (its coordinates are not found in the database).</string>
     <string name="veh_ch_direction_choice_error_msg">There is no available information for this line at the moment or you have a problem with your Internet connection.</string>
     <string name="veh_ch_search_box">Search by station number</string>
@@ -102,7 +101,7 @@
     <string name="st_inf_menu_position">Focus</string>
 
     <!-- Station Info Route Mape -->
-    <string name="st_inf_route_title">Information about "</string>
+    <string name="st_inf_route_title">Information about \"</string>
 
     <!-- FAVOURITES -->
     <!-- Favourites -->
@@ -146,8 +145,8 @@
 
     <!-- About -->
     <string name="about_label">Sofbus 24 (version 1.15)</string>
-    <string name="about_text">\ \tAn Android system, giving an information about the public transport in Sofia, as time of arrival in real time, 
-        schedule of the vehicles, positioning of the stations, as well as locating the closest stations, depending on the current location.
+    <string name="about_text">An Android application, giving an information about the public transport in Sofia, as the time of arrival in real time, 
+        the schedule of the vehicles, the position of the stations, as well as locating the closest stations, depending on the current location.
         \n\n<i>The data are extracted from: <b><u>http://m.sumc.bg</u></b></i> \n\n<b>Author: Zdravko Nestorov</b></string>
     <string name="about_btn_label">OK</string>
 
@@ -163,14 +162,14 @@
 
     <!-- Vehicle names -->
     <string name="title_bus">Bus</string>
-    <string name="title_buses">Buses: </string>
+    <string name="title_buses">Buses:&#160;</string>
     <string name="title_trolley">Trolley</string>
-    <string name="title_trolleys">Trolleys: </string>
+    <string name="title_trolleys">Trolleys:&#160;</string>
     <string name="title_tram">Tram</string>
-    <string name="title_trams">Trams: </string>
+    <string name="title_trams">Trams:&#160;</string>
 
     <!-- Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" -->
-    <string name="choose_vehicle_number">Choose number of </string>
+    <string name="choose_vehicle_number">Choose number of a&#160;</string>
 
     <!-- "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" -->
     <string name="button_title_ok">ОК</string>
@@ -181,7 +180,17 @@
     <string name="button_title_no">No</string>
 
     <!-- "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" -->
-    <string name="time_remaining">Remaining time: </string>
-    <string name="time_arrival">Time of arrival: </string>
+    <string name="time_remaining">Remaining time:&#160;</string>
+    <string name="time_arrival">Time of arrival:&#160;</string>
+
+    <!-- "ERRORS" with retrieving information: "HtmlResultSumc" -->
+    <string name="error_sumc_noInfo">There is no available information</string>
+    <string name="error_sumc_retrieve_noInfo">There is no available information for station \"%s\". Please try again later.</string>
+    <string name="error_sumc_noBusStop">There is no available information found</string>
+    <string name="error_sumc_retrieve_noBusStop">The station \"%s\" doesn\'t exist.</string>
+
+    <!-- "ERRORS" with retrieving information: "HtmlResultSumcChoice" -->
+    <string name="error_sumc_choice_noInfo">There is no available information found</string>
+    <string name="error_sumc_choice_retrieve_noInfo">There are no matches found for \"%s\".</string>
 
 </resources>

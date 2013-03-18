@@ -5,10 +5,14 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
+import android.preference.PreferenceManager;
+import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 
 import com.google.android.maps.GeoPoint;
 
@@ -20,12 +24,27 @@ public class StationsDataSource {
 	private String[] allColumns = { StationsSQLite.COLUMN_ID,
 			StationsSQLite.COLUMN_NAME, StationsSQLite.COLUMN_LAT,
 			StationsSQLite.COLUMN_LON };
+	private Context context;
 
 	// Radius of stations
 	public static int stations_count = 8;
 
+	// Shared Preferences (option menu)
+	private SharedPreferences sharedPreferences;
+	String language;
+
 	public StationsDataSource(Context context) {
 		dbHelper = new StationsSQLite(context);
+		this.context = context;
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this.context);
+
+		// Get "language" value from the Shared Preferences
+		language = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_LANGUAGE,
+				Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
 	}
 
 	public void open() throws SQLException {
@@ -41,6 +60,7 @@ public class StationsDataSource {
 		if (getStation(station) == null) {
 			// Creating ContentValues object and insert the station data in it
 			ContentValues values = new ContentValues();
+
 			values.put(StationsSQLite.COLUMN_ID, station.getId());
 			values.put(StationsSQLite.COLUMN_NAME, station.getName());
 
@@ -119,7 +139,7 @@ public class StationsDataSource {
 			return station;
 		} else {
 			cursor.close();
-			
+
 			return null;
 		}
 	}
@@ -142,7 +162,7 @@ public class StationsDataSource {
 			return station;
 		} else {
 			cursor.close();
-			
+
 			return null;
 		}
 	}
@@ -179,9 +199,15 @@ public class StationsDataSource {
 	private GPSStation cursorToStation(Cursor cursor) {
 		GPSStation station = new GPSStation();
 
+		// Check if have to translate the station name
+		String stationName = cursor.getString(1);
+		if (!"bg".equals(language)) {
+			stationName = TranslatorCyrillicToLatin.translate(stationName);
+		}
+
 		// Getting all columns of the row and setting them to a Station object
 		station.setId(cursor.getString(0));
-		station.setName(cursor.getString(1));
+		station.setName(stationName);
 		station.setLat(cursor.getString(2));
 		station.setLon(cursor.getString(3));
 

@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.Utils;
 
 import android.content.Context;
@@ -82,7 +83,17 @@ public class HtmlResultStation {
 				}
 			}
 
-			return time_stamp.toString();
+			// Get "language" value from the Shared Preferences
+			String language = sharedPreferences.getString(
+					Constants.PREFERENCE_KEY_LANGUAGE,
+					Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
+
+			if ("bg".equals(language)) {
+				return time_stamp.toString();
+			} else {
+				return TranslatorCyrillicToLatin.translate(time_stamp
+						.toString());
+			}
 		}
 
 		return null;

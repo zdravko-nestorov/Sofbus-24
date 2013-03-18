@@ -184,7 +184,7 @@ public class VehicleListView extends Activity {
 
 			// HtmlResult processing and creating an ArrayList
 			HtmlResultDirection htmlResultDirection = new HtmlResultDirection(
-					vehicleChoice, result);
+					context, vehicleChoice, result);
 			ArrayList<Direction> directionList = htmlResultDirection
 					.showResult();
 			ArrayList<Direction> resultList = directionList;

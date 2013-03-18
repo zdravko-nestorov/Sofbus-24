@@ -5,6 +5,12 @@ import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
 import java.util.ArrayList;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+
 // Filling the Direction object with data
 public class HtmlResultDirection {
 
@@ -24,11 +30,17 @@ public class HtmlResultDirection {
 	private static final String STOP_ID_END = "\">";
 
 	// The HtmlResult got from HtmlReqeustDirection class
+	private final Context context;
 	private String htmlResult;
 	private String vehicleType;
 	private String vehicleNumber;
 
-	public HtmlResultDirection(String vehicleChoice, String htmlResult) {
+	// Shared Preferences (option menu)
+	private SharedPreferences sharedPreferences;
+
+	public HtmlResultDirection(Context context, String vehicleChoice,
+			String htmlResult) {
+		this.context = context;
 		this.vehicleType = getValueBefore(vehicleChoice, "$");
 		this.vehicleNumber = getValueAfter(vehicleChoice, "$");
 		this.htmlResult = htmlResult;
@@ -55,7 +67,20 @@ public class HtmlResultDirection {
 			directionList = setValues(directionList);
 		}
 
-		return directionList;
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		// Get "language" value from the Shared Preferences
+		String language = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_LANGUAGE,
+				Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
+
+		if ("bg".equals(language)) {
+			return directionList;
+		} else {
+			return TranslatorCyrillicToLatin.translateDirection(directionList);
+		}
 	}
 
 	// Setting values to the Direction object

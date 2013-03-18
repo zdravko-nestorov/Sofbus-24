@@ -26,15 +26,12 @@ public class LanguageChange {
 	}
 
 	public static void selectLocale(Context context) {
+		Locale locale = new Locale(getUserLocale(context));
+		Locale.setDefault(locale);
+
 		Configuration config = new Configuration(context.getResources()
 				.getConfiguration());
-		String language = getUserLocale(context);
-
-		if ("en".equals(language)) {
-			config.locale = Locale.CANADA;
-		} else {
-			config.locale = Locale.getDefault();
-		}
+		config.locale = locale;
 
 		context.getResources().updateConfiguration(config,
 				context.getResources().getDisplayMetrics());

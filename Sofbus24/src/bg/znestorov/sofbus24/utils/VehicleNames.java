@@ -3,6 +3,8 @@ package bg.znestorov.sofbus24.utils;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.schedule_vehicles.Vehicle;
 
@@ -20,6 +22,9 @@ public class VehicleNames {
 	public final static ArrayList<Vehicle> trolley = new ArrayList<Vehicle>();
 	public final static ArrayList<Vehicle> tram = new ArrayList<Vehicle>();
 
+	// Shared Preferences (option menu)
+	private SharedPreferences sharedPreferences;
+
 	public VehicleNames(Context context) {
 		bus_number = context.getResources().getStringArray(R.array.bus_numbers);
 		bus_stations = context.getResources().getStringArray(
@@ -32,6 +37,22 @@ public class VehicleNames {
 				R.array.tram_numbers);
 		tram_stations = context.getResources().getStringArray(
 				R.array.tram_stations);
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		// Get "language" value from the Shared Preferences
+		String language = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_LANGUAGE,
+				Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
+
+		if (!"bg".equals(language)) {
+			bus_stations = TranslatorCyrillicToLatin.translate(bus_stations);
+			trolley_stations = TranslatorCyrillicToLatin
+					.translate(trolley_stations);
+			tram_stations = TranslatorCyrillicToLatin.translate(tram_stations);
+		}
 
 		this.emptyArrays();
 		this.fillArrays(context);

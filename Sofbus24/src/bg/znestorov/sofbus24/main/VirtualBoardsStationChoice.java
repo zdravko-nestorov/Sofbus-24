@@ -59,8 +59,8 @@ public class VirtualBoardsStationChoice extends ListActivity {
 			stationCode = tempArray[0];
 			htmlSrc = tempArray[1];
 
-			HtmlResultSumcChoice result = new HtmlResultSumcChoice(stationCode,
-					htmlSrc);
+			HtmlResultSumcChoice result = new HtmlResultSumcChoice(context,
+					stationCode, htmlSrc);
 			station_list = new ArrayList<GPSStation>();
 			station_list = result.showResult();
 			String time_stamp = station_list.get(0).getTime_stamp();
@@ -74,7 +74,9 @@ public class VirtualBoardsStationChoice extends ListActivity {
 			} else if (time_stamp.contains(noInfo)) {
 				errorLabel.setTextSize(Constants.TEXT_BOX_SIZE
 						* TypedValue.COMPLEX_UNIT_DIP);
-				errorLabel.setText(time_stamp);
+				errorLabel.setText(String.format(
+						getString(R.string.error_sumc_choice_retrieve_noInfo),
+						stationCode));
 			} else {
 				// Use the SimpleCursorAdapter to show the
 				// elements in a ListView

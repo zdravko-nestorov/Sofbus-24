@@ -5,9 +5,14 @@ import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
+import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 
 public class FavouritesDataSource {
 
@@ -19,9 +24,22 @@ public class FavouritesDataSource {
 			FavouritesSQLite.COLUMN_LON, FavouritesSQLite.COLUMN_CODEO };
 	private Context context;
 
+	// Shared Preferences (option menu)
+	private SharedPreferences sharedPreferences;
+	String language;
+
 	public FavouritesDataSource(Context context) {
 		dbHelper = new FavouritesSQLite(context);
 		this.context = context;
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this.context);
+
+		// Get "language" value from the Shared Preferences
+		language = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_LANGUAGE,
+				Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
 	}
 
 	public void open() throws SQLException {
@@ -38,8 +56,14 @@ public class FavouritesDataSource {
 			// Creating ContentValues object and insert the station data in it
 			ContentValues values = new ContentValues();
 
+			// Check if have to translate the station name
+			String stationName = station.getName();
+			if (!"bg".equals(language)) {
+				stationName = TranslatorLatinToCyrillic.translate(stationName);
+			}
+
 			values.put(FavouritesSQLite.COLUMN_ID, station.getId());
-			values.put(FavouritesSQLite.COLUMN_NAME, station.getName());
+			values.put(FavouritesSQLite.COLUMN_NAME, stationName);
 
 			StationsDataSource stationDS = new StationsDataSource(context);
 			stationDS.open();
@@ -171,9 +195,15 @@ public class FavouritesDataSource {
 	private GPSStation cursorToStation(Cursor cursor) {
 		GPSStation station = new GPSStation();
 
+		// Check if have to translate the station name
+		String stationName = cursor.getString(1);
+		if (!"bg".equals(language)) {
+			stationName = TranslatorCyrillicToLatin.translate(stationName);
+		}
+
 		// Getting all columns of the row and setting them to a Station object
 		station.setId(cursor.getString(0));
-		station.setName(cursor.getString(1));
+		station.setName(stationName);
 		station.setLat(cursor.getString(2));
 		station.setLon(cursor.getString(3));
 		station.setCodeO(cursor.getString(4));

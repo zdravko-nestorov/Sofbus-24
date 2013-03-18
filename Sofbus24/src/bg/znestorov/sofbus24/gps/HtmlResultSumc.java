@@ -13,16 +13,17 @@ import android.preference.PreferenceManager;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.Utils;
 
 public class HtmlResultSumc {
 
 	// Errors in the HTML source file
-	public static final String error_noInfo = "Няма информация";
-	public static final String error_retrieve_noInfo = "В момента няма информация за спирка \"%s\". Моля опитайте пак по-късно.";
-	public static final String error_noBusStop = "Няма намерена информация";
-	public static final String error_retrieve_noBusStop = "Спирката \"%s\" не съществува.";
-	public static final String incorrect_retrieve_data = "INCORRECT";
+	public static String error_noInfo = "Няма информация";
+	public static String error_retrieve_noInfo = "В момента няма информация за спирка \"%s\". Моля опитайте пак по-късно.";
+	public static String error_noBusStop = "Няма намерена информация";
+	public static String error_retrieve_noBusStop = "Спирката \"%s\" не съществува.";
+	public static String incorrect_retrieve_data = "INCORRECT";
 
 	// Name of the vehicles
 	private static String vehicle_Bus;
@@ -65,9 +66,14 @@ public class HtmlResultSumc {
 		this.htmlSrc = htmlSrc;
 		this.tempHtmlSrc = htmlSrc;
 
+		// Get String values from "strings" XML
 		vehicle_Bus = context.getString(R.string.title_bus);
 		vehicle_Trolley = context.getString(R.string.title_trolley);
 		vehicle_Tram = context.getString(R.string.title_tram);
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this.context);
 	}
 
 	// Define if the result contains needed data or not
@@ -101,7 +107,17 @@ public class HtmlResultSumc {
 			String htmlBody = htmlSrc.substring(endOfBody, startOfBody
 					+ BODY_END.length());
 
-			return getInfo(htmlBody);
+			// Get "language" value from the Shared Preferences
+			String language = sharedPreferences.getString(
+					Constants.PREFERENCE_KEY_LANGUAGE,
+					Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
+
+			if ("bg".equals(language)) {
+				return getInfo(htmlBody);
+			} else {
+				return TranslatorCyrillicToLatin
+						.translateGPSStation(getInfo(htmlBody));
+			}
 		}
 
 		gpsStation.setTime_stamp(incorrect_retrieve_data);
@@ -196,10 +212,6 @@ public class HtmlResultSumc {
 	public String getInformationTime(String htmlSrc) {
 		String infoTime = "";
 
-		// Get SharedPreferences from option menu
-		sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(this.context);
-
 		// Get "timeInfoRetrieval" value from the Shared Preferences
 		String timeInfoRetrieval = sharedPreferences.getString(
 				Constants.PREFERENCE_KEY_TIME_INFO_RETRIEVAL,
@@ -272,10 +284,6 @@ public class HtmlResultSumc {
 		while (currTime.contains(" ")) {
 			currTime = getValueAfter(currTime, " ");
 		}
-
-		// Get SharedPreferences from option menu
-		sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(this.context);
 
 		// Get "exitAlert" value from the Shared Preferences
 		boolean timeGPS = sharedPreferences.getBoolean(

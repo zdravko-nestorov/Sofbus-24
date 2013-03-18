@@ -104,7 +104,7 @@
     <string name="st_inf_menu_position">Позиционирай</string>
 
     <!-- Station Info Route Mape -->
-    <string name="st_inf_route_title">Информация за "</string>
+    <string name="st_inf_route_title">Информация за \"</string>
 
     <!-- FAVOURITES -->
     <!-- Favourites -->
@@ -148,7 +148,7 @@
 
     <!-- About -->
     <string name="about_label">Софбус 24 (версия 1.15)</string>
-    <string name="about_text">\ \tAndroid системата предоставя подробна информация, свързана с използването на градския транпорт 
+    <string name="about_text">Android системата предоставя подробна информация, свързана с използването на градския транпорт 
         в София, като часове на пристигане в реално време, разписания на превозните средства, разположения на спирките 
         на територията на София, както и локализиране на най-близките спирки, в зависимост от текущото местоположение.
         \n\n<i>Данните се извличат от: <b><u>http://m.sumc.bg</u></b></i> \n\n<b>Автор: Здравко Несторов</b></string>
@@ -166,14 +166,14 @@
 
     <!-- Vehicle names -->
     <string name="title_bus">Автобус</string>
-    <string name="title_buses">Автобуси: </string>
+    <string name="title_buses">Автобуси:&#160;</string>
     <string name="title_trolley">Тролей</string>
-    <string name="title_trolleys">Тролеи: </string>
+    <string name="title_trolleys">Тролеи:&#160;</string>
     <string name="title_tram">Трамвай</string>
-    <string name="title_trams">Трамваи: </string>
+    <string name="title_trams">Трамваи:&#160;</string>
 
     <!-- Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" -->
-    <string name="choose_vehicle_number">Изберете номер на </string>
+    <string name="choose_vehicle_number">Изберете номер на&#160;</string>
 
     <!-- "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" -->
     <string name="button_title_ok">ОК</string>
@@ -184,7 +184,17 @@
     <string name="button_title_no">Не</string>
 
     <!-- "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" -->
-    <string name="time_remaining">Оставащо време: </string>
-    <string name="time_arrival">Времена на пристигане: </string>
+    <string name="time_remaining">Оставащо време:&#160;</string>
+    <string name="time_arrival">Времена на пристигане:&#160;</string>
+
+    <!-- "ERRORS" with retrieving information: "HtmlResultSumc" -->
+    <string name="error_sumc_noInfo">Няма информация</string>
+    <string name="error_sumc_retrieve_noInfo">В момента няма информация за спирка \"%s\". Моля опитайте пак по-късно.</string>
+    <string name="error_sumc_noBusStop">Няма намерена информация</string>
+    <string name="error_sumc_retrieve_noBusStop">Спирката \"%s\" не съществува.</string>
+
+    <!-- "ERRORS" with retrieving information: "HtmlResultSumcChoice" -->
+    <string name="error_sumc_choice_noInfo">Няма намерена информация</string>
+    <string name="error_sumc_choice_retrieve_noInfo">Няма намерени съвпадения за \"%s\".</string>
 
 </resources>

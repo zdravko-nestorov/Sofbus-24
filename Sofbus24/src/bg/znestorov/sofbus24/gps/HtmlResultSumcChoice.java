@@ -5,14 +5,19 @@ import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
 import java.util.ArrayList;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import bg.znestorov.sofbus24.station_database.GPSStation;
+import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 
 public class HtmlResultSumcChoice {
 
 	// Errors in the HTML source file
-	public static final String error_noInfo = "Няма намерена информация";
-	public static final String error_retrieve_noInfo = "Няма намерени съвпадения за \"%s\".";
-	public static final String incorrect_retrieve_data = "INCORRECT";
+	public static String error_noInfo = "Няма намерена информация";
+	public static String error_retrieve_noInfo = "Няма намерени съвпадения за \"%s\".";
+	public static String incorrect_retrieve_data = "INCORRECT";
 
 	// Needed information for creating the list of stations
 	public static final String info_ok = "Намерени са";
@@ -30,12 +35,22 @@ public class HtmlResultSumcChoice {
 	private final ArrayList<GPSStation> listOfVehicles = new ArrayList<GPSStation>();
 
 	// Constructor variables (passed through other class)
+	private final Context context;
 	private final String stationCode;
 	private String htmlSrc;
 
-	public HtmlResultSumcChoice(String stationCode, String htmlSrc) {
+	// Shared Preferences (option menu)
+	private SharedPreferences sharedPreferences;
+
+	public HtmlResultSumcChoice(Context context, String stationCode,
+			String htmlSrc) {
+		this.context = context;
 		this.stationCode = stationCode;
 		this.htmlSrc = htmlSrc;
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this.context);
 	}
 
 	// Define if the result contains needed data or not
@@ -62,7 +77,16 @@ public class HtmlResultSumcChoice {
 				}
 			}
 
-			return getInfo();
+			// Get "language" value from the Shared Preferences
+			String language = sharedPreferences.getString(
+					Constants.PREFERENCE_KEY_LANGUAGE,
+					Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
+
+			if ("bg".equals(language)) {
+				return getInfo();
+			} else {
+				return TranslatorCyrillicToLatin.translateGPSStation(getInfo());
+			}
 		}
 
 		gpsStation.setTime_stamp(incorrect_retrieve_data);

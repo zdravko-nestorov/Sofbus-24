@@ -172,14 +172,16 @@ public class VirtualBoards extends ListActivity {
 	public void showNoBusDialog(String stationName) {
 		this.setTitle(String.format(getString(R.string.gps_error_noBus),
 				stationName));
-		showErrorDialog(HtmlResultSumc.error_noBusStop, String.format(
-				HtmlResultSumc.error_retrieve_noBusStop, stationName));
+		showErrorDialog(getString(R.string.error_sumc_noBusStop),
+				String.format(
+						getString(R.string.error_sumc_retrieve_noBusStop),
+						stationName));
 	}
 
 	// Alert Dialog when NO STATION error happens (empty input)
 	public void showNoBusEmptyDialog() {
 		this.setTitle(getString(R.string.gps_error_noBusEmpty));
-		showErrorDialog(HtmlResultSumc.error_noBusStop,
+		showErrorDialog(getString(R.string.error_sumc_noBusStop),
 				getString(R.string.gps_error_noBusEmpty) + ".");
 	}
 
@@ -187,8 +189,8 @@ public class VirtualBoards extends ListActivity {
 	public void showNoInfoDialog(String stationName) {
 		this.setTitle(String.format(getString(R.string.gps_error_noInfo),
 				stationName));
-		showErrorDialog(HtmlResultSumc.error_noInfo, String.format(
-				HtmlResultSumc.error_retrieve_noInfo, stationName));
+		showErrorDialog(getString(R.string.error_sumc_noInfo), String.format(
+				getString(R.string.error_sumc_retrieve_noInfo), stationName));
 	}
 
 	@Override
