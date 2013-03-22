@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
+import bg.znestorov.sofbus24.utils.Constants;
 
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
@@ -55,8 +56,8 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
 
 		Toast.makeText(context, balloonTitle, Toast.LENGTH_SHORT).show();
 
-		new HtmlRequestSumc().getInformation(context, stationID, stationID,
-				null);
+		new HtmlRequestSumc().getInformation(context, stationID,
+				Constants.GPS_TIMES_GPS_PARAM, null);
 
 		return true;
 	}

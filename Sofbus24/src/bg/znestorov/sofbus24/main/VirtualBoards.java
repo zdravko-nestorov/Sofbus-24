@@ -36,6 +36,7 @@ public class VirtualBoards extends ListActivity {
 
 	// Time_Stamp message
 	private static final String unknown = "INCORRECT";
+	private static final String unknownInfo = "В момента няма информация за тази спирка";
 	private static final String noInfo = "В момента няма информация за спирка";
 	private static final String noBus = "не съществува.";
 
@@ -78,6 +79,9 @@ public class VirtualBoards extends ListActivity {
 			// Error with the HTML source code (unknown)
 			if (time_stamp.contains(unknown)) {
 				showErrorDialog();
+				// No information found (ex: line number 1)
+			} else if (time_stamp.contains(unknownInfo)) {
+				showUnknownInfoDialog();
 				// No such station
 			} else if (time_stamp.contains(noBus)) {
 				// If the station code is not empty
@@ -166,6 +170,13 @@ public class VirtualBoards extends ListActivity {
 		this.setTitle(getString(R.string.gps_error_unknown));
 		showErrorDialog(getString(R.string.gps_err_dialog_title),
 				getString(R.string.gps_err_dialog_msg));
+	}
+
+	// Alert Dialog when UNKNOWN INFO error happens (ex: line number 1)
+	public void showUnknownInfoDialog() {
+		this.setTitle(getString(R.string.error_sumc_unknownInfo));
+		showErrorDialog(getString(R.string.error_sumc_unknownInfo),
+				getString(R.string.error_sumc_retrieve_unknownInfo));
 	}
 
 	// Alert Dialog when NO STATION error happens

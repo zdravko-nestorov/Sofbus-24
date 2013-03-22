@@ -29,6 +29,9 @@ public class Constants {
 	public static final String SCHEDULE_GPS_FIND_CODEO = "&nbsp;спирка&nbsp;";
 	public static final String SCHEDULE_GPS_PARAM = "schedule";
 
+	// GPS times taken through GPS Times Google Maps
+	public static final String GPS_TIMES_GPS_PARAM = "gpsTimes";
+
 	// GPS times taken through FAVORITES
 	public static final String FAVORITES_GPS_PARAM = "favorites";
 

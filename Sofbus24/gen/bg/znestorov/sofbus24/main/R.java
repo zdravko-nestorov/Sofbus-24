@@ -228,15 +228,17 @@ public final class R {
         /**  "ERRORS" with retrieving information: "HtmlResultSumcChoice" 
  "ERRORS" with retrieving information: "HtmlResultSumcChoice" 
          */
-        public static final int error_sumc_choice_noInfo=0x7f080080;
-        public static final int error_sumc_choice_retrieve_noInfo=0x7f080081;
-        public static final int error_sumc_noBusStop=0x7f08007e;
+        public static final int error_sumc_choice_noInfo=0x7f080082;
+        public static final int error_sumc_choice_retrieve_noInfo=0x7f080083;
+        public static final int error_sumc_noBusStop=0x7f080080;
+        public static final int error_sumc_noInfo=0x7f08007e;
+        public static final int error_sumc_retrieve_noBusStop=0x7f080081;
+        public static final int error_sumc_retrieve_noInfo=0x7f08007f;
+        public static final int error_sumc_retrieve_unknownInfo=0x7f08007d;
         /**  "ERRORS" with retrieving information: "HtmlResultSumc" 
  "ERRORS" with retrieving information: "HtmlResultSumc" 
          */
-        public static final int error_sumc_noInfo=0x7f08007c;
-        public static final int error_sumc_retrieve_noBusStop=0x7f08007f;
-        public static final int error_sumc_retrieve_noInfo=0x7f08007d;
+        public static final int error_sumc_unknownInfo=0x7f08007c;
         public static final int exit_msg=0x7f08006c;
         public static final int fav_delete=0x7f080047;
         public static final int fav_delete_all=0x7f080048;

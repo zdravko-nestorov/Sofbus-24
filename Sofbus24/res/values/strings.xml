@@ -188,6 +188,8 @@
     <string name="time_arrival">Времена на пристигане:&#160;</string>
 
     <!-- "ERRORS" with retrieving information: "HtmlResultSumc" -->
+    <string name="error_sumc_unknownInfo">Няма информация</string>
+    <string name="error_sumc_retrieve_unknownInfo">В момента няма информация за тази спирка. Моля опитайте пак по-късно.</string>
     <string name="error_sumc_noInfo">Няма информация</string>
     <string name="error_sumc_retrieve_noInfo">В момента няма информация за спирка \"%s\". Моля опитайте пак по-късно.</string>
     <string name="error_sumc_noBusStop">Няма намерена информация</string>

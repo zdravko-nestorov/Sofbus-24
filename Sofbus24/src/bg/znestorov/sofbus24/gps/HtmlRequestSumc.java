@@ -423,11 +423,12 @@ public class HtmlRequestSumc {
 		}
 
 		// Check in case the user is requesting information from Schedule
-		// section
+		// or GPS Times GoogleMaps sections
 		if (src.toUpperCase().contains(Constants.SEARCH_TYPE_COUNT_RESULTS_1)
 				&& src.toUpperCase().contains(
 						Constants.SEARCH_TYPE_COUNT_RESULTS_2)
-				&& Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO)) {
+				&& (Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO) || Constants.GPS_TIMES_GPS_PARAM
+						.equals(stationCodeO))) {
 			stationCodeO = Utils.getCodeO(src, stationCode);
 			new HtmlRequestSumc().getInformation(context, stationCode,
 					stationCodeO, null);

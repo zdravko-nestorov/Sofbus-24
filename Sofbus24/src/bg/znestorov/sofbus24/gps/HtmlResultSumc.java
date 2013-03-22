@@ -19,6 +19,8 @@ import bg.znestorov.sofbus24.utils.Utils;
 public class HtmlResultSumc {
 
 	// Errors in the HTML source file
+	public static String error_unknownInfo = "В момента нямаме информация. Моля, опитайте по-късно.";
+	public static String error_retrieve_unknownInfo = "В момента няма информация за тази спирка. Моля опитайте пак по-късно.";
 	public static String error_noInfo = "Няма информация";
 	public static String error_retrieve_noInfo = "В момента няма информация за спирка \"%s\". Моля опитайте пак по-късно.";
 	public static String error_noBusStop = "Няма намерена информация";
@@ -85,7 +87,12 @@ public class HtmlResultSumc {
 			int startOfBody = htmlSrc.indexOf(BODY_END, endOfBody);
 
 			if (endOfBody == -1 && startOfBody == -1) {
-				if (htmlSrc.contains(error_noInfo)) {
+				if (htmlSrc.contains(error_unknownInfo)) {
+					gpsStation.setId(getStationId(htmlSrc));
+					gpsStation.setTime_stamp(error_retrieve_unknownInfo);
+					listOfVehicles.add(gpsStation);
+					return listOfVehicles;
+				} else if (htmlSrc.contains(error_noInfo)) {
 					gpsStation.setId(getStationId(htmlSrc));
 					gpsStation.setName(getStationName(htmlSrc));
 					gpsStation.setTime_stamp(String.format(
