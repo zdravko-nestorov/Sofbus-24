@@ -1,6 +1,7 @@
 package bg.znestorov.sofbus24.main;
 
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,9 @@ public class HomeScreenSelect extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_screen_choice);
+
+		// Set the language
+		LanguageChange.selectLocale(HomeScreenSelect.this);
 
 		// Setting activity title
 		this.setTitle(getString(R.string.app_name));

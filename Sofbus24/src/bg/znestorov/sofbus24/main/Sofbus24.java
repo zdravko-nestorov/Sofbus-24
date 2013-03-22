@@ -21,7 +21,6 @@ import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.gps_map.MyLocation;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.DatabaseUtils;
-import bg.znestorov.sofbus24.utils.LanguageChange;
 
 public class Sofbus24 extends Activity implements OnClickListener {
 
@@ -35,9 +34,6 @@ public class Sofbus24 extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_screen);
-
-		// Set the language
-		LanguageChange.selectLocale(context);
 
 		// Setting activity title
 		this.setTitle(getString(R.string.ss_name));

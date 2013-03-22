@@ -41,9 +41,9 @@ public class Constants {
 	public static final String PREFERENCE_KEY_TIME_INFO_RETRIEVAL = "timeInfoRetrieval";
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL = "time_skgt";
 	public static final String PREFERENCE_KEY_TIME_GPS = "timeGPS";
-	public static final boolean PREFERENCE_DEFAULT_VALUE_TIME_GPS = false;
+	public static final boolean PREFERENCE_DEFAULT_VALUE_TIME_GPS = true;
 	public static final String PREFERENCE_KEY_TIME_SCHEDULE = "timeSchedule";
-	public static final boolean PREFERENCE_DEFAULT_VALUE_TIME_SCHEDULE = false;
+	public static final boolean PREFERENCE_DEFAULT_VALUE_TIME_SCHEDULE = true;
 	public static final String PREFERENCE_KEY_HOME_SCREEN = "homeScreen";
 	public static final String PREFERENCE_DEFAULT_VALUE_HOME_SCREEN = "version_2";
 	public static final String PREFERENCE_KEY_EXIT_ALERT = "exitAlert";
