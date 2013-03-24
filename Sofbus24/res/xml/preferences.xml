@@ -25,12 +25,12 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_stations" >
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="timeGPS"
             android:summary="@string/stations_timeGPS_summary"
             android:title="@string/stations_timeGPS_title" />
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="timeSchedule"
             android:summary="@string/stations_timeSchedule_summary"
             android:title="@string/stations_timeSchedule_title" />

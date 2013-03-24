@@ -57,6 +57,7 @@ public class HtmlResultSumc {
 
 	// Shared Preferences (option menu)
 	private SharedPreferences sharedPreferences;
+	private String language;
 
 	// Time retrieval string from the source file
 	private static final String TIME_RETRIEVAL_BEGIN = "<b>Информация към ";
@@ -76,6 +77,11 @@ public class HtmlResultSumc {
 		// Get SharedPreferences from option menu
 		sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this.context);
+
+		// Get "language" value from the Shared Preferences
+		language = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_LANGUAGE,
+				Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
 	}
 
 	// Define if the result contains needed data or not
@@ -114,11 +120,7 @@ public class HtmlResultSumc {
 			String htmlBody = htmlSrc.substring(endOfBody, startOfBody
 					+ BODY_END.length());
 
-			// Get "language" value from the Shared Preferences
-			String language = sharedPreferences.getString(
-					Constants.PREFERENCE_KEY_LANGUAGE,
-					Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
-
+			// Check which language is chosen from Preferences
 			if ("bg".equals(language)) {
 				return getInfo(htmlBody);
 			} else {
@@ -268,7 +270,12 @@ public class HtmlResultSumc {
 			stationName = stationName.trim();
 		}
 
-		return stationName;
+		// Check which language is chosen from Preferences
+		if ("bg".equals(language)) {
+			return stationName;
+		} else {
+			return TranslatorCyrillicToLatin.translate(stationName);
+		}
 	}
 
 	private String getStationId(String htmlSrc) {
