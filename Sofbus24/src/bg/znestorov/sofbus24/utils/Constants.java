@@ -59,4 +59,6 @@ public class Constants {
 	public static final String PREFERENCE_DEFAULT_VALUE_CLOSEST_STATIONS = "8";
 	public static final String PREFERENCE_KEY_LANGUAGE = "language";
 	public static final String PREFERENCE_DEFAULT_VALUE_LANGUAGE = "bg";
+	public static final String PREFERENCE_KEY_POSITION = "position";
+	public static final boolean PREFERENCE_DEFAULT_VALUE_POSITION = false;
 }

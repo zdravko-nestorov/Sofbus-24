@@ -83,6 +83,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	private static Animation slideOut;
 	private static TextView locationStatusView;
 	private static TextView locationStatusViewBackground;
+	private int animationCount = 0;
 
 	// Shared Preferences (option menu)
 	private SharedPreferences sharedPreferences;
@@ -98,6 +99,10 @@ public class VirtualBoardsMapGPS extends MapActivity {
 
 		// Setting activity title
 		this.setTitle(getString(R.string.map_gps_name));
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
 
 		// Sliding animations for the status bar
 		slideIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
@@ -118,6 +123,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 
 			public void onAnimationEnd(Animation animation) {
 				locationStatusViewBackground.setVisibility(View.INVISIBLE);
+				animationCount++;
 			}
 		});
 
@@ -165,9 +171,11 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		// Define a network listener that responds to location updates
 		m_NetworkLocationListener = new LocationListener() {
 			public void onLocationChanged(Location location) {
-				// Hide the status bar
-				locationStatusView.startAnimation(slideOut);
-				locationStatusView.setVisibility(View.INVISIBLE);
+				// Start the animation and hide the status bar (first time)
+				if (animationCount == 0) {
+					locationStatusView.startAnimation(slideOut);
+					locationStatusView.setVisibility(View.INVISIBLE);
+				}
 
 				getPosition(location, false);
 			}
@@ -190,9 +198,11 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		// Define a GPS listener that responds to location updates
 		m_GPSLocationListener = new LocationListener() {
 			public void onLocationChanged(Location location) {
-				// Hide the status bar
-				locationStatusView.startAnimation(slideOut);
-				locationStatusView.setVisibility(View.INVISIBLE);
+				// Start the animation and hide the status bar (first time)
+				if (animationCount == 0) {
+					locationStatusView.startAnimation(slideOut);
+					locationStatusView.setVisibility(View.INVISIBLE);
+				}
 
 				getPosition(location, false);
 			}
@@ -237,10 +247,6 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		}
 
 		// Set default map view
-		// Get SharedPreferences from option menu
-		sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getBaseContext());
-
 		// Get "exitAlert" value from the Shared Preferences
 		boolean satellitePref = sharedPreferences.getBoolean(
 				Constants.PREFERENCE_KEY_SATELLITE,
@@ -314,8 +320,19 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		GeoPoint geoPoint = new GeoPoint((int) (loc.getLatitude() * 1E6),
 				(int) (loc.getLongitude() * 1E6));
 
+		// Get "position" value from the Shared Preferences
+		boolean position = sharedPreferences.getBoolean(
+				Constants.PREFERENCE_KEY_POSITION,
+				Constants.PREFERENCE_DEFAULT_VALUE_POSITION);
+
 		mapController = mapView.getController();
-		mapController.animateTo(geoPoint);
+
+		// Focus the current position if the activity is started for the first
+		// time or the position option is enabled in Settings menu
+		if (position || animationCount == 0 || tap) {
+			mapController.animateTo(geoPoint);
+		}
+
 		if (!tap) {
 			mapController.setZoom(17);
 		}
@@ -326,10 +343,6 @@ public class VirtualBoardsMapGPS extends MapActivity {
 		List<GPSStation> stations = new ArrayList<GPSStation>();
 
 		datasource.open();
-
-		// Get SharedPreferences from option menu
-		sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getBaseContext());
 
 		// Get "closestStations" value from the Shared Preferences
 		String closestStations = sharedPreferences.getString(

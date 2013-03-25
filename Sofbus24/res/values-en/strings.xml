@@ -4,7 +4,7 @@
     <!-- Main -->
     <string name="ss_name">Sofia public transport</string>
     <string name="btn_gps">Virtual boards</string>
-    <string name="gps_msg">Please enter the code or the name of a station:</string>
+    <string name="gps_msg">Please enter the code or the name of a station (in Cyrillic or Latin):</string>
     <string name="btn_map">GPS times - Google Maps</string>
     <string name="btn_schedule">Schedules</string>
     <string name="btn_favourite">Favorites</string>
@@ -31,6 +31,13 @@
     <string name="gps_station_choice_error_info">No information found.</string>
 
     <!-- VIRTUAL BOARDS -->
+    <!-- VIRTUAL BOARDS HELP -->
+    <string name="vb_help_title">&lt;u>Latin -> Cyrillic&lt;/u></string>
+    <string name="vb_help_summary1">"A" = "А"\n"B" = "Б"\n"V" = "В"\n"G" = "Г"\n"D" = "Д"\n"E" = "Е"\n"ZH" = "Ж"\n"Z" = "З"\n"I" = "И"\n
+        "J" = "Й"\n"K" = "К"\n"L" = "Л"\n"M" = "М"\n"N" = "Н"\n"O" = "О"\n</string>
+    <string name="vb_help_summary2">"P" = "П"\n"R" = "Р"\n"S" = "С"\n"T" = "Т"\n"U" = "У"\n"F" = "Ф"\n"H" = "Х"\n"TS" = "Ц"\n
+        "CH" = "Ч"\n"SH" = "Ш"\n"SHT" = "Щ"\n"Y" = "Ъ"\n"YU" = "Ю"\n"YA" = "Я"</string>
+
     <!-- GPS -->
     <string name="gps_name">Virtual boards</string>
     <string name="gps_err_dialog_title">Error</string>
@@ -139,6 +146,8 @@
     <string name="map_compass_summary">Show an orientation arrow in the upper left corner (in GPS GoogleMaps)</string>
     <string name="map_mapView_title">Map mode</string>
     <string name="map_mapView_summary">Show a map mode change icon (in the upper right corner)</string>
+    <string name="map_position_title">Focus the map</string>
+    <string name="map_position_summary">Focus the map when changing the current location (in GPS GoogleMaps)</string>
     <string name="pref_category_other">OTHER</string>
     <string name="other_info_title">Information</string>
     <string name="other_info_summary">Product information</string>
@@ -174,6 +183,7 @@
     <!-- "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" -->
     <string name="button_title_ok">ОК</string>
     <string name="button_title_cancel">Cancel</string>
+    <string name="button_title_help">Help</string>
 
     <!-- "YES" and "NO" button titles: "Sofbus24.onBackPressed()" -->
     <string name="button_title_yes">Yes</string>

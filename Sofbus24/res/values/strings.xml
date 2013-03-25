@@ -5,7 +5,7 @@
     <string name="app_name">Софбус 24</string>
     <string name="ss_name">Софийски градски транспорт</string>
     <string name="btn_gps">Виртуални табла</string>
-    <string name="gps_msg">Моля въведете код или име на спирка:</string>
+    <string name="gps_msg">Моля въведете код или име на спирка (на Кирилица или Латиница):</string>
     <string name="btn_map">GPS времена - Google Maps</string>
     <string name="btn_schedule">Разписания</string>
     <string name="btn_favourite">Любими</string>
@@ -32,6 +32,13 @@
     <string name="gps_station_choice_error_info">Няма намерена информация.</string>
 
     <!-- VIRTUAL BOARDS -->
+    <!-- VIRTUAL BOARDS HELP -->
+    <string name="vb_help_title">&lt;u>Латиница -> Кирилица&lt;/u></string>
+    <string name="vb_help_summary1">"A" = "А"\n"B" = "Б"\n"V" = "В"\n"G" = "Г"\n"D" = "Д"\n"E" = "Е"\n"ZH" = "Ж"\n"Z" = "З"\n"I" = "И"\n
+        "J" = "Й"\n"K" = "К"\n"L" = "Л"\n"M" = "М"\n"N" = "Н"\n"O" = "О"\n</string>
+    <string name="vb_help_summary2">"P" = "П"\n"R" = "Р"\n"S" = "С"\n"T" = "Т"\n"U" = "У"\n"F" = "Ф"\n"H" = "Х"\n"TS" = "Ц"\n
+        "CH" = "Ч"\n"SH" = "Ш"\n"SHT" = "Щ"\n"Y" = "Ъ"\n"YU" = "Ю"\n"YA" = "Я"</string>
+
     <!-- GPS -->
     <string name="gps_name">Виртуални табла</string>
     <string name="gps_err_dialog_title">Грешка</string>
@@ -142,6 +149,8 @@
     <string name="map_compass_summary">Покажи стрелка за ориентация на посоката (в GPS GoogleMaps)</string>
     <string name="map_mapView_title">Режим на картата</string>
     <string name="map_mapView_summary">Покажи икона за смяна на режима на картата (в горния десен ъгъл)</string>
+    <string name="map_position_title">Позициониране</string>
+    <string name="map_position_summary">Позиционирай картата при промяна на текущото местоположение (в GPS GoogleMaps)</string>
     <string name="pref_category_other">ДРУГИ</string>
     <string name="other_info_title">Информация</string>
     <string name="other_info_summary">Информация за продукта</string>
@@ -178,6 +187,7 @@
     <!-- "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" -->
     <string name="button_title_ok">ОК</string>
     <string name="button_title_cancel">Отказ</string>
+    <string name="button_title_help">Помощ</string>
 
     <!-- "YES" and "NO" button titles: "Sofbus24.onBackPressed()" -->
     <string name="button_title_yes">Да</string>

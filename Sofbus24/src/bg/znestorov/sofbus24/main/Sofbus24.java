@@ -111,6 +111,17 @@ public class Sofbus24 extends Activity implements OnClickListener {
 						}
 					});
 
+			alert.setNeutralButton(
+					context.getString(R.string.button_title_help),
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int whichButton) {
+							Intent i = new Intent(Sofbus24.this,
+									VirtualBoardsHelp.class);
+							startActivity(i);
+						}
+					});
+
 			final AlertDialog dialog = alert.create();
 			dialog.show();
 			dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);

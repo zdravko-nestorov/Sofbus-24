@@ -66,6 +66,11 @@
             android:key="mapView"
             android:summary="@string/map_mapView_summary"
             android:title="@string/map_mapView_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="position"
+            android:summary="@string/map_position_summary"
+            android:title="@string/map_position_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_other" >
         <PreferenceScreen

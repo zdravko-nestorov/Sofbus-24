@@ -76,6 +76,10 @@ public class VirtualBoards extends ListActivity {
 			station_list = result.showResult();
 			String time_stamp = station_list.get(0).getTime_stamp();
 
+			if (!stationCode.equals(stationCode.replaceAll("\\D+", ""))) {
+				stationCode = result.getStationId(tempArray[1]);
+			}
+
 			// Error with the HTML source code (unknown)
 			if (time_stamp.contains(unknown)) {
 				showErrorDialog();

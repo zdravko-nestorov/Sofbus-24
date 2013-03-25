@@ -65,9 +65,14 @@ public class HtmlResultSumc {
 
 	public HtmlResultSumc(Context context, String stationCode, String htmlSrc) {
 		this.context = context;
-		this.stationCode = stationCode;
 		this.htmlSrc = htmlSrc;
 		this.tempHtmlSrc = htmlSrc;
+
+		if (stationCode.equals(stationCode.replaceAll("\\D+", ""))) {
+			this.stationCode = stationCode;
+		} else {
+			this.stationCode = getStationId(this.tempHtmlSrc);
+		}
 
 		// Get String values from "strings" XML
 		vehicle_Bus = context.getString(R.string.title_bus);
@@ -278,7 +283,7 @@ public class HtmlResultSumc {
 		}
 	}
 
-	private String getStationId(String htmlSrc) {
+	public String getStationId(String htmlSrc) {
 		String stationId = getValueAfter(htmlSrc, "<b>спирка");
 		stationId = getValueAfter(stationId, "(");
 		stationId = getValueBefore(stationId, ")").trim();
