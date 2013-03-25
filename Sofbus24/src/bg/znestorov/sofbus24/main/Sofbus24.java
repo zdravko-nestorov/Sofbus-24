@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -21,6 +22,7 @@ import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.gps_map.MyLocation;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.DatabaseUtils;
+import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 
 public class Sofbus24 extends Activity implements OnClickListener {
 
@@ -92,6 +94,8 @@ public class Sofbus24 extends Activity implements OnClickListener {
 						public void onClick(DialogInterface dialog,
 								int whichButton) {
 							String stationID = input.getText().toString();
+							stationID = TranslatorLatinToCyrillic
+									.translate(stationID);
 							new HtmlRequestSumc().getInformation(context,
 									stationID, null, null);
 
@@ -190,7 +194,7 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			break;
 		case R.id.btn_exit:
 			if (exitAlert) {
-				onBackPressed();
+				onKeyDown(KeyEvent.KEYCODE_BACK, null);
 			} else {
 				finish();
 			}
@@ -209,28 +213,34 @@ public class Sofbus24 extends Activity implements OnClickListener {
 	}
 
 	@Override
-	public void onBackPressed() {
-		if (exitAlert) {
-			new AlertDialog.Builder(this)
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setTitle(R.string.btn_exit)
-					.setMessage(R.string.exit_msg)
-					.setCancelable(true)
-					.setPositiveButton(
-							context.getString(R.string.button_title_yes),
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int i) {
-									finish();
-								}
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (exitAlert) {
+				new AlertDialog.Builder(this)
+						.setIcon(android.R.drawable.ic_dialog_alert)
+						.setTitle(R.string.btn_exit)
+						.setMessage(R.string.exit_msg)
+						.setCancelable(true)
+						.setPositiveButton(
+								context.getString(R.string.button_title_yes),
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog,
+											int i) {
+										finish();
+									}
 
-							})
-					.setNegativeButton(
-							context.getString(R.string.button_title_no), null)
-					.show();
-		} else {
-			finish();
+								})
+						.setNegativeButton(
+								context.getString(R.string.button_title_no),
+								null).show();
+			} else {
+				finish();
+			}
+
+			return true;
 		}
+
+		return super.onKeyDown(keyCode, event);
 	}
 
 	// AsyncTask capable for loading the map
