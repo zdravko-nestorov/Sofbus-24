@@ -5,7 +5,7 @@
     <string name="app_name">Софбус 24</string>
     <string name="ss_name">Софийски градски транспорт</string>
     <string name="btn_gps">Виртуални табла</string>
-    <string name="gps_msg">Моля въведете код или име на спирка (на Кирилица или Латиница):</string>
+    <string name="gps_msg">Моля въведете код (цифри) или име (на кирилица или латиница) на спирка:</string>
     <string name="btn_map">GPS времена - Google Maps</string>
     <string name="btn_schedule">Разписания</string>
     <string name="btn_favourite">Любими</string>
@@ -33,11 +33,11 @@
 
     <!-- VIRTUAL BOARDS -->
     <!-- VIRTUAL BOARDS HELP -->
-    <string name="vb_help_title">&lt;u>Латиница -> Кирилица&lt;/u></string>
-    <string name="vb_help_summary1">"A" = "А"\n"B" = "Б"\n"V" = "В"\n"G" = "Г"\n"D" = "Д"\n"E" = "Е"\n"ZH" = "Ж"\n"Z" = "З"\n"I" = "И"\n
-        "J" = "Й"\n"K" = "К"\n"L" = "Л"\n"M" = "М"\n"N" = "Н"\n"O" = "О"\n</string>
-    <string name="vb_help_summary2">"P" = "П"\n"R" = "Р"\n"S" = "С"\n"T" = "Т"\n"U" = "У"\n"F" = "Ф"\n"H" = "Х"\n"TS" = "Ц"\n
-        "CH" = "Ч"\n"SH" = "Ш"\n"SHT" = "Щ"\n"Y" = "Ъ"\n"YU" = "Ю"\n"YA" = "Я"</string>
+    <string name="vb_help_title">&lt;u>Кирилица на Латиница&lt;/u></string>
+    <string name="vb_help_summary1">\"А\" = \"A\"\n\"Б\" = \"B\"\n\"В\" = \"V\"\n\"Г\" = \"G\"\n\"Д\" = \"D\"\n\"Е\" = \"E\"\n\"Ж\" = \"Zh\"\n\"З\" = \"Z\"\n\"И\" = \"I\"
+		\n\"Й\" = \"J\"\n\"К\" = \"K\"\n\"Л\" = \"L\"\n\"М\" = \"M\"\n\"Н\" = \"N\"\n\"О\" = \"O\"\n</string>
+    <string name="vb_help_summary2">\"П\" = \"P\"\n\"Р\" = \"R\"\n\"С\" = \"S\"\n\"Т\" = \"T\"\n\"У\" = \"U\"\n\"Ф\" = \"F\"\n\"Х\" = \"H\"\n\"Ц\" = \"C\"\n\"Ч\" = \"Ch\"
+		\n\"Ш\" = \"Sh\"\n\"Щ\" = \"Sht\"\n\"Ъ\" = \"Y\"\n\"Ь\" = \"J\"\n\"Ю\" = \"Yu\"\n\"Я\" = \"Ya\"</string>
 
     <!-- GPS -->
     <string name="gps_name">Виртуални табла</string>

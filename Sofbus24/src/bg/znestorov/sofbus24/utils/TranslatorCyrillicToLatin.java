@@ -34,7 +34,7 @@ public class TranslatorCyrillicToLatin {
 		translatorMap.put("ó", "u");
 		translatorMap.put("ô", "f");
 		translatorMap.put("õ", "h");
-		translatorMap.put("ö", "ts");
+		translatorMap.put("ö", "c");
 		translatorMap.put("÷", "ch");
 		translatorMap.put("ø", "sh");
 		translatorMap.put("ù", "sht");
@@ -64,7 +64,7 @@ public class TranslatorCyrillicToLatin {
 		translatorMap.put("Ó", "U");
 		translatorMap.put("Ô", "F");
 		translatorMap.put("Õ", "H");
-		translatorMap.put("Ö", "Ts");
+		translatorMap.put("Ö", "C");
 		translatorMap.put("×", "Ch");
 		translatorMap.put("Ø", "Sh");
 		translatorMap.put("Ù", "Sht");

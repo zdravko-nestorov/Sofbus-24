@@ -3,8 +3,10 @@ package bg.znestorov.sofbus24.main;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.MotionEvent;
 import android.view.Window;
+import android.widget.TextView;
 
 public class VirtualBoardsHelp extends Activity {
 
@@ -16,6 +18,10 @@ public class VirtualBoardsHelp extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		setContentView(R.layout.activity_gps_station_help);
+
+		TextView helpTitle = (TextView) findViewById(R.id.vb_help_title);
+		helpTitle.setText(Html.fromHtml(String
+				.format(getString(R.string.vb_help_title))));
 	}
 
 	@Override

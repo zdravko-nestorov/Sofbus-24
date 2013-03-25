@@ -2,7 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:background="#000000"
+    android:orientation="vertical"
+    android:paddingLeft="8dip"
+    android:paddingRight="8dip" >
 
     <TextView
         android:id="@+id/vb_help_title"
@@ -11,8 +14,8 @@
         android:clickable="false"
         android:gravity="center"
         android:padding="5dip"
-        android:text="@string/vb_help_title"
-        android:textSize="25dip" />
+        android:textSize="23dip"
+        android:textStyle="bold" />
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,7 +31,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/vb_help_summary1"
-            android:textSize="15dip" />
+            android:textSize="16dip" />
 
         <TextView
             android:id="@+id/vb_help_summary2"
@@ -37,7 +40,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/vb_help_summary2"
-            android:textSize="15dip" />
+            android:textSize="16dip" />
     </LinearLayout>
 
 </LinearLayout>

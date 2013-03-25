@@ -32,6 +32,10 @@ public class Sofbus24 extends Activity implements OnClickListener {
 	// Exit alert dialog
 	boolean exitAlert = false;
 
+	// Variable holding the written text in the EditField in VirtualBoards alert
+	// dialog
+	private static String vbInputText = "";
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,118 +82,10 @@ public class Sofbus24 extends Activity implements OnClickListener {
 
 		switch (v.getId()) {
 		case R.id.btn_gps:
-			AlertDialog.Builder alert = new AlertDialog.Builder(Sofbus24.this);
-
-			alert.setTitle(R.string.btn_gps);
-			alert.setMessage(R.string.gps_msg);
-
-			// Set an EditText view to get user input
-			final EditText input = new EditText(Sofbus24.this);
-			// input.setInputType(InputType.TYPE_CLASS_NUMBER);
-			alert.setView(input);
-
-			alert.setPositiveButton(
-					context.getString(R.string.button_title_ok),
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int whichButton) {
-							String stationID = input.getText().toString();
-							stationID = TranslatorLatinToCyrillic
-									.translate(stationID);
-							new HtmlRequestSumc().getInformation(context,
-									stationID, null, null);
-
-						}
-					});
-
-			alert.setNegativeButton(
-					context.getString(R.string.button_title_cancel),
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int whichButton) {
-							// Canceled.
-						}
-					});
-
-			alert.setNeutralButton(
-					context.getString(R.string.button_title_help),
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog,
-								int whichButton) {
-							Intent i = new Intent(Sofbus24.this,
-									VirtualBoardsHelp.class);
-							startActivity(i);
-						}
-					});
-
-			final AlertDialog dialog = alert.create();
-			dialog.show();
-			dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
-
-			// Add Text listener on input field
-			input.addTextChangedListener(new TextWatcher() {
-				public void afterTextChanged(Editable s) {
-				}
-
-				public void beforeTextChanged(CharSequence s, int start,
-						int count, int after) {
-				}
-
-				public void onTextChanged(CharSequence s, int start,
-						int before, int count) {
-					String inputText = input.getText().toString();
-
-					if ((inputText.length() == 0)
-							|| (inputText.length() <= 2 && !inputText
-									.equals(inputText.replaceAll("\\D+", "")))) {
-						dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(
-								false);
-					} else {
-						dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(
-								true);
-					}
-				}
-			});
-
+			startVirtualBoardsActivity("");
 			break;
 		case R.id.btn_map:
-			MyLocation myLocation = new MyLocation();
-
-			// Check to see if at least one provider is enabled
-			if (myLocation.getLocation(context)) {
-				ProgressDialog progressDialog = new ProgressDialog(context);
-				progressDialog.setMessage("Loading...");
-
-				LoadMapAsyncTask loadMap = new LoadMapAsyncTask(context,
-						progressDialog);
-				loadMap.execute();
-			} else {
-				new AlertDialog.Builder(this)
-						.setIcon(android.R.drawable.ic_dialog_alert)
-						.setTitle(R.string.ss_gps_map_msg_title)
-						.setMessage(R.string.ss_gps_map_msg_body)
-						.setCancelable(false)
-						.setPositiveButton(
-								context.getString(R.string.button_title_ok),
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int i) {
-										Intent intent = new Intent(
-												android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-										startActivity(intent);
-									}
-
-								})
-						.setNegativeButton(
-								context.getString(R.string.button_title_cancel),
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int i) {
-									}
-
-								}).show();
-			}
-
+			startVirtualBoardsMapGPSActivity();
 			break;
 		case R.id.btn_schedule:
 			Intent listVehicleChoice = new Intent(context, VehicleTabView.class);
@@ -220,6 +116,10 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			Intent homeScreenSelect = new Intent(context,
 					HomeScreenSelect.class);
 			startActivity(homeScreenSelect);
+		}
+
+		if (requestCode == 1) {
+			startVirtualBoardsActivity(vbInputText);
 		}
 	}
 
@@ -281,6 +181,117 @@ public class Sofbus24 extends Activity implements OnClickListener {
 		@Override
 		protected void onPostExecute(Void result) {
 			progressDialog.dismiss();
+		}
+	}
+
+	// Once button btn_gps is clicked
+	private void startVirtualBoardsActivity(String inputText) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(Sofbus24.this);
+
+		alert.setTitle(R.string.btn_gps);
+		alert.setMessage(R.string.gps_msg);
+
+		// Set an EditText view to get user input
+		final EditText input = new EditText(Sofbus24.this);
+		input.setText(inputText);
+		input.setSelection(input.getText().length());
+		alert.setView(input);
+
+		alert.setPositiveButton(context.getString(R.string.button_title_ok),
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String stationID = input.getText().toString();
+						stationID = TranslatorLatinToCyrillic
+								.translate(stationID);
+						new HtmlRequestSumc().getInformation(context,
+								stationID, null, null);
+
+					}
+				});
+
+		alert.setNegativeButton(
+				context.getString(R.string.button_title_cancel),
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						// Canceled.
+					}
+				});
+
+		alert.setNeutralButton(context.getString(R.string.button_title_help),
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						Intent intent = new Intent(Sofbus24.this,
+								VirtualBoardsHelp.class);
+						startActivityForResult(intent, 1);
+					}
+				});
+
+		final AlertDialog dialog = alert.create();
+		dialog.show();
+		dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
+
+		// Add Text listener on input field
+		input.addTextChangedListener(new TextWatcher() {
+			public void afterTextChanged(Editable s) {
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				String inputText = input.getText().toString();
+				vbInputText = inputText;
+
+				if ((inputText.length() == 0)
+						|| (inputText.length() <= 2 && !inputText
+								.equals(inputText.replaceAll("\\D+", "")))) {
+					dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
+				} else {
+					dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(true);
+				}
+			}
+		});
+	}
+
+	// Once button btn_map is clicked
+	private void startVirtualBoardsMapGPSActivity() {
+		MyLocation myLocation = new MyLocation();
+
+		// Check to see if at least one provider is enabled
+		if (myLocation.getLocation(context)) {
+			ProgressDialog progressDialog = new ProgressDialog(context);
+			progressDialog.setMessage("Loading...");
+
+			LoadMapAsyncTask loadMap = new LoadMapAsyncTask(context,
+					progressDialog);
+			loadMap.execute();
+		} else {
+			new AlertDialog.Builder(this)
+					.setIcon(android.R.drawable.ic_dialog_alert)
+					.setTitle(R.string.ss_gps_map_msg_title)
+					.setMessage(R.string.ss_gps_map_msg_body)
+					.setCancelable(false)
+					.setPositiveButton(
+							context.getString(R.string.button_title_ok),
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int i) {
+									Intent intent = new Intent(
+											android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+									startActivity(intent);
+								}
+
+							})
+					.setNegativeButton(
+							context.getString(R.string.button_title_cancel),
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int i) {
+								}
+
+							}).show();
 		}
 	}
 

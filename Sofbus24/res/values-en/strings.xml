@@ -4,7 +4,7 @@
     <!-- Main -->
     <string name="ss_name">Sofia public transport</string>
     <string name="btn_gps">Virtual boards</string>
-    <string name="gps_msg">Please enter the code or the name of a station (in Cyrillic or Latin):</string>
+    <string name="gps_msg">Please enter the code (digits) or the name (in cyrillic or latin) of a station:</string>
     <string name="btn_map">GPS times - Google Maps</string>
     <string name="btn_schedule">Schedules</string>
     <string name="btn_favourite">Favorites</string>
@@ -32,11 +32,11 @@
 
     <!-- VIRTUAL BOARDS -->
     <!-- VIRTUAL BOARDS HELP -->
-    <string name="vb_help_title">&lt;u>Latin -> Cyrillic&lt;/u></string>
-    <string name="vb_help_summary1">"A" = "А"\n"B" = "Б"\n"V" = "В"\n"G" = "Г"\n"D" = "Д"\n"E" = "Е"\n"ZH" = "Ж"\n"Z" = "З"\n"I" = "И"\n
-        "J" = "Й"\n"K" = "К"\n"L" = "Л"\n"M" = "М"\n"N" = "Н"\n"O" = "О"\n</string>
-    <string name="vb_help_summary2">"P" = "П"\n"R" = "Р"\n"S" = "С"\n"T" = "Т"\n"U" = "У"\n"F" = "Ф"\n"H" = "Х"\n"TS" = "Ц"\n
-        "CH" = "Ч"\n"SH" = "Ш"\n"SHT" = "Щ"\n"Y" = "Ъ"\n"YU" = "Ю"\n"YA" = "Я"</string>
+    <string name="vb_help_title">&lt;u>Latin to Cyrillic Chars&lt;/u></string>
+    <string name="vb_help_summary1">\"A\" = \"А\"\n\"B\" = \"Б\"\n\"V\" = \"В\"\n\"G\" = \"Г\"\n\"D\" = \"Д\"\n\"E\" = \"Е\"\n\"ZH\" = \"Ж\"\n\"Z\" = \"З\"\n\"I\" = \"И\"\n
+        \"J\" = \"Й\"\n\"K\" = \"К\"\n\"L\" = \"Л\"\n\"M\" = \"М\"\n\"N\" = \"Н\"\n\"O\" = \"О\"\n</string>
+    <string name="vb_help_summary2">\"P\" = \"П\"\n\"R\" = \"Р\"\n\"S\" = \"С\"\n\"T\" = \"Т\"\n\"U\" = \"У\"\n\"F\" = \"Ф\"\n\"H\" = \"Х\"\n\"TS\" = \"Ц\"\n
+        \"CH\" = \"Ч\"\n\"SH\" = \"Ш\"\n\"SHT\" = \"Щ\"\n\"Y\" = \"Ъ\"\n\"YU\" = \"Ю\"\n\"YA\" = \"Я\"</string>
 
     <!-- GPS -->
     <string name="gps_name">Virtual boards</string>
