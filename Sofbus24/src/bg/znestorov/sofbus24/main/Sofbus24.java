@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.gps_map.MyLocation;
+import bg.znestorov.sofbus24.gps_map.ObtainCurrentCordinates;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.DatabaseUtils;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
@@ -100,11 +101,14 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			startActivityForResult(i, 0);
 			break;
 		case R.id.btn_exit:
-			if (exitAlert) {
-				onKeyDown(KeyEvent.KEYCODE_BACK, null);
-			} else {
-				finish();
-			}
+			// if (exitAlert) {
+			// onKeyDown(KeyEvent.KEYCODE_BACK, null);
+			// } else {
+			// finish();
+			// }
+
+			ObtainCurrentCordinates fetchCordinates = new ObtainCurrentCordinates(context);
+			fetchCordinates.execute();
 
 			break;
 		}

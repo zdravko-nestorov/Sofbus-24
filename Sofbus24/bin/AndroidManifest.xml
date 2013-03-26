@@ -1,0 +1,129 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="bg.znestorov.sofbus24.main"
+    android:configChanges="keyboardHidden|orientation"
+    android:versionCode="9"
+    android:versionName="1.15" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-sdk
+        android:minSdkVersion="3"
+        android:targetSdkVersion="10" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <uses-library android:name="com.google.android.maps" />
+
+        <activity
+            android:name=".HomeScreenSelect"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Sofbus24"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Preferences"
+            android:label="@string/pref_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <!-- Виртуални табла -->
+        <activity
+            android:name=".VirtualBoards"
+            android:label="@string/gps_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".StationInfo"
+            android:label="@string/st_inf_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".VirtualBoardsMap"
+            android:label="@string/st_inf_name" >
+        </activity>
+        <activity
+            android:name=".VirtualBoardsStationChoice"
+            android:label="@string/gps_station_choice_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name=".VirtualBoardsHelp"
+            android:label="@string/vb_help_title"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <!-- Google Maps карта -->
+        <activity
+            android:name=".VirtualBoardsMapGPS"
+            android:label="@string/map_gps_name" >
+        </activity>
+        <activity
+            android:name=".Help"
+            android:label="@string/map_help_label"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <!-- Разписания (коли на градския транспорт) -->
+        <activity
+            android:name=".VehicleTabView"
+            android:label="@string/veh_ch_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".VehicleListView"
+            android:label="@string/veh_ch_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <!-- Разписания (спирки на градския транспорт) -->
+        <activity
+            android:name=".StationTabView"
+            android:label="@string/st_ch_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".StationListView"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/st_ch_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".StationInfoRouteMap"
+            android:label="@string/st_inf_name" >
+        </activity>
+        <activity
+            android:name=".StationInfoMap"
+            android:label="@string/st_inf_name" >
+        </activity>
+        <!-- Любими -->
+        <activity
+            android:name=".Favourites"
+            android:label="@string/fav_info"
+            android:screenOrientation="portrait" >
+        </activity>
+        <!-- Информация -->
+        <activity
+            android:name=".About"
+            android:label="@string/about_label"
+            android:theme="@android:style/Theme.Dialog" >
+            <intent-filter>
+                <action android:name="android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
