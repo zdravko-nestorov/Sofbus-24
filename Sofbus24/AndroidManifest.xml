@@ -61,6 +61,12 @@
             android:theme="@android:style/Theme.Dialog" >
         </activity>
         <activity
+            android:name=".VirtualBoardsMapStationChoice"
+            android:label="@string/gps_station_choice_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
             android:name=".VirtualBoardsHelp"
             android:label="@string/vb_help_title"
             android:screenOrientation="portrait"

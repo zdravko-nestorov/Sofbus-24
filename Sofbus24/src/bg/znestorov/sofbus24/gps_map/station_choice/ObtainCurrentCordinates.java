@@ -1,13 +1,13 @@
-package bg.znestorov.sofbus24.gps_map;
+package bg.znestorov.sofbus24.gps_map.station_choice;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,7 +15,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.VirtualBoardsMapStationChoice;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.station_database.StationsDataSource;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -88,24 +88,21 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 	protected void onPostExecute(String result) {
 		progressDailog.dismiss();
 
-		List<GPSStation> stations = getClosestStations();
-		String output = "";
-		for (int i = 0; i < stations.size(); i++) {
-			output = output + "\n" + stations.get(i).toString();
-		}
+		// Getting a list with the closest stations
+		List<GPSStation> station_list = getClosestStations();
 
-		new AlertDialog.Builder(context)
-				.setIcon(android.R.drawable.ic_dialog_alert)
-				.setTitle(R.string.btn_exit)
-				.setMessage(output)
-				.setCancelable(true)
-				.setPositiveButton(
-						context.getString(R.string.button_title_yes),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int i) {
-							}
+		// Transforming the list to an array, so can be sent to another activity
+		GPSStation[] station_array = station_list
+				.toArray(new GPSStation[station_list.size()]);
 
-						}).show();
+		// Transfer the GPSStations array to VirtualBoardsMapStationChoice
+		// activity
+		Bundle bundle = new Bundle();
+		Intent stationInfoIntent = new Intent(context,
+				VirtualBoardsMapStationChoice.class);
+		bundle.putSerializable("Array Of GPSStations", station_array);
+		stationInfoIntent.putExtras(bundle);
+		context.startActivity(stationInfoIntent);
 	}
 
 	@Override
@@ -139,7 +136,7 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 
 	// Adding station marker according to GeoPoint coordinates
 	private List<GPSStation> getClosestStations() {
-		List<GPSStation> stations = new ArrayList<GPSStation>();
+		List<GPSStation> station_list = new ArrayList<GPSStation>();
 
 		// Open database connection
 		datasource.open();
@@ -160,12 +157,12 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 		}
 
 		// Get a list with the closest stations using the current location
-		stations = datasource.getClosestStations(geoPoint);
+		station_list = datasource.getClosestStations(geoPoint);
 
 		// Close database connection
 		datasource.close();
 
-		return stations;
+		return station_list;
 	}
 
 }

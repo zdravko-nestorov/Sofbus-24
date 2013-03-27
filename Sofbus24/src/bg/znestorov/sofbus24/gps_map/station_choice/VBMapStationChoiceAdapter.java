@@ -1,4 +1,4 @@
-package bg.znestorov.sofbus24.vb_station_choice;
+package bg.znestorov.sofbus24.gps_map.station_choice;
 
 import java.util.List;
 
@@ -12,11 +12,11 @@ import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 
 // Class for creating the vehicles ListView
-public class VBStationChoiceAdapter extends ArrayAdapter<GPSStation> {
+public class VBMapStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 	private final Context context;
 	private final List<GPSStation> stations;
 
-	public VBStationChoiceAdapter(Context context, List<GPSStation> stations) {
+	public VBMapStationChoiceAdapter(Context context, List<GPSStation> stations) {
 		super(context, R.layout.activity_station, stations);
 		this.context = context;
 		this.stations = stations;
@@ -36,7 +36,7 @@ public class VBStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 		return rowView;
 	}
 
-	// Direction row in the ListView
+	// Station row in the ListView
 	public View setRow(LayoutInflater inflater, ViewGroup parent,
 			GPSStation station) {
 		View rowView = inflater.inflate(R.layout.vb_station_choice_text,

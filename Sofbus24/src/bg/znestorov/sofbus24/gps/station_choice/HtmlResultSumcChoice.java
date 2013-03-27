@@ -1,4 +1,4 @@
-package bg.znestorov.sofbus24.gps;
+package bg.znestorov.sofbus24.gps.station_choice;
 
 import static bg.znestorov.sofbus24.utils.Utils.getValueAfter;
 import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
