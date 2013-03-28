@@ -299,4 +299,14 @@
         <item name="en">en</item>
     </string-array>
 
+    <!-- GPS Google Maps button (functionality) -->
+    <string-array name="gpsMapFunct">
+        <item name="funct_1">Чрез GoogleMaps</item>
+        <item name="funct_2">Чрез списък</item>
+    </string-array>
+    <string-array name="gpsMapFunctValues">
+        <item name="funct_1">funct_1</item>
+        <item name="funct_2">funct_2</item>
+    </string-array>
+
 </resources>

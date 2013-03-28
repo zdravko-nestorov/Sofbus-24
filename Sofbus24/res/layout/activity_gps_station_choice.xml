@@ -12,6 +12,7 @@
         android:clickable="false"
         android:gravity="center"
         android:padding="5dip"
+        android:textColor="#FFFFFF"
         android:textSize="23dip" />
 
     <ListView

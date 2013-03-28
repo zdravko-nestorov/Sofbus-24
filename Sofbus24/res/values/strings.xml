@@ -53,6 +53,12 @@
     <string name="gps_error_noCoordinates">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
 
     <!-- GPS GOOGLE MAPS -->
+    <!-- GPS GOOGLE MAPS Station Choice -->
+    <string name="gps_map_station_choice_name">&lt;u>Изберете спирка&lt;/u></string>
+    <string name="gps_map_station_choice_error_summary">Възникна грешка при трансфера на информация. Моля опитайте отново.</string>
+    <string name="gps_map_station_choice_distance">Разстояние:&#160;</string>
+    <string name="gps_map_station_choice_meters">&#160;метра</string>
+
     <!-- Map GPS -->
     <string name="map_gps_name">Виртуални табла - Google Maps</string>
     <string name="map_gps_menu_item_distance">Маршрут</string>
@@ -131,8 +137,11 @@
     <string name="common_home_screen_summary">Избор на начален екран</string>
     <string name="common_language_title">Език</string>
     <string name="common_language_summary">Избор на език</string>
-    <string name="common_exit_title">Съобщение при изход</string>
-    <string name="common_exit_summary">Използване на диалогов прозорец при изход</string>
+    <string name="pref_category_home_screen">НАЧАЛЕН ЕКРАН</string>
+    <string name="home_screen_gps_map_title">GPS Google Maps</string>
+    <string name="home_screen_gps_map_summary">Избор на функционалност на бутона \"GPS Времена Google Maps\" (начален екран)</string>
+    <string name="home_screen_exit_title">Съобщение при изход</string>
+    <string name="home_screen_exit_summary">Използване на диалогов прозорец при изход</string>
     <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
     <string name="stations_timeGPS_title">Виртуални табла</string>
     <string name="stations_timeGPS_summary">Оставащо време или времена на пристигане</string>

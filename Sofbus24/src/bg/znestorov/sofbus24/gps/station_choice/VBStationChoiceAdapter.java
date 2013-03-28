@@ -17,7 +17,7 @@ public class VBStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 	private final List<GPSStation> stations;
 
 	public VBStationChoiceAdapter(Context context, List<GPSStation> stations) {
-		super(context, R.layout.activity_station, stations);
+		super(context, R.layout.activity_gps_station_choice, stations);
 		this.context = context;
 		this.stations = stations;
 	}
@@ -39,8 +39,8 @@ public class VBStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 	// Station row in the ListView
 	public View setRow(LayoutInflater inflater, ViewGroup parent,
 			GPSStation station) {
-		View rowView = inflater.inflate(R.layout.vb_station_choice_text,
-				parent, false);
+		View rowView = inflater.inflate(
+				R.layout.activity_gps_station_choice_list_row, parent, false);
 
 		TextView vehicleGPSStation = (TextView) rowView
 				.findViewById(R.id.vb_station_choice_text);

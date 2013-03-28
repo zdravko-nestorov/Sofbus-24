@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.gps_map.station_choice;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.VirtualBoardsMapStationChoice;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.station_database.StationsDataSource;
@@ -71,7 +73,8 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 				ObtainCurrentCordinates.this.cancel(true);
 			}
 		});
-		progressDailog.setMessage("Loading...");
+		progressDailog.setMessage(context
+				.getString(R.string.map_gps_location_status));
 		progressDailog.setIndeterminate(true);
 		progressDailog.setCancelable(true);
 		progressDailog.show();
@@ -91,17 +94,37 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 		// Getting a list with the closest stations
 		List<GPSStation> station_list = getClosestStations();
 
-		// Transforming the list to an array, so can be sent to another activity
-		GPSStation[] station_array = station_list
-				.toArray(new GPSStation[station_list.size()]);
+		// Transfer the list to a string
+		String station_string = "";
+		for (GPSStation station : station_list) {
+			// Creating location with the current location
+			Location locCurr = new Location("");
+			locCurr.setLatitude(this.latitude);
+			locCurr.setLongitude(this.longitude);
+
+			// Creating location with the current station
+			Location locTap = new Location("");
+			locTap.setLatitude(Double.parseDouble(station.getLat()));
+			locTap.setLongitude(Double.parseDouble(station.getLon()));
+
+			// Calculate distance between current location and the station
+			Float distanceTo = locTap.distanceTo(locCurr);
+			BigDecimal bd = new BigDecimal(distanceTo);
+			BigDecimal rounded = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+			distanceTo = rounded.floatValue();
+
+			station_string += "@" + station.getName() + "," + station.getId()
+					+ "," + distanceTo;
+		}
+		if (!"".equals(station_string)) {
+			station_string = station_string.substring(1).trim();
+		}
 
 		// Transfer the GPSStations array to VirtualBoardsMapStationChoice
 		// activity
-		Bundle bundle = new Bundle();
 		Intent stationInfoIntent = new Intent(context,
 				VirtualBoardsMapStationChoice.class);
-		bundle.putSerializable("Array Of GPSStations", station_array);
-		stationInfoIntent.putExtras(bundle);
+		stationInfoIntent.putExtra("ClosestStations", station_string);
 		context.startActivity(stationInfoIntent);
 	}
 

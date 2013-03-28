@@ -14,6 +14,7 @@
         android:clickable="false"
         android:gravity="center"
         android:padding="5dip"
+        android:textColor="#FFFFFF"
         android:textSize="23dip"
         android:textStyle="bold" />
 
@@ -31,6 +32,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/vb_help_summary1"
+            android:textColor="#FFFFFF"
             android:textSize="16dip" />
 
         <TextView
@@ -40,6 +42,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/vb_help_summary2"
+            android:textColor="#FFFFFF"
             android:textSize="16dip" />
     </LinearLayout>
 

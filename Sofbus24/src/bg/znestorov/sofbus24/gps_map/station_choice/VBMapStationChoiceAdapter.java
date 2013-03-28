@@ -17,7 +17,7 @@ public class VBMapStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 	private final List<GPSStation> stations;
 
 	public VBMapStationChoiceAdapter(Context context, List<GPSStation> stations) {
-		super(context, R.layout.activity_station, stations);
+		super(context, R.layout.activity_gps_station_choice, stations);
 		this.context = context;
 		this.stations = stations;
 	}
@@ -39,14 +39,20 @@ public class VBMapStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 	// Station row in the ListView
 	public View setRow(LayoutInflater inflater, ViewGroup parent,
 			GPSStation station) {
-		View rowView = inflater.inflate(R.layout.vb_station_choice_text,
-				parent, false);
+		View rowView = inflater.inflate(
+				R.layout.activity_gps_map_station_choice_list_row, parent,
+				false);
 
-		TextView vehicleGPSStation = (TextView) rowView
-				.findViewById(R.id.vb_station_choice_text);
+		TextView stationInfo = (TextView) rowView
+				.findViewById(R.id.station_info);
+		TextView stationDistance = (TextView) rowView
+				.findViewById(R.id.station_distance);
 
-		vehicleGPSStation.setText(station.getName() + " (" + station.getId()
-				+ ")");
+		stationInfo.setText(station.getName() + " (" + station.getId() + ")");
+		stationDistance.setText(context
+				.getString(R.string.gps_map_station_choice_distance)
+				+ station.getTime_stamp()
+				+ context.getString(R.string.gps_map_station_choice_meters));
 
 		return rowView;
 	}

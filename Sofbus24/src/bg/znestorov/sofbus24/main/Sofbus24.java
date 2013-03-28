@@ -31,7 +31,10 @@ public class Sofbus24 extends Activity implements OnClickListener {
 	SharedPreferences sharedPreferences;
 
 	// Exit alert dialog
-	boolean exitAlert = false;
+	boolean exitAlert;
+
+	// "GPS Map Google Maps" button functionality
+	String gpsMapFunct;
 
 	// Variable holding the written text in the EditField in VirtualBoards alert
 	// dialog
@@ -56,6 +59,11 @@ public class Sofbus24 extends Activity implements OnClickListener {
 		exitAlert = sharedPreferences.getBoolean(
 				Constants.PREFERENCE_KEY_EXIT_ALERT,
 				Constants.PREFERENCE_DEFAULT_VALUE_EXIT_ALERT);
+
+		// Get "exitAlert" value from the Shared Preferences
+		gpsMapFunct = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_GPS_MAP_FUNCT,
+				Constants.PREFERENCE_DEFAULT_VALUE_GPS_MAP_FUNCT);
 
 		// DatabaseUtils.copyDatabase(context);
 		// DatabaseUtils.generateStationsXML(context);
@@ -86,7 +94,14 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			startVirtualBoardsActivity("");
 			break;
 		case R.id.btn_map:
-			startVirtualBoardsMapGPSActivity();
+			if ("funct_1".equals(gpsMapFunct)) {
+				startVirtualBoardsMapGPSActivity();
+			} else {
+				ObtainCurrentCordinates fetchCordinates = new ObtainCurrentCordinates(
+						context);
+				fetchCordinates.execute();
+			}
+
 			break;
 		case R.id.btn_schedule:
 			Intent listVehicleChoice = new Intent(context, VehicleTabView.class);
@@ -101,14 +116,11 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			startActivityForResult(i, 0);
 			break;
 		case R.id.btn_exit:
-			// if (exitAlert) {
-			// onKeyDown(KeyEvent.KEYCODE_BACK, null);
-			// } else {
-			// finish();
-			// }
-
-			ObtainCurrentCordinates fetchCordinates = new ObtainCurrentCordinates(context);
-			fetchCordinates.execute();
+			if (exitAlert) {
+				onKeyDown(KeyEvent.KEYCODE_BACK, null);
+			} else {
+				finish();
+			}
 
 			break;
 		}

@@ -1,6 +1,6 @@
 package bg.znestorov.sofbus24.main;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ListActivity;
@@ -17,15 +17,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
-import bg.znestorov.sofbus24.gps.station_choice.VBStationChoiceAdapter;
+import bg.znestorov.sofbus24.gps_map.station_choice.VBMapStationChoiceAdapter;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.utils.Constants;
 
 public class VirtualBoardsMapStationChoice extends ListActivity {
 
 	private Context context;
-	private List<GPSStation> station_list;
-	private GPSStation[] station_array;
+	private String station_string;
+	private List<GPSStation> station_list = new ArrayList<GPSStation>();
 	private TextView errorLabel;
 
 	@Override
@@ -43,27 +43,40 @@ public class VirtualBoardsMapStationChoice extends ListActivity {
 
 		// Getting the information transfered from StationListView activity
 		try {
-			station_array = (GPSStation[]) getIntent().getSerializableExtra(
-					"Array Of GPSStations");
+			station_string = getIntent().getExtras().getString(
+					"ClosestStations");
 		} catch (Exception e) {
-			station_array = null;
+			station_string = null;
 		}
 
-		if (station_array != null) {
-			// Transform the Array to an ArrayList
-			station_list = Arrays.asList(station_array);
+		if (station_string != null) {
+			String[] station_array = station_string.split("@");
+			for (int i = 0; i < station_array.length; i++) {
+				String[] station_data_array = station_array[i].split(",");
 
-			// Use the SimpleCursorAdapter to show the
-			// elements in a ListView
-			errorLabel.setText(Html.fromHtml(String
-					.format(getString(R.string.gps_station_choice_name))));
-			errorLabel.setTypeface(null, Typeface.BOLD);
-			setListAdapter(new VBStationChoiceAdapter(context, station_list));
+				if (station_data_array.length == 3) {
+					GPSStation station = new GPSStation();
+					station.setName(station_data_array[0]);
+					station.setId(station_data_array[1]);
+					station.setTime_stamp(station_data_array[2]);
+
+					station_list.add(station);
+				}
+			}
+
+			if (station_list != null) {
+				// Use the SimpleCursorAdapter to show the
+				// elements in a ListView
+				errorLabel.setText(Html.fromHtml(String
+						.format(getString(R.string.gps_station_choice_name))));
+				errorLabel.setTypeface(null, Typeface.BOLD);
+				setListAdapter(new VBMapStationChoiceAdapter(context,
+						station_list));
+			} else {
+				showErrorMessage();
+			}
 		} else {
-			errorLabel.setTextSize(Constants.TEXT_BOX_SIZE
-					* TypedValue.COMPLEX_UNIT_DIP);
-			errorLabel
-					.setText(getString(R.string.gps_station_choice_error_internet));
+			showErrorMessage();
 		}
 	}
 
@@ -88,6 +101,13 @@ public class VirtualBoardsMapStationChoice extends ListActivity {
 		}
 
 		return super.dispatchTouchEvent(event);
+	}
+
+	private void showErrorMessage() {
+		errorLabel.setTextSize(Constants.TEXT_BOX_SIZE
+				* TypedValue.COMPLEX_UNIT_DIP);
+		errorLabel
+				.setText(getString(R.string.gps_map_station_choice_error_summary));
 	}
 
 }

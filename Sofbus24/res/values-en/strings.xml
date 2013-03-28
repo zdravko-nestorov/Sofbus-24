@@ -52,6 +52,12 @@
     <string name="gps_error_noCoordinates">The station could not be visualized (its coordinates are not found in the database).</string>
 
     <!-- GPS GOOGLE MAPS -->
+    <!-- GPS GOOGLE MAPS Station Choice -->
+    <string name="gps_map_station_choice_name">&lt;u>Please choose a station&lt;/u></string>
+    <string name="gps_map_station_choice_error_summary">An error occurred while transfering the information. Please try again.</string>
+    <string name="gps_map_station_choice_distance">Distance:&#160;</string>
+    <string name="gps_map_station_choice_meters">&#160;meters</string>
+
     <!-- Map GPS -->
     <string name="map_gps_name">Virtual boards - Google Maps</string>
     <string name="map_gps_menu_item_distance">Route</string>
@@ -128,8 +134,11 @@
     <string name="common_home_screen_summary">Select the home screen</string>
     <string name="common_language_title">Language</string>
     <string name="common_language_summary">Select a language</string>
-    <string name="common_exit_title">Exit message</string>
-    <string name="common_exit_summary">Using a dialog box on exit</string>
+    <string name="pref_category_home_screen">HOME SCREEN</string>
+    <string name="home_screen_gps_map_title">GPS Google Maps</string>
+    <string name="home_screen_gps_map_summary">Choose \"GPS Times Google Maps\" button functionality (home screen)</string>
+    <string name="home_screen_exit_title">Exit message</string>
+    <string name="home_screen_exit_summary">Using a dialog box on exit</string>
     <string name="pref_category_stations">STATION INFORMATION</string>
     <string name="stations_timeGPS_title">Virtual boards</string>
     <string name="stations_timeGPS_summary">Remaining time or time of arrival</string>

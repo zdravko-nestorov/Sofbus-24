@@ -61,4 +61,6 @@ public class Constants {
 	public static final String PREFERENCE_DEFAULT_VALUE_LANGUAGE = "bg";
 	public static final String PREFERENCE_KEY_POSITION = "position";
 	public static final boolean PREFERENCE_DEFAULT_VALUE_POSITION = false;
+	public static final String PREFERENCE_KEY_GPS_MAP_FUNCT = "gpsMapFunct";
+	public static final String PREFERENCE_DEFAULT_VALUE_GPS_MAP_FUNCT = "funct_1";
 }

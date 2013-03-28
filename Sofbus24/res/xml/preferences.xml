@@ -16,12 +16,21 @@
             android:key="language"
             android:summary="@string/common_language_summary"
             android:title="@string/common_language_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_home_screen" >
+        <ListPreference
+            android:defaultValue="funct_1"
+            android:entries="@array/gpsMapFunct"
+            android:entryValues="@array/gpsMapFunctValues"
+            android:key="gpsMapFunct"
+            android:summary="@string/home_screen_gps_map_summary"
+            android:title="@string/home_screen_gps_map_title" />
 
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="exitAlert"
-            android:summary="@string/common_exit_summary"
-            android:title="@string/common_exit_title" />
+            android:summary="@string/home_screen_exit_summary"
+            android:title="@string/home_screen_exit_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_stations" >
         <CheckBoxPreference
