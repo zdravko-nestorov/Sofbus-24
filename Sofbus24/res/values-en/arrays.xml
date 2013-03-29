@@ -20,11 +20,11 @@
         <item name="version_1">Version 1</item>
         <item name="version_2">Version 2</item>
     </string-array>
-    
+
     <!-- GPS Google Maps button (functionality) -->
     <string-array name="gpsMapFunct">
-        <item name="funct_1">Google Maps View</item>
-        <item name="funct_2">List View</item>
+        <item name="funct_1">Google Maps</item>
+        <item name="funct_2">List</item>
     </string-array>
 
 </resources>

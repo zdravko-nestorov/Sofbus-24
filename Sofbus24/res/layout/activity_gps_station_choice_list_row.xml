@@ -8,9 +8,13 @@
         android:id="@+id/vb_station_choice_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
         android:padding="7dip"
-        android:textColor="#FFFFFF"
-        android:textSize="17dip"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="16dip"
+        android:textStyle="bold"
         android:visibility="visible" />
 
 </LinearLayout>

@@ -138,7 +138,7 @@
     <string name="common_language_title">Език</string>
     <string name="common_language_summary">Избор на език</string>
     <string name="pref_category_home_screen">НАЧАЛЕН ЕКРАН</string>
-    <string name="home_screen_gps_map_title">GPS Google Maps</string>
+    <string name="home_screen_gps_map_title">Бутон \"GPS Google Maps\"</string>
     <string name="home_screen_gps_map_summary">Избор на функционалност на бутона \"GPS Времена Google Maps\" (начален екран)</string>
     <string name="home_screen_exit_title">Съобщение при изход</string>
     <string name="home_screen_exit_summary">Използване на диалогов прозорец при изход</string>
