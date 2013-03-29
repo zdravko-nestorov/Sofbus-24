@@ -12,8 +12,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +23,7 @@ import bg.znestorov.sofbus24.gps.GPSStationAdapter;
 import bg.znestorov.sofbus24.gps.HtmlResultSumc;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.station_database.GPSStation;
+import bg.znestorov.sofbus24.utils.Utils;
 
 public class VirtualBoards extends ListActivity {
 
@@ -33,15 +36,13 @@ public class VirtualBoards extends ListActivity {
 	// Possible errors after extracting the information from SUMC
 	public static final String htmlErrorMessage = "HTML_ERROR";
 	public static final String captchaErrorMessage = "CAPTCHA_ERROR";
-
-	// Time_Stamp message
-	private static final String unknown = "INCORRECT";
 	private static final String unknownInfo = "В момента няма информация за тази спирка";
-	private static final String noInfo = "В момента няма информация за спирка";
-	private static final String noBus = "не съществува.";
 
 	// ArrayList of GPSStations
 	ArrayList<GPSStation> station_list = new ArrayList<GPSStation>();
+
+	// Shared Preferences (option menu)
+	private SharedPreferences sharedPreferences;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,10 @@ public class VirtualBoards extends ListActivity {
 		this.setTitle(getString(R.string.gps_name));
 
 		context = VirtualBoards.this;
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
 
 		dialog = new AlertDialog.Builder(VirtualBoards.this);
 
@@ -74,64 +79,45 @@ public class VirtualBoards extends ListActivity {
 					htmlSrc);
 			station_list = new ArrayList<GPSStation>();
 			station_list = result.showResult();
+
 			String time_stamp = station_list.get(0).getTime_stamp();
 
 			if (!stationCode.equals(stationCode.replaceAll("\\D+", ""))
 					&& !time_stamp.equals(unknownInfo)) {
-				stationCode = result.getStationId(tempArray[1]);
+				stationCode = Utils.getStationId(tempArray[1], tempArray[0]);
 			}
 
-			// Error with the HTML source code (unknown)
-			if (time_stamp.contains(unknown)) {
-				showErrorDialog();
-				// No information found (ex: line number 1)
-			} else if (time_stamp.contains(unknownInfo)) {
-				showUnknownInfoDialog();
-				// No such station
-			} else if (time_stamp.contains(noBus)) {
-				// If the station code is not empty
-				if (!"".equals(stationCode)) {
-					showNoBusDialog(stationCode);
-				} else {
-					showNoBusEmptyDialog();
-				}
-				// No results for the selected station
-			} else if (time_stamp.contains(noInfo)) {
-				showNoInfoDialog(station_list.get(0).getName());
+			// Getting the coordinates from FAVOURITES
+			if (lat != null && !lat.equals("EMPTY") && lon != null
+					&& !lon.equals("EMPTY")) {
+				station_list.get(0).setLat(lat);
+				station_list.get(0).setLon(lon);
 			} else {
-				// Getting the coordinates from FAVOURITES
-				if (lat != null && !lat.equals("EMPTY") && lon != null
-						&& !lon.equals("EMPTY")) {
-					station_list.get(0).setLat(lat);
-					station_list.get(0).setLon(lon);
+				// Getting the coordinates from the XML file
+				String[] coordinates = getLocation(context, stationCode);
+
+				if (coordinates != null && !"".equals(coordinates)) {
+					station_list.get(0).setLat(coordinates[0]);
+					station_list.get(0).setLon(coordinates[1]);
 				} else {
-					// Getting the coordinates from the XML file
-					String[] coordinates = getLocation(context, stationCode);
-
-					if (coordinates != null && !"".equals(coordinates)) {
-						station_list.get(0).setLat(coordinates[0]);
-						station_list.get(0).setLon(coordinates[1]);
-					} else {
-						station_list.get(0).setLat("EMPTY");
-						station_list.get(0).setLon("EMPTY");
-					}
+					station_list.get(0).setLat("EMPTY");
+					station_list.get(0).setLon("EMPTY");
 				}
-
-				GPSStation gpsStation = new GPSStation();
-
-				gpsStation.setName("\"" + station_list.get(0).getName() + "\"");
-				gpsStation.setTime_stamp(String.format(
-						getString(R.string.st_inf_time),
-						result.getInformationTime(htmlSrc)));
-				gpsStation.setId(stationCode);
-				gpsStation.setCodeO(tempArray[4]);
-				station_list.add(0, gpsStation);
-
-				station_list.get(1).setCodeO(tempArray[4]);
-
-				setListAdapter(new GPSStationAdapter(context, station_list));
 			}
 
+			GPSStation gpsStation = new GPSStation();
+
+			gpsStation.setName("\"" + station_list.get(0).getName() + "\"");
+			gpsStation.setTime_stamp(String.format(
+					getString(R.string.st_inf_time),
+					Utils.getInformationTime(htmlSrc, sharedPreferences)));
+			gpsStation.setId(stationCode);
+			gpsStation.setCodeO(tempArray[4]);
+			station_list.add(0, gpsStation);
+
+			station_list.get(1).setCodeO(tempArray[4]);
+
+			setListAdapter(new GPSStationAdapter(context, station_list));
 		} else {
 			// Error with Transferring data between activities or with the HTML
 			// Request
@@ -174,39 +160,7 @@ public class VirtualBoards extends ListActivity {
 	public void showErrorDialog() {
 		this.setTitle(getString(R.string.gps_error_unknown));
 		showErrorDialog(getString(R.string.gps_err_dialog_title),
-				getString(R.string.gps_err_dialog_msg));
-	}
-
-	// Alert Dialog when UNKNOWN INFO error happens (ex: line number 1)
-	public void showUnknownInfoDialog() {
-		this.setTitle(getString(R.string.error_sumc_unknownInfo));
-		showErrorDialog(getString(R.string.error_sumc_unknownInfo),
-				getString(R.string.error_sumc_retrieve_unknownInfo));
-	}
-
-	// Alert Dialog when NO STATION error happens
-	public void showNoBusDialog(String stationName) {
-		this.setTitle(String.format(getString(R.string.gps_error_noBus),
-				stationName));
-		showErrorDialog(getString(R.string.error_sumc_noBusStop),
-				String.format(
-						getString(R.string.error_sumc_retrieve_noBusStop),
-						stationName));
-	}
-
-	// Alert Dialog when NO STATION error happens (empty input)
-	public void showNoBusEmptyDialog() {
-		this.setTitle(getString(R.string.gps_error_noBusEmpty));
-		showErrorDialog(getString(R.string.error_sumc_noBusStop),
-				getString(R.string.gps_error_noBusEmpty) + ".");
-	}
-
-	// Alert Dialog when NO BUS error happens
-	public void showNoInfoDialog(String stationName) {
-		this.setTitle(String.format(getString(R.string.gps_error_noInfo),
-				stationName));
-		showErrorDialog(getString(R.string.error_sumc_noInfo), String.format(
-				getString(R.string.error_sumc_retrieve_noInfo), stationName));
+				getString(R.string.gps_map_station_choice_error_summary));
 	}
 
 	@Override

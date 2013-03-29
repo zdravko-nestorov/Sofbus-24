@@ -2,8 +2,9 @@ package bg.znestorov.sofbus24.utils;
 
 import java.math.BigDecimal;
 
-import bg.znestorov.sofbus24.main.R;
 import android.content.Context;
+import android.content.SharedPreferences;
+import bg.znestorov.sofbus24.main.R;
 
 // Creating methods for easy processing data
 public class Utils {
@@ -117,5 +118,82 @@ public class Utils {
 		}
 
 		return codeO;
+	}
+
+	// Get station name from HTML src
+	public static String getStationName(String htmlSrc, String tempHtmlSrc,
+			String stationCode, String language) {
+		String stationName = getValueAfter(htmlSrc, "<b>спирка");
+		stationName = getValueBefore(stationName, "</b>");
+		stationName = getValueBefore(stationName, "(").trim();
+		stationName = getValueAfter(stationName, "&nbsp;");
+		stationName = getValueBefore(stationName, "&nbsp;");
+
+		// Special case when the number of the station is in some stations'
+		// names
+		if (stationName.length() > 100) {
+			stationName = getValueBefore(tempHtmlSrc, "(" + stationCode + ")");
+
+			if (stationName.contains("&nbsp;")) {
+				stationName = stationName.substring(0,
+						stationName.lastIndexOf("&nbsp;"));
+			}
+
+			if (stationName.contains("&nbsp;")) {
+				stationName = stationName.substring(stationName
+						.lastIndexOf("&nbsp;") + 6);
+			}
+
+			if (stationName.contains("<b>")) {
+				stationName = stationName.substring(stationName
+						.lastIndexOf("<b>") + 3);
+				stationName = getValueAfter(stationName, ".");
+			}
+
+			stationName = stationName.trim();
+		}
+
+		// Check which language is chosen from Preferences
+		if ("bg".equals(language)) {
+			return stationName;
+		} else {
+			return TranslatorCyrillicToLatin.translate(stationName);
+		}
+	}
+
+	// Get station ID from HTML src
+	public static String getStationId(String htmlSrc, String stationCode) {
+		String stationId = getValueAfter(htmlSrc, "<b>спирка");
+		stationId = getValueAfter(stationId, "(");
+		stationId = getValueBefore(stationId, ")").trim();
+
+		if (stationId.length() > 100) {
+			stationId = stationCode;
+		}
+
+		return stationId;
+	}
+
+	// Get information time from HTML src
+	public static String getInformationTime(String htmlSrc,
+			SharedPreferences sharedPreferences) {
+		String infoTime = "";
+
+		// Get "timeInfoRetrieval" value from the Shared Preferences
+		String timeInfoRetrieval = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_TIME_INFO_RETRIEVAL,
+				Constants.PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL);
+
+		if (htmlSrc.contains(Constants.TIME_RETRIEVAL_BEGIN)
+				&& "time_skgt".equals(timeInfoRetrieval)) {
+			infoTime = getValueAfter(htmlSrc, Constants.TIME_RETRIEVAL_BEGIN);
+			infoTime = getValueBefore(infoTime, Constants.TIME_RETRIEVAL_END);
+			infoTime = infoTime.trim();
+		} else {
+			infoTime = android.text.format.DateFormat.format("dd.MM.yyy kk:mm",
+					new java.util.Date()).toString();
+		}
+
+		return infoTime;
 	}
 }

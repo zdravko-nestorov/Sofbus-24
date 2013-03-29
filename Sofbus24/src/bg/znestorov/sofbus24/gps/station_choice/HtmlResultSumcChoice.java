@@ -11,16 +11,9 @@ import android.preference.PreferenceManager;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.Utils;
 
 public class HtmlResultSumcChoice {
-
-	// Errors in the HTML source file
-	public static String error_noInfo = "Няма намерена информация";
-	public static String error_retrieve_noInfo = "Няма намерени съвпадения за \"%s\".";
-	public static String incorrect_retrieve_data = "INCORRECT";
-
-	// Needed information for creating the list of stations
-	public static final String info_ok = "Намерени са";
 
 	// START and END of the needed information
 	private static final String BEGIN = "<br /><br />";
@@ -36,21 +29,36 @@ public class HtmlResultSumcChoice {
 
 	// Constructor variables (passed through other class)
 	private final Context context;
-	private final String stationCode;
+	private String stationCode;
 	private String htmlSrc;
+	private final String tempHtmlSrc;
 
 	// Shared Preferences (option menu)
 	private SharedPreferences sharedPreferences;
+	private String language;
 
 	public HtmlResultSumcChoice(Context context, String stationCode,
 			String htmlSrc) {
 		this.context = context;
 		this.stationCode = stationCode;
 		this.htmlSrc = htmlSrc;
+		this.tempHtmlSrc = htmlSrc;
+
+		if (stationCode.equals(stationCode.replaceAll("\\D+", ""))) {
+			this.stationCode = stationCode;
+		} else {
+			this.stationCode = Utils.getStationId(this.tempHtmlSrc,
+					this.stationCode);
+		}
 
 		// Get SharedPreferences from option menu
 		sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this.context);
+
+		// Get "language" value from the Shared Preferences
+		language = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_LANGUAGE,
+				Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
 	}
 
 	// Define if the result contains needed data or not
@@ -59,20 +67,47 @@ public class HtmlResultSumcChoice {
 
 		// Check if the htmlSrc is not empty
 		if (htmlSrc != null && !"".equals(htmlSrc)) {
-			// Check if htmlSrc contains needed information
-			if (!htmlSrc.contains(info_ok)) {
-				// Check if no stations are found
-				if (htmlSrc.contains(error_noInfo)) {
-					gpsStation.setTime_stamp(String.format(
-							error_retrieve_noInfo, stationCode));
+			// Check if the HTML is valid and that there are found stations
+			if (!htmlSrc.contains(Constants.ERORR_NONE)) {
+				// Strange case in which the station is found, but there is
+				// no
+				// information (line #1)
+				if (htmlSrc.contains(Constants.ERROR_NO_INFO_STATION)) {
+					gpsStation.setId(Utils.getStationId(htmlSrc, stationCode));
+					gpsStation
+							.setTime_stamp(Constants.ERROR_RETRIEVE_NO_INFO_STATION);
 					listOfVehicles.add(gpsStation);
-
 					return listOfVehicles;
-					// Catch any other error
-				} else {
-					gpsStation.setTime_stamp(incorrect_retrieve_data);
+					// Case in which there is no information found
+				} else if (htmlSrc.contains(Constants.ERROR_NO_INFO_NOW)) {
+					gpsStation.setId(Utils.getStationId(htmlSrc, stationCode));
+					gpsStation.setName(Utils.getStationName(htmlSrc,
+							tempHtmlSrc, stationCode, language));
+					gpsStation.setTime_stamp(String.format(
+							Constants.ERROR_RETRIEVE_NO_INFO_NOW, stationCode));
 					listOfVehicles.add(gpsStation);
-
+					return listOfVehicles;
+					// Case in which there is no such station or station
+					// name
+					// match
+				} else if (htmlSrc.contains(Constants.ERROR_NO_INFO)) {
+					if (stationCode.equals(stationCode.replaceAll("\\D+", ""))) {
+						gpsStation.setTime_stamp(String.format(
+								Constants.ERROR_RETRIEVE_NO_BUS_STOP,
+								stationCode));
+						listOfVehicles.add(gpsStation);
+						return listOfVehicles;
+					} else {
+						gpsStation.setTime_stamp(String.format(
+								Constants.ERROR_RETRIEVE_NO_STATION_MATCH,
+								stationCode));
+						listOfVehicles.add(gpsStation);
+						return listOfVehicles;
+					}
+					// All other errors
+				} else {
+					gpsStation.setTime_stamp(Constants.ERROR_RETRIEVE_NO_DATA);
+					listOfVehicles.add(gpsStation);
 					return listOfVehicles;
 				}
 			}
@@ -89,7 +124,7 @@ public class HtmlResultSumcChoice {
 			}
 		}
 
-		gpsStation.setTime_stamp(incorrect_retrieve_data);
+		gpsStation.setTime_stamp(Constants.ERROR_RETRIEVE_NO_DATA);
 		listOfVehicles.add(gpsStation);
 
 		return listOfVehicles;

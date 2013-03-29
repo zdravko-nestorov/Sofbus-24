@@ -203,15 +203,9 @@
     <string name="time_arrival">Time of arrival:&#160;</string>
 
     <!-- "ERRORS" with retrieving information: "HtmlResultSumc" -->
-    <string name="error_sumc_unknownInfo">There is no available information</string>
-    <string name="error_sumc_retrieve_unknownInfo">There is no available information for this station. Please try again later.</string>
-    <string name="error_sumc_noInfo">There is no available information</string>
-    <string name="error_sumc_retrieve_noInfo">There is no available information for station \"%s\". Please try again later.</string>
-    <string name="error_sumc_noBusStop">There is no available information found</string>
-    <string name="error_sumc_retrieve_noBusStop">The station \"%s\" doesn\'t exist.</string>
-
-    <!-- "ERRORS" with retrieving information: "HtmlResultSumcChoice" -->
-    <string name="error_sumc_choice_noInfo">There is no available information found</string>
-    <string name="error_sumc_choice_retrieve_noInfo">There are no matches found for \"%s\".</string>
+    <string name="error_sumc_no_info_station">There is no available information for this station. Please try again later.</string>
+    <string name="error_sumc_no_info_now">There is no available information for station \"%s\". Please try again later.</string>
+    <string name="error_sumc_no_bus_stop">The station \"%s\" doesn\'t exist.</string>
+    <string name="error_sumc_no_station_match">There are no matches found for \"%s\".</string>
 
 </resources>

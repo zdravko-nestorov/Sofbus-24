@@ -4,13 +4,6 @@ import android.graphics.Color;
 
 public class Constants {
 
-	// Indicating if there are more than 1 result
-	public static final String SEARCH_TYPE_COUNT_RESULTS_1 = "НАМЕРЕНИ СА";
-	public static final String SEARCH_TYPE_COUNT_RESULTS_2 = "СПИРКИ ЗА &QUOT;";
-
-	// Setting the size of the TextBox in VirtualBoardStationChoice
-	public static final int TEXT_BOX_SIZE = 18;
-
 	// Help activity
 	public static final String HELP_ACTIVITY = "HELP";
 
@@ -37,6 +30,40 @@ public class Constants {
 
 	// Indicating the needed zoom distance for focusing the current position
 	public static final int PADDING_ACTIVE_ZOOM = 50;
+
+	// CONSTANTS FOR RETRIEVING/PROCESSING INFORMATION
+	// Setting the size of the TextBox in VirtualBoardStationChoice
+	public static final int TEXT_BOX_SIZE = 18;
+
+	// Indicating if there are more than 1 result
+	public static final String SEARCH_TYPE_COUNT_RESULTS_1 = "НАМЕРЕНИ СА";
+	public static final String SEARCH_TYPE_COUNT_RESULTS_2 = "СПИРКИ ЗА &QUOT;";
+
+	// Needed information for creating body
+	public static final String BODY_START = "<div class=\"arrivals\">";
+	public static final String BODY_END = "\n</div>";
+
+	// Time retrieval string from the source file
+	public static final String TIME_RETRIEVAL_BEGIN = "<b>Информация към ";
+	public static final String TIME_RETRIEVAL_END = "</b>";
+
+	// Possible HTML errors while retrieving information
+	public static final String ERORR_NONE = "Намерени са";
+	public static final String ERROR_NO_INFO_STATION = "В момента нямаме информация. Моля, опитайте по-късно.";
+	public static final String ERROR_RETRIEVE_NO_INFO_STATION = "В момента няма информация за тази спирка. Моля опитайте пак по-късно.";
+	public static final String ERROR_NO_INFO_NOW = "Няма информация";
+	public static final String ERROR_RETRIEVE_NO_INFO_NOW = "В момента няма информация за спирка \"%s\". Моля опитайте пак по-късно.";
+	public static final String ERROR_NO_INFO = "Няма намерена информация";
+	public static final String ERROR_RETRIEVE_NO_BUS_STOP = "Спирката \"%s\" не съществува.";
+	public static final String ERROR_RETRIEVE_NO_STATION_MATCH = "Няма намерени съвпадения за \"%s\".";
+	public static final String ERROR_RETRIEVE_NO_DATA = "INCORRECT";
+
+	// Possible HTML errors in TIME_STAMP after processing the information
+	public static final String SEARCH_NO_INFO_STATION = "В момента няма информация за тази спирка";
+	public static final String SEARCH_NO_INFO_NOW = "В момента няма информация за спирка";
+	public static final String SEARCH_NO_BUS_STOP = "не съществува.";
+	public static final String SEARCH_NO_STATION_MATCH = "Няма намерени съвпадения";
+	public static final String SEARCH_NO_DATA = "INCORRECT";
 
 	// Preferences constants
 	public static final String PREFERENCE_KEY_TIME_INFO_RETRIEVAL = "timeInfoRetrieval";

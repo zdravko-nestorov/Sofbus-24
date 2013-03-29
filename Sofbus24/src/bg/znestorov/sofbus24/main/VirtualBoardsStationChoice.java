@@ -28,10 +28,6 @@ public class VirtualBoardsStationChoice extends ListActivity {
 	List<GPSStation> station_list;
 	TextView errorLabel;
 
-	// Time_Stamp message
-	private static final String unknown = "INCORRECT";
-	private static final String noInfo = "Няма намерени съвпадения";
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,16 +62,30 @@ public class VirtualBoardsStationChoice extends ListActivity {
 			String time_stamp = station_list.get(0).getTime_stamp();
 
 			// Error with the HTML source code (unknown)
-			if (time_stamp.contains(unknown)) {
-				errorLabel.setTextSize(Constants.TEXT_BOX_SIZE
-						* TypedValue.COMPLEX_UNIT_DIP);
-				errorLabel
-						.setText(getString(R.string.gps_station_choice_error_internet));
-			} else if (time_stamp.contains(noInfo)) {
-				errorLabel.setTextSize(Constants.TEXT_BOX_SIZE
-						* TypedValue.COMPLEX_UNIT_DIP);
-				errorLabel.setText(String.format(
-						getString(R.string.error_sumc_choice_retrieve_noInfo),
+			if (time_stamp.contains(Constants.SEARCH_NO_DATA)) {
+				setErrorLabelText(getString(R.string.gps_station_choice_error_internet));
+				// No information found (ex: line number 1)
+			} else if (time_stamp.contains(Constants.SEARCH_NO_INFO_STATION)) {
+				setErrorLabelText(getString(R.string.error_sumc_no_info_station));
+				// No such station
+			} else if (time_stamp.contains(Constants.SEARCH_NO_BUS_STOP)) {
+				// If the station code is not empty
+				if (!"".equals(stationCode)) {
+					setErrorLabelText(String.format(
+							getString(R.string.error_sumc_no_bus_stop),
+							stationCode));
+				} else {
+					setErrorLabelText(getString(R.string.gps_error_noBusEmpty)
+							+ ".");
+				}
+				// No results for the selected station
+			} else if (time_stamp.contains(Constants.SEARCH_NO_INFO_NOW)) {
+				setErrorLabelText(String
+						.format(getString(R.string.error_sumc_no_info_now),
+								stationCode));
+			} else if (time_stamp.contains(Constants.SEARCH_NO_STATION_MATCH)) {
+				setErrorLabelText(String.format(
+						getString(R.string.error_sumc_no_station_match),
 						stationCode));
 			} else {
 				// Use the SimpleCursorAdapter to show the
@@ -86,10 +96,7 @@ public class VirtualBoardsStationChoice extends ListActivity {
 				setListAdapter(new VBStationChoiceAdapter(context, station_list));
 			}
 		} else {
-			errorLabel.setTextSize(Constants.TEXT_BOX_SIZE
-					* TypedValue.COMPLEX_UNIT_DIP);
-			errorLabel
-					.setText(getString(R.string.gps_station_choice_error_internet));
+			setErrorLabelText(getString(R.string.gps_station_choice_error_internet));
 		}
 	}
 
@@ -114,6 +121,12 @@ public class VirtualBoardsStationChoice extends ListActivity {
 		}
 
 		return super.dispatchTouchEvent(event);
+	}
+
+	private void setErrorLabelText(String input) {
+		errorLabel.setTextSize(Constants.TEXT_BOX_SIZE
+				* TypedValue.COMPLEX_UNIT_DIP);
+		errorLabel.setText(input);
 	}
 
 }

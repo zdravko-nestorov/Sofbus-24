@@ -396,6 +396,23 @@ public class HtmlRequestSumc {
 
 		Intent intent = new Intent();
 
+		// Check if there is an error while retrieving/processing the
+		// information
+		if (src == null || "".equals(src)
+				|| src.indexOf(Constants.BODY_START) == -1
+				|| src.indexOf(Constants.BODY_END) == -1
+				|| !src.contains(Constants.ERORR_NONE)
+				|| src.contains(Constants.ERROR_NO_INFO_STATION)
+				|| src.contains(Constants.ERROR_NO_INFO_NOW)
+				|| src.contains(Constants.ERROR_NO_INFO)) {
+			intent = new Intent(context, VirtualBoardsStationChoice.class);
+
+			intent.putExtra(VirtualBoards.keyHtmlResult, text);
+			context.startActivity(intent);
+
+			return;
+		}
+
 		// Check which activity calls this class and in case of "VirtualBoards"
 		// finish the previous activity
 		if (context.getClass().toString()

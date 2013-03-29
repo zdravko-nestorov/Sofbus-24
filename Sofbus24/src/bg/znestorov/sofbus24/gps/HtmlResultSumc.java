@@ -18,15 +18,6 @@ import bg.znestorov.sofbus24.utils.Utils;
 
 public class HtmlResultSumc {
 
-	// Errors in the HTML source file
-	public static String error_unknownInfo = "В момента нямаме информация. Моля, опитайте по-късно.";
-	public static String error_retrieve_unknownInfo = "В момента няма информация за тази спирка. Моля опитайте пак по-късно.";
-	public static String error_noInfo = "Няма информация";
-	public static String error_retrieve_noInfo = "В момента няма информация за спирка \"%s\". Моля опитайте пак по-късно.";
-	public static String error_noBusStop = "Няма намерена информация";
-	public static String error_retrieve_noBusStop = "Спирката \"%s\" не съществува.";
-	public static String incorrect_retrieve_data = "INCORRECT";
-
 	// Name of the vehicles
 	private static String vehicle_Bus;
 	private static final String vehicle_Bus_Check = "втоб";
@@ -44,10 +35,6 @@ public class HtmlResultSumc {
 	private final String htmlSrc;
 	private final String tempHtmlSrc;
 
-	// Needed information for creating body
-	private static final String BODY_START = "<div class=\"arrivals\">";
-	private static final String BODY_END = "\n</div>";
-
 	// Needed information for fixing body
 	private static final String INFO_BEGIN = "<div class=\"arr_info_";
 	private static final int INFO_BEGIN_LENGTH = (INFO_BEGIN + "1\">").length();
@@ -59,10 +46,6 @@ public class HtmlResultSumc {
 	private SharedPreferences sharedPreferences;
 	private String language;
 
-	// Time retrieval string from the source file
-	private static final String TIME_RETRIEVAL_BEGIN = "<b>Информация към ";
-	private static final String TIME_RETRIEVAL_END = "</b>";
-
 	public HtmlResultSumc(Context context, String stationCode, String htmlSrc) {
 		this.context = context;
 		this.htmlSrc = htmlSrc;
@@ -71,7 +54,8 @@ public class HtmlResultSumc {
 		if (stationCode.equals(stationCode.replaceAll("\\D+", ""))) {
 			this.stationCode = stationCode;
 		} else {
-			this.stationCode = getStationId(this.tempHtmlSrc);
+			this.stationCode = Utils.getStationId(this.tempHtmlSrc,
+					this.stationCode);
 		}
 
 		// Get String values from "strings" XML
@@ -91,53 +75,19 @@ public class HtmlResultSumc {
 
 	// Define if the result contains needed data or not
 	public ArrayList<GPSStation> showResult() {
-		GPSStation gpsStation = new GPSStation();
+		int endOfBody = htmlSrc.indexOf(Constants.BODY_START);
+		int startOfBody = htmlSrc.indexOf(Constants.BODY_END, endOfBody);
 
-		if (htmlSrc != null && !"".equals(htmlSrc)) {
-			int endOfBody = htmlSrc.indexOf(BODY_START);
-			int startOfBody = htmlSrc.indexOf(BODY_END, endOfBody);
+		String htmlBody = htmlSrc.substring(endOfBody, startOfBody
+				+ Constants.BODY_END.length());
 
-			if (endOfBody == -1 && startOfBody == -1) {
-				if (htmlSrc.contains(error_unknownInfo)) {
-					gpsStation.setId(getStationId(htmlSrc));
-					gpsStation.setTime_stamp(error_retrieve_unknownInfo);
-					listOfVehicles.add(gpsStation);
-					return listOfVehicles;
-				} else if (htmlSrc.contains(error_noInfo)) {
-					gpsStation.setId(getStationId(htmlSrc));
-					gpsStation.setName(getStationName(htmlSrc));
-					gpsStation.setTime_stamp(String.format(
-							error_retrieve_noInfo, stationCode));
-					listOfVehicles.add(gpsStation);
-					return listOfVehicles;
-				} else if (htmlSrc.contains(error_noBusStop)) {
-					gpsStation.setTime_stamp(String.format(
-							error_retrieve_noBusStop, stationCode));
-					listOfVehicles.add(gpsStation);
-					return listOfVehicles;
-				} else {
-					gpsStation.setTime_stamp(incorrect_retrieve_data);
-					listOfVehicles.add(gpsStation);
-					return listOfVehicles;
-				}
-			}
-
-			String htmlBody = htmlSrc.substring(endOfBody, startOfBody
-					+ BODY_END.length());
-
-			// Check which language is chosen from Preferences
-			if ("bg".equals(language)) {
-				return getInfo(htmlBody);
-			} else {
-				return TranslatorCyrillicToLatin
-						.translateGPSStation(getInfo(htmlBody));
-			}
+		// Check which language is chosen from Preferences
+		if ("bg".equals(language)) {
+			return getInfo(htmlBody);
+		} else {
+			return TranslatorCyrillicToLatin
+					.translateGPSStation(getInfo(htmlBody));
 		}
-
-		gpsStation.setTime_stamp(incorrect_retrieve_data);
-		listOfVehicles.add(gpsStation);
-
-		return listOfVehicles;
 	}
 
 	// Getting the needed information from the HTML source code
@@ -159,8 +109,9 @@ public class HtmlResultSumc {
 				if (split.length == INFO_SPLIT_SIZE) {
 					GPSStation gpsStation = new GPSStation();
 
-					gpsStation.setId(getStationId(htmlSrc));
-					gpsStation.setName(getStationName(htmlSrc));
+					gpsStation.setId(Utils.getStationId(htmlSrc, stationCode));
+					gpsStation.setName(Utils.getStationName(htmlSrc,
+							tempHtmlSrc, stationCode, language));
 
 					if (vehicleInfo.toString().contains(vehicle_Bus_Check)) {
 						vehicleType = vehicle_Bus;
@@ -223,83 +174,11 @@ public class HtmlResultSumc {
 		return listOfVehicles;
 	}
 
-	public String getInformationTime(String htmlSrc) {
-		String infoTime = "";
-
-		// Get "timeInfoRetrieval" value from the Shared Preferences
-		String timeInfoRetrieval = sharedPreferences.getString(
-				Constants.PREFERENCE_KEY_TIME_INFO_RETRIEVAL,
-				Constants.PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL);
-
-		if (htmlSrc.contains(TIME_RETRIEVAL_BEGIN)
-				&& "time_skgt".equals(timeInfoRetrieval)) {
-			infoTime = getValueAfter(htmlSrc, TIME_RETRIEVAL_BEGIN);
-			infoTime = getValueBefore(infoTime, TIME_RETRIEVAL_END);
-			infoTime = infoTime.trim();
-		} else {
-			infoTime = android.text.format.DateFormat.format("dd.MM.yyy kk:mm",
-					new java.util.Date()).toString();
-		}
-
-		return infoTime;
-	}
-
-	private String getStationName(String htmlSrc) {
-		String stationName = getValueAfter(htmlSrc, "<b>спирка");
-		stationName = getValueBefore(stationName, "</b>");
-		stationName = getValueBefore(stationName, "(").trim();
-		stationName = getValueAfter(stationName, "&nbsp;");
-		stationName = getValueBefore(stationName, "&nbsp;");
-
-		// Special case when the number of the station is in some stations'
-		// names
-		if (stationName.length() > 100) {
-			stationName = getValueBefore(tempHtmlSrc, "(" + stationCode + ")");
-
-			if (stationName.contains("&nbsp;")) {
-				stationName = stationName.substring(0,
-						stationName.lastIndexOf("&nbsp;"));
-			}
-
-			if (stationName.contains("&nbsp;")) {
-				stationName = stationName.substring(stationName
-						.lastIndexOf("&nbsp;") + 6);
-			}
-
-			if (stationName.contains("<b>")) {
-				stationName = stationName.substring(stationName
-						.lastIndexOf("<b>") + 3);
-				stationName = getValueAfter(stationName, ".");
-			}
-
-			stationName = stationName.trim();
-		}
-
-		// Check which language is chosen from Preferences
-		if ("bg".equals(language)) {
-			return stationName;
-		} else {
-			return TranslatorCyrillicToLatin.translate(stationName);
-		}
-	}
-
-	public String getStationId(String htmlSrc) {
-		String stationId = getValueAfter(htmlSrc, "<b>спирка");
-		stationId = getValueAfter(stationId, "(");
-		stationId = getValueBefore(stationId, ")").trim();
-
-		if (stationId.length() > 100) {
-			stationId = stationCode;
-		}
-
-		return stationId;
-	}
-
 	private String setRemainingTimeStamp(String timeStamp) {
 		String remainingTime = "";
 
 		// Get current time or the time from SGKT - according to the Preferences
-		String currTime = getInformationTime(htmlSrc);
+		String currTime = Utils.getInformationTime(htmlSrc, sharedPreferences);
 		while (currTime.contains(" ")) {
 			currTime = getValueAfter(currTime, " ");
 		}

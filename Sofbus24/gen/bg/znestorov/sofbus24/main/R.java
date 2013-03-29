@@ -236,20 +236,13 @@ public final class R {
         public static final int common_home_screen_title=0x7f080056;
         public static final int common_language_summary=0x7f080059;
         public static final int common_language_title=0x7f080058;
+        public static final int error_sumc_no_bus_stop=0x7f08008b;
+        public static final int error_sumc_no_info_now=0x7f08008a;
         /**  "ERRORS" with retrieving information: "HtmlResultSumcChoice" 
- "ERRORS" with retrieving information: "HtmlResultSumcChoice" 
-         */
-        public static final int error_sumc_choice_noInfo=0x7f08008f;
-        public static final int error_sumc_choice_retrieve_noInfo=0x7f080090;
-        public static final int error_sumc_noBusStop=0x7f08008d;
-        public static final int error_sumc_noInfo=0x7f08008b;
-        public static final int error_sumc_retrieve_noBusStop=0x7f08008e;
-        public static final int error_sumc_retrieve_noInfo=0x7f08008c;
-        public static final int error_sumc_retrieve_unknownInfo=0x7f08008a;
-        /**  "ERRORS" with retrieving information: "HtmlResultSumc" 
  "ERRORS" with retrieving information: "HtmlResultSumc" 
          */
-        public static final int error_sumc_unknownInfo=0x7f080089;
+        public static final int error_sumc_no_info_station=0x7f080089;
+        public static final int error_sumc_no_station_match=0x7f08008c;
         public static final int exit_msg=0x7f080078;
         public static final int fav_delete=0x7f08004e;
         public static final int fav_delete_all=0x7f08004f;
