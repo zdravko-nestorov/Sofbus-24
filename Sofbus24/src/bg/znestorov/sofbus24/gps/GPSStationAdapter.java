@@ -19,6 +19,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 // Class for creating the vehicles ListView
 public class GPSStationAdapter extends ArrayAdapter<GPSStation> implements
 		OnClickListener {
+
 	private final Context context;
 	private final ArrayList<GPSStation> stations;
 

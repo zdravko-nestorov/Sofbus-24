@@ -26,17 +26,12 @@ import org.apache.http.params.HttpParams;
 import android.content.Context;
 import android.util.Log;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.Constants;
 
 public class HtmlRequestDirection {
 
 	// LogCat TAG
 	private static final String TAG = "HtmlRequestDirection";
-
-	// URL and variables
-	private static final String URL = "http://m.sofiatraffic.bg/schedules?";
-	private static final String QUERY_BUS_TYPE = "tt";
-	private static final String QUERY_LINE = "ln";
-	private static final String QUERY_SEARCH = "s";
 
 	private String vehicleType;
 	private String vehicleNumber;
@@ -67,13 +62,12 @@ public class HtmlRequestDirection {
 			HttpParams httpParameters = new BasicHttpParams();
 			// Set the timeout in milliseconds until a connection is
 			// established.
-			int timeoutConnection = 3000;
 			HttpConnectionParams.setConnectionTimeout(httpParameters,
-					timeoutConnection);
+					Constants.TIMEOUT_CONNECTION);
 			// Set the default socket timeout (SO_TIMEOUT)
 			// in milliseconds which is the timeout for waiting for data.
-			int timeoutSocket = 5000;
-			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+			HttpConnectionParams.setSoTimeout(httpParameters,
+					Constants.TIMEOUT_SOCKET);
 
 			// Creating ThreadSafeClientConnManager
 			SchemeRegistry schemeRegistry = new SchemeRegistry();
@@ -104,11 +98,12 @@ public class HtmlRequestDirection {
 	private String createURL() {
 		final List<NameValuePair> result = new ArrayList<NameValuePair>();
 
-		result.add(new BasicNameValuePair(QUERY_BUS_TYPE, vehicleType));
-		result.add(new BasicNameValuePair(QUERY_LINE, vehicleNumber));
-		result.add(new BasicNameValuePair(QUERY_SEARCH, "Search"));
+		result.add(new BasicNameValuePair(Constants.QUERY_BUS_TYPE, vehicleType));
+		result.add(new BasicNameValuePair(Constants.QUERY_LINE, vehicleNumber));
+		result.add(new BasicNameValuePair(Constants.QUERY_SEARCH, "Search"));
 
-		String returnURL = URL + URLEncodedUtils.format(result, "UTF-8");
+		String returnURL = Constants.DIRECTION_URL
+				+ URLEncodedUtils.format(result, "UTF-8");
 
 		return returnURL;
 	}

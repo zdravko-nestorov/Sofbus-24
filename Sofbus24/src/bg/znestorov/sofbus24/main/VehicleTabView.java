@@ -8,14 +8,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.VehicleNames;
 
 public class VehicleTabView extends TabActivity {
-
-	// Extra info for the ListViews
-	private static final String bus = "BUS";
-	private static final String trolley = "TROLLEY";
-	private static final String tram = "TRAM";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,27 +62,30 @@ public class VehicleTabView extends TabActivity {
 			TabHost tabHost = getTabHost();
 
 			// Bus tab
-			TabSpec busTab = tabHost.newTabSpec(bus);
+			TabSpec busTab = tabHost.newTabSpec(Constants.VEHICLE_BUS);
 			busTab.setIndicator("",
 					getResources().getDrawable(R.drawable.bus_tab));
 			Intent busIntent = new Intent(context, VehicleListView.class);
-			busIntent.putExtra(VehicleListView.keyVehicleType, bus);
+			busIntent.putExtra(Constants.KEYWORD_VEHICLE_TYPE,
+					Constants.VEHICLE_BUS);
 			busTab.setContent(busIntent);
 
 			// Trolley tab
-			TabSpec trolleyTab = tabHost.newTabSpec(trolley);
+			TabSpec trolleyTab = tabHost.newTabSpec(Constants.VEHICLE_TROLLEY);
 			trolleyTab.setIndicator("",
 					getResources().getDrawable(R.drawable.trolley_tab));
 			Intent trolleyIntent = new Intent(context, VehicleListView.class);
-			trolleyIntent.putExtra(VehicleListView.keyVehicleType, trolley);
+			trolleyIntent.putExtra(Constants.KEYWORD_VEHICLE_TYPE,
+					Constants.VEHICLE_TROLLEY);
 			trolleyTab.setContent(trolleyIntent);
 
 			// Tram tab
-			TabSpec tramTab = tabHost.newTabSpec(tram);
+			TabSpec tramTab = tabHost.newTabSpec(Constants.VEHICLE_TRAM);
 			tramTab.setIndicator("",
 					getResources().getDrawable(R.drawable.tram_tab));
 			Intent tramIntent = new Intent(context, VehicleListView.class);
-			tramIntent.putExtra(VehicleListView.keyVehicleType, tram);
+			tramIntent.putExtra(Constants.KEYWORD_VEHICLE_TYPE,
+					Constants.VEHICLE_TRAM);
 			tramTab.setContent(tramIntent);
 
 			// Adding tabs to the TabHost

@@ -237,8 +237,11 @@ public class VirtualBoardsMapGPS extends MapActivity {
 
 		} catch (Exception e) {
 			m_Location = new Location("");
-			m_Location.setLatitude(Double.parseDouble("42.696492"));
-			m_Location.setLongitude(Double.parseDouble("23.326011"));
+			m_Location.setLatitude(Double
+					.parseDouble(Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE));
+			m_Location
+					.setLongitude(Double
+							.parseDouble(Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE));
 
 			focusCurrentPosition(m_Location, false);
 
@@ -541,10 +544,10 @@ public class VirtualBoardsMapGPS extends MapActivity {
 			startActivity(recreateIntent);
 			break;
 		case R.id.menu_gps_help:
-			Intent i = new Intent(this, Help.class);
-			i.putExtra(Constants.HELP_ACTIVITY,
+			Intent intent = new Intent(this, Help.class);
+			intent.putExtra(Constants.KEYWORD_HELP,
 					getString(R.string.map_help_text));
-			startActivity(i);
+			startActivity(intent);
 			break;
 		}
 

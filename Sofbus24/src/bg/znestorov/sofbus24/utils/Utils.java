@@ -3,7 +3,6 @@ package bg.znestorov.sofbus24.utils;
 import java.math.BigDecimal;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import bg.znestorov.sofbus24.main.R;
 
 // Creating methods for easy processing data
@@ -106,7 +105,8 @@ public class Utils {
 	// Get "o" code using the station ID
 	public static String getCodeO(String htmlSrc, String stationCode) {
 		String codeO = "1";
-		stationCode = "(" + stationCode + ")";
+		stationCode = Constants.STATION_INFO_END_2 + stationCode
+				+ Constants.STATION_INFO_END_3;
 
 		if (htmlSrc.contains(stationCode)) {
 			codeO = getValueBeforeLast(htmlSrc, stationCode);
@@ -120,37 +120,50 @@ public class Utils {
 		return codeO;
 	}
 
-	// Get station name from HTML src
+	// Get station name from HTML source
 	public static String getStationName(String htmlSrc, String tempHtmlSrc,
 			String stationCode, String language) {
-		String stationName = getValueAfter(htmlSrc, "<b>спирка");
-		stationName = getValueBefore(stationName, "</b>");
-		stationName = getValueBefore(stationName, "(").trim();
-		stationName = getValueAfter(stationName, "&nbsp;");
-		stationName = getValueBefore(stationName, "&nbsp;");
+		String stationName = getValueAfter(htmlSrc,
+				Constants.STATION_INFO_BEGIN);
+		stationName = getValueBefore(stationName, Constants.STATION_INFO_END_1);
+		stationName = getValueBefore(stationName, Constants.STATION_INFO_END_2)
+				.trim();
+		stationName = getValueAfter(stationName,
+				Constants.STATION_INFO_SEPARATOR_SPACE);
+		stationName = getValueBefore(stationName,
+				Constants.STATION_INFO_SEPARATOR_SPACE);
 
 		// Special case when the number of the station is in some stations'
 		// names
 		if (stationName.length() > 100) {
-			stationName = getValueBefore(tempHtmlSrc, "(" + stationCode + ")");
+			stationName = getValueBefore(tempHtmlSrc,
+					Constants.STATION_INFO_END_2 + stationCode
+							+ Constants.STATION_INFO_END_3);
 
-			if (stationName.contains("&nbsp;")) {
-				stationName = stationName.substring(0,
-						stationName.lastIndexOf("&nbsp;"));
+			if (stationName.contains(Constants.STATION_INFO_SEPARATOR_SPACE)) {
+				stationName = stationName.substring(0, stationName
+						.lastIndexOf(Constants.STATION_INFO_SEPARATOR_SPACE));
 			}
 
-			if (stationName.contains("&nbsp;")) {
-				stationName = stationName.substring(stationName
-						.lastIndexOf("&nbsp;") + 6);
+			if (stationName.contains(Constants.STATION_INFO_SEPARATOR_SPACE)) {
+				stationName = stationName
+						.substring(stationName
+								.lastIndexOf(Constants.STATION_INFO_SEPARATOR_SPACE) + 6);
 			}
 
-			if (stationName.contains("<b>")) {
-				stationName = stationName.substring(stationName
-						.lastIndexOf("<b>") + 3);
-				stationName = getValueAfter(stationName, ".");
+			if (stationName.contains(Constants.STATION_INFO_SEPARATOR_BOLD)) {
+				stationName = stationName
+						.substring(stationName
+								.lastIndexOf(Constants.STATION_INFO_SEPARATOR_BOLD) + 3);
+				stationName = getValueAfter(stationName,
+						Constants.STATION_INFO_SEPARATOR_POINT);
 			}
 
 			stationName = stationName.trim();
+		}
+
+		if (stationName.length() > 100) {
+			stationName = stationCode;
 		}
 
 		// Check which language is chosen from Preferences
@@ -161,11 +174,12 @@ public class Utils {
 		}
 	}
 
-	// Get station ID from HTML src
+	// Get station ID from HTML source
 	public static String getStationId(String htmlSrc, String stationCode) {
-		String stationId = getValueAfter(htmlSrc, "<b>спирка");
-		stationId = getValueAfter(stationId, "(");
-		stationId = getValueBefore(stationId, ")").trim();
+		String stationId = getValueAfter(htmlSrc, Constants.STATION_INFO_BEGIN);
+		stationId = getValueAfter(stationId, Constants.STATION_INFO_END_2);
+		stationId = getValueBefore(stationId, Constants.STATION_INFO_END_3)
+				.trim();
 
 		if (stationId.length() > 100) {
 			stationId = stationCode;
@@ -174,26 +188,20 @@ public class Utils {
 		return stationId;
 	}
 
-	// Get information time from HTML src
-	public static String getInformationTime(String htmlSrc,
-			SharedPreferences sharedPreferences) {
-		String infoTime = "";
+	// Get station ID from HTML source
+	public static String getStationId(String htmlSrc, String stationCode,
+			String stationCodeO) {
+		String stationId = getValueAfter(htmlSrc,
+				Constants.STATION_INFO_SEPARATOR_BOLD + stationCodeO
+						+ Constants.STATION_INFO_SEPARATOR_POINT);
+		stationId = getValueAfter(stationId, Constants.STATION_INFO_END_2);
+		stationId = getValueBefore(stationId, Constants.STATION_INFO_END_3)
+				.trim();
 
-		// Get "timeInfoRetrieval" value from the Shared Preferences
-		String timeInfoRetrieval = sharedPreferences.getString(
-				Constants.PREFERENCE_KEY_TIME_INFO_RETRIEVAL,
-				Constants.PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL);
-
-		if (htmlSrc.contains(Constants.TIME_RETRIEVAL_BEGIN)
-				&& "time_skgt".equals(timeInfoRetrieval)) {
-			infoTime = getValueAfter(htmlSrc, Constants.TIME_RETRIEVAL_BEGIN);
-			infoTime = getValueBefore(infoTime, Constants.TIME_RETRIEVAL_END);
-			infoTime = infoTime.trim();
-		} else {
-			infoTime = android.text.format.DateFormat.format("dd.MM.yyy kk:mm",
-					new java.util.Date()).toString();
+		if (stationId.length() > 100) {
+			stationId = stationCode;
 		}
 
-		return infoTime;
+		return stationId;
 	}
 }

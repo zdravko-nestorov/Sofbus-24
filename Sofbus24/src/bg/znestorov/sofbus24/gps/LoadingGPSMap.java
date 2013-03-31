@@ -10,6 +10,7 @@ import bg.znestorov.sofbus24.station_database.GPSStation;
 
 // Showing a ProgressDialog once loading the list of stations for the chosen vehicle using an AsyncTask
 public class LoadingGPSMap extends AsyncTask<Void, Void, ArrayList<GPSStation>> {
+
 	Context context;
 	ArrayList<GPSStation> station_list;
 	ProgressDialog progressDialog;

@@ -44,7 +44,7 @@ public class VirtualBoardsMapStationChoice extends ListActivity {
 		// Getting the information transfered from StationListView activity
 		try {
 			station_string = getIntent().getExtras().getString(
-					"ClosestStations");
+					Constants.KEYWORD_CLOSEST_STATIONS);
 		} catch (Exception e) {
 			station_string = null;
 		}

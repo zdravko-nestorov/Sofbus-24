@@ -5,6 +5,7 @@ import java.util.List;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import bg.znestorov.sofbus24.utils.Constants;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -25,7 +26,7 @@ public abstract class BalloonItemizedOverlay<Item> extends
 	public BalloonItemizedOverlay(Drawable defaultMarker, MapView mapView) {
 		super(defaultMarker);
 		this.mapView = mapView;
-		viewOffset = 13;
+		viewOffset = Constants.BALLOON_VIEW_OFFSET;
 		mc = mapView.getController();
 	}
 

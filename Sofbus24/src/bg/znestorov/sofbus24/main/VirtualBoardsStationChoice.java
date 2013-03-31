@@ -5,9 +5,11 @@ import java.util.List;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -21,16 +23,30 @@ import bg.znestorov.sofbus24.gps.station_choice.HtmlResultSumcChoice;
 import bg.znestorov.sofbus24.gps.station_choice.VBStationChoiceAdapter;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.Utils;
 
 public class VirtualBoardsStationChoice extends ListActivity {
 
+	// Check how many times the activity is started
+	public static int countStarts;
+
+	// Check if codeO is present
+	public static boolean checkCodeO = false;
+
 	private Context context;
-	List<GPSStation> station_list;
-	TextView errorLabel;
+	private String stationCode;
+	private String stationName;
+	private List<GPSStation> station_list;
+	private TextView errorLabel;
+
+	// Shared Preferences (option menu)
+	private SharedPreferences sharedPreferences;
+	private String language;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		countStarts++;
 
 		// Removing title of the window
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -41,19 +57,30 @@ public class VirtualBoardsStationChoice extends ListActivity {
 		context = VirtualBoardsStationChoice.this;
 		errorLabel = (TextView) findViewById(R.id.station_choice_label);
 
-		String ss_transfer = getIntent().getStringExtra(
-				VirtualBoards.keyHtmlResult);
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this.context);
 
-		String stationCode = null;
+		// Get "language" value from the Shared Preferences
+		language = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_LANGUAGE,
+				Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
+
+		String ss_transfer = getIntent().getStringExtra(
+				Constants.KEYWORD_HTML_RESULT);
+
 		String htmlSrc = null;
 
 		if (ss_transfer != null && !"".equals(ss_transfer)
-				&& !ss_transfer.contains(VirtualBoards.htmlErrorMessage)
-				&& !ss_transfer.contains(VirtualBoards.captchaErrorMessage)) {
+				&& !ss_transfer.contains(Constants.SUMC_HTML_ERROR_MESSAGE)
+				&& !ss_transfer.contains(Constants.SUMC_CAPTCHA_ERROR_MESSAGE)) {
 
-			String[] tempArray = ss_transfer.split("SEPARATOR");
+			String[] tempArray = ss_transfer
+					.split(Constants.GLOBAL_PARAM_SEPARATOR);
 			stationCode = tempArray[0];
 			htmlSrc = tempArray[1];
+			stationName = Utils.getStationName(htmlSrc, htmlSrc, stationCode,
+					language);
 
 			HtmlResultSumcChoice result = new HtmlResultSumcChoice(context,
 					stationCode, htmlSrc);
@@ -64,7 +91,7 @@ public class VirtualBoardsStationChoice extends ListActivity {
 			// Error with the HTML source code (unknown)
 			if (time_stamp.contains(Constants.SEARCH_NO_DATA)) {
 				setErrorLabelText(getString(R.string.gps_station_choice_error_internet));
-				// No information found (ex: line number 1)
+				// No information found (example: line number 1)
 			} else if (time_stamp.contains(Constants.SEARCH_NO_INFO_STATION)) {
 				setErrorLabelText(getString(R.string.error_sumc_no_info_station));
 				// No such station
@@ -73,7 +100,7 @@ public class VirtualBoardsStationChoice extends ListActivity {
 				if (!"".equals(stationCode)) {
 					setErrorLabelText(String.format(
 							getString(R.string.error_sumc_no_bus_stop),
-							stationCode));
+							stationName));
 				} else {
 					setErrorLabelText(getString(R.string.gps_error_noBusEmpty)
 							+ ".");
@@ -82,7 +109,7 @@ public class VirtualBoardsStationChoice extends ListActivity {
 			} else if (time_stamp.contains(Constants.SEARCH_NO_INFO_NOW)) {
 				setErrorLabelText(String
 						.format(getString(R.string.error_sumc_no_info_now),
-								stationCode));
+								stationName));
 			} else if (time_stamp.contains(Constants.SEARCH_NO_STATION_MATCH)) {
 				setErrorLabelText(String.format(
 						getString(R.string.error_sumc_no_station_match),
@@ -106,7 +133,7 @@ public class VirtualBoardsStationChoice extends ListActivity {
 		String selectedRow = station.getName();
 		Toast.makeText(this, selectedRow, Toast.LENGTH_SHORT).show();
 
-		new HtmlRequestSumc().getInformation(context, station.getId(),
+		new HtmlRequestSumc().getInformation(context, stationCode,
 				Integer.toString(position + 1), null);
 	}
 
@@ -129,4 +156,14 @@ public class VirtualBoardsStationChoice extends ListActivity {
 		errorLabel.setText(input);
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		countStarts--;
+
+		// Impossible case - just in case
+		if (countStarts < 0) {
+			countStarts = 0;
+		}
+	}
 }

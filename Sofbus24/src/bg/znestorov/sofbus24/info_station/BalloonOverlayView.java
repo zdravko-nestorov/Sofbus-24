@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.Constants;
 
 import com.google.android.maps.OverlayItem;
 
@@ -24,7 +25,9 @@ public class BalloonOverlayView extends FrameLayout {
 
 		super(context);
 
-		setPadding(10, 0, 10, balloonBottomOffset);
+		setPadding(Constants.BALLOON_PADDING_LEFT,
+				Constants.BALLOON_PADDING_TOP, Constants.BALLOON_PADDING_RIGHT,
+				balloonBottomOffset);
 		layout = new LinearLayout(context);
 		layout.setVisibility(VISIBLE);
 

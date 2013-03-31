@@ -37,7 +37,7 @@ public class VirtualBoardsMap extends MapActivity {
 		// Getting the information transfered from VirtualBoards activity
 		try {
 			station = (GPSStation) getIntent().getSerializableExtra(
-					"GPSStation");
+					Constants.KEYWORD_BUNDLE_GPS_STATION);
 		} catch (Exception e) {
 			station = null;
 		}

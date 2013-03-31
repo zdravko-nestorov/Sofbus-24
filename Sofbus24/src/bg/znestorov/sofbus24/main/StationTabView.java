@@ -21,13 +21,6 @@ import bg.znestorov.sofbus24.utils.Constants;
 
 public class StationTabView extends TabActivity {
 
-	// Variable used for transferring information from VehicleListView
-	public static final String keyVehicleChoice = "VEHICLE";
-
-	// Extra info for the ListViews
-	private static final String direction1 = "DIRECTION-1";
-	private static final String direction2 = "DIRECTION-2";
-
 	DirectionTransfer directionTransfer;
 	Context context;
 
@@ -43,7 +36,8 @@ public class StationTabView extends TabActivity {
 
 		try {
 			directionTransfer = (DirectionTransfer) getIntent()
-					.getSerializableExtra("DirectionTransfer");
+					.getSerializableExtra(
+							Constants.KEYWORD_BUNDLE_DIRECTION_TRANSFER);
 		} catch (Exception e) {
 			directionTransfer = null;
 		}
@@ -54,25 +48,27 @@ public class StationTabView extends TabActivity {
 		TabHost tabHost = getTabHost();
 
 		// Direction 1 tab
-		TabSpec tabDirection1 = tabHost.newTabSpec(direction1);
+		TabSpec tabDirection1 = tabHost.newTabSpec(Constants.DIRECTION_1);
 		tabDirection1.setIndicator("",
 				getResources().getDrawable(R.drawable.left));
 		// Transferring the HtmlResult to ListViewStationChoice - DIRECTION-1
 		Intent tabDirection1Intent = new Intent(this, StationListView.class);
 		directionTransfer.setChoice(0);
-		bundle.putSerializable("DirectionTransfer", directionTransfer);
+		bundle.putSerializable(Constants.KEYWORD_BUNDLE_DIRECTION_TRANSFER,
+				directionTransfer);
 		tabDirection1Intent.putExtras(bundle);
 		tabDirection1.setContent(tabDirection1Intent);
 		tabHost.addTab(tabDirection1);
 
 		// Direction 2 tab
-		TabSpec tabDirection2 = tabHost.newTabSpec(direction2);
+		TabSpec tabDirection2 = tabHost.newTabSpec(Constants.DIRECTION_2);
 		tabDirection2.setIndicator("",
 				getResources().getDrawable(R.drawable.right));
 		// Transferring the HtmlResult to ListViewStationChoice - DIRECTION-1
 		Intent tabDirection2Intent = new Intent(this, StationListView.class);
 		directionTransfer.setChoice(1);
-		bundle.putSerializable("DirectionTransfer", directionTransfer);
+		bundle.putSerializable(Constants.KEYWORD_BUNDLE_DIRECTION_TRANSFER,
+				directionTransfer);
 		tabDirection2Intent.putExtras(bundle);
 		tabDirection2.setContent(tabDirection2Intent);
 		tabHost.addTab(tabDirection2);
@@ -135,10 +131,10 @@ public class StationTabView extends TabActivity {
 			break;
 
 		case R.id.menu_help:
-			Intent i = new Intent(this, Help.class);
-			i.putExtra(Constants.HELP_ACTIVITY,
+			Intent intent = new Intent(this, Help.class);
+			intent.putExtra(Constants.KEYWORD_HELP,
 					getString(R.string.st_ch_help_text));
-			startActivity(i);
+			startActivity(intent);
 			break;
 		}
 		return true;
@@ -169,7 +165,7 @@ public class StationTabView extends TabActivity {
 		protected Intent doInBackground(Void... params) {
 			Intent intent = new Intent(context, StationInfoRouteMap.class);
 			intent.putExtra(
-					StationInfoRouteMap.ROUTE_MAP,
+					Constants.KEYWORD_ROUTE_MAP,
 					direction.getVehicleType() + ";"
 							+ direction.getVehicleNumber() + "$" + coordinates);
 

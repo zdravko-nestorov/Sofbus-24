@@ -11,6 +11,7 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
 
 public class MapRouteOverlay extends Overlay {
+
 	private GeoPoint geoPoint1;
 	private GeoPoint geoPoint2;
 
@@ -21,7 +22,7 @@ public class MapRouteOverlay extends Overlay {
 		this.geoPoint1 = geoPoint1;
 		this.geoPoint2 = geoPoint2;
 		this.mode = mode;
-		
+
 		// Set the default color to NONE
 		this.defaultColor = 999;
 	}

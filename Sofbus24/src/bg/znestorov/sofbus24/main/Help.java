@@ -24,7 +24,7 @@ public class Help extends Activity implements OnClickListener {
 		// "StationTabView" activity
 		try {
 			helpInfo = (String) getIntent().getSerializableExtra(
-					Constants.HELP_ACTIVITY);
+					Constants.KEYWORD_HELP);
 		} catch (Exception e) {
 			helpInfo = null;
 		}

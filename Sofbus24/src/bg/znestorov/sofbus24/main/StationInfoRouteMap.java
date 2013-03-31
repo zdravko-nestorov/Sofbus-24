@@ -30,10 +30,7 @@ import com.google.android.maps.OverlayItem;
 
 // Creating a MapActivity with the station position and info about the coming vehicle
 public class StationInfoRouteMap extends MapActivity {
-
-	// Variable used for the data transfer from StationTabView
-	public final static String ROUTE_MAP = "VehicleRoute";
-
+	
 	MapView mapView;
 	MapController mapController;
 	GeoPoint geoPoint;
@@ -66,7 +63,7 @@ public class StationInfoRouteMap extends MapActivity {
 		Context context = StationInfoRouteMap.this;
 
 		// Getting the information transfered from StationTabView activity
-		String extraInfo = getIntent().getStringExtra(ROUTE_MAP);
+		String extraInfo = getIntent().getStringExtra(Constants.KEYWORD_ROUTE_MAP);
 
 		// Getting vehicleType, vehicleNumber and coordinates
 		String vehicleType = getValueBefore(extraInfo, "$");

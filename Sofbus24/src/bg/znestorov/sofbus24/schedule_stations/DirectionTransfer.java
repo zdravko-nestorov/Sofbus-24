@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 // Storing the results of both directions, so can be transfered from one activity to another
 public class DirectionTransfer implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	private int choice;
 	private Direction direction1;

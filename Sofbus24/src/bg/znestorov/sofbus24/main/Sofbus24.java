@@ -21,8 +21,8 @@ import android.widget.ImageView;
 import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.gps_map.MyLocation;
 import bg.znestorov.sofbus24.gps_map.station_choice.ObtainCurrentCordinates;
+import bg.znestorov.sofbus24.station_database.DatabaseUtils;
 import bg.znestorov.sofbus24.utils.Constants;
-import bg.znestorov.sofbus24.utils.DatabaseUtils;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 
 public class Sofbus24 extends Activity implements OnClickListener {

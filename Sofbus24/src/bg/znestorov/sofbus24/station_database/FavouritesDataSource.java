@@ -76,7 +76,7 @@ public class FavouritesDataSource {
 					values.put(StationsSQLite.COLUMN_LAT,
 							stationDS.getStation(station).getLat());
 				} else {
-					station.setLat("EMPTY");
+					station.setLat(Constants.GLOBAL_PARAM_EMPTY);
 					values.put(StationsSQLite.COLUMN_LAT, station.getLat());
 				}
 			}
@@ -89,7 +89,7 @@ public class FavouritesDataSource {
 					values.put(StationsSQLite.COLUMN_LON,
 							stationDS.getStation(station).getLon());
 				} else {
-					station.setLon("EMPTY");
+					station.setLon(Constants.GLOBAL_PARAM_EMPTY);
 					values.put(StationsSQLite.COLUMN_LON, station.getLon());
 				}
 			}

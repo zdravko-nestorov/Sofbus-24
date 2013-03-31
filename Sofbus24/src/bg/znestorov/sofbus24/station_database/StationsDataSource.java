@@ -72,7 +72,7 @@ public class StationsDataSource {
 					values.put(StationsSQLite.COLUMN_LAT,
 							this.getStation(station.getId()).getLat());
 				} else {
-					station.setLat("EMPTY");
+					station.setLat(Constants.GLOBAL_PARAM_EMPTY);
 					values.put(StationsSQLite.COLUMN_LAT, station.getLat());
 				}
 			}
@@ -85,7 +85,7 @@ public class StationsDataSource {
 					values.put(StationsSQLite.COLUMN_LON,
 							this.getStation(station.getId()).getLon());
 				} else {
-					station.setLon("EMPTY");
+					station.setLon(Constants.GLOBAL_PARAM_EMPTY);
 					values.put(StationsSQLite.COLUMN_LON, station.getLon());
 				}
 			}

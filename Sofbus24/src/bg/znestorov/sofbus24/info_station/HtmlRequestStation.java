@@ -22,20 +22,12 @@ import org.apache.http.params.HttpParams;
 
 import android.util.Log;
 import bg.znestorov.sofbus24.schedule_stations.Station;
-
+import bg.znestorov.sofbus24.utils.Constants;
 
 public class HtmlRequestStation {
 
 	// LogCat TAG
 	private static final String TAG = "HtmlRequestStation";
-
-	// URL and variables
-	private static final String URL = "http://m.sumc.bg/schedules/vehicle?";
-	private static final String QUERY_STOP = "stop";
-	private static final String QUERY_CHECK = "ch";
-	private static final String QUERY_VT = "vt";
-	private static final String QUERY_LID = "lid";
-	private static final String QUERY_RID = "rid";
 
 	// Constructor parameters
 	private Station station;
@@ -54,13 +46,12 @@ public class HtmlRequestStation {
 			HttpParams httpParameters = new BasicHttpParams();
 			// Set the timeout in milliseconds until a connection is
 			// established.
-			int timeoutConnection = 3000;
 			HttpConnectionParams.setConnectionTimeout(httpParameters,
-					timeoutConnection);
+					Constants.TIMEOUT_CONNECTION);
 			// Set the default socket timeout (SO_TIMEOUT)
 			// in milliseconds which is the timeout for waiting for data.
-			int timeoutSocket = 5000;
-			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+			HttpConnectionParams.setSoTimeout(httpParameters,
+					Constants.TIMEOUT_SOCKET);
 
 			// Creating ThreadSafeClientConnManager
 			SchemeRegistry schemeRegistry = new SchemeRegistry();
@@ -91,13 +82,15 @@ public class HtmlRequestStation {
 	private String createURL() {
 		final List<NameValuePair> result = new ArrayList<NameValuePair>();
 
-		result.add(new BasicNameValuePair(QUERY_STOP, station.getStop()));
-		result.add(new BasicNameValuePair(QUERY_CHECK, "Check"));
-		result.add(new BasicNameValuePair(QUERY_VT, station.getVt()));
-		result.add(new BasicNameValuePair(QUERY_LID, station.getLid()));
-		result.add(new BasicNameValuePair(QUERY_RID, station.getRid()));
+		result.add(new BasicNameValuePair(Constants.QUERY_STOP, station
+				.getStop()));
+		result.add(new BasicNameValuePair(Constants.QUERY_CHECK, "Check"));
+		result.add(new BasicNameValuePair(Constants.QUERY_VT, station.getVt()));
+		result.add(new BasicNameValuePair(Constants.QUERY_LID, station.getLid()));
+		result.add(new BasicNameValuePair(Constants.QUERY_RID, station.getRid()));
 
-		String returnURL = URL + URLEncodedUtils.format(result, "UTF-8");
+		String returnURL = Constants.SCHEDULE_URL
+				+ URLEncodedUtils.format(result, "UTF-8");
 
 		return returnURL;
 	}

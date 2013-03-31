@@ -12,10 +12,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +21,7 @@ import bg.znestorov.sofbus24.gps.GPSStationAdapter;
 import bg.znestorov.sofbus24.gps.HtmlResultSumc;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.station_database.GPSStation;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
 public class VirtualBoards extends ListActivity {
@@ -30,19 +29,8 @@ public class VirtualBoards extends ListActivity {
 	Context context;
 	Builder dialog;
 
-	// Key word used to transfer data between activities (from HtmlResult)
-	public static final String keyHtmlResult = "HTML_Result";
-
-	// Possible errors after extracting the information from SUMC
-	public static final String htmlErrorMessage = "HTML_ERROR";
-	public static final String captchaErrorMessage = "CAPTCHA_ERROR";
-	private static final String unknownInfo = "В момента няма информация за тази спирка";
-
 	// ArrayList of GPSStations
 	ArrayList<GPSStation> station_list = new ArrayList<GPSStation>();
-
-	// Shared Preferences (option menu)
-	private SharedPreferences sharedPreferences;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,24 +40,21 @@ public class VirtualBoards extends ListActivity {
 		this.setTitle(getString(R.string.gps_name));
 
 		context = VirtualBoards.this;
-
-		// Get SharedPreferences from option menu
-		sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(context);
-
 		dialog = new AlertDialog.Builder(VirtualBoards.this);
 
 		String stationCode = null;
 		String htmlSrc = null;
 		String lat, lon;
 
-		String ss_transfer = getIntent().getStringExtra(keyHtmlResult);
+		String ss_transfer = getIntent().getStringExtra(
+				Constants.KEYWORD_HTML_RESULT);
 
 		if (ss_transfer != null && !"".equals(ss_transfer)
-				&& !ss_transfer.contains(htmlErrorMessage)
-				&& !ss_transfer.contains(captchaErrorMessage)) {
+				&& !ss_transfer.contains(Constants.SUMC_HTML_ERROR_MESSAGE)
+				&& !ss_transfer.contains(Constants.SUMC_CAPTCHA_ERROR_MESSAGE)) {
 
-			String[] tempArray = ss_transfer.split("SEPARATOR");
+			String[] tempArray = ss_transfer
+					.split(Constants.GLOBAL_PARAM_SEPARATOR);
 			stationCode = tempArray[0];
 			htmlSrc = tempArray[1];
 			lat = tempArray[2];
@@ -83,13 +68,13 @@ public class VirtualBoards extends ListActivity {
 			String time_stamp = station_list.get(0).getTime_stamp();
 
 			if (!stationCode.equals(stationCode.replaceAll("\\D+", ""))
-					&& !time_stamp.equals(unknownInfo)) {
+					&& !time_stamp.equals(Constants.SUMC_UNKNOWN_INFO)) {
 				stationCode = Utils.getStationId(tempArray[1], tempArray[0]);
 			}
 
 			// Getting the coordinates from FAVOURITES
-			if (lat != null && !lat.equals("EMPTY") && lon != null
-					&& !lon.equals("EMPTY")) {
+			if (lat != null && !lat.equals(Constants.GLOBAL_PARAM_EMPTY)
+					&& lon != null && !lon.equals(Constants.GLOBAL_PARAM_EMPTY)) {
 				station_list.get(0).setLat(lat);
 				station_list.get(0).setLon(lon);
 			} else {
@@ -100,8 +85,8 @@ public class VirtualBoards extends ListActivity {
 					station_list.get(0).setLat(coordinates[0]);
 					station_list.get(0).setLon(coordinates[1]);
 				} else {
-					station_list.get(0).setLat("EMPTY");
-					station_list.get(0).setLon("EMPTY");
+					station_list.get(0).setLat(Constants.GLOBAL_PARAM_EMPTY);
+					station_list.get(0).setLon(Constants.GLOBAL_PARAM_EMPTY);
 				}
 			}
 
@@ -110,7 +95,7 @@ public class VirtualBoards extends ListActivity {
 			gpsStation.setName("\"" + station_list.get(0).getName() + "\"");
 			gpsStation.setTime_stamp(String.format(
 					getString(R.string.st_inf_time),
-					Utils.getInformationTime(htmlSrc, sharedPreferences)));
+					result.getInformationTime(htmlSrc)));
 			gpsStation.setId(stationCode);
 			gpsStation.setCodeO(tempArray[4]);
 			station_list.add(0, gpsStation);
@@ -192,8 +177,9 @@ public class VirtualBoards extends ListActivity {
 			break;
 
 		case R.id.menu_see_map:
-			if (!gpsStation.getLat().equals("EMPTY")
-					&& !gpsStation.getLon().equals("EMPTY")) {
+			if (!gpsStation.getLat().equals(Constants.GLOBAL_PARAM_EMPTY)
+					&& !gpsStation.getLon()
+							.equals(Constants.GLOBAL_PARAM_EMPTY)) {
 
 				// Showing a ProgressDialog
 				Bundle bundle = new Bundle();
@@ -299,7 +285,8 @@ public class VirtualBoards extends ListActivity {
 			setInfo();
 			Intent stationInfoIntent = new Intent(context,
 					VirtualBoardsMap.class);
-			bundle.putSerializable("GPSStation", gpsStation);
+			bundle.putSerializable(Constants.KEYWORD_BUNDLE_GPS_STATION,
+					gpsStation);
 			stationInfoIntent.putExtras(bundle);
 
 			return stationInfoIntent;

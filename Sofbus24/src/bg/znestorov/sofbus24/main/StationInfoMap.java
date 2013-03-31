@@ -48,7 +48,8 @@ public class StationInfoMap extends MapActivity {
 
 		// Getting the information transfered from StationListView activity
 		try {
-			station = (Station) getIntent().getSerializableExtra("Station");
+			station = (Station) getIntent().getSerializableExtra(
+					Constants.KEYWORD_BUNDLE_STATION);
 		} catch (Exception e) {
 			station = null;
 		}

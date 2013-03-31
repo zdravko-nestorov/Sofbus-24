@@ -61,35 +61,7 @@ import bg.znestorov.sofbus24.utils.Utils;
 public class HtmlRequestSumc {
 
 	// LogCat TAG
-	private static final String TAG = "SUMC";
-
-	// CAPTCHA position in the source file
-	private static final String CAPTCHA_START = "<img src=\"/captcha/";
-	private static final String CAPTCHA_END = "\"";
-	private static final String REQUIRES_CAPTCHA = "Въведете символите от изображението";
-	// CAPTCHA URL link
-	private static final String CAPTCHA_IMAGE = "http://m.sofiatraffic.bg/captcha/%s";
-
-	// SUMC - URL and variables
-	private static final String URL = "http://m.sofiatraffic.bg/vt";
-	// q=000000 in order to find only by ID (we expect that there is no label
-	// 000000)
-	private static final String QUERY_BUS_STOP_ID = "q";
-	private static final String QUERY_O = "o";
-	private static final String QUERY_GO = "go";
-	private static final String QUERY_CAPTCHA_TEXT = "sc";
-	private static final String QUERY_CAPTCHA_ID = "poleicngi";
-
-	// User Agent and Referrer
-	private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1017.2 Safari/535.19";
-	private static final String REFERER = "http://m.sofiatraffic.bg/vt/";
-
-	// SUMC cookies
-	private static final String SHARED_PREFERENCES_NAME_SUMC_COOKIES = "sumc_cookies";
-	private static final String PREFERENCES_COOKIE_NAME = "name";
-	private static final String PREFERENCES_COOKIE_DOMAIN = "domain";
-	private static final String PREFERENCES_COOKIE_PATH = "path";
-	private static final String PREFERENCES_COOKIE_VALUE = "value";
+	private static final String TAG = "HTML Request SUMC";
 
 	// Getting the CAPTCHA text from the dialog result
 	private static String dialogResult = null;
@@ -104,8 +76,8 @@ public class HtmlRequestSumc {
 		if (transferCoordinates != null) {
 			coordinates = transferCoordinates;
 		} else {
-			coordinates[0] = "EMPTY";
-			coordinates[1] = "EMPTY";
+			coordinates[0] = Constants.GLOBAL_PARAM_EMPTY;
+			coordinates[1] = Constants.GLOBAL_PARAM_EMPTY;
 		}
 
 		// Check if stationCodeO is null or not
@@ -115,14 +87,13 @@ public class HtmlRequestSumc {
 
 		// Setting timeout parameters
 		HttpParams httpParameters = new BasicHttpParams();
-		// Set the timeout in milliseconds until a connection is established.
-		int timeoutConnection = 3000;
+		// Set the timeout in milliseconds until a connection is established
 		HttpConnectionParams.setConnectionTimeout(httpParameters,
-				timeoutConnection);
+				Constants.TIMEOUT_CONNECTION);
 		// Set the default socket timeout (SO_TIMEOUT)
-		// in milliseconds which is the timeout for waiting for data.
-		int timeoutSocket = 5000;
-		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+		// in milliseconds which is the timeout for waiting for data
+		HttpConnectionParams.setSoTimeout(httpParameters,
+				Constants.TIMEOUT_SOCKET);
 
 		// Creating ThreadSafeClientConnManager
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
@@ -136,8 +107,6 @@ public class HtmlRequestSumc {
 
 		// HTTP Client - created once and using cookies
 		DefaultHttpClient client = new DefaultHttpClient(cm, httpParameters);
-
-		Log.d(TAG, stationCode);
 
 		loadCookiesFromPreferences(context, client);
 
@@ -153,17 +122,22 @@ public class HtmlRequestSumc {
 	private void saveCookiesToPreferences(Context context,
 			DefaultHttpClient client) {
 		final SharedPreferences sharedPreferences = context
-				.getSharedPreferences(SHARED_PREFERENCES_NAME_SUMC_COOKIES,
+				.getSharedPreferences(
+						Constants.SHARED_PREFERENCES_NAME_SUMC_COOKIES,
 						Context.MODE_PRIVATE);
 		final Editor edit = sharedPreferences.edit();
 		edit.clear();
 
 		int i = 0;
 		for (Cookie cookie : client.getCookieStore().getCookies()) {
-			edit.putString(PREFERENCES_COOKIE_NAME + i, cookie.getName());
-			edit.putString(PREFERENCES_COOKIE_VALUE + i, cookie.getValue());
-			edit.putString(PREFERENCES_COOKIE_DOMAIN + i, cookie.getDomain());
-			edit.putString(PREFERENCES_COOKIE_PATH + i, cookie.getPath());
+			edit.putString(Constants.PREFERENCES_COOKIE_NAME + i,
+					cookie.getName());
+			edit.putString(Constants.PREFERENCES_COOKIE_VALUE + i,
+					cookie.getValue());
+			edit.putString(Constants.PREFERENCES_COOKIE_DOMAIN + i,
+					cookie.getDomain());
+			edit.putString(Constants.PREFERENCES_COOKIE_PATH + i,
+					cookie.getPath());
 			i++;
 		}
 		edit.commit();
@@ -174,21 +148,23 @@ public class HtmlRequestSumc {
 			DefaultHttpClient client) {
 		final CookieStore cookieStore = client.getCookieStore();
 		final SharedPreferences sharedPreferences = context
-				.getSharedPreferences(SHARED_PREFERENCES_NAME_SUMC_COOKIES,
+				.getSharedPreferences(
+						Constants.SHARED_PREFERENCES_NAME_SUMC_COOKIES,
 						Context.MODE_PRIVATE);
 
 		int i = 0;
-		while (sharedPreferences.contains(PREFERENCES_COOKIE_NAME + i)) {
+		while (sharedPreferences
+				.contains(Constants.PREFERENCES_COOKIE_NAME + i)) {
 			final String name = sharedPreferences.getString(
-					PREFERENCES_COOKIE_NAME + i, null);
+					Constants.PREFERENCES_COOKIE_NAME + i, null);
 			final String value = sharedPreferences.getString(
-					PREFERENCES_COOKIE_VALUE + i, null);
+					Constants.PREFERENCES_COOKIE_VALUE + i, null);
 			final BasicClientCookie result = new BasicClientCookie(name, value);
 
 			result.setDomain(sharedPreferences.getString(
-					PREFERENCES_COOKIE_DOMAIN + i, null));
-			result.setPath(sharedPreferences.getString(PREFERENCES_COOKIE_PATH
-					+ i, null));
+					Constants.PREFERENCES_COOKIE_DOMAIN + i, null));
+			result.setPath(sharedPreferences.getString(
+					Constants.PREFERENCES_COOKIE_PATH + i, null));
 			cookieStore.addCookie(result);
 			i++;
 		}
@@ -197,9 +173,9 @@ public class HtmlRequestSumc {
 	// Adding the User-Agent, the Referrer and the parameters to the HttpPost
 	private static HttpPost createRequest(String stationCode,
 			String stationCodeO, String captchaText, String captchaId) {
-		final HttpPost result = new HttpPost(URL);
-		result.addHeader("User-Agent", USER_AGENT);
-		result.addHeader("Referer", REFERER);
+		final HttpPost result = new HttpPost(Constants.VB_URL);
+		result.addHeader("User-Agent", Constants.USER_AGENT);
+		result.addHeader("Referer", Constants.REFERER);
 
 		try {
 			final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(
@@ -225,13 +201,16 @@ public class HtmlRequestSumc {
 
 		final List<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>(
 				5);
-		result.addAll(Arrays.asList(new BasicNameValuePair(QUERY_BUS_STOP_ID,
-				stationCode), new BasicNameValuePair(QUERY_GO, "1"),
-				new BasicNameValuePair(QUERY_O, stationCodeO)));
+		result.addAll(Arrays.asList(new BasicNameValuePair(
+				Constants.QUERY_BUS_STOP_ID, stationCode),
+				new BasicNameValuePair(Constants.QUERY_GO, "1"),
+				new BasicNameValuePair(Constants.QUERY_O, stationCodeO)));
 
 		if (captchaText != null && captchaId != null) {
-			result.add(new BasicNameValuePair(QUERY_CAPTCHA_ID, captchaId));
-			result.add(new BasicNameValuePair(QUERY_CAPTCHA_TEXT, captchaText));
+			result.add(new BasicNameValuePair(Constants.QUERY_CAPTCHA_ID,
+					captchaId));
+			result.add(new BasicNameValuePair(Constants.QUERY_CAPTCHA_TEXT,
+					captchaText));
 		}
 
 		return result;
@@ -241,9 +220,8 @@ public class HtmlRequestSumc {
 	private void checkCaptchaText(DefaultHttpClient client, Context context,
 			String stationCode, String stationCodeO, String src) {
 		try {
-			if (src.contains(REQUIRES_CAPTCHA)) {
+			if (src.contains(Constants.REQUIRES_CAPTCHA)) {
 				String captchaId = getCaptchaId(src);
-				Log.d(TAG, "Captcha ID: " + captchaId);
 
 				if (captchaId != null) {
 					// Making HttpRequest and showing a progress dialog
@@ -265,32 +243,33 @@ public class HtmlRequestSumc {
 			Log.e(TAG, "Could not get data for parameters for station: "
 					+ stationCode, e);
 			startNewActivity(client, context, stationCode, stationCodeO,
-					VirtualBoards.captchaErrorMessage);
+					Constants.SUMC_CAPTCHA_ERROR_MESSAGE);
 		}
 	}
 
 	// Get the CAPTCHA ID from the HTML source file
 	private static String getCaptchaId(String src) {
-		final int captchaStart = src.indexOf(CAPTCHA_START);
+		final int captchaStart = src.indexOf(Constants.CAPTCHA_START);
 		if (captchaStart == -1) {
 			return null;
 		}
-		final int captchaEnd = src.indexOf(CAPTCHA_END, captchaStart
-				+ CAPTCHA_START.length());
+		final int captchaEnd = src.indexOf(Constants.CAPTCHA_END, captchaStart
+				+ Constants.CAPTCHA_START.length());
 		if (captchaEnd == -1) {
 			return null;
 		}
 
-		return src.substring(captchaStart + CAPTCHA_START.length(), captchaEnd);
+		return src.substring(captchaStart + Constants.CAPTCHA_START.length(),
+				captchaEnd);
 	}
 
 	// Get the image from URL
 	private static Bitmap getCaptchaImage(HttpClient client, String captchaId)
 			throws ClientProtocolException, IOException {
-		final HttpGet request = new HttpGet(String.format(CAPTCHA_IMAGE,
-				captchaId));
-		request.addHeader("User-Agent", USER_AGENT);
-		request.addHeader("Referer", REFERER);
+		final HttpGet request = new HttpGet(String.format(
+				Constants.CAPTCHA_IMAGE, captchaId));
+		request.addHeader("User-Agent", Constants.USER_AGENT);
+		request.addHeader("Referer", Constants.REFERER);
 		request.getParams().setBooleanParameter(
 				CoreProtocolPNames.USE_EXPECT_CONTINUE, true);
 
@@ -374,8 +353,6 @@ public class HtmlRequestSumc {
 		String captchaText = dialogResult;
 		dialogResult = null;
 
-		Log.d(TAG, "RESULT: " + captchaText);
-
 		// Making HttpRequest and showing a progress dialog
 		ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setMessage("Loading...");
@@ -387,30 +364,61 @@ public class HtmlRequestSumc {
 	// Starting new activity
 	private void startNewActivity(DefaultHttpClient client, Context context,
 			String stationCode, String stationCodeO, String src) {
-		String text = stationCode + "SEPARATOR" + src + "SEPARATOR"
-				+ coordinates[0] + "SEPARATOR" + coordinates[1] + "SEPARATOR"
-				+ stationCodeO;
-
 		saveCookiesToPreferences(context, client);
 		client.getConnectionManager().shutdown();
 
 		Intent intent = new Intent();
 
+		// Check if codeO is present
+		if ("-1".equals(stationCodeO)
+				|| Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO)
+				|| Constants.GPS_TIMES_GPS_PARAM.equals(stationCodeO)
+				|| Constants.FAVORITES_GPS_PARAM.equals(stationCodeO)) {
+			VirtualBoardsStationChoice.checkCodeO = false;
+		} else {
+			VirtualBoardsStationChoice.checkCodeO = true;
+			stationCode = Utils.getStationId(src, stationCode, stationCodeO);
+		}
+
+		String text = stationCode + Constants.GLOBAL_PARAM_SEPARATOR + src
+				+ Constants.GLOBAL_PARAM_SEPARATOR + coordinates[0]
+				+ Constants.GLOBAL_PARAM_SEPARATOR + coordinates[1]
+				+ Constants.GLOBAL_PARAM_SEPARATOR + stationCodeO;
+
 		// Check if there is an error while retrieving/processing the
 		// information
 		if (src == null || "".equals(src)
-				|| src.indexOf(Constants.BODY_START) == -1
-				|| src.indexOf(Constants.BODY_END) == -1
 				|| !src.contains(Constants.ERORR_NONE)
 				|| src.contains(Constants.ERROR_NO_INFO_STATION)
 				|| src.contains(Constants.ERROR_NO_INFO_NOW)
 				|| src.contains(Constants.ERROR_NO_INFO)) {
-			intent = new Intent(context, VirtualBoardsStationChoice.class);
 
-			intent.putExtra(VirtualBoards.keyHtmlResult, text);
-			context.startActivity(intent);
+			// Check if the request is from SCHEDULE/GPS GoogleMaps/FAVORITES
+			if (!Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO)
+					&& !Constants.GPS_TIMES_GPS_PARAM.equals(stationCodeO)
+					&& !Constants.FAVORITES_GPS_PARAM.equals(stationCodeO)) {
 
-			return;
+				// Check if the HTML source contains BODY_START and BODY_END ==>
+				// in this case there is 100% a result (example:
+				// "Централа автогара (2665)")
+				if (src.indexOf(Constants.BODY_START) == -1
+						|| src.indexOf(Constants.BODY_END) == -1) {
+					intent = new Intent(context,
+							VirtualBoardsStationChoice.class);
+
+					intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
+					context.startActivity(intent);
+					if (VirtualBoardsStationChoice.countStarts == 1
+							&& context
+									.getClass()
+									.toString()
+									.equals("class bg.znestorov.sofbus24.main.VirtualBoardsStationChoice")) {
+						((VirtualBoardsStationChoice) context).finish();
+					}
+
+					return;
+				}
+			}
 		}
 
 		// Check which activity calls this class and in case of "VirtualBoards"
@@ -419,7 +427,7 @@ public class HtmlRequestSumc {
 				.equals("class bg.znestorov.sofbus24.main.VirtualBoards")) {
 			intent = new Intent(context, VirtualBoards.class);
 
-			intent.putExtra(VirtualBoards.keyHtmlResult, text);
+			intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
 			context.startActivity(intent);
 			((VirtualBoards) context).finish();
 
@@ -433,7 +441,7 @@ public class HtmlRequestSumc {
 				&& "-1".equals(stationCodeO)) {
 			intent = new Intent(context, VirtualBoardsStationChoice.class);
 
-			intent.putExtra(VirtualBoards.keyHtmlResult, text);
+			intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
 			context.startActivity(intent);
 
 			return;
@@ -447,6 +455,7 @@ public class HtmlRequestSumc {
 				&& (Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO) || Constants.GPS_TIMES_GPS_PARAM
 						.equals(stationCodeO))) {
 			stationCodeO = Utils.getCodeO(src, stationCode);
+
 			new HtmlRequestSumc().getInformation(context, stationCode,
 					stationCodeO, null);
 
@@ -476,7 +485,7 @@ public class HtmlRequestSumc {
 		// Start VirtualBoards
 		intent = new Intent(context, VirtualBoards.class);
 
-		intent.putExtra(VirtualBoards.keyHtmlResult, text);
+		intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
 		context.startActivity(intent);
 	}
 
@@ -518,7 +527,7 @@ public class HtmlRequestSumc {
 						new BasicResponseHandler());
 			} catch (Exception e) {
 				Log.e(TAG, "Could not get data for station " + stationCode, e);
-				htmlSourceCode = "EXCEPTION";
+				htmlSourceCode = Constants.EXCEPTION;
 			}
 
 			return htmlSourceCode;
@@ -528,9 +537,9 @@ public class HtmlRequestSumc {
 		protected void onPostExecute(String result) {
 			progressDialog.dismiss();
 
-			if (result.equals("EXCEPTION")) {
+			if (result.equals(Constants.EXCEPTION)) {
 				startNewActivity(client, context, stationCode, stationCodeO,
-						VirtualBoards.htmlErrorMessage);
+						Constants.SUMC_HTML_ERROR_MESSAGE);
 			} else {
 				checkCaptchaText(client, context, stationCode, stationCodeO,
 						result);
@@ -584,7 +593,7 @@ public class HtmlRequestSumc {
 						captchaId, result);
 			} else {
 				startNewActivity(client, context, stationCode, stationCodeO,
-						VirtualBoards.htmlErrorMessage);
+						Constants.SUMC_HTML_ERROR_MESSAGE);
 			}
 		}
 	}

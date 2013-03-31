@@ -13,6 +13,7 @@ import bg.znestorov.sofbus24.main.R;
 
 // Class for creating the vehicles ListView
 public class VehicleAdapter extends ArrayAdapter<Vehicle> {
+
 	private final Context context;
 	private final ArrayList<Vehicle> list_values;
 

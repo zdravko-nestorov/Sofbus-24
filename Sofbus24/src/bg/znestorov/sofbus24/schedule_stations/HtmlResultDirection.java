@@ -14,21 +14,6 @@ import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 // Filling the Direction object with data
 public class HtmlResultDirection {
 
-	// URL variables
-	private static final String INFO_BEGIN = "<form method=\"get\" action=\"/schedules/vehicle\">";
-	private static final String INFO_END = "</form>";
-	private static final String DIRECTION_BEGIN = "<div class=\"info\">";
-	private static final String DIRECTION_END = "</div>";
-	private static final String VAR_BEGIN = "<input type=\"hidden\" value=\"";
-	private static final String VT_END = "\" name=\"vt\"/>";
-	private static final String LID_END = "\" name=\"lid\"/>";
-	private static final String RID_END = "\" name=\"rid\"/>";
-	private static final String STOP_BEGIN = "<select name=\"stop\">";
-	private static final String STOP_END = "</select>";
-	private static final String SPLITTER = "</option>";
-	private static final String STOP_ID_BEGIN = "\" value=\"";
-	private static final String STOP_ID_END = "\">";
-
 	// The HtmlResult got from HtmlReqeustDirection class
 	private final Context context;
 	private String htmlResult;
@@ -50,17 +35,18 @@ public class HtmlResultDirection {
 	public ArrayList<Direction> showResult() {
 		ArrayList<Direction> directionList = null;
 		boolean checkHtmlResult = (htmlResult != null && !"".equals(htmlResult)
-				&& htmlResult.contains(INFO_BEGIN)
-				&& htmlResult.contains(INFO_END)
-				&& htmlResult.contains(DIRECTION_BEGIN)
-				&& htmlResult.contains(DIRECTION_END)
-				&& htmlResult.contains(VAR_BEGIN)
-				&& htmlResult.contains(LID_END) && htmlResult.contains(RID_END)
-				&& htmlResult.contains(STOP_BEGIN)
-				&& htmlResult.contains(STOP_END)
-				&& htmlResult.contains(SPLITTER)
-				&& htmlResult.contains(STOP_ID_BEGIN) && htmlResult
-				.contains(STOP_ID_END));
+				&& htmlResult.contains(Constants.INFO_BEGIN)
+				&& htmlResult.contains(Constants.INFO_END)
+				&& htmlResult.contains(Constants.DIRECTION_BEGIN)
+				&& htmlResult.contains(Constants.DIRECTION_END)
+				&& htmlResult.contains(Constants.VAR_BEGIN)
+				&& htmlResult.contains(Constants.LID_END)
+				&& htmlResult.contains(Constants.RID_END)
+				&& htmlResult.contains(Constants.STOP_BEGIN)
+				&& htmlResult.contains(Constants.STOP_END)
+				&& htmlResult.contains(Constants.SPLITTER)
+				&& htmlResult.contains(Constants.STOP_ID_BEGIN) && htmlResult
+				.contains(Constants.STOP_ID_END));
 
 		if (checkHtmlResult) {
 			directionList = new ArrayList<Direction>(2);
@@ -90,10 +76,10 @@ public class HtmlResultDirection {
 
 		// String containing both direction of the vehicle
 		String[] localResult = new String[2];
-		localResult[0] = getValueAfter(htmlResult, INFO_BEGIN);
-		localResult[1] = getValueAfter(localResult[0], INFO_BEGIN);
-		localResult[0] = getValueBefore(localResult[0], INFO_END);
-		localResult[1] = getValueBefore(localResult[1], INFO_END);
+		localResult[0] = getValueAfter(htmlResult, Constants.INFO_BEGIN);
+		localResult[1] = getValueAfter(localResult[0], Constants.INFO_BEGIN);
+		localResult[0] = getValueBefore(localResult[0], Constants.INFO_END);
+		localResult[1] = getValueBefore(localResult[1], Constants.INFO_END);
 
 		do {
 			Direction dir = new Direction();
@@ -101,35 +87,38 @@ public class HtmlResultDirection {
 			dir.setVehicleType(vehicleType);
 			dir.setVehicleNumber(vehicleNumber);
 
-			String direction = getValueAfter(localResult[br], DIRECTION_BEGIN);
-			direction = getValueBefore(direction, DIRECTION_END);
+			String direction = getValueAfter(localResult[br],
+					Constants.DIRECTION_BEGIN);
+			direction = getValueBefore(direction, Constants.DIRECTION_END);
 			dir.setDirection(direction.trim());
 
-			String vt = getValueAfter(localResult[br], VAR_BEGIN);
-			String lid = getValueAfter(vt, VAR_BEGIN);
-			String rid = getValueAfter(lid, VAR_BEGIN);
+			String vt = getValueAfter(localResult[br], Constants.VAR_BEGIN);
+			String lid = getValueAfter(vt, Constants.VAR_BEGIN);
+			String rid = getValueAfter(lid, Constants.VAR_BEGIN);
 
-			vt = getValueBefore(vt, VT_END);
+			vt = getValueBefore(vt, Constants.VT_END);
 			dir.setVt(vt.trim());
 
-			lid = getValueBefore(lid, LID_END);
+			lid = getValueBefore(lid, Constants.LID_END);
 			dir.setLid(lid.trim());
 
-			rid = getValueBefore(rid, RID_END);
+			rid = getValueBefore(rid, Constants.RID_END);
 			dir.setRid(rid.trim());
 
-			String stops = getValueAfter(localResult[br], STOP_BEGIN);
-			stops = getValueBefore(stops, STOP_END);
-			String[] stopInfo = stops.split(SPLITTER);
+			String stops = getValueAfter(localResult[br], Constants.STOP_BEGIN);
+			stops = getValueBefore(stops, Constants.STOP_END);
+			String[] stopInfo = stops.split(Constants.SPLITTER);
 			ArrayList<String> stopName = new ArrayList<String>();
 			stopName.add("0");
 			ArrayList<String> stopId = new ArrayList<String>();
 			stopId.add("0");
 
 			for (int i = 0; i < stopInfo.length - 1; i++) {
-				stopName.add(getValueAfter(stopInfo[i], STOP_ID_END).trim());
-				stopInfo[i] = getValueAfter(stopInfo[i], STOP_ID_BEGIN);
-				stopInfo[i] = getValueBefore(stopInfo[i], STOP_ID_END);
+				stopName.add(getValueAfter(stopInfo[i], Constants.STOP_ID_END)
+						.trim());
+				stopInfo[i] = getValueAfter(stopInfo[i],
+						Constants.STOP_ID_BEGIN);
+				stopInfo[i] = getValueBefore(stopInfo[i], Constants.STOP_ID_END);
 				stopId.add(stopInfo[i].trim());
 			}
 

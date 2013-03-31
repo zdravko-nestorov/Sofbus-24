@@ -6,11 +6,11 @@ import android.content.Context;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.station_database.StationsDataSource;
 
-
 public class StationCoordinates {
 
 	// Getting the coordinates for the station with code "stationCode"
 	public static String[] getLocation(Context context, String stationCode) {
+
 		// Opening station database
 		StationsDataSource datasource = new StationsDataSource(context);
 		datasource.open();

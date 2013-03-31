@@ -26,12 +26,10 @@ import bg.znestorov.sofbus24.schedule_stations.HtmlRequestDirection;
 import bg.znestorov.sofbus24.schedule_stations.HtmlResultDirection;
 import bg.znestorov.sofbus24.schedule_vehicles.Vehicle;
 import bg.znestorov.sofbus24.schedule_vehicles.VehicleAdapter;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.VehicleNames;
 
 public class VehicleListView extends Activity {
-
-	// Variable used for transferring information from VehicleTabChoice
-	public static final String keyVehicleType = "VEHICLE_TYPE";
 
 	ListView listView;
 	EditText editText;
@@ -49,7 +47,8 @@ public class VehicleListView extends Activity {
 		this.setTitle(getString(R.string.veh_ch_name));
 
 		// Getting the information from VehicleTabView
-		final String vehicleType = getIntent().getStringExtra(keyVehicleType);
+		final String vehicleType = getIntent().getStringExtra(
+				Constants.KEYWORD_VEHICLE_TYPE);
 
 		// Getting the ListView box from "activity_vehicle_search" layout
 		listView = (ListView) findViewById(R.id.list_view_search);
@@ -59,9 +58,9 @@ public class VehicleListView extends Activity {
 		trolley = VehicleNames.trolley;
 		tram = VehicleNames.tram;
 
-		if (vehicleType.equals("BUS")) {
+		if (vehicleType.equals(Constants.VEHICLE_BUS)) {
 			listView.setAdapter(new VehicleAdapter(this, bus));
-		} else if (vehicleType.equals("TROLLEY")) {
+		} else if (vehicleType.equals(Constants.VEHICLE_TROLLEY)) {
 			listView.setAdapter(new VehicleAdapter(this, trolley));
 		} else {
 			listView.setAdapter(new VehicleAdapter(this, tram));
@@ -91,12 +90,12 @@ public class VehicleListView extends Activity {
 				trolley = new ArrayList<Vehicle>();
 				tram = new ArrayList<Vehicle>();
 
-				if (vehicleType.equals("BUS")) {
+				if (vehicleType.equals(Constants.VEHICLE_BUS)) {
 					bus = obj.onTextChanged(VehicleNames.bus, searchText,
 							textLength);
 					listView.setAdapter(new VehicleAdapter(
 							VehicleListView.this, bus));
-				} else if (vehicleType.equals("TROLLEY")) {
+				} else if (vehicleType.equals(Constants.VEHICLE_TROLLEY)) {
 					trolley = obj.onTextChanged(VehicleNames.trolley,
 							searchText, textLength);
 					listView.setAdapter(new VehicleAdapter(
@@ -217,7 +216,7 @@ public class VehicleListView extends Activity {
 										Intent stationIntent = new Intent(
 												context, StationTabView.class);
 										bundle.putSerializable(
-												"DirectionTransfer",
+												Constants.KEYWORD_BUNDLE_DIRECTION_TRANSFER,
 												directionTransfer);
 										stationIntent.putExtras(bundle);
 										editText.setText("");

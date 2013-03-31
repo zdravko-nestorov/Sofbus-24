@@ -53,7 +53,8 @@ public class StationListView extends ListActivity {
 		DirectionTransfer directionTransfer;
 		try {
 			directionTransfer = (DirectionTransfer) getIntent()
-					.getSerializableExtra("DirectionTransfer");
+					.getSerializableExtra(
+							Constants.KEYWORD_BUNDLE_DIRECTION_TRANSFER);
 		} catch (Exception e) {
 			directionTransfer = null;
 		}
@@ -237,7 +238,8 @@ public class StationListView extends ListActivity {
 				Bundle bundle = new Bundle();
 				Intent stationInfoIntent = new Intent(context,
 						StationInfoMap.class);
-				bundle.putSerializable("Station", station);
+				bundle.putSerializable(Constants.KEYWORD_BUNDLE_STATION,
+						station);
 				stationInfoIntent.putExtras(bundle);
 				startActivityForResult(stationInfoIntent, 1);
 			} else if (coordinates == null || "".equals(coordinates)

@@ -8,21 +8,13 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import bg.znestorov.sofbus24.main.VirtualBoardsStationChoice;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.Utils;
 
 public class HtmlResultSumcChoice {
-
-	// START and END of the needed information
-	private static final String BEGIN = "<br /><br />";
-	private static final String END = "</div>";
-
-	// Separators
-	private static final String SEPARATOR = "&nbsp;спирка&nbsp;";
-	private static final String SEPARATOR_2 = "</b>";
-	private static final String SPACE = "&nbsp;";
 
 	// List containing the info for each station
 	private final ArrayList<GPSStation> listOfVehicles = new ArrayList<GPSStation>();
@@ -47,7 +39,7 @@ public class HtmlResultSumcChoice {
 		if (stationCode.equals(stationCode.replaceAll("\\D+", ""))) {
 			this.stationCode = stationCode;
 		} else {
-			this.stationCode = Utils.getStationId(this.tempHtmlSrc,
+			this.stationCode = Utils.getStationId(this.htmlSrc,
 					this.stationCode);
 		}
 
@@ -68,59 +60,59 @@ public class HtmlResultSumcChoice {
 		// Check if the htmlSrc is not empty
 		if (htmlSrc != null && !"".equals(htmlSrc)) {
 			// Check if the HTML is valid and that there are found stations
-			if (!htmlSrc.contains(Constants.ERORR_NONE)) {
-				// Strange case in which the station is found, but there is
-				// no
-				// information (line #1)
-				if (htmlSrc.contains(Constants.ERROR_NO_INFO_STATION)) {
-					gpsStation.setId(Utils.getStationId(htmlSrc, stationCode));
-					gpsStation
-							.setTime_stamp(Constants.ERROR_RETRIEVE_NO_INFO_STATION);
-					listOfVehicles.add(gpsStation);
-					return listOfVehicles;
-					// Case in which there is no information found
-				} else if (htmlSrc.contains(Constants.ERROR_NO_INFO_NOW)) {
-					gpsStation.setId(Utils.getStationId(htmlSrc, stationCode));
-					gpsStation.setName(Utils.getStationName(htmlSrc,
-							tempHtmlSrc, stationCode, language));
-					gpsStation.setTime_stamp(String.format(
-							Constants.ERROR_RETRIEVE_NO_INFO_NOW, stationCode));
-					listOfVehicles.add(gpsStation);
-					return listOfVehicles;
-					// Case in which there is no such station or station
-					// name
-					// match
-				} else if (htmlSrc.contains(Constants.ERROR_NO_INFO)) {
-					if (stationCode.equals(stationCode.replaceAll("\\D+", ""))) {
-						gpsStation.setTime_stamp(String.format(
-								Constants.ERROR_RETRIEVE_NO_BUS_STOP,
-								stationCode));
-						listOfVehicles.add(gpsStation);
-						return listOfVehicles;
-					} else {
-						gpsStation.setTime_stamp(String.format(
-								Constants.ERROR_RETRIEVE_NO_STATION_MATCH,
-								stationCode));
-						listOfVehicles.add(gpsStation);
-						return listOfVehicles;
-					}
-					// All other errors
+			if (htmlSrc.contains(Constants.ERORR_NONE)
+					&& VirtualBoardsStationChoice.countStarts == 1
+					&& !VirtualBoardsStationChoice.checkCodeO) {
+				// Get "language" value from the Shared Preferences
+				String language = sharedPreferences.getString(
+						Constants.PREFERENCE_KEY_LANGUAGE,
+						Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
+
+				if ("bg".equals(language)) {
+					return getInfo();
 				} else {
-					gpsStation.setTime_stamp(Constants.ERROR_RETRIEVE_NO_DATA);
-					listOfVehicles.add(gpsStation);
-					return listOfVehicles;
+					return TranslatorCyrillicToLatin
+							.translateGPSStation(getInfo());
 				}
 			}
 
-			// Get "language" value from the Shared Preferences
-			String language = sharedPreferences.getString(
-					Constants.PREFERENCE_KEY_LANGUAGE,
-					Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
-
-			if ("bg".equals(language)) {
-				return getInfo();
+			// Strange case in which the station is found, but there is
+			// no information (line #1)
+			if (htmlSrc.contains(Constants.ERROR_NO_INFO_STATION)) {
+				gpsStation.setId(Utils.getStationId(htmlSrc, stationCode));
+				gpsStation
+						.setTime_stamp(Constants.ERROR_RETRIEVE_NO_INFO_STATION);
+				listOfVehicles.add(gpsStation);
+				return listOfVehicles;
+				// Case in which there is no information found
+			} else if (htmlSrc.contains(Constants.ERROR_NO_INFO_NOW)) {
+				gpsStation.setId(Utils.getStationId(htmlSrc, stationCode));
+				gpsStation.setName(Utils.getStationName(htmlSrc, tempHtmlSrc,
+						stationCode, language));
+				gpsStation.setTime_stamp(String.format(
+						Constants.ERROR_RETRIEVE_NO_INFO_NOW, stationCode));
+				listOfVehicles.add(gpsStation);
+				return listOfVehicles;
+				// Case in which there is no such station or station
+				// name match
+			} else if (htmlSrc.contains(Constants.ERROR_NO_INFO)) {
+				if (stationCode.equals(stationCode.replaceAll("\\D+", ""))) {
+					gpsStation.setTime_stamp(String.format(
+							Constants.ERROR_RETRIEVE_NO_BUS_STOP, stationCode));
+					listOfVehicles.add(gpsStation);
+					return listOfVehicles;
+				} else {
+					gpsStation.setTime_stamp(String.format(
+							Constants.ERROR_RETRIEVE_NO_STATION_MATCH,
+							stationCode));
+					listOfVehicles.add(gpsStation);
+					return listOfVehicles;
+				}
+				// All other errors
 			} else {
-				return TranslatorCyrillicToLatin.translateGPSStation(getInfo());
+				gpsStation.setTime_stamp(Constants.ERROR_RETRIEVE_NO_DATA);
+				listOfVehicles.add(gpsStation);
+				return listOfVehicles;
 			}
 		}
 
@@ -132,18 +124,21 @@ public class HtmlResultSumcChoice {
 
 	// Getting the needed information from the HTML source code
 	private ArrayList<GPSStation> getInfo() {
-		while (htmlSrc.contains(BEGIN)) {
-			htmlSrc = getValueAfter(htmlSrc, BEGIN);
+		while (htmlSrc.contains(Constants.MULTIPLE_RESULTS_BEGIN)) {
+			htmlSrc = getValueAfter(htmlSrc, Constants.MULTIPLE_RESULTS_BEGIN);
 		}
 
-		htmlSrc = getValueAfter(htmlSrc, SEPARATOR);
-		htmlSrc = getValueBefore(htmlSrc, END).trim();
+		htmlSrc = getValueAfter(htmlSrc, Constants.MULTIPLE_RESULTS_SEPARATOR_1);
+		htmlSrc = getValueBefore(htmlSrc, Constants.MULTIPLE_RESULTS_END)
+				.trim();
 
-		String[] array = htmlSrc.split(SEPARATOR);
+		String[] array = htmlSrc.split(Constants.MULTIPLE_RESULTS_SEPARATOR_1);
 
 		for (int i = 0; i < array.length; i++) {
-			array[i] = getValueBefore(array[i], SEPARATOR_2);
-			array[i] = array[i].replaceAll(SPACE, " ");
+			array[i] = getValueBefore(array[i],
+					Constants.MULTIPLE_RESULTS_SEPARATOR_2);
+			array[i] = array[i].replaceAll(Constants.MULTIPLE_RESULTS_SPACE,
+					" ");
 
 			String name = getValueBefore(array[i], "(").trim();
 			String number = getValueAfter(array[i], "(");

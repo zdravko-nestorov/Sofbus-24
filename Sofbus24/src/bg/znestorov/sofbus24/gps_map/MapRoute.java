@@ -17,10 +17,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.Constants;
 
 import com.google.android.maps.GeoPoint;
 
 public class MapRoute {
+
 	// GeoPoints for START and END
 	private GeoPoint gpSrc = null;
 	private GeoPoint gpDest = null;
@@ -80,8 +82,7 @@ public class MapRoute {
 
 	private Runnable ruFetch = new Runnable() {
 		public void run() {
-			// URL used for finding the GeoPoints between the START and the END
-			String szUrl = "http://maps.googleapis.com/maps/api/directions/xml";
+			String szUrl = Constants.SZ_URL;
 			szUrl += "?origin=" + (gpSrc.getLatitudeE6() / 1e6) + ","
 					+ (gpSrc.getLongitudeE6() / 1e6);
 			szUrl += "&destination=" + (gpDest.getLatitudeE6() / 1e6) + ","
@@ -113,7 +114,7 @@ public class MapRoute {
 				haRoute.post(ruFetchError);
 			}
 
-			// Parrse the XML file
+			// Parse the XML file
 			try {
 				XmlPullParserFactory xppfFactory = XmlPullParserFactory
 						.newInstance();

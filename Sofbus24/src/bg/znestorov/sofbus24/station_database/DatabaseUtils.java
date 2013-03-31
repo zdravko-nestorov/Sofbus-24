@@ -1,4 +1,4 @@
-package bg.znestorov.sofbus24.utils;
+package bg.znestorov.sofbus24.station_database;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,10 +19,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
-import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
-import bg.znestorov.sofbus24.station_database.GPSStation;
-import bg.znestorov.sofbus24.station_database.StationsDataSource;
-import bg.znestorov.sofbus24.station_database.StationsSQLite;
 
 public class DatabaseUtils {
 

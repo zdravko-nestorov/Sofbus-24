@@ -4,13 +4,90 @@ import android.graphics.Color;
 
 public class Constants {
 
-	// Help activity
-	public static final String HELP_ACTIVITY = "HELP";
+	// GLOBAL PARAMETERS
+	public static final String GLOBAL_PARAM_SEPARATOR = "SEPARATOR";
+	public static final String GLOBAL_PARAM_EMPTY = "EMPTY";
+	public static final String GLOBAL_PARAM_SOFIA_CENTER_LATITUDE = "42.696492";
+	public static final String GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE = "23.326011";
+	public static final int TIMEOUT_CONNECTION = 5000;
+	public static final int TIMEOUT_SOCKET = 8000;
 
-	// GPS Map - time for the status bar
-	public static final int TIME_STATUS_BAR_SLIDE_IN = 1000;
-	public static final int TIME_STATUS_BAR_SLIDE_OUT = 750;
+	// EXTRA KEYWORDS USED FOR TRANSFERING INFORMATION BETWEEEN ACTIVITIES
+	// HtmlRequestSumc -> VirtualBoards/VirtualBoardsStationChoice
+	public static final String KEYWORD_HTML_RESULT = "HTML_Result";
+	// ObtainCurrentCordinates -> VirtualBoardsMapStationChoice
+	public static final String KEYWORD_CLOSEST_STATIONS = "Closest_Stations";
+	// VirtualBoardsMapGPS/StationTabView -> Help
+	public static final String KEYWORD_HELP = "Help";
+	// StationTabView -> StationInfoRouteMap
+	public final static String KEYWORD_ROUTE_MAP = "Vehicle_Route";
+	// VehicleTabView -> VehicleListView
+	public static final String KEYWORD_VEHICLE_TYPE = "Vehicle_Type";
+	// StationListView -> StationInfoMap
+	public static final String KEYWORD_BUNDLE_STATION = "Station";
+	// VehicleListView -> StationTabView -> StationListView
+	public static final String KEYWORD_BUNDLE_DIRECTION_TRANSFER = "Direction_Transfer";
+	// VirtualBoards -> VirtualBoardsMap
+	public static final String KEYWORD_BUNDLE_GPS_STATION = "GPS_Station";
 
+	// PARAMS WHICH HELP TO EXTRACT THE INFORMATION FROM VIRTUAL BOARDS
+	// (CLASS: HtmlRequestSumc)
+	// CAPTCHA position in the source file
+	public static final String CAPTCHA_START = "<img src=\"/captcha/";
+	public static final String CAPTCHA_END = "\"";
+	public static final String REQUIRES_CAPTCHA = "Въведете символите от изображението";
+	// CAPTCHA URL link
+	public static final String CAPTCHA_IMAGE = "http://m.sofiatraffic.bg/captcha/%s";
+	// SUMC - URL and variables
+	public static final String VB_URL = "http://m.sofiatraffic.bg/vt";
+	public static final String QUERY_BUS_STOP_ID = "q";
+	public static final String QUERY_O = "o";
+	public static final String QUERY_GO = "go";
+	public static final String QUERY_CAPTCHA_TEXT = "sc";
+	public static final String QUERY_CAPTCHA_ID = "poleicngi";
+	// User Agent and Referrer
+	public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1017.2 Safari/535.19";
+	public static final String REFERER = "http://m.sofiatraffic.bg/vt/";
+	// SUMC cookies
+	public static final String SHARED_PREFERENCES_NAME_SUMC_COOKIES = "sumc_cookies";
+	public static final String PREFERENCES_COOKIE_NAME = "name";
+	public static final String PREFERENCES_COOKIE_DOMAIN = "domain";
+	public static final String PREFERENCES_COOKIE_PATH = "path";
+	public static final String PREFERENCES_COOKIE_VALUE = "value";
+	// In case of HTML Request error
+	public static final String EXCEPTION = "EXCEPTION";
+
+	// PARAMS WHICH DEFINE THE ACTIVITY THAT CALLS VIRTUAL BOARDS
+	// (CLASS: HtmlRequestSumc)
+	// GPS times taken through SCHEDULE
+	public static final String SCHEDULE_GPS_FIND_CODEO = "&nbsp;спирка&nbsp;";
+	public static final String SCHEDULE_GPS_PARAM = "schedule";
+	// GPS times taken through GPS Times Google Maps
+	public static final String GPS_TIMES_GPS_PARAM = "gpsTimes";
+	// GPS times taken through FAVORITES
+	public static final String FAVORITES_GPS_PARAM = "favorites";
+
+	// PARAMS WHICH HELP TO DEFINE THE TYPE OF THE VEHICLES
+	// (CLASS: HtmlResultSumc)
+	// Name of the vehicles in the HTML source
+	public static final String VEHICLE_BUS_CHECK = "втоб";
+	public static final String VEHICLE_TROLLEY_CHECK = "роле";
+	public static final String VEHICLE_TRAM_CHECK = "рамв";
+	// Needed information for creating body
+	public static final String BODY_START = "<div class=\"arrivals\">";
+	public static final String BODY_END = "\n</div>";
+	// Needed information for fixing body
+	public static final String SUMC_INFO_BEGIN = "<div class=\"arr_info_";
+	public static final int SUMC_INFO_BEGIN_LENGTH = (SUMC_INFO_BEGIN + "1\">")
+			.length();
+	public static final String SUMC_INFO_END = "</div>";
+	public static final String SUMC_INFO_SPLITTER = "<a href=\"|\">|<b>|</b>|</a>&nbsp;-&nbsp;|<br />";
+	public static final int SUMC_INFO_SPLIT_SIZE = 7;
+
+	// PARAMS WHICH DEFINE THE MAP ROUTE
+	// (CLASSES: MapRoute & MapRouteOverlay)
+	// URL used for finding the GeoPoints between the START and the END
+	public static final String SZ_URL = "http://maps.googleapis.com/maps/api/directions/xml";
 	// GPS GoogleMaps ROUTE
 	public static final int ROUTE_MODE = 2;
 	public static final int ROUTE_DEFAULT_COLOR = Color.RED;
@@ -18,35 +95,9 @@ public class Constants {
 	public static final int ROUTE_STROKE_WIDTH = 6;
 	public static final int ROUTE_ALPHA = 180;
 
-	// GPS times taken through SCHEDULE
-	public static final String SCHEDULE_GPS_FIND_CODEO = "&nbsp;спирка&nbsp;";
-	public static final String SCHEDULE_GPS_PARAM = "schedule";
-
-	// GPS times taken through GPS Times Google Maps
-	public static final String GPS_TIMES_GPS_PARAM = "gpsTimes";
-
-	// GPS times taken through FAVORITES
-	public static final String FAVORITES_GPS_PARAM = "favorites";
-
-	// Indicating the needed zoom distance for focusing the current position
-	public static final int PADDING_ACTIVE_ZOOM = 50;
-
-	// CONSTANTS FOR RETRIEVING/PROCESSING INFORMATION
-	// Setting the size of the TextBox in VirtualBoardStationChoice
-	public static final int TEXT_BOX_SIZE = 18;
-
-	// Indicating if there are more than 1 result
-	public static final String SEARCH_TYPE_COUNT_RESULTS_1 = "НАМЕРЕНИ СА";
-	public static final String SEARCH_TYPE_COUNT_RESULTS_2 = "СПИРКИ ЗА &QUOT;";
-
-	// Needed information for creating body
-	public static final String BODY_START = "<div class=\"arrivals\">";
-	public static final String BODY_END = "\n</div>";
-
-	// Time retrieval string from the source file
-	public static final String TIME_RETRIEVAL_BEGIN = "<b>Информация към ";
-	public static final String TIME_RETRIEVAL_END = "</b>";
-
+	// PARAMS WHICH DEFINES THE ERRORS IN THE HTML SOURCE WHILE
+	// RETRIEVING/TRANSFERING INFORMATION
+	// (CLASS: HtmlResultSumcChoice)
 	// Possible HTML errors while retrieving information
 	public static final String ERORR_NONE = "Намерени са";
 	public static final String ERROR_NO_INFO_STATION = "В момента нямаме информация. Моля, опитайте по-късно.";
@@ -57,14 +108,116 @@ public class Constants {
 	public static final String ERROR_RETRIEVE_NO_BUS_STOP = "Спирката \"%s\" не съществува.";
 	public static final String ERROR_RETRIEVE_NO_STATION_MATCH = "Няма намерени съвпадения за \"%s\".";
 	public static final String ERROR_RETRIEVE_NO_DATA = "INCORRECT";
-
 	// Possible HTML errors in TIME_STAMP after processing the information
 	public static final String SEARCH_NO_INFO_STATION = "В момента няма информация за тази спирка";
 	public static final String SEARCH_NO_INFO_NOW = "В момента няма информация за спирка";
 	public static final String SEARCH_NO_BUS_STOP = "не съществува.";
 	public static final String SEARCH_NO_STATION_MATCH = "Няма намерени съвпадения";
 	public static final String SEARCH_NO_DATA = "INCORRECT";
+	// START and END of the needed information
+	public static final String MULTIPLE_RESULTS_BEGIN = "<br /><br />";
+	public static final String MULTIPLE_RESULTS_END = "</div>";
+	// Separators
+	public static final String MULTIPLE_RESULTS_SEPARATOR_1 = "&nbsp;спирка&nbsp;";
+	public static final String MULTIPLE_RESULTS_SEPARATOR_2 = "</b>";
+	public static final String MULTIPLE_RESULTS_SPACE = "&nbsp;";
 
+	// PARAM WHICH DEFINES THE OFFSET/PADDINGS OF THE MAP BALLOON PICTURE
+	// (CLASSES: BalloonItemizedOverlay & BalloonOverlayView)
+	// Balloon offset
+	public static final int BALLOON_VIEW_OFFSET = 13;
+	// Balloon paddings
+	public static final int BALLOON_PADDING_LEFT = 10;
+	public static final int BALLOON_PADDING_TOP = 0;
+	public static final int BALLOON_PADDING_RIGHT = 10;
+	public static final int BALLOON_PADDING_BOTTOM = 0;
+
+	// PARAMS WHICH HELP TO EXTRACT THE INFORMATION FROM SCHEDULE
+	// (CLASS: HtmlRequestStation)
+	// URL and variables
+	public static final String SCHEDULE_URL = "http://m.sumc.bg/schedules/vehicle?";
+	public static final String QUERY_STOP = "stop";
+	public static final String QUERY_CHECK = "ch";
+	public static final String QUERY_VT = "vt";
+	public static final String QUERY_LID = "lid";
+	public static final String QUERY_RID = "rid";
+
+	// PARAMS WHICH HELP TO EXTRACT THE INFORMATION FROM SCHEDULE
+	// (CLASS: HtmlRequestDirection)
+	// URL and variables
+	public static final String DIRECTION_URL = "http://m.sofiatraffic.bg/schedules?";
+	public static final String QUERY_BUS_TYPE = "tt";
+	public static final String QUERY_LINE = "ln";
+	public static final String QUERY_SEARCH = "s";
+
+	// PARAMS WHICH HELP TO EXTRACT THE DIRECTION FROM SCHEDULE
+	// (CLASS: HtmlResultDirection)
+	// HTML source variables
+	public static final String INFO_BEGIN = "<form method=\"get\" action=\"/schedules/vehicle\">";
+	public static final String INFO_END = "</form>";
+	public static final String DIRECTION_BEGIN = "<div class=\"info\">";
+	public static final String DIRECTION_END = "</div>";
+	public static final String VAR_BEGIN = "<input type=\"hidden\" value=\"";
+	public static final String VT_END = "\" name=\"vt\"/>";
+	public static final String LID_END = "\" name=\"lid\"/>";
+	public static final String RID_END = "\" name=\"rid\"/>";
+	public static final String STOP_BEGIN = "<select name=\"stop\">";
+	public static final String STOP_END = "</select>";
+	public static final String SPLITTER = "</option>";
+	public static final String STOP_ID_BEGIN = "\" value=\"";
+	public static final String STOP_ID_END = "\">";
+
+	// PARAMS WHICH HELP TO EXTRACT STATION ID, NAME AND CODEO FROM HTML SOURCE
+	// (CLASS: Utils)
+	// HTML source variables
+	public static final String STATION_INFO_BEGIN = "<b>спирка";
+	public static final String STATION_INFO_END_1 = "</b>";
+	public static final String STATION_INFO_END_2 = "(";
+	public static final String STATION_INFO_END_3 = ")";
+	public static final String STATION_INFO_SEPARATOR_SPACE = "&nbsp;";
+	public static final String STATION_INFO_SEPARATOR_BOLD = "<b>";
+	public static final String STATION_INFO_SEPARATOR_POINT = ".";
+
+	// PARAMS WHICH DEFINES STATIONS LISTVIEWS
+	// (CLASS: StationTabView)
+	// Extra info for the ListViews
+	public static final String DIRECTION_1 = "DIRECTION_1";
+	public static final String DIRECTION_2 = "DIRECTION_2";
+
+	// PARAMS WHICH DEFINES VEHICLES LISTVIEWS
+	// (CLASS: VehicleTabView)
+	// Extra info for the ListViews
+	public static final String VEHICLE_BUS = "BUS";
+	public static final String VEHICLE_TROLLEY = "TROLLEY";
+	public static final String VEHICLE_TRAM = "TRAM";
+
+	// PARAMS WHICH DEFINES THE ERRORS AFTER EXTRACT THE INFORMATION FROM
+	// VIRTUAL BOARDS
+	// (CLASS: VirtualBoards)
+	// Possible errors after extracting the information from SUMC
+	public static final String SUMC_HTML_ERROR_MESSAGE = "HTML_ERROR";
+	public static final String SUMC_CAPTCHA_ERROR_MESSAGE = "CAPTCHA_ERROR";
+	public static final String SUMC_UNKNOWN_INFO = "В момента няма информация за тази спирка";
+	// Time retrieval string from the source file
+	public static final String TIME_RETRIEVAL_BEGIN = "<b>Информация към ";
+	public static final String TIME_RETRIEVAL_END = "</b>";
+
+	// PARAMS WHICH HELP FOR RETRIEVING/PROCESSING INFORMATION
+	// (CLASS: VirtualBoardStationChoice)
+	// Indicating if there are more than 1 result
+	public static final String SEARCH_TYPE_COUNT_RESULTS_1 = "НАМЕРЕНИ СА";
+	public static final String SEARCH_TYPE_COUNT_RESULTS_2 = "СПИРКИ ЗА &QUOT;";
+	// Setting the size of the TextBox
+	public static final int TEXT_BOX_SIZE = 18;
+
+	// PARAMS WHICH HELP FOR STATUS BAR ANIMATION
+	// (CLASS: VirtualBoardsMapGPS)
+	// GPS Map - times for the status bar animation
+	public static final int TIME_STATUS_BAR_SLIDE_IN = 1000;
+	public static final int TIME_STATUS_BAR_SLIDE_OUT = 750;
+
+	// PARAMS WHICH INDICATE THE DIFFERENT USER SETTINGS
+	// (CLASS: Preferences)
 	// Preferences constants
 	public static final String PREFERENCE_KEY_TIME_INFO_RETRIEVAL = "timeInfoRetrieval";
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL = "time_skgt";

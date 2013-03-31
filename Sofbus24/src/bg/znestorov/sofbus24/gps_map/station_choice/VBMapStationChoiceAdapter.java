@@ -13,6 +13,7 @@ import bg.znestorov.sofbus24.station_database.GPSStation;
 
 // Class for creating the vehicles ListView
 public class VBMapStationChoiceAdapter extends ArrayAdapter<GPSStation> {
+
 	private final Context context;
 	private final List<GPSStation> stations;
 

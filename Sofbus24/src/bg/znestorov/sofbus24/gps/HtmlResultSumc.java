@@ -20,27 +20,17 @@ public class HtmlResultSumc {
 
 	// Name of the vehicles
 	private static String vehicle_Bus;
-	private static final String vehicle_Bus_Check = "втоб";
 	private static String vehicle_Trolley;
-	private static final String vehicle_Trolley_Check = "роле";
 	private static String vehicle_Tram;
-	private static final String vehicle_Tram_Check = "рамв";
 
 	// List containing each vehicle with the information for it
 	private final ArrayList<GPSStation> listOfVehicles = new ArrayList<GPSStation>();
 
 	// Constructor variables (passed through other class)
 	private final Context context;
-	private final String stationCode;
+	private String stationCode;
 	private final String htmlSrc;
 	private final String tempHtmlSrc;
-
-	// Needed information for fixing body
-	private static final String INFO_BEGIN = "<div class=\"arr_info_";
-	private static final int INFO_BEGIN_LENGTH = (INFO_BEGIN + "1\">").length();
-	private static final String INFO_END = "</div>";
-	private static final String INFO_SPLITTER = "<a href=\"|\">|<b>|</b>|</a>&nbsp;-&nbsp;|<br />";
-	private static final int INFO_SPLIT_SIZE = 7;
 
 	// Shared Preferences (option menu)
 	private SharedPreferences sharedPreferences;
@@ -48,13 +38,14 @@ public class HtmlResultSumc {
 
 	public HtmlResultSumc(Context context, String stationCode, String htmlSrc) {
 		this.context = context;
+		this.stationCode = stationCode;
 		this.htmlSrc = htmlSrc;
 		this.tempHtmlSrc = htmlSrc;
 
 		if (stationCode.equals(stationCode.replaceAll("\\D+", ""))) {
 			this.stationCode = stationCode;
 		} else {
-			this.stationCode = Utils.getStationId(this.tempHtmlSrc,
+			this.stationCode = Utils.getStationId(this.htmlSrc,
 					this.stationCode);
 		}
 
@@ -96,32 +87,34 @@ public class HtmlResultSumc {
 		String vehicleType = context.getString(R.string.title_bus);
 
 		int start = 0;
-		int end = htmlBody.indexOf(INFO_BEGIN);
+		int end = htmlBody.indexOf(Constants.SUMC_INFO_BEGIN);
 
 		while (end != -1) {
-			end += INFO_BEGIN_LENGTH;
+			end += Constants.SUMC_INFO_BEGIN_LENGTH;
 			vehicleInfo = htmlBody.substring(start, end);
-			start = htmlBody.indexOf(INFO_END, end);
+			start = htmlBody.indexOf(Constants.SUMC_INFO_END, end);
 
 			if (start != -1) {
 				String[] split = htmlBody.substring(end, start).split(
-						INFO_SPLITTER, INFO_SPLIT_SIZE);
-				if (split.length == INFO_SPLIT_SIZE) {
+						Constants.SUMC_INFO_SPLITTER,
+						Constants.SUMC_INFO_SPLIT_SIZE);
+				if (split.length == Constants.SUMC_INFO_SPLIT_SIZE) {
 					GPSStation gpsStation = new GPSStation();
 
 					gpsStation.setId(Utils.getStationId(htmlSrc, stationCode));
 					gpsStation.setName(Utils.getStationName(htmlSrc,
 							tempHtmlSrc, stationCode, language));
 
-					if (vehicleInfo.toString().contains(vehicle_Bus_Check)) {
+					if (vehicleInfo.toString().contains(
+							Constants.VEHICLE_BUS_CHECK)) {
 						vehicleType = vehicle_Bus;
 						gpsStation.setType(vehicleType);
 					} else if (vehicleInfo.toString().contains(
-							vehicle_Trolley_Check)) {
+							Constants.VEHICLE_TROLLEY_CHECK)) {
 						vehicleType = vehicle_Trolley;
 						gpsStation.setType(vehicleType);
 					} else if (vehicleInfo.toString().contains(
-							vehicle_Tram_Check)) {
+							Constants.VEHICLE_TRAM_CHECK)) {
 						vehicleType = vehicle_Tram;
 						gpsStation.setType(vehicleType);
 					} else {
@@ -135,7 +128,7 @@ public class HtmlResultSumc {
 					listOfVehicles.add(gpsStation);
 				}
 			}
-			end = htmlBody.indexOf(INFO_BEGIN, start);
+			end = htmlBody.indexOf(Constants.SUMC_INFO_BEGIN, start);
 		}
 
 		Collections.sort(listOfVehicles, new Comparator<GPSStation>() {
@@ -174,11 +167,32 @@ public class HtmlResultSumc {
 		return listOfVehicles;
 	}
 
+	public String getInformationTime(String htmlSrc) {
+		String infoTime = "";
+
+		// Get "timeInfoRetrieval" value from the Shared Preferences
+		String timeInfoRetrieval = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_TIME_INFO_RETRIEVAL,
+				Constants.PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL);
+
+		if (htmlSrc.contains(Constants.TIME_RETRIEVAL_BEGIN)
+				&& "time_skgt".equals(timeInfoRetrieval)) {
+			infoTime = getValueAfter(htmlSrc, Constants.TIME_RETRIEVAL_BEGIN);
+			infoTime = getValueBefore(infoTime, Constants.TIME_RETRIEVAL_END);
+			infoTime = infoTime.trim();
+		} else {
+			infoTime = android.text.format.DateFormat.format("dd.MM.yyy kk:mm",
+					new java.util.Date()).toString();
+		}
+
+		return infoTime;
+	}
+
 	private String setRemainingTimeStamp(String timeStamp) {
 		String remainingTime = "";
 
 		// Get current time or the time from SGKT - according to the Preferences
-		String currTime = Utils.getInformationTime(htmlSrc, sharedPreferences);
+		String currTime = getInformationTime(htmlSrc);
 		while (currTime.contains(" ")) {
 			currTime = getValueAfter(currTime, " ");
 		}

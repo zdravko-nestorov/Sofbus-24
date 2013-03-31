@@ -29,11 +29,11 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 	private Context context;
 	private ProgressDialog progressDailog;
 
-	// Default lattitude and longitude
+	// Default latitude and longitude
 	private double latitude = 0.0;
 	private double longitude = 0.0;
 
-	// Location Managers responsible fot the current location
+	// Location Managers responsible for the current location
 	private LocationManager mLocationManager;
 	private VeggsterLocationListener mVeggsterLocationListener;
 
@@ -124,7 +124,8 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 		// activity
 		Intent stationInfoIntent = new Intent(context,
 				VirtualBoardsMapStationChoice.class);
-		stationInfoIntent.putExtra("ClosestStations", station_string);
+		stationInfoIntent.putExtra(Constants.KEYWORD_CLOSEST_STATIONS,
+				station_string);
 		context.startActivity(stationInfoIntent);
 	}
 
