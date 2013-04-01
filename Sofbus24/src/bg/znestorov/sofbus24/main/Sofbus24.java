@@ -278,7 +278,8 @@ public class Sofbus24 extends Activity implements OnClickListener {
 		// Check to see if at least one provider is enabled
 		if (myLocation.getLocation(context)) {
 			ProgressDialog progressDialog = new ProgressDialog(context);
-			progressDialog.setMessage("Loading...");
+			progressDialog.setMessage(context
+					.getString(R.string.loading_message_preview_gps_map));
 
 			LoadMapAsyncTask loadMap = new LoadMapAsyncTask(context,
 					progressDialog);

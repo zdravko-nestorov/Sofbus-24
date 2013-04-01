@@ -59,6 +59,20 @@ public class Utils {
 		return diff;
 	}
 
+	// Format the number to be always 4 digits (if lower than 4)
+	public static String formatNumberOfDigits(String input) {
+		int outputLength = 4;
+
+		String formatType = String.format("%%0%dd", outputLength);
+
+		try {
+			input = String.format(formatType, Integer.parseInt(input));
+		} catch (Exception e) {
+		}
+
+		return input;
+	}
+
 	// Format Date (making the minutes in format :XX)
 	public static String formatTime(Context context, String difference) {
 		String diff = "";

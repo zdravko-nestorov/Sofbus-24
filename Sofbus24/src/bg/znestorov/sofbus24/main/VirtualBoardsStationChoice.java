@@ -100,16 +100,15 @@ public class VirtualBoardsStationChoice extends ListActivity {
 				if (!"".equals(stationCode)) {
 					setErrorLabelText(String.format(
 							getString(R.string.error_sumc_no_bus_stop),
-							stationName));
+							stationName + " (" + stationCode + ")"));
 				} else {
-					setErrorLabelText(getString(R.string.gps_error_noBusEmpty)
-							+ ".");
+					setErrorLabelText(getString(R.string.gps_error_noBusEmpty));
 				}
 				// No results for the selected station
 			} else if (time_stamp.contains(Constants.SEARCH_NO_INFO_NOW)) {
-				setErrorLabelText(String
-						.format(getString(R.string.error_sumc_no_info_now),
-								stationName));
+				setErrorLabelText(String.format(
+						getString(R.string.error_sumc_no_info_now), stationName
+								+ " (" + stationCode + ")"));
 			} else if (time_stamp.contains(Constants.SEARCH_NO_STATION_MATCH)) {
 				setErrorLabelText(String.format(
 						getString(R.string.error_sumc_no_station_match),

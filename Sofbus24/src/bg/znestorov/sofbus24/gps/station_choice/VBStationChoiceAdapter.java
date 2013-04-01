@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.station_database.GPSStation;
+import bg.znestorov.sofbus24.utils.Utils;
 
 // Class for creating the vehicles ListView
 public class VBStationChoiceAdapter extends ArrayAdapter<GPSStation> {
@@ -41,13 +42,18 @@ public class VBStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 	public View setRow(LayoutInflater inflater, ViewGroup parent,
 			GPSStation station) {
 		View rowView = inflater.inflate(
-				R.layout.activity_gps_station_choice_list_row, parent, false);
+				R.layout.activity_gps_map_station_choice_list_row, parent,
+				false);
 
-		TextView vehicleGPSStation = (TextView) rowView
-				.findViewById(R.id.vb_station_choice_text);
+		TextView stationInfo = (TextView) rowView
+				.findViewById(R.id.station_info);
+		TextView stationCode = (TextView) rowView
+				.findViewById(R.id.station_distance);
 
-		vehicleGPSStation.setText(station.getName() + " (" + station.getId()
-				+ ")");
+		stationInfo.setText(station.getName());
+		stationCode.setText(context
+				.getString(R.string.gps_station_choice_station_code)
+				+ Utils.formatNumberOfDigits(station.getId()));
 
 		return rowView;
 	}

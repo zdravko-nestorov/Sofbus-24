@@ -108,7 +108,8 @@ public class StationListView extends ListActivity {
 		// Getting the HtmlResult and showing a ProgressDialog
 		Context context = StationListView.this;
 		ProgressDialog progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage("Loading...");
+		progressDialog.setMessage(context
+				.getString(R.string.loading_message_retrieve_schedule_info));
 		LoadStationAsyncTask loadStationAsyncTask = new LoadStationAsyncTask(
 				context, progressDialog, station, stationCode);
 		loadStationAsyncTask.execute();
@@ -147,7 +148,9 @@ public class StationListView extends ListActivity {
 			// Getting the HtmlResult and showing a ProgressDialog
 			Context context = StationListView.this;
 			ProgressDialog progressDialog = new ProgressDialog(context);
-			progressDialog.setMessage("Loading...");
+			progressDialog
+					.setMessage(context
+							.getString(R.string.loading_message_retrieve_schedule_info));
 			LoadStationAsyncTask loadStationAsyncTask = new LoadStationAsyncTask(
 					context, progressDialog, station, stationCode);
 			loadStationAsyncTask.execute();

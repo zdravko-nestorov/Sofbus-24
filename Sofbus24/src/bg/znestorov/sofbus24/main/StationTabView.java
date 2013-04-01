@@ -108,7 +108,9 @@ public class StationTabView extends TabActivity {
 				// Showing a ProgressDialog
 				Context context = StationTabView.this;
 				ProgressDialog progressDialog = new ProgressDialog(context);
-				progressDialog.setMessage("Loading...");
+				progressDialog
+						.setMessage(context
+								.getString(R.string.loading_message_preview_info_map_route));
 
 				LoadMapAsyncTask loadMap = new LoadMapAsyncTask(context,
 						progressDialog, direction, coordinates);

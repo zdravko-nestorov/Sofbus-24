@@ -74,7 +74,7 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 			}
 		});
 		progressDailog.setMessage(context
-				.getString(R.string.map_gps_location_status));
+				.getString(R.string.loading_message_gps_map_location_status));
 		progressDailog.setIndeterminate(true);
 		progressDailog.setCancelable(true);
 		progressDailog.show();

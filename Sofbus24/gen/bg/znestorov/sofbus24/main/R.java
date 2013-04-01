@@ -256,36 +256,37 @@ public final class R {
         public static final int fav_menu_rename=0x7f080050;
         public static final int fav_menu_rename_msg=0x7f080052;
         public static final int fav_menu_rename_title=0x7f080051;
-        public static final int gps_err_dialog_msg=0x7f08001c;
-        public static final int gps_err_dialog_title=0x7f08001a;
-        public static final int gps_error_noBus=0x7f080021;
-        public static final int gps_error_noBusEmpty=0x7f080022;
-        public static final int gps_error_noCoordinates=0x7f080023;
-        public static final int gps_error_noInfo=0x7f080020;
-        public static final int gps_error_unknown=0x7f08001f;
-        public static final int gps_fav_dialog_title=0x7f08001b;
-        public static final int gps_favourite_add=0x7f08001d;
-        public static final int gps_map_station_choice_distance=0x7f080026;
-        public static final int gps_map_station_choice_error_summary=0x7f080025;
-        public static final int gps_map_station_choice_meters=0x7f080027;
+        public static final int gps_err_dialog_msg=0x7f08001d;
+        public static final int gps_err_dialog_title=0x7f08001b;
+        public static final int gps_error_noBus=0x7f080022;
+        public static final int gps_error_noBusEmpty=0x7f080023;
+        public static final int gps_error_noCoordinates=0x7f080024;
+        public static final int gps_error_noInfo=0x7f080021;
+        public static final int gps_error_unknown=0x7f080020;
+        public static final int gps_fav_dialog_title=0x7f08001c;
+        public static final int gps_favourite_add=0x7f08001e;
+        public static final int gps_map_station_choice_distance=0x7f080027;
+        public static final int gps_map_station_choice_error_summary=0x7f080026;
+        public static final int gps_map_station_choice_meters=0x7f080028;
         /**  GPS GOOGLE MAPS 
  GPS GOOGLE MAPS Station Choice 
  GPS GOOGLE MAPS 
  GPS GOOGLE MAPS Station Choice 
          */
-        public static final int gps_map_station_choice_name=0x7f080024;
+        public static final int gps_map_station_choice_name=0x7f080025;
         public static final int gps_msg=0x7f080003;
         /**  GPS 
  GPS 
          */
-        public static final int gps_name=0x7f080019;
-        public static final int gps_see_map=0x7f08001e;
-        public static final int gps_station_choice_error_info=0x7f080015;
-        public static final int gps_station_choice_error_internet=0x7f080014;
+        public static final int gps_name=0x7f08001a;
+        public static final int gps_see_map=0x7f08001f;
+        public static final int gps_station_choice_error_info=0x7f080016;
+        public static final int gps_station_choice_error_internet=0x7f080015;
         /**  GPS Station Choice 
  GPS Station Choice 
          */
         public static final int gps_station_choice_name=0x7f080013;
+        public static final int gps_station_choice_station_code=0x7f080014;
         public static final int home_screen_exit_summary=0x7f08005e;
         public static final int home_screen_exit_title=0x7f08005d;
         public static final int home_screen_gps_map_summary=0x7f08005c;
@@ -299,21 +300,30 @@ public final class R {
         public static final int hs_button4=0x7f08000d;
         public static final int hs_button5=0x7f08000e;
         public static final int hs_button6=0x7f08000f;
+        public static final int loading_message_gps_map_location_status=0x7f080090;
+        public static final int loading_message_preview_gps_map=0x7f08008f;
+        public static final int loading_message_preview_info_map_route=0x7f080092;
+        public static final int loading_message_retrieve_schedule_info=0x7f080091;
+        public static final int loading_message_retrieve_sumc_catcha=0x7f08008e;
+        /**  Loading messages on progressDialogs 
+ Loading messages on progressDialogs 
+         */
+        public static final int loading_message_retrieve_sumc_info=0x7f08008d;
+        public static final int loading_message_retrieve_vehicles_numbers=0x7f080093;
         public static final int map_compass_summary=0x7f08006c;
         public static final int map_compass_title=0x7f08006b;
-        public static final int map_gps_distance_ERR=0x7f080030;
-        public static final int map_gps_distance_OK=0x7f08002f;
-        public static final int map_gps_location_status=0x7f080031;
-        public static final int map_gps_menu_item_clean=0x7f08002c;
-        public static final int map_gps_menu_item_distance=0x7f080029;
-        public static final int map_gps_menu_item_focus=0x7f08002a;
-        public static final int map_gps_menu_item_help=0x7f08002b;
+        public static final int map_gps_distance_ERR=0x7f080031;
+        public static final int map_gps_distance_OK=0x7f080030;
+        public static final int map_gps_menu_item_clean=0x7f08002d;
+        public static final int map_gps_menu_item_distance=0x7f08002a;
+        public static final int map_gps_menu_item_focus=0x7f08002b;
+        public static final int map_gps_menu_item_help=0x7f08002c;
         /**  Map GPS 
  Map GPS 
          */
-        public static final int map_gps_name=0x7f080028;
-        public static final int map_gps_no_last_location=0x7f08002d;
-        public static final int map_gps_route_error=0x7f08002e;
+        public static final int map_gps_name=0x7f080029;
+        public static final int map_gps_no_last_location=0x7f08002e;
+        public static final int map_gps_route_error=0x7f08002f;
         public static final int map_help_btn_label=0x7f080034;
         /**  Map GPS Help 
  Map GPS Help 
@@ -406,14 +416,14 @@ public final class R {
         public static final int title_trams=0x7f080080;
         public static final int title_trolley=0x7f08007d;
         public static final int title_trolleys=0x7f08007e;
-        public static final int vb_help_summary1=0x7f080017;
-        public static final int vb_help_summary2=0x7f080018;
+        public static final int vb_help_summary1=0x7f080018;
+        public static final int vb_help_summary2=0x7f080019;
         /**  VIRTUAL BOARDS 
  VIRTUAL BOARDS HELP 
  VIRTUAL BOARDS 
  VIRTUAL BOARDS HELP 
          */
-        public static final int vb_help_title=0x7f080016;
+        public static final int vb_help_title=0x7f080017;
         public static final int veh_ch_coordinates_error=0x7f080039;
         public static final int veh_ch_direction_choice=0x7f080037;
         public static final int veh_ch_direction_choice_error=0x7f080038;

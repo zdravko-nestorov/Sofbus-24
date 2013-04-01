@@ -25,7 +25,8 @@ public class VehicleTabView extends TabActivity {
 		// (via AsyncTask)
 		Context context = VehicleTabView.this;
 		ProgressDialog progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage("Loading...");
+		progressDialog.setMessage(context
+				.getString(R.string.loading_message_retrieve_vehicles_numbers));
 		LoadStationsAsyncTask loadStations = new LoadStationsAsyncTask(context,
 				progressDialog);
 		loadStations.execute();

@@ -123,7 +123,8 @@ public class VehicleListView extends Activity {
 				// Getting the HtmlResult and showing a ProgressDialog
 				Context context = VehicleListView.this;
 				ProgressDialog progressDialog = new ProgressDialog(context);
-				progressDialog.setMessage("Loading...");
+				progressDialog.setMessage(context
+						.getString(R.string.loading_message_retrieve_schedule_info));
 				LoadStationsAsyncTask loadStationsAsyncTask = new LoadStationsAsyncTask(
 						context, progressDialog, choice);
 				loadStationsAsyncTask.execute();

@@ -27,6 +27,7 @@
 
     <!-- GPS Station Choice -->
     <string name="gps_station_choice_name">&lt;u>Please choose a station&lt;/u></string>
+    <string name="gps_station_choice_station_code">Station number:&#160;</string>
     <string name="gps_station_choice_error_internet">An error occurred while retrieving the information. Please check your Internet connection and try again.</string>
     <string name="gps_station_choice_error_info">No information found.</string>
 
@@ -48,7 +49,7 @@
     <string name="gps_error_unknown">Information transfer error</string>
     <string name="gps_error_noInfo" formatted="false">There is no information about the station \"%s\"</string>
     <string name="gps_error_noBus" formatted="false">The station \"%s\" does not exist</string>
-    <string name="gps_error_noBusEmpty">The station does not exist</string>
+    <string name="gps_error_noBusEmpty">The station does not exist according to the SKGT site.</string>
     <string name="gps_error_noCoordinates">The station could not be visualized (its coordinates are not found in the database).</string>
 
     <!-- GPS GOOGLE MAPS -->
@@ -68,7 +69,6 @@
     <string name="map_gps_route_error">An Internet connection is needed to visualize the route (or there is a problem with the GoogleMaps server).</string>
     <string name="map_gps_distance_OK" formatted="false">The distance from the current position to the selected station is %s.</string>
     <string name="map_gps_distance_ERR">Please select a station.</string>
-    <string name="map_gps_location_status">Calculating the current coordinates&#8230;</string>
 
     <!-- Map GPS Help -->
     <string name="map_help_label">Help</string>
@@ -203,9 +203,20 @@
     <string name="time_arrival">Time of arrival:&#160;</string>
 
     <!-- "ERRORS" with retrieving information: "HtmlResultSumc" -->
-    <string name="error_sumc_no_info_station">There is no available information for this station. Please try again later.</string>
-    <string name="error_sumc_no_info_now">There is no available information for station \"%s\". Please try again later.</string>
-    <string name="error_sumc_no_bus_stop">The station \"%s\" doesn\'t exist.</string>
+    <string name="error_sumc_no_info_station">There is no available information for this station according to the SKGT site. 
+        Please try again later.</string>
+    <string name="error_sumc_no_info_now">There is no available information for а station \"%s\" according to the SKGT site. 
+        Please try again later.</string>
+    <string name="error_sumc_no_bus_stop">The station with \"%s\" number doesn\'t exist.</string>
     <string name="error_sumc_no_station_match">There are no matches found for \"%s\".</string>
+
+    <!-- Loading messages on progressDialogs -->
+    <string name="loading_message_retrieve_sumc_info">Processing data&#8230;</string>
+    <string name="loading_message_retrieve_sumc_catcha">Checking the CAPTCHA image&#8230;</string>
+    <string name="loading_message_preview_gps_map">Previewing GoogleMaps&#8230;</string>
+    <string name="loading_message_gps_map_location_status">Calculating the current coordinates&#8230;</string>
+    <string name="loading_message_retrieve_schedule_info">Processing schedule data&#8230;</string>
+    <string name="loading_message_preview_info_map_route">Previewing the GoogleMaps route&#8230;</string>
+    <string name="loading_message_retrieve_vehicles_numbers">Processing public transport vehicles data&#8230;</string>
 
 </resources>

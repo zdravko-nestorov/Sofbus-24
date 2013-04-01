@@ -1,6 +1,8 @@
 package bg.znestorov.sofbus24.main;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.ListActivity;
@@ -70,6 +72,30 @@ public class VirtualBoardsMapStationChoice extends ListActivity {
 				errorLabel.setText(Html.fromHtml(String
 						.format(getString(R.string.gps_station_choice_name))));
 				errorLabel.setTypeface(null, Typeface.BOLD);
+
+				Collections.sort(station_list, new Comparator<GPSStation>() {
+					public int compare(GPSStation gpsStation1,
+							GPSStation gpsStation2) {
+						// Get first station distance
+						String gpsStation1Distance = gpsStation1
+								.getTime_stamp();
+
+						// Get second station distance
+						String gpsStation2Distance = gpsStation2
+								.getTime_stamp();
+
+						// Compare vehicles' numbers
+						try {
+							return Double
+									.valueOf(gpsStation1Distance)
+									.compareTo(
+											Double.valueOf(gpsStation2Distance));
+						} catch (NumberFormatException e) {
+							return 0;
+						}
+					}
+				});
+
 				setListAdapter(new VBMapStationChoiceAdapter(context,
 						station_list));
 			} else {

@@ -112,7 +112,8 @@ public class HtmlRequestSumc {
 
 		// Making HttpRequest and showing a progress dialog
 		ProgressDialog progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage("Loading...");
+		progressDialog.setMessage(context
+				.getString(R.string.loading_message_retrieve_sumc_info));
 		LoadingSumc loadingSumc = new LoadingSumc(context, progressDialog,
 				client, stationCode, stationCodeO, null, null);
 		loadingSumc.execute();
@@ -226,7 +227,9 @@ public class HtmlRequestSumc {
 				if (captchaId != null) {
 					// Making HttpRequest and showing a progress dialog
 					ProgressDialog progressDialog = new ProgressDialog(context);
-					progressDialog.setMessage("Loading...");
+					progressDialog
+							.setMessage(context
+									.getString(R.string.loading_message_retrieve_sumc_info));
 					LoadingCaptcha loadingCaptcha = new LoadingCaptcha(context,
 							progressDialog, client, stationCode, stationCodeO,
 							captchaId);
@@ -355,7 +358,8 @@ public class HtmlRequestSumc {
 
 		// Making HttpRequest and showing a progress dialog
 		ProgressDialog progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage("Loading...");
+		progressDialog.setMessage(context
+				.getString(R.string.loading_message_retrieve_sumc_catcha));
 		LoadingSumc loadingSumc = new LoadingSumc(context, progressDialog,
 				client, stationCode, stationCodeO, captchaText, captchaId);
 		loadingSumc.execute();
@@ -408,13 +412,6 @@ public class HtmlRequestSumc {
 
 					intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
 					context.startActivity(intent);
-					if (VirtualBoardsStationChoice.countStarts == 1
-							&& context
-									.getClass()
-									.toString()
-									.equals("class bg.znestorov.sofbus24.main.VirtualBoardsStationChoice")) {
-						((VirtualBoardsStationChoice) context).finish();
-					}
 
 					return;
 				}

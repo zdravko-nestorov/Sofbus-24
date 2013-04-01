@@ -28,6 +28,7 @@
 
     <!-- GPS Station Choice -->
     <string name="gps_station_choice_name">&lt;u>Изберете спирка&lt;/u></string>
+    <string name="gps_station_choice_station_code">Номер на спирка:&#160;</string>
     <string name="gps_station_choice_error_internet">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
     <string name="gps_station_choice_error_info">Няма намерена информация.</string>
 
@@ -49,7 +50,7 @@
     <string name="gps_error_unknown">Грешка при трансфера на информация</string>
     <string name="gps_error_noInfo" formatted="false">Няма информация за спирка \"%s\"</string>
     <string name="gps_error_noBus" formatted="false">Спирката \"%s\" не съществува</string>
-    <string name="gps_error_noBusEmpty">Спирката не съществува</string>
+    <string name="gps_error_noBusEmpty">Според сайта за градска мобилност, не съществува такава спирка.</string>
     <string name="gps_error_noCoordinates">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
 
     <!-- GPS GOOGLE MAPS -->
@@ -69,7 +70,6 @@
     <string name="map_gps_route_error">Нужна е интернет връзка, за да се визуалзира маршрута (или има проблем със сървъра на GoogleMaps).</string>
     <string name="map_gps_distance_OK" formatted="false">Разтоянието от текущата позиция до избраната от Вас спирка е %s метра.</string>
     <string name="map_gps_distance_ERR">Моля изберете спирка.</string>
-    <string name="map_gps_location_status">Изчисляване на текущите координати&#8230;</string>
 
     <!-- Map GPS Help -->
     <string name="map_help_label">Помощ</string>
@@ -207,9 +207,20 @@
     <string name="time_arrival">Времена на пристигане:&#160;</string>
 
     <!-- "ERRORS" with retrieving information: "HtmlResultSumcChoice" -->
-    <string name="error_sumc_no_info_station">В момента няма информация за тази спирка. Моля опитайте пак по-късно.</string>
-    <string name="error_sumc_no_info_now">В момента няма информация за спирка \"%s\". Моля опитайте пак по-късно.</string>
-    <string name="error_sumc_no_bus_stop">Спирката \"%s\" не съществува.</string>
+    <string name="error_sumc_no_info_station">В момента сайта за градска мобилност не предоставя информация за тази спирка. 
+        Моля опитайте пак по-късно.</string>
+    <string name="error_sumc_no_info_now">В момента сайта за градска мобилност не предоставя информация за спирка \"%s\". 
+        Моля опитайте пак по-късно.</string>
+    <string name="error_sumc_no_bus_stop">Спирка с номер \"%s\" не съществува.</string>
     <string name="error_sumc_no_station_match">Няма намерени съвпадения за \"%s\".</string>
+
+    <!-- Loading messages on progressDialogs -->
+    <string name="loading_message_retrieve_sumc_info">Извличане времената на пристигане&#8230;</string>
+    <string name="loading_message_retrieve_sumc_catcha">Проверка на CAPTCHA изображението&#8230;</string>
+    <string name="loading_message_preview_gps_map">Визуализиране на картата GoogleMaps&#8230;</string>
+    <string name="loading_message_gps_map_location_status">Изчисляване на текущите координати&#8230;</string>
+    <string name="loading_message_retrieve_schedule_info">Извличане на времената от разписанията&#8230;</string>
+    <string name="loading_message_preview_info_map_route">Визуализиране на маршрута върху картата GoogleMaps&#8230;</string>
+    <string name="loading_message_retrieve_vehicles_numbers">Извличане на информация за колите на градския транспорт&#8230;</string>
 
 </resources>
