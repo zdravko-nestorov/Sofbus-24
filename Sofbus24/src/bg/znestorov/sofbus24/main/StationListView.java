@@ -160,6 +160,8 @@ public class StationListView extends ListActivity {
 		case R.id.st_list_gps:
 			new HtmlRequestSumc().getInformation(StationListView.this,
 					stationCode, Constants.SCHEDULE_GPS_PARAM, null);
+
+			Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.st_list_fav:
 			datasource.open();

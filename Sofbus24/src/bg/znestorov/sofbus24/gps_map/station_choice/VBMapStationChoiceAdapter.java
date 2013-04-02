@@ -5,15 +5,20 @@ import java.util.List;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 
 // Class for creating the vehicles ListView
 public class VBMapStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 
+	private final FavouritesDataSource datasource;
 	private final Context context;
 	private final List<GPSStation> stations;
 
@@ -21,6 +26,7 @@ public class VBMapStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 		super(context, R.layout.activity_gps_station_choice, stations);
 		this.context = context;
 		this.stations = stations;
+		this.datasource = new FavouritesDataSource(this.context);
 	}
 
 	// Creating the elements of the ListView
@@ -49,11 +55,48 @@ public class VBMapStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 		TextView stationDistance = (TextView) rowView
 				.findViewById(R.id.station_distance);
 
-		stationInfo.setText(station.getName() + " (" + station.getId() + ")");
+		// Create final variable for GPSStation, so can be used in
+		// onClickListener
+		final GPSStation gpsStation = station;
+		final ImageView stationFavorites = (ImageView) rowView
+				.findViewById(R.id.station_favorite);
+
+		// Set image on the imageView
+		datasource.open();
+		if (datasource.getStation(gpsStation) == null) {
+			stationFavorites.setImageResource(R.drawable.favorites_empty);
+		} else {
+			stationFavorites.setImageResource(R.drawable.favorites_full);
+		}
+		datasource.close();
+
+		stationInfo.setText(gpsStation.getName() + " (" + gpsStation.getId()
+				+ ")");
 		stationDistance.setText(context
 				.getString(R.string.gps_map_station_choice_distance)
-				+ station.getTime_stamp()
+				+ gpsStation.getTime_stamp()
 				+ context.getString(R.string.gps_map_station_choice_meters));
+
+		// Set onClick listener
+		stationFavorites.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				datasource.open();
+				if (datasource.getStation(gpsStation) == null) {
+					datasource.createStation(gpsStation);
+					stationFavorites
+							.setImageResource(R.drawable.favorites_full);
+					Toast.makeText(context, R.string.toast_favorites_add,
+							Toast.LENGTH_SHORT).show();
+				} else {
+					datasource.deleteStation(gpsStation);
+					stationFavorites
+							.setImageResource(R.drawable.favorites_empty);
+					Toast.makeText(context, R.string.toast_favorites_remove,
+							Toast.LENGTH_SHORT).show();
+				}
+				datasource.close();
+			}
+		});
 
 		return rowView;
 	}

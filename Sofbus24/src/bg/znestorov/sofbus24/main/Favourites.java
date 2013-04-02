@@ -107,18 +107,32 @@ public class Favourites extends ListActivity {
 				station = (GPSStation) getListAdapter().getItem(0);
 				datasource.deleteStation(station);
 				adapter.remove(station);
+				Toast.makeText(context, R.string.toast_favorites_remove,
+						Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(context, R.string.toast_favorites_no_stations,
+						Toast.LENGTH_SHORT).show();
 			}
+
 			break;
 		case R.id.menu_delete_all:
 			GPSStation station = new GPSStation();
 			int list_size = getListAdapter().getCount();
 
-			for (int i = 0; i < list_size; i++) {
-				station = (GPSStation) getListAdapter().getItem(0);
-				datasource.deleteStation(station);
-				adapter.remove(station);
-				adapter.notifyDataSetChanged();
+			if (list_size > 0) {
+				for (int i = 0; i < list_size; i++) {
+					station = (GPSStation) getListAdapter().getItem(0);
+					datasource.deleteStation(station);
+					adapter.remove(station);
+					adapter.notifyDataSetChanged();
+				}
+				Toast.makeText(context, R.string.toast_favorites_remove_all,
+						Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(context, R.string.toast_favorites_no_stations,
+						Toast.LENGTH_SHORT).show();
 			}
+
 			break;
 		}
 
@@ -180,6 +194,11 @@ public class Favourites extends ListActivity {
 
 							datasource.createStation(station);
 							adapter.add(station);
+
+							// Show toast message
+							Toast.makeText(context,
+									R.string.toast_station_rename,
+									Toast.LENGTH_SHORT).show();
 						}
 					});
 
@@ -225,6 +244,8 @@ public class Favourites extends ListActivity {
 					(int) info.id);
 			datasource.deleteStation(station);
 			adapter.remove(station);
+			Toast.makeText(context, R.string.toast_favorites_remove,
+					Toast.LENGTH_SHORT).show();
 			break;
 		}
 

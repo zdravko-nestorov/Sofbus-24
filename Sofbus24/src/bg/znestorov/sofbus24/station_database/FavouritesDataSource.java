@@ -139,7 +139,7 @@ public class FavouritesDataSource {
 				whereArgs);
 	}
 
-	// Get all stations from the database
+	// Get a station from the database
 	public GPSStation getStation(GPSStation gpsStation) {
 		// Selecting the row that contains the station data
 		Cursor cursor = database.query(FavouritesSQLite.TABLE_FAVOURITES,

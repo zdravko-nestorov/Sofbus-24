@@ -219,4 +219,14 @@
     <string name="loading_message_preview_info_map_route">Previewing the GoogleMaps route&#8230;</string>
     <string name="loading_message_retrieve_vehicles_numbers">Processing public transport vehicles data&#8230;</string>
 
+    <!-- TOAST MESSAGES -->
+    <!-- Favorites messages -->
+    <string name="toast_favorites_add">The station was successfully added to Favorites.</string>
+    <string name="toast_favorites_remove">The station was successfully removed from Favorites.</string>
+    <string name="toast_favorites_remove_first">The first station was successfully removed from Favorites.</string>
+    <string name="toast_favorites_remove_all">All stations were successfully removed from Favorites.</string>
+    <string name="toast_favorites_no_stations">There are no stations in Favorites section.</string>
+    <!-- Rename message -->
+    <string name="toast_station_rename">The station was successfully renamed.</string>
+
 </resources>
