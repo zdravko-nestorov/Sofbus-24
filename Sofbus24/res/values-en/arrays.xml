@@ -1,5 +1,29 @@
 <resources>
 
+    <!-- Home Screen Choice -->
+    <string-array name="versionChoice">
+        <item name="version_1">Version 1</item>
+        <item name="version_2">Version 2</item>
+    </string-array>
+
+    <!-- GPS Google Maps button (functionality) -->
+    <string-array name="gpsMapFunct">
+        <item name="funct_1">Google Maps</item>
+        <item name="funct_2">List</item>
+    </string-array>
+
+    <!-- Virtual Boards Time -->
+    <string-array name="timeGPS">
+        <item name="timeGPS_remaining">Remaining time</item>
+        <item name="timeGPS_arrival">Time of arrival</item>
+    </string-array>
+
+    <!-- Schedule Time -->
+    <string-array name="timeSchedule">
+        <item name="timeSchedule_remaining">Remaining time</item>
+        <item name="timeSchedule_arrival">Time of arrival</item>
+    </string-array>
+
     <!-- Closest stations -->
     <string-array name="closestStations">
         <item name="6">6 stations</item>
@@ -15,16 +39,10 @@
         <item name="time_real">System time</item>
     </string-array>
 
-    <!-- Home Screen Choice -->
-    <string-array name="versionChoice">
-        <item name="version_1">Version 1</item>
-        <item name="version_2">Version 2</item>
-    </string-array>
-
-    <!-- GPS Google Maps button (functionality) -->
-    <string-array name="gpsMapFunct">
-        <item name="funct_1">Google Maps</item>
-        <item name="funct_2">List</item>
+    <!-- GoogleMaps view (satellite or street view) -->
+    <string-array name="mapSatellite">
+        <item name="map_satellite">Satellite map</item>
+        <item name="map_street">Street View map</item>
     </string-array>
 
 </resources>

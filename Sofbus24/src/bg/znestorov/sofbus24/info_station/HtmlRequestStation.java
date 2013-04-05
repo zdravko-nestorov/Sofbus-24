@@ -1,6 +1,7 @@
 package bg.znestorov.sofbus24.info_station;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -38,7 +40,7 @@ public class HtmlRequestStation {
 	}
 
 	// Getting the source file of the HTTP request
-	public String getInformation() {
+	public String getInformation(HttpGet httpGet) {
 		String htmlResult = null;
 
 		try {
@@ -47,11 +49,13 @@ public class HtmlRequestStation {
 			// Set the timeout in milliseconds until a connection is
 			// established.
 			HttpConnectionParams.setConnectionTimeout(httpParameters,
-					Constants.TIMEOUT_CONNECTION);
+					Constants.GLOBAL_TIMEOUT_CONNECTION);
 			// Set the default socket timeout (SO_TIMEOUT)
 			// in milliseconds which is the timeout for waiting for data.
 			HttpConnectionParams.setSoTimeout(httpParameters,
-					Constants.TIMEOUT_SOCKET);
+					Constants.GLOBAL_TIMEOUT_SOCKET);
+			ConnManagerParams.setTimeout(httpParameters,
+					Constants.GLOBAL_TIMEOUT_SOCKET);
 
 			// Creating ThreadSafeClientConnManager
 			SchemeRegistry schemeRegistry = new SchemeRegistry();
@@ -65,10 +69,7 @@ public class HtmlRequestStation {
 
 			// HTTP Client - created once and using cookies
 			DefaultHttpClient client = new DefaultHttpClient(cm, httpParameters);
-
-			HttpGet request = new HttpGet();
-			request.setURI(new URI(createURL()));
-			htmlResult = client.execute(request, new BasicResponseHandler());
+			htmlResult = client.execute(httpGet, new BasicResponseHandler());
 			client.getConnectionManager().shutdown();
 		} catch (Exception e) {
 			htmlResult = null;
@@ -76,6 +77,14 @@ public class HtmlRequestStation {
 		}
 
 		return htmlResult;
+	}
+
+	// Create CAPTCHA HTTPGet request
+	public HttpGet createStationRequest() throws URISyntaxException {
+		HttpGet httpGet = new HttpGet();
+		httpGet.setURI(new URI(createURL()));
+
+		return httpGet;
 	}
 
 	// Creating the URL

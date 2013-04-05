@@ -17,6 +17,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -89,11 +90,12 @@ public class HtmlRequestSumc {
 		HttpParams httpParameters = new BasicHttpParams();
 		// Set the timeout in milliseconds until a connection is established
 		HttpConnectionParams.setConnectionTimeout(httpParameters,
-				Constants.TIMEOUT_CONNECTION);
+				Constants.GLOBAL_TIMEOUT_CONNECTION);
 		// Set the default socket timeout (SO_TIMEOUT)
 		// in milliseconds which is the timeout for waiting for data
 		HttpConnectionParams.setSoTimeout(httpParameters,
-				Constants.TIMEOUT_SOCKET);
+				Constants.GLOBAL_TIMEOUT_SOCKET);
+		ConnManagerParams.setTimeout(httpParameters, Constants.GLOBAL_TIMEOUT_SOCKET);
 
 		// Creating ThreadSafeClientConnManager
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
@@ -172,7 +174,7 @@ public class HtmlRequestSumc {
 	}
 
 	// Adding the User-Agent, the Referrer and the parameters to the HttpPost
-	private static HttpPost createRequest(String stationCode,
+	private static HttpPost createSumcRequest(String stationCode,
 			String stationCodeO, String captchaText, String captchaId) {
 		final HttpPost result = new HttpPost(Constants.VB_URL);
 		result.addHeader("User-Agent", Constants.USER_AGENT);
@@ -267,15 +269,8 @@ public class HtmlRequestSumc {
 	}
 
 	// Get the image from URL
-	private static Bitmap getCaptchaImage(HttpClient client, String captchaId)
-			throws ClientProtocolException, IOException {
-		final HttpGet request = new HttpGet(String.format(
-				Constants.CAPTCHA_IMAGE, captchaId));
-		request.addHeader("User-Agent", Constants.USER_AGENT);
-		request.addHeader("Referer", Constants.REFERER);
-		request.getParams().setBooleanParameter(
-				CoreProtocolPNames.USE_EXPECT_CONTINUE, true);
-
+	private static Bitmap getCaptchaImage(HttpClient client, HttpGet request,
+			String captchaId) throws ClientProtocolException, IOException {
 		final HttpResponse response = client.execute(request);
 
 		final HttpEntity entity = response.getEntity();
@@ -296,6 +291,19 @@ public class HtmlRequestSumc {
 		Bitmap sumcBitmap = BitmapFactory.decodeByteArray(result, 0,
 				result.length);
 		return Bitmap.createScaledBitmap(sumcBitmap, 180, 60, false);
+	}
+
+	// Create CAPTCHA HTTPGet request
+	private static HttpGet createCaptchaRequest(String captchaId)
+			throws ClientProtocolException, IOException {
+		final HttpGet request = new HttpGet(String.format(
+				Constants.CAPTCHA_IMAGE, captchaId));
+		request.addHeader("User-Agent", Constants.USER_AGENT);
+		request.addHeader("Referer", Constants.REFERER);
+		request.getParams().setBooleanParameter(
+				CoreProtocolPNames.USE_EXPECT_CONTINUE, true);
+
+		return request;
 	}
 
 	// Showing an AlertDialog to enter the CAPTCHA text
@@ -495,6 +503,9 @@ public class HtmlRequestSumc {
 		String captchaText;
 		String captchaId;
 
+		// Http Post parameter used to create/abort the HTTP connection
+		HttpPost httpPost;
+
 		public LoadingSumc(Context context, ProgressDialog progressDialog,
 				DefaultHttpClient client, String stationCode,
 				String stationCodeO, String captchaText, String captchaId) {
@@ -509,7 +520,14 @@ public class HtmlRequestSumc {
 
 		@Override
 		protected void onPreExecute() {
-			progressDialog.setCancelable(false);
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						public void onCancel(DialogInterface dialog) {
+							cancel(true);
+						}
+					});
 			progressDialog.show();
 		}
 
@@ -518,9 +536,9 @@ public class HtmlRequestSumc {
 			String htmlSourceCode = null;
 
 			try {
-				final HttpPost request = createRequest(stationCode,
-						stationCodeO, captchaText, captchaId);
-				htmlSourceCode = client.execute(request,
+				httpPost = createSumcRequest(stationCode, stationCodeO,
+						captchaText, captchaId);
+				htmlSourceCode = client.execute(httpPost,
 						new BasicResponseHandler());
 			} catch (Exception e) {
 				Log.e(TAG, "Could not get data for station " + stationCode, e);
@@ -542,6 +560,14 @@ public class HtmlRequestSumc {
 						result);
 			}
 		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+
+			progressDialog.dismiss();
+			httpPost.abort();
+		}
 	}
 
 	private class LoadingCaptcha extends AsyncTask<Void, Void, Bitmap> {
@@ -551,6 +577,9 @@ public class HtmlRequestSumc {
 		String stationCode;
 		String stationCodeO;
 		String captchaId;
+
+		// Http Get parameter used to create/abort the HTTP connection
+		HttpGet httpGet;
 
 		public LoadingCaptcha(Context context, ProgressDialog progressDialog,
 				DefaultHttpClient client, String stationCode,
@@ -565,7 +594,14 @@ public class HtmlRequestSumc {
 
 		@Override
 		protected void onPreExecute() {
-			progressDialog.setCancelable(false);
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						public void onCancel(DialogInterface dialog) {
+							cancel(true);
+						}
+					});
 			progressDialog.show();
 		}
 
@@ -573,7 +609,8 @@ public class HtmlRequestSumc {
 		protected Bitmap doInBackground(Void... params) {
 			Bitmap captchaImage;
 			try {
-				captchaImage = getCaptchaImage(client, captchaId);
+				httpGet = createCaptchaRequest(captchaId);
+				captchaImage = getCaptchaImage(client, httpGet, captchaId);
 			} catch (Exception e) {
 				captchaImage = null;
 			}
@@ -592,6 +629,14 @@ public class HtmlRequestSumc {
 				startNewActivity(client, context, stationCode, stationCodeO,
 						Constants.SUMC_HTML_ERROR_MESSAGE);
 			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+
+			progressDialog.dismiss();
+			httpGet.abort();
 		}
 	}
 }

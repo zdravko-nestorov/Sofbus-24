@@ -139,8 +139,8 @@
     <string name="common_language_summary">Избор на език</string>
     <string name="pref_category_home_screen">НАЧАЛЕН ЕКРАН</string>
     <string name="home_screen_gps_map_title">Бутон \"GPS Google Maps\"</string>
-    <string name="home_screen_gps_map_summary">Избор на функционалност на бутона \"GPS Времена Google Maps\" (начален екран)</string>
-    <string name="home_screen_exit_title">Съобщение при изход</string>
+    <string name="home_screen_gps_map_summary">Избор на функционалност на бутона \"GPS Времена Google Maps\"</string>
+    <string name="home_screen_exit_title">Бутон \"Изход\"</string>
     <string name="home_screen_exit_summary">Използване на диалогов прозорец при изход</string>
     <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
     <string name="stations_timeGPS_title">Виртуални табла</string>
@@ -152,8 +152,8 @@
     <string name="stations_timeInfoRetrieval_title">Извлечена информация</string>
     <string name="stations_timeInfoRetrieval_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация (Виртуални табла)</string>
     <string name="pref_category_map">КАРТА</string>
-    <string name="map_satellite_title">Сателитна карта</string>
-    <string name="map_satellite_summary">(или Street View карта)</string>
+    <string name="map_satellite_title">Изглед на картата</string>
+    <string name="map_satellite_summary">Сателитна или Street View карта</string>
     <string name="map_compass_title">Компас</string>
     <string name="map_compass_summary">Покажи стрелка за ориентация на посоката (в GPS GoogleMaps)</string>
     <string name="map_mapView_title">Режим на картата</string>

@@ -9,8 +9,8 @@ public class Constants {
 	public static final String GLOBAL_PARAM_EMPTY = "EMPTY";
 	public static final String GLOBAL_PARAM_SOFIA_CENTER_LATITUDE = "42.696492";
 	public static final String GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE = "23.326011";
-	public static final int TIMEOUT_CONNECTION = 5000;
-	public static final int TIMEOUT_SOCKET = 8000;
+	public static final int GLOBAL_TIMEOUT_CONNECTION = 4000;
+	public static final int GLOBAL_TIMEOUT_SOCKET = 7000;
 
 	// EXTRA KEYWORDS USED FOR TRANSFERING INFORMATION BETWEEEN ACTIVITIES
 	// HtmlRequestSumc -> VirtualBoards/VirtualBoardsStationChoice
@@ -219,28 +219,28 @@ public class Constants {
 	// PARAMS WHICH INDICATE THE DIFFERENT USER SETTINGS
 	// (CLASS: Preferences)
 	// Preferences constants
-	public static final String PREFERENCE_KEY_TIME_INFO_RETRIEVAL = "timeInfoRetrieval";
-	public static final String PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL = "time_skgt";
-	public static final String PREFERENCE_KEY_TIME_GPS = "timeGPS";
-	public static final boolean PREFERENCE_DEFAULT_VALUE_TIME_GPS = true;
-	public static final String PREFERENCE_KEY_TIME_SCHEDULE = "timeSchedule";
-	public static final boolean PREFERENCE_DEFAULT_VALUE_TIME_SCHEDULE = true;
 	public static final String PREFERENCE_KEY_HOME_SCREEN = "homeScreen";
 	public static final String PREFERENCE_DEFAULT_VALUE_HOME_SCREEN = "version_2";
-	public static final String PREFERENCE_KEY_EXIT_ALERT = "exitAlert";
-	public static final boolean PREFERENCE_DEFAULT_VALUE_EXIT_ALERT = false;
-	public static final String PREFERENCE_KEY_SATELLITE = "satellite";
-	public static final boolean PREFERENCE_DEFAULT_VALUE_SATELLITE = false;
-	public static final String PREFERENCE_KEY_MAP_VIEW = "mapView";
-	public static final boolean PREFERENCE_DEFAULT_VALUE_MAP_VIEW = true;
-	public static final String PREFERENCE_KEY_COMPASS = "compass";
-	public static final boolean PREFERENCE_DEFAULT_VALUE_COMPASS = false;
-	public static final String PREFERENCE_KEY_CLOSEST_STATIONS = "closestStations";
-	public static final String PREFERENCE_DEFAULT_VALUE_CLOSEST_STATIONS = "8";
 	public static final String PREFERENCE_KEY_LANGUAGE = "language";
 	public static final String PREFERENCE_DEFAULT_VALUE_LANGUAGE = "bg";
-	public static final String PREFERENCE_KEY_POSITION = "position";
-	public static final boolean PREFERENCE_DEFAULT_VALUE_POSITION = false;
 	public static final String PREFERENCE_KEY_GPS_MAP_FUNCT = "gpsMapFunct";
 	public static final String PREFERENCE_DEFAULT_VALUE_GPS_MAP_FUNCT = "funct_1";
+	public static final String PREFERENCE_KEY_EXIT_ALERT = "exitAlert";
+	public static final boolean PREFERENCE_DEFAULT_VALUE_EXIT_ALERT = false;
+	public static final String PREFERENCE_KEY_TIME_GPS = "timeGPS";
+	public static final String PREFERENCE_DEFAULT_VALUE_TIME_GPS = "timeGPS_remaining";
+	public static final String PREFERENCE_KEY_TIME_SCHEDULE = "timeSchedule";
+	public static final String PREFERENCE_DEFAULT_VALUE_TIME_SCHEDULE = "timeSchedule_remaining";
+	public static final String PREFERENCE_KEY_CLOSEST_STATIONS = "closestStations";
+	public static final String PREFERENCE_DEFAULT_VALUE_CLOSEST_STATIONS = "8";
+	public static final String PREFERENCE_KEY_TIME_INFO_RETRIEVAL = "timeInfoRetrieval";
+	public static final String PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL = "time_skgt";
+	public static final String PREFERENCE_KEY_SATELLITE = "satellite";
+	public static final String PREFERENCE_DEFAULT_VALUE_SATELLITE = "map_satellite";
+	public static final String PREFERENCE_KEY_COMPASS = "compass";
+	public static final boolean PREFERENCE_DEFAULT_VALUE_COMPASS = false;
+	public static final String PREFERENCE_KEY_MAP_VIEW = "mapView";
+	public static final boolean PREFERENCE_DEFAULT_VALUE_MAP_VIEW = true;
+	public static final String PREFERENCE_KEY_POSITION = "position";
+	public static final boolean PREFERENCE_DEFAULT_VALUE_POSITION = false;
 }

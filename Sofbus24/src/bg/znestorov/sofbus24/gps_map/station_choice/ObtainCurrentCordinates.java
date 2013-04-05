@@ -27,7 +27,7 @@ import com.google.android.maps.GeoPoint;
 public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> {
 
 	private Context context;
-	private ProgressDialog progressDailog;
+	private ProgressDialog progressDialog;
 
 	// Default latitude and longitude
 	private double latitude = 0.0;
@@ -67,29 +67,29 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 				0, 0, mVeggsterLocationListener);
 
 		// Create progress dialog showing the loading message
-		progressDailog = new ProgressDialog(context);
-		progressDailog.setOnCancelListener(new OnCancelListener() {
+		progressDialog = new ProgressDialog(context);
+		progressDialog.setOnCancelListener(new OnCancelListener() {
 			public void onCancel(DialogInterface dialog) {
 				ObtainCurrentCordinates.this.cancel(true);
 			}
 		});
-		progressDailog.setMessage(context
+		progressDialog.setMessage(context
 				.getString(R.string.loading_message_gps_map_location_status));
-		progressDailog.setIndeterminate(true);
-		progressDailog.setCancelable(true);
-		progressDailog.show();
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCancelable(true);
+		progressDialog.show();
 
 	}
 
 	@Override
 	protected void onCancelled() {
-		progressDailog.dismiss();
+		progressDialog.dismiss();
 		mLocationManager.removeUpdates(mVeggsterLocationListener);
 	}
 
 	@Override
 	protected void onPostExecute(String result) {
-		progressDailog.dismiss();
+		progressDialog.dismiss();
 
 		// Getting a list with the closest stations
 		List<GPSStation> station_list = getClosestStations();

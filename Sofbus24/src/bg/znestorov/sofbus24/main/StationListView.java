@@ -5,6 +5,8 @@ import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
 import java.util.ArrayList;
 
+import org.apache.http.client.methods.HttpGet;
+
 import android.R.drawable;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -191,6 +193,9 @@ public class StationListView extends ListActivity {
 		Station station;
 		String stationCode;
 
+		// Http Get parameter used to create/abort the HTTP connection
+		HttpGet httpGet;
+
 		public LoadStationAsyncTask(Context context,
 				ProgressDialog progressDialog, Station station,
 				String stationCode) {
@@ -202,15 +207,29 @@ public class StationListView extends ListActivity {
 
 		@Override
 		protected void onPreExecute() {
-			progressDialog.setCancelable(false);
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						public void onCancel(DialogInterface dialog) {
+							cancel(true);
+						}
+					});
 			progressDialog.show();
 		}
 
 		@Override
 		protected String doInBackground(Void... params) {
-			HtmlRequestStation htmlRequestStation = new HtmlRequestStation(
-					station);
-			String htmlResult = htmlRequestStation.getInformation();
+			String htmlResult = null;
+
+			try {
+				HtmlRequestStation htmlRequestStation = new HtmlRequestStation(
+						station);
+				httpGet = htmlRequestStation.createStationRequest();
+				htmlResult = htmlRequestStation.getInformation(httpGet);
+			} catch (Exception e) {
+				htmlResult = null;
+			}
 
 			return htmlResult;
 		}
@@ -273,6 +292,14 @@ public class StationListView extends ListActivity {
 									}
 								}).show();
 			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+
+			progressDialog.dismiss();
+			httpGet.abort();
 		}
 	}
 }

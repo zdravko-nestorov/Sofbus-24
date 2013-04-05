@@ -4,6 +4,7 @@ import static bg.znestorov.sofbus24.utils.Utils.getValueAfter;
 import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class HtmlRequestDirection {
 	}
 
 	// Getting the source file of the HTTP request
-	public String getInformation() {
+	public String getInformation(HttpGet httpGet) {
 		String htmlResult = null;
 
 		try {
@@ -63,11 +64,11 @@ public class HtmlRequestDirection {
 			// Set the timeout in milliseconds until a connection is
 			// established.
 			HttpConnectionParams.setConnectionTimeout(httpParameters,
-					Constants.TIMEOUT_CONNECTION);
+					Constants.GLOBAL_TIMEOUT_CONNECTION);
 			// Set the default socket timeout (SO_TIMEOUT)
 			// in milliseconds which is the timeout for waiting for data.
 			HttpConnectionParams.setSoTimeout(httpParameters,
-					Constants.TIMEOUT_SOCKET);
+					Constants.GLOBAL_TIMEOUT_SOCKET);
 
 			// Creating ThreadSafeClientConnManager
 			SchemeRegistry schemeRegistry = new SchemeRegistry();
@@ -81,10 +82,7 @@ public class HtmlRequestDirection {
 
 			// HTTP Client - created once and using cookies
 			DefaultHttpClient client = new DefaultHttpClient(cm, httpParameters);
-
-			HttpGet request = new HttpGet();
-			request.setURI(new URI(createURL()));
-			htmlResult = client.execute(request, new BasicResponseHandler());
+			htmlResult = client.execute(httpGet, new BasicResponseHandler());
 			client.getConnectionManager().shutdown();
 		} catch (Exception e) {
 			htmlResult = null;
@@ -92,6 +90,14 @@ public class HtmlRequestDirection {
 		}
 
 		return htmlResult;
+	}
+
+	// Create CAPTCHA HTTPGet request
+	public HttpGet createDirectionRequest() throws URISyntaxException {
+		HttpGet httpGet = new HttpGet();
+		httpGet.setURI(new URI(createURL()));
+
+		return httpGet;
 	}
 
 	// Creating the URL

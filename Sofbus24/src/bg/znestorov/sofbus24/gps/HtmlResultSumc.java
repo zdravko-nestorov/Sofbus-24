@@ -198,11 +198,12 @@ public class HtmlResultSumc {
 		}
 
 		// Get "exitAlert" value from the Shared Preferences
-		boolean timeGPS = sharedPreferences.getBoolean(
+		String timeGPS = sharedPreferences.getString(
 				Constants.PREFERENCE_KEY_TIME_GPS,
 				Constants.PREFERENCE_DEFAULT_VALUE_TIME_GPS);
 
-		if (timeStamp != null && !"".equals(timeStamp) && timeGPS) {
+		if (timeStamp != null && !"".equals(timeStamp)
+				&& "timeGPS_remaining".equals(timeGPS)) {
 			String[] tempTimeStamp = timeStamp.split(",");
 			String[] tempTimeStampAM = new String[tempTimeStamp.length];
 			int br = 0;

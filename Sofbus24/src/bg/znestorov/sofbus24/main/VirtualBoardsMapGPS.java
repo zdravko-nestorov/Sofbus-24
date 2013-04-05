@@ -251,11 +251,11 @@ public class VirtualBoardsMapGPS extends MapActivity {
 
 		// Set default map view
 		// Get "exitAlert" value from the Shared Preferences
-		boolean satellitePref = sharedPreferences.getBoolean(
+		String satellitePref = sharedPreferences.getString(
 				Constants.PREFERENCE_KEY_SATELLITE,
 				Constants.PREFERENCE_DEFAULT_VALUE_SATELLITE);
 
-		if (satellitePref) {
+		if ("map_satellite".equals(satellitePref)) {
 			mapView.setSatellite(true);
 		} else {
 			mapView.setSatellite(false);

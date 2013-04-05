@@ -20,22 +20,37 @@ public final class R {
         /**  Closest stations 
  Closest stations 
          */
-        public static final int closestStations=0x7f060006;
-        public static final int closestStationsValues=0x7f060007;
+        public static final int closestStations=0x7f060010;
+        public static final int closestStationsValues=0x7f060011;
         /**  GPS Google Maps button (functionality) 
  GPS Google Maps button (functionality) 
          */
-        public static final int gpsMapFunct=0x7f06000e;
-        public static final int gpsMapFunctValues=0x7f06000f;
+        public static final int gpsMapFunct=0x7f06000a;
+        public static final int gpsMapFunctValues=0x7f06000b;
         /**  Language 
          */
-        public static final int languagenChoice=0x7f06000c;
-        public static final int languagenChoiceValues=0x7f06000d;
+        public static final int languagenChoice=0x7f060008;
+        public static final int languagenChoiceValues=0x7f060009;
+        /**  GoogleMaps view (satellite or street view) 
+ GoogleMaps view (satellite or street view) 
+         */
+        public static final int mapSatellite=0x7f060014;
+        public static final int mapSatelliteValues=0x7f060015;
+        /**  Virtual Boards Time 
+ Virtual Boards Time 
+         */
+        public static final int timeGPS=0x7f06000c;
+        public static final int timeGPSValues=0x7f06000d;
         /**  Virtual Borads (Information retrieval time) 
  Virtual Borads (Information retrieval time) 
          */
-        public static final int timeInfoRetrieval=0x7f060008;
-        public static final int timeInfoRetrievalValues=0x7f060009;
+        public static final int timeInfoRetrieval=0x7f060012;
+        public static final int timeInfoRetrievalValues=0x7f060013;
+        /**  Schedule Time 
+ Schedule Time 
+         */
+        public static final int timeSchedule=0x7f06000e;
+        public static final int timeScheduleValues=0x7f06000f;
         /**  TRAM STUFF 
          */
         public static final int tram_numbers=0x7f060004;
@@ -47,8 +62,8 @@ public final class R {
         /**  Home Screen Choice 
  Home Screen Choice 
          */
-        public static final int versionChoice=0x7f06000a;
-        public static final int versionChoiceValues=0x7f06000b;
+        public static final int versionChoice=0x7f060006;
+        public static final int versionChoiceValues=0x7f060007;
     }
     public static final class attr {
     }

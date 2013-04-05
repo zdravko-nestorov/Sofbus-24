@@ -114,12 +114,12 @@ public class GPSStationAdapter extends ArrayAdapter<GPSStation> implements
 				.getDefaultSharedPreferences(this.context);
 
 		// Get "exitAlert" value from the Shared Preferences
-		boolean time = sharedPreferences.getBoolean(
+		String timeGPS = sharedPreferences.getString(
 				Constants.PREFERENCE_KEY_TIME_GPS,
 				Constants.PREFERENCE_DEFAULT_VALUE_TIME_GPS);
 		String vehicleTimeStampText = "";
 
-		if (time) {
+		if ("timeGPS_remaining".equals(timeGPS)) {
 			vehicleTimeStampText = context.getString(R.string.time_remaining)
 					+ station.getTime_stamp();
 		} else {

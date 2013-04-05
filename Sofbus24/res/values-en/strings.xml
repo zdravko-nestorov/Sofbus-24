@@ -136,8 +136,8 @@
     <string name="common_language_summary">Select a language</string>
     <string name="pref_category_home_screen">HOME SCREEN</string>
     <string name="home_screen_gps_map_title">Button \"GPS Google Maps\"</string>
-    <string name="home_screen_gps_map_summary">Choose \"GPS Times Google Maps\" button functionality (home screen)</string>
-    <string name="home_screen_exit_title">Exit message</string>
+    <string name="home_screen_gps_map_summary">Choose \"GPS Times Google Maps\" button functionality</string>
+    <string name="home_screen_exit_title">Button \"Exit\"</string>
     <string name="home_screen_exit_summary">Using a dialog box on exit</string>
     <string name="pref_category_stations">STATION INFORMATION</string>
     <string name="stations_timeGPS_title">Virtual boards</string>
@@ -149,8 +149,8 @@
     <string name="stations_timeInfoRetrieval_title">Extracted information</string>
     <string name="stations_timeInfoRetrieval_summary">What time to be used for displaying/calculating the extracted information (Virtual boards)</string>
     <string name="pref_category_map">MAP</string>
-    <string name="map_satellite_title">Satelite map</string>
-    <string name="map_satellite_summary">(or Street View map)</string>
+    <string name="map_satellite_title">Google Maps View</string>
+    <string name="map_satellite_summary">Satellite or Street View of the map</string>
     <string name="map_compass_title">Compass</string>
     <string name="map_compass_summary">Show an orientation arrow in the upper left corner (in GPS GoogleMaps)</string>
     <string name="map_mapView_title">Map mode</string>
@@ -158,7 +158,7 @@
     <string name="map_position_title">Focus the map</string>
     <string name="map_position_summary">Focus the map when changing the current location (in GPS GoogleMaps)</string>
     <string name="pref_category_other">OTHER</string>
-    <string name="other_info_title">Information</string>
+    <string name="other_info_title">About</string>
     <string name="other_info_summary">Product information</string>
 
     <!-- About -->

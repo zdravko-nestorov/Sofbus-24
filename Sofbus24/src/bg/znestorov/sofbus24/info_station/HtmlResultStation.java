@@ -65,11 +65,12 @@ public class HtmlResultStation {
 					.getDefaultSharedPreferences(context);
 
 			// Get "exitAlert" value from the Shared Preferences
-			boolean timeSchedule = sharedPreferences.getBoolean(
+			String timeSchedule = sharedPreferences.getString(
 					Constants.PREFERENCE_KEY_TIME_SCHEDULE,
 					Constants.PREFERENCE_DEFAULT_VALUE_TIME_SCHEDULE);
 
-			if (time_stamp.size() > 0 && timeSchedule) {
+			if (time_stamp.size() > 0
+					&& "timeSchedule_remaining".equals(timeSchedule)) {
 				for (int i = 0; i < time_stamp.size(); i++) {
 					time_stamp.set(i, Utils.getDifference(context,
 							time_stamp.get(i), currTime));

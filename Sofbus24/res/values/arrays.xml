@@ -253,32 +253,6 @@
         <item>МЛАДЕЖКИ ТЕАТЪР - УЛ. ОБИКОЛНА</item>
     </array>
 
-    <!-- Closest stations -->
-    <string-array name="closestStations">
-        <item name="6">6 спирки</item>
-        <item name="7">7 спирки</item>
-        <item name="8">8 спирки</item>
-        <item name="9">9 спирки</item>
-        <item name="10">10 спирки</item>
-    </string-array>
-    <string-array name="closestStationsValues">
-        <item name="6">6</item>
-        <item name="7">7</item>
-        <item name="8">8</item>
-        <item name="9">9</item>
-        <item name="10">10</item>
-    </string-array>
-
-    <!-- Virtual Borads (Information retrieval time) -->
-    <string-array name="timeInfoRetrieval">
-        <item name="time_skgt">От сайта на СКГТ</item>
-        <item name="time_real">Системно време</item>
-    </string-array>
-    <string-array name="timeInfoRetrievalValues">
-        <item name="time_skgt">time_skgt</item>
-        <item name="time_real">time_real</item>
-    </string-array>
-
     <!-- Home Screen Choice -->
     <string-array name="versionChoice">
         <item name="version_1">Версия 1</item>
@@ -307,6 +281,62 @@
     <string-array name="gpsMapFunctValues">
         <item name="funct_1">funct_1</item>
         <item name="funct_2">funct_2</item>
+    </string-array>
+
+    <!-- Virtual Boards Time -->
+    <string-array name="timeGPS">
+        <item name="timeGPS_remaining">Оставащо време</item>
+        <item name="timeGPS_arrival">Времена на пристигане</item>
+    </string-array>
+    <string-array name="timeGPSValues">
+        <item name="timeGPS_remaining">timeGPS_remaining</item>
+        <item name="timeGPS_arrival">timeGPS_arrival</item>
+    </string-array>
+
+    <!-- Schedule Time -->
+    <string-array name="timeSchedule">
+        <item name="timeSchedule_remaining">Оставащо време</item>
+        <item name="timeSchedule_arrival">Времена на пристигане</item>
+    </string-array>
+    <string-array name="timeScheduleValues">
+        <item name="timeSchedule_remaining">timeSchedule_remaining</item>
+        <item name="timeSchedule_arrival">timeSchedule_arrival</item>
+    </string-array>
+
+    <!-- Closest stations -->
+    <string-array name="closestStations">
+        <item name="6">6 спирки</item>
+        <item name="7">7 спирки</item>
+        <item name="8">8 спирки</item>
+        <item name="9">9 спирки</item>
+        <item name="10">10 спирки</item>
+    </string-array>
+    <string-array name="closestStationsValues">
+        <item name="6">6</item>
+        <item name="7">7</item>
+        <item name="8">8</item>
+        <item name="9">9</item>
+        <item name="10">10</item>
+    </string-array>
+
+    <!-- Virtual Borads (Information retrieval time) -->
+    <string-array name="timeInfoRetrieval">
+        <item name="time_skgt">От сайта на СКГТ</item>
+        <item name="time_real">Системно време</item>
+    </string-array>
+    <string-array name="timeInfoRetrievalValues">
+        <item name="time_skgt">time_skgt</item>
+        <item name="time_real">time_real</item>
+    </string-array>
+
+    <!-- GoogleMaps view (satellite or street view) -->
+    <string-array name="mapSatellite">
+        <item name="map_satellite">Сателитна карта</item>
+        <item name="map_street">Street View карта</item>
+    </string-array>
+    <string-array name="mapSatelliteValues">
+        <item name="map_satellite">map_satellite</item>
+        <item name="map_street">map_street</item>
     </string-array>
 
 </resources>

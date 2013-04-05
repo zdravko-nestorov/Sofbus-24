@@ -2,6 +2,8 @@ package bg.znestorov.sofbus24.main;
 
 import java.util.ArrayList;
 
+import org.apache.http.client.methods.HttpGet;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -156,6 +158,9 @@ public class VehicleListView extends Activity {
 		ProgressDialog progressDialog;
 		String vehicleChoice;
 
+		// Http Get parameter used to create/abort the HTTP connection
+		HttpGet httpGet;
+
 		public LoadStationsAsyncTask(Context context,
 				ProgressDialog progressDialog, String vehicleChoice) {
 			this.context = context;
@@ -165,15 +170,29 @@ public class VehicleListView extends Activity {
 
 		@Override
 		protected void onPreExecute() {
-			progressDialog.setCancelable(false);
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						public void onCancel(DialogInterface dialog) {
+							cancel(true);
+						}
+					});
 			progressDialog.show();
 		}
 
 		@Override
 		protected String doInBackground(Void... params) {
-			HtmlRequestDirection htmlRequestDirection = new HtmlRequestDirection(
-					VehicleListView.this, vehicleChoice);
-			String htmlResult = htmlRequestDirection.getInformation();
+			String htmlResult = null;
+
+			try {
+				HtmlRequestDirection htmlRequestDirection = new HtmlRequestDirection(
+						VehicleListView.this, vehicleChoice);
+				httpGet = htmlRequestDirection.createDirectionRequest();
+				htmlResult = htmlRequestDirection.getInformation(httpGet);
+			} catch (Exception e) {
+				htmlResult = null;
+			}
 
 			return htmlResult;
 		}
@@ -237,6 +256,14 @@ public class VehicleListView extends Activity {
 									}
 								}).show();
 			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+
+			progressDialog.dismiss();
+			httpGet.abort();
 		}
 	}
 
