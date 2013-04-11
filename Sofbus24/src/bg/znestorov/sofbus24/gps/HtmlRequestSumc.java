@@ -95,7 +95,8 @@ public class HtmlRequestSumc {
 		// in milliseconds which is the timeout for waiting for data
 		HttpConnectionParams.setSoTimeout(httpParameters,
 				Constants.GLOBAL_TIMEOUT_SOCKET);
-		ConnManagerParams.setTimeout(httpParameters, Constants.GLOBAL_TIMEOUT_SOCKET);
+		ConnManagerParams.setTimeout(httpParameters,
+				Constants.GLOBAL_TIMEOUT_SOCKET);
 
 		// Creating ThreadSafeClientConnManager
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
@@ -487,11 +488,24 @@ public class HtmlRequestSumc {
 			return;
 		}
 
-		// Start VirtualBoards
-		intent = new Intent(context, VirtualBoards.class);
+		try {
+			new HtmlResultSumc(context, stationCode, src).showResult();
 
-		intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
-		context.startActivity(intent);
+			// Start VirtualBoards
+			intent = new Intent(context, VirtualBoards.class);
+
+			intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
+			context.startActivity(intent);
+
+			// Case that is reached when the method is called from
+			// SCHEDULE/GPS GoogleMaps/FAVORITES and some error occur
+		} catch (Exception e) {
+			// Start VirtualBoardsStationChoice
+			intent = new Intent(context, VirtualBoardsStationChoice.class);
+
+			intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
+			context.startActivity(intent);
+		}
 	}
 
 	private class LoadingSumc extends AsyncTask<Void, Void, String> {

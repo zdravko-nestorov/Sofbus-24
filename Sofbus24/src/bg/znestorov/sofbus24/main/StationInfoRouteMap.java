@@ -58,7 +58,7 @@ public class StationInfoRouteMap extends MapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_station_info_map);
+		setContentView(R.layout.activity_google_map);
 
 		Context context = StationInfoRouteMap.this;
 

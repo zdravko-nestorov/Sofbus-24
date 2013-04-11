@@ -3,6 +3,7 @@ package bg.znestorov.sofbus24.main;
 import static bg.znestorov.sofbus24.utils.Utils.getValueAfter;
 import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -16,8 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.info_station.MyItemizedOverlay;
+import bg.znestorov.sofbus24.info_station.StationInfoMapAdapter;
 import bg.znestorov.sofbus24.schedule_stations.Station;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.station_database.GPSStation;
@@ -42,7 +45,7 @@ public class StationInfoMap extends MapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_station_info_map);
+		setContentView(R.layout.activity_google_map_station_info);
 
 		Context context = StationInfoMap.this;
 
@@ -58,6 +61,18 @@ public class StationInfoMap extends MapActivity {
 		this.setTitle(String.format(getString(R.string.st_inf_name), "\""
 				+ getValueBefore(station.getStation(), "(").trim() + "\""));
 
+		// CREATING TOP PART OF THE ACTIVITY
+		List<Station> station_list = new ArrayList<Station>();
+		station_list.add(station);
+		station_list.add(station);
+		station_list.add(station);
+		station_list.add(station);
+
+		// Set the list items
+		ListView listView = (ListView) findViewById(android.R.id.list);
+		listView.setAdapter(new StationInfoMapAdapter(context, station_list));
+
+		// CREATING BOTTOM PART OF THE ACTIVITY
 		// Creating MapView, setting StreetView and adding zoom controls
 		mapView = (MapView) findViewById(R.id.mapView);
 		mapView.setSatellite(false);

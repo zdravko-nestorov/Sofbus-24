@@ -32,7 +32,7 @@ public class VirtualBoardsMap extends MapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_station_info_map);
+		setContentView(R.layout.activity_google_map);
 
 		// Getting the information transfered from VirtualBoards activity
 		try {

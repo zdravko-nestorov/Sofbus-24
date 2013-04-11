@@ -115,6 +115,8 @@
     <string name="st_inf_fav_ok">Спирката беше добавено успешно в \"Любими\".</string>
     <string name="st_inf_fav_err">Спирката вече е била добавена в \"Любими\".</string>
     <string name="st_inf_menu_position">Позиционирай</string>
+    <string name="st_inf_direction">Посока</string>
+    <string name="st_inf_times_arrival">Часове на пристигане</string>
 
     <!-- Station Info Route Mape -->
     <string name="st_inf_route_title">Информация за \"</string>

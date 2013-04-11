@@ -112,6 +112,8 @@
     <string name="st_inf_fav_ok">The station was successfully added to Favorites.</string>
     <string name="st_inf_fav_err">The station has been already added to Favorites.</string>
     <string name="st_inf_menu_position">Focus</string>
+    <string name="st_inf_direction">Direction</string>
+    <string name="st_inf_times_arrival">Times of arrival</string>
 
     <!-- Station Info Route Mape -->
     <string name="st_inf_route_title">Information about \"</string>

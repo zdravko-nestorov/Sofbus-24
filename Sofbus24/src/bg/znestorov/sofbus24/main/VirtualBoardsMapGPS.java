@@ -95,7 +95,7 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_station_info_map);
+		setContentView(R.layout.activity_google_map);
 
 		// Setting activity title
 		this.setTitle(getString(R.string.map_gps_name));
