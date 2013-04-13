@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 import bg.znestorov.sofbus24.gps.GPSStationAdapter;
 import bg.znestorov.sofbus24.gps.HtmlResultSumc;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
@@ -126,21 +127,6 @@ public class VirtualBoards extends ListActivity {
 						}).show();
 	}
 
-	// Info dialog example with custom title and message
-	public void showInfoDialog(String title, String msg) {
-		dialog.setTitle(title)
-				.setMessage(msg)
-				.setCancelable(false)
-				.setIcon(android.R.drawable.ic_dialog_alert)
-				.setPositiveButton(context.getString(R.string.button_title_ok),
-						new OnClickListener() {
-							public void onClick(
-									DialogInterface dialoginterface, int i) {
-
-							}
-						}).show();
-	}
-
 	// Alert Dialog when UNKNOWN error happens
 	public void showErrorDialog() {
 		this.setTitle(getString(R.string.gps_error_unknown));
@@ -166,11 +152,11 @@ public class VirtualBoards extends ListActivity {
 			datasource.open();
 			if (datasource.getStation(gpsStation) == null) {
 				datasource.createStation(gpsStation);
-				showInfoDialog(getString(R.string.gps_fav_dialog_title),
-						getString(R.string.st_inf_fav_ok));
+				Toast.makeText(context, R.string.st_inf_fav_ok,
+						Toast.LENGTH_SHORT).show();
 			} else {
-				showInfoDialog(getString(R.string.gps_err_dialog_title),
-						getString(R.string.st_inf_fav_err));
+				Toast.makeText(context, R.string.st_inf_fav_err,
+						Toast.LENGTH_SHORT).show();
 			}
 			datasource.close();
 
@@ -192,8 +178,12 @@ public class VirtualBoards extends ListActivity {
 						context, progressDialog, gpsStation);
 				loadMap.execute();
 			} else {
-				showInfoDialog(getString(R.string.gps_err_dialog_title),
-						getString(R.string.gps_error_noCoordinates));
+				Intent intent = new Intent(context,
+						VirtualBoardsStationChoice.class);
+
+				intent.putExtra(Constants.KEYWORD_HTML_RESULT,
+						Constants.VB_NO_COORDINATES);
+				context.startActivity(intent);
 			}
 
 			break;

@@ -107,8 +107,8 @@ public class StationInfoMap extends MapActivity {
 
 			balloonTitle = station.getVehicleType() + " ¹ "
 					+ station.getVehicleNumber();
-			balloonSummary = station.getDirection() + "\n"
-					+ station.getStation() + "\n" + station.getTime_stamp();
+			balloonSummary = station.getStation() + "\n"
+					+ station.getTime_stamp();
 		} catch (Exception e) {
 			lat = Double
 					.parseDouble(Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE);
@@ -120,8 +120,8 @@ public class StationInfoMap extends MapActivity {
 			balloonTitle = station.getVehicleType() + " ¹ "
 					+ station.getVehicleNumber() + "\n"
 					+ context.getString(R.string.veh_ch_coordinates_error);
-			balloonSummary = station.getDirection() + "\n"
-					+ station.getStation() + "\n" + station.getTime_stamp();
+			balloonSummary = station.getStation() + "\n"
+					+ station.getTime_stamp();
 		}
 
 		// Calculating the map coordinates

@@ -206,6 +206,8 @@ public class Constants {
 	// Time retrieval string from the source file
 	public static final String TIME_RETRIEVAL_BEGIN = "<b>Информация към ";
 	public static final String TIME_RETRIEVAL_END = "</b>";
+	// Extra info for VirtualBoardsStationChoice
+	public static final String VB_NO_COORDINATES = "VB NO COORDINATES";
 
 	// PARAMS WHICH HELP FOR RETRIEVING/PROCESSING INFORMATION
 	// (CLASS: VirtualBoardStationChoice)

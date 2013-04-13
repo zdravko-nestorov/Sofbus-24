@@ -74,7 +74,8 @@ public class VirtualBoardsStationChoice extends ListActivity {
 		if (ss_transfer != null && !"".equals(ss_transfer)
 				&& !ss_transfer.contains(Constants.SUMC_HTML_ERROR_MESSAGE)
 				&& !ss_transfer.contains(Constants.SUMC_CAPTCHA_ERROR_MESSAGE)
-				&& !ss_transfer.contains(Constants.SCHEDULE_NO_INFO)) {
+				&& !ss_transfer.contains(Constants.SCHEDULE_NO_INFO)
+				&& !ss_transfer.contains(Constants.VB_NO_COORDINATES)) {
 
 			String[] tempArray = ss_transfer
 					.split(Constants.GLOBAL_PARAM_SEPARATOR);
@@ -125,6 +126,10 @@ public class VirtualBoardsStationChoice extends ListActivity {
 			// Case this activity is called from StationListView
 		} else if (ss_transfer.contains(Constants.SCHEDULE_NO_INFO)) {
 			setErrorLabelText(getString(R.string.veh_ch_direction_choice_error_msg));
+			// Case this activity is called from VirtualBoards (no coordinates
+			// in the DB)
+		} else if (ss_transfer.contains(Constants.VB_NO_COORDINATES)) {
+			setErrorLabelText(getString(R.string.gps_error_noCoordinates));
 			// All other cases (real time information)
 		} else {
 			setErrorLabelText(getString(R.string.gps_station_choice_error_internet));
