@@ -112,6 +112,7 @@
         <activity
             android:name=".StationInfoMap"
             android:label="@string/st_inf_name" >
+            android:screenOrientation="portrait" >
         </activity>
         <!-- Любими -->
         <activity

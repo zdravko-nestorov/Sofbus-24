@@ -37,14 +37,14 @@
             android:defaultValue="timeGPS_remaining"
             android:entries="@array/timeGPS"
             android:entryValues="@array/timeGPSValues"
-            android:key="timeGPS"
+            android:key="timeGPS_NEW"
             android:summary="@string/stations_timeGPS_summary"
             android:title="@string/stations_timeGPS_title" />
         <ListPreference
             android:defaultValue="timeSchedule_remaining"
             android:entries="@array/timeSchedule"
             android:entryValues="@array/timeScheduleValues"
-            android:key="timeSchedule"
+            android:key="timeSchedule_NEW"
             android:summary="@string/stations_timeSchedule_summary"
             android:title="@string/stations_timeSchedule_title" />
         <ListPreference
@@ -67,7 +67,7 @@
             android:defaultValue="map_satellite"
             android:entries="@array/mapSatellite"
             android:entryValues="@array/mapSatelliteValues"
-            android:key="satellite"
+            android:key="satellite_NEW"
             android:summary="@string/map_satellite_summary"
             android:title="@string/map_satellite_title" />
 

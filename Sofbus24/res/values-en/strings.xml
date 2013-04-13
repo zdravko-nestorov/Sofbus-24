@@ -83,8 +83,7 @@
     <string name="veh_ch_name">Vehicles\' schedule</string>
     <string name="veh_ch_image">Vehicle\'s image</string>
     <string name="veh_ch_direction_choice">Select a direction</string>
-    <string name="veh_ch_direction_choice_error">Information</string>
-    <string name="veh_ch_coordinates_error">The station could not be visualized (its coordinates are not found in the database).</string>
+    <string name="veh_ch_coordinates_error">(no coordinates in the DB)</string>
     <string name="veh_ch_direction_choice_error_msg">There is no available information for this line at the moment or you have a problem with your Internet connection.</string>
     <string name="veh_ch_search_box">Search by station number</string>
 
@@ -103,7 +102,6 @@
     <string name="st_list_cont_menu_header">Select</string>
     <string name="st_list_schedule">Schedule</string>
     <string name="st_list_gps">Virtual boards</string>
-    <string name="st_list_fav">Add to Favorites</string>
 
     <!-- Station Info -->
     <string name="st_inf_name" formatted="false">Information about %s</string>
@@ -114,6 +112,7 @@
     <string name="st_inf_menu_position">Focus</string>
     <string name="st_inf_direction">Direction</string>
     <string name="st_inf_times_arrival">Times of arrival</string>
+    <string name="st_inf_times_remaining">Remaining time</string>
 
     <!-- Station Info Route Mape -->
     <string name="st_inf_route_title">Information about \"</string>

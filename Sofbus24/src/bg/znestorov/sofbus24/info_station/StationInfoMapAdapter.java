@@ -3,7 +3,9 @@ package bg.znestorov.sofbus24.info_station;
 import java.util.List;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.schedule_stations.Station;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
 // Class for creating the vehicles ListView
@@ -19,6 +22,8 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 
 	private final Context context;
 	private final List<Station> stations;
+
+	private SharedPreferences sharedPreferences;
 
 	public StationInfoMapAdapter(Context context, List<Station> stations) {
 		super(context, R.layout.activity_gps_station_choice, stations);
@@ -69,21 +74,22 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 
 		TextView listSummary = (TextView) rowView
 				.findViewById(R.id.list_summary);
-		listSummary.setText(station.getStation());
+		listSummary.setText(String.format(
+				context.getString(R.string.st_inf_time),
+				android.text.format.DateFormat.format("dd.MM.yyy, kk:mm",
+						new java.util.Date()).toString()));
 
 		ImageView ListImage = (ImageView) rowView.findViewById(R.id.list_image);
 		Drawable drawable;
 		if (station.getVehicleType().equals(
 				context.getString(R.string.title_bus))) {
-			drawable = context.getResources().getDrawable(
-					R.drawable.bus_station);
+			drawable = context.getResources().getDrawable(R.drawable.bus_icon);
 		} else if (station.getVehicleType().equals(
 				context.getString(R.string.title_trolley))) {
 			drawable = context.getResources().getDrawable(
-					R.drawable.trolley_station);
+					R.drawable.trolley_icon);
 		} else {
-			drawable = context.getResources().getDrawable(
-					R.drawable.tram_station);
+			drawable = context.getResources().getDrawable(R.drawable.tram_icon);
 		}
 		ListImage.setImageDrawable(drawable);
 
@@ -109,11 +115,11 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 				.findViewById(R.id.list_summary);
 		listSummary.setText(context
 				.getString(R.string.gps_station_choice_station_code)
-				+ stationCode);
+				+ Utils.formatNumberOfDigits(stationCode));
 
 		ImageView ListImage = (ImageView) rowView.findViewById(R.id.list_image);
 		Drawable drawable = context.getResources().getDrawable(
-				R.drawable.bus_station);
+				R.drawable.st_inf_location);
 		ListImage.setImageDrawable(drawable);
 
 		return rowView;
@@ -135,7 +141,7 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 
 		ImageView ListImage = (ImageView) rowView.findViewById(R.id.list_image);
 		Drawable drawable = context.getResources().getDrawable(
-				R.drawable.bus_station);
+				R.drawable.st_inf_direction);
 		ListImage.setImageDrawable(drawable);
 
 		return rowView;
@@ -149,7 +155,23 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 				false);
 
 		TextView listTitle = (TextView) rowView.findViewById(R.id.list_title);
-		listTitle.setText(context.getString(R.string.st_inf_times_arrival));
+
+		// Get SharedPreferences from option menu
+		sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this.context);
+
+		// Get "exitAlert" value from the Shared Preferences
+		String timeGPS = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_TIME_GPS,
+				Constants.PREFERENCE_DEFAULT_VALUE_TIME_GPS);
+		String listTitleText = "";
+
+		if ("timeGPS_remaining".equals(timeGPS)) {
+			listTitleText = context.getString(R.string.st_inf_times_remaining);
+		} else {
+			listTitleText = context.getString(R.string.st_inf_times_arrival);
+		}
+		listTitle.setText(listTitleText);
 
 		TextView listSummary = (TextView) rowView
 				.findViewById(R.id.list_summary);
@@ -157,7 +179,7 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 
 		ImageView ListImage = (ImageView) rowView.findViewById(R.id.list_image);
 		Drawable drawable = context.getResources().getDrawable(
-				R.drawable.bus_station);
+				R.drawable.st_inf_time);
 		ListImage.setImageDrawable(drawable);
 
 		return rowView;

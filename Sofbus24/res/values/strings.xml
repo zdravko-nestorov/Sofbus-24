@@ -83,8 +83,7 @@
     <string name="veh_ch_name">Разписание на колите</string>
     <string name="veh_ch_image">Изображение на превозното средство</string>
     <string name="veh_ch_direction_choice">Изберете направление</string>
-    <string name="veh_ch_direction_choice_error">Информация</string>
-    <string name="veh_ch_coordinates_error">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
+    <string name="veh_ch_coordinates_error">(няма координати в БД)</string>
     <string name="veh_ch_direction_choice_error_msg">В момента не е налична информация за тази линия или имате проблем с вашата интернет връзка.</string>
     <string name="veh_ch_search_box">Търсене по номер</string>
 
@@ -106,7 +105,6 @@
     <string name="st_list_cont_menu_header">Изберете</string>
     <string name="st_list_schedule">Разписание</string>
     <string name="st_list_gps">Виртуални табла</string>
-    <string name="st_list_fav">Добави в \"Любими\"</string>
 
     <!-- Station Info -->
     <string name="st_inf_name" formatted="false">Информация за %s</string>
@@ -117,6 +115,7 @@
     <string name="st_inf_menu_position">Позиционирай</string>
     <string name="st_inf_direction">Посока</string>
     <string name="st_inf_times_arrival">Часове на пристигане</string>
+    <string name="st_inf_times_remaining">Оставащо време</string>
 
     <!-- Station Info Route Mape -->
     <string name="st_inf_route_title">Информация за \"</string>

@@ -9,8 +9,8 @@ public class Constants {
 	public static final String GLOBAL_PARAM_EMPTY = "EMPTY";
 	public static final String GLOBAL_PARAM_SOFIA_CENTER_LATITUDE = "42.696492";
 	public static final String GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE = "23.326011";
-	public static final int GLOBAL_TIMEOUT_CONNECTION = 4000;
-	public static final int GLOBAL_TIMEOUT_SOCKET = 7000;
+	public static final int GLOBAL_TIMEOUT_CONNECTION = 5000;
+	public static final int GLOBAL_TIMEOUT_SOCKET = 8000;
 
 	// EXTRA KEYWORDS USED FOR TRANSFERING INFORMATION BETWEEEN ACTIVITIES
 	// HtmlRequestSumc -> VirtualBoards/VirtualBoardsStationChoice
@@ -191,6 +191,11 @@ public class Constants {
 	public static final String VEHICLE_TROLLEY = "TROLLEY";
 	public static final String VEHICLE_TRAM = "TRAM";
 
+	// PARAMS WHICH DEFINES SCHEDULE ERROR
+	// (CLASS: StationListView)
+	// Extra info for VirtualBoardsStationChoice
+	public static final String SCHEDULE_NO_INFO = "SCHEDULE NO INFO";
+
 	// PARAMS WHICH DEFINES THE ERRORS AFTER EXTRACT THE INFORMATION FROM
 	// VIRTUAL BOARDS
 	// (CLASS: VirtualBoards)
@@ -227,15 +232,15 @@ public class Constants {
 	public static final String PREFERENCE_DEFAULT_VALUE_GPS_MAP_FUNCT = "funct_1";
 	public static final String PREFERENCE_KEY_EXIT_ALERT = "exitAlert";
 	public static final boolean PREFERENCE_DEFAULT_VALUE_EXIT_ALERT = false;
-	public static final String PREFERENCE_KEY_TIME_GPS = "timeGPS";
+	public static final String PREFERENCE_KEY_TIME_GPS = "timeGPS_NEW";
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_GPS = "timeGPS_remaining";
-	public static final String PREFERENCE_KEY_TIME_SCHEDULE = "timeSchedule";
+	public static final String PREFERENCE_KEY_TIME_SCHEDULE = "timeSchedule_NEW";
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_SCHEDULE = "timeSchedule_remaining";
 	public static final String PREFERENCE_KEY_CLOSEST_STATIONS = "closestStations";
 	public static final String PREFERENCE_DEFAULT_VALUE_CLOSEST_STATIONS = "8";
 	public static final String PREFERENCE_KEY_TIME_INFO_RETRIEVAL = "timeInfoRetrieval";
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL = "time_skgt";
-	public static final String PREFERENCE_KEY_SATELLITE = "satellite";
+	public static final String PREFERENCE_KEY_SATELLITE = "satellite_NEW";
 	public static final String PREFERENCE_DEFAULT_VALUE_SATELLITE = "map_satellite";
 	public static final String PREFERENCE_KEY_COMPASS = "compass";
 	public static final boolean PREFERENCE_DEFAULT_VALUE_COMPASS = false;

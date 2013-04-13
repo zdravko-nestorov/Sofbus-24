@@ -1,20 +1,16 @@
 package bg.znestorov.sofbus24.main;
 
 import static bg.znestorov.sofbus24.utils.StationCoordinates.getLocation;
-import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 
 import java.util.ArrayList;
 
 import org.apache.http.client.methods.HttpGet;
 
 import android.R.drawable;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,7 +30,6 @@ import bg.znestorov.sofbus24.schedule_stations.DirectionTransfer;
 import bg.znestorov.sofbus24.schedule_stations.Station;
 import bg.znestorov.sofbus24.schedule_stations.StationAdapter;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
-import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.utils.Constants;
 
 public class StationListView extends ListActivity {
@@ -138,7 +133,6 @@ public class StationListView extends ListActivity {
 		String selectedValue = station.getStation();
 
 		// Getting the name and the number of the station
-		String name = getValueBefore(selectedValue, "(").trim();
 		String stationCode = selectedValue;
 		if (stationCode.contains("(") && stationCode.contains(")")) {
 			stationCode = stationCode.substring(stationCode.indexOf("(") + 1,
@@ -164,22 +158,6 @@ public class StationListView extends ListActivity {
 					stationCode, Constants.SCHEDULE_GPS_PARAM, null);
 
 			Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
-			break;
-		case R.id.st_list_fav:
-			datasource.open();
-
-			GPSStation gpsStationFav = new GPSStation(stationCode, name);
-
-			if (datasource.getStation(gpsStationFav) == null) {
-				datasource.createStation(gpsStationFav);
-				Toast.makeText(this, R.string.st_inf_fav_ok, Toast.LENGTH_SHORT)
-						.show();
-			} else {
-				Toast.makeText(this, R.string.st_inf_fav_err,
-						Toast.LENGTH_SHORT).show();
-			}
-			datasource.close();
-
 			break;
 		}
 
@@ -244,9 +222,11 @@ public class StationListView extends ListActivity {
 			// Getting the coordinates of the station
 			String[] coordinates = getLocation(context, stationCode);
 
-			// Creating AlertDialog with the information, if TimeStamp and
-			// Coordinates exists, otherwise showing an error message
-			Builder dialog = new AlertDialog.Builder(context);
+			// New activity parameters
+			Bundle bundle = new Bundle();
+			Intent stationInfoIntent = new Intent(context, StationInfoMap.class);
+			bundle.putSerializable(Constants.KEYWORD_BUNDLE_STATION, station);
+			stationInfoIntent.putExtras(bundle);
 
 			if (time_stamp != null && !"".equals(time_stamp)
 					&& time_stamp.length() > 2 && coordinates != null
@@ -259,38 +239,24 @@ public class StationListView extends ListActivity {
 				// Setting the map coordinates into the station object
 				station.setCoordinates(coordinates);
 
-				Bundle bundle = new Bundle();
-				Intent stationInfoIntent = new Intent(context,
-						StationInfoMap.class);
-				bundle.putSerializable(Constants.KEYWORD_BUNDLE_STATION,
-						station);
-				stationInfoIntent.putExtras(bundle);
 				startActivityForResult(stationInfoIntent, 1);
-			} else if (coordinates == null || "".equals(coordinates)
-					|| coordinates.length == 0) {
-				dialog.setTitle(R.string.veh_ch_direction_choice_error)
-						.setMessage(R.string.veh_ch_coordinates_error)
-						.setIcon(android.R.drawable.ic_dialog_alert)
-						.setPositiveButton(
-								context.getString(R.string.button_title_ok),
-								new OnClickListener() {
-									public void onClick(
-											DialogInterface dialoginterface,
-											int i) {
-									}
-								}).show();
+			} else if (time_stamp != null
+					&& !"".equals(time_stamp)
+					&& time_stamp.length() > 2
+					&& (coordinates == null || "".equals(coordinates) || coordinates.length == 0)) {
+
+				// Fixing the time_stamp
+				time_stamp = time_stamp.substring(1, time_stamp.length() - 1);
+				station.setTime_stamp(time_stamp);
+
+				startActivityForResult(stationInfoIntent, 1);
 			} else {
-				dialog.setTitle(R.string.veh_ch_direction_choice_error)
-						.setMessage(R.string.veh_ch_direction_choice_error_msg)
-						.setIcon(android.R.drawable.ic_dialog_alert)
-						.setPositiveButton(
-								context.getString(R.string.button_title_ok),
-								new OnClickListener() {
-									public void onClick(
-											DialogInterface dialoginterface,
-											int i) {
-									}
-								}).show();
+				Intent intent = new Intent(context,
+						VirtualBoardsStationChoice.class);
+
+				intent.putExtra(Constants.KEYWORD_HTML_RESULT,
+						Constants.SCHEDULE_NO_INFO);
+				context.startActivity(intent);
 			}
 		}
 

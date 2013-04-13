@@ -10,7 +10,6 @@ import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -244,17 +243,12 @@ public class VehicleListView extends Activity {
 									}
 								}).show();
 			} else {
-				dialog.setTitle(R.string.veh_ch_direction_choice_error)
-						.setMessage(R.string.veh_ch_direction_choice_error_msg)
-						.setIcon(android.R.drawable.ic_dialog_alert)
-						.setPositiveButton(
-								context.getString(R.string.button_title_ok),
-								new OnClickListener() {
-									public void onClick(
-											DialogInterface dialoginterface,
-											int i) {
-									}
-								}).show();
+				Intent intent = new Intent(context,
+						VirtualBoardsStationChoice.class);
+
+				intent.putExtra(Constants.KEYWORD_HTML_RESULT,
+						Constants.SCHEDULE_NO_INFO);
+				context.startActivity(intent);
 			}
 		}
 

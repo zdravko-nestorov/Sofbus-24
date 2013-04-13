@@ -81,20 +81,51 @@ public class StationInfoMap extends MapActivity {
 		// Add a location marker and a balloon above it
 		List<Overlay> mapOverlays = mapView.getOverlays();
 		Drawable drawable;
-		if (station.getVehicleType().equals(
-				context.getString(R.string.title_bus))) {
-			drawable = getResources().getDrawable(R.drawable.bus_station);
-		} else if (station.getVehicleType().equals(
-				context.getString(R.string.title_trolley))) {
-			drawable = getResources().getDrawable(R.drawable.trolley_station);
-		} else {
-			drawable = getResources().getDrawable(R.drawable.tram_station);
+
+		// Latitude and Longitude of the station
+		double lat;
+		double lng;
+
+		// Station balloon text
+		String balloonTitle;
+		String balloonSummary;
+
+		try {
+			lat = Double.parseDouble(station.getCoordinates()[0]);
+			lng = Double.parseDouble(station.getCoordinates()[1]);
+
+			if (station.getVehicleType().equals(
+					context.getString(R.string.title_bus))) {
+				drawable = getResources().getDrawable(R.drawable.bus_station);
+			} else if (station.getVehicleType().equals(
+					context.getString(R.string.title_trolley))) {
+				drawable = getResources().getDrawable(
+						R.drawable.trolley_station);
+			} else {
+				drawable = getResources().getDrawable(R.drawable.tram_station);
+			}
+
+			balloonTitle = station.getVehicleType() + " ¹ "
+					+ station.getVehicleNumber();
+			balloonSummary = station.getDirection() + "\n"
+					+ station.getStation() + "\n" + station.getTime_stamp();
+		} catch (Exception e) {
+			lat = Double
+					.parseDouble(Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE);
+			lng = Double
+					.parseDouble(Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE);
+
+			drawable = getResources().getDrawable(R.drawable.no_station);
+
+			balloonTitle = station.getVehicleType() + " ¹ "
+					+ station.getVehicleNumber() + "\n"
+					+ context.getString(R.string.veh_ch_coordinates_error);
+			balloonSummary = station.getDirection() + "\n"
+					+ station.getStation() + "\n" + station.getTime_stamp();
 		}
 
 		// Calculating the map coordinates
 		mapController = mapView.getController();
-		double lat = Double.parseDouble(station.getCoordinates()[0]);
-		double lng = Double.parseDouble(station.getCoordinates()[1]);
 
 		// Focus the map over an exact coordinates and set the zoom
 		geoPoint = new GeoPoint((int) (lat * 1E6), (int) (lng * 1E6));
@@ -104,10 +135,8 @@ public class StationInfoMap extends MapActivity {
 		// Add the marker
 		MyItemizedOverlay itemizedOverlay = new MyItemizedOverlay(drawable,
 				mapView);
-		OverlayItem overlayItem = new OverlayItem(geoPoint,
-				station.getVehicleType() + " ¹ " + station.getVehicleNumber(),
-				station.getDirection() + "\n" + station.getStation() + "\n"
-						+ station.getTime_stamp());
+		OverlayItem overlayItem = new OverlayItem(geoPoint, balloonTitle,
+				balloonSummary);
 
 		itemizedOverlay.addOverlay(overlayItem);
 

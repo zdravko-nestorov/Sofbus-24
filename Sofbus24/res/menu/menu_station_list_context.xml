@@ -6,8 +6,5 @@
     <item
         android:id="@+id/st_list_gps"
         android:title="@string/st_list_gps"/>
-    <item
-        android:id="@+id/st_list_fav"
-        android:title="@string/st_list_fav"/>
 
 </menu>
