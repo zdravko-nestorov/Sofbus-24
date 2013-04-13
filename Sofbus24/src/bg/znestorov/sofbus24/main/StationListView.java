@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import org.apache.http.client.methods.HttpGet;
 
 import android.R.drawable;
-import android.app.ListActivity;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,8 +19,11 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.info_station.HtmlRequestStation;
@@ -32,7 +35,9 @@ import bg.znestorov.sofbus24.schedule_stations.StationAdapter;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.utils.Constants;
 
-public class StationListView extends ListActivity {
+public class StationListView extends Activity {
+
+	ListView listView;
 
 	Context context;
 	FavouritesDataSource datasource;
@@ -40,6 +45,7 @@ public class StationListView extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_station);
 
 		// Setting activity title
 		this.setTitle(getString(R.string.st_ch_name));
@@ -56,6 +62,9 @@ public class StationListView extends ListActivity {
 			directionTransfer = null;
 		}
 
+		// Getting the ListView box from "activity_station" layout
+		listView = (ListView) findViewById(R.id.list_view_stations);
+
 		ArrayList<Station> stations = new ArrayList<Station>();
 
 		if (directionTransfer.getChoice() == 0) {
@@ -64,17 +73,67 @@ public class StationListView extends ListActivity {
 				stations.add(new Station(direction, i));
 			}
 
-			setListAdapter(new StationAdapter(context, stations));
-			registerForContextMenu(getListView());
+			listView.setAdapter(new StationAdapter(context, stations));
+			registerForContextMenu(listView);
 		} else {
 			Direction direction = directionTransfer.getDirection2();
 			for (int i = 0; i < direction.getStations().size(); i++) {
 				stations.add(new Station(direction, i));
 			}
 
-			setListAdapter(new StationAdapter(context, stations));
-			registerForContextMenu(getListView());
+			listView.setAdapter(new StationAdapter(context, stations));
+			registerForContextMenu(listView);
 		}
+
+		// Setting the first TextView in the Activity
+		TextView vehicleNumber = (TextView) findViewById(R.id.vehicle_text_view);
+		TextView vehicleDirection = (TextView) findViewById(R.id.direction_text_view);
+
+		String vehicleType = stations.get(0).getVehicleType();
+		String vehicleNumberText = stations.get(0).getVehicleNumber();
+		String vehicleDirectionText = stations.get(0).getDirection();
+
+		if (vehicleType.equals(context.getString(R.string.title_bus))) {
+			vehicleNumber.setText(vehicleType + " ¹ " + vehicleNumberText);
+			vehicleDirection.setText(vehicleDirectionText);
+		} else if (vehicleType
+				.equals(context.getString(R.string.title_trolley))) {
+			vehicleNumber.setText(vehicleType + " ¹ " + vehicleNumberText);
+			vehicleDirection.setText(vehicleDirectionText);
+		} else {
+			vehicleNumber.setText(vehicleType + " ¹ " + vehicleNumberText);
+			vehicleDirection.setText(vehicleDirectionText);
+		}
+
+		// Setting ListView listener (if an item is clicked)
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(AdapterView<?> parent, View v,
+					int position, long id) {
+				Station station = (Station) listView.getAdapter().getItem(
+						position);
+				String selectedValue = station.getStation();
+				Toast.makeText(context, selectedValue, Toast.LENGTH_SHORT)
+						.show();
+
+				// Getting the station number
+				String stationCode = station.getStation();
+				if (stationCode.contains("(") && stationCode.contains(")")) {
+					stationCode = stationCode.substring(
+							stationCode.indexOf("(") + 1,
+							stationCode.indexOf(")"));
+				}
+
+				// Getting the HtmlResult and showing a ProgressDialog
+				Context context = StationListView.this;
+				ProgressDialog progressDialog = new ProgressDialog(context);
+				progressDialog.setMessage(context
+						.getString(R.string.loading_message_retrieve_schedule_info));
+				LoadStationAsyncTask loadStationAsyncTask = new LoadStationAsyncTask(
+						context, progressDialog, station, stationCode);
+				loadStationAsyncTask.execute();
+			}
+		});
 	}
 
 	@Override
@@ -87,29 +146,6 @@ public class StationListView extends ListActivity {
 	protected void onPause() {
 		datasource.close();
 		super.onPause();
-	}
-
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Station station = (Station) getListAdapter().getItem(position);
-		String selectedValue = station.getStation();
-		Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
-
-		// Getting the station number
-		String stationCode = station.getStation();
-		if (stationCode.contains("(") && stationCode.contains(")")) {
-			stationCode = stationCode.substring(stationCode.indexOf("(") + 1,
-					stationCode.indexOf(")"));
-		}
-
-		// Getting the HtmlResult and showing a ProgressDialog
-		Context context = StationListView.this;
-		ProgressDialog progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage(context
-				.getString(R.string.loading_message_retrieve_schedule_info));
-		LoadStationAsyncTask loadStationAsyncTask = new LoadStationAsyncTask(
-				context, progressDialog, station, stationCode);
-		loadStationAsyncTask.execute();
 	}
 
 	@Override
@@ -129,7 +165,8 @@ public class StationListView extends ListActivity {
 		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 
-		Station station = (Station) getListAdapter().getItem((int) info.id);
+		Station station = (Station) listView.getAdapter()
+				.getItem((int) info.id);
 		String selectedValue = station.getStation();
 
 		// Getting the name and the number of the station

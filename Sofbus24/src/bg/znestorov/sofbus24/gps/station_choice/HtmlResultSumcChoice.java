@@ -142,6 +142,12 @@ public class HtmlResultSumcChoice {
 
 			String name = getValueBefore(array[i], "(").trim();
 			String number = getValueAfter(array[i], "(");
+
+			// In case the name contains multiple brackets
+			while (number.contains("(")) {
+				number = getValueAfter(number, "(");
+			}
+
 			number = getValueBefore(number, ")").trim();
 
 			if (name != null && !"".equals(name) && number != null

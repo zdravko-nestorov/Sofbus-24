@@ -96,8 +96,8 @@
     <string name="st_ch_help_text">\ Each station on the list is a link to GoogleMaps, giving an information about the schedule and the location of the station. 
         There is an additional menu, showing when long pressed on the desired station, with the following options:&lt;br/>
          * &lt;b>Schedule&lt;/b> - an information about the schedule for the selected station;&lt;br/>
-         * &lt;b>Virtual boards&lt;/b> - an information about the arrival in real time for the selected station;&lt;br/>
-         * &lt;b>Add to Favorites&lt;/b> - adding the stations to Favorites;&lt;br/>&lt;br/>
+         * &lt;b>Virtual boards&lt;/b> - an information about the arrival in real time for the selected station;&lt;br/>&lt;br/>
+       	Adding or removing a station from the Favorites section is possible by clicking the star in front of it.&lt;br/>   
         It is possible to visualize the route of the selected vehicle using the shortcut menu.</string>
     <string name="st_list_cont_menu_header">Select</string>
     <string name="st_list_schedule">Schedule</string>

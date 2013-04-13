@@ -68,6 +68,10 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 				R.layout.activity_google_map_station_info_list_row, parent,
 				false);
 
+		rowView.setOnClickListener(null);
+		rowView.setOnLongClickListener(null);
+		rowView.setLongClickable(false);
+
 		TextView listTitle = (TextView) rowView.findViewById(R.id.list_title);
 		listTitle.setText(station.getVehicleType() + " ¹ "
 				+ station.getVehicleNumber());
@@ -103,6 +107,10 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 				R.layout.activity_google_map_station_info_list_row, parent,
 				false);
 
+		rowView.setOnClickListener(null);
+		rowView.setOnLongClickListener(null);
+		rowView.setLongClickable(false);
+
 		String stationName = station.getStation();
 		String stationCode = Utils.getValueAfter(stationName, "(");
 		stationCode = Utils.getValueBefore(stationCode, ")");
@@ -132,6 +140,10 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 				R.layout.activity_google_map_station_info_list_row, parent,
 				false);
 
+		rowView.setOnClickListener(null);
+		rowView.setOnLongClickListener(null);
+		rowView.setLongClickable(false);
+
 		TextView listTitle = (TextView) rowView.findViewById(R.id.list_title);
 		listTitle.setText(context.getString(R.string.st_inf_direction));
 
@@ -153,6 +165,10 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 		View rowView = inflater.inflate(
 				R.layout.activity_google_map_station_info_list_row, parent,
 				false);
+
+		rowView.setOnClickListener(null);
+		rowView.setOnLongClickListener(null);
+		rowView.setLongClickable(false);
 
 		TextView listTitle = (TextView) rowView.findViewById(R.id.list_title);
 

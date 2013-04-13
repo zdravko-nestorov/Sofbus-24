@@ -15,12 +15,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import bg.znestorov.sofbus24.schedule_stations.Direction;
 import bg.znestorov.sofbus24.schedule_stations.DirectionTransfer;
 import bg.znestorov.sofbus24.schedule_stations.HtmlRequestDirection;
@@ -34,6 +37,7 @@ public class VehicleListView extends Activity {
 
 	ListView listView;
 	EditText editText;
+	Context context;
 
 	public static ArrayList<Vehicle> bus;
 	public static ArrayList<Vehicle> trolley;
@@ -44,12 +48,17 @@ public class VehicleListView extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_vehicle_search);
 
+		context = VehicleListView.this;
+
 		// Setting activity title
 		this.setTitle(getString(R.string.veh_ch_name));
 
 		// Getting the information from VehicleTabView
 		final String vehicleType = getIntent().getStringExtra(
 				Constants.KEYWORD_VEHICLE_TYPE);
+
+		// Getting the first row (TextView) text
+		TextView separator = (TextView) findViewById(R.id.list_item_section_text);
 
 		// Getting the ListView box from "activity_vehicle_search" layout
 		listView = (ListView) findViewById(R.id.list_view_search);
@@ -61,10 +70,16 @@ public class VehicleListView extends Activity {
 
 		if (vehicleType.equals(Constants.VEHICLE_BUS)) {
 			listView.setAdapter(new VehicleAdapter(this, bus));
+			separator.setText(getString(R.string.choose_vehicle_number)
+					+ bus.get(0).getType().toLowerCase());
 		} else if (vehicleType.equals(Constants.VEHICLE_TROLLEY)) {
 			listView.setAdapter(new VehicleAdapter(this, trolley));
+			separator.setText(getString(R.string.choose_vehicle_number)
+					+ trolley.get(0).getType().toLowerCase());
 		} else {
 			listView.setAdapter(new VehicleAdapter(this, tram));
+			separator.setText(getString(R.string.choose_vehicle_number)
+					+ tram.get(0).getType().toLowerCase());
 		}
 
 		// Creating the search engine using the EditText box from
@@ -106,6 +121,16 @@ public class VehicleListView extends Activity {
 							textLength);
 					listView.setAdapter(new VehicleAdapter(
 							VehicleListView.this, tram));
+				}
+			}
+		});
+
+		editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					// Hide soft keyboard.
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 				}
 			}
 		});
@@ -259,6 +284,22 @@ public class VehicleListView extends Activity {
 			progressDialog.dismiss();
 			httpGet.abort();
 		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_SEARCH) {
+			// Focus the field.
+			editText.requestFocus();
+
+			// Show soft keyboard for the user to enter the value.
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+
+			return true;
+		}
+
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

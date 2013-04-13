@@ -2,7 +2,6 @@
 
     <!-- BUS STUFF -->
     <string-array name="bus_numbers">
-        <item>0</item>
         <item>1</item>
         <item>3</item>
         <item>4</item>
@@ -96,7 +95,6 @@
     </string-array>
 
     <array name="bus_stations">
-        <item>СЕПАРАТОР</item>
         <item>АВТОСТАНЦИЯ ГЕО МИЛЕВ - СЕЛО КОКАЛЯНЕ</item>
         <item>АВТОСТАНЦИЯ ГЕО МИЛЕВ - СЕЛО ДОЛНИ ПАСАРЕЛ</item>
         <item>Ж.К. МЛАДОСТ-1 - КОКАЛЯНСКО ХАНЧЕ</item>
@@ -190,7 +188,6 @@
     </array>
     <!-- TROLLEY STUFF -->
     <string-array name="trolley_numbers">
-        <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>4</item>
@@ -203,7 +200,6 @@
     </string-array>
 
     <array name="trolley_stations">
-        <item>СЕПАРАТОР</item>
         <item>ПЕТА ГРАДСКА БОЛНИЦА - Ж.К. ЛЕВСКИ Г</item>
         <item>Ж.К. ХАДЖИ ДИМИТЪР - Ж.К. БЪКСТОН</item>
         <item>Ж.К. ХАДЖИ ДИМИТЪР - Ж.К. ДРУЖБА-2</item>
@@ -216,7 +212,6 @@
     </array>
     <!-- TRAM STUFF -->
     <string-array name="tram_numbers">
-        <item>0</item>
         <item>1</item>
         <item>3</item>
         <item>4</item>
@@ -235,7 +230,6 @@
     </string-array>
 
     <array name="tram_stations">
-        <item>СЕПАРАТОР</item>
         <item>НАДЛЕЗ НАДЕЖДА - Ж.К. ИВАН ВАЗОВ</item>
         <item>ГАРА ЗАХАРНА ФАБРИКА - КВ. ОРЛАНДОВЦИ</item>
         <item>КВ. ОРЛАНДОВЦИ - БУЛ. НИКОЛА ПЕТКОВ</item>

@@ -33,13 +33,7 @@ public class VehicleAdapter extends ArrayAdapter<Vehicle> {
 		final String vehicleType = vehicle.getType();
 
 		View rowView = convertView;
-
-		// Checking what to put - vehicle or separator row
-		if (vehicle.getNumber().equals("0")) {
-			rowView = setSeparatorRow(inflater, parent, vehicle, vehicleType);
-		} else {
-			rowView = setVehicleRow(inflater, parent, vehicle, vehicleType);
-		}
+		rowView = setVehicleRow(inflater, parent, vehicle, vehicleType);
 
 		return rowView;
 	}
@@ -71,25 +65,6 @@ public class VehicleAdapter extends ArrayAdapter<Vehicle> {
 			vehicleDirection.setText(vehicle.getDirection());
 			imageView.setImageResource(R.drawable.tram_icon);
 		}
-
-		return rowView;
-	}
-
-	// Separator row in the ListView
-	public View setSeparatorRow(LayoutInflater inflater, ViewGroup parent,
-			Vehicle vehicle, String vehicleType) {
-		View rowView = inflater.inflate(R.layout.activity_vehicle_separator,
-				parent, false);
-
-		rowView.setOnClickListener(null);
-		rowView.setOnLongClickListener(null);
-		rowView.setLongClickable(false);
-
-		TextView separator = (TextView) rowView
-				.findViewById(R.id.list_item_section_text);
-
-		separator.setText(context.getString(R.string.choose_vehicle_number)
-				+ vehicleType.toLowerCase());
 
 		return rowView;
 	}

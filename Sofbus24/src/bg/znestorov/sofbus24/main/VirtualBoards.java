@@ -4,9 +4,9 @@ import static bg.znestorov.sofbus24.utils.StationCoordinates.getLocation;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,15 +17,22 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.gps.GPSStationAdapter;
+import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.gps.HtmlResultSumc;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
-public class VirtualBoards extends ListActivity {
+public class VirtualBoards extends Activity {
+
+	ListView listView;
 
 	Context context;
 	Builder dialog;
@@ -36,6 +43,7 @@ public class VirtualBoards extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_station);
 
 		// Setting activity title
 		this.setTitle(getString(R.string.gps_name));
@@ -91,19 +99,34 @@ public class VirtualBoards extends ListActivity {
 				}
 			}
 
-			GPSStation gpsStation = new GPSStation();
-
-			gpsStation.setName("\"" + station_list.get(0).getName() + "\"");
-			gpsStation.setTime_stamp(String.format(
-					getString(R.string.st_inf_time),
-					result.getInformationTime(htmlSrc)));
-			gpsStation.setId(stationCode);
-			gpsStation.setCodeO(tempArray[4]);
-			station_list.add(0, gpsStation);
-
 			station_list.get(1).setCodeO(tempArray[4]);
 
-			setListAdapter(new GPSStationAdapter(context, station_list));
+			// Getting the ListView box from "activity_station" layout
+			listView = (ListView) findViewById(R.id.list_view_stations);
+			listView.setAdapter(new GPSStationAdapter(context, station_list));
+
+			// Setting the first TextView in the Activity
+			TextView listName = (TextView) findViewById(R.id.vehicle_text_view);
+			TextView listTime = (TextView) findViewById(R.id.direction_text_view);
+			ImageView refreshButton = (ImageView) findViewById(R.id.refresh_button);
+
+			listName.setText("\"" + station_list.get(0).getName() + "\"");
+			listTime.setText(String.format(getString(R.string.st_inf_time),
+					result.getInformationTime(htmlSrc)));
+
+			// Refresh button functionality
+			refreshButton.setVisibility(View.VISIBLE);
+			refreshButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					switch (v.getId()) {
+					case R.id.refresh_button:
+						new HtmlRequestSumc().getInformation(context,
+								station_list.get(0).getId(), station_list
+										.get(0).getCodeO(), null);
+						break;
+					}
+				}
+			});
 		} else {
 			// Error with Transferring data between activities or with the HTML
 			// Request

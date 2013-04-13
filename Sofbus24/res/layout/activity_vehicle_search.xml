@@ -16,6 +16,16 @@
         android:inputType="number"
         android:maxLines="1" >
     </EditText>
+    <TextView
+        android:id="@+id/list_item_section_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_gradient"
+        android:gravity="center"
+        android:textColor="#FFFFFFFF"
+        android:textSize="13dip"
+        android:textStyle="bold"
+        android:visibility="visible" />
 
     <ListView
         android:id="@+id/list_view_search"

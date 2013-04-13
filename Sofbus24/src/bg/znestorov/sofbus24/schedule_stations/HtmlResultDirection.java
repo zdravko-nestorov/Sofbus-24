@@ -109,9 +109,7 @@ public class HtmlResultDirection {
 			stops = getValueBefore(stops, Constants.STOP_END);
 			String[] stopInfo = stops.split(Constants.SPLITTER);
 			ArrayList<String> stopName = new ArrayList<String>();
-			stopName.add("0");
 			ArrayList<String> stopId = new ArrayList<String>();
-			stopId.add("0");
 
 			for (int i = 0; i < stopInfo.length - 1; i++) {
 				stopName.add(getValueAfter(stopInfo[i], Constants.STOP_ID_END)
