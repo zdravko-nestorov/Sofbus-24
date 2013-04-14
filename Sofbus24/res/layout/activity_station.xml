@@ -5,8 +5,7 @@
     android:layout_height="fill_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    android:orientation="vertical"
-    android:paddingTop="6dip" >
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -28,7 +27,7 @@
                 android:padding="1dip"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="15dip"
+                android:textSize="14dip"
                 android:textStyle="bold" />
 
             <TextView

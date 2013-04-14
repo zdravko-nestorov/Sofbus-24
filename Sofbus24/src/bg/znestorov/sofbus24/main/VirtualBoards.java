@@ -99,7 +99,7 @@ public class VirtualBoards extends Activity {
 				}
 			}
 
-			station_list.get(1).setCodeO(tempArray[4]);
+			station_list.get(0).setCodeO(tempArray[4]);
 
 			// Getting the ListView box from "activity_station" layout
 			listView = (ListView) findViewById(R.id.list_view_stations);
@@ -110,7 +110,8 @@ public class VirtualBoards extends Activity {
 			TextView listTime = (TextView) findViewById(R.id.direction_text_view);
 			ImageView refreshButton = (ImageView) findViewById(R.id.refresh_button);
 
-			listName.setText("\"" + station_list.get(0).getName() + "\"");
+			listName.setText("\"" + station_list.get(0).getName() + " ("
+					+ station_list.get(0).getId() + ")\"");
 			listTime.setText(String.format(getString(R.string.st_inf_time),
 					result.getInformationTime(htmlSrc)));
 
@@ -166,7 +167,7 @@ public class VirtualBoards extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		final GPSStation gpsStation = station_list.get(1);
+		final GPSStation gpsStation = station_list.get(0);
 
 		switch (item.getItemId()) {
 		case R.id.menu_add_favourite:
@@ -223,7 +224,7 @@ public class VirtualBoards extends Activity {
 		boolean flag_tl = false;
 		boolean flag_tm = false;
 
-		for (int i = 1; i < station_list.size(); i++) {
+		for (int i = 0; i < station_list.size(); i++) {
 			GPSStation vehicle = station_list.get(i);
 
 			if (vehicle.getType().equals(context.getString(R.string.title_bus))) {
@@ -270,7 +271,7 @@ public class VirtualBoards extends Activity {
 			}
 		}
 
-		station_list.get(1).setTime_stamp(stationInfo.toString());
+		station_list.get(0).setTime_stamp(stationInfo.toString());
 	}
 
 	// AsyncTask capable for loading the map

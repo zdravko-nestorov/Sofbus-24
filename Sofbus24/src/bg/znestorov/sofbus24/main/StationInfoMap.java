@@ -206,8 +206,13 @@ public class StationInfoMap extends MapActivity {
 
 		gpsStation.setId(stationCode);
 		gpsStation.setName(getValueBefore(station.getStation(), "(").trim());
-		gpsStation.setLat(station.getCoordinates()[0]);
-		gpsStation.setLon(station.getCoordinates()[1]);
+		try {
+			gpsStation.setLat(station.getCoordinates()[0]);
+			gpsStation.setLon(station.getCoordinates()[1]);
+		} catch (Exception e) {
+			gpsStation.setLat(null);
+			gpsStation.setLon(null);
+		}
 
 		switch (item.getItemId()) {
 		case R.id.menu_add_favourite:

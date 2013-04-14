@@ -102,7 +102,7 @@ public class VirtualBoardsStationChoice extends ListActivity {
 				if (!"".equals(stationCode)) {
 					setErrorLabelText(String.format(
 							getString(R.string.error_sumc_no_bus_stop),
-							stationName + " (" + stationCode + ")"));
+							stationCode));
 				} else {
 					setErrorLabelText(getString(R.string.gps_error_noBusEmpty));
 				}
@@ -139,7 +139,7 @@ public class VirtualBoardsStationChoice extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		GPSStation station = (GPSStation) getListAdapter().getItem(position);
-		String selectedRow = station.getName();
+		String selectedRow = station.getName().trim();
 		Toast.makeText(this, selectedRow, Toast.LENGTH_SHORT).show();
 
 		new HtmlRequestSumc().getInformation(context, stationCode,
