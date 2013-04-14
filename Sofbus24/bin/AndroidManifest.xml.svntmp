@@ -52,8 +52,7 @@
         </activity>
         <activity
             android:name=".VirtualBoardsMap"
-            android:label="@string/st_inf_name"
-            android:screenOrientation="portrait" >
+            android:label="@string/st_inf_name" >
         </activity>
         <activity
             android:name=".VirtualBoardsStationChoice"
@@ -76,13 +75,11 @@
         <!-- Google Maps карта -->
         <activity
             android:name=".VirtualBoardsMapGPS"
-            android:label="@string/map_gps_name"
-            android:screenOrientation="portrait" >
+            android:label="@string/map_gps_name" >
         </activity>
         <activity
             android:name=".Help"
             android:label="@string/map_help_label"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
         <!-- Разписания (коли на градския транспорт) -->
@@ -110,13 +107,12 @@
         </activity>
         <activity
             android:name=".StationInfoRouteMap"
-            android:label="@string/st_inf_name"
-            android:screenOrientation="portrait" >
+            android:label="@string/st_inf_name" >
         </activity>
         <activity
             android:name=".StationInfoMap"
-            android:label="@string/st_inf_name"
-            android:screenOrientation="portrait" >
+            android:label="@string/st_inf_name" >
+            android:screenOrientation="portrait" >
         </activity>
         <!-- Любими -->
         <activity
@@ -128,7 +124,6 @@
         <activity
             android:name=".About"
             android:label="@string/about_label"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" >
             <intent-filter>
                 <action android:name="android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS" />
