@@ -177,12 +177,12 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 				.getDefaultSharedPreferences(this.context);
 
 		// Get "exitAlert" value from the Shared Preferences
-		String timeGPS = sharedPreferences.getString(
-				Constants.PREFERENCE_KEY_TIME_GPS,
-				Constants.PREFERENCE_DEFAULT_VALUE_TIME_GPS);
+		String timeSchedule = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_TIME_SCHEDULE,
+				Constants.PREFERENCE_DEFAULT_VALUE_TIME_SCHEDULE);
 		String listTitleText = "";
 
-		if ("timeGPS_remaining".equals(timeGPS)) {
+		if ("timeSchedule_remaining".equals(timeSchedule)) {
 			listTitleText = context.getString(R.string.st_inf_times_remaining);
 		} else {
 			listTitleText = context.getString(R.string.st_inf_times_arrival);
