@@ -21,7 +21,10 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="#444"
+        android:orientation="vertical"
+        android:paddingTop="2dp" >
 
         <com.google.android.maps.MapView
             android:id="@+id/mapView"
