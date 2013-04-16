@@ -2,13 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/pref_category_common" >
-        <ListPreference
+        <!-- <ListPreference
             android:defaultValue="version_2"
             android:entries="@array/versionChoice"
             android:entryValues="@array/versionChoiceValues"
             android:key="homeScreen"
             android:summary="@string/common_home_screen_summary"
-            android:title="@string/common_home_screen_title" />
+            android:title="@string/common_home_screen_title" /> -->
         <ListPreference
             android:defaultValue="bg"
             android:entries="@array/languagenChoice"
