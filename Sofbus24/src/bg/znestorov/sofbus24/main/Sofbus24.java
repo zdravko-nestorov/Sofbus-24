@@ -16,6 +16,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
@@ -24,6 +25,7 @@ import bg.znestorov.sofbus24.gps_map.station_choice.ObtainCurrentCordinates;
 import bg.znestorov.sofbus24.station_database.DatabaseUtils;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
+import bg.znestorov.sofbus24.utils.Utils;
 
 public class Sofbus24 extends Activity implements OnClickListener {
 
@@ -202,13 +204,13 @@ public class Sofbus24 extends Activity implements OnClickListener {
 
 	// Once button btn_gps is clicked
 	private void startVirtualBoardsActivity(String inputText) {
-		AlertDialog.Builder alert = new AlertDialog.Builder(Sofbus24.this);
+		AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
 		alert.setTitle(R.string.btn_gps);
 		alert.setMessage(R.string.gps_msg);
 
 		// Set an EditText view to get user input
-		final EditText input = new EditText(Sofbus24.this);
+		final EditText input = new EditText(context);
 		input.setText(inputText);
 		input.setSelection(input.getText().length());
 		alert.setView(input);
@@ -236,7 +238,7 @@ public class Sofbus24 extends Activity implements OnClickListener {
 		alert.setNeutralButton(context.getString(R.string.button_title_help),
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						Intent intent = new Intent(Sofbus24.this,
+						Intent intent = new Intent(context,
 								VirtualBoardsHelp.class);
 						startActivityForResult(intent, 1);
 					}
@@ -269,6 +271,22 @@ public class Sofbus24 extends Activity implements OnClickListener {
 				}
 			}
 		});
+
+		// Add Focus listener on the input field
+		input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					Utils.hideKeyboard(context, input);
+				} else {
+					dialog.getWindow()
+							.setSoftInputMode(
+									WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+				}
+			}
+		});
+
+		// Request focus
+		input.requestFocus();
 	}
 
 	// Once button btn_map is clicked

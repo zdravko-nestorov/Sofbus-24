@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="bg.znestorov.sofbus24.main"
     android:configChanges="keyboardHidden|orientation"
-    android:versionCode="9"
+    android:versionCode="10"
     android:versionName="1.15" >
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-sdk
-        android:minSdkVersion="5"
+        android:minSdkVersion="4"
         android:targetSdkVersion="10" />
 
     <application

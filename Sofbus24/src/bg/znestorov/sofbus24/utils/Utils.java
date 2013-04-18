@@ -3,6 +3,8 @@ package bg.znestorov.sofbus24.utils;
 import java.math.BigDecimal;
 
 import android.content.Context;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import bg.znestorov.sofbus24.main.R;
 
 // Creating methods for easy processing data
@@ -217,5 +219,24 @@ public class Utils {
 		}
 
 		return stationId;
+	}
+
+	// Request focus and show keyboard on EditText
+	public static void showKeyboard(Context context, EditText editText) {
+		// Focus the field
+		editText.requestFocus();
+
+		// Show soft keyboard for the user to enter the value
+		InputMethodManager imm = (InputMethodManager) context
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+	}
+
+	// Request focus and show keyboard on EditText
+	public static void hideKeyboard(Context context, EditText editText) {
+		// Hide soft keyboard.
+		InputMethodManager imm = (InputMethodManager) context
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 	}
 }

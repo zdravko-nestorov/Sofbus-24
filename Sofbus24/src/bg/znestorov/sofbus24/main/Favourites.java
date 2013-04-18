@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -26,6 +27,7 @@ import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.Utils;
 
 public class Favourites extends ListActivity {
 
@@ -237,6 +239,22 @@ public class Favourites extends ListActivity {
 					}
 				}
 			});
+
+			// Add Focus listener on the input field
+			input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+				public void onFocusChange(View v, boolean hasFocus) {
+					if (!hasFocus) {
+						Utils.hideKeyboard(context, input);
+					} else {
+						dialog.getWindow()
+								.setSoftInputMode(
+										WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+					}
+				}
+			});
+
+			// Request focus
+			input.requestFocus();
 
 			break;
 		case R.id.fav_menu_delete:

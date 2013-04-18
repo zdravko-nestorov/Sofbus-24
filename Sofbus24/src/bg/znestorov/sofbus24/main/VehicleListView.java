@@ -17,7 +17,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -31,6 +30,7 @@ import bg.znestorov.sofbus24.schedule_stations.HtmlResultDirection;
 import bg.znestorov.sofbus24.schedule_vehicles.Vehicle;
 import bg.znestorov.sofbus24.schedule_vehicles.VehicleAdapter;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.VehicleNames;
 
 public class VehicleListView extends Activity {
@@ -128,9 +128,7 @@ public class VehicleListView extends Activity {
 		editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
-					// Hide soft keyboard.
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+					Utils.hideKeyboard(context, editText);
 				}
 			}
 		});
@@ -289,13 +287,7 @@ public class VehicleListView extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_SEARCH) {
-			// Focus the field.
-			editText.requestFocus();
-
-			// Show soft keyboard for the user to enter the value.
-			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
-
+			Utils.showKeyboard(context, editText);
 			return true;
 		}
 
