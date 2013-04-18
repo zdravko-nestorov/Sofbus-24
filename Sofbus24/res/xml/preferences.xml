@@ -2,13 +2,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/pref_category_common" >
-        <!-- <ListPreference
+
+        <!--
+             <ListPreference
             android:defaultValue="version_2"
             android:entries="@array/versionChoice"
             android:entryValues="@array/versionChoiceValues"
             android:key="homeScreen"
             android:summary="@string/common_home_screen_summary"
-            android:title="@string/common_home_screen_title" /> -->
+            android:title="@string/common_home_screen_title" />
+        -->
+
         <ListPreference
             android:defaultValue="bg"
             android:entries="@array/languagenChoice"
@@ -64,10 +68,10 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_map" >
         <ListPreference
-            android:defaultValue="map_satellite"
-            android:entries="@array/mapSatellite"
-            android:entryValues="@array/mapSatelliteValues"
-            android:key="satellite_NEW"
+            android:defaultValue="map_street"
+            android:entries="@array/mapType"
+            android:entryValues="@array/mapTypeValues"
+            android:key="mapType"
             android:summary="@string/map_satellite_summary"
             android:title="@string/map_satellite_title" />
 

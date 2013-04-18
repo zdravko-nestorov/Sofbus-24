@@ -34,8 +34,8 @@ public final class R {
         /**  GoogleMaps view (satellite or street view) 
  GoogleMaps view (satellite or street view) 
          */
-        public static final int mapSatellite=0x7f060014;
-        public static final int mapSatelliteValues=0x7f060015;
+        public static final int mapType=0x7f060014;
+        public static final int mapTypeValues=0x7f060015;
         /**  Virtual Boards Time 
  Virtual Boards Time 
          */

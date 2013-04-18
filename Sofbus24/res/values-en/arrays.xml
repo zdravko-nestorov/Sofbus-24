@@ -40,9 +40,9 @@
     </string-array>
 
     <!-- GoogleMaps view (satellite or street view) -->
-    <string-array name="mapSatellite">
-        <item name="map_satellite">Satellite map</item>
+    <string-array name="mapType">
         <item name="map_street">Street View map</item>
+        <item name="map_satellite">Satellite map</item>
     </string-array>
 
 </resources>

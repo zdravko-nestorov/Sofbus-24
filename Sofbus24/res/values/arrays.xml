@@ -324,13 +324,13 @@
     </string-array>
 
     <!-- GoogleMaps view (satellite or street view) -->
-    <string-array name="mapSatellite">
-        <item name="map_satellite">Сателитна карта</item>
+    <string-array name="mapType">
         <item name="map_street">Street View карта</item>
+        <item name="map_satellite">Сателитна карта</item>
     </string-array>
-    <string-array name="mapSatelliteValues">
-        <item name="map_satellite">map_satellite</item>
+    <string-array name="mapTypeValues">
         <item name="map_street">map_street</item>
+        <item name="map_satellite">map_satellite</item>
     </string-array>
 
 </resources>

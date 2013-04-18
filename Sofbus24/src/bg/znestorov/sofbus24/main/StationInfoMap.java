@@ -151,11 +151,11 @@ public class StationInfoMap extends MapActivity {
 				.getDefaultSharedPreferences(getBaseContext());
 
 		// Get "satellite" value from the Shared Preferences
-		String satellitePref = sharedPreferences.getString(
-				Constants.PREFERENCE_KEY_SATELLITE,
-				Constants.PREFERENCE_DEFAULT_VALUE_SATELLITE);
+		String mapType = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_MAP_TYPE,
+				Constants.PREFERENCE_DEFAULT_VALUE_MAP_TYPE);
 
-		if ("map_satellite".equals(satellitePref)) {
+		if ("map_satellite".equals(mapType)) {
 			mapView.setSatellite(true);
 		} else {
 			mapView.setSatellite(false);

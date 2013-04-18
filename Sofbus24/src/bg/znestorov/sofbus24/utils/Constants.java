@@ -242,8 +242,8 @@ public class Constants {
 	public static final String PREFERENCE_DEFAULT_VALUE_CLOSEST_STATIONS = "8";
 	public static final String PREFERENCE_KEY_TIME_INFO_RETRIEVAL = "timeInfoRetrieval";
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL = "time_skgt";
-	public static final String PREFERENCE_KEY_SATELLITE = "satellite_NEW";
-	public static final String PREFERENCE_DEFAULT_VALUE_SATELLITE = "map_satellite";
+	public static final String PREFERENCE_KEY_MAP_TYPE = "mapType";
+	public static final String PREFERENCE_DEFAULT_VALUE_MAP_TYPE = "map_street";
 	public static final String PREFERENCE_KEY_COMPASS = "compass";
 	public static final boolean PREFERENCE_DEFAULT_VALUE_COMPASS = false;
 	public static final String PREFERENCE_KEY_MAP_VIEW = "mapView";
