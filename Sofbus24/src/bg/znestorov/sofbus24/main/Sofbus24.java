@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -211,6 +212,7 @@ public class Sofbus24 extends Activity implements OnClickListener {
 
 		// Set an EditText view to get user input
 		final EditText input = new EditText(context);
+		input.setRawInputType(InputType.TYPE_CLASS_NUMBER);
 		input.setText(inputText);
 		input.setSelection(input.getText().length());
 		alert.setView(input);

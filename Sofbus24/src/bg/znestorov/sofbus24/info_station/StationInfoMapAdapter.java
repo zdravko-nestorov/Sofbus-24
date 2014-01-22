@@ -112,9 +112,9 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 		rowView.setLongClickable(false);
 
 		String stationName = station.getStation();
-		String stationCode = Utils.getValueAfter(stationName, "(");
+		String stationCode = Utils.getValueAfterLast(stationName, "(");
 		stationCode = Utils.getValueBefore(stationCode, ")");
-		stationName = Utils.getValueBefore(stationName, "(").trim();
+		stationName = Utils.getValueBeforeLast(stationName, "(").trim();
 
 		TextView listTitle = (TextView) rowView.findViewById(R.id.list_title);
 		listTitle.setText(stationName);

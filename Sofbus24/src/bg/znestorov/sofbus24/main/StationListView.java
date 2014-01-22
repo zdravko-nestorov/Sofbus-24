@@ -1,5 +1,7 @@
 package bg.znestorov.sofbus24.main;
 
+import static bg.znestorov.sofbus24.utils.Utils.getValueAfterLast;
+import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 import static bg.znestorov.sofbus24.utils.StationCoordinates.getLocation;
 
 import java.util.ArrayList;
@@ -55,9 +57,7 @@ public class StationListView extends Activity {
 
 		DirectionTransfer directionTransfer;
 		try {
-			directionTransfer = (DirectionTransfer) getIntent()
-					.getSerializableExtra(
-							Constants.KEYWORD_BUNDLE_DIRECTION_TRANSFER);
+			directionTransfer = (DirectionTransfer) getIntent().getSerializableExtra(Constants.KEYWORD_BUNDLE_DIRECTION_TRANSFER);
 		} catch (Exception e) {
 			directionTransfer = null;
 		}
@@ -96,8 +96,7 @@ public class StationListView extends Activity {
 		if (vehicleType.equals(context.getString(R.string.title_bus))) {
 			vehicleNumber.setText(vehicleType + " ¹ " + vehicleNumberText);
 			vehicleDirection.setText(vehicleDirectionText);
-		} else if (vehicleType
-				.equals(context.getString(R.string.title_trolley))) {
+		} else if (vehicleType.equals(context.getString(R.string.title_trolley))) {
 			vehicleNumber.setText(vehicleType + " ¹ " + vehicleNumberText);
 			vehicleDirection.setText(vehicleDirectionText);
 		} else {
@@ -108,29 +107,23 @@ public class StationListView extends Activity {
 		// Setting ListView listener (if an item is clicked)
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
-			public void onItemClick(AdapterView<?> parent, View v,
-					int position, long id) {
-				Station station = (Station) listView.getAdapter().getItem(
-						position);
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+				Station station = (Station) listView.getAdapter().getItem(position);
 				String selectedValue = station.getStation();
-				Toast.makeText(context, selectedValue, Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(context, selectedValue, Toast.LENGTH_SHORT).show();
 
 				// Getting the station number
 				String stationCode = station.getStation();
 				if (stationCode.contains("(") && stationCode.contains(")")) {
-					stationCode = stationCode.substring(
-							stationCode.indexOf("(") + 1,
-							stationCode.indexOf(")"));
+					stationCode = getValueAfterLast(stationCode, "(");
+					stationCode = getValueBefore(stationCode, ")");
 				}
 
 				// Getting the HtmlResult and showing a ProgressDialog
 				Context context = StationListView.this;
 				ProgressDialog progressDialog = new ProgressDialog(context);
-				progressDialog.setMessage(context
-						.getString(R.string.loading_message_retrieve_schedule_info));
-				LoadStationAsyncTask loadStationAsyncTask = new LoadStationAsyncTask(
-						context, progressDialog, station, stationCode);
+				progressDialog.setMessage(context.getString(R.string.loading_message_retrieve_schedule_info));
+				LoadStationAsyncTask loadStationAsyncTask = new LoadStationAsyncTask(context, progressDialog, station, stationCode);
 				loadStationAsyncTask.execute();
 			}
 		});
@@ -149,8 +142,7 @@ public class StationListView extends Activity {
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_station_list_context, menu);
@@ -162,18 +154,15 @@ public class StationListView extends Activity {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-				.getMenuInfo();
+		final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 
-		Station station = (Station) listView.getAdapter()
-				.getItem((int) info.id);
+		Station station = (Station) listView.getAdapter().getItem((int) info.id);
 		String selectedValue = station.getStation();
 
 		// Getting the name and the number of the station
 		String stationCode = selectedValue;
 		if (stationCode.contains("(") && stationCode.contains(")")) {
-			stationCode = stationCode.substring(stationCode.indexOf("(") + 1,
-					stationCode.indexOf(")"));
+			stationCode = stationCode.substring(stationCode.indexOf("(") + 1, stationCode.indexOf(")"));
 		}
 
 		switch (item.getItemId()) {
@@ -181,18 +170,14 @@ public class StationListView extends Activity {
 			// Getting the HtmlResult and showing a ProgressDialog
 			Context context = StationListView.this;
 			ProgressDialog progressDialog = new ProgressDialog(context);
-			progressDialog
-					.setMessage(context
-							.getString(R.string.loading_message_retrieve_schedule_info));
-			LoadStationAsyncTask loadStationAsyncTask = new LoadStationAsyncTask(
-					context, progressDialog, station, stationCode);
+			progressDialog.setMessage(context.getString(R.string.loading_message_retrieve_schedule_info));
+			LoadStationAsyncTask loadStationAsyncTask = new LoadStationAsyncTask(context, progressDialog, station, stationCode);
 			loadStationAsyncTask.execute();
 
 			Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.st_list_gps:
-			new HtmlRequestSumc().getInformation(StationListView.this,
-					stationCode, Constants.SCHEDULE_GPS_PARAM, null);
+			new HtmlRequestSumc().getInformation(StationListView.this, stationCode, Constants.SCHEDULE_GPS_PARAM, null);
 
 			Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
 			break;
@@ -211,9 +196,7 @@ public class StationListView extends Activity {
 		// Http Get parameter used to create/abort the HTTP connection
 		HttpGet httpGet;
 
-		public LoadStationAsyncTask(Context context,
-				ProgressDialog progressDialog, Station station,
-				String stationCode) {
+		public LoadStationAsyncTask(Context context, ProgressDialog progressDialog, Station station, String stationCode) {
 			this.context = context;
 			this.progressDialog = progressDialog;
 			this.station = station;
@@ -224,12 +207,11 @@ public class StationListView extends Activity {
 		protected void onPreExecute() {
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(true);
-			progressDialog
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						public void onCancel(DialogInterface dialog) {
-							cancel(true);
-						}
-					});
+			progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				public void onCancel(DialogInterface dialog) {
+					cancel(true);
+				}
+			});
 			progressDialog.show();
 		}
 
@@ -238,8 +220,7 @@ public class StationListView extends Activity {
 			String htmlResult = null;
 
 			try {
-				HtmlRequestStation htmlRequestStation = new HtmlRequestStation(
-						station);
+				HtmlRequestStation htmlRequestStation = new HtmlRequestStation(station);
 				httpGet = htmlRequestStation.createStationRequest();
 				htmlResult = htmlRequestStation.getInformation(httpGet);
 			} catch (Exception e) {
@@ -265,9 +246,8 @@ public class StationListView extends Activity {
 			bundle.putSerializable(Constants.KEYWORD_BUNDLE_STATION, station);
 			stationInfoIntent.putExtras(bundle);
 
-			if (time_stamp != null && !"".equals(time_stamp)
-					&& time_stamp.length() > 2 && coordinates != null
-					&& !"".equals(coordinates) && coordinates.length > 0) {
+			if (time_stamp != null && !"".equals(time_stamp) && time_stamp.length() > 2 && coordinates != null && !"".equals(coordinates)
+					&& coordinates.length > 0) {
 
 				// Fixing the time_stamp
 				time_stamp = time_stamp.substring(1, time_stamp.length() - 1);
@@ -277,9 +257,7 @@ public class StationListView extends Activity {
 				station.setCoordinates(coordinates);
 
 				startActivityForResult(stationInfoIntent, 1);
-			} else if (time_stamp != null
-					&& !"".equals(time_stamp)
-					&& time_stamp.length() > 2
+			} else if (time_stamp != null && !"".equals(time_stamp) && time_stamp.length() > 2
 					&& (coordinates == null || "".equals(coordinates) || coordinates.length == 0)) {
 
 				// Fixing the time_stamp
@@ -288,11 +266,9 @@ public class StationListView extends Activity {
 
 				startActivityForResult(stationInfoIntent, 1);
 			} else {
-				Intent intent = new Intent(context,
-						VirtualBoardsStationChoice.class);
+				Intent intent = new Intent(context, VirtualBoardsStationChoice.class);
 
-				intent.putExtra(Constants.KEYWORD_HTML_RESULT,
-						Constants.SCHEDULE_NO_INFO);
+				intent.putExtra(Constants.KEYWORD_HTML_RESULT, Constants.SCHEDULE_NO_INFO);
 				context.startActivity(intent);
 			}
 		}

@@ -1,5 +1,8 @@
 package bg.znestorov.sofbus24.utils;
 
+import static bg.znestorov.sofbus24.utils.Utils.getValueAfterLast;
+import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
+
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -42,8 +45,8 @@ public class StationCoordinates {
 			stationCode = stations.get(i);
 
 			if (stationCode.contains("(") && stationCode.contains(")")) {
-				stationCode = stationCode.substring(
-						stationCode.indexOf("(") + 1, stationCode.indexOf(")"));
+				stationCode = getValueAfterLast(stationCode, "(");
+				stationCode = getValueBefore(stationCode, ")");
 
 				// Getting station from the database via stationCode
 				GPSStation station = datasource.getStation(stationCode);

@@ -37,6 +37,15 @@ public class Utils {
 		}
 	}
 
+	// Get value AFTER some REGEX (Last)
+	public static String getValueAfterLast(String value, String regex) {
+		if (value.contains(regex)) {
+			return value.substring(value.lastIndexOf(regex) + regex.length());
+		} else {
+			return value;
+		}
+	}
+
 	// Get the difference between two hours in format HH:MM
 	public static String getDifference(Context context, String afterTime,
 			String currTime) {
@@ -100,15 +109,12 @@ public class Utils {
 			} else {
 				differenceArr[0] = differenceArr[0]
 						+ context.getString(R.string.remaining_hours);
-				;
 				if (differenceArr[1].length() == 0) {
 					differenceArr[1] = "0"
 							+ context.getString(R.string.remaining_minutes);
-					;
 				} else {
 					differenceArr[1] = differenceArr[1]
 							+ context.getString(R.string.remaining_minutes);
-					;
 				}
 
 				diff = "~" + differenceArr[0] + " " + differenceArr[1];
@@ -142,7 +148,7 @@ public class Utils {
 		String stationName = getValueAfter(htmlSrc,
 				Constants.STATION_INFO_BEGIN);
 		stationName = getValueBefore(stationName, Constants.STATION_INFO_END_1);
-		stationName = getValueBefore(stationName, Constants.STATION_INFO_END_2)
+		stationName = getValueBeforeLast(stationName, Constants.STATION_INFO_END_2)
 				.trim();
 		stationName = getValueAfter(stationName,
 				Constants.STATION_INFO_SEPARATOR_SPACE);
@@ -194,6 +200,9 @@ public class Utils {
 	public static String getStationId(String htmlSrc, String stationCode) {
 		String stationId = getValueAfter(htmlSrc, Constants.STATION_INFO_BEGIN);
 		stationId = getValueAfter(stationId, Constants.STATION_INFO_END_2);
+		while (stationId.contains(Constants.STATION_INFO_END_2) && !Character.isDigit(stationId.charAt(0))) {
+			stationId = getValueAfter(stationId, Constants.STATION_INFO_END_2);
+		}
 		stationId = getValueBefore(stationId, Constants.STATION_INFO_END_3)
 				.trim();
 
@@ -211,6 +220,9 @@ public class Utils {
 				Constants.STATION_INFO_SEPARATOR_BOLD + stationCodeO
 						+ Constants.STATION_INFO_SEPARATOR_POINT);
 		stationId = getValueAfter(stationId, Constants.STATION_INFO_END_2);
+		while (stationId.contains(Constants.STATION_INFO_END_2) && !Character.isDigit(stationId.charAt(0))) {
+			stationId = getValueAfter(stationId, Constants.STATION_INFO_END_2);
+		}
 		stationId = getValueBefore(stationId, Constants.STATION_INFO_END_3)
 				.trim();
 
