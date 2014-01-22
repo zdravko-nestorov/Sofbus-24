@@ -1,5 +1,7 @@
 package bg.znestorov.sofbus24.gps_map.station_choice;
 
+import static bg.znestorov.sofbus24.utils.Utils.createNoLocationAlert;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.VirtualBoardsMapStationChoice;
 import bg.znestorov.sofbus24.station_database.GPSStation;
@@ -25,6 +28,9 @@ import bg.znestorov.sofbus24.utils.Constants;
 import com.google.android.maps.GeoPoint;
 
 public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> {
+
+	// LogCat TAG for console messages
+	private final static String TAG = "ObtainCurrentCordinates";
 
 	private Context context;
 	private ProgressDialog progressDialog;
@@ -43,6 +49,10 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 	// Database
 	StationsDataSource datasource;
 
+	// Available Location providers
+	private boolean isNetworkProviderOn = true;
+	private boolean isGpsProviderOn = true;
+
 	public ObtainCurrentCordinates(Context context) {
 		this.context = context;
 
@@ -60,11 +70,23 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 		mLocationManager = (LocationManager) context
 				.getSystemService(Context.LOCATION_SERVICE);
 
-		mLocationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, 0, 0,
-				mVeggsterLocationListener);
-		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				0, 0, mVeggsterLocationListener);
+		try {
+			mLocationManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, 0, 0,
+					mVeggsterLocationListener);
+		} catch (Exception e) {
+			Log.d(TAG, "Network problem.");
+			isNetworkProviderOn = false;
+		}
+
+		try {
+			mLocationManager.requestLocationUpdates(
+					LocationManager.GPS_PROVIDER, 0, 0,
+					mVeggsterLocationListener);
+		} catch (Exception e) {
+			Log.d(TAG, "GPS problem.");
+			isGpsProviderOn = false;
+		}
 
 		// Create progress dialog showing the loading message
 		progressDialog = new ProgressDialog(context);
@@ -78,7 +100,6 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 		progressDialog.setIndeterminate(true);
 		progressDialog.setCancelable(true);
 		progressDialog.show();
-
 	}
 
 	@Override
@@ -91,48 +112,54 @@ public class ObtainCurrentCordinates extends AsyncTask<String, Integer, String> 
 	protected void onPostExecute(String result) {
 		progressDialog.dismiss();
 
-		// Getting a list with the closest stations
-		List<GPSStation> station_list = getClosestStations();
+		if (isNetworkProviderOn || isGpsProviderOn) {
+			// Getting a list with the closest stations
+			List<GPSStation> station_list = getClosestStations();
 
-		// Transfer the list to a string
-		String station_string = "";
-		for (GPSStation station : station_list) {
-			// Creating location with the current location
-			Location locCurr = new Location("");
-			locCurr.setLatitude(this.latitude);
-			locCurr.setLongitude(this.longitude);
+			// Transfer the list to a string
+			String station_string = "";
+			for (GPSStation station : station_list) {
+				// Creating location with the current location
+				Location locCurr = new Location("");
+				locCurr.setLatitude(this.latitude);
+				locCurr.setLongitude(this.longitude);
 
-			// Creating location with the current station
-			Location locTap = new Location("");
-			locTap.setLatitude(Double.parseDouble(station.getLat()));
-			locTap.setLongitude(Double.parseDouble(station.getLon()));
+				// Creating location with the current station
+				Location locTap = new Location("");
+				locTap.setLatitude(Double.parseDouble(station.getLat()));
+				locTap.setLongitude(Double.parseDouble(station.getLon()));
 
-			// Calculate distance between current location and the station
-			Float distanceTo = locTap.distanceTo(locCurr);
-			BigDecimal bd = new BigDecimal(distanceTo);
-			BigDecimal rounded = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-			distanceTo = rounded.floatValue();
+				// Calculate distance between current location and the station
+				Float distanceTo = locTap.distanceTo(locCurr);
+				BigDecimal bd = new BigDecimal(distanceTo);
+				BigDecimal rounded = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+				distanceTo = rounded.floatValue();
 
-			station_string += "@" + station.getName() + "," + station.getId()
-					+ "," + distanceTo;
+				station_string += "@" + station.getName() + ","
+						+ station.getId() + "," + distanceTo;
+			}
+			if (!"".equals(station_string)) {
+				station_string = station_string.substring(1).trim();
+			}
+
+			// Transfer the GPSStations array to VirtualBoardsMapStationChoice
+			// activity
+			Intent stationInfoIntent = new Intent(context,
+					VirtualBoardsMapStationChoice.class);
+			stationInfoIntent.putExtra(Constants.KEYWORD_CLOSEST_STATIONS,
+					station_string);
+			context.startActivity(stationInfoIntent);
+		} else {
+			createNoLocationAlert(context);
 		}
-		if (!"".equals(station_string)) {
-			station_string = station_string.substring(1).trim();
-		}
-
-		// Transfer the GPSStations array to VirtualBoardsMapStationChoice
-		// activity
-		Intent stationInfoIntent = new Intent(context,
-				VirtualBoardsMapStationChoice.class);
-		stationInfoIntent.putExtra(Constants.KEYWORD_CLOSEST_STATIONS,
-				station_string);
-		context.startActivity(stationInfoIntent);
 	}
 
 	@Override
 	protected String doInBackground(String... params) {
-		while (this.latitude == 0.0 && this.longitude == 0.0) {
-			// Repeat until the user obtain coordinates
+		if (isNetworkProviderOn || isGpsProviderOn) {
+			while (this.latitude == 0.0 && this.longitude == 0.0) {
+				// Repeat until the user obtain coordinates
+			}
 		}
 
 		return null;

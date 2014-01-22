@@ -33,7 +33,8 @@ public class StationAdapter extends ArrayAdapter<Station> {
 	// Creating the elements of the ListView
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		Station station = stations.get(position);
 		View rowView = convertView;
@@ -43,11 +44,16 @@ public class StationAdapter extends ArrayAdapter<Station> {
 	}
 
 	// Direction row in the ListView
-	public View setDirectionRow(LayoutInflater inflater, ViewGroup parent, Station station) {
-		View rowView = inflater.inflate(R.layout.activity_gps_map_station_choice_list_row, parent, false);
+	public View setDirectionRow(LayoutInflater inflater, ViewGroup parent,
+			Station station) {
+		View rowView = inflater.inflate(
+				R.layout.activity_gps_map_station_choice_list_row, parent,
+				false);
 
-		TextView stationInfo = (TextView) rowView.findViewById(R.id.station_info);
-		TextView stationCode = (TextView) rowView.findViewById(R.id.station_distance);
+		TextView stationInfo = (TextView) rowView
+				.findViewById(R.id.station_info);
+		TextView stationCode = (TextView) rowView
+				.findViewById(R.id.station_distance);
 
 		// Create final variable for GPSStation, so can be used in
 		// onClickListener
@@ -57,7 +63,8 @@ public class StationAdapter extends ArrayAdapter<Station> {
 		stationName = Utils.getValueBeforeLast(stationName, "(").trim();
 
 		final GPSStation gpsStation = new GPSStation(stationId, stationName);
-		final ImageView stationFavorites = (ImageView) rowView.findViewById(R.id.station_favorite);
+		final ImageView stationFavorites = (ImageView) rowView
+				.findViewById(R.id.station_favorite);
 
 		// Set image on the imageView
 		datasource.open();
@@ -69,7 +76,9 @@ public class StationAdapter extends ArrayAdapter<Station> {
 		datasource.close();
 
 		stationInfo.setText(stationName);
-		stationCode.setText(context.getString(R.string.gps_station_choice_station_code) + Utils.formatNumberOfDigits(stationId));
+		stationCode.setText(context
+				.getString(R.string.gps_station_choice_station_code)
+				+ Utils.formatNumberOfDigits(stationId));
 
 		// Set onClick listener
 		stationFavorites.setOnClickListener(new OnClickListener() {
@@ -77,12 +86,16 @@ public class StationAdapter extends ArrayAdapter<Station> {
 				datasource.open();
 				if (datasource.getStation(gpsStation) == null) {
 					datasource.createStation(gpsStation);
-					stationFavorites.setImageResource(R.drawable.favorites_full);
-					Toast.makeText(context, R.string.toast_favorites_add, Toast.LENGTH_SHORT).show();
+					stationFavorites
+							.setImageResource(R.drawable.favorites_full);
+					Toast.makeText(context, R.string.toast_favorites_add,
+							Toast.LENGTH_SHORT).show();
 				} else {
 					datasource.deleteStation(gpsStation);
-					stationFavorites.setImageResource(R.drawable.favorites_empty);
-					Toast.makeText(context, R.string.toast_favorites_remove, Toast.LENGTH_SHORT).show();
+					stationFavorites
+							.setImageResource(R.drawable.favorites_empty);
+					Toast.makeText(context, R.string.toast_favorites_remove,
+							Toast.LENGTH_SHORT).show();
 				}
 				datasource.close();
 			}

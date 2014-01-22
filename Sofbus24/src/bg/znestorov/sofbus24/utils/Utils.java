@@ -2,7 +2,10 @@ package bg.znestorov.sofbus24.utils;
 
 import java.math.BigDecimal;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import bg.znestorov.sofbus24.main.R;
@@ -148,8 +151,8 @@ public class Utils {
 		String stationName = getValueAfter(htmlSrc,
 				Constants.STATION_INFO_BEGIN);
 		stationName = getValueBefore(stationName, Constants.STATION_INFO_END_1);
-		stationName = getValueBeforeLast(stationName, Constants.STATION_INFO_END_2)
-				.trim();
+		stationName = getValueBeforeLast(stationName,
+				Constants.STATION_INFO_END_2).trim();
 		stationName = getValueAfter(stationName,
 				Constants.STATION_INFO_SEPARATOR_SPACE);
 		stationName = getValueBefore(stationName,
@@ -200,7 +203,8 @@ public class Utils {
 	public static String getStationId(String htmlSrc, String stationCode) {
 		String stationId = getValueAfter(htmlSrc, Constants.STATION_INFO_BEGIN);
 		stationId = getValueAfter(stationId, Constants.STATION_INFO_END_2);
-		while (stationId.contains(Constants.STATION_INFO_END_2) && !Character.isDigit(stationId.charAt(0))) {
+		while (stationId.contains(Constants.STATION_INFO_END_2)
+				&& !Character.isDigit(stationId.charAt(0))) {
 			stationId = getValueAfter(stationId, Constants.STATION_INFO_END_2);
 		}
 		stationId = getValueBefore(stationId, Constants.STATION_INFO_END_3)
@@ -220,7 +224,8 @@ public class Utils {
 				Constants.STATION_INFO_SEPARATOR_BOLD + stationCodeO
 						+ Constants.STATION_INFO_SEPARATOR_POINT);
 		stationId = getValueAfter(stationId, Constants.STATION_INFO_END_2);
-		while (stationId.contains(Constants.STATION_INFO_END_2) && !Character.isDigit(stationId.charAt(0))) {
+		while (stationId.contains(Constants.STATION_INFO_END_2)
+				&& !Character.isDigit(stationId.charAt(0))) {
 			stationId = getValueAfter(stationId, Constants.STATION_INFO_END_2);
 		}
 		stationId = getValueBefore(stationId, Constants.STATION_INFO_END_3)
@@ -250,5 +255,30 @@ public class Utils {
 		InputMethodManager imm = (InputMethodManager) context
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+	}
+
+	// Dialog alerting that no location provider is enabled
+	public static void createNoLocationAlert(final Context context) {
+		new AlertDialog.Builder(context)
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.setTitle(R.string.ss_gps_map_msg_title)
+				.setMessage(R.string.ss_gps_map_msg_body)
+				.setCancelable(false)
+				.setPositiveButton(context.getString(R.string.button_title_ok),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int i) {
+								Intent intent = new Intent(
+										android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+								context.startActivity(intent);
+							}
+
+						})
+				.setNegativeButton(
+						context.getString(R.string.button_title_cancel),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int i) {
+							}
+
+						}).show();
 	}
 }

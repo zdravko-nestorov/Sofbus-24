@@ -584,14 +584,16 @@ public class VirtualBoardsMapGPS extends MapActivity {
 	public void requestUpdates() {
 		// Set the listener to the current LocationManager
 		try {
-			m_LocationManager.requestLocationUpdates("network", 20000, 10f,
+			m_LocationManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, 20000, 10f,
 					m_NetworkLocationListener);
 		} catch (Exception e) {
 			Log.d(TAG, "Network problem.");
 		}
 
 		try {
-			m_LocationManager.requestLocationUpdates("gps", 20000, 10f,
+			m_LocationManager.requestLocationUpdates(
+					LocationManager.GPS_PROVIDER, 20000, 10f,
 					m_GPSLocationListener);
 		} catch (Exception e) {
 			Log.d(TAG, "GPS problem.");

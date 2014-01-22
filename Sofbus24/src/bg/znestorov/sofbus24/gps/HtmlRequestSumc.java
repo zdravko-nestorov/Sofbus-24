@@ -564,7 +564,12 @@ public class HtmlRequestSumc {
 
 		@Override
 		protected void onPostExecute(String result) {
-			progressDialog.dismiss();
+			try {
+				progressDialog.dismiss();
+			} catch (Exception e) {
+				// Workaround used just in case when this activity is destroyed
+				// before the dialog
+			}
 
 			if (result.equals(Constants.EXCEPTION)) {
 				startNewActivity(client, context, stationCode, stationCodeO,
@@ -579,8 +584,13 @@ public class HtmlRequestSumc {
 		protected void onCancelled() {
 			super.onCancelled();
 
-			progressDialog.dismiss();
-			httpPost.abort();
+			try {
+				progressDialog.dismiss();
+				httpPost.abort();
+			} catch (Exception e) {
+				// Workaround used just in case when this activity is destroyed
+				// before the dialog
+			}
 		}
 	}
 

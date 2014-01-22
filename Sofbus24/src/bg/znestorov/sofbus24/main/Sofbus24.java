@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.main;
 
+import static bg.znestorov.sofbus24.utils.Utils.createNoLocationAlert;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,6 +26,7 @@ import bg.znestorov.sofbus24.gps_map.MyLocation;
 import bg.znestorov.sofbus24.gps_map.station_choice.ObtainCurrentCordinates;
 import bg.znestorov.sofbus24.station_database.DatabaseUtils;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 import bg.znestorov.sofbus24.utils.Utils;
 
@@ -47,6 +49,9 @@ public class Sofbus24 extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_screen);
+
+		// Set the language
+		LanguageChange.selectLocale(Sofbus24.this);
 
 		// Setting activity title
 		this.setTitle(getString(R.string.ss_name));
@@ -305,30 +310,7 @@ public class Sofbus24 extends Activity implements OnClickListener {
 					progressDialog);
 			loadMap.execute();
 		} else {
-			new AlertDialog.Builder(this)
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setTitle(R.string.ss_gps_map_msg_title)
-					.setMessage(R.string.ss_gps_map_msg_body)
-					.setCancelable(false)
-					.setPositiveButton(
-							context.getString(R.string.button_title_ok),
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int i) {
-									Intent intent = new Intent(
-											android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-									startActivity(intent);
-								}
-
-							})
-					.setNegativeButton(
-							context.getString(R.string.button_title_cancel),
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int i) {
-								}
-
-							}).show();
+			createNoLocationAlert(context);
 		}
 	}
 
