@@ -16,22 +16,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.params.ConnManagerParams;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -86,30 +76,8 @@ public class HtmlRequestSumc {
 			stationCodeO = "-1";
 		}
 
-		// Setting timeout parameters
-		HttpParams httpParameters = new BasicHttpParams();
-		// Set the timeout in milliseconds until a connection is established
-		HttpConnectionParams.setConnectionTimeout(httpParameters,
-				Constants.GLOBAL_TIMEOUT_CONNECTION);
-		// Set the default socket timeout (SO_TIMEOUT)
-		// in milliseconds which is the timeout for waiting for data
-		HttpConnectionParams.setSoTimeout(httpParameters,
-				Constants.GLOBAL_TIMEOUT_SOCKET);
-		ConnManagerParams.setTimeout(httpParameters,
-				Constants.GLOBAL_TIMEOUT_SOCKET);
-
-		// Creating ThreadSafeClientConnManager
-		SchemeRegistry schemeRegistry = new SchemeRegistry();
-		schemeRegistry.register(new Scheme("http", PlainSocketFactory
-				.getSocketFactory(), 80));
-		final SSLSocketFactory sslSocketFactory = SSLSocketFactory
-				.getSocketFactory();
-		schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
-		ClientConnectionManager cm = new ThreadSafeClientConnManager(
-				httpParameters, schemeRegistry);
-
 		// HTTP Client - created once and using cookies
-		DefaultHttpClient client = new DefaultHttpClient(cm, httpParameters);
+		final DefaultHttpClient client = new DefaultHttpClient();
 
 		loadCookiesFromPreferences(context, client);
 
@@ -509,6 +477,7 @@ public class HtmlRequestSumc {
 	}
 
 	private class LoadingSumc extends AsyncTask<Void, Void, String> {
+		
 		Context context;
 		ProgressDialog progressDialog;
 		DefaultHttpClient client;
@@ -595,6 +564,7 @@ public class HtmlRequestSumc {
 	}
 
 	private class LoadingCaptcha extends AsyncTask<Void, Void, Bitmap> {
+		
 		Context context;
 		ProgressDialog progressDialog;
 		DefaultHttpClient client;
@@ -659,8 +629,13 @@ public class HtmlRequestSumc {
 		protected void onCancelled() {
 			super.onCancelled();
 
-			progressDialog.dismiss();
-			httpGet.abort();
+			try {
+				progressDialog.dismiss();
+				httpGet.abort();
+			} catch (Exception e) {
+				// Workaround used just in case when this activity is destroyed
+				// before the dialog
+			}
 		}
 	}
 }

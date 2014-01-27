@@ -90,7 +90,7 @@ public class MapRoute {
 			szUrl += "&sensor=true";
 
 			// Standard HTTPClient for GET request
-			HttpClient httpclient = new DefaultHttpClient();
+			final HttpClient httpclient = new DefaultHttpClient();
 			HttpResponse response;
 
 			// XML result
@@ -112,6 +112,8 @@ public class MapRoute {
 				}
 			} catch (Exception e) {
 				haRoute.post(ruFetchError);
+			} finally {
+				httpclient.getConnectionManager().shutdown();
 			}
 
 			// Parse the XML file

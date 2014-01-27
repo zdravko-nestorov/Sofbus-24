@@ -2,10 +2,7 @@ package bg.znestorov.sofbus24.utils;
 
 import java.math.BigDecimal;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import bg.znestorov.sofbus24.main.R;
@@ -255,30 +252,5 @@ public class Utils {
 		InputMethodManager imm = (InputMethodManager) context
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-	}
-
-	// Dialog alerting that no location provider is enabled
-	public static void createNoLocationAlert(final Context context) {
-		new AlertDialog.Builder(context)
-				.setIcon(android.R.drawable.ic_dialog_alert)
-				.setTitle(R.string.ss_gps_map_msg_title)
-				.setMessage(R.string.ss_gps_map_msg_body)
-				.setCancelable(false)
-				.setPositiveButton(context.getString(R.string.button_title_ok),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int i) {
-								Intent intent = new Intent(
-										android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-								context.startActivity(intent);
-							}
-
-						})
-				.setNegativeButton(
-						context.getString(R.string.button_title_cancel),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int i) {
-							}
-
-						}).show();
 	}
 }

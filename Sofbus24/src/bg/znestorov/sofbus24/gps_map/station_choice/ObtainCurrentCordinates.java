@@ -1,6 +1,6 @@
 package bg.znestorov.sofbus24.gps_map.station_choice;
 
-import static bg.znestorov.sofbus24.utils.Utils.createNoLocationAlert;
+import static bg.znestorov.sofbus24.utils.ActivityHelper.createNoLocationAlert;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

@@ -8,19 +8,9 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.params.ConnManagerParams;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 
 import android.util.Log;
 import bg.znestorov.sofbus24.schedule_stations.Station;
@@ -41,39 +31,19 @@ public class HtmlRequestStation {
 
 	// Getting the source file of the HTTP request
 	public String getInformation(HttpGet httpGet) {
+		// HTTP Client - created once (final)
+		final DefaultHttpClient client = new DefaultHttpClient();
+		
+		// Create a response handler
 		String htmlResult = null;
 
 		try {
-			// Setting timeout parameters
-			HttpParams httpParameters = new BasicHttpParams();
-			// Set the timeout in milliseconds until a connection is
-			// established.
-			HttpConnectionParams.setConnectionTimeout(httpParameters,
-					Constants.GLOBAL_TIMEOUT_CONNECTION);
-			// Set the default socket timeout (SO_TIMEOUT)
-			// in milliseconds which is the timeout for waiting for data.
-			HttpConnectionParams.setSoTimeout(httpParameters,
-					Constants.GLOBAL_TIMEOUT_SOCKET);
-			ConnManagerParams.setTimeout(httpParameters,
-					Constants.GLOBAL_TIMEOUT_SOCKET);
-
-			// Creating ThreadSafeClientConnManager
-			SchemeRegistry schemeRegistry = new SchemeRegistry();
-			schemeRegistry.register(new Scheme("http", PlainSocketFactory
-					.getSocketFactory(), 80));
-			final SSLSocketFactory sslSocketFactory = SSLSocketFactory
-					.getSocketFactory();
-			schemeRegistry.register(new Scheme("https", sslSocketFactory, 443));
-			ClientConnectionManager cm = new ThreadSafeClientConnManager(
-					httpParameters, schemeRegistry);
-
-			// HTTP Client - created once and using cookies
-			DefaultHttpClient client = new DefaultHttpClient(cm, httpParameters);
 			htmlResult = client.execute(httpGet, new BasicResponseHandler());
-			client.getConnectionManager().shutdown();
 		} catch (Exception e) {
 			htmlResult = null;
 			Log.d(TAG, "Could not load data from " + createURL());
+		} finally {
+			client.getConnectionManager().shutdown();
 		}
 
 		return htmlResult;

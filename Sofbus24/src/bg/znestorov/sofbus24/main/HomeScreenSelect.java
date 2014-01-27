@@ -13,10 +13,9 @@ public class HomeScreenSelect extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
+		
 		setContentView(R.layout.activity_home_screen_choice);
-
-		// Set the language
-		LanguageChange.selectLocale(HomeScreenSelect.this);
 
 		// Setting activity title
 		this.setTitle(getString(R.string.app_name));

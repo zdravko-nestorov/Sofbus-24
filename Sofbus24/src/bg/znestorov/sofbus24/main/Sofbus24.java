@@ -1,6 +1,6 @@
 package bg.znestorov.sofbus24.main;
 
-import static bg.znestorov.sofbus24.utils.Utils.createNoLocationAlert;
+import static bg.znestorov.sofbus24.utils.ActivityHelper.createNoLocationAlert;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -48,10 +48,9 @@ public class Sofbus24 extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_home_screen);
+		LanguageChange.selectLocale(this);
 
-		// Set the language
-		LanguageChange.selectLocale(Sofbus24.this);
+		setContentView(R.layout.activity_home_screen);
 
 		// Setting activity title
 		this.setTitle(getString(R.string.ss_name));

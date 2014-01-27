@@ -2,6 +2,7 @@ package bg.znestorov.sofbus24.utils;
 
 import java.util.Locale;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -25,15 +26,18 @@ public class LanguageChange {
 		return language;
 	}
 
-	public static void selectLocale(Context context) {
+	public static void selectLocale(Activity context) {
 		Locale locale = new Locale(getUserLocale(context));
 		Locale.setDefault(locale);
 
-		Configuration config = new Configuration(context.getResources()
-				.getConfiguration());
+		Configuration config = new Configuration();
 		config.locale = locale;
 
-		context.getResources().updateConfiguration(config,
-				context.getResources().getDisplayMetrics());
+		context.getBaseContext()
+				.getResources()
+				.updateConfiguration(
+						config,
+						context.getBaseContext().getResources()
+								.getDisplayMetrics());
 	}
 }
