@@ -7,10 +7,24 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import bg.znestorov.sofbus24.main.R;
 
-// Creating methods for easy processing data
+/**
+ * Creating methods for easy processing data
+ * 
+ * @author znestorov
+ * 
+ */
 public class Utils {
 
-	// Get value BEFORE some REGEX
+	/**
+	 * Get a value from a string BEFORE some REGEX
+	 * 
+	 * @param value
+	 *            the string value
+	 * @param regex
+	 *            the regex that is looked for
+	 * @return the substring value BEFORE the REGEX, or the value in case of no
+	 *         REGEX found
+	 */
 	public static String getValueBefore(String value, String regex) {
 		if (value.contains(regex)) {
 			return value.substring(0, value.indexOf(regex));
@@ -19,7 +33,16 @@ public class Utils {
 		}
 	}
 
-	// Get value BEFORE some REGEX (Last)
+	/**
+	 * Get a value from a string BEFORE some REGEX (LAST)
+	 * 
+	 * @param value
+	 *            the string value
+	 * @param regex
+	 *            the regex that is looked for
+	 * @return the substring value BEFORE the REGEX (LAST), or the value in case
+	 *         of no REGEX found
+	 */
 	public static String getValueBeforeLast(String value, String regex) {
 		if (value.contains(regex)) {
 			return value.substring(0, value.lastIndexOf(regex));
@@ -28,7 +51,16 @@ public class Utils {
 		}
 	}
 
-	// Get value AFTER some REGEX
+	/**
+	 * Get a value from a string AFTER some REGEX
+	 * 
+	 * @param value
+	 *            the string value
+	 * @param regex
+	 *            the regex that is looked for
+	 * @return the substring value AFTER the REGEX, or the value in case of no
+	 *         REGEX found
+	 */
 	public static String getValueAfter(String value, String regex) {
 		if (value.contains(regex)) {
 			return value.substring(value.indexOf(regex) + regex.length());
@@ -37,7 +69,16 @@ public class Utils {
 		}
 	}
 
-	// Get value AFTER some REGEX (Last)
+	/**
+	 * Get a value from a string AFTER some REGEX (LAST)
+	 * 
+	 * @param value
+	 *            the string value
+	 * @param regex
+	 *            the regex that is looked for
+	 * @return the substring value AFTER the REGEX (LAST), or the value in case
+	 *         of no REGEX found
+	 */
 	public static String getValueAfterLast(String value, String regex) {
 		if (value.contains(regex)) {
 			return value.substring(value.lastIndexOf(regex) + regex.length());
@@ -46,7 +87,17 @@ public class Utils {
 		}
 	}
 
-	// Get the difference between two hours in format HH:MM
+	/**
+	 * Get the difference between two hours in format HH:MM
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 * @param afterTime
+	 *            a time after the current moment in format HH:MM
+	 * @param currTime
+	 *            the current time in format HH:MM
+	 * @return the difference between the times
+	 */
 	public static String getDifference(Context context, String afterTime,
 			String currTime) {
 		String diff = "";
@@ -70,7 +121,13 @@ public class Utils {
 		return diff;
 	}
 
-	// Format the number to be always 4 digits (if lower than 4)
+	/**
+	 * Filling a number with zeroes ("0") if it is lower than 4 digits
+	 * 
+	 * @param input
+	 *            an input string containg a number
+	 * @return a number (in string format) which is always at least 4 digits
+	 */
 	public static String formatNumberOfDigits(String input) {
 		int outputLength = 4;
 
@@ -84,7 +141,16 @@ public class Utils {
 		return input;
 	}
 
-	// Format Date (making the minutes in format :XX)
+	/**
+	 * Format Date (making the minutes in format :XX)
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 * @param difference
+	 *            the difference between the times (current one and the one
+	 *            after)
+	 * @return the difference in format ~1h,20m
+	 */
 	public static String formatTime(Context context, String difference) {
 		String diff = "";
 		String[] differenceArr = difference.split(":");
@@ -124,7 +190,15 @@ public class Utils {
 		return diff;
 	}
 
-	// Get "o" code using the station ID
+	/**
+	 * Get "o" code using the station ID
+	 * 
+	 * @param htmlSrc
+	 *            the source of the page
+	 * @param stationCode
+	 *            the code of the station
+	 * @return the position of the station in case of multiple results
+	 */
 	public static String getCodeO(String htmlSrc, String stationCode) {
 		String codeO = "1";
 		stationCode = Constants.STATION_INFO_END_2 + stationCode

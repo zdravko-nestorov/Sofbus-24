@@ -60,7 +60,29 @@ public class HtmlRequestSumc {
 	// Coordinates of the station
 	private static String[] coordinates = new String[2];
 
-	// Getting the source file of the HTTP request and opening a new Activity
+	/**
+	 * Getting the source file of the HTTP request and opening a new Activity
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 * @param stationCode
+	 *            The code of the station
+	 * @param stationCodeO
+	 *            The position of the station code in case of multiple results: <br>
+	 *            * null - when search for a first time for a result and
+	 *            multiple are found <br>
+	 *            * any number - the position of the station in the list with
+	 *            multiple results <br>
+	 *            * schedule - in case the method is called from SCHEDULE
+	 *            section <br>
+	 *            * gpsTimes - in case the method is called from GPS TIMES
+	 *            section <br>
+	 *            * favorites - in case the method is called from FAVORITES
+	 *            section <br>
+	 * @param transferCoordinates
+	 *            array with length 2 - containg the longitude and latitude of
+	 *            the station
+	 */
 	public void getInformation(Context context, String stationCode,
 			String stationCodeO, String[] transferCoordinates) {
 		// Assigning the transfer coordinates to a global variable
@@ -90,7 +112,17 @@ public class HtmlRequestSumc {
 		loadingSumc.execute();
 	}
 
-	// Saving cookies
+	/**
+	 * Getting the value for the CAPTCHA code and put it in a SharedPreferences
+	 * file - containing the information in key=value format. It is saved on the
+	 * internal memory of the device and contains all cookies from the request.
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 * @param client
+	 *            The DefaultHttpClient, which is created only once and used for
+	 *            HTTP requests
+	 */
 	private void saveCookiesToPreferences(Context context,
 			DefaultHttpClient client) {
 		final SharedPreferences sharedPreferences = context
@@ -115,7 +147,18 @@ public class HtmlRequestSumc {
 		edit.commit();
 	}
 
-	// Loading cookies
+	/**
+	 * Getting the value for the CAPTCHA code from a SharedPreferences file that
+	 * contains the information in key=value format. It is saved on the internal
+	 * memory of the device, containing the cookies needed for sending a new
+	 * request
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 * @param client
+	 *            The DefaultHttpClient, which is created only once and used for
+	 *            HTTP requests
+	 */
 	private void loadCookiesFromPreferences(Context context,
 			DefaultHttpClient client) {
 		final CookieStore cookieStore = client.getCookieStore();
@@ -142,7 +185,29 @@ public class HtmlRequestSumc {
 		}
 	}
 
-	// Adding the User-Agent, the Referrer and the parameters to the HttpPost
+	/**
+	 * Adding the User-Agent, the Referrer and the parameters to the HttpPost
+	 * 
+	 * @param stationCode
+	 *            The code of the station
+	 * @param stationCodeO
+	 *            The position of the station code in case of multiple results: <br>
+	 *            * null - when search for a first time for a result and
+	 *            multiple are found <br>
+	 *            * any number - the position of the station in the list with
+	 *            multiple results <br>
+	 *            * schedule - in case the method is called from SCHEDULE
+	 *            section <br>
+	 *            * gpsTimes - in case the method is called from GPS TIMES
+	 *            section <br>
+	 *            * favorites - in case the method is called from FAVORITES
+	 *            section <br>
+	 * @param captchaText
+	 *            The text that the user entered according to the CAPTCHA image
+	 * @param captchaId
+	 *            The Id of the CAPTCHA image, token from the source file
+	 * @return an HTTP POST object, created with the needed params
+	 */
 	private static HttpPost createSumcRequest(String stationCode,
 			String stationCodeO, String captchaText, String captchaId) {
 		final HttpPost result = new HttpPost(Constants.VB_URL);
@@ -162,7 +227,31 @@ public class HtmlRequestSumc {
 		return result;
 	}
 
-	// Adding parameters to a list (used in the HttpPost)
+	/**
+	 * Creating a list with BasicNameValuePair params, used for preparing the
+	 * HTTP POST request
+	 * 
+	 * @param stationCode
+	 *            The code of the station
+	 * @param stationCodeO
+	 *            The position of the station code in case of multiple results: <br>
+	 *            * null - when search for a first time for a result and
+	 *            multiple are found <br>
+	 *            * any number - the position of the station in the list with
+	 *            multiple results <br>
+	 *            * schedule - in case the method is called from SCHEDULE
+	 *            section <br>
+	 *            * gpsTimes - in case the method is called from GPS TIMES
+	 *            section <br>
+	 *            * favorites - in case the method is called from FAVORITES
+	 *            section <br>
+	 * @param captchaText
+	 *            The text that the user entered according to the CAPTCHA image
+	 * @param captchaId
+	 *            The Id of the CAPTCHA image, token from the source file
+	 * @return a list with BasicNameValuePair parameters for the HTTP POST
+	 *         request
+	 */
 	private static List<BasicNameValuePair> parameters(String stationCode,
 			String stationCodeO, String captchaText, String captchaId) {
 		// Ensure that the search will return results
@@ -188,7 +277,32 @@ public class HtmlRequestSumc {
 		return result;
 	}
 
-	// Check if CAPTCHA is required
+	/**
+	 * Checking if a CAPTCHA image has to be showed to the user
+	 * 
+	 * @param client
+	 *            The DefaultHttpClient, which is created only once and used for
+	 *            HTTP requests
+	 * @param context
+	 *            Context of the current activity
+	 * @param stationCode
+	 *            The code of the station
+	 * @param stationCodeO
+	 *            The position of the station code in case of multiple results: <br>
+	 *            * null - when search for a first time for a result and
+	 *            multiple are found <br>
+	 *            * any number - the position of the station in the list with
+	 *            multiple results <br>
+	 *            * schedule - in case the method is called from SCHEDULE
+	 *            section <br>
+	 *            * gpsTimes - in case the method is called from GPS TIMES
+	 *            section <br>
+	 *            * favorites - in case the method is called from FAVORITES
+	 *            section <br>
+	 * @param src
+	 *            The response text, prepared from the HTTP request to the SUMC
+	 *            server
+	 */
 	private void checkCaptchaText(DefaultHttpClient client, Context context,
 			String stationCode, String stationCodeO, String src) {
 		try {
@@ -221,7 +335,14 @@ public class HtmlRequestSumc {
 		}
 	}
 
-	// Get the CAPTCHA ID from the HTML source file
+	/**
+	 * Get the CAPTCHA ID from the HTML source file
+	 * 
+	 * @param src
+	 *            The response text, prepared from the HTTP request to the SUMC
+	 *            server
+	 * @return the CAPTCHA Id from the source file
+	 */
 	private static String getCaptchaId(String src) {
 		final int captchaStart = src.indexOf(Constants.CAPTCHA_START);
 		if (captchaStart == -1) {
@@ -237,7 +358,20 @@ public class HtmlRequestSumc {
 				captchaEnd);
 	}
 
-	// Get the image from URL
+	/**
+	 * Getting the image file as a Bitmap image from the source file
+	 * 
+	 * @param client
+	 *            The DefaultHttpClient, which is created only once and used for
+	 *            HTTP requests
+	 * @param request
+	 *            HTTP GET request
+	 * @param captchaId
+	 *            The Id of the CAPTCHA image, token from the source file
+	 * @return a Bitmap CAPTCHA image
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
 	private static Bitmap getCaptchaImage(HttpClient client, HttpGet request,
 			String captchaId) throws ClientProtocolException, IOException {
 		final HttpResponse response = client.execute(request);
@@ -262,7 +396,15 @@ public class HtmlRequestSumc {
 		return Bitmap.createScaledBitmap(sumcBitmap, 180, 60, false);
 	}
 
-	// Create CAPTCHA HTTPGet request
+	/**
+	 * Create a CAPTCHA HTTP GET request
+	 * 
+	 * @param captchaId
+	 *            The Id of the CAPTCHA image, token from the source file
+	 * @return a HTTP GET request to the SUMC server
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
 	private static HttpGet createCaptchaRequest(String captchaId)
 			throws ClientProtocolException, IOException {
 		final HttpGet request = new HttpGet(String.format(
@@ -275,7 +417,34 @@ public class HtmlRequestSumc {
 		return request;
 	}
 
-	// Showing an AlertDialog to enter the CAPTCHA text
+	/**
+	 * Creating an Alert Dialog with the CAPTCHA image and sets some settings on
+	 * it (as enlarging the image, set the keyboard input type and so on)
+	 * 
+	 * @param client
+	 *            The DefaultHttpClient, which is created only once and used for
+	 *            HTTP requests
+	 * @param context
+	 *            Context of the current activity
+	 * @param stationCode
+	 *            The code of the station
+	 * @param stationCodeO
+	 *            The position of the station code in case of multiple results: <br>
+	 *            * null - when search for a first time for a result and
+	 *            multiple are found <br>
+	 *            * any number - the position of the station in the list with
+	 *            multiple results <br>
+	 *            * schedule - in case the method is called from SCHEDULE
+	 *            section <br>
+	 *            * gpsTimes - in case the method is called from GPS TIMES
+	 *            section <br>
+	 *            * favorites - in case the method is called from FAVORITES
+	 *            section <br>
+	 * @param captchaId
+	 *            The Id of the CAPTCHA image, token from the source file
+	 * @param captchaImage
+	 *            The Bitmap CAPTCHA image
+	 */
 	private void getCaptchaText(final DefaultHttpClient client,
 			final Context context, final String stationCode,
 			final String stationCodeO, final String captchaId,
@@ -327,7 +496,31 @@ public class HtmlRequestSumc {
 
 	}
 
-	// Processing the CAPTCHA text, after clicking OK button
+	/**
+	 * Processing the CAPTCHA text, after clicking OK button
+	 * 
+	 * @param client
+	 *            The DefaultHttpClient, which is created only once and used for
+	 *            HTTP requests
+	 * @param context
+	 *            Context of the current activity
+	 * @param stationCode
+	 *            The code of the station
+	 * @param stationCodeO
+	 *            The position of the station code in case of multiple results: <br>
+	 *            * null - when search for a first time for a result and
+	 *            multiple are found <br>
+	 *            * any number - the position of the station in the list with
+	 *            multiple results <br>
+	 *            * schedule - in case the method is called from SCHEDULE
+	 *            section <br>
+	 *            * gpsTimes - in case the method is called from GPS TIMES
+	 *            section <br>
+	 *            * favorites - in case the method is called from FAVORITES
+	 *            section <br>
+	 * @param captchaId
+	 *            The Id of the CAPTCHA image, token from the source file
+	 */
 	private void processCaptchaText(DefaultHttpClient client, Context context,
 			String stationCode, String stationCodeO, String captchaId) {
 		String captchaText = dialogResult;
@@ -342,7 +535,34 @@ public class HtmlRequestSumc {
 		loadingSumc.execute();
 	}
 
-	// Starting new activity
+	/**
+	 * Starting a new activity and checking for all possible errors that can
+	 * occur. It is also checking the source that is creating the new activity
+	 * and set a special condition before this
+	 * 
+	 * @param client
+	 *            The DefaultHttpClient, which is created only once and used for
+	 *            HTTP requests
+	 * @param context
+	 *            Context of the current activity
+	 * @param stationCode
+	 *            The code of the station
+	 * @param stationCodeO
+	 *            The position of the station code in case of multiple results: <br>
+	 *            * null - when search for a first time for a result and
+	 *            multiple are found <br>
+	 *            * any number - the position of the station in the list with
+	 *            multiple results <br>
+	 *            * schedule - in case the method is called from SCHEDULE
+	 *            section <br>
+	 *            * gpsTimes - in case the method is called from GPS TIMES
+	 *            section <br>
+	 *            * favorites - in case the method is called from FAVORITES
+	 *            section <br>
+	 * @param src
+	 *            The response text, prepared from the HTTP request to the SUMC
+	 *            server
+	 */
 	private void startNewActivity(DefaultHttpClient client, Context context,
 			String stationCode, String stationCodeO, String src) {
 		saveCookiesToPreferences(context, client);
@@ -399,6 +619,20 @@ public class HtmlRequestSumc {
 		// finish the previous activity
 		if (context.getClass().toString()
 				.equals("class bg.znestorov.sofbus24.main.VirtualBoards")) {
+
+			// In case of multiple REFRESH, the SUMC site is not returning
+			// information and falling in an error -
+			// Constants.ERROR_NO_INFO_STATION
+			if (src.indexOf(Constants.BODY_START) == -1
+					|| src.indexOf(Constants.BODY_END) == -1) {
+				intent = new Intent(context, VirtualBoardsStationChoice.class);
+
+				intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
+				context.startActivity(intent);
+
+				return;
+			}
+
 			intent = new Intent(context, VirtualBoards.class);
 
 			intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
@@ -476,8 +710,15 @@ public class HtmlRequestSumc {
 		}
 	}
 
+	/**
+	 * Creating a request to the SUMC server to see if any CAPTCHA is required
+	 * to be entered as a security measure
+	 * 
+	 * @author znestorov
+	 * 
+	 */
 	private class LoadingSumc extends AsyncTask<Void, Void, String> {
-		
+
 		Context context;
 		ProgressDialog progressDialog;
 		DefaultHttpClient client;
@@ -563,8 +804,14 @@ public class HtmlRequestSumc {
 		}
 	}
 
+	/**
+	 * Class responsible for loading the CAPTCHA image from the server
+	 * 
+	 * @author znestorov
+	 * 
+	 */
 	private class LoadingCaptcha extends AsyncTask<Void, Void, Bitmap> {
-		
+
 		Context context;
 		ProgressDialog progressDialog;
 		DefaultHttpClient client;
