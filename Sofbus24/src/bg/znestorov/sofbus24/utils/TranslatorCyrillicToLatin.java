@@ -7,6 +7,13 @@ import java.util.Map;
 import bg.znestorov.sofbus24.schedule_stations.Direction;
 import bg.znestorov.sofbus24.station_database.GPSStation;
 
+/**
+ * Class which is used to transcode the <b>Cyrillic</b> text to a <b>Latin</b>
+ * one using a table with the symbol translations
+ * 
+ * @author znestorov
+ * 
+ */
 public class TranslatorCyrillicToLatin {
 
 	private static final Map<String, String> translatorMap;
@@ -77,6 +84,14 @@ public class TranslatorCyrillicToLatin {
 	private TranslatorCyrillicToLatin() {
 	}
 
+	/**
+	 * Translate the input Cyrillic text to a Latin one using a table with the
+	 * translation
+	 * 
+	 * @param input
+	 *            the input text in Latin
+	 * @return the transcoded Cyrillic text in a Latin format
+	 */
 	public static String translate(String input) {
 		StringBuilder output = new StringBuilder("");
 
@@ -181,6 +196,14 @@ public class TranslatorCyrillicToLatin {
 		return output;
 	}
 
+	/**
+	 * Translate the Directions from Schedule menu from Cyrillic to Latin, using
+	 * directly an array of <b>Direction</b> objects
+	 * 
+	 * @param input
+	 *            an array list with the Dirtection to be transcoded
+	 * @return an array list with the transcoded directions
+	 */
 	public static ArrayList<Direction> translateDirection(
 			ArrayList<Direction> input) {
 		ArrayList<Direction> output = null;

@@ -8,7 +8,12 @@ import android.preference.PreferenceManager;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.schedule_vehicles.Vehicle;
 
-// Filling the ArrayList<Vehicle>
+/**
+ * Filling the ArrayList with Vehicles from the XML file
+ * 
+ * @author znestorov
+ * 
+ */
 public class VehicleNames {
 
 	private String[] bus_number;

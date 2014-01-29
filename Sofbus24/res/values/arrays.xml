@@ -261,10 +261,14 @@
     <string-array name="languagenChoice">
         <item name="bg">Български</item>
         <item name="en">English</item>
+        <item name="fr">Français</item>
+        <item name="it">Italiano</item>
     </string-array>
     <string-array name="languagenChoiceValues">
         <item name="bg">bg</item>
         <item name="en">en</item>
+        <item name="fr">fr</item>
+        <item name="it">it</item>
     </string-array>
 
     <!-- GPS Google Maps button (functionality) -->

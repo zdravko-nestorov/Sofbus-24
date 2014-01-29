@@ -8,11 +8,25 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 
+/**
+ * Class used for defining the locale that need to be set, so cover the selected
+ * language by the user
+ * 
+ * @author znestorov
+ * 
+ */
 public class LanguageChange {
 
 	private LanguageChange() {
 	}
 
+	/**
+	 * Getting the selected language of the user (from settings)
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 * @return the selected user locale
+	 */
 	private static String getUserLocale(Context context) {
 		// Get SharedPreferences from option menu
 		final SharedPreferences sharedPreferences = PreferenceManager
@@ -26,6 +40,12 @@ public class LanguageChange {
 		return language;
 	}
 
+	/**
+	 * Set the selected locale as a default for the application
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 */
 	public static void selectLocale(Activity context) {
 		Locale locale = new Locale(getUserLocale(context));
 		Locale.setDefault(locale);

@@ -1,0 +1,48 @@
+<resources>
+
+    <!-- Home Screen Choice -->
+    <string-array name="versionChoice">
+        <item name="version_1">Versione 1</item>
+        <item name="version_2">Versione 2</item>
+    </string-array>
+
+    <!-- GPS Google Maps button (functionality) -->
+    <string-array name="gpsMapFunct">
+        <item name="funct_1">Google Maps</item>
+        <item name="funct_2">Lista</item>
+    </string-array>
+
+    <!-- Virtual Boards Time -->
+    <string-array name="timeGPS">
+        <item name="timeGPS_remaining">Tempo rimanente</item>
+        <item name="timeGPS_arrival">Ora di arrivo</item>
+    </string-array>
+
+    <!-- Schedule Time -->
+    <string-array name="timeSchedule">
+        <item name="timeSchedule_remaining">Tempo rimanente</item>
+        <item name="timeSchedule_arrival">Ora di arrivo</item>
+    </string-array>
+
+    <!-- Closest stations -->
+    <string-array name="closestStations">
+        <item name="6">6 stazioni</item>
+        <item name="7">7 stazioni</item>
+        <item name="8">8 stazioni</item>
+        <item name="9">9 stazioni</item>
+        <item name="10">10 stazioni</item>
+    </string-array>
+
+    <!-- Virtual Borads (Information retrieval time) -->
+    <string-array name="timeInfoRetrieval">
+        <item name="time_skgt">Dal sito SKGT</item>
+        <item name="time_real">Ora di sistema</item>
+    </string-array>
+
+    <!-- GoogleMaps view (satellite or street view) -->
+    <string-array name="mapType">
+        <item name="map_street">Street View la mappa</item>
+        <item name="map_satellite">Mappa satellitare</item>
+    </string-array>
+
+</resources>

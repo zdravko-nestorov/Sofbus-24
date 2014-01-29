@@ -9,7 +9,6 @@ import bg.znestorov.sofbus24.main.R;
 public class ActivityHelper {
 
 	/**
-	 * 
 	 * Dialog alerting that no location provider is enabled
 	 * 
 	 * @param context

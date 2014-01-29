@@ -194,7 +194,7 @@ public class Utils {
 	 * Get "o" code using the station ID
 	 * 
 	 * @param htmlSrc
-	 *            the source of the page
+	 *            the source code of the page
 	 * @param stationCode
 	 *            the code of the station
 	 * @return the position of the station in case of multiple results
@@ -216,7 +216,20 @@ public class Utils {
 		return codeO;
 	}
 
-	// Get station name from HTML source
+	/**
+	 * Parse the HTML source file using the station code to get the station
+	 * name. It is transcoded to latin in case of differen than BG language
+	 * 
+	 * @param htmlSrc
+	 *            the source code of the page
+	 * @param tempHtmlSrc
+	 *            the source code of the page (temp version)
+	 * @param stationCode
+	 *            the code of the station
+	 * @param language
+	 *            the chosen language of the application
+	 * @return the name of the staion according to the station code
+	 */
 	public static String getStationName(String htmlSrc, String tempHtmlSrc,
 			String stationCode, String language) {
 		String stationName = getValueAfter(htmlSrc,
@@ -270,7 +283,15 @@ public class Utils {
 		}
 	}
 
-	// Get station ID from HTML source
+	/**
+	 * Parse the HTML source file using the station code to get the station Id.
+	 * 
+	 * @param htmlSrc
+	 *            the source code of the page
+	 * @param stationCode
+	 *            the code of the station
+	 * @return the station Id according to the station code
+	 */
 	public static String getStationId(String htmlSrc, String stationCode) {
 		String stationId = getValueAfter(htmlSrc, Constants.STATION_INFO_BEGIN);
 		stationId = getValueAfter(stationId, Constants.STATION_INFO_END_2);
@@ -288,7 +309,17 @@ public class Utils {
 		return stationId;
 	}
 
-	// Get station ID from HTML source
+	/**
+	 * Parse the HTML source file using the station code to get the station Id.
+	 * 
+	 * @param htmlSrc
+	 *            the source code of the page
+	 * @param stationCode
+	 *            the code of the station
+	 * @param stationCodeO
+	 *            the position of the station in case of multiple results
+	 * @return the station Id according to the station code
+	 */
 	public static String getStationId(String htmlSrc, String stationCode,
 			String stationCodeO) {
 		String stationId = getValueAfter(htmlSrc,
@@ -309,7 +340,14 @@ public class Utils {
 		return stationId;
 	}
 
-	// Request focus and show keyboard on EditText
+	/**
+	 * Request the focus and show a keyboard on EditText field
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 * @param editText
+	 *            the EditText field
+	 */
 	public static void showKeyboard(Context context, EditText editText) {
 		// Focus the field
 		editText.requestFocus();
@@ -320,9 +358,16 @@ public class Utils {
 		imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
 	}
 
-	// Request focus and show keyboard on EditText
+	/**
+	 * Request the focus and hide the keyboard on EditText field
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 * @param editText
+	 *            the EditText field
+	 */
 	public static void hideKeyboard(Context context, EditText editText) {
-		// Hide soft keyboard.
+		// Hide soft keyboard
 		InputMethodManager imm = (InputMethodManager) context
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);

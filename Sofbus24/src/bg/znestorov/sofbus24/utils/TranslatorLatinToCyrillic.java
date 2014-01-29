@@ -3,6 +3,13 @@ package bg.znestorov.sofbus24.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class which is used to transcode the <b>Latin</b> text to a <b>Cyrillic</b> one using a
+ * table with the symbol translations
+ * 
+ * @author znestorov
+ * 
+ */
 public class TranslatorLatinToCyrillic {
 
 	private static final Map<String, String> translatorMap;
@@ -71,6 +78,14 @@ public class TranslatorLatinToCyrillic {
 	private TranslatorLatinToCyrillic() {
 	}
 
+	/**
+	 * Translate the input Latin text to a Cyrillic one using a table with the
+	 * translation
+	 * 
+	 * @param input
+	 *            the input text in Latin
+	 * @return the transcoded Latin text in a Cyrillic format
+	 */
 	public static String translate(String input) {
 		StringBuilder output = new StringBuilder("");
 

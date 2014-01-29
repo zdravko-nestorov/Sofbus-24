@@ -19,10 +19,14 @@ public final class R {
         public static final int bus_stations=0x7f060001;
         /**  Closest stations 
  Closest stations 
+ Closest stations 
+ Closest stations 
          */
         public static final int closestStations=0x7f060010;
         public static final int closestStationsValues=0x7f060011;
         /**  GPS Google Maps button (functionality) 
+ GPS Google Maps button (functionality) 
+ GPS Google Maps button (functionality) 
  GPS Google Maps button (functionality) 
          */
         public static final int gpsMapFunct=0x7f06000a;
@@ -33,20 +37,28 @@ public final class R {
         public static final int languagenChoiceValues=0x7f060009;
         /**  GoogleMaps view (satellite or street view) 
  GoogleMaps view (satellite or street view) 
+ GoogleMaps view (satellite or street view) 
+ GoogleMaps view (satellite or street view) 
          */
         public static final int mapType=0x7f060014;
         public static final int mapTypeValues=0x7f060015;
         /**  Virtual Boards Time 
+ Virtual Boards Time 
+ Virtual Boards Time 
  Virtual Boards Time 
          */
         public static final int timeGPS=0x7f06000c;
         public static final int timeGPSValues=0x7f06000d;
         /**  Virtual Borads (Information retrieval time) 
  Virtual Borads (Information retrieval time) 
+ Virtual Borads (Information retrieval time) 
+ Virtual Borads (Information retrieval time) 
          */
         public static final int timeInfoRetrieval=0x7f060012;
         public static final int timeInfoRetrievalValues=0x7f060013;
         /**  Schedule Time 
+ Schedule Time 
+ Schedule Time 
  Schedule Time 
          */
         public static final int timeSchedule=0x7f06000e;
@@ -60,6 +72,8 @@ public final class R {
         public static final int trolley_numbers=0x7f060002;
         public static final int trolley_stations=0x7f060003;
         /**  Home Screen Choice 
+ Home Screen Choice 
+ Home Screen Choice 
  Home Screen Choice 
          */
         public static final int versionChoice=0x7f060006;
@@ -226,14 +240,24 @@ public final class R {
         public static final int about_btn_label=0x7f080077;
         /**  About 
  About 
+ About 
+ About 
          */
         public static final int about_label=0x7f080075;
         public static final int about_text=0x7f080076;
         /**  HOME SCREEN 
  Main 
+ HOME SCREEN 
+ Main 
+ HOME SCREEN 
+ Main 
          */
         public static final int app_name=0x7f080000;
         /**  EXIT 
+ Exit 
+ EXIT 
+ Exit 
+ EXIT 
  Exit 
  EXIT 
  Exit 
@@ -249,13 +273,19 @@ public final class R {
         public static final int button_title_no=0x7f080087;
         /**  "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" 
  "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" 
+ "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" 
+ "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" 
          */
         public static final int button_title_ok=0x7f080083;
         /**  "YES" and "NO" button titles: "Sofbus24.onBackPressed()" 
  "YES" and "NO" button titles: "Sofbus24.onBackPressed()" 
+ "YES" and "NO" button titles: "Sofbus24.onBackPressed()" 
+ "YES" and "NO" button titles: "Sofbus24.onBackPressed()" 
          */
         public static final int button_title_yes=0x7f080086;
         /**  Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" 
+ Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" 
+ Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" 
  Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" 
          */
         public static final int choose_vehicle_number=0x7f080082;
@@ -267,6 +297,8 @@ public final class R {
         public static final int error_sumc_no_info_now=0x7f08008b;
         /**  "ERRORS" with retrieving information: "HtmlResultSumcChoice" 
  "ERRORS" with retrieving information: "HtmlResultSumc" 
+ "ERRORS" with retrieving information: "HtmlResultSumcChoice" 
+ "ERRORS" with retrieving information: "HtmlResultSumcChoice" 
          */
         public static final int error_sumc_no_info_station=0x7f08008a;
         public static final int error_sumc_no_station_match=0x7f08008d;
@@ -274,6 +306,10 @@ public final class R {
         public static final int fav_delete=0x7f08004f;
         public static final int fav_delete_all=0x7f080050;
         /**  FAVOURITES 
+ Favourites 
+ FAVOURITES 
+ Favourites 
+ FAVOURITES 
  Favourites 
  FAVOURITES 
  Favourites 
@@ -299,10 +335,16 @@ public final class R {
  GPS GOOGLE MAPS Station Choice 
  GPS GOOGLE MAPS 
  GPS GOOGLE MAPS Station Choice 
+ GPS GOOGLE MAPS 
+ GPS GOOGLE MAPS Station Choice 
+ GPS GOOGLE MAPS 
+ GPS GOOGLE MAPS Station Choice 
          */
         public static final int gps_map_station_choice_name=0x7f080025;
         public static final int gps_msg=0x7f080003;
         /**  GPS 
+ GPS 
+ GPS 
  GPS 
          */
         public static final int gps_name=0x7f08001a;
@@ -310,6 +352,8 @@ public final class R {
         public static final int gps_station_choice_error_info=0x7f080016;
         public static final int gps_station_choice_error_internet=0x7f080015;
         /**  GPS Station Choice 
+ GPS Station Choice 
+ GPS Station Choice 
  GPS Station Choice 
          */
         public static final int gps_station_choice_name=0x7f080013;
@@ -319,6 +363,8 @@ public final class R {
         public static final int home_screen_gps_map_summary=0x7f08005d;
         public static final int home_screen_gps_map_title=0x7f08005c;
         /**  Home Screen Buttons 
+ Home Screen Buttons 
+ Home Screen Buttons 
  Home Screen Buttons 
          */
         public static final int hs_button1=0x7f08000a;
@@ -334,6 +380,8 @@ public final class R {
         public static final int loading_message_retrieve_sumc_catcha=0x7f08008f;
         /**  Loading messages on progressDialogs 
  Loading messages on progressDialogs 
+ Loading messages on progressDialogs 
+ Loading messages on progressDialogs 
          */
         public static final int loading_message_retrieve_sumc_info=0x7f08008e;
         public static final int loading_message_retrieve_vehicles_numbers=0x7f080094;
@@ -347,12 +395,15 @@ public final class R {
         public static final int map_gps_menu_item_help=0x7f08002c;
         /**  Map GPS 
  Map GPS 
+ Map GPS 
+ Map GPS 
          */
         public static final int map_gps_name=0x7f080029;
         public static final int map_gps_no_last_location=0x7f08002e;
         public static final int map_gps_route_error=0x7f08002f;
         public static final int map_help_btn_label=0x7f080034;
         /**  Map GPS Help 
+ Map GPS Help 
  Map GPS Help 
          */
         public static final int map_help_label=0x7f080032;
@@ -374,10 +425,18 @@ public final class R {
  Preferences 
  PREFERENCES 
  Preferences 
+ PREFERENCES 
+ Preferences 
+ PREFERENCES 
+ Preferences 
          */
         public static final int pref_name=0x7f080055;
         public static final int remaining_hours=0x7f08007b;
         /**  ADDITIONAL STRINGS 
+ Format remaining time: "Utils.formatTime(context, difference)" 
+ ADDITIONAL STRINGS 
+ Format remaining time: "Utils.formatTime(context, difference)" 
+ ADDITIONAL STRINGS 
  Format remaining time: "Utils.formatTime(context, difference)" 
  ADDITIONAL STRINGS 
  Format remaining time: "Utils.formatTime(context, difference)" 
@@ -396,6 +455,8 @@ public final class R {
         public static final int st_ch_menu_item_route=0x7f08003c;
         /**  Station Choice 
  Station Choice 
+ Station Choice 
+ Station Choice 
          */
         public static final int st_ch_name=0x7f08003b;
         public static final int st_inf_direction=0x7f08004a;
@@ -404,9 +465,13 @@ public final class R {
         public static final int st_inf_menu_position=0x7f080049;
         /**  Station Info 
  Station Info 
+ Station Info 
+ Station Info 
          */
         public static final int st_inf_name=0x7f080044;
         /**  Station Info Route Mape 
+ Station Info Route Mape 
+ Station Info Route Mape 
  Station Info Route Mape 
          */
         public static final int st_inf_route_title=0x7f08004d;
@@ -428,15 +493,21 @@ public final class R {
         public static final int sumc_button_label=0x7f080012;
         /**  SUMC GPS 
  SUMC GPS 
+ SUMC GPS 
+ SUMC GPS 
          */
         public static final int sumc_captcha=0x7f080010;
         public static final int sumc_captcha_msg=0x7f080011;
         public static final int time_arrival=0x7f080089;
         /**  "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" 
  "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" 
+ "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" 
+ "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" 
          */
         public static final int time_remaining=0x7f080088;
         /**  Vehicle names 
+ Vehicle names 
+ Vehicle names 
  Vehicle names 
          */
         public static final int title_bus=0x7f08007c;
@@ -449,6 +520,10 @@ public final class R {
  Favorites messages 
  TOAST MESSAGES 
  Favorites messages 
+ TOAST MESSAGES 
+ Favorites messages 
+ TOAST MESSAGES 
+ Favorites messages 
          */
         public static final int toast_favorites_add=0x7f080095;
         public static final int toast_favorites_no_stations=0x7f080099;
@@ -457,11 +532,17 @@ public final class R {
         public static final int toast_favorites_remove_first=0x7f080097;
         /**  Rename message 
  Rename message 
+ Rename message 
+ Rename message 
          */
         public static final int toast_station_rename=0x7f08009a;
         public static final int vb_help_summary1=0x7f080018;
         public static final int vb_help_summary2=0x7f080019;
         /**  VIRTUAL BOARDS 
+ VIRTUAL BOARDS HELP 
+ VIRTUAL BOARDS 
+ VIRTUAL BOARDS HELP 
+ VIRTUAL BOARDS 
  VIRTUAL BOARDS HELP 
  VIRTUAL BOARDS 
  VIRTUAL BOARDS HELP 
@@ -472,6 +553,10 @@ public final class R {
         public static final int veh_ch_direction_choice_error_msg=0x7f080039;
         public static final int veh_ch_image=0x7f080036;
         /**  SCHEDULE 
+ Vehicle Choice 
+ SCHEDULE 
+ Vehicle Choice 
+ SCHEDULE 
  Vehicle Choice 
  SCHEDULE 
  Vehicle Choice 

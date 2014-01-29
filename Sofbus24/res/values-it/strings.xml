@@ -1,0 +1,230 @@
+<resources>
+
+    <!-- HOME SCREEN -->
+    <!-- Main -->
+    <string name="app_name">Sofbus 24</string>
+    <string name="ss_name">Trasporto pubblico di Sofia</string>
+    <string name="btn_gps">Schede virtuali</string>
+    <string name="gps_msg">Si prega d\'inserire il codice (numero) o nome (cirillico o latino), alla fermata:</string>
+    <string name="btn_map">Tempo GPS - Google Maps</string>
+    <string name="btn_schedule">Orari</string>
+    <string name="btn_favourite">Favoriti</string>
+    <string name="btn_options">Strumenti</string>
+    <string name="ss_gps_map_msg_title">Errore</string>
+    <string name="ss_gps_map_msg_body">Si prega di accendere almeno uno dei dispositivi(GPS или WiFi), per rilevare la Sua posizione corrente.</string>
+
+    <!-- Home Screen Buttons -->
+    <string name="hs_button1">Pulsante 1</string>
+    <string name="hs_button2">Pulsante 2</string>
+    <string name="hs_button3">Pulsante 3</string>
+    <string name="hs_button4">Pulsante 4</string>
+    <string name="hs_button5">Pulsante 5</string>
+    <string name="hs_button6">Pulsante 6</string>
+
+    <!-- SUMC GPS -->
+    <string name="sumc_captcha">Prova di sicurezza</string>
+    <string name="sumc_captcha_msg">Si prega d\'Inserire i caratteri dell\'immagine:</string>
+    <string name="sumc_button_label">OK</string>
+
+    <!-- GPS Station Choice -->
+    <string name="gps_station_choice_name">&lt;u>Selezionare  una fermata;/u></string>
+    <string name="gps_station_choice_station_code">Numero di fermata:&#160;</string>
+    <string name="gps_station_choice_error_internet">C\'è un errore durante lo scaricamento dell\'informazione. Si prega di verificare la Sua Connessione Internet e riprova.</string>
+    <string name="gps_station_choice_error_info">Nessuna informazione trovata.</string>
+
+    <!-- VIRTUAL BOARDS -->
+    <!-- VIRTUAL BOARDS HELP -->
+    <string name="vb_help_title">&lt;u>Alfabeto cirillico o alfabeto Latino&lt;/u></string>
+    <string name="vb_help_summary1">\"А\" = \"A\"\n\"Б\" = \"B\"\n\"В\" = \"V\"\n\"Г\" = \"G\"\n\"Д\" = \"D\"\n\"Е\" = \"E\"\n\"Ж\" = \"Zh\"\n\"З\" = \"Z\"\n\"И\" = \"I\"
+		\n\"Й\" = \"J\"\n\"К\" = \"K\"\n\"Л\" = \"L\"\n\"М\" = \"M\"\n\"Н\" = \"N\"\n\"О\" = \"O\"\n</string>
+    <string name="vb_help_summary2">\"П\" = \"P\"\n\"Р\" = \"R\"\n\"С\" = \"S\"\n\"Т\" = \"T\"\n\"У\" = \"U\"\n\"Ф\" = \"F\"\n\"Х\" = \"H\"\n\"Ц\" = \"C\"\n\"Ч\" = \"Ch\"
+		\n\"Ш\" = \"Sh\"\n\"Щ\" = \"Sht\"\n\"Ъ\" = \"Y\"\n\"Ь\" = \"J\"\n\"Ю\" = \"Yu\"\n\"Я\" = \"Ya\"</string>
+
+    <!-- GPS -->
+    <string name="gps_name">Schede virtuali</string>
+    <string name="gps_err_dialog_title">Errore</string>
+    <string name="gps_fav_dialog_title">Favoriti</string>
+    <string name="gps_err_dialog_msg">C\'è un errore durante lo scaricamento dell\'informazione.Si prega di verificare la Sua Connessione Internet e riprova.</string>
+    <string name="gps_favourite_add">Ragguingere \"Favoriti\"</string>
+    <string name="gps_see_map">Guarda alla mappa</string>
+    <string name="gps_error_unknown">Errore durante il trasferimento dell\'informatione</string>
+    <string name="gps_error_noInfo" formatted="false">Nessuna informazione per questa fermata \"%s\"</string>
+    <string name="gps_error_noBus" formatted="false">La Fermata  \"%s\" non esiste</string>
+    <string name="gps_error_noBusEmpty">Secondo il sito internet della mobilità urbana di Sofia questa fermata non esiste.</string>
+    <string name="gps_error_noCoordinates">Non è possibile di visualizzare questa fermata(i suoi coordinati non sono trovati nella basa dei danni ).</string>
+
+    <!-- GPS GOOGLE MAPS -->
+    <!-- GPS GOOGLE MAPS Station Choice -->
+    <string name="gps_map_station_choice_name">&lt;u>Selezionare una fermata&lt;/u></string>
+    <string name="gps_map_station_choice_error_summary">Errore durante il trasferimento dell\'informatione. Riprova.</string>
+    <string name="gps_map_station_choice_distance">Distanza:&#160;</string>
+    <string name="gps_map_station_choice_meters">&#160;metri</string>
+
+    <!-- Map GPS -->
+    <string name="map_gps_name">Schede virtuali - Google Maps</string>
+    <string name="map_gps_menu_item_distance">Percorso</string>
+    <string name="map_gps_menu_item_focus">Posizionare</string>
+    <string name="map_gps_menu_item_help">Aiuto</string>
+    <string name="map_gps_menu_item_clean">Cancellare</string>
+    <string name="map_gps_no_last_location">Si prega di aspettare per determinare le sue coordinate.</string>
+    <string name="map_gps_route_error">La connessione Internet è è necessaria per visualizzare il percorso( o c\'è un problema con il server GoogleMaps).</string>
+    <string name="map_gps_distance_OK" formatted="false">La distanza dalla sua posizione corrente alla fermata scegiata da Lei è %s metri.</string>
+    <string name="map_gps_distance_ERR">Si prega di scegliere una fermata.</string>
+
+    <!-- Map GPS Help -->
+    <string name="map_help_label">Aiuto</string>
+    <string name="map_help_text">\ Fermate inizialmente visualizzate sono  8 (predifinite)  di più vicino a Lei (&lt;i>Il punto blue&lt;/i>),
+        anche le fermate  Aggiunte ai \"Favoriti\". Selezionando il punto sulla mappa le 8 fermate di più vicino sarano visualizzate.&lt;br/>&lt;br/>Cliccando sulla fermata ci sono disponibili il nome et il codice della fermata
+        . Questa bolla è &lt;b>link&lt;/b>Per l\'informazione completa ci sono disponibili le previsioni di arrivo dei veicoli che passano alla fermata selezionata.</string>
+    <string name="map_help_btn_label">OK</string>
+
+    <!-- SCHEDULE -->
+    <!-- Vehicle Choice -->
+    <string name="veh_ch_name">Orario dei veicoli</string>
+    <string name="veh_ch_image">Immagine del mezzo di trasporto</string>
+    <string name="veh_ch_direction_choice">Selezionare la destinazione</string>
+    <string name="veh_ch_coordinates_error">(I coordinati non sono trovati nella basa dei dati)</string>
+    <string name="veh_ch_direction_choice_error_msg">In questo momento nessuna informazione è disponibile per questa linea o c\'è un problemà con la sua connessione Internet.</string>
+    <string name="veh_ch_search_box">Cercare secondo il numero</string>
+
+    <!-- Station Choice -->
+    <string name="st_ch_name">Destinazione</string>
+    <string name="st_ch_menu_item_route">Percorso</string>
+    <string name="st_ch_menu_item_help">Aiuto</string>
+    <string name="st_ch_menu_err_title">Errore</string>
+    <string name="st_ch_menu_err_msg">Le fermate di questa linea non possono essere visualizzate pero non sono presente nella basa dei datti.</string>
+    <string name="st_ch_help_text">Tutta la fermata della lista e un link al GoogleMaps, e da l\'informazione per il orario la localizzazione della fermata. Il menu addizionale è inserito che si visualizza in caso di clicca sulla fermata requiesta e da informazione per l\'orario e la localizazzione della fermata. C\'è un menu addizionale visualizzato durante un lungo clich sulla fermata desirata con le seguenti opzioni::&lt;br/>
+         * &lt;b>Orario&lt;/b> - Informazione per l\'orarion della fermata selezionata;&lt;br/>
+         * &lt;b>Schede virtuali&lt;/b> - informazione per le ore di arrivo in tempo reale per la fermata selezionata;&lt;br/>&lt;br/>
+       L\'aggiunta e rimozione delle fermate in \"Favoriti\", si realiza con un click sulla stella davanti la fermata.&lt;br/> 
+        Con il menu contestuale è possibile di visualizzare il percorso del veicolo di trasporto selezionato.</string>
+    <string name="st_list_cont_menu_header">S</string>
+    <string name="st_list_schedule">Orario</string>
+    <string name="st_list_gps">Schede virtuali</string>
+
+    <!-- Station Info -->
+    <string name="st_inf_name" formatted="false">Informazione per %s</string>
+    <string name="st_inf_time" formatted="false">Informazione da %s</string>
+    <string name="st_inf_satelite_image">Schemi visione della mappa</string>
+    <string name="st_inf_fav_ok">La fermata è ragguinta nei  \"Favoriti"\ con successo.</string>
+    <string name="st_inf_fav_err">La fermata è gia ragguinta nei \"Favoriti"\.</string>
+    <string name="st_inf_menu_position">Posizionare</string>
+    <string name="st_inf_direction">Direzione</string>
+    <string name="st_inf_times_arrival">Ore del arrivo</string>
+    <string name="st_inf_times_remaining">Tempo d\'attentere</string>
+
+    <!-- Station Info Route Mape -->
+    <string name="st_inf_route_title">Informazione per \"</string>
+
+    <!-- FAVOURITES -->
+    <!-- Favourites -->
+    <string name="fav_info">Fermate selezionate</string>
+    <string name="fav_delete">Rimuovere la prima</string>
+    <string name="fav_delete_all">Rimuovere tutti/e</string>
+    <string name="fav_menu_rename">Rinominare</string>
+    <string name="fav_menu_rename_title">Rinominare</string>
+    <string name="fav_menu_rename_msg">Inserire il nuovo nome della fermata:</string>
+    <string name="fav_menu_delete">Rimuovere</string>
+
+    <!-- PREFERENCES -->
+    <!-- Preferences -->
+    <string name="pref_name">Strumenti</string>
+    <string name="pref_category_common">Generali</string>
+    <string name="common_home_screen_title">Paggina iniziale</string>
+    <string name="common_home_screen_summary">Selezione la paggina iniziale</string>
+    <string name="common_language_title">Lingua</string>
+    <string name="common_language_summary">Selezionare la lingua</string>
+    <string name="pref_category_home_screen">PAGGINA INIZIALE</string>
+    <string name="home_screen_gps_map_title">Pulsante \"GPS Google Maps\"</string>
+    <string name="home_screen_gps_map_summary">Selezione della funzionalità del pulsante \"GPS Tempo Google Maps\"</string>
+    <string name="home_screen_exit_title">Pulsante \"Uscita\"</string>
+    <string name="home_screen_exit_summary">Usando una finestra di dialogo in uscita</string>
+    <string name="pref_category_stations">INFORMAZIONE PER LE FERMATE</string>
+    <string name="stations_timeGPS_title">Schede virtuali</string>
+    <string name="stations_timeGPS_summary">Tempo rimanente o tempo di arrivo</string>
+    <string name="stations_timeSchedule_title">Orario</string>
+    <string name="stations_timeSchedule_summary">Tempo rimanente o tempo di arrivo</string>
+    <string name="stations_closestST_title">Nombre delle fermate viccino di più a Lei</string>
+    <string name="stations_closestST_summary">Quante fermate devono visualizzarsi intorno della sua localizzazione corrente o il punto selezionato.</string>
+    <string name="stations_timeInfoRetrieval_title">Informazione scaricatta</string>
+    <string name="stations_timeInfoRetrieval_summary">Determinazione del tempo di visualizzare /calcolo del informazione scaricata (Schede Virtuali)</string>
+    <string name="pref_category_map">MAPPA</string>
+    <string name="map_satellite_title">Schemi visione della mappa</string>
+    <string name="map_satellite_summary">Mappa dal satellite o Mappa Street View</string>
+    <string name="map_compass_title">Bussola</string>
+    <string name="map_compass_summary">Mostrare la freccia di orientamento della direzione (in GPS GoogleMaps)</string>
+    <string name="map_mapView_title">Modo della mappa</string>
+    <string name="map_mapView_summary">Mostrate l\'icona di cambiamento del modo della mappa (nel angolo destra superiore)</string>
+    <string name="map_position_title">Posizionamento</string>
+    <string name="map_position_summary">Posizionare la mappa in caso di cambiamento della localizzazione corrente (in GPS GoogleMaps)</string>
+    <string name="pref_category_other">ALTRI</string>
+    <string name="other_info_title">Informazione</string>
+    <string name="other_info_summary">Informazione del prodotto</string>
+
+    <!-- About -->
+    <string name="about_label">Sofbus 24 (versione 1.15)</string>
+    <string name="about_text">Il sistema di Android fornisce una informazione dettagliata per l\'uso di trasporto pubblico di Sofia anche per l\'ora del arrivo in tempo reale, orario dei veicoli, localizzazione delle fermate al territorio di Sofia anche la localizzazione delle fermate di più viccino a Lei secondo la sua posizione corrente.
+        \n\n<i>Данните се извличат от: <b><u>http://m.sumc.bg</u></b></i> \n\n<b>Autore: Zdravko Nestorov</b></string>
+    <string name="about_btn_label">OK</string>
+
+    <!-- EXIT -->
+    <!-- Exit -->
+    <string name="btn_exit">Uscita</string>
+    <string name="exit_msg">E sicura di voler chiudere l\'applicazione?</string>
+
+    <!-- ADDITIONAL STRINGS -->
+    <!-- Format remaining time: "Utils.formatTime(context, difference)" -->
+    <string name="remaining_minutes">m</string>
+    <string name="remaining_hours">h</string>
+
+    <!-- Vehicle names -->
+    <string name="title_bus">Autobus</string>
+    <string name="title_buses">Autobus:&#160;</string>
+    <string name="title_trolley">Filobus</string>
+    <string name="title_trolleys">Filobus:&#160;</string>
+    <string name="title_tram">Tram</string>
+    <string name="title_trams">Tram:&#160;</string>
+
+    <!-- Choose vehicle number: "VehicleAdapter.setSeparatorRow(...)" -->
+    <string name="choose_vehicle_number">Selezionare numero di&#160;</string>
+
+    <!-- "OK" and "CANCEL" button titles: "Favourites.onContextItemSelected(item)", "Sofbus24.onClick(v)" -->
+    <string name="button_title_ok">ОК</string>
+    <string name="button_title_cancel">Cancellare</string>
+    <string name="button_title_help">Aiuto</string>
+
+    <!-- "YES" and "NO" button titles: "Sofbus24.onBackPressed()" -->
+    <string name="button_title_yes">Si</string>
+    <string name="button_title_no">No</string>
+
+    <!-- "REMAINING TIME" or "TIME" of arrival: "GPSStationAdapter.setVehicleRow(...)" -->
+    <string name="time_remaining">Tempo rimanente:&#160;</string>
+    <string name="time_arrival">Tempo di arrivo:&#160;</string>
+
+    <!-- "ERRORS" with retrieving information: "HtmlResultSumcChoice" -->
+    <string name="error_sumc_no_info_station">Il sito della mobilità urbana non fornisce informazione per questa fermata. Si prega di riprovare più tardi.</string>
+    <string name="error_sumc_no_info_now">Il sito Internet della mobilità urbana non fornisce informazione per questa fermata \"%s\". 
+        Si prega di riprovare più tardi.</string>
+    <string name="error_sumc_no_bus_stop">Fermata numero \"%s\" non esiste.</string>
+    <string name="error_sumc_no_station_match">Nessuna corrispondenza per \"%s\".</string>
+
+    <!-- Loading messages on progressDialogs -->
+    <string name="loading_message_retrieve_sumc_info">Scaricare il tempo di arrivo&#8230;</string>
+    <string name="loading_message_retrieve_sumc_catcha">Controllo del CAPTCHA immagine&#8230;</string>
+    <string name="loading_message_preview_gps_map">Schemi visione della mappa GoogleMaps&#8230;</string>
+    <string name="loading_message_gps_map_location_status">Calcolo dei coordinati correnti&#8230;</string>
+    <string name="loading_message_retrieve_schedule_info">Scaricare il tempo di arrivo dei orari&#8230;</string>
+    <string name="loading_message_preview_info_map_route">Visualizzare il persorso sulla la mappa GoogleMaps&#8230;</string>
+    <string name="loading_message_retrieve_vehicles_numbers">Scaricare informazione dei veicoli del trasporto pubblico&#8230;</string>
+
+    <!-- TOAST MESSAGES -->
+    <!-- Favorites messages -->
+    <string name="toast_favorites_add">La fermata è stata  ragguinta ai \"Favoriti"\ con successo.</string>
+    <string name="toast_favorites_remove">La fermata è stata rimossa dei \"Favoriti"\ con successo.</string>
+    <string name="toast_favorites_remove_first">La prima fermata è stata rimossa dei \"Favoriti"\ con successo.</string>
+    <string name="toast_favorites_remove_all"> Tutte Le prima fermata è stata rimossa dei \"Favoriti"\ con successo.</string>
+    <string name="toast_favorites_no_stations">Non ci sono le fermate regguinte alla sezione \"Favoriti"\.</string>
+    <!-- Rename message -->
+    <string name="toast_station_rename">La fermata è stata rinominata con successo.</string>
+
+</resources>

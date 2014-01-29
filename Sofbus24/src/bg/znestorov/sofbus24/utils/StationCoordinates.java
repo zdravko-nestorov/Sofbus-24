@@ -11,7 +11,17 @@ import bg.znestorov.sofbus24.station_database.StationsDataSource;
 
 public class StationCoordinates {
 
-	// Getting the coordinates for the station with code "stationCode"
+	/**
+	 * Getting the coordinates of a station from the database using the station
+	 * code
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 * @param stationCode
+	 *            the code of the station
+	 * @return an array with two elements - the latitude and the longitude of
+	 *         the station (if exists)
+	 */
 	public static String[] getLocation(Context context, String stationCode) {
 
 		// Opening station database
@@ -33,7 +43,17 @@ public class StationCoordinates {
 		return coordinates;
 	}
 
-	// Getting the coordinates for the station with code "stationCode"
+	/**
+	 * Getting the coordinates of an array list of stations from the database
+	 * using their station codes (finding the route of a vehicle)
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 * @param stations
+	 *            an array with the station codes
+	 * @return a string object containing the route of the vehicle in format -->
+	 *         <b>LAT,LON, NAME(CODE);</b>
+	 */
 	public static String getRoute(Context context, ArrayList<String> stations) {
 		// Opening station database
 		StationsDataSource datasource = new StationsDataSource(context);
