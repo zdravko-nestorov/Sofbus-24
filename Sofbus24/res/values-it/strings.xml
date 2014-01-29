@@ -11,7 +11,7 @@
     <string name="btn_favourite">Favoriti</string>
     <string name="btn_options">Strumenti</string>
     <string name="ss_gps_map_msg_title">Errore</string>
-    <string name="ss_gps_map_msg_body">Si prega di accendere almeno uno dei dispositivi(GPS или WiFi), per rilevare la Sua posizione corrente.</string>
+    <string name="ss_gps_map_msg_body">Si prega di accendere almeno uno dei dispositivi (GPS или WiFi), per rilevare la Sua posizione corrente.</string>
 
     <!-- Home Screen Buttons -->
     <string name="hs_button1">Pulsante 1</string>
@@ -27,7 +27,7 @@
     <string name="sumc_button_label">OK</string>
 
     <!-- GPS Station Choice -->
-    <string name="gps_station_choice_name">&lt;u>Selezionare  una fermata;/u></string>
+    <string name="gps_station_choice_name">&lt;u>Selezionare una fermata&lt;/u></string>
     <string name="gps_station_choice_station_code">Numero di fermata:&#160;</string>
     <string name="gps_station_choice_error_internet">C\'è un errore durante lo scaricamento dell\'informazione. Si prega di verificare la Sua Connessione Internet e riprova.</string>
     <string name="gps_station_choice_error_info">Nessuna informazione trovata.</string>
@@ -49,13 +49,13 @@
     <string name="gps_see_map">Guarda alla mappa</string>
     <string name="gps_error_unknown">Errore durante il trasferimento dell\'informatione</string>
     <string name="gps_error_noInfo" formatted="false">Nessuna informazione per questa fermata \"%s\"</string>
-    <string name="gps_error_noBus" formatted="false">La Fermata  \"%s\" non esiste</string>
+    <string name="gps_error_noBus" formatted="false">La Fermata \"%s\" non esiste</string>
     <string name="gps_error_noBusEmpty">Secondo il sito internet della mobilità urbana di Sofia questa fermata non esiste.</string>
-    <string name="gps_error_noCoordinates">Non è possibile di visualizzare questa fermata(i suoi coordinati non sono trovati nella basa dei danni ).</string>
+    <string name="gps_error_noCoordinates">Non è possibile di visualizzare questa fermata (i suoi coordinati non sono trovati nella basa dei danni).</string>
 
     <!-- GPS GOOGLE MAPS -->
     <!-- GPS GOOGLE MAPS Station Choice -->
-    <string name="gps_map_station_choice_name">&lt;u>Selezionare una fermata&lt;/u></string>
+    <string name="gps_map_station_choice_name">&lt;u>Selezionare una fermata&lt;u></string>
     <string name="gps_map_station_choice_error_summary">Errore durante il trasferimento dell\'informatione. Riprova.</string>
     <string name="gps_map_station_choice_distance">Distanza:&#160;</string>
     <string name="gps_map_station_choice_meters">&#160;metri</string>
@@ -67,15 +67,16 @@
     <string name="map_gps_menu_item_help">Aiuto</string>
     <string name="map_gps_menu_item_clean">Cancellare</string>
     <string name="map_gps_no_last_location">Si prega di aspettare per determinare le sue coordinate.</string>
-    <string name="map_gps_route_error">La connessione Internet è è necessaria per visualizzare il percorso( o c\'è un problema con il server GoogleMaps).</string>
+    <string name="map_gps_route_error">La connessione Internet è è necessaria per visualizzare il percorso (o c\'è un problema con il server GoogleMaps).</string>
     <string name="map_gps_distance_OK" formatted="false">La distanza dalla sua posizione corrente alla fermata scegiata da Lei è %s metri.</string>
     <string name="map_gps_distance_ERR">Si prega di scegliere una fermata.</string>
 
     <!-- Map GPS Help -->
     <string name="map_help_label">Aiuto</string>
-    <string name="map_help_text">\ Fermate inizialmente visualizzate sono  8 (predifinite)  di più vicino a Lei (&lt;i>Il punto blue&lt;/i>),
-        anche le fermate  Aggiunte ai \"Favoriti\". Selezionando il punto sulla mappa le 8 fermate di più vicino sarano visualizzate.&lt;br/>&lt;br/>Cliccando sulla fermata ci sono disponibili il nome et il codice della fermata
-        . Questa bolla è &lt;b>link&lt;/b>Per l\'informazione completa ci sono disponibili le previsioni di arrivo dei veicoli che passano alla fermata selezionata.</string>
+    <string name="map_help_text">\ Fermate inizialmente visualizzate sono 8 (predifinite) di più vicino a Lei (&lt;i>Il punto blue&lt;/i>),
+        anche le fermate Aggiunte ai \"Favoriti\". Selezionando il punto sulla mappa le 8 fermate di più vicino sarano visualizzate.&lt;br/>&lt;br/> 
+        Cliccando sulla fermata ci sono disponibili il nome et il codice della fermata. Questa bolla è &lt;b>link&lt;/b> 
+        Per l\'informazione completa ci sono disponibili le previsioni di arrivo dei veicoli che passano alla fermata selezionata.</string>
     <string name="map_help_btn_label">OK</string>
 
     <!-- SCHEDULE -->
@@ -96,9 +97,9 @@
     <string name="st_ch_help_text">Tutta la fermata della lista e un link al GoogleMaps, e da l\'informazione per il orario la localizzazione della fermata. Il menu addizionale è inserito che si visualizza in caso di clicca sulla fermata requiesta e da informazione per l\'orario e la localizazzione della fermata. C\'è un menu addizionale visualizzato durante un lungo clich sulla fermata desirata con le seguenti opzioni::&lt;br/>
          * &lt;b>Orario&lt;/b> - Informazione per l\'orarion della fermata selezionata;&lt;br/>
          * &lt;b>Schede virtuali&lt;/b> - informazione per le ore di arrivo in tempo reale per la fermata selezionata;&lt;br/>&lt;br/>
-       L\'aggiunta e rimozione delle fermate in \"Favoriti\", si realiza con un click sulla stella davanti la fermata.&lt;br/> 
+		L\'aggiunta e rimozione delle fermate in \"Favoriti\", si realiza con un click sulla stella davanti la fermata.&lt;br/> 
         Con il menu contestuale è possibile di visualizzare il percorso del veicolo di trasporto selezionato.</string>
-    <string name="st_list_cont_menu_header">S</string>
+    <string name="st_list_cont_menu_header">Selezionare</string>
     <string name="st_list_schedule">Orario</string>
     <string name="st_list_gps">Schede virtuali</string>
 
@@ -106,7 +107,7 @@
     <string name="st_inf_name" formatted="false">Informazione per %s</string>
     <string name="st_inf_time" formatted="false">Informazione da %s</string>
     <string name="st_inf_satelite_image">Schemi visione della mappa</string>
-    <string name="st_inf_fav_ok">La fermata è ragguinta nei  \"Favoriti"\ con successo.</string>
+    <string name="st_inf_fav_ok">La fermata è ragguinta nei \"Favoriti"\ con successo.</string>
     <string name="st_inf_fav_err">La fermata è gia ragguinta nei \"Favoriti"\.</string>
     <string name="st_inf_menu_position">Posizionare</string>
     <string name="st_inf_direction">Direzione</string>
@@ -219,7 +220,7 @@
 
     <!-- TOAST MESSAGES -->
     <!-- Favorites messages -->
-    <string name="toast_favorites_add">La fermata è stata  ragguinta ai \"Favoriti"\ con successo.</string>
+    <string name="toast_favorites_add">La fermata è stata ragguinta ai \"Favoriti"\ con successo.</string>
     <string name="toast_favorites_remove">La fermata è stata rimossa dei \"Favoriti"\ con successo.</string>
     <string name="toast_favorites_remove_first">La prima fermata è stata rimossa dei \"Favoriti"\ con successo.</string>
     <string name="toast_favorites_remove_all"> Tutte Le prima fermata è stata rimossa dei \"Favoriti"\ con successo.</string>

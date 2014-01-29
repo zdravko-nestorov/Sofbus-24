@@ -107,45 +107,47 @@ public final class R {
         public static final int button_gps_map_f=0x7f020011;
         public static final int button_gps_map_unf=0x7f020012;
         public static final int button_gps_unf=0x7f020013;
-        public static final int button_sch=0x7f020014;
-        public static final int button_sch_f=0x7f020015;
-        public static final int button_sch_unf=0x7f020016;
-        public static final int button_settings=0x7f020017;
-        public static final int button_settings_f=0x7f020018;
-        public static final int button_settings_unf=0x7f020019;
-        public static final int clean=0x7f02001a;
-        public static final int color_gps_map_status_bar_background=0x7f020039;
-        public static final int color_gps_map_status_bar_text=0x7f02003a;
-        public static final int distance=0x7f02001b;
-        public static final int fav_delete=0x7f02001c;
-        public static final int fav_delete_all=0x7f02001d;
-        public static final int favorites_empty=0x7f02001e;
-        public static final int favorites_full=0x7f02001f;
-        public static final int favourite=0x7f020020;
-        public static final int favourite_add=0x7f020021;
-        public static final int help=0x7f020022;
-        public static final int ic_launcher=0x7f020023;
-        public static final int left=0x7f020024;
-        public static final int logo=0x7f020025;
-        public static final int map_position=0x7f020026;
-        public static final int no_station=0x7f020027;
-        public static final int refresh=0x7f020028;
-        public static final int right=0x7f020029;
-        public static final int route=0x7f02002a;
-        public static final int satellite=0x7f02002b;
-        public static final int satellite_f=0x7f02002c;
-        public static final int satellite_unf=0x7f02002d;
-        public static final int see_map=0x7f02002e;
-        public static final int st_inf_direction=0x7f02002f;
-        public static final int st_inf_location=0x7f020030;
-        public static final int st_inf_time=0x7f020031;
-        public static final int station=0x7f020032;
-        public static final int tram_icon=0x7f020033;
-        public static final int tram_station=0x7f020034;
-        public static final int tram_tab=0x7f020035;
-        public static final int trolley_icon=0x7f020036;
-        public static final int trolley_station=0x7f020037;
-        public static final int trolley_tab=0x7f020038;
+        public static final int button_refresh=0x7f020014;
+        public static final int button_refresh_f=0x7f020015;
+        public static final int button_refresh_unf=0x7f020016;
+        public static final int button_sch=0x7f020017;
+        public static final int button_sch_f=0x7f020018;
+        public static final int button_sch_unf=0x7f020019;
+        public static final int button_settings=0x7f02001a;
+        public static final int button_settings_f=0x7f02001b;
+        public static final int button_settings_unf=0x7f02001c;
+        public static final int clean=0x7f02001d;
+        public static final int color_gps_map_status_bar_background=0x7f02003b;
+        public static final int color_gps_map_status_bar_text=0x7f02003c;
+        public static final int distance=0x7f02001e;
+        public static final int fav_delete=0x7f02001f;
+        public static final int fav_delete_all=0x7f020020;
+        public static final int favorites_empty=0x7f020021;
+        public static final int favorites_full=0x7f020022;
+        public static final int favourite=0x7f020023;
+        public static final int favourite_add=0x7f020024;
+        public static final int help=0x7f020025;
+        public static final int ic_launcher=0x7f020026;
+        public static final int left=0x7f020027;
+        public static final int logo=0x7f020028;
+        public static final int map_position=0x7f020029;
+        public static final int no_station=0x7f02002a;
+        public static final int right=0x7f02002b;
+        public static final int route=0x7f02002c;
+        public static final int satellite=0x7f02002d;
+        public static final int satellite_f=0x7f02002e;
+        public static final int satellite_unf=0x7f02002f;
+        public static final int see_map=0x7f020030;
+        public static final int st_inf_direction=0x7f020031;
+        public static final int st_inf_location=0x7f020032;
+        public static final int st_inf_time=0x7f020033;
+        public static final int station=0x7f020034;
+        public static final int tram_icon=0x7f020035;
+        public static final int tram_station=0x7f020036;
+        public static final int tram_tab=0x7f020037;
+        public static final int trolley_icon=0x7f020038;
+        public static final int trolley_station=0x7f020039;
+        public static final int trolley_tab=0x7f02003a;
     }
     public static final class id {
         public static final int about_content=0x7f0b0000;
@@ -403,6 +405,7 @@ public final class R {
         public static final int map_gps_route_error=0x7f08002f;
         public static final int map_help_btn_label=0x7f080034;
         /**  Map GPS Help 
+ Map GPS Help 
  Map GPS Help 
  Map GPS Help 
          */

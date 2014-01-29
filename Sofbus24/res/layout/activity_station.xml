@@ -48,7 +48,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dip"
             android:layout_marginTop="7dip"
-            android:background="@drawable/refresh"
+            android:background="@drawable/button_refresh"
             android:clickable="true"
             android:visibility="gone" />
     </RelativeLayout>

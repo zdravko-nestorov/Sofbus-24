@@ -5,13 +5,13 @@
     <string name="app_name">Sofbus 24</string>
     <string name="ss_name">Transport public de Sofia</string>
     <string name="btn_gps">Tableaux vituels</string>
-    <string name="gps_msg">Veuillez insérer le numéro ou le nom(en cirylic ou latin) de la station:</string>
+    <string name="gps_msg">Veuillez insérer le numéro ou le nom (en cirylic ou latin) de la station:</string>
     <string name="btn_map">Temps GPS - Google Maps</string>
-    <string name="btn_schedule">Horraire</string>
+    <string name="btn_schedule">Horaire</string>
     <string name="btn_favourite">Favoris</string>
     <string name="btn_options">Outils</string>
     <string name="ss_gps_map_msg_title">Erreur</string>
-    <string name="ss_gps_map_msg_body">Veuillez activer au moins un moyen de communication(GPS ou WiFi), pour détecter votre position courante.</string>
+    <string name="ss_gps_map_msg_body">Veuillez activer au moins un moyen de communication (GPS ou WiFi), pour détecter votre position courante.</string>
 
     <!-- Home Screen Buttons -->
     <string name="hs_button1">Bouton 1</string>
@@ -27,14 +27,14 @@
     <string name="sumc_button_label">OK</string>
 
     <!-- GPS Station Choice -->
-    <string name="gps_station_choice_name">&lt;u>Sélectionner une station;/u></string>
+    <string name="gps_station_choice_name">&lt;u>Sélectionner une station&lt;/u></string>
     <string name="gps_station_choice_station_code">Numéro de station:&#160;</string>
     <string name="gps_station_choice_error_internet">Une erreur s\'est produite lors du téléchargement d\'information. Veuillez vérifier votre connection d\'Internet er réessayer.</string>
     <string name="gps_station_choice_error_info">Aucune information disponible.</string>
 
     <!-- VIRTUAL BOARDS -->
     <!-- VIRTUAL BOARDS HELP -->
-    <string name="vb_help_title">&lt;u>Alphabet cyrilic ou alphabet Latin&lt;/u></string>
+    <string name="vb_help_title">&lt;u>Alphabet Cyrilic ou alphabet Latin&lt;/u></string>
     <string name="vb_help_summary1">\"А\" = \"A\"\n\"Б\" = \"B\"\n\"В\" = \"V\"\n\"Г\" = \"G\"\n\"Д\" = \"D\"\n\"Е\" = \"E\"\n\"Ж\" = \"Zh\"\n\"З\" = \"Z\"\n\"И\" = \"I\"
 		\n\"Й\" = \"J\"\n\"К\" = \"K\"\n\"Л\" = \"L\"\n\"М\" = \"M\"\n\"Н\" = \"N\"\n\"О\" = \"O\"\n</string>
     <string name="vb_help_summary2">\"П\" = \"P\"\n\"Р\" = \"R\"\n\"С\" = \"S\"\n\"Т\" = \"T\"\n\"У\" = \"U\"\n\"Ф\" = \"F\"\n\"Х\" = \"H\"\n\"Ц\" = \"C\"\n\"Ч\" = \"Ch\"
@@ -44,14 +44,14 @@
     <string name="gps_name">Tableaux vituels</string>
     <string name="gps_err_dialog_title">Erreur</string>
     <string name="gps_fav_dialog_title">Favoris</string>
-    <string name="gps_err_dialog_msg">Une erreur s\'est produite lors du téléchargement d\'information. Veuillez v?rifier votre connection d\'Internet er réessayer.</string>
-    <string name="gps_favourite_add">Ajouter sur\"Favoris\"</string>
+    <string name="gps_err_dialog_msg">Une erreur s\'est produite lors du téléchargement d\'information. Veuillez vérifier votre connection d\'Internet er réessayer.</string>
+    <string name="gps_favourite_add">Ajouter sur \"Favoris\"</string>
     <string name="gps_see_map">Consulter la carte</string>
     <string name="gps_error_unknown">Erreur lors de transmission d\'information</string>
     <string name="gps_error_noInfo" formatted="false">Pas d\'information pour cette station\"%s\"</string>
-    <string name="gps_error_noBus" formatted="false">La station  \"%s\" n\'existe pas</string>
+    <string name="gps_error_noBus" formatted="false">La station \"%s\" n\'existe pas</string>
     <string name="gps_error_noBusEmpty">Selon le site d\'Internet de la mobilité urbaine de Sofia cette station n\'existe pas.</string>
-    <string name="gps_error_noCoordinates">Impossible de visualiser cette station(ses coordonnées ne sont pas trouvés dans la base de donnée).</string>
+    <string name="gps_error_noCoordinates">Impossible de visualiser cette station (ses coordonnées ne sont pas trouvés dans la base de donnée).</string>
 
     <!-- GPS GOOGLE MAPS -->
     <!-- GPS GOOGLE MAPS Station Choice -->
@@ -63,24 +63,25 @@
     <!-- Map GPS -->
     <string name="map_gps_name">Tableax virtuels - Google Maps</string>
     <string name="map_gps_menu_item_distance">Direction</string>
-    <string name="map_gps_menu_item_focus">Se positionner/string>
+    <string name="map_gps_menu_item_focus">Se positionner</string>
     <string name="map_gps_menu_item_help">Aide</string>
     <string name="map_gps_menu_item_clean">Annuler</string>
     <string name="map_gps_no_last_location">Veuillez patienter le temps de dérivation de vos coordonées.</string>
-    <string name="map_gps_route_error">Une connection d\'Internet est nécessaire pour visualiser le trajet( ou il y a de problème avec le serveur GoogleMaps).</string>
-    <string name="map_gps_distance_OK" formatted="false">La distance de votre position courante à la station sélectionnée  %s mettres.</string>
+    <string name="map_gps_route_error">Une connection d\'Internet est nécessaire pour visualiser le trajet (ou il y a de problème avec le serveur GoogleMaps).</string>
+    <string name="map_gps_distance_OK" formatted="false">La distance de votre position courante à la station sélectionnée %s mettres.</string>
     <string name="map_gps_distance_ERR">Veuillez sélectionner une station.</string>
 
     <!-- Map GPS Help -->
     <string name="map_help_label">Aide</string>
-    <string name="map_help_text">\Les premi?res stations visualisées par défaut sont les 8 les plus proches de vous(&lt;i>le point bleu&lt;/i>),
-        également celles ajout?es dans \"Favoris\". En choisissant un point sur la carte les 8 stations les plus proches de lui.&lt;br/>&lt;br/>Cliquant sur chaque station une boulette d\'informaton concernant le numéro et le nom de la station apparait. Cette boulette est &lt;b> un lien&lt;/b>        vers une information détaillée des horraires des voitures qui passsent par cette station.</string>
-        également celles ajout?es dans \"Favoris\". En choisissant un point sur la carte les 8 stations les plus proches de lui.&lt;br/>&lt;br/>Cliquant sur chaque station une boulette d\'informaton concernant le numéro et le nom de la station apparait. Cette boulette est &lt;b> un lien&lt;/b>        vers une information détaillée des horraires des voitures qui passsent par cette station.</string>
+    <string name="map_help_text">Les premières stations visualisées par défaut sont les 8 les plus proches de vous (&lt;i>le point bleu&lt;/i>),
+        également celles ajoutés dans \"Favoris\". En choisissant un point sur la carte les 8 stations les plus proches de lui.&lt;br/>&lt;br/> 
+        Cliquant sur chaque station une boulette d\'informaton concernant le numéro et le nom de la station apparait. Cette boulette est &lt;b> un lien&lt;/b> 
+        vers une information détaillée des horraires des voitures qui passsent par cette station.</string>
     <string name="map_help_btn_label">OK</string>
 
     <!-- SCHEDULE -->
     <!-- Vehicle Choice -->
-    <string name="veh_ch_name">Horraire des voiture</string>
+    <string name="veh_ch_name">Horaire des voiture</string>
     <string name="veh_ch_image">Image du moyen de transport</string>
     <string name="veh_ch_direction_choice">Sélectionner direction</string>
     <string name="veh_ch_coordinates_error">(Il n\'y a pas de coordonnés trouvés dans la base de données)</string>
@@ -94,12 +95,12 @@
     <string name="st_ch_menu_err_title">Erreur</string>
     <string name="st_ch_menu_err_msg">Les stations de cette ligne ne peuvent pas être visualisées puisqu\'elles ne sont pas trouvées dans la base de donnée.</string>
     <string name="st_ch_help_text">\ Chaque station est un lien vers GoogleMaps qui donne d\'information sur son horraire et sa localisation. Un menu complémentaire est introduit avec les options suivantes, se visualise lors d\'appui continuel sur la station selectionnée:&lt;br/>
-         * &lt;b>Horraire&lt;/b> - Information concernant l\'horraire de la station sélectionnée;&lt;br/>
+         * &lt;b>Horaire&lt;/b> - Information concernant l\'horraire de la station sélectionnée;&lt;br/>
          * &lt;b>Tableaux viruels&lt;/b> - Information des heures d\'arrivée en temps réel pour la station sélectionnée;&lt;br/>&lt;br/>
         Pour ajouter ou sortir des station du menu \"Favoris\" veuillez appuyer sur l\'étoile devant.&lt;br/> 
-        Il est possible de visualiser l\'itin?raire du moyen de transport sélectionné par le menu contextuel.</string>
+        Il est possible de visualiser l\'itinéraire du moyen de transport sélectionné par le menu contextuel.</string>
     <string name="st_list_cont_menu_header">Sélectionner</string>
-    <string name="st_list_schedule">Horraire</string>
+    <string name="st_list_schedule">Horaire</string>
     <string name="st_list_gps">Tableaux virtuels</string>
 
     <!-- Station Info -->
@@ -123,7 +124,7 @@
     <string name="fav_delete_all">Effacer toutes</string>
     <string name="fav_menu_rename">Renommer</string>
     <string name="fav_menu_rename_title">Renommer</string>
-    <string name="fav_menu_rename_msg">Introduire la nouvelle d?nommination de la station:</string>
+    <string name="fav_menu_rename_msg">Introduire la nouvelle dénomination de la station:</string>
     <string name="fav_menu_delete">Effacer</string>
 
     <!-- PREFERENCES -->
@@ -142,12 +143,12 @@
     <string name="pref_category_stations">INFORMATION POUR DES STATIONS</string>
     <string name="stations_timeGPS_title">Tableaux virtuels</string>
     <string name="stations_timeGPS_summary">Temps restant ou temps d\'arrivée</string>
-    <string name="stations_timeSchedule_title">Horraires</string>
+    <string name="stations_timeSchedule_title">Horaires</string>
     <string name="stations_timeSchedule_summary">Temps restant ou temps d\'arrivée</string>
     <string name="stations_closestST_title">Nombre de stations les plus proches</string>
     <string name="stations_closestST_summary">Combien de stations doivent se visualiser autours de votre position courante ou point choisi</string>
     <string name="stations_timeInfoRetrieval_title">information téléchargée</string>
-    <string name="stations_timeInfoRetrieval_summary">Définir le mode d\'affichage du temps/ calculs de l\'information téléchargée (Tableaux virtuels)</string>
+    <string name="stations_timeInfoRetrieval_summary">Définir le mode d\'affichage du temps/calculs de l\'information téléchargée (Tableaux virtuels)</string>
     <string name="pref_category_map">CARTE</string>
     <string name="map_satellite_title">Mode d\'affichage de la carte</string>
     <string name="map_satellite_summary">Carte de satellite ou carte Street View</string>
@@ -156,15 +157,15 @@
     <string name="map_mapView_title">Mode de la carte</string>
     <string name="map_mapView_summary">Afficher l\'icone de changement du mode de la carte (dans le coin droit en haut)</string>
     <string name="map_position_title">Positionnement</string>
-    <string name="map_position_summary">Positionner la carte lors de changement de votre position courrante(sur GPS GoogleMaps)</string>
+    <string name="map_position_summary">Positionner la carte lors de changement de votre position courrante (sur GPS GoogleMaps)</string>
     <string name="pref_category_other">AUTRES</string>
     <string name="other_info_title">Information</string>
     <string name="other_info_summary">Information du produit</string>
 
     <!-- About -->
-    <string name="about_label">Sofbus 24(version 1.15)</string>
-    <string name="about_text">Le système d\'Android fournit d\'information détaillée liée à l\'utilisation du transport publique de Sofia pour des heures d\'arrivée  en temps réel, horraires des moyens de transport, localisation des stations surle territoire de Sofia ainsi que positionnement des stations les plus proches en fonction de votre position courrante.
-        \n\n<i>Les donn?es sont téléchargées du : <b><u>http://m.sumc.bg</u></b></i> \n\n<b>Auteur: Zdravko Nestorov</b></string>
+    <string name="about_label">Sofbus 24 (version 1.15)</string>
+    <string name="about_text">Le système d\'Android fournit d\'information détaillée liée à l\'utilisation du transport publique de Sofia pour des heures d\'arrivée en temps réel, horraires des moyens de transport, localisation des stations surle territoire de Sofia ainsi que positionnement des stations les plus proches en fonction de votre position courrante.
+        \n\n<i>Les données sont téléchargées du: <b><u>http://m.sumc.bg</u></b></i> \n\n<b>Auteur: Zdravko Nestorov</b></string>
     <string name="about_btn_label">OK</string>
 
     <!-- EXIT -->

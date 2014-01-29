@@ -104,6 +104,11 @@ public class Utils {
 		int afterTimeMilis = 0;
 		int currTimeMilis = 0;
 
+		// In cases when it is after midnight
+		if (currTime.startsWith("00:")) {
+			currTime = currTime.replaceAll("00:", "24:");
+		}
+
 		try {
 			afterTimeMilis = new BigDecimal(afterTime.split(":")[0]).intValue()
 					* 60 + new BigDecimal(afterTime.split(":")[1]).intValue();
@@ -125,7 +130,7 @@ public class Utils {
 	 * Filling a number with zeroes ("0") if it is lower than 4 digits
 	 * 
 	 * @param input
-	 *            an input string containg a number
+	 *            an input string containing a number
 	 * @return a number (in string format) which is always at least 4 digits
 	 */
 	public static String formatNumberOfDigits(String input) {
@@ -218,7 +223,7 @@ public class Utils {
 
 	/**
 	 * Parse the HTML source file using the station code to get the station
-	 * name. It is transcoded to latin in case of differen than BG language
+	 * name. It is transcoded to Latin in case of different than BG language
 	 * 
 	 * @param htmlSrc
 	 *            the source code of the page
@@ -228,7 +233,7 @@ public class Utils {
 	 *            the code of the station
 	 * @param language
 	 *            the chosen language of the application
-	 * @return the name of the staion according to the station code
+	 * @return the name of the station according to the station code
 	 */
 	public static String getStationName(String htmlSrc, String tempHtmlSrc,
 			String stationCode, String language) {
