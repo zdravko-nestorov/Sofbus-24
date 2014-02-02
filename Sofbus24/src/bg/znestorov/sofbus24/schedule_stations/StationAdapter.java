@@ -78,7 +78,7 @@ public class StationAdapter extends ArrayAdapter<Station> {
 		stationInfo.setText(stationName);
 		stationCode.setText(context
 				.getString(R.string.gps_station_choice_station_code)
-				+ Utils.formatNumberOfDigits(stationId));
+				+ Utils.formatNumberOfDigits(stationId, 4));
 
 		// Set onClick listener
 		stationFavorites.setOnClickListener(new OnClickListener() {

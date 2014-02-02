@@ -304,6 +304,7 @@ public final class R {
          */
         public static final int error_sumc_no_info_station=0x7f08008a;
         public static final int error_sumc_no_station_match=0x7f08008d;
+        public static final int error_sumc_refresh=0x7f08008e;
         public static final int exit_msg=0x7f080079;
         public static final int fav_delete=0x7f08004f;
         public static final int fav_delete_all=0x7f080050;
@@ -375,18 +376,18 @@ public final class R {
         public static final int hs_button4=0x7f08000d;
         public static final int hs_button5=0x7f08000e;
         public static final int hs_button6=0x7f08000f;
-        public static final int loading_message_gps_map_location_status=0x7f080091;
-        public static final int loading_message_preview_gps_map=0x7f080090;
-        public static final int loading_message_preview_info_map_route=0x7f080093;
-        public static final int loading_message_retrieve_schedule_info=0x7f080092;
-        public static final int loading_message_retrieve_sumc_catcha=0x7f08008f;
+        public static final int loading_message_gps_map_location_status=0x7f080092;
+        public static final int loading_message_preview_gps_map=0x7f080091;
+        public static final int loading_message_preview_info_map_route=0x7f080094;
+        public static final int loading_message_retrieve_schedule_info=0x7f080093;
+        public static final int loading_message_retrieve_sumc_catcha=0x7f080090;
         /**  Loading messages on progressDialogs 
  Loading messages on progressDialogs 
  Loading messages on progressDialogs 
  Loading messages on progressDialogs 
          */
-        public static final int loading_message_retrieve_sumc_info=0x7f08008e;
-        public static final int loading_message_retrieve_vehicles_numbers=0x7f080094;
+        public static final int loading_message_retrieve_sumc_info=0x7f08008f;
+        public static final int loading_message_retrieve_vehicles_numbers=0x7f080095;
         public static final int map_compass_summary=0x7f08006d;
         public static final int map_compass_title=0x7f08006c;
         public static final int map_gps_distance_ERR=0x7f080031;
@@ -528,17 +529,17 @@ public final class R {
  TOAST MESSAGES 
  Favorites messages 
          */
-        public static final int toast_favorites_add=0x7f080095;
-        public static final int toast_favorites_no_stations=0x7f080099;
-        public static final int toast_favorites_remove=0x7f080096;
-        public static final int toast_favorites_remove_all=0x7f080098;
-        public static final int toast_favorites_remove_first=0x7f080097;
+        public static final int toast_favorites_add=0x7f080096;
+        public static final int toast_favorites_no_stations=0x7f08009a;
+        public static final int toast_favorites_remove=0x7f080097;
+        public static final int toast_favorites_remove_all=0x7f080099;
+        public static final int toast_favorites_remove_first=0x7f080098;
         /**  Rename message 
  Rename message 
  Rename message 
  Rename message 
          */
-        public static final int toast_station_rename=0x7f08009a;
+        public static final int toast_station_rename=0x7f08009b;
         public static final int vb_help_summary1=0x7f080018;
         public static final int vb_help_summary2=0x7f080019;
         /**  VIRTUAL BOARDS 

@@ -209,6 +209,8 @@
         Veuillez réessayer plus tard.</string>
     <string name="error_sumc_no_bus_stop">Station numéro \"%s\" n\'existe pas.</string>
     <string name="error_sumc_no_station_match">Il n\'y a pas de résultat trouvés pour \"%s\".</string>
+    <string name="error_sumc_refresh">Une erreur s\'est produite lors de mise à jour de l\'information, en raison de problèmes dans le site urbain 
+        mobilité (le site ne fournit pas les informations, même si c\'est disponible). Veuillez actualiser l\'information à nouveau.</string>
 
     <!-- Loading messages on progressDialogs -->
     <string name="loading_message_retrieve_sumc_info">Télechargement des temps d\'arrivée&#8230;</string>

@@ -74,7 +74,7 @@ public class VBStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 		stationInfo.setText(station.getName());
 		stationCode.setText(context
 				.getString(R.string.gps_station_choice_station_code)
-				+ Utils.formatNumberOfDigits(station.getId()));
+				+ Utils.formatNumberOfDigits(station.getId(), 4));
 
 		// Set onClick listener
 		stationFavorites.setOnClickListener(new OnClickListener() {

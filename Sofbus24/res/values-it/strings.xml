@@ -208,6 +208,8 @@
         Si prega di riprovare più tardi.</string>
     <string name="error_sumc_no_bus_stop">Fermata numero \"%s\" non esiste.</string>
     <string name="error_sumc_no_station_match">Nessuna corrispondenza per \"%s\".</string>
+    <string name="error_sumc_refresh">Errore durante l\'aggiornamento delle informazioni, a causa di problemi nel sito per urbano 
+        mobilità (il sito non fornisce le informazioni, anche se tale è disponibile). Per favore aggiorna il informazioni nuovamente.</string>
 
     <!-- Loading messages on progressDialogs -->
     <string name="loading_message_retrieve_sumc_info">Scaricare il tempo di arrivo&#8230;</string>

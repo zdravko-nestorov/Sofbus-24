@@ -76,9 +76,15 @@ public class HtmlResultSumcChoice {
 				}
 			}
 
-			// Strange case in which the station is found, but there is
-			// no information (line #1)
-			if (htmlSrc.contains(Constants.ERROR_NO_INFO_STATION)) {
+			// Case in which there is no info after refresh
+			if (htmlSrc.contains(Constants.SEARCH_ERROR_WITH_REFRESH)) {
+				gpsStation
+						.setTime_stamp(Constants.SEARCH_ERROR_WITH_REFRESH);
+				listOfVehicles.add(gpsStation);
+				return listOfVehicles;
+				// Strange case in which the station is found, but there is
+				// no information (line #1)
+			} else if (htmlSrc.contains(Constants.ERROR_NO_INFO_STATION)) {
 				gpsStation.setId(Utils.getStationId(htmlSrc, stationCode));
 				gpsStation
 						.setTime_stamp(Constants.ERROR_RETRIEVE_NO_INFO_STATION);

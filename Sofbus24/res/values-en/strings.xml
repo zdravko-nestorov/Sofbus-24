@@ -210,6 +210,8 @@
         Please try again later.</string>
     <string name="error_sumc_no_bus_stop">The station with \"%s\" number doesn\'t exist.</string>
     <string name="error_sumc_no_station_match">There are no matches found for \"%s\".</string>
+    <string name="error_sumc_refresh">An error occurred while updating the information, due to problems in the SKGT site 
+        (the site does not provide the information, although such is available). Please refresh again.</string>
 
     <!-- Loading messages on progressDialogs -->
     <string name="loading_message_retrieve_sumc_info">Processing data&#8230;</string>

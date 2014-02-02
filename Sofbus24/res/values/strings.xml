@@ -214,6 +214,8 @@
         Моля опитайте пак по-късно.</string>
     <string name="error_sumc_no_bus_stop">Спирка с номер \"%s\" не съществува.</string>
     <string name="error_sumc_no_station_match">Няма намерени съвпадения за \"%s\".</string>
+    <string name="error_sumc_refresh">Възникна грешка при обновяването на информацията, поради проблеми в сайта за градска 
+        мобилност (сайтът не предоставя информация, въпреки че такава е налична). Моля обновете информарцията отново.</string>
 
     <!-- Loading messages on progressDialogs -->
     <string name="loading_message_retrieve_sumc_info">Извличане времената на пристигане&#8230;</string>

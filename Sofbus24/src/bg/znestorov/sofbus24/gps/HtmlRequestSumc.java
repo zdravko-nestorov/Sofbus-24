@@ -1,12 +1,18 @@
 package bg.znestorov.sofbus24.gps;
 
+import static bg.znestorov.sofbus24.utils.Utils.formatNumberOfDigits;
+import static bg.znestorov.sofbus24.utils.Utils.isTimeInRange;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -37,6 +43,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.text.InputType;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,6 +67,9 @@ public class HtmlRequestSumc {
 	// Coordinates of the station
 	private static String[] coordinates = new String[2];
 
+	// Consecutive requests in case of an error
+	private static int requestsCount = 0;
+
 	/**
 	 * Getting the source file of the HTTP request and opening a new Activity
 	 * 
@@ -68,17 +78,19 @@ public class HtmlRequestSumc {
 	 * @param stationCode
 	 *            The code of the station
 	 * @param stationCodeO
-	 *            The position of the station code in case of multiple results: <br>
-	 *            * null - when search for a first time for a result and
-	 *            multiple are found <br>
-	 *            * any number - the position of the station in the list with
-	 *            multiple results <br>
-	 *            * schedule - in case the method is called from SCHEDULE
-	 *            section <br>
-	 *            * gpsTimes - in case the method is called from GPS TIMES
-	 *            section <br>
-	 *            * favorites - in case the method is called from FAVORITES
-	 *            section <br>
+	 *            The position of the station code in case of multiple results:
+	 *            <ul>
+	 *            <li>null - when search for a first time for a result and
+	 *            multiple are found</li>
+	 *            <li>any number - the position of the station in the list with
+	 *            multiple results</li>
+	 *            <li>schedule - in case the method is called from SCHEDULE
+	 *            section</li>
+	 *            <li>gpsTimes - in case the method is called from GPS TIMES
+	 *            section</li>
+	 *            <li>favorites - in case the method is called from FAVORITES
+	 *            section</li>
+	 *            </ul>
 	 * @param transferCoordinates
 	 *            array with length 2 - containg the longitude and latitude of
 	 *            the station
@@ -191,17 +203,19 @@ public class HtmlRequestSumc {
 	 * @param stationCode
 	 *            The code of the station
 	 * @param stationCodeO
-	 *            The position of the station code in case of multiple results: <br>
-	 *            * null - when search for a first time for a result and
-	 *            multiple are found <br>
-	 *            * any number - the position of the station in the list with
-	 *            multiple results <br>
-	 *            * schedule - in case the method is called from SCHEDULE
-	 *            section <br>
-	 *            * gpsTimes - in case the method is called from GPS TIMES
-	 *            section <br>
-	 *            * favorites - in case the method is called from FAVORITES
-	 *            section <br>
+	 *            The position of the station code in case of multiple results:
+	 *            <ul>
+	 *            <li>null - when search for a first time for a result and
+	 *            multiple are found</li>
+	 *            <li>any number - the position of the station in the list with
+	 *            multiple results</li>
+	 *            <li>schedule - in case the method is called from SCHEDULE
+	 *            section</li>
+	 *            <li>gpsTimes - in case the method is called from GPS TIMES
+	 *            section</li>
+	 *            <li>favorites - in case the method is called from FAVORITES
+	 *            section</li>
+	 *            </ul>
 	 * @param captchaText
 	 *            The text that the user entered according to the CAPTCHA image
 	 * @param captchaId
@@ -234,17 +248,19 @@ public class HtmlRequestSumc {
 	 * @param stationCode
 	 *            The code of the station
 	 * @param stationCodeO
-	 *            The position of the station code in case of multiple results: <br>
-	 *            * null - when search for a first time for a result and
-	 *            multiple are found <br>
-	 *            * any number - the position of the station in the list with
-	 *            multiple results <br>
-	 *            * schedule - in case the method is called from SCHEDULE
-	 *            section <br>
-	 *            * gpsTimes - in case the method is called from GPS TIMES
-	 *            section <br>
-	 *            * favorites - in case the method is called from FAVORITES
-	 *            section <br>
+	 *            The position of the station code in case of multiple results:
+	 *            <ul>
+	 *            <li>null - when search for a first time for a result and
+	 *            multiple are found</li>
+	 *            <li>any number - the position of the station in the list with
+	 *            multiple results</li>
+	 *            <li>schedule - in case the method is called from SCHEDULE
+	 *            section</li>
+	 *            <li>gpsTimes - in case the method is called from GPS TIMES
+	 *            section</li>
+	 *            <li>favorites - in case the method is called from FAVORITES
+	 *            section</li>
+	 *            </ul>
 	 * @param captchaText
 	 *            The text that the user entered according to the CAPTCHA image
 	 * @param captchaId
@@ -288,17 +304,19 @@ public class HtmlRequestSumc {
 	 * @param stationCode
 	 *            The code of the station
 	 * @param stationCodeO
-	 *            The position of the station code in case of multiple results: <br>
-	 *            * null - when search for a first time for a result and
-	 *            multiple are found <br>
-	 *            * any number - the position of the station in the list with
-	 *            multiple results <br>
-	 *            * schedule - in case the method is called from SCHEDULE
-	 *            section <br>
-	 *            * gpsTimes - in case the method is called from GPS TIMES
-	 *            section <br>
-	 *            * favorites - in case the method is called from FAVORITES
-	 *            section <br>
+	 *            The position of the station code in case of multiple results:
+	 *            <ul>
+	 *            <li>null - when search for a first time for a result and
+	 *            multiple are found</li>
+	 *            <li>any number - the position of the station in the list with
+	 *            multiple results</li>
+	 *            <li>schedule - in case the method is called from SCHEDULE
+	 *            section</li>
+	 *            <li>gpsTimes - in case the method is called from GPS TIMES
+	 *            section</li>
+	 *            <li>favorites - in case the method is called from FAVORITES
+	 *            section</li>
+	 *            </ul>
 	 * @param src
 	 *            The response text, prepared from the HTTP request to the SUMC
 	 *            server
@@ -429,17 +447,19 @@ public class HtmlRequestSumc {
 	 * @param stationCode
 	 *            The code of the station
 	 * @param stationCodeO
-	 *            The position of the station code in case of multiple results: <br>
-	 *            * null - when search for a first time for a result and
-	 *            multiple are found <br>
-	 *            * any number - the position of the station in the list with
-	 *            multiple results <br>
-	 *            * schedule - in case the method is called from SCHEDULE
-	 *            section <br>
-	 *            * gpsTimes - in case the method is called from GPS TIMES
-	 *            section <br>
-	 *            * favorites - in case the method is called from FAVORITES
-	 *            section <br>
+	 *            The position of the station code in case of multiple results:
+	 *            <ul>
+	 *            <li>null - when search for a first time for a result and
+	 *            multiple are found</li>
+	 *            <li>any number - the position of the station in the list with
+	 *            multiple results</li>
+	 *            <li>schedule - in case the method is called from SCHEDULE
+	 *            section</li>
+	 *            <li>gpsTimes - in case the method is called from GPS TIMES
+	 *            section</li>
+	 *            <li>favorites - in case the method is called from FAVORITES
+	 *            section</li>
+	 *            </ul>
 	 * @param captchaId
 	 *            The Id of the CAPTCHA image, token from the source file
 	 * @param captchaImage
@@ -492,8 +512,12 @@ public class HtmlRequestSumc {
 				dialogResult = null;
 			}
 		});
-		dialogBuilder.create().show();
 
+		// Workaround to show a keyboard
+		AlertDialog alertDialog = dialogBuilder.create();
+		alertDialog.getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		alertDialog.show();
 	}
 
 	/**
@@ -507,17 +531,19 @@ public class HtmlRequestSumc {
 	 * @param stationCode
 	 *            The code of the station
 	 * @param stationCodeO
-	 *            The position of the station code in case of multiple results: <br>
-	 *            * null - when search for a first time for a result and
-	 *            multiple are found <br>
-	 *            * any number - the position of the station in the list with
-	 *            multiple results <br>
-	 *            * schedule - in case the method is called from SCHEDULE
-	 *            section <br>
-	 *            * gpsTimes - in case the method is called from GPS TIMES
-	 *            section <br>
-	 *            * favorites - in case the method is called from FAVORITES
-	 *            section <br>
+	 *            The position of the station code in case of multiple results:
+	 *            <ul>
+	 *            <li>null - when search for a first time for a result and
+	 *            multiple are found</li>
+	 *            <li>any number - the position of the station in the list with
+	 *            multiple results</li>
+	 *            <li>schedule - in case the method is called from SCHEDULE
+	 *            section</li>
+	 *            <li>gpsTimes - in case the method is called from GPS TIMES
+	 *            section</li>
+	 *            <li>favorites - in case the method is called from FAVORITES
+	 *            section</li>
+	 *            </ul>
 	 * @param captchaId
 	 *            The Id of the CAPTCHA image, token from the source file
 	 */
@@ -548,17 +574,19 @@ public class HtmlRequestSumc {
 	 * @param stationCode
 	 *            The code of the station
 	 * @param stationCodeO
-	 *            The position of the station code in case of multiple results: <br>
-	 *            * null - when search for a first time for a result and
-	 *            multiple are found <br>
-	 *            * any number - the position of the station in the list with
-	 *            multiple results <br>
-	 *            * schedule - in case the method is called from SCHEDULE
-	 *            section <br>
-	 *            * gpsTimes - in case the method is called from GPS TIMES
-	 *            section <br>
-	 *            * favorites - in case the method is called from FAVORITES
-	 *            section <br>
+	 *            The position of the station code in case of multiple results:
+	 *            <ul>
+	 *            <li>null - when search for a first time for a result and
+	 *            multiple are found</li>
+	 *            <li>any number - the position of the station in the list with
+	 *            multiple results</li>
+	 *            <li>schedule - in case the method is called from SCHEDULE
+	 *            section</li>
+	 *            <li>gpsTimes - in case the method is called from GPS TIMES
+	 *            section</li>
+	 *            <li>favorites - in case the method is called from FAVORITES
+	 *            section</li>
+	 *            </ul>
 	 * @param src
 	 *            The response text, prepared from the HTTP request to the SUMC
 	 *            server
@@ -586,6 +614,33 @@ public class HtmlRequestSumc {
 				+ Constants.GLOBAL_PARAM_SEPARATOR + coordinates[1]
 				+ Constants.GLOBAL_PARAM_SEPARATOR + stationCodeO;
 
+		// Check which activity calls this class and in case of "VirtualBoards"
+		// finish the previous activity
+		if (context.getClass().toString()
+				.equals("class bg.znestorov.sofbus24.main.VirtualBoards")) {
+
+			// In case of multiple REFRESH, the SUMC site is not returning
+			// information and falling in an error -
+			// Constants.ERROR_NO_INFO_STATION
+			if (src.indexOf(Constants.BODY_START) == -1
+					|| src.indexOf(Constants.BODY_END) == -1) {
+				text = text.replaceAll("<head>",
+						Constants.SEARCH_ERROR_WITH_REFRESH);
+				startAnErrorActivity(context, stationCode, stationCodeO, text);
+
+				return;
+			}
+
+			requestsCount = 0;
+
+			intent = new Intent(context, VirtualBoards.class);
+			intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
+			context.startActivity(intent);
+			((VirtualBoards) context).finish();
+
+			return;
+		}
+
 		// Check if there is an error while retrieving/processing the
 		// information
 		if (src == null || "".equals(src)
@@ -604,42 +659,12 @@ public class HtmlRequestSumc {
 				// "Централа автогара (2665)")
 				if (src.indexOf(Constants.BODY_START) == -1
 						|| src.indexOf(Constants.BODY_END) == -1) {
-					intent = new Intent(context,
-							VirtualBoardsStationChoice.class);
-
-					intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
-					context.startActivity(intent);
+					startAnErrorActivity(context, stationCode, stationCodeO,
+							text);
 
 					return;
 				}
 			}
-		}
-
-		// Check which activity calls this class and in case of "VirtualBoards"
-		// finish the previous activity
-		if (context.getClass().toString()
-				.equals("class bg.znestorov.sofbus24.main.VirtualBoards")) {
-
-			// In case of multiple REFRESH, the SUMC site is not returning
-			// information and falling in an error -
-			// Constants.ERROR_NO_INFO_STATION
-			if (src.indexOf(Constants.BODY_START) == -1
-					|| src.indexOf(Constants.BODY_END) == -1) {
-				intent = new Intent(context, VirtualBoardsStationChoice.class);
-
-				intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
-				context.startActivity(intent);
-
-				return;
-			}
-
-			intent = new Intent(context, VirtualBoards.class);
-
-			intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
-			context.startActivity(intent);
-			((VirtualBoards) context).finish();
-
-			return;
 		}
 
 		// Check if the result is returning multiple results
@@ -647,12 +672,21 @@ public class HtmlRequestSumc {
 				&& src.toUpperCase().contains(
 						Constants.SEARCH_TYPE_COUNT_RESULTS_2)
 				&& "-1".equals(stationCodeO)) {
-			intent = new Intent(context, VirtualBoardsStationChoice.class);
+			// Check if an unexpected error occurred. If so - make another
+			// request to ensure that the error is normal or not
+			if (src.indexOf(Constants.BODY_START) == -1
+					|| src.indexOf(Constants.BODY_END) == -1) {
+				startAnErrorActivity(context, stationCode, stationCodeO, text);
 
-			intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
-			context.startActivity(intent);
+				return;
+			} else {
+				intent = new Intent(context, VirtualBoardsStationChoice.class);
 
-			return;
+				intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
+				context.startActivity(intent);
+
+				return;
+			}
 		}
 
 		// Check in case the user is requesting information from Schedule
@@ -692,10 +726,10 @@ public class HtmlRequestSumc {
 
 		try {
 			new HtmlResultSumc(context, stationCode, src).showResult();
+			requestsCount = 0;
 
 			// Start VirtualBoards
 			intent = new Intent(context, VirtualBoards.class);
-
 			intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
 			context.startActivity(intent);
 
@@ -703,10 +737,7 @@ public class HtmlRequestSumc {
 			// SCHEDULE/GPS GoogleMaps/FAVORITES and some error occur
 		} catch (Exception e) {
 			// Start VirtualBoardsStationChoice
-			intent = new Intent(context, VirtualBoardsStationChoice.class);
-
-			intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
-			context.startActivity(intent);
+			startAnErrorActivity(context, stationCode, stationCodeO, text);
 		}
 	}
 
@@ -884,5 +915,78 @@ public class HtmlRequestSumc {
 				// before the dialog
 			}
 		}
+	}
+
+	/**
+	 * If an error occur once trying to retrieve an information from the mobile
+	 * version of the site, a few checks are executed to determine if the
+	 * problem is with the site, or just no information is available in this
+	 * moment:
+	 * <ul>
+	 * <li>Make two more requests if the current time is between 05:00 and 24:00
+	 * </li>
+	 * <li>Make one more request if the current time is between 00:00 and 01:00</li>
+	 * <li>Otherwise - show an error dialog</li>
+	 * </ul>
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 * @param stationCode
+	 *            The code of the station
+	 * @param stationCodeO
+	 *            The position of the station code in case of multiple results:
+	 *            <ul>
+	 *            <li>null - when search for a first time for a result and
+	 *            multiple are found</li>
+	 *            <li>any number - the position of the station in the list with
+	 *            multiple results</li>
+	 *            <li>schedule - in case the method is called from SCHEDULE
+	 *            section</li>
+	 *            <li>gpsTimes - in case the method is called from GPS TIMES
+	 *            section</li>
+	 *            <li>favorites - in case the method is called from FAVORITES
+	 *            section</li>
+	 *            </ul>
+	 * @param transferredText
+	 *            the text that will be transferred to the error dialog
+	 */
+	private void startAnErrorActivity(Context context, String stationCode,
+			String stationCodeO, String transferredText) {
+		requestsCount++;
+
+		TimeZone timeZone = TimeZone.getTimeZone(Constants.TIME_ZONE);
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTimeZone(timeZone);
+
+		String currentTime = calendar.get(Calendar.HOUR_OF_DAY)
+				+ formatNumberOfDigits("" + calendar.get(Calendar.MINUTE), 2);
+
+		// In case of an error with the mobile version of the site, make another
+		// 2 requests (if the current time is between 5 and 24)
+		if (requestsCount <= Constants.MAX_CONSECUTIVE_REQUESTS_1
+				&& isTimeInRange(currentTime,
+						Constants.CONSECUTIVE_REQUESTS_START_HOUR_1,
+						Constants.CONSECUTIVE_REQUESTS_END_HOUR_1)) {
+			new HtmlRequestSumc().getInformation(context, stationCode,
+					stationCodeO, null);
+			return;
+		}
+
+		// In case of an error with the mobile version of the site, make another
+		// 1 request (if the current time is between 0 and 1)
+		if (requestsCount <= Constants.MAX_CONSECUTIVE_REQUESTS_2
+				&& !isTimeInRange(currentTime,
+						Constants.CONSECUTIVE_REQUESTS_START_HOUR_2,
+						Constants.CONSECUTIVE_REQUESTS_END_HOUR_2)) {
+			new HtmlRequestSumc().getInformation(context, stationCode,
+					stationCodeO, null);
+			return;
+		}
+
+		requestsCount = 0;
+
+		Intent intent = new Intent(context, VirtualBoardsStationChoice.class);
+		intent.putExtra(Constants.KEYWORD_HTML_RESULT, transferredText);
+		context.startActivity(intent);
 	}
 }

@@ -133,9 +133,7 @@ public class Utils {
 	 *            an input string containing a number
 	 * @return a number (in string format) which is always at least 4 digits
 	 */
-	public static String formatNumberOfDigits(String input) {
-		int outputLength = 4;
-
+	public static String formatNumberOfDigits(String input, int outputLength) {
 		String formatType = String.format("%%0%dd", outputLength);
 
 		try {
@@ -376,5 +374,35 @@ public class Utils {
 		InputMethodManager imm = (InputMethodManager) context
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+	}
+
+	/**
+	 * Check if a time is in between two hour constants
+	 * 
+	 * @param currentTime
+	 *            current time in format HH:mm
+	 * @param startTime
+	 *            the beginning of the time range
+	 * @param endTime
+	 *            the end of the time range
+	 * @return if the time is in the range
+	 */
+	public static boolean isTimeInRange(String currentTime, int startTime,
+			int endTime) {
+		boolean isInRange = false;
+
+		try {
+			int nowTime = Integer.parseInt(currentTime.replace(":", ""));
+			startTime = startTime * 100;
+			endTime = endTime * 100;
+
+			if ((nowTime >= startTime) && (nowTime < endTime)) {
+				isInRange = true;
+			}
+		} catch (Exception e) {
+			isInRange = false;
+		}
+
+		return isInRange;
 	}
 }

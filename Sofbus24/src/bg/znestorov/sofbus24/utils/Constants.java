@@ -66,6 +66,16 @@ public class Constants {
 	public static final String GPS_TIMES_GPS_PARAM = "gpsTimes";
 	// GPS times taken through FAVORITES
 	public static final String FAVORITES_GPS_PARAM = "favorites";
+	
+	// PARAMS WHICH CAUSE MULTIPLE REQUESTS TO THE SUMC SERVER
+	// (CLASS: HtmlRequestSumc)
+	public static final String TIME_ZONE = "Europe/Sofia";
+	public static final int MAX_CONSECUTIVE_REQUESTS_1 = 2;
+	public static final int CONSECUTIVE_REQUESTS_START_HOUR_1 = 5;
+	public static final int CONSECUTIVE_REQUESTS_END_HOUR_1 = 24;
+	public static final int MAX_CONSECUTIVE_REQUESTS_2 = 1;
+	public static final int CONSECUTIVE_REQUESTS_START_HOUR_2 = 1;
+	public static final int CONSECUTIVE_REQUESTS_END_HOUR_2 = 5;
 
 	// PARAMS WHICH HELP TO DEFINE THE TYPE OF THE VEHICLES
 	// (CLASS: HtmlResultSumc)
@@ -113,6 +123,7 @@ public class Constants {
 	public static final String SEARCH_NO_INFO_NOW = "В момента няма информация за спирка";
 	public static final String SEARCH_NO_BUS_STOP = "не съществува.";
 	public static final String SEARCH_NO_STATION_MATCH = "Няма намерени съвпадения";
+	public static final String SEARCH_ERROR_WITH_REFRESH = "REFRESH ERROR";
 	public static final String SEARCH_NO_DATA = "INCORRECT";
 	// START and END of the needed information
 	public static final String MULTIPLE_RESULTS_BEGIN = "<br /><br />";

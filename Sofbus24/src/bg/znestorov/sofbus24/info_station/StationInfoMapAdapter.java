@@ -123,7 +123,7 @@ public class StationInfoMapAdapter extends ArrayAdapter<Station> {
 				.findViewById(R.id.list_summary);
 		listSummary.setText(context
 				.getString(R.string.gps_station_choice_station_code)
-				+ Utils.formatNumberOfDigits(stationCode));
+				+ Utils.formatNumberOfDigits(stationCode, 4));
 
 		ImageView ListImage = (ImageView) rowView.findViewById(R.id.list_image);
 		Drawable drawable = context.getResources().getDrawable(

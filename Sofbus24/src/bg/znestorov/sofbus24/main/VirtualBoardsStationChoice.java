@@ -90,8 +90,11 @@ public class VirtualBoardsStationChoice extends ListActivity {
 			station_list = result.showResult();
 			String time_stamp = station_list.get(0).getTime_stamp();
 
-			// Error with the HTML source code (unknown)
-			if (time_stamp.contains(Constants.SEARCH_NO_DATA)) {
+			// In case of error with the refresh
+			if (time_stamp.contains(Constants.SEARCH_ERROR_WITH_REFRESH)) {
+				setErrorLabelText(getString(R.string.error_sumc_refresh));
+				// Error with the HTML source code (unknown)
+			} else if (time_stamp.contains(Constants.SEARCH_NO_DATA)) {
 				setErrorLabelText(getString(R.string.gps_station_choice_error_internet));
 				// No information found (example: line number 1)
 			} else if (time_stamp.contains(Constants.SEARCH_NO_INFO_STATION)) {
