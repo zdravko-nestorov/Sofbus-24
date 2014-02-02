@@ -656,9 +656,13 @@ public class HtmlRequestSumc {
 
 				// Check if the HTML source contains BODY_START and BODY_END ==>
 				// in this case there is 100% a result (example:
-				// "Централа автогара (2665)")
-				if (src.indexOf(Constants.BODY_START) == -1
-						|| src.indexOf(Constants.BODY_END) == -1) {
+				// "Централа автогара (2665)") and no multiple results are found
+				if ((src.indexOf(Constants.BODY_START) == -1 || src
+						.indexOf(Constants.BODY_END) == -1)
+						&& !(src.toUpperCase().contains(
+								Constants.SEARCH_TYPE_COUNT_RESULTS_1) && src
+								.toUpperCase().contains(
+										Constants.SEARCH_TYPE_COUNT_RESULTS_2))) {
 					startAnErrorActivity(context, stationCode, stationCodeO,
 							text);
 
@@ -672,21 +676,13 @@ public class HtmlRequestSumc {
 				&& src.toUpperCase().contains(
 						Constants.SEARCH_TYPE_COUNT_RESULTS_2)
 				&& "-1".equals(stationCodeO)) {
-			// Check if an unexpected error occurred. If so - make another
-			// request to ensure that the error is normal or not
-			if (src.indexOf(Constants.BODY_START) == -1
-					|| src.indexOf(Constants.BODY_END) == -1) {
-				startAnErrorActivity(context, stationCode, stationCodeO, text);
+			requestsCount = 0;
 
-				return;
-			} else {
-				intent = new Intent(context, VirtualBoardsStationChoice.class);
+			intent = new Intent(context, VirtualBoardsStationChoice.class);
+			intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
+			context.startActivity(intent);
 
-				intent.putExtra(Constants.KEYWORD_HTML_RESULT, text);
-				context.startActivity(intent);
-
-				return;
-			}
+			return;
 		}
 
 		// Check in case the user is requesting information from Schedule
