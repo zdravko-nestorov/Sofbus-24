@@ -163,7 +163,7 @@
     <string name="other_info_summary">Product information</string>
 
     <!-- About -->
-    <string name="about_label">Sofbus 24 (version 1.15)</string>
+    <string name="about_label">Sofbus 24 (version 1.16)</string>
     <string name="about_text">An Android application, giving an information about the public transport in Sofia, as the time of arrival in real time, 
         the schedule of the vehicles, the position of the stations, as well as locating the closest stations, depending on the current location.
         \n\n<i>The data are extracted from: <b><u>http://m.sumc.bg</u></b></i> \n\n<b>Author: Zdravko Nestorov</b></string>
