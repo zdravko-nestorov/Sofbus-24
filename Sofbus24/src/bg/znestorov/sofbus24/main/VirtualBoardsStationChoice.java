@@ -145,7 +145,7 @@ public class VirtualBoardsStationChoice extends ListActivity {
 		String selectedRow = station.getName().trim();
 		Toast.makeText(this, selectedRow, Toast.LENGTH_SHORT).show();
 
-		new HtmlRequestSumc().getInformation(context, stationCode,
+		new HtmlRequestSumc().getInformation(context, station.getId(),
 				Constants.MULTIPLE_RESULTS_GPS_PARAM, null);
 	}
 

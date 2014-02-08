@@ -67,7 +67,7 @@ public class Constants {
 	// GPS times taken through FAVORITES
 	public static final String FAVORITES_GPS_PARAM = "favorites";
 	// GPS times taken through REFRESH
-	public static final String MULTIPLE_RESULTS_GPS_PARAM = "refresh";
+	public static final String MULTIPLE_RESULTS_GPS_PARAM = "multiple_results";
 
 	// PARAMS WHICH CAUSE MULTIPLE REQUESTS TO THE SUMC SERVER
 	// (CLASS: HtmlRequestSumc)
