@@ -66,15 +66,17 @@ public class Constants {
 	public static final String GPS_TIMES_GPS_PARAM = "gpsTimes";
 	// GPS times taken through FAVORITES
 	public static final String FAVORITES_GPS_PARAM = "favorites";
-	
+	// GPS times taken through REFRESH
+	public static final String MULTIPLE_RESULTS_GPS_PARAM = "refresh";
+
 	// PARAMS WHICH CAUSE MULTIPLE REQUESTS TO THE SUMC SERVER
 	// (CLASS: HtmlRequestSumc)
 	public static final String TIME_ZONE = "Europe/Sofia";
 	public static final int MAX_CONSECUTIVE_REQUESTS_1 = 2;
-	public static final int CONSECUTIVE_REQUESTS_START_HOUR_1 = 5;
-	public static final int CONSECUTIVE_REQUESTS_END_HOUR_1 = 24;
+	public static final int CONSECUTIVE_REQUESTS_START_HOUR_1 = 1;
+	public static final int CONSECUTIVE_REQUESTS_END_HOUR_1 = 5;
 	public static final int MAX_CONSECUTIVE_REQUESTS_2 = 1;
-	public static final int CONSECUTIVE_REQUESTS_START_HOUR_2 = 1;
+	public static final int CONSECUTIVE_REQUESTS_START_HOUR_2 = 4;
 	public static final int CONSECUTIVE_REQUESTS_END_HOUR_2 = 5;
 
 	// PARAMS WHICH HELP TO DEFINE THE TYPE OF THE VEHICLES

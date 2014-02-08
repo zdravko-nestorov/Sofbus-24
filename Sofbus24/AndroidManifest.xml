@@ -125,7 +125,6 @@
         <!-- Информация -->
         <activity
             android:name=".About"
-            android:label="@string/about_label"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" >
             <intent-filter>

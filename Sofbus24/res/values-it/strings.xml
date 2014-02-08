@@ -163,7 +163,7 @@
     <string name="other_info_summary">Informazione del prodotto</string>
 
     <!-- About -->
-    <string name="about_label">Sofbus 24 (versione 1.16)</string>
+    <string name="about_label">Sofbus 24 (versione %s)</string>
     <string name="about_text">Il sistema di Android fornisce una informazione dettagliata per l\'uso di trasporto pubblico di Sofia anche per l\'ora del arrivo in tempo reale, orario dei veicoli, localizzazione delle fermate al territorio di Sofia anche la localizzazione delle fermate di più viccino a Lei secondo la sua posizione corrente.
         \n\n<i>Данните се извличат от: <b><u>http://m.sumc.bg</u></b></i> \n\n<b>Autore: Zdravko Nestorov</b></string>
     <string name="about_btn_label">OK</string>

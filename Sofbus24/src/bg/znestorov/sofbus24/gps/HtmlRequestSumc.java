@@ -602,7 +602,8 @@ public class HtmlRequestSumc {
 		if ("-1".equals(stationCodeO)
 				|| Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO)
 				|| Constants.GPS_TIMES_GPS_PARAM.equals(stationCodeO)
-				|| Constants.FAVORITES_GPS_PARAM.equals(stationCodeO)) {
+				|| Constants.FAVORITES_GPS_PARAM.equals(stationCodeO)
+				|| Constants.MULTIPLE_RESULTS_GPS_PARAM.equals(stationCodeO)) {
 			VirtualBoardsStationChoice.checkCodeO = false;
 		} else {
 			VirtualBoardsStationChoice.checkCodeO = true;
@@ -631,6 +632,7 @@ public class HtmlRequestSumc {
 				return;
 			}
 
+			// Null the request counter
 			requestsCount = 0;
 
 			intent = new Intent(context, VirtualBoards.class);
@@ -652,7 +654,9 @@ public class HtmlRequestSumc {
 			// Check if the request is from SCHEDULE/GPS GoogleMaps/FAVORITES
 			if (!Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO)
 					&& !Constants.GPS_TIMES_GPS_PARAM.equals(stationCodeO)
-					&& !Constants.FAVORITES_GPS_PARAM.equals(stationCodeO)) {
+					&& !Constants.FAVORITES_GPS_PARAM.equals(stationCodeO)
+					&& !Constants.MULTIPLE_RESULTS_GPS_PARAM
+							.equals(stationCodeO)) {
 
 				// Check if the HTML source contains BODY_START and BODY_END ==>
 				// in this case there is 100% a result (example:
@@ -671,7 +675,9 @@ public class HtmlRequestSumc {
 			}
 		}
 
-		// Check if the result is returning multiple results
+		// Check if the result is returning multiple results (after entering the
+		// station code in the input dialog after selecting Virtual Boards
+		// option on the home screen)
 		if (src.toUpperCase().contains(Constants.SEARCH_TYPE_COUNT_RESULTS_1)
 				&& src.toUpperCase().contains(
 						Constants.SEARCH_TYPE_COUNT_RESULTS_2)
@@ -685,13 +691,14 @@ public class HtmlRequestSumc {
 			return;
 		}
 
-		// Check in case the user is requesting information from Schedule
-		// or GPS Times GoogleMaps sections
+		// Check in case the user is requesting information from "Schedule",
+		// "GPS Times GoogleMaps" or "Multiple Results " sections
 		if (src.toUpperCase().contains(Constants.SEARCH_TYPE_COUNT_RESULTS_1)
 				&& src.toUpperCase().contains(
 						Constants.SEARCH_TYPE_COUNT_RESULTS_2)
-				&& (Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO) || Constants.GPS_TIMES_GPS_PARAM
-						.equals(stationCodeO))) {
+				&& (Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO)
+						|| Constants.GPS_TIMES_GPS_PARAM.equals(stationCodeO) || Constants.MULTIPLE_RESULTS_GPS_PARAM
+							.equals(stationCodeO))) {
 			stationCodeO = Utils.getCodeO(src, stationCode);
 
 			new HtmlRequestSumc().getInformation(context, stationCode,
@@ -958,9 +965,10 @@ public class HtmlRequestSumc {
 				+ formatNumberOfDigits("" + calendar.get(Calendar.MINUTE), 2);
 
 		// In case of an error with the mobile version of the site, make another
-		// 2 requests (if the current time is between 5 and 24)
+		// 2 requests (if the current time is between [05:00 and 24:00] and
+		// [00:00 and 01:00])
 		if (requestsCount <= Constants.MAX_CONSECUTIVE_REQUESTS_1
-				&& isTimeInRange(currentTime,
+				&& !isTimeInRange(currentTime,
 						Constants.CONSECUTIVE_REQUESTS_START_HOUR_1,
 						Constants.CONSECUTIVE_REQUESTS_END_HOUR_1)) {
 			new HtmlRequestSumc().getInformation(context, stationCode,
@@ -969,9 +977,9 @@ public class HtmlRequestSumc {
 		}
 
 		// In case of an error with the mobile version of the site, make another
-		// 1 request (if the current time is between 0 and 1)
+		// 1 request (if the current time is between [04:00 and 05:00])
 		if (requestsCount <= Constants.MAX_CONSECUTIVE_REQUESTS_2
-				&& !isTimeInRange(currentTime,
+				&& isTimeInRange(currentTime,
 						Constants.CONSECUTIVE_REQUESTS_START_HOUR_2,
 						Constants.CONSECUTIVE_REQUESTS_END_HOUR_2)) {
 			new HtmlRequestSumc().getInformation(context, stationCode,
