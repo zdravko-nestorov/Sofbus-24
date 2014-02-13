@@ -3,10 +3,10 @@ package bg.znestorov.sofbus24.main;
 import static bg.znestorov.sofbus24.utils.ActivityHelper.createNoLocationAlert;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -25,6 +25,7 @@ import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.gps_map.MyLocation;
 import bg.znestorov.sofbus24.gps_map.station_choice.ObtainCurrentCordinates;
 import bg.znestorov.sofbus24.station_database.DatabaseUtils;
+import bg.znestorov.sofbus24.utils.ActivityHelper;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
@@ -224,6 +225,8 @@ public class Sofbus24 extends Activity implements OnClickListener {
 		alert.setPositiveButton(context.getString(R.string.button_title_ok),
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
+						vbInputText = "";
+
 						String stationID = input.getText().toString();
 						stationID = TranslatorLatinToCyrillic
 								.translate(stationID);
@@ -237,7 +240,7 @@ public class Sofbus24 extends Activity implements OnClickListener {
 				context.getString(R.string.button_title_cancel),
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						// Canceled.
+						vbInputText = "";
 					}
 				});
 
@@ -250,9 +253,16 @@ public class Sofbus24 extends Activity implements OnClickListener {
 					}
 				});
 
+		alert.setOnCancelListener(new OnCancelListener() {
+			public void onCancel(DialogInterface arg0) {
+				vbInputText = "";
+			}
+
+		});
+
 		final AlertDialog dialog = alert.create();
 		dialog.show();
-		dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
+		ActivityHelper.setOkButtonActivity(vbInputText, dialog);
 
 		// Add Text listener on input field
 		input.addTextChangedListener(new TextWatcher() {
@@ -268,13 +278,7 @@ public class Sofbus24 extends Activity implements OnClickListener {
 				String inputText = input.getText().toString();
 				vbInputText = inputText;
 
-				if ((inputText.length() == 0)
-						|| (inputText.length() <= 2 && !inputText
-								.equals(inputText.replaceAll("\\D+", "")))) {
-					dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
-				} else {
-					dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(true);
-				}
+				ActivityHelper.setOkButtonActivity(inputText, dialog);
 			}
 		});
 

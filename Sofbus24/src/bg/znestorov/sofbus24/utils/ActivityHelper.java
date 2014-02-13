@@ -1,6 +1,7 @@
 package bg.znestorov.sofbus24.utils;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,5 +37,24 @@ public class ActivityHelper {
 							}
 
 						}).show();
+	}
+
+	/**
+	 * Check if the OK button on the VirtualBoards alert dialog should be active
+	 * or not
+	 * 
+	 * @param inputText
+	 *            the text in the input field
+	 * @param dialog
+	 *            the alert dialog
+	 */
+	public static void setOkButtonActivity(String inputText, AlertDialog dialog) {
+		if ((inputText.length() == 0)
+				|| (inputText.length() <= 2 && !inputText.equals(inputText
+						.replaceAll("\\D+", "")))) {
+			dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
+		} else {
+			dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(true);
+		}
 	}
 }
