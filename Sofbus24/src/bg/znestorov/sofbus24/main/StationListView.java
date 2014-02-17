@@ -1,8 +1,8 @@
 package bg.znestorov.sofbus24.main;
 
+import static bg.znestorov.sofbus24.utils.StationCoordinates.getLocation;
 import static bg.znestorov.sofbus24.utils.Utils.getValueAfterLast;
 import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
-import static bg.znestorov.sofbus24.utils.StationCoordinates.getLocation;
 
 import java.util.ArrayList;
 

@@ -7,13 +7,12 @@ import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import bg.znestorov.sofbus24.utils.Constants;
-import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
-import bg.znestorov.sofbus24.utils.Utils;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.Utils;
 
 // Getting the times of the HtmlRequestStation
 public class HtmlResultStation {

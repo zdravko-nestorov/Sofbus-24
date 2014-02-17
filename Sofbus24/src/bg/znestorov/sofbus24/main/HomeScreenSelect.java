@@ -1,12 +1,12 @@
 package bg.znestorov.sofbus24.main;
 
-import bg.znestorov.sofbus24.utils.Constants;
-import bg.znestorov.sofbus24.utils.LanguageChange;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 
 public class HomeScreenSelect extends Activity {
 

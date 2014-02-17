@@ -235,5 +235,13 @@
     <string name="toast_favorites_no_stations">Няма добавени спирки в секцията \"Любими\".</string>
     <!-- Rename message -->
     <string name="toast_station_rename">Спирката беше успешно преименувана.</string>
+    
+    <!-- METRO MESSAGES -->
+    <!-- Loading messages on progressDialogs -->
+    <string name="loading_message_metro_schedule">Извличане на разписанието на метрото&#8230;</string>
+    
+    <!-- Metro Station Choice -->
+    <string name="metro_st_ch_name">Направления</string>
+    <string name="metro_st_ch_choice">Изберете направление</string>
 
 </resources>

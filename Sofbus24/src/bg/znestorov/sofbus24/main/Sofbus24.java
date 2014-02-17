@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.gps_map.MyLocation;
 import bg.znestorov.sofbus24.gps_map.station_choice.ObtainCurrentCordinates;
+import bg.znestorov.sofbus24.metro.HtmlRequestMetroDirection;
 import bg.znestorov.sofbus24.station_database.DatabaseUtils;
 import bg.znestorov.sofbus24.utils.ActivityHelper;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -124,11 +125,11 @@ public class Sofbus24 extends Activity implements OnClickListener {
 			startActivityForResult(i, 0);
 			break;
 		case R.id.btn_exit:
-			if (exitAlert) {
-				onKeyDown(KeyEvent.KEYCODE_BACK, null);
-			} else {
-				finish();
-			}
+			new HtmlRequestMetroDirection().getInformation(this);
+			/*
+			 * if (exitAlert) { onKeyDown(KeyEvent.KEYCODE_BACK, null); } else {
+			 * finish(); }
+			 */
 
 			break;
 		}

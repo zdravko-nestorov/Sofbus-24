@@ -377,6 +377,10 @@ public final class R {
         public static final int hs_button5=0x7f08000e;
         public static final int hs_button6=0x7f08000f;
         public static final int loading_message_gps_map_location_status=0x7f080092;
+        /**  METRO MESSAGES 
+ Loading messages on progressDialogs 
+         */
+        public static final int loading_message_metro_schedule=0x7f08009c;
         public static final int loading_message_preview_gps_map=0x7f080091;
         public static final int loading_message_preview_info_map_route=0x7f080094;
         public static final int loading_message_retrieve_schedule_info=0x7f080093;
@@ -418,6 +422,10 @@ public final class R {
         public static final int map_position_title=0x7f080070;
         public static final int map_satellite_summary=0x7f08006b;
         public static final int map_satellite_title=0x7f08006a;
+        public static final int metro_st_ch_choice=0x7f08009e;
+        /**  Metro Station Choice 
+         */
+        public static final int metro_st_ch_name=0x7f08009d;
         public static final int other_info_summary=0x7f080074;
         public static final int other_info_title=0x7f080073;
         public static final int pref_category_common=0x7f080056;
