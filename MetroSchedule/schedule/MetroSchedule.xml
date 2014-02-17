@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<MetroSchedule id="1034">
+	<DirectionsCount>2</DirectionsCount>
+	<Direction>
+		<Name>м.Джеймс Баучер-м.Обеля-м.Цариградско шосе</Name>
+		<StationsCount>27</StationsCount>
+		<Station number="2977">
+			<Name>МЕТРОСТАНЦИЯ ДЖЕЙМС БАУЧЕР</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2977.xml</StationScheduleURL>
+		</Station>
+		<Station number="2979">
+			<Name>МЕТРОСТАНЦИЯ ЕВРОПЕЙСКИ СЪЮЗ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2979.xml</StationScheduleURL>
+		</Station>
+		<Station number="2981">
+			<Name>МЕТРОСТАНЦИЯ НДК</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2981.xml</StationScheduleURL>
+		</Station>
+		<Station number="2983">
+			<Name>МЕТРОСТАНЦИЯ СЕРДИКА 2</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2983.xml</StationScheduleURL>
+		</Station>
+		<Station number="2985">
+			<Name>МЕТРОСТАНЦИЯ ЛЪВОВ МОСТ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2985.xml</StationScheduleURL>
+		</Station>
+		<Station number="2987">
+			<Name>МЕТРОСТАНЦИЯ ЦЕНТРАЛНА ГАРА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2987.xml</StationScheduleURL>
+		</Station>
+		<Station number="2989">
+			<Name>НАДЛЕЗ НАДЕЖДА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2989.xml</StationScheduleURL>
+		</Station>
+		<Station number="2991">
+			<Name>МЕТРОСТАНЦИЯ ХАН КУБРАТ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2991.xml</StationScheduleURL>
+		</Station>
+		<Station number="2993">
+			<Name>МЕТРОСТАНЦИЯ НАДЕЖДА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2993.xml</StationScheduleURL>
+		</Station>
+		<Station number="2995">
+			<Name>МЕТРОСТАНЦИЯ БЕЛИ ДУНАВ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2995.xml</StationScheduleURL>
+		</Station>
+		<Station number="2997">
+			<Name>МЕТРОСТАНЦИЯ ЛОМСКО ШОСЕ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2997.xml</StationScheduleURL>
+		</Station>
+		<Station number="2999">
+			<Name>МЕТРОСТАНЦИЯ ОБЕЛЯ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2999.xml</StationScheduleURL>
+		</Station>
+		<Station number="3001">
+			<Name>МЕТРОСТАНЦИЯ СЛИВНИЦА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3001.xml</StationScheduleURL>
+		</Station>
+		<Station number="3003">
+			<Name>МЕТРОСТАНЦИЯ ЛЮЛИН</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3003.xml</StationScheduleURL>
+		</Station>
+		<Station number="3005">
+			<Name>МЕТРОСТАНЦИЯ ЗАПАДЕН ПАРК</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3005.xml</StationScheduleURL>
+		</Station>
+		<Station number="3007">
+			<Name>МЕТРОСТАНЦИЯ ВАРДАР</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3007.xml</StationScheduleURL>
+		</Station>
+		<Station number="3009">
+			<Name>МЕТРОСТАНЦИЯ К.ВЕЛИЧКОВ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3009.xml</StationScheduleURL>
+		</Station>
+		<Station number="3011">
+			<Name>МЕТРОСТАНЦИЯ ОПЪЛЧЕНСКА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3011.xml</StationScheduleURL>
+		</Station>
+		<Station number="3013">
+			<Name>МЕТРОСТАНЦИЯ СЕРДИКА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3013.xml</StationScheduleURL>
+		</Station>
+		<Station number="3015">
+			<Name>МЕТРОСТАНЦИЯ СУ КЛИМЕНТ ОХРИДСКИ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3015.xml</StationScheduleURL>
+		</Station>
+		<Station number="3017">
+			<Name>МЕТРОСТАНЦИЯ СТ.ВАСИЛ ЛЕВСКИ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3017.xml</StationScheduleURL>
+		</Station>
+		<Station number="3019">
+			<Name>МЕТРОСТАНЦИЯ ЖОЛИО КЮРИ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3019.xml</StationScheduleURL>
+		</Station>
+		<Station number="3021">
+			<Name>МЕТРОСТАНЦИЯ Г.М. ДИМИТРОВ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3021.xml</StationScheduleURL>
+		</Station>
+		<Station number="3023">
+			<Name>МЕТРОСТАНЦИЯ МУСАГЕНИЦА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3023.xml</StationScheduleURL>
+		</Station>
+		<Station number="3025">
+			<Name>МЕТРОСТАНЦИЯ МЛАДОСТ 1</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3025.xml</StationScheduleURL>
+		</Station>
+		<Station number="3027">
+			<Name>МЕТРОСТАНЦИЯ МЛАДОСТ-3</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3027.xml</StationScheduleURL>
+		</Station>
+		<Station number="3029">
+			<Name>МЕТРОСТ. ЦАРИГРАДСКО ШОСЕ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3029.xml</StationScheduleURL>
+		</Station>
+	</Direction>
+	<Direction>
+		<Name>м.Цариградско шосе-м.Обеля-м.Джеймс Баучер</Name>
+		<StationsCount>27</StationsCount>
+		<Station number="2977">
+			<Name>МЕТРОСТАНЦИЯ ДЖЕЙМС БАУЧЕР</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2977.xml</StationScheduleURL>
+		</Station>
+		<Station number="2979">
+			<Name>МЕТРОСТАНЦИЯ ЕВРОПЕЙСКИ СЪЮЗ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2979.xml</StationScheduleURL>
+		</Station>
+		<Station number="2981">
+			<Name>МЕТРОСТАНЦИЯ НДК</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2981.xml</StationScheduleURL>
+		</Station>
+		<Station number="2983">
+			<Name>МЕТРОСТАНЦИЯ СЕРДИКА 2</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2983.xml</StationScheduleURL>
+		</Station>
+		<Station number="2985">
+			<Name>МЕТРОСТАНЦИЯ ЛЪВОВ МОСТ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2985.xml</StationScheduleURL>
+		</Station>
+		<Station number="2987">
+			<Name>МЕТРОСТАНЦИЯ ЦЕНТРАЛНА ГАРА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2987.xml</StationScheduleURL>
+		</Station>
+		<Station number="2989">
+			<Name>НАДЛЕЗ НАДЕЖДА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2989.xml</StationScheduleURL>
+		</Station>
+		<Station number="2991">
+			<Name>МЕТРОСТАНЦИЯ ХАН КУБРАТ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2991.xml</StationScheduleURL>
+		</Station>
+		<Station number="2993">
+			<Name>МЕТРОСТАНЦИЯ НАДЕЖДА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2993.xml</StationScheduleURL>
+		</Station>
+		<Station number="2995">
+			<Name>МЕТРОСТАНЦИЯ БЕЛИ ДУНАВ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2995.xml</StationScheduleURL>
+		</Station>
+		<Station number="2997">
+			<Name>МЕТРОСТАНЦИЯ ЛОМСКО ШОСЕ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2997.xml</StationScheduleURL>
+		</Station>
+		<Station number="2999">
+			<Name>МЕТРОСТАНЦИЯ ОБЕЛЯ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station2999.xml</StationScheduleURL>
+		</Station>
+		<Station number="3001">
+			<Name>МЕТРОСТАНЦИЯ СЛИВНИЦА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3001.xml</StationScheduleURL>
+		</Station>
+		<Station number="3003">
+			<Name>МЕТРОСТАНЦИЯ ЛЮЛИН</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3003.xml</StationScheduleURL>
+		</Station>
+		<Station number="3005">
+			<Name>МЕТРОСТАНЦИЯ ЗАПАДЕН ПАРК</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3005.xml</StationScheduleURL>
+		</Station>
+		<Station number="3007">
+			<Name>МЕТРОСТАНЦИЯ ВАРДАР</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3007.xml</StationScheduleURL>
+		</Station>
+		<Station number="3009">
+			<Name>МЕТРОСТАНЦИЯ К.ВЕЛИЧКОВ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3009.xml</StationScheduleURL>
+		</Station>
+		<Station number="3011">
+			<Name>МЕТРОСТАНЦИЯ ОПЪЛЧЕНСКА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3011.xml</StationScheduleURL>
+		</Station>
+		<Station number="3013">
+			<Name>МЕТРОСТАНЦИЯ СЕРДИКА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3013.xml</StationScheduleURL>
+		</Station>
+		<Station number="3015">
+			<Name>МЕТРОСТАНЦИЯ СУ КЛИМЕНТ ОХРИДСКИ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3015.xml</StationScheduleURL>
+		</Station>
+		<Station number="3017">
+			<Name>МЕТРОСТАНЦИЯ СТ.ВАСИЛ ЛЕВСКИ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3017.xml</StationScheduleURL>
+		</Station>
+		<Station number="3019">
+			<Name>МЕТРОСТАНЦИЯ ЖОЛИО КЮРИ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3019.xml</StationScheduleURL>
+		</Station>
+		<Station number="3021">
+			<Name>МЕТРОСТАНЦИЯ Г.М. ДИМИТРОВ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3021.xml</StationScheduleURL>
+		</Station>
+		<Station number="3023">
+			<Name>МЕТРОСТАНЦИЯ МУСАГЕНИЦА</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3023.xml</StationScheduleURL>
+		</Station>
+		<Station number="3025">
+			<Name>МЕТРОСТАНЦИЯ МЛАДОСТ 1</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3025.xml</StationScheduleURL>
+		</Station>
+		<Station number="3027">
+			<Name>МЕТРОСТАНЦИЯ МЛАДОСТ-3</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3027.xml</StationScheduleURL>
+		</Station>
+		<Station number="3029">
+			<Name>МЕТРОСТ. ЦАРИГРАДСКО ШОСЕ</Name>
+			<StationScheduleURL>https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station3029.xml</StationScheduleURL>
+		</Station>
+	</Direction>
+</MetroSchedule>
