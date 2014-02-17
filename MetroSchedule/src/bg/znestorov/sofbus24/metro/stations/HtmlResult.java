@@ -4,6 +4,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import bg.znestorov.sobusf24.metro.utils.Constants;
+
 public class HtmlResult {
 
 	/**
@@ -26,6 +28,7 @@ public class HtmlResult {
 			String htmlSrc) {
 
 		logger.info("Start parsing the information about the Metro directions and schedule...");
+		long startTime = System.currentTimeMillis();
 
 		MetroDirectionTransfer mdt = new MetroDirectionTransfer();
 		String[] htmlSrcParts = htmlSrc.split(Constants.METRO_REGEX_PARTS);
@@ -53,8 +56,17 @@ public class HtmlResult {
 
 			// Fill each MetroDirection with the stations
 			for (int i = 0; i < mdt.getDirectionsListSize(); i++) {
-				if (htmlSrcParts.length >= i * 2 + 1) {
-					String[] htmlSrcStationParts = htmlSrcParts[i * 2 + 1]
+
+				// Check in which part to look at
+				int htmlPart;
+				if (i % 2 == 0) {
+					htmlPart = i * 2 + 1;
+				} else {
+					htmlPart = i * 2;
+				}
+
+				if (htmlSrcParts.length >= htmlPart) {
+					String[] htmlSrcStationParts = htmlSrcParts[htmlPart]
 							.split(Constants.METRO_REGEX_STATION_PARTS);
 
 					if (htmlSrcStationParts.length > 0) {
@@ -70,6 +82,10 @@ public class HtmlResult {
 				logger.info("0 stations found.");
 			}
 		}
+
+		long endTime = System.currentTimeMillis();
+		logger.info("The HTTP response information is processed for "
+				+ ((endTime - startTime) / 1000) + " seconds");
 
 		if (mdt.getDirectionsListSize() >= 2) {
 			return mdt;

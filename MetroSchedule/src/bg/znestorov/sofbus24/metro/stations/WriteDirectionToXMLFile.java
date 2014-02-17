@@ -18,15 +18,19 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import bg.znestorov.sobusf24.metro.utils.Constants;
+
 /**
  * Write the MetroDirectionTransfer object to a XML file
  * 
  * @author zanio
  * 
  */
-public class WriteXMLFile {
+public class WriteDirectionToXMLFile {
 
 	public static void saveToXMLFile(Logger logger, MetroDirectionTransfer mdt) {
+
+		logger.info("Saving the METRO directions and stations to a XML file");
 
 		try {
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory
@@ -49,7 +53,7 @@ public class WriteXMLFile {
 			// Create each Direction element
 			for (MetroDirection metroDirection : mdt.getDirectionsList()) {
 				Element direction = doc.createElement("Direction");
-				metroSchedule.setAttribute("id", metroDirection.getId());
+				direction.setAttribute("id", metroDirection.getId());
 				metroSchedule.appendChild(direction);
 
 				Element name = doc.createElement("Name");

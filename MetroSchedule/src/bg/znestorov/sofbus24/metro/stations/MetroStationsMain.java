@@ -2,7 +2,7 @@ package bg.znestorov.sofbus24.metro.stations;
 
 import java.util.logging.Logger;
 
-public class MetroMain {
+public class MetroStationsMain {
 
 	public static MetroDirectionTransfer saveStationsInfoToAFile(Logger logger) {
 		String htmlResponse = HtmlRequest.retrieveStationsInfo(logger);
@@ -20,10 +20,10 @@ public class MetroMain {
 			return null;
 		}
 
-		logger.info("Saving the METRO directions and stations to a XML file");
 		long startTime = System.currentTimeMillis();
-		WriteXMLFile.saveToXMLFile(logger, mdt);
+		WriteDirectionToXMLFile.saveToXMLFile(logger, mdt);
 		long endTime = System.currentTimeMillis();
+
 		logger.info("The information is saved to XML file for "
 				+ ((endTime - startTime) / 1000) + " seconds\n");
 
