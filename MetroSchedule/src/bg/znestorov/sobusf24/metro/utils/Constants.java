@@ -3,6 +3,12 @@ package bg.znestorov.sobusf24.metro.utils;
 public class Constants {
 
 	/**
+	 * MAIN CONSTANTS
+	 */
+	public static final String METRO_LOG_FILE = "log/MyLogFile.log";
+	public static final String METRO_PROPERTIES_FILE = "properties/metro_coordinates.properties";
+
+	/**
 	 * METRO STATIONS CONSTANTS
 	 */
 	public static final String METRO_SCHEDULE_URL = "http://schedules.sofiatraffic.bg/metro/1";

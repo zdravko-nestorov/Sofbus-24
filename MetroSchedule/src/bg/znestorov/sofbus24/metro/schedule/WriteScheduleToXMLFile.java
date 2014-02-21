@@ -1,6 +1,7 @@
 package bg.znestorov.sofbus24.metro.schedule;
 
 import java.io.File;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -26,7 +27,8 @@ import bg.znestorov.sobusf24.metro.utils.Utils;
  */
 public class WriteScheduleToXMLFile {
 
-	public static void saveToXMLFile(Logger logger, MetroStation ms) {
+	public static void saveToXMLFile(Logger logger, MetroStation ms,
+			Properties coordinatesProp) {
 
 		logger.info("Saving the METRO station to an XML file");
 
@@ -42,6 +44,11 @@ public class WriteScheduleToXMLFile {
 			Element station = doc.createElement("Station");
 			doc.appendChild(station);
 
+			// Create Status element
+			Element status = doc.createElement("Status");
+			status.setAttribute("state", "OK");
+			station.appendChild(status);
+
 			// Create Number element
 			Element number = doc.createElement("Number");
 			number.appendChild(doc.createTextNode(ms.getNumber()));
@@ -51,6 +58,18 @@ public class WriteScheduleToXMLFile {
 			Element name = doc.createElement("Name");
 			name.appendChild(doc.createTextNode(ms.getName()));
 			station.appendChild(name);
+
+			// Create Coordinates element
+			Element coordinates = doc.createElement("Coordinates");
+			station.appendChild(coordinates);
+			String[] coordinatesArray = coordinatesProp.getProperty(
+					ms.getNumber()).split(",");
+			Element latitude = doc.createElement("Latitude");
+			latitude.appendChild(doc.createTextNode(coordinatesArray[0]));
+			coordinates.appendChild(latitude);
+			Element longitude = doc.createElement("Longitude");
+			longitude.appendChild(doc.createTextNode(coordinatesArray[1]));
+			coordinates.appendChild(longitude);
 
 			// Create WEEKDAY schedule
 			Element scheduleWeekday = doc.createElement("Schedule");

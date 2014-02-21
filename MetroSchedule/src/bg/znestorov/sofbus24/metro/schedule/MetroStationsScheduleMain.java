@@ -1,12 +1,14 @@
 package bg.znestorov.sofbus24.metro.schedule;
 
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 public class MetroStationsScheduleMain {
 
 	public static void saveStationsScheduleToAFile(Logger logger,
-			String directionId, Map.Entry<String, String> station) {
+			String directionId, Map.Entry<String, String> station,
+			Properties coordinatesProp) {
 		String htmlResponse = HtmlRequestStationSchedule.retrieveStationsInfo(
 				logger, directionId, station);
 
@@ -25,7 +27,7 @@ public class MetroStationsScheduleMain {
 			return;
 		}
 
-		WriteScheduleToXMLFile.saveToXMLFile(logger, ms);
+		WriteScheduleToXMLFile.saveToXMLFile(logger, ms, coordinatesProp);
 	}
 
 }

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Station>
-	<Status state="OK"/>
+	<Status state="OK">
+		<Number>XXXXX</Number>
+		<Name>XXXXX</Name>
+		<URL>XXXXX</URL>
+	</Status>
 	<Number>2977</Number>
 	<Name>МЕТРОСТАНЦИЯ ДЖЕЙМС БАУЧЕР</Name>
 	<Coordinates>
