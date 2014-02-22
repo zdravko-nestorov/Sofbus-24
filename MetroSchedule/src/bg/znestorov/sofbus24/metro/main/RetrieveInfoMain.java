@@ -64,15 +64,14 @@ public class RetrieveInfoMain {
 				while (iterator.hasNext()) {
 					Map.Entry<String, String> mapEntry = (Map.Entry<String, String>) iterator
 							.next();
-					MetroStationsScheduleMain.saveStationsScheduleToAFile(
-							logger, md.getId(), mapEntry, prop);
 
 					logger.info("Start retrieving/parsing information about station name = "
 							+ mapEntry.getValue()
 							+ " and number = "
 							+ mapEntry.getKey());
-					// TODO: remove
-					break;
+
+					MetroStationsScheduleMain.saveStationsScheduleToAFile(
+							logger, md.getId(), mapEntry, prop);
 				}
 			}
 
