@@ -1,9 +1,16 @@
 package bg.znestorov.sofbus24.metro;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 
-import bg.znestorov.sofbus24.utils.Constants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * It is used for parsing the information and filling an object with the
@@ -14,85 +21,59 @@ import bg.znestorov.sofbus24.utils.Constants;
  */
 public class HtmlResultMetroDirection {
 
-	/**
-	 * Create a MetroDirectionTransfer object and filling it with all
-	 * information from the source code:
-	 * <ul>
-	 * <li>Direction id</li>
-	 * <li>Direction name</li>
-	 * <li>List with all stations ids in each direction</li>
-	 * <li>List with all stations names in each direction</li>
-	 * </ul>
-	 * In case of an error while parsing the information - returns null.
-	 * 
-	 * @param htmlSrc
-	 *            the HTML response
-	 * @return a MetroDirectionTransfer object with all needed information about
-	 *         the directions and the stations
-	 */
-	public static MetroDirectionTransfer getMetroDirections(String htmlSrc) {
+	public static MetroDirectionTransfer getMetroDirections(String scheduleXml) {
 		MetroDirectionTransfer mdt = new MetroDirectionTransfer();
-		String[] htmlSrcParts = htmlSrc.split(Constants.METRO_REGEX_PARTS);
 
-		if (htmlSrcParts.length >= 5) {
-			// Find the ID and the NAME of each direction
-			Pattern directionPattern = Pattern
-					.compile(Constants.METRO_REGEX_DIRECTIONS);
-			Matcher directionMatcher = directionPattern
-					.matcher(htmlSrcParts[0]);
+		try {
+			InputStream is = new ByteArrayInputStream(Charset.forName("UTF-8")
+					.encode(scheduleXml).array());
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(is);
+			doc.getDocumentElement().normalize();
 
-			while (directionMatcher.find()) {
-				MetroDirection md = new MetroDirection();
-				md.setId(directionMatcher.group(1));
-				md.setName(directionMatcher.group(2));
+			// Get all directions from the XML file
+			NodeList directionsList = doc.getElementsByTagName("Direction");
+			for (int i = 0; i < directionsList.getLength(); i++) {
+				Node directionNode = directionsList.item(i);
+				Element directionElement = (Element) directionNode;
 
-				mdt.getDirectionsList().add(md);
-			}
+				// Get the ID and NAME of the direction
+				String directionId = directionElement.getAttribute("id");
+				String directionName = directionElement
+						.getElementsByTagName("Name").item(0).getTextContent();
+				MetroDirection md = new MetroDirection(directionId,
+						directionName);
 
-			// Fill each MetroDirection with the stations
-			for (int i = 0; i < mdt.getDirectionsListSize(); i++) {
-				if (htmlSrcParts.length >= i * 2 + 1) {
-					String[] htmlSrcStationParts = htmlSrcParts[i * 2 + 1]
-							.split(Constants.METRO_REGEX_STATION_PARTS);
+				// Get all stations of this direction
+				NodeList stationsList = directionElement
+						.getElementsByTagName("Station");
+				for (int j = 0; j < stationsList.getLength(); j++) {
+					Node stationNode = stationsList.item(i);
+					Element stationElement = (Element) stationNode;
 
-					if (htmlSrcStationParts.length > 0) {
-						setStations(mdt, i, htmlSrcStationParts[0]);
-					}
+					// Get the NUMBER, NAME and URL of the station
+					String stationNumber = stationElement
+							.getAttribute("number");
+					String stationName = stationElement
+							.getElementsByTagName("Name").item(0)
+							.getTextContent();
+					String stationUrl = stationElement
+							.getElementsByTagName("StationScheduleURL").item(0)
+							.getTextContent();
+
+					// Add the station to the list of current direction
+					md.addStation(stationNumber, stationName, stationUrl);
 				}
+
+				mdt.addMetroDirection(md);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		if (mdt.getDirectionsListSize() >= 2) {
-			return mdt;
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * Set the stations to each direction by parsing the HTML code with a REGEX
-	 * 
-	 * @param mdt
-	 *            the MetroDirectionTransfer object, which contains only the
-	 *            directions (without any station)
-	 * @param directionNumber
-	 *            the number of the direction
-	 * @param htmlSrcPart
-	 *            the part of the HTML code, which is containing the stations
-	 *            info
-	 */
-	private static void setStations(MetroDirectionTransfer mdt,
-			int directionNumber, String htmlSrcPart) {
-		Pattern stationPattern = Pattern
-				.compile(Constants.METRO_REGEX_STATIONS);
-		Matcher stationMatcher = stationPattern.matcher(htmlSrcPart);
-
-		while (stationMatcher.find()) {
-			mdt.getDirectionsList().get(directionNumber).getStationNames()
-					.add(stationMatcher.group(1));
-			mdt.getDirectionsList().get(directionNumber).getStationNumbers()
-					.add(stationMatcher.group(2));
-		}
+		return mdt;
 	}
 
 }

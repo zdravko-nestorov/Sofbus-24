@@ -13,7 +13,8 @@ public class Constants {
 	public static final int GLOBAL_TIMEOUT_SOCKET = 8000;
 
 	// EXTRA KEYWORDS USED FOR TRANSFERING INFORMATION BETWEEEN ACTIVITIES
-	// HtmlRequestSumc -> VirtualBoards/VirtualBoardsStationChoice
+	// HtmlRequestSumc -> VirtualBoards/VirtualBoardsStationChoice;
+	// HtmlRequestMetroDirection -> VirtualBoardsStationChoice
 	public static final String KEYWORD_HTML_RESULT = "HTML_Result";
 	// ObtainCurrentCordinates -> VirtualBoardsMapStationChoice
 	public static final String KEYWORD_CLOSEST_STATIONS = "Closest_Stations";
@@ -31,6 +32,18 @@ public class Constants {
 	public static final String KEYWORD_BUNDLE_GPS_STATION = "GPS_Station";
 	// HtmlRequestMetroDirection -> MetroTabView
 	public static final String KEYWORD_BUNDLE_METRO_DIRECTION_TRANSFER = "Metro_Direction_Tranfer";
+
+	// PARAMS WHICH HELPS TO EXTRACT THE METRO STATIONS
+	// (CLASS: HtmlRequestMetroDirection)
+	// METRO - URL address
+	public static final String METRO_SCHEDULE_URL = "https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/MetroSchedule.xml";
+	// Possible HTML errors while retrieving information
+	public static final String METRO_INTERNET_PROBLEM = "METRO INTERNET PROBLEM";
+
+	// (CLASS: MetroDirection)
+	// The keys in the NAME-URL map
+	public static final String METRO_STATION_NAME_KEY = "name";
+	public static final String METRO_STATION_URL_KEY = "url";
 
 	// PARAMS WHICH HELP TO EXTRACT THE INFORMATION FROM VIRTUAL BOARDS
 	// (CLASS: HtmlRequestSumc)
@@ -59,25 +72,6 @@ public class Constants {
 	// In case of HTML Request error
 	public static final String EXCEPTION = "EXCEPTION";
 
-	// PARAMS WHICH HELPS TO EXTRACT THE METRO STATIONS
-	// (CLASS: HtmlRequestMetroDirection)
-	// METRO - URL address
-	public static final String METRO_SCHEDULE_URL = "http://schedules.sofiatraffic.bg/metro/1";
-	// User Agent and Referrer
-	public static final String METRO_USER_AGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36";
-	// Possible HTML errors while retrieving information
-	public static final String METRO_INTERNET_PROBLEM = "INTERNET Connection Problem";
-	public static final String METRO_PARSING_PROBLEM = "Problem with parsing the information";
-
-	// PARAMS WHICH HELPS TO EXTRACT THE METRO STATIONS
-	// (CLASS: HtmlResultMetroDirection)
-	// HTML Parsing regex
-	public static final String METRO_REGEX_PARTS = "<div class=\"schedule_direction_sign_wrapper\">";
-	public static final String METRO_REGEX_DIRECTIONS = ".*?<li>[^^]*?<a href=\"/metro/1#direction/([0-9]{4}).*?id=\"schedule_direction_.*?class=\"schedule_view_direction[^^]*?<span>(.*?)</span>";
-	public static final String METRO_REGEX_STATION_PARTS = "<div class=\"schedule_view_direction\">";
-	public static final String METRO_REGEX_STATIONS = ".*?<a class=\"stop_link\" id=\"schedule_[0-9]*_direction_[0-9]*_sign_[0-9]*_stop\" href=\".*?\">([0-9]*)</a>[^^]*?<a class=\"stop_change\" id=\"schedule_[0-9]*_direction_[0-9]*_sign_[0-9]*\" href=\".*?\">(.*?)</a>[^^]*?</li>";
-
-	// PARAMS WHICH DEFINE THE ACTIVITY THAT CALLS VIRTUAL BOARDS
 	// (CLASS: HtmlRequestSumc)
 	// GPS times taken through SCHEDULE
 	public static final String SCHEDULE_GPS_FIND_CODEO = "&nbsp;спирка&nbsp;";

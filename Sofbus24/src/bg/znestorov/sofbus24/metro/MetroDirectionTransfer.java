@@ -60,6 +60,10 @@ public class MetroDirectionTransfer implements Serializable {
 		return directionsListNames;
 	}
 
+	public void addMetroDirection(MetroDirection md) {
+		this.directionsList.add(md);
+	}
+
 	@Override
 	public String toString() {
 		return "MetroDirectionTransfer [choice=" + choice + ", directionsList="

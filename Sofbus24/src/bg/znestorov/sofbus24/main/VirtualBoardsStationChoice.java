@@ -75,7 +75,8 @@ public class VirtualBoardsStationChoice extends ListActivity {
 				&& !ss_transfer.contains(Constants.SUMC_HTML_ERROR_MESSAGE)
 				&& !ss_transfer.contains(Constants.SUMC_CAPTCHA_ERROR_MESSAGE)
 				&& !ss_transfer.contains(Constants.SCHEDULE_NO_INFO)
-				&& !ss_transfer.contains(Constants.VB_NO_COORDINATES)) {
+				&& !ss_transfer.contains(Constants.VB_NO_COORDINATES)
+				&& !ss_transfer.contains(Constants.METRO_INTERNET_PROBLEM)) {
 
 			String[] tempArray = ss_transfer
 					.split(Constants.GLOBAL_PARAM_SEPARATOR);

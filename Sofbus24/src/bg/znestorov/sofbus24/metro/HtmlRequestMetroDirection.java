@@ -1,7 +1,11 @@
 package bg.znestorov.sofbus24.metro;
 
+import java.io.ByteArrayOutputStream;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
@@ -15,6 +19,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.StationTabView;
+import bg.znestorov.sofbus24.main.VirtualBoardsStationChoice;
 import bg.znestorov.sofbus24.utils.Constants;
 
 /**
@@ -31,7 +36,7 @@ public class HtmlRequestMetroDirection {
 	 * Getting the source file of the HTTP request and opening a new Activity
 	 * 
 	 * @param context
-	 *            Activity of the current activity
+	 *            Activity context of the current activity
 	 */
 	public void getInformation(Activity context) {
 		// HTTP Client - created once and using cookies
@@ -47,30 +52,30 @@ public class HtmlRequestMetroDirection {
 	}
 
 	/**
-	 * Creating a HTTP GET request by creating the URL address and adding the
-	 * User-Agent
+	 * Create a MetroDirectionTransfer object by parsing the HTML response XML
 	 * 
-	 * @return a HTTP GET method with set parameters
+	 * @param context
+	 *            Activity context of the current activity
+	 * @param scheduleXml
+	 *            the HTML response of the request (XML file)
 	 */
-	private HttpGet createMetroDirectionRequest() {
-		final HttpGet result = new HttpGet(Constants.METRO_SCHEDULE_URL);
-		result.addHeader("User-Agent", Constants.METRO_USER_AGENT);
-
-		return result;
-	}
-
-	private void processHtmlResult(Activity context, String htmlSrc) {
+	private void processHtmlResult(Activity context, String scheduleXml) {
 		MetroDirectionTransfer mdt = HtmlResultMetroDirection
-				.getMetroDirections(htmlSrc);
+				.getMetroDirections(scheduleXml);
 
-		if (mdt == null) {
-			startErrorActivity(context, Constants.METRO_PARSING_PROBLEM);
-		} else {
-			startNewActivity(context, mdt);
-		}
-
+		startNewActivity(context, mdt);
 	}
 
+	/**
+	 * Creating an AlertDialog, indicating the directions of the Metro. After
+	 * choosing one of them redirects to a new activity, showing all the
+	 * stations in this direction
+	 * 
+	 * @param context
+	 *            Activity context of the current activity
+	 * @param mdt
+	 *            the MetroDirection transfer object, created from the XML file
+	 */
 	private void startNewActivity(final Activity context,
 			final MetroDirectionTransfer mdt) {
 		Builder dialog = new AlertDialog.Builder(context);
@@ -99,8 +104,19 @@ public class HtmlRequestMetroDirection {
 						}).show();
 	}
 
+	/**
+	 * Starting an error activity, informing that there is a problem with the
+	 * Internet connection
+	 * 
+	 * @param context
+	 *            Activity context of the current activity
+	 * @param errorText
+	 *            the Internet error
+	 */
 	private void startErrorActivity(Activity context, String errorText) {
-
+		Intent intent = new Intent(context, VirtualBoardsStationChoice.class);
+		intent.putExtra(Constants.KEYWORD_HTML_RESULT, errorText);
+		context.startActivity(intent);
 	}
 
 	/**
@@ -115,8 +131,6 @@ public class HtmlRequestMetroDirection {
 		private Activity context;
 		private ProgressDialog progressDialog;
 		private DefaultHttpClient client;
-
-		private HttpGet httpGet;
 
 		public LoadingMetroDirections(Activity context,
 				ProgressDialog progressDialog, DefaultHttpClient client) {
@@ -140,21 +154,30 @@ public class HtmlRequestMetroDirection {
 
 		@Override
 		protected String doInBackground(Void... params) {
-			String htmlResponse = null;
+			HttpResponse htmlResponse = null;
+			String scheduleXml = null;
 
 			try {
-				httpGet = createMetroDirectionRequest();
-				htmlResponse = client.execute(httpGet,
-						new BasicResponseHandler());
-				htmlResponse = new String(htmlResponse.getBytes("ISO-8859-1"),
-						"UTF-8");
+				htmlResponse = client.execute(new HttpGet(
+						Constants.METRO_SCHEDULE_URL));
+				StatusLine statusLine = htmlResponse.getStatusLine();
+
+				if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
+					ByteArrayOutputStream out = new ByteArrayOutputStream();
+					htmlResponse.getEntity().writeTo(out);
+					out.close();
+					scheduleXml = out.toString();
+				} else {
+					htmlResponse.getEntity().getContent().close();
+					scheduleXml = Constants.METRO_INTERNET_PROBLEM;
+				}
 			} catch (Exception e) {
-				htmlResponse = Constants.METRO_INTERNET_PROBLEM;
+				scheduleXml = Constants.METRO_INTERNET_PROBLEM;
 			} finally {
 				client.getConnectionManager().shutdown();
 			}
 
-			return htmlResponse;
+			return scheduleXml;
 		}
 
 		@Override
@@ -179,7 +202,6 @@ public class HtmlRequestMetroDirection {
 
 			try {
 				progressDialog.dismiss();
-				httpGet.abort();
 			} catch (Exception e) {
 				// Workaround used just in case when this activity is destroyed
 				// before the dialog

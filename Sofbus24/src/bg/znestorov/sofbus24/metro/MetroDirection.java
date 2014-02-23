@@ -1,6 +1,9 @@
 package bg.znestorov.sofbus24.metro;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
+import bg.znestorov.sofbus24.utils.Constants;
 
 /**
  * This class contains information about each of the Metro directions
@@ -12,18 +15,26 @@ public class MetroDirection {
 
 	private String id;
 	private String name;
-	private ArrayList<String> stationNames = new ArrayList<String>();
-	private ArrayList<String> stationNumbers = new ArrayList<String>();
+
+	/**
+	 * Object with the following structure:<br>
+	 * [station ID = [name=<b>station name</b>, url=<b>station URL address</b>]]
+	 */
+	private HashMap<String, HashMap<String, String>> stations = new LinkedHashMap<String, HashMap<String, String>>();
 
 	public MetroDirection() {
 	}
 
-	public MetroDirection(String id, String name,
-			ArrayList<String> stationNames, ArrayList<String> stationNumbers) {
+	public MetroDirection(String id, String name) {
 		this.id = id;
 		this.name = name;
-		this.stationNames = stationNames;
-		this.stationNumbers = stationNumbers;
+	}
+
+	public MetroDirection(String id, String name,
+			HashMap<String, HashMap<String, String>> stations) {
+		this.id = id;
+		this.name = name;
+		this.stations = stations;
 	}
 
 	public String getId() {
@@ -42,26 +53,26 @@ public class MetroDirection {
 		this.name = name;
 	}
 
-	public ArrayList<String> getStationNames() {
-		return stationNames;
+	public HashMap<String, HashMap<String, String>> getStations() {
+		return stations;
 	}
 
-	public void setStationNames(ArrayList<String> stations) {
-		this.stationNames = stations;
+	public void setStations(HashMap<String, HashMap<String, String>> stations) {
+		this.stations = stations;
 	}
 
-	public ArrayList<String> getStationNumbers() {
-		return stationNumbers;
-	}
+	public void addStation(String id, String name, String url) {
+		HashMap<String, String> urlNameMap = new HashMap<String, String>();
+		urlNameMap.put(Constants.METRO_STATION_NAME_KEY, name);
+		urlNameMap.put(Constants.METRO_STATION_URL_KEY, url);
 
-	public void setStationNumbers(ArrayList<String> stationNumbers) {
-		this.stationNumbers = stationNumbers;
+		this.stations.put(id, urlNameMap);
 	}
 
 	@Override
 	public String toString() {
 		return "MetroDirection [id=" + id + ", name=" + name + ", stations="
-				+ stationNames + ", stationNumbers=" + stationNumbers + "]";
+				+ stations + "]";
 	}
 
 }
