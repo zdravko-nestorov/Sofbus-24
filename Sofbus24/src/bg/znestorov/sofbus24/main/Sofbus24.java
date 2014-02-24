@@ -24,7 +24,7 @@ import android.widget.ImageView;
 import bg.znestorov.sofbus24.gps.HtmlRequestSumc;
 import bg.znestorov.sofbus24.gps_map.MyLocation;
 import bg.znestorov.sofbus24.gps_map.station_choice.ObtainCurrentCordinates;
-import bg.znestorov.sofbus24.metro.HtmlRequestMetroDirection;
+import bg.znestorov.sofbus24.metro_schedule_directions.HtmlRequestMetroDirection;
 import bg.znestorov.sofbus24.station_database.DatabaseUtils;
 import bg.znestorov.sofbus24.utils.ActivityHelper;
 import bg.znestorov.sofbus24.utils.Constants;

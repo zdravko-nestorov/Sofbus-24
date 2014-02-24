@@ -1,4 +1,4 @@
-package bg.znestorov.sofbus24.metro;
+package bg.znestorov.sofbus24.metro_schedule_directions;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -50,7 +50,7 @@ public class HtmlResultMetroDirection {
 				NodeList stationsList = directionElement
 						.getElementsByTagName("Station");
 				for (int j = 0; j < stationsList.getLength(); j++) {
-					Node stationNode = stationsList.item(i);
+					Node stationNode = stationsList.item(j);
 					Element stationElement = (Element) stationNode;
 
 					// Get the NUMBER, NAME and URL of the station

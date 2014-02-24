@@ -116,6 +116,17 @@
             android:label="@string/st_inf_name"
             android:screenOrientation="portrait" >
         </activity>
+        <!-- Разписания (МЕТРО) -->
+        <activity
+            android:name=".MetroStationListView"
+            android:label="@string/metro_st_ch_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".MetroStationTabView"
+            android:label="@string/metro_st_ch_name"
+            android:screenOrientation="portrait" >
+        </activity>
         <!-- Любими -->
         <activity
             android:name=".Favourites"

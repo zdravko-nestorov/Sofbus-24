@@ -1,4 +1,4 @@
-package bg.znestorov.sofbus24.metro;
+package bg.znestorov.sofbus24.metro_schedule_directions;
 
 import java.io.ByteArrayOutputStream;
 
@@ -17,8 +17,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import bg.znestorov.sofbus24.main.MetroStationTabView;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.main.StationTabView;
 import bg.znestorov.sofbus24.main.VirtualBoardsStationChoice;
 import bg.znestorov.sofbus24.utils.Constants;
 
@@ -94,7 +94,7 @@ public class HtmlRequestMetroDirection {
 								mdt.setChoice(i);
 								Bundle bundle = new Bundle();
 								Intent stationIntent = new Intent(context,
-										StationTabView.class);
+										MetroStationTabView.class);
 								bundle.putSerializable(
 										Constants.KEYWORD_BUNDLE_METRO_DIRECTION_TRANSFER,
 										mdt);

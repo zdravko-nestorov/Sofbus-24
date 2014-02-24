@@ -15,9 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
-import bg.znestorov.sofbus24.metro.MetroDirection;
-import bg.znestorov.sofbus24.metro.MetroDirectionTransfer;
-import bg.znestorov.sofbus24.schedule_stations.Direction;
+import bg.znestorov.sofbus24.metro_schedule_directions.MetroDirection;
+import bg.znestorov.sofbus24.metro_schedule_directions.MetroDirectionTransfer;
 import bg.znestorov.sofbus24.utils.Constants;
 
 public class MetroStationTabView extends TabActivity {
@@ -42,7 +41,7 @@ public class MetroStationTabView extends TabActivity {
 			mdt = null;
 		}
 
-		int direction = mdt.getChoice();
+		int directionChoice = mdt.getChoice();
 
 		// TabHost which contain the tabs
 		TabHost tabHost = getTabHost();
@@ -52,7 +51,7 @@ public class MetroStationTabView extends TabActivity {
 		tabDirection1.setIndicator("",
 				getResources().getDrawable(R.drawable.left));
 		// Transferring the HtmlResult to ListViewStationChoice - DIRECTION-1
-		Intent tabDirection1Intent = new Intent(this, StationListView.class);
+		Intent tabDirection1Intent = new Intent(this, MetroStationListView.class);
 		mdt.setChoice(0);
 		bundle.putSerializable(
 				Constants.KEYWORD_BUNDLE_METRO_DIRECTION_TRANSFER, mdt);
@@ -65,7 +64,7 @@ public class MetroStationTabView extends TabActivity {
 		tabDirection2.setIndicator("",
 				getResources().getDrawable(R.drawable.right));
 		// Transferring the HtmlResult to ListViewStationChoice - DIRECTION-1
-		Intent tabDirection2Intent = new Intent(this, StationListView.class);
+		Intent tabDirection2Intent = new Intent(this, MetroStationListView.class);
 		mdt.setChoice(1);
 		bundle.putSerializable(
 				Constants.KEYWORD_BUNDLE_METRO_DIRECTION_TRANSFER, mdt);
@@ -73,7 +72,7 @@ public class MetroStationTabView extends TabActivity {
 		tabDirection2.setContent(tabDirection2Intent);
 		tabHost.addTab(tabDirection2);
 
-		if (direction == 0) {
+		if (directionChoice == 0) {
 			tabHost.setCurrentTab(0);
 		} else {
 			tabHost.setCurrentTab(1);
@@ -89,13 +88,13 @@ public class MetroStationTabView extends TabActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		MetroDirection direction = mdt.getDirectionsList().get(mdt.getChoice());
+		MetroDirection md = mdt.getDirectionsList().get(mdt.getChoice());
 
 		switch (item.getItemId()) {
 		case R.id.menu_route:
 			// Getting the coordinates of the whole route
 			String coordinates = getRoute(MetroStationTabView.this,
-					direction.getStations());
+					md.getStations());
 
 			// Checking if even one station has coordinates in the DB
 			if (coordinates != null) {
@@ -108,7 +107,7 @@ public class MetroStationTabView extends TabActivity {
 								.getString(R.string.loading_message_preview_info_map_route));
 
 				LoadMapAsyncTask loadMap = new LoadMapAsyncTask(context,
-						progressDialog, direction, coordinates);
+						progressDialog, coordinates);
 				loadMap.execute();
 
 			} else {
@@ -141,14 +140,12 @@ public class MetroStationTabView extends TabActivity {
 	private class LoadMapAsyncTask extends AsyncTask<Void, Void, Intent> {
 		Context context;
 		ProgressDialog progressDialog;
-		Direction direction;
 		String coordinates;
 
 		public LoadMapAsyncTask(Context context, ProgressDialog progressDialog,
-				Direction direction, String coordinates) {
+				String coordinates) {
 			this.context = context;
 			this.progressDialog = progressDialog;
-			this.direction = direction;
 			this.coordinates = coordinates;
 		}
 
@@ -161,10 +158,7 @@ public class MetroStationTabView extends TabActivity {
 		@Override
 		protected Intent doInBackground(Void... params) {
 			Intent intent = new Intent(context, StationInfoRouteMap.class);
-			intent.putExtra(
-					Constants.KEYWORD_ROUTE_MAP,
-					direction.getVehicleType() + ";"
-							+ direction.getVehicleNumber() + "$" + coordinates);
+			intent.putExtra(Constants.KEYWORD_ROUTE_MAP, "$" + coordinates);
 
 			return intent;
 		}

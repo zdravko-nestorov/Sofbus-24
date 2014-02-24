@@ -1,8 +1,14 @@
-package bg.znestorov.sofbus24.metro;
+package bg.znestorov.sofbus24.metro_schedule_directions;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import bg.znestorov.sofbus24.metro_schedule_stations.MetroStation;
 import bg.znestorov.sofbus24.utils.Constants;
 
 /**
@@ -11,8 +17,9 @@ import bg.znestorov.sofbus24.utils.Constants;
  * @author zanio
  * 
  */
-public class MetroDirection {
+public class MetroDirection implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private String id;
 	private String name;
 
@@ -61,12 +68,50 @@ public class MetroDirection {
 		this.stations = stations;
 	}
 
+	/**
+	 * Add a station to the Station HashMap structure
+	 * 
+	 * @param id
+	 *            the number of the station
+	 * @param name
+	 *            the name of the station
+	 * @param url
+	 *            the url of the station information
+	 */
 	public void addStation(String id, String name, String url) {
 		HashMap<String, String> urlNameMap = new HashMap<String, String>();
 		urlNameMap.put(Constants.METRO_STATION_NAME_KEY, name);
 		urlNameMap.put(Constants.METRO_STATION_URL_KEY, url);
 
 		this.stations.put(id, urlNameMap);
+	}
+
+	/**
+	 * Transform the Station HashMap structure to an Array of MetroStation
+	 * objects
+	 * 
+	 * @return an array of MetroStation objects
+	 */
+	public ArrayList<MetroStation> getStationsAsList() {
+		ArrayList<MetroStation> metroStations = new ArrayList<MetroStation>();
+
+		Iterator<Entry<String, HashMap<String, String>>> iterator = this.stations
+				.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map.Entry<String, HashMap<String, String>> mapEntry = (Map.Entry<String, HashMap<String, String>>) iterator
+					.next();
+			String stationNumber = mapEntry.getKey();
+			String stationName = mapEntry.getValue().get(
+					Constants.METRO_STATION_NAME_KEY);
+			String stationUrl = mapEntry.getValue().get(
+					Constants.METRO_STATION_URL_KEY);
+
+			MetroStation ms = new MetroStation(stationNumber, stationName,
+					stationUrl);
+			metroStations.add(ms);
+		}
+
+		return metroStations;
 	}
 
 	@Override

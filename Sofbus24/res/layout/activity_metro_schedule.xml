@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:paddingTop="6dip" >
+
+    <EditText
+        android:id="@+id/edit_box_search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/veh_ch_search_box"
+        android:inputType="number"
+        android:maxLines="1" >
+    </EditText>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_gradient"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="2dip"
+            android:paddingRight="?android:attr/scrollbarSize" >
+
+            <TextView
+                android:id="@+id/direction_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="1dip"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/white"
+                android:textSize="11dip" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/refresh_button"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="7dip"
+            android:background="@drawable/button_refresh"
+            android:clickable="true"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/list_view_search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+</LinearLayout>

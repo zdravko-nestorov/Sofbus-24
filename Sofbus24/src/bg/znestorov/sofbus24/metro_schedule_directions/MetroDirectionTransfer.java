@@ -1,4 +1,4 @@
-package bg.znestorov.sofbus24.metro;
+package bg.znestorov.sofbus24.metro_schedule_directions;
 
 import java.io.Serializable;
 import java.util.ArrayList;
