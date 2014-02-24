@@ -49,6 +49,7 @@ public class MetroStationListView extends Activity {
 			mdt = (MetroDirectionTransfer) getIntent().getSerializableExtra(
 					Constants.KEYWORD_BUNDLE_METRO_DIRECTION_TRANSFER);
 		} catch (Exception e) {
+			// It should never go here
 			mdt = null;
 		}
 
@@ -124,9 +125,9 @@ public class MetroStationListView extends Activity {
 	 * @param inputList
 	 *            inputList
 	 * @param searchText
-	 *            text in the serach box
+	 *            text in the search box
 	 * @param searchTextLength
-	 *            length of the serach text
+	 *            length of the search text
 	 * @return processed input list
 	 */
 	private ArrayList<MetroStation> onTextChanged(

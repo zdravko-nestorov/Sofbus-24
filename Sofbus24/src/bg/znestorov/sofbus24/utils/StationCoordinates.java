@@ -115,20 +115,15 @@ public class StationCoordinates {
 		for (int i = 0; i < stations.size(); i++) {
 			stationCode = stations.get(i);
 
-			if (stationCode.contains("(") && stationCode.contains(")")) {
-				stationCode = getValueAfterLast(stationCode, "(");
-				stationCode = getValueBefore(stationCode, ")");
+			// Getting station from the database via stationCode
+			GPSStation station = datasource.getStation(stationCode);
 
-				// Getting station from the database via stationCode
-				GPSStation station = datasource.getStation(stationCode);
-
-				// Filling coordinates StringBuilder
-				if (station != null) {
-					coordinates.append(station.getLat()).append(",")
-							.append(station.getLon()).append(",")
-							.append(station.getName()).append(" (")
-							.append(station.getId()).append(")").append(";");
-				}
+			// Filling coordinates StringBuilder
+			if (station != null) {
+				coordinates.append(station.getLat()).append(",")
+						.append(station.getLon()).append(",")
+						.append(station.getName()).append(" (")
+						.append(station.getId()).append(")").append(";");
 			}
 		}
 

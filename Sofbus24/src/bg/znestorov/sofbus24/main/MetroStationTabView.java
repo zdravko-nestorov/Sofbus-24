@@ -51,7 +51,8 @@ public class MetroStationTabView extends TabActivity {
 		tabDirection1.setIndicator("",
 				getResources().getDrawable(R.drawable.left));
 		// Transferring the HtmlResult to ListViewStationChoice - DIRECTION-1
-		Intent tabDirection1Intent = new Intent(this, MetroStationListView.class);
+		Intent tabDirection1Intent = new Intent(this,
+				MetroStationListView.class);
 		mdt.setChoice(0);
 		bundle.putSerializable(
 				Constants.KEYWORD_BUNDLE_METRO_DIRECTION_TRANSFER, mdt);
@@ -63,8 +64,9 @@ public class MetroStationTabView extends TabActivity {
 		TabSpec tabDirection2 = tabHost.newTabSpec(Constants.DIRECTION_2);
 		tabDirection2.setIndicator("",
 				getResources().getDrawable(R.drawable.right));
-		// Transferring the HtmlResult to ListViewStationChoice - DIRECTION-1
-		Intent tabDirection2Intent = new Intent(this, MetroStationListView.class);
+		// Transferring the HtmlResult to ListViewStationChoice - DIRECTION-2
+		Intent tabDirection2Intent = new Intent(this,
+				MetroStationListView.class);
 		mdt.setChoice(1);
 		bundle.putSerializable(
 				Constants.KEYWORD_BUNDLE_METRO_DIRECTION_TRANSFER, mdt);
@@ -72,11 +74,7 @@ public class MetroStationTabView extends TabActivity {
 		tabDirection2.setContent(tabDirection2Intent);
 		tabHost.addTab(tabDirection2);
 
-		if (directionChoice == 0) {
-			tabHost.setCurrentTab(0);
-		} else {
-			tabHost.setCurrentTab(1);
-		}
+		tabHost.setCurrentTab(directionChoice);
 	}
 
 	@Override
@@ -158,7 +156,7 @@ public class MetroStationTabView extends TabActivity {
 		@Override
 		protected Intent doInBackground(Void... params) {
 			Intent intent = new Intent(context, StationInfoRouteMap.class);
-			intent.putExtra(Constants.KEYWORD_ROUTE_MAP, "$" + coordinates);
+			intent.putExtra(Constants.KEYWORD_ROUTE_MAP, coordinates);
 
 			return intent;
 		}
