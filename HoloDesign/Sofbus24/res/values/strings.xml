@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Софбус 24</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <!-- Action Bar -->
+    <string name="action_switch_gps">Включване/изключване на GPS модула</string>
+    <string name="action_check_updates">Проверка за нова версия</string>
+    <string name="action_settings">Настройки</string>
+
+</resources>
