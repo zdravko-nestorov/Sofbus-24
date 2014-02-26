@@ -158,13 +158,13 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		public Integer getPageIcon(int position) {
 			switch (position) {
 			case 0:
-				return R.drawable.ic_action_check_updates;
+				return R.drawable.ic_tab_favorites;
 			case 1:
-				return R.drawable.ic_action_check_updates;
+				return R.drawable.ic_tab_real_time;
 			case 2:
-				return R.drawable.ic_action_check_updates;
+				return R.drawable.ic_tab_schedule;
 			case 3:
-				return R.drawable.ic_action_check_updates;
+				return R.drawable.ic_tab_metro;
 			}
 			return null;
 		}

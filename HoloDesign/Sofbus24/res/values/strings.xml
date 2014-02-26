@@ -10,5 +10,8 @@
     <string name="action_switch_gps">Включване/изключване на GPS модула</string>
     <string name="action_check_updates">Проверка за нова версия</string>
     <string name="action_settings">Настройки</string>
+    <string name="action_delete_all">Изтрий всички</string>
+    <string name="action_search">Търсене</string>
+    <string name="action_help">Помощ</string>
 
 </resources>
