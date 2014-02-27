@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Global labels -->
     <string name="app_name">Софбус 24</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
 
     <!-- Action Bar -->
     <string name="action_switch_gps">Включване/изключване на GPS модула</string>
@@ -13,5 +11,9 @@
     <string name="action_delete_all">Изтрий всички</string>
     <string name="action_search">Търсене</string>
     <string name="action_help">Помощ</string>
+
+    <!-- Search Widget -->
+    <string name="search_widget_hint">Търсене по номер или име</string>
+    <string name="search_widget_label">Търсене</string>
 
 </resources>

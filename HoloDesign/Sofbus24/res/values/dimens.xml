@@ -4,4 +4,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <!-- Sliding Menu -->
+    <dimen name="slidingmenu_shadow_width">5dp</dimen>
+    <dimen name="slidingmenu_offset">60dp</dimen>
+
 </resources>
