@@ -1,7 +1,5 @@
 package bg.znestorov.sofbus24.main;
 
-import java.util.Locale;
-
 import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
 import android.app.FragmentTransaction;
@@ -12,11 +10,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.favorites.FavoritesFragment;
+import bg.znestorov.sofbus24.utils.Constants;
+
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener {
 
@@ -28,22 +32,24 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	 * intensive, it may be best to switch to a
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
-	SectionsPagerAdapter mSectionsPagerAdapter;
+	private SectionsPagerAdapter mSectionsPagerAdapter;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
-	ViewPager mViewPager;
+	private ViewPager mViewPager;
+
+	private SlidingMenu slidingMenu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sofbus24);
 
-		// Set up the action bar.
+		// Set up the action bar
 		final ActionBar actionBar = getActionBar();
 
-		// Create the custom bar at the top
+		// Create the TOP custom bar
 		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT, Gravity.RIGHT
 						| Gravity.CENTER_VERTICAL);
@@ -54,8 +60,8 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections of the app.
+		// Create the adapter that will return a fragment for each of the
+		// primary sections of the application
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
 
@@ -84,13 +90,26 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 					.setIcon(mSectionsPagerAdapter.getPageIcon(i))
 					.setTabListener(this));
 		}
+
+		// Create the sliding menu
+		slidingMenu = new SlidingMenu(this);
+		slidingMenu.setMode(SlidingMenu.LEFT);
+		slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+		slidingMenu.setShadowWidthRes(R.dimen.slidingmenu_shadow_width);
+		slidingMenu.setShadowDrawable(R.drawable.slide_menu_shadow);
+		slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+		slidingMenu.setFadeDegree(0.35f);
+		slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+		slidingMenu.setMenu(R.layout.activity_sliding_menu);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_sofbus24_actions, menu);
-		return true;
+
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -111,6 +130,36 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			FragmentTransaction fragmentTransaction) {
 	}
 
+	@Override
+	public void onBackPressed() {
+		if (slidingMenu.isMenuShowing()) {
+			slidingMenu.toggle();
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_MENU) {
+			this.slidingMenu.toggle();
+			return true;
+		}
+
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			this.slidingMenu.toggle();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
@@ -123,36 +172,27 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		@Override
 		public Fragment getItem(int position) {
-			// getItem is called to instantiate the fragment for the given page.
-			// Return a DummySectionFragment (defined as a static inner class
-			// below) with the page number as its lone argument.
-			Fragment fragment = new DummySectionFragment();
-			Bundle args = new Bundle();
-			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-			fragment.setArguments(args);
+			Fragment fragment = null;
+			Bundle bundle = new Bundle();
+
+			switch (position) {
+			case 0:
+				fragment = new FavoritesFragment();
+				break;
+			default:
+				fragment = new DummySectionFragment();
+				bundle.putInt(DummySectionFragment.ARG_SECTION_NUMBER,
+						position + 1);
+				fragment.setArguments(bundle);
+				break;
+			}
+
 			return fragment;
 		}
 
 		@Override
 		public int getCount() {
-			// Show 4 total pages.
-			return 4;
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			Locale l = Locale.getDefault();
-			switch (position) {
-			case 0:
-				return getString(R.string.title_section1).toUpperCase(l);
-			case 1:
-				return getString(R.string.title_section2).toUpperCase(l);
-			case 2:
-				return getString(R.string.title_section3).toUpperCase(l);
-			case 3:
-				return getString(R.string.title_section3).toUpperCase(l);
-			}
-			return null;
+			return Constants.GLOBAL_TAB_COUNT;
 		}
 
 		public Integer getPageIcon(int position) {
@@ -171,8 +211,8 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	}
 
 	/**
-	 * A dummy fragment representing a section of the app, but that simply
-	 * displays dummy text.
+	 * A dummy fragment representing a section of the application, but that
+	 * simply displays dummy text.
 	 */
 	public static class DummySectionFragment extends Fragment {
 		/**
