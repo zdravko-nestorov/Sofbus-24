@@ -10,6 +10,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 
 import com.google.android.maps.GeoPoint;
 
@@ -21,14 +23,17 @@ public class StationsDataSource {
 	private String[] allColumns = { StationsSQLite.COULMN_NUMBER,
 			StationsSQLite.COLUMN_NAME, StationsSQLite.COLUMN_LAT,
 			StationsSQLite.COLUMN_LON };
+
 	private Context context;
+	private String language;
 
 	// Number of nearest stations
 	public static int nearestStationsCount = 8;
 
 	public StationsDataSource(Context context) {
 		this.context = context;
-		dbHelper = new StationsSQLite(this.context);
+		dbHelper = new StationsSQLite(context);
+		language = LanguageChange.getUserLocale(context);
 	}
 
 	public void open() throws SQLException {
@@ -212,13 +217,24 @@ public class StationsDataSource {
 	/**
 	 * Creating new Station object with the data of the current row of the
 	 * database
+	 * 
+	 * @param cursor
+	 *            the input cursor for interacting with the DB
+	 * @return the station object on the current row
 	 */
 	private Station cursorToStation(Cursor cursor) {
 		Station station = new Station();
 
+		// Check if have to translate the station name
+		String stationName = cursor.getString(1);
+		if (!"bg".equals(language)) {
+			stationName = TranslatorCyrillicToLatin.translate(context,
+					stationName);
+		}
+
 		// Getting all columns of the row and setting them to a Station object
 		station.setNumber(cursor.getString(0));
-		station.setName(cursor.getString(1));
+		station.setName(stationName);
 		station.setLat(cursor.getString(2));
 		station.setLon(cursor.getString(3));
 

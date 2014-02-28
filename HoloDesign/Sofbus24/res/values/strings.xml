@@ -16,4 +16,8 @@
     <string name="search_widget_hint">Търсене по номер или име</string>
     <string name="search_widget_label">Търсене</string>
 
+    <!-- Favourites Fragment -->
+    <string name="favourites_item_image" />
+    <string name="favourites_item_bg_image" />
+
 </resources>

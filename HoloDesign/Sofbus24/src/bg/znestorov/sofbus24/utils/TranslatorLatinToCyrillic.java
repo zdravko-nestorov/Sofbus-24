@@ -1,11 +1,14 @@
 package bg.znestorov.sofbus24.utils;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
+import android.content.Context;
+
 /**
- * Class which is used to transcode the <b>Latin</b> text to a <b>Cyrillic</b> one using a
- * table with the symbol translations
+ * Class which is used to transcode the <b>Latin</b> text to a <b>Cyrillic</b>
+ * one using a table with the symbol translations
  * 
  * @author znestorov
  * 
@@ -82,12 +85,15 @@ public class TranslatorLatinToCyrillic {
 	 * Translate the input Latin text to a Cyrillic one using a table with the
 	 * translation
 	 * 
+	 * @param context
+	 *            the current activity context
 	 * @param input
 	 *            the input text in Latin
 	 * @return the transcoded Latin text in a Cyrillic format
 	 */
-	public static String translate(String input) {
+	public static String translate(Context context, String input) {
 		StringBuilder output = new StringBuilder("");
+		Locale currentLocale = new Locale(LanguageChange.getUserLocale(context));
 
 		if (input != null && !"".equals(input)) {
 			int j = 1;
@@ -107,7 +113,7 @@ public class TranslatorLatinToCyrillic {
 
 					String latinSymbol = "" + input.charAt(i)
 							+ input.charAt(i + 1) + input.charAt(i + 2);
-					latinSymbol = latinSymbol.toLowerCase();
+					latinSymbol = latinSymbol.toLowerCase(currentLocale);
 					String cyrillicSymbol = translatorMap.get(latinSymbol);
 
 					if (cyrillicSymbol == null) {
@@ -120,7 +126,7 @@ public class TranslatorLatinToCyrillic {
 
 						latinSymbol = "" + input.charAt(i)
 								+ input.charAt(i + 1);
-						latinSymbol = latinSymbol.toLowerCase();
+						latinSymbol = latinSymbol.toLowerCase(currentLocale);
 						cyrillicSymbol = translatorMap.get(latinSymbol);
 
 						if (cyrillicSymbol == null) {
@@ -138,7 +144,8 @@ public class TranslatorLatinToCyrillic {
 							}
 						} else {
 							if (capitalFlag) {
-								output.append(cyrillicSymbol.toUpperCase());
+								output.append(cyrillicSymbol
+										.toUpperCase(currentLocale));
 							} else {
 								output.append(cyrillicSymbol);
 							}
@@ -147,7 +154,8 @@ public class TranslatorLatinToCyrillic {
 						}
 					} else {
 						if (capitalFlag) {
-							output.append(cyrillicSymbol.toUpperCase());
+							output.append(cyrillicSymbol
+									.toUpperCase(currentLocale));
 						} else {
 							output.append(cyrillicSymbol);
 						}
@@ -165,7 +173,7 @@ public class TranslatorLatinToCyrillic {
 
 					String latinSymbol = "" + input.charAt(i)
 							+ input.charAt(i + 1);
-					latinSymbol = latinSymbol.toLowerCase();
+					latinSymbol = latinSymbol.toLowerCase(currentLocale);
 					String cyrillicSymbol = translatorMap.get(latinSymbol);
 
 					if (cyrillicSymbol == null) {
@@ -183,7 +191,8 @@ public class TranslatorLatinToCyrillic {
 						}
 					} else {
 						if (capitalFlag) {
-							output.append(cyrillicSymbol.toUpperCase());
+							output.append(cyrillicSymbol
+									.toUpperCase(currentLocale));
 						} else {
 							output.append(cyrillicSymbol);
 						}

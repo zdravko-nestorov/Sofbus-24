@@ -9,6 +9,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 
 /**
  * Favorites data source used for DB interactions
@@ -24,11 +27,14 @@ public class FavouritesDataSource {
 	private String[] allColumns = { FavouritesSQLite.COLUMN_NUMBER,
 			FavouritesSQLite.COLUMN_NAME, FavouritesSQLite.COLUMN_LAT,
 			FavouritesSQLite.COLUMN_LON, FavouritesSQLite.COLUMN_CUSTOM_FIELD };
+
 	private Context context;
+	private String language;
 
 	public FavouritesDataSource(Context context) {
 		this.context = context;
-		dbHelper = new FavouritesSQLite(this.context);
+		dbHelper = new FavouritesSQLite(context);
+		language = LanguageChange.getUserLocale(context);
 	}
 
 	public void open() throws SQLException {
@@ -49,9 +55,18 @@ public class FavouritesDataSource {
 	 */
 	public Station createStation(Station station) {
 		if (getStation(station) == null) {
+
+			// Check if have to translate the station name
+			String stationName = station.getName();
+			if (!"bg".equals(language)) {
+				stationName = TranslatorLatinToCyrillic.translate(context,
+						stationName);
+			}
+
+			// Creating ContentValues object and insert the station data in it
 			ContentValues values = new ContentValues();
 			values.put(FavouritesSQLite.COLUMN_NUMBER, station.getNumber());
-			values.put(FavouritesSQLite.COLUMN_NAME, station.getName());
+			values.put(FavouritesSQLite.COLUMN_NAME, stationName);
 			values.put(StationsSQLite.COLUMN_LAT,
 					getCoordinates(station.getNumber(), station.getLat()));
 			values.put(StationsSQLite.COLUMN_LON,
@@ -208,13 +223,24 @@ public class FavouritesDataSource {
 	/**
 	 * Creating new Station object with the data of the current row of the
 	 * database
+	 * 
+	 * @param cursor
+	 *            the input cursor for interacting with the DB
+	 * @return the station object on the current row
 	 */
 	private Station cursorToStation(Cursor cursor) {
 		Station station = new Station();
 
+		// Check if have to translate the station name
+		String stationName = cursor.getString(1);
+		if (!"bg".equals(language)) {
+			stationName = TranslatorCyrillicToLatin.translate(context,
+					stationName);
+		}
+
 		// Getting all columns of the row and setting them to a Station object
 		station.setNumber(cursor.getString(0));
-		station.setName(cursor.getString(1));
+		station.setName(stationName);
 		station.setLat(cursor.getString(2));
 		station.setLon(cursor.getString(3));
 		station.setCustomField(cursor.getString(4));

@@ -1,15 +1,14 @@
 package bg.znestorov.sofbus24.main;
 
 import android.app.ActionBar;
-import android.app.ActionBar.LayoutParams;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.databases.DatabaseUtils;
 import bg.znestorov.sofbus24.favorites.FavouritesFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 
@@ -41,23 +41,25 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 	private SlidingMenu slidingMenu;
 
+	private Context context;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sofbus24);
 
+		context = Sofbus24.this;
+
+		// Creating and copying the DB to the SD card (used only for testing
+		// purposes) - DO NOT UNCOMMENT
+		// DatabaseUtils.generateAndCopyStationsDB(context);
+
+		// Create the database by copying it from the assets folder to the
+		// internal memory
+		DatabaseUtils.createStationsDatabase(context);
+
 		// Set up the action bar
 		final ActionBar actionBar = getActionBar();
-
-		// Create the TOP custom bar
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT, Gravity.RIGHT
-						| Gravity.CENTER_VERTICAL);
-		View actionBarTop = LayoutInflater.from(this).inflate(
-				R.layout.activity_sofbus24_top_actions, null);
-		actionBar.setCustomView(actionBarTop, layoutParams);
-		actionBar.setDisplayShowCustomEnabled(true);
-
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		// Create the adapter that will return a fragment for each of the

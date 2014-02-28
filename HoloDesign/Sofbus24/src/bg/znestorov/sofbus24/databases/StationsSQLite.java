@@ -22,7 +22,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 
 	// Table and columns names
 	public static final String TABLE_STATIONS = "stations";
-	public static final String COULMN_NUMBER = "id";
+	public static final String COULMN_NUMBER = "number";
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_LAT = "latitude";
 	public static final String COLUMN_LON = "longitude";
@@ -30,6 +30,13 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	// The Android's default system path of the database
 	private static String DB_PATH = "//data//data//bg.znestorov.sofbus24.main//databases//";
 	private static String DB_NAME = "stations.db";
+	private static final int DATABASE_VERSION = 1;
+
+	// Database creation SQL statement
+	private static final String DATABASE_CREATE_STATIONS = "CREATE TABLE "
+			+ TABLE_STATIONS + "(" + COULMN_NUMBER + " INTEGER PRIMARY KEY, "
+			+ COLUMN_NAME + " TEXT NOT NULL, " + COLUMN_LAT
+			+ " TEXT NOT NULL, " + COLUMN_LON + " TEXT NOT NULL" + ");";
 
 	private SQLiteDatabase dbStations;
 	private final Context context;
@@ -42,15 +49,35 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	 *            the current context
 	 */
 	public StationsSQLite(Context context) {
-		super(context, DB_NAME, null, 1);
+		super(context, DB_NAME, null, DATABASE_VERSION);
 		this.context = context;
+	}
+
+	@Override
+	public void onCreate(SQLiteDatabase database) {
+		database.execSQL(DATABASE_CREATE_STATIONS);
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		Log.w(FavouritesSQLite.class.getName(),
+				"Upgrading database from version " + oldVersion + " to "
+						+ newVersion + ", which will destroy all old data.");
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATIONS);
+		createDataBase();
+	}
+
+	@Override
+	public synchronized void close() {
+		if (dbStations != null)
+			dbStations.close();
+
+		super.close();
 	}
 
 	/**
 	 * Create an empty database on the system and rewrites it with the ready
 	 * database
-	 * 
-	 * @throws IOException
 	 */
 	public void createDataBase() {
 		// Check if the DB already exists
@@ -123,27 +150,5 @@ public class StationsSQLite extends SQLiteOpenHelper {
 				SQLiteDatabase.OPEN_READONLY);
 
 		return dbStations;
-	}
-
-	@Override
-	public synchronized void close() {
-		if (dbStations != null)
-			dbStations.close();
-
-		super.close();
-	}
-
-	@Override
-	public void onCreate(SQLiteDatabase db) {
-
-	}
-
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w(FavouritesSQLite.class.getName(),
-				"Upgrading database from version " + oldVersion + " to "
-						+ newVersion + ", which will destroy all old data.");
-		db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATIONS);
-		createDataBase();
 	}
 }

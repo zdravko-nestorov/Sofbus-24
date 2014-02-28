@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <!-- Delete All -->
+    <!-- Turn on GPS -->
     <item
-        android:id="@+id/action_delete_all"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:id="@+id/action_switch_gps"
+        android:icon="@drawable/ic_action_switch_gps"
         android:showAsAction="ifRoom"
-        android:title="@string/action_delete_all"/>
+        android:title="@string/action_switch_gps"/>
 
-    <!-- Search -->
+    <!-- Check updates -->
     <item
-        android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:id="@+id/action_check_updates"
+        android:icon="@drawable/ic_action_check_updates"
         android:showAsAction="always"
-        android:title="@string/action_search"/>
+        android:title="@string/action_check_updates"/>
 
-    <!-- Grid -->
+    <!-- Settings -->
     <item
-        android:id="@+id/action_help"
-        android:icon="@android:drawable/ic_menu_help"
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_action_settings"
         android:showAsAction="ifRoom"
-        android:title="@string/action_help"/>
+        android:title="@string/action_settings"/>
 
 </menu>

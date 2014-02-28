@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:hint="@string/app_name"
         android:inputType="number"
-        android:maxLines="1" >
+        android:maxLines="1"
+        android:visibility="invisible" >
     </EditText>
 
     <ListView

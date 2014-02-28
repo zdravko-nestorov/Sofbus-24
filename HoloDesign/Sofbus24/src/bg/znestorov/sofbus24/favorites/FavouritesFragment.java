@@ -1,5 +1,8 @@
 package bg.znestorov.sofbus24.favorites;
 
+import java.util.List;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -7,13 +10,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.databases.Station;
 import bg.znestorov.sofbus24.main.R;
 
+/**
+ * Favourites fragment responsible for visualizing the items from Favourites DB
+ * 
+ * @author Zdravko Nestorov
+ * @version 1.0
+ * 
+ */
 public class FavouritesFragment extends ListFragment {
 
-	String names[] = {};
+	private FavouritesDataSource favouritesDatasource;
+	private Context context;
+	private List<Station> favouritesStations;
 
 	public FavouritesFragment() {
 	}
@@ -28,11 +41,20 @@ public class FavouritesFragment extends ListFragment {
 			Bundle savedInstanceState) {
 		View myFragmentView = inflater.inflate(
 				R.layout.activity_favorites_fragment, container, false);
-		TextView tv = (TextView) myFragmentView
-				.findViewById(R.id.edit_box_search);
-		tv.setText("");
-		setListAdapter(new ArrayAdapter<String>(getActivity(),
-				android.R.layout.simple_list_item_1, names));
+
+		// Set the context (activity) associated with a fragment.
+		this.context = getActivity();
+
+		favouritesDatasource = new FavouritesDataSource(context);
+		favouritesDatasource.open();
+		favouritesStations = favouritesDatasource.getAllStations();
+		favouritesDatasource.close();
+
+		// Use an ArrayAdapter to show the elements in a ListView
+		ArrayAdapter<Station> adapter = new FavouritesStationAdapter(context,
+				favouritesStations);
+		setListAdapter(adapter);
+
 		return myFragmentView;
 	}
 
