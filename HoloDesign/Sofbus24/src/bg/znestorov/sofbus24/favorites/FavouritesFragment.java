@@ -11,11 +11,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.main.R;
 
-public class FavoritesFragment extends ListFragment {
+public class FavouritesFragment extends ListFragment {
 
 	String names[] = {};
 
-	public FavoritesFragment() {
+	public FavouritesFragment() {
 	}
 
 	@Override

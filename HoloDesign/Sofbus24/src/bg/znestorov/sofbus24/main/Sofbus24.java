@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import bg.znestorov.sofbus24.favorites.FavoritesFragment;
+import bg.znestorov.sofbus24.favorites.FavouritesFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -177,7 +177,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 			switch (position) {
 			case 0:
-				fragment = new FavoritesFragment();
+				fragment = new FavouritesFragment();
 				break;
 			default:
 				fragment = new DummySectionFragment();
