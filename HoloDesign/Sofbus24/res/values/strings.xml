@@ -17,7 +17,7 @@
     <string name="search_widget_label">Търсене</string>
 
     <!-- Favourites Fragment -->
-    <string name="favourites_item_image" />
     <string name="favourites_item_bg_image" />
+    <string name="favourites_item_remove" />
 
 </resources>

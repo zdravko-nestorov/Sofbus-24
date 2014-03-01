@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5sp" >
+    android:minHeight="160dip" >
 
     <ImageButton
         android:id="@+id/favourites_item_bg_image"
@@ -10,23 +10,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/favourites_item_bg_image"
+        android:cropToPadding="true"
+        android:padding="10sp"
+        android:scaleType="centerCrop"
         android:src="@drawable/favourites" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="#80000000"
-        android:paddingRight="?android:attr/scrollbarSize" >
+        android:layout_margin="10sp"
+        android:background="#80000000" >
 
         <ImageButton
-            android:id="@+id/favourites_item_image"
+            android:id="@+id/favourites_item_remove"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:background="#00000000"
-            android:contentDescription="@string/favourites_item_image"
+            android:contentDescription="@string/favourites_item_remove"
             android:paddingLeft="5dip"
-            android:src="@android:drawable/btn_star" />
+            android:src="@android:drawable/ic_menu_delete" />
 
         <RelativeLayout
             android:layout_width="0dip"
@@ -34,7 +37,7 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="6dip"
             android:layout_weight="1"
-            android:padding="3dip" >
+            android:padding="1dip" >
 
             <TextView
                 android:id="@+id/favourites_item_station_name"
@@ -44,8 +47,9 @@
                 android:fadingEdge="horizontal"
                 android:padding="1dip"
                 android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -56,6 +60,7 @@
                 android:layout_below="@+id/favourites_item_station_name"
                 android:padding="1dip"
                 android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#FFFFFF"
                 android:textSize="12sp" />
         </RelativeLayout>

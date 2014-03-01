@@ -40,15 +40,13 @@ public class FavouritesFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View myFragmentView = inflater.inflate(
-				R.layout.activity_favorites_fragment, container, false);
+				R.layout.activity_favourites_fragment, container, false);
 
-		// Set the context (activity) associated with a fragment.
-		this.context = getActivity();
-
+		// Set the context (activity) associated with this fragment
+		context = getActivity();
 		favouritesDatasource = new FavouritesDataSource(context);
 		favouritesDatasource.open();
 		favouritesStations = favouritesDatasource.getAllStations();
-		favouritesDatasource.close();
 
 		// Use an ArrayAdapter to show the elements in a ListView
 		ArrayAdapter<Station> adapter = new FavouritesStationAdapter(context,
@@ -63,5 +61,17 @@ public class FavouritesFragment extends ListFragment {
 		// on click display the item in toast
 		Toast.makeText(getActivity(), (String) l.getItemAtPosition(position),
 				Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onResume() {
+		favouritesDatasource.open();
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		favouritesDatasource.close();
+		super.onPause();
 	}
 }
