@@ -3,21 +3,30 @@
 
     <!-- Global labels -->
     <string name="app_name">Софбус 24</string>
+    <string name="app_dialog_title_important">Важно</string>
+    <string name="app_img_empty_content_description" />
+    <string name="app_button_ok">OK</string>
+    <string name="app_button_cancel">Отказ</string>
+    <string name="app_button_yes">Да</string>
+    <string name="app_button_no">Не</string>
 
     <!-- Action Bar -->
     <string name="action_switch_gps">Включване/изключване на GPS модула</string>
     <string name="action_check_updates">Проверка за нова версия</string>
     <string name="action_settings">Настройки</string>
-    <string name="action_delete_all">Изтрий всички</string>
-    <string name="action_search">Търсене</string>
-    <string name="action_help">Помощ</string>
-
-    <!-- Search Widget -->
-    <string name="search_widget_hint">Търсене по номер или име</string>
-    <string name="search_widget_label">Търсене</string>
 
     <!-- Favourites Fragment -->
-    <string name="favourites_item_bg_image" />
-    <string name="favourites_item_remove" />
+    <string name="fav_search_hint">Търсене по име или номер</string>
+    <string name="fav_item_station_number_text" formatted="false">Спирка номер: %s</string>
+    <string name="fav_item_rename_title">Преименувай</string>
+    <string name="fav_item_rename_msg" formatted="false"><![CDATA[Промени името на спирка <b><i>%s (%s)</i></b> на:]]></string>
+    <string name="fav_item_rename_hint">Въведи ново име</string>
+    <string name="fav_item_rename_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше преименувана на <b><i>%s (%s)</b></i>.]]></string>
+    <string name="fav_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
+    <string name="fav_item_empty_list" formatted="false"><![CDATA[Няма намерени спирки в секцията <b>Любими</b>. За да добавите спирката, която търсите, намерете я в някой от останалите табове и маркирайте звездата пред нея.]]></string>
+    <string name="fav_menu_remove_all">Изтрий всички</string>
+    <string name="fav_menu_remove_all_confirmation" formatted="false"><![CDATA[Сигурни ли сте, че искате да премахнете всички спирки от <b>Любими?</b>]]></string>
+    <string name="fav_menu_remove_all_toast" formatted="false"><![CDATA[Всички спирки бяха премахнати от секцията <b>Любими.</b>]]></string>
+    <string name="fav_menu_remove_all_empty_toast" formatted="false"><![CDATA[Няма добавени спирки в секцията <b>Любими.</b>]]></string>
 
 </resources>

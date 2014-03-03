@@ -140,18 +140,19 @@ public class FavouritesDataSource {
 	 * Update a station from the database. The search is done by the station
 	 * code and the custom field is updated.
 	 * 
-	 * @param stationCode
-	 *            the station code
-	 * @param stationCustomField
-	 *            the station custom filed
+	 * @param station
+	 *            the new station parameters
 	 */
-	public void updateStation(String stationCode, String stationCustomField) {
+	public void updateStation(Station station) {
 		ContentValues dataToInsert = new ContentValues();
+		dataToInsert.put(FavouritesSQLite.COLUMN_NAME, station.getName());
+		dataToInsert.put(FavouritesSQLite.COLUMN_LAT, station.getLat());
+		dataToInsert.put(FavouritesSQLite.COLUMN_LON, station.getLon());
 		dataToInsert.put(FavouritesSQLite.COLUMN_CUSTOM_FIELD,
-				stationCustomField);
+				station.getCustomField());
 
 		String where = FavouritesSQLite.COLUMN_NUMBER + " = ?";
-		String[] whereArgs = new String[] { String.valueOf(stationCode) };
+		String[] whereArgs = new String[] { String.valueOf(station.getNumber()) };
 
 		database.update(FavouritesSQLite.TABLE_FAVOURITES, dataToInsert, where,
 				whereArgs);

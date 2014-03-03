@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -139,16 +138,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		} else {
 			super.onBackPressed();
 		}
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_MENU) {
-			this.slidingMenu.toggle();
-			return true;
-		}
-
-		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
