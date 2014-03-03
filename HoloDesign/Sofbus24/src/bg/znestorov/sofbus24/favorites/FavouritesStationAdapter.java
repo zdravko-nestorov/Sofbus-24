@@ -11,19 +11,20 @@ import android.text.Html;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
-import bg.znestorov.sofbus24.databases.Station;
+import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.ActivityUtils;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -72,7 +73,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	}
 
 	/**
-	 * Direction row in the ListView
+	 * Favourites row in the ListView
 	 * 
 	 * @param position
 	 *            the row number
@@ -108,6 +109,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		String stationLon = station.getLon();
 		String imageUrl;
 
+		// TODO: Find better approach
 		if (stationLat.contains(",") || stationLat.contains(".")) {
 			imageUrl = String.format(Constants.FAVOURITES_IMAGE_URL,
 					stationLat, stationLon);
@@ -135,11 +137,23 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 */
 	private void editStation(final int position, View rowView,
 			final Station station) {
-		ImageButton editStation = (ImageButton) rowView
+		final ImageButton editStation = (ImageButton) rowView
 				.findViewById(R.id.favourites_item_rename);
-		editStation.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				createEditDialog(position, station);
+		editStation.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View arg0, MotionEvent me) {
+				if (me.getAction() == MotionEvent.ACTION_DOWN) {
+					editStation
+							.setColorFilter(Constants.FAVOURITES_IMG_BUTTON_ACTION_DOWN);
+					createEditDialog(position, station);
+					return true;
+				} else if (me.getAction() == MotionEvent.ACTION_UP) {
+					editStation
+							.setColorFilter(Constants.FAVOURITES_IMG_BUTTON_ACTION_UP);
+					return true;
+				}
+
+				return false;
 			}
 		});
 	}
@@ -300,22 +314,36 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 *            the station on the rowView
 	 */
 	private void removeStation(View rowView, final Station station) {
-		ImageButton removeStation = (ImageButton) rowView
+		final ImageButton removeStation = (ImageButton) rowView
 				.findViewById(R.id.favourites_item_remove);
-		removeStation.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v) {
-				favouritesDatasource.open();
-				favouritesDatasource.deleteStation(station);
-				favouritesDatasource.close();
-				FavouritesStationAdapter.this.remove(station);
-				FavouritesStationAdapter.this.notifyDataSetChanged();
+		removeStation.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View arg0, MotionEvent me) {
+				if (me.getAction() == MotionEvent.ACTION_DOWN) {
+					removeStation
+							.setColorFilter(Constants.FAVOURITES_IMG_BUTTON_ACTION_DOWN);
 
-				Toast.makeText(
-						context,
-						Html.fromHtml(String.format(context
-								.getString(R.string.fav_item_remove_toast),
-								station.getName(), station.getNumber())),
-						Toast.LENGTH_LONG).show();
+					favouritesDatasource.open();
+					favouritesDatasource.deleteStation(station);
+					favouritesDatasource.close();
+					FavouritesStationAdapter.this.remove(station);
+					FavouritesStationAdapter.this.notifyDataSetChanged();
+
+					Toast.makeText(
+							context,
+							Html.fromHtml(String.format(context
+									.getString(R.string.fav_item_remove_toast),
+									station.getName(), station.getNumber())),
+							Toast.LENGTH_LONG).show();
+
+					return true;
+				} else if (me.getAction() == MotionEvent.ACTION_UP) {
+					removeStation
+							.setColorFilter(Constants.FAVOURITES_IMG_BUTTON_ACTION_UP);
+					return true;
+				}
+
+				return false;
 			}
 		});
 	}

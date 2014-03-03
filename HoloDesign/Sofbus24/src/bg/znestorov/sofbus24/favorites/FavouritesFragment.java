@@ -25,9 +25,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import bg.znestorov.sofbus24.databases.DatabaseUtils;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
-import bg.znestorov.sofbus24.databases.Station;
+import bg.znestorov.sofbus24.databases.FavouritesDatabaseUtils;
+import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.ActivityUtils;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -54,6 +54,8 @@ public class FavouritesFragment extends ListFragment {
 
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
+
+		// Fill the list view with the stations from DB
 		favouritesDatasource = new FavouritesDataSource(context);
 		favouritesDatasource.open();
 		favouritesStations = favouritesDatasource.getAllStations();
@@ -210,7 +212,8 @@ public class FavouritesFragment extends ListFragment {
 						case DialogInterface.BUTTON_POSITIVE:
 							setListAdapter(new FavouritesStationAdapter(
 									context, new ArrayList<Station>()));
-							DatabaseUtils.deleteFavouriteDatabase(context);
+							FavouritesDatabaseUtils
+									.deleteFavouriteDatabase(context);
 							Toast.makeText(
 									context,
 									Html.fromHtml(getString(R.string.fav_menu_remove_all_toast)),

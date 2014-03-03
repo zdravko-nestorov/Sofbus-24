@@ -15,8 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import bg.znestorov.sofbus24.databases.DatabaseUtils;
+import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
+import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
 import bg.znestorov.sofbus24.favorites.FavouritesFragment;
+import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -51,11 +53,13 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		// Creating and copying the DB to the SD card (used only for testing
 		// purposes) - DO NOT UNCOMMENT
-		// DatabaseUtils.generateAndCopyStationsDB(context);
+		// StationsDatabaseUtils.generateAndCopyStationsDB(context);
+		// VehiclesDatabaseUtils.generateAndCopyStationsDB(context);
 
 		// Create the database by copying it from the assets folder to the
 		// internal memory
-		DatabaseUtils.createStationsDatabase(context);
+		StationsDatabaseUtils.createStationsDatabase(context);
+		VehiclesDatabaseUtils.createVehiclesDatabase(context);
 
 		// Set up the action bar
 		final ActionBar actionBar = getActionBar();
@@ -169,6 +173,9 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			switch (position) {
 			case 0:
 				fragment = new FavouritesFragment();
+				break;
+			case 2:
+				fragment = new ScheduleFragment();
 				break;
 			default:
 				fragment = new DummySectionFragment();

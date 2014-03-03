@@ -1,11 +1,11 @@
-package bg.znestorov.sofbus24.databases;
+package bg.znestorov.sofbus24.entity;
 
 import java.io.Serializable;
 
 import bg.znestorov.sofbus24.utils.Utils;
 
 /**
- * Abstract class representing a station structure with all common fields
+ * Class representing a station structure with all common fields
  * (implements Serializable, so can be transferred between activities)
  * 
  * @author Zdravko Nestorov

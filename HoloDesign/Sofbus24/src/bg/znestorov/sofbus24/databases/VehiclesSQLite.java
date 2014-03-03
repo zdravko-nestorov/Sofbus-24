@@ -18,27 +18,32 @@ import android.util.Log;
  * @author Zdravko Nestorov
  * @version 1.0
  */
-public class StationsSQLite extends SQLiteOpenHelper {
+public class VehiclesSQLite extends SQLiteOpenHelper {
 
 	// Table and columns names
-	public static final String TABLE_STATIONS = "stations";
+	public static final String TABLE_BUSSES = "busses";
+	public static final String TABLE_TROLLEYS = "trolleys";
+	public static final String TABLE_TRAMS = "trams";
 	public static final String COULMN_NUMBER = "number";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_LAT = "latitude";
-	public static final String COLUMN_LON = "longitude";
+	public static final String COLUMN_DIRECTION = "direction";
 
 	// The Android's default system path of the database
 	private static String DB_PATH = "//data//data//bg.znestorov.sofbus24.main//databases//";
-	private static String DB_NAME = "stations.db";
+	private static String DB_NAME = "vehicles.db";
 	private static final int DATABASE_VERSION = 1;
 
 	// Database creation SQL statement
-	private static final String DATABASE_CREATE_STATIONS = "CREATE TABLE "
-			+ TABLE_STATIONS + "(" + COULMN_NUMBER + " INTEGER PRIMARY KEY, "
-			+ COLUMN_NAME + " TEXT NOT NULL, " + COLUMN_LAT
-			+ " TEXT NOT NULL, " + COLUMN_LON + " TEXT NOT NULL" + ");";
+	private static final String DATABASE_CREATE_BUSSES = "CREATE TABLE "
+			+ TABLE_BUSSES + "(" + COULMN_NUMBER + " INTEGER PRIMARY KEY, "
+			+ COLUMN_DIRECTION + " TEXT NOT NULL" + ");";
+	private static final String DATABASE_CREATE_TROLLEYS = "CREATE TABLE "
+			+ TABLE_TROLLEYS + "(" + COULMN_NUMBER + " INTEGER PRIMARY KEY, "
+			+ COLUMN_DIRECTION + " TEXT NOT NULL" + ");";
+	private static final String DATABASE_CREATE_TRAMS = "CREATE TABLE "
+			+ TABLE_TRAMS + "(" + COULMN_NUMBER + " INTEGER PRIMARY KEY, "
+			+ COLUMN_DIRECTION + " TEXT NOT NULL" + ");";
 
-	private SQLiteDatabase dbStations;
+	private SQLiteDatabase dbVehicles;
 	private final Context context;
 
 	/**
@@ -48,14 +53,16 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	 * @param context
 	 *            the current context
 	 */
-	public StationsSQLite(Context context) {
+	public VehiclesSQLite(Context context) {
 		super(context, DB_NAME, null, DATABASE_VERSION);
 		this.context = context;
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase database) {
-		database.execSQL(DATABASE_CREATE_STATIONS);
+		database.execSQL(DATABASE_CREATE_BUSSES);
+		database.execSQL(DATABASE_CREATE_TROLLEYS);
+		database.execSQL(DATABASE_CREATE_TRAMS);
 	}
 
 	@Override
@@ -63,14 +70,14 @@ public class StationsSQLite extends SQLiteOpenHelper {
 		Log.w(FavouritesSQLite.class.getName(),
 				"Upgrading database from version " + oldVersion + " to "
 						+ newVersion + ", which will destroy all old data.");
-		context.deleteDatabase("stations.db");
+		context.deleteDatabase("vehicles.db");
 		createDataBase();
 	}
 
 	@Override
 	public synchronized void close() {
-		if (dbStations != null)
-			dbStations.close();
+		if (dbVehicles != null)
+			dbVehicles.close();
 
 		super.close();
 	}
@@ -107,7 +114,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * Copies the stations database from the local assets-folder to the just
+	 * Copies the vehicles database from the local assets-folder to the just
 	 * created empty database in the system folder, from where it can be
 	 * accessed and handled. This is done by transferring ByteStream.
 	 * 
@@ -138,7 +145,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * Open the stations DB in readonly mode
+	 * Open the stations DB in read-only mode
 	 * 
 	 * @return the stations DB
 	 * @throws SQLException
@@ -146,9 +153,9 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	public SQLiteDatabase openDataBase() throws SQLException {
 		// Open the database
 		String myPath = DB_PATH + DB_NAME;
-		dbStations = SQLiteDatabase.openDatabase(myPath, null,
+		dbVehicles = SQLiteDatabase.openDatabase(myPath, null,
 				SQLiteDatabase.OPEN_READONLY);
 
-		return dbStations;
+		return dbVehicles;
 	}
 }
