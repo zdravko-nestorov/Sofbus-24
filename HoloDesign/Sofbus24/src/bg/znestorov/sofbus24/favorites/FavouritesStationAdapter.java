@@ -53,9 +53,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		this.stations = stations;
 		this.favouritesDatasource = new FavouritesDataSource(context);
 
-		displayImageOptions = new DisplayImageOptions.Builder()
-				.delayBeforeLoading(100).cacheInMemory(true).cacheOnDisc(true)
-				.build();
+		displayImageOptions = ActivityUtils.displayImageOptions();
 	}
 
 	/**

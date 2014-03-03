@@ -86,4 +86,18 @@ public class ActivityUtils {
 		ImageLoader.getInstance().init(config);
 	}
 
+	/**
+	 * Create the display image options according via the Universal Image Loader
+	 * options
+	 * 
+	 * @return the configured display image options
+	 */
+	public static DisplayImageOptions displayImageOptions() {
+		DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+				.delayBeforeLoading(100).cacheInMemory(true).cacheOnDisc(true)
+				.build();
+
+		return displayImageOptions;
+	}
+
 }

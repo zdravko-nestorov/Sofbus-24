@@ -2,6 +2,8 @@ package bg.znestorov.sofbus24.databases;
 
 import java.io.Serializable;
 
+import bg.znestorov.sofbus24.utils.Utils;
+
 /**
  * Abstract class representing a station structure with all common fields
  * (implements Serializable, so can be transferred between activities)
@@ -43,7 +45,7 @@ public class Station implements Serializable {
 	}
 
 	public String getNumber() {
-		return number;
+		return Utils.formatNumberOfDigits(number, 4);
 	}
 
 	public void setNumber(String number) {
