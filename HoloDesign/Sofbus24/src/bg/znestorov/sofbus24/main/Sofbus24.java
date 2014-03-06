@@ -54,15 +54,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		context = Sofbus24.this;
 
-		// Load all vehicles from the Database, so use them lately
-		ScheduleLoadVehicles.getInstance(context);
-
-		// Load all favourites stations from the Database, so use them lately
-		FavouritesLoadStations.getInstance(context);
-
-		// Init the UIL image loader
-		ActivityUtils.initImageLoader(context);
-
 		// Creating and copying the DB to the SD card (used only for testing
 		// purposes) - DO NOT UNCOMMENT
 		// StationsDatabaseUtils.generateAndCopyStationsDB(context);
@@ -72,6 +63,15 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		// internal memory
 		StationsDatabaseUtils.createStationsDatabase(context);
 		VehiclesDatabaseUtils.createVehiclesDatabase(context);
+
+		// Load all vehicles from the Database, so use them lately
+		ScheduleLoadVehicles.getInstance(context);
+
+		// Load all favourites stations from the Database, so use them lately
+		FavouritesLoadStations.getInstance(context);
+
+		// Init the UIL image loader
+		ActivityUtils.initImageLoader(context);
 
 		// Set up the action bar
 		final ActionBar actionBar = getActionBar();
