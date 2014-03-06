@@ -26,6 +26,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_LAT = "latitude";
 	public static final String COLUMN_LON = "longitude";
+	public static final String COLUMN_TYPE = "type";
 
 	// The Android's default system path of the database
 	private static String DB_PATH = "//data//data//bg.znestorov.sofbus24.main//databases//";
@@ -36,7 +37,8 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	private static final String DATABASE_CREATE_STATIONS = "CREATE TABLE "
 			+ TABLE_STATIONS + "(" + COULMN_NUMBER + " INTEGER PRIMARY KEY, "
 			+ COLUMN_NAME + " TEXT NOT NULL, " + COLUMN_LAT
-			+ " TEXT NOT NULL, " + COLUMN_LON + " TEXT NOT NULL" + ");";
+			+ " TEXT NOT NULL, " + COLUMN_LON + " TEXT NOT NULL, "
+			+ COLUMN_TYPE + " TEXT NOT NULL" + ");";
 
 	private SQLiteDatabase dbStations;
 	private final Context context;

@@ -5,8 +5,8 @@ import java.io.Serializable;
 import bg.znestorov.sofbus24.utils.Utils;
 
 /**
- * Class representing a station structure with all common fields
- * (implements Serializable, so can be transferred between activities)
+ * Class representing a station structure with all common fields (implements
+ * Serializable, so can be transferred between activities)
  * 
  * @author Zdravko Nestorov
  * @version 1.0
@@ -20,6 +20,7 @@ public class Station implements Serializable {
 	private String name;
 	private String lat;
 	private String lon;
+	private VehicleType type;
 
 	/**
 	 * It is used in two cases with different meanings:
@@ -35,12 +36,13 @@ public class Station implements Serializable {
 	}
 
 	public Station(String number, String name, String lat, String lon,
-			String customField) {
+			VehicleType type, String customField) {
 		super();
 		this.number = number;
 		this.name = name;
 		this.lat = lat;
 		this.lon = lon;
+		this.type = type;
 		this.customField = customField;
 	}
 
@@ -76,6 +78,14 @@ public class Station implements Serializable {
 		this.lon = lon;
 	}
 
+	public VehicleType getType() {
+		return type;
+	}
+
+	public void setType(VehicleType type) {
+		this.type = type;
+	}
+
 	public String getCustomField() {
 		return customField;
 	}
@@ -87,7 +97,7 @@ public class Station implements Serializable {
 	@Override
 	public String toString() {
 		return "Station [number=" + number + ", name=" + name + ", lat=" + lat
-				+ ", lon=" + lon + ", customField=" + customField + "]";
+				+ ", lon=" + lon + ", type=" + type + ", customField="
+				+ customField + "]";
 	}
-
 }

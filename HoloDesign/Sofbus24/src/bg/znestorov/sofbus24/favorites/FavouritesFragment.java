@@ -2,7 +2,6 @@ package bg.znestorov.sofbus24.favorites;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -30,7 +29,6 @@ import bg.znestorov.sofbus24.databases.FavouritesDatabaseUtils;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.ActivityUtils;
-import bg.znestorov.sofbus24.utils.LanguageChange;
 
 /**
  * Favourites fragment responsible for visualizing the items from Favourites DB
@@ -85,27 +83,25 @@ public class FavouritesFragment extends ListFragment {
 				.fromHtml(getString(R.string.fav_item_empty_list)));
 
 		// Searching over the Favourites
-		final EditText editText = (EditText) myFragmentView
+		final EditText searchEditText = (EditText) myFragmentView
 				.findViewById(R.id.favourites_search);
-		editText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
 
-		editText.setOnFocusChangeListener(new OnFocusChangeListener() {
+		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
-					ActivityUtils.hideKeyboard(context, editText);
+					ActivityUtils.hideKeyboard(context, searchEditText);
 				}
 			}
 		});
 
-		editText.addTextChangedListener(new TextWatcher() {
+		searchEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				// Make the search only in cases there is something in
-				// Favourites
-				String searchText = editText.getText().toString();
-				ArrayList<Station> searchStationList = getSearchResult(
-						myFragmentView, searchText);
+				String searchText = searchEditText.getText().toString();
+				List<Station> searchStationList = favouritesDatasource
+						.getStationsViaSearch(searchText);
 				ArrayAdapter<Station> adapter = new FavouritesStationAdapter(
 						context, searchStationList);
 
@@ -124,44 +120,6 @@ public class FavouritesFragment extends ListFragment {
 		});
 
 		return myFragmentView;
-	}
-
-	/**
-	 * Creates an ArrayList with all stations that match the search condition
-	 * 
-	 * @param searchText
-	 *            the search text
-	 * @return an ArrayList with all stations from Favourites matching the
-	 *         search
-	 */
-	private ArrayList<Station> getSearchResult(View myFragmentView,
-			String searchText) {
-		ArrayList<Station> searchStationList = new ArrayList<Station>();
-		Locale currentLocale = new Locale(LanguageChange.getUserLocale(context));
-
-		// Get the Favourites stations each time a search is made
-		favouritesStations = favouritesDatasource.getAllStations();
-
-		if (searchText != null && !"".equals(searchText)) {
-			searchText = searchText.toUpperCase(currentLocale);
-
-			for (int i = 0; i < favouritesStations.size(); i++) {
-				Station station = favouritesStations.get(i);
-				String stationName = station.getName().toUpperCase(
-						currentLocale);
-				String stationNumber = station.getNumber().toUpperCase(
-						currentLocale);
-
-				if (stationName.contains(searchText)
-						|| stationNumber.contains(searchText)) {
-					searchStationList.add(station);
-				}
-			}
-		} else {
-			searchStationList.addAll(favouritesStations);
-		}
-
-		return searchStationList;
 	}
 
 	@Override

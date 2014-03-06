@@ -2,6 +2,7 @@ package bg.znestorov.sofbus24.databases;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -68,9 +69,9 @@ public class FavouritesDataSource {
 			ContentValues values = new ContentValues();
 			values.put(FavouritesSQLite.COLUMN_NUMBER, station.getNumber());
 			values.put(FavouritesSQLite.COLUMN_NAME, stationName);
-			values.put(StationsSQLite.COLUMN_LAT,
+			values.put(FavouritesSQLite.COLUMN_LAT,
 					getCoordinates(station.getNumber(), station.getLat()));
-			values.put(StationsSQLite.COLUMN_LON,
+			values.put(FavouritesSQLite.COLUMN_LON,
 					getCoordinates(station.getNumber(), station.getLon()));
 			values.put(FavouritesSQLite.COLUMN_CUSTOM_FIELD,
 					station.getCustomField());
@@ -187,6 +188,44 @@ public class FavouritesDataSource {
 
 			return null;
 		}
+	}
+
+	/**
+	 * Get the stations which NUMBER or NAME contains the searched text
+	 * 
+	 * @param searchText
+	 *            the user search text
+	 * @return a list with all stations matching the input conditions
+	 */
+	public List<Station> getStationsViaSearch(String searchText) {
+		List<Station> stations = new ArrayList<Station>();
+		Locale currentLocale = new Locale(language);
+		searchText = searchText.toLowerCase(currentLocale);
+
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT * 											");
+		query.append(" FROM " + FavouritesSQLite.TABLE_FAVOURITES + "		");
+		query.append(" WHERE 												");
+		query.append(" 	lower(CAST(" + FavouritesSQLite.COLUMN_NUMBER
+				+ " AS TEXT)) LIKE '%" + searchText + "%'					");
+		query.append(" OR 													");
+		query.append(" 	lower(" + FavouritesSQLite.COLUMN_NAME + ") LIKE '%"
+				+ searchText + "%'		 									");
+
+		Cursor cursor = database.rawQuery(query.toString(), null);
+
+		// Iterating the cursor and fill the empty List<Station>
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Station station = cursorToStation(cursor);
+			stations.add(station);
+			cursor.moveToNext();
+		}
+
+		// Closing the cursor
+		cursor.close();
+
+		return stations;
 	}
 
 	/**

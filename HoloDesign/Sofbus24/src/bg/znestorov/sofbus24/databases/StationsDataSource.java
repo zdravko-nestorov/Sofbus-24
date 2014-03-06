@@ -10,6 +10,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
@@ -23,7 +24,7 @@ public class StationsDataSource {
 	private StationsSQLite dbHelper;
 	private String[] allColumns = { StationsSQLite.COULMN_NUMBER,
 			StationsSQLite.COLUMN_NAME, StationsSQLite.COLUMN_LAT,
-			StationsSQLite.COLUMN_LON };
+			StationsSQLite.COLUMN_LON, StationsSQLite.COLUMN_TYPE };
 
 	private Context context;
 	private String language;
@@ -63,6 +64,7 @@ public class StationsDataSource {
 					getCoordinates(station.getNumber(), station.getLat()));
 			values.put(StationsSQLite.COLUMN_LON,
 					getCoordinates(station.getNumber(), station.getLon()));
+			values.put(StationsSQLite.COLUMN_TYPE, station.getType().toString());
 
 			// Insert the ContentValues data into the database
 			database.insert(StationsSQLite.TABLE_STATIONS, null, values);
@@ -238,6 +240,7 @@ public class StationsDataSource {
 		station.setName(stationName);
 		station.setLat(cursor.getString(2));
 		station.setLon(cursor.getString(3));
+		station.setType(VehicleType.valueOf(cursor.getString(4)));
 
 		return station;
 	}

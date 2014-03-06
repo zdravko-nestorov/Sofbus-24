@@ -21,10 +21,9 @@ import android.util.Log;
 public class VehiclesSQLite extends SQLiteOpenHelper {
 
 	// Table and columns names
-	public static final String TABLE_BUSSES = "busses";
-	public static final String TABLE_TROLLEYS = "trolleys";
-	public static final String TABLE_TRAMS = "trams";
-	public static final String COULMN_NUMBER = "number";
+	public static final String TABLE_VEHICLES = "vehicles";
+	public static final String COLUMN_NUMBER = "number";
+	public static final String COLUMN_TYPE = "type";
 	public static final String COLUMN_DIRECTION = "direction";
 
 	// The Android's default system path of the database
@@ -33,15 +32,10 @@ public class VehiclesSQLite extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 
 	// Database creation SQL statement
-	private static final String DATABASE_CREATE_BUSSES = "CREATE TABLE "
-			+ TABLE_BUSSES + "(" + COULMN_NUMBER + " INTEGER PRIMARY KEY, "
-			+ COLUMN_DIRECTION + " TEXT NOT NULL" + ");";
-	private static final String DATABASE_CREATE_TROLLEYS = "CREATE TABLE "
-			+ TABLE_TROLLEYS + "(" + COULMN_NUMBER + " INTEGER PRIMARY KEY, "
-			+ COLUMN_DIRECTION + " TEXT NOT NULL" + ");";
-	private static final String DATABASE_CREATE_TRAMS = "CREATE TABLE "
-			+ TABLE_TRAMS + "(" + COULMN_NUMBER + " INTEGER PRIMARY KEY, "
-			+ COLUMN_DIRECTION + " TEXT NOT NULL" + ");";
+	private static final String DATABASE_CREATE_VEHICLES = "CREATE TABLE "
+			+ TABLE_VEHICLES + "(" + COLUMN_NUMBER + " INTEGER, " + COLUMN_TYPE
+			+ " TEXT NOT NULL, " + COLUMN_DIRECTION + " TEXT NOT NULL, "
+			+ "PRIMARY KEY(" + COLUMN_NUMBER + ", " + COLUMN_TYPE + "));";
 
 	private SQLiteDatabase dbVehicles;
 	private final Context context;
@@ -60,9 +54,7 @@ public class VehiclesSQLite extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase database) {
-		database.execSQL(DATABASE_CREATE_BUSSES);
-		database.execSQL(DATABASE_CREATE_TROLLEYS);
-		database.execSQL(DATABASE_CREATE_TRAMS);
+		database.execSQL(DATABASE_CREATE_VEHICLES);
 	}
 
 	@Override

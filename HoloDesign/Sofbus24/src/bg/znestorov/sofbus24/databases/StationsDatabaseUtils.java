@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.VehicleType;
 
 /**
  * Class containing all helping functions for creating the Stations DB from an
@@ -87,8 +88,8 @@ public class StationsDatabaseUtils {
 			 * and put there XML file with all stations in the right format,
 			 * named "stations_list.xml" and delete the line above
 			 */
-			// InputSource inputSrc = new
-			// InputSource(context.getResources().openRawResource(R.raw.stations_list));
+			// InputSource inputSrc = new InputSource(context.getResources()
+			// .openRawResource(R.raw.stations_list));
 			InputSource inputSrc = null;
 
 			XPath xpath = XPathFactory.newInstance().newXPath();
@@ -98,11 +99,13 @@ public class StationsDatabaseUtils {
 
 			Station gpsStation = new Station();
 
-			for (int i = 0; i < nodes.getLength(); i = i + 4) {
+			for (int i = 0; i < nodes.getLength(); i = i + 5) {
 				gpsStation.setNumber(nodes.item(i).getTextContent());
 				gpsStation.setName(nodes.item(i + 1).getTextContent());
 				gpsStation.setLat(nodes.item(i + 2).getTextContent());
 				gpsStation.setLon(nodes.item(i + 3).getTextContent());
+				gpsStation.setType(VehicleType.valueOf(nodes.item(i + 4)
+						.getTextContent()));
 
 				datasource.createStation(gpsStation);
 			}

@@ -2,6 +2,7 @@ package bg.znestorov.sofbus24.databases;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,8 +19,8 @@ public class VehiclesDataSource {
 	// Database fields
 	private SQLiteDatabase database;
 	private VehiclesSQLite dbHelper;
-	private String[] allColumns = { VehiclesSQLite.COULMN_NUMBER,
-			VehiclesSQLite.COLUMN_DIRECTION };
+	private String[] allColumns = { VehiclesSQLite.COLUMN_NUMBER,
+			VehiclesSQLite.COLUMN_TYPE, VehiclesSQLite.COLUMN_DIRECTION };
 
 	private Context context;
 	private String language;
@@ -50,16 +51,17 @@ public class VehiclesDataSource {
 		if (getVehicle(vehicle) == null) {
 			// Creating ContentValues object and insert the vehicle data in it
 			ContentValues values = new ContentValues();
-			values.put(VehiclesSQLite.COULMN_NUMBER, vehicle.getNumber());
+			values.put(VehiclesSQLite.COLUMN_NUMBER, vehicle.getNumber());
+			values.put(VehiclesSQLite.COLUMN_TYPE, vehicle.getType().toString());
 			values.put(VehiclesSQLite.COLUMN_DIRECTION, vehicle.getDirection());
 
 			// Insert the ContentValues data into the database
-			String dbToInsert = getDBTable(vehicle);
-			database.insert(dbToInsert, null, values);
+			database.insert(VehiclesSQLite.TABLE_VEHICLES, null, values);
 
 			// Selecting the row that contains the vehicle data
-			Cursor cursor = database.query(dbToInsert, allColumns,
-					VehiclesSQLite.COULMN_NUMBER + " = " + vehicle.getNumber(),
+			Cursor cursor = database.query(VehiclesSQLite.TABLE_VEHICLES,
+					allColumns,
+					VehiclesSQLite.COLUMN_NUMBER + " = " + vehicle.getNumber(),
 					null, null, null, null);
 
 			// Moving the cursor to the first column of the selected row
@@ -78,44 +80,19 @@ public class VehiclesDataSource {
 	}
 
 	/**
-	 * Define the table in which the vehicle will be inserted
-	 * 
-	 * @param vehicle
-	 *            the vehicle that will be inserted
-	 * @return table in which the vehicle will be inserted
-	 */
-	private String getDBTable(Vehicle vehicle) {
-		String dbTable;
-
-		switch (vehicle.getType()) {
-		case BUS:
-			dbTable = VehiclesSQLite.TABLE_BUSSES;
-			break;
-		case TROLLEY:
-			dbTable = VehiclesSQLite.TABLE_TROLLEYS;
-			break;
-		case TRAM:
-			dbTable = VehiclesSQLite.TABLE_TRAMS;
-			break;
-		default:
-			dbTable = VehiclesSQLite.TABLE_BUSSES;
-			break;
-		}
-
-		return dbTable;
-	}
-
-	/**
 	 * Delete vehicle from the database
 	 * 
 	 * @param vehicle
 	 *            the vehicle that will be deleted
 	 */
 	public void deleteVehicle(Vehicle vehicle) {
-		String where = VehiclesSQLite.COULMN_NUMBER + " = ?";
-		String[] whereArgs = new String[] { String.valueOf(vehicle.getNumber()) };
+		String where = VehiclesSQLite.COLUMN_NUMBER + " = ? AND "
+				+ VehiclesSQLite.COLUMN_TYPE + " = ?";
+		String[] whereArgs = new String[] {
+				String.valueOf(vehicle.getNumber()),
+				String.valueOf(vehicle.getType()) };
 
-		database.delete(getDBTable(vehicle), where, whereArgs);
+		database.delete(VehiclesSQLite.TABLE_VEHICLES, where, whereArgs);
 	}
 
 	/**
@@ -126,10 +103,15 @@ public class VehiclesDataSource {
 	 * @return the vehicle if it is found in the DB and null otherwise
 	 */
 	public Vehicle getVehicle(Vehicle vehicle) {
+		String selection = VehiclesSQLite.COLUMN_NUMBER + " = ? AND "
+				+ VehiclesSQLite.COLUMN_TYPE + " = ?";
+		String[] selectionArgs = new String[] {
+				String.valueOf(vehicle.getNumber()),
+				String.valueOf(vehicle.getType()) };
+
 		// Selecting the row that contains the vehicle data
-		Cursor cursor = database.query(getDBTable(vehicle), allColumns,
-				VehiclesSQLite.COULMN_NUMBER + " = " + vehicle.getNumber(),
-				null, null, null, null);
+		Cursor cursor = database.query(VehiclesSQLite.TABLE_VEHICLES,
+				allColumns, selection, selectionArgs, null, null, null);
 
 		if (cursor.getCount() > 0) {
 			// Moving the cursor to the first column of the selected row
@@ -149,105 +131,52 @@ public class VehiclesDataSource {
 	}
 
 	/**
-	 * Get all busses from the database
+	 * Get the vehicles which NUMBER or DIRECTION contains the searched text
 	 * 
-	 * @return a list with all busses from the DB
+	 * @param searchText
+	 *            the user search text
+	 * @return a list with all busses matching the input conditions
 	 */
-	public List<Vehicle> getAllBusses() {
-		List<Vehicle> busses = new ArrayList<Vehicle>();
+	public List<Vehicle> getVehiclesViaSearch(VehicleType type,
+			String searchText) {
+		List<Vehicle> vehicles = new ArrayList<Vehicle>();
+		Locale currentLocale = new Locale(language);
+		searchText = searchText.toLowerCase(currentLocale);
 
-		// Selecting all fields of the TABLE_BUSSES
-		Cursor cursor = database.query(VehiclesSQLite.TABLE_BUSSES, allColumns,
-				null, null, null, null, null);
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT * 											");
+		query.append(" FROM " + VehiclesSQLite.TABLE_VEHICLES + "			");
+		query.append(" WHERE ( 												");
+		query.append(" 		lower(CAST(" + VehiclesSQLite.COLUMN_NUMBER
+				+ " AS TEXT)) LIKE '%" + searchText + "%'					");
+		query.append(" OR 													");
+		query.append(" 		lower(" + VehiclesSQLite.COLUMN_DIRECTION
+				+ ") LIKE '%" + searchText + "%'		 					");
+		query.append(" ) AND												");
+		query.append(" 		" + VehiclesSQLite.COLUMN_TYPE + " LIKE '%"
+				+ type.toString() + "%'										");
 
-		// Iterating the cursor and fill the empty List<Vehicle>
+		Cursor cursor = database.rawQuery(query.toString(), null);
+
+		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			Vehicle vehicle = cursorToVehicle(cursor);
-			vehicle.setType(VehicleType.BUS);
-			busses.add(vehicle);
+			vehicles.add(vehicle);
 			cursor.moveToNext();
 		}
 
 		// Closing the cursor
 		cursor.close();
 
-		return busses;
+		return vehicles;
 	}
 
 	/**
-	 * Delete all busses from the database;
+	 * Delete all vehicles from the database;
 	 */
-	public void deleteAllBusses() {
-		database.delete(VehiclesSQLite.TABLE_BUSSES, null, null);
-	}
-
-	/**
-	 * Get all busses from the database
-	 * 
-	 * @return a list with all busses from the DB
-	 */
-	public List<Vehicle> getAllTrolleys() {
-		List<Vehicle> trolleys = new ArrayList<Vehicle>();
-
-		// Selecting all fields of the TABLE_VEHICLES
-		Cursor cursor = database.query(VehiclesSQLite.TABLE_TROLLEYS,
-				allColumns, null, null, null, null, null);
-
-		// Iterating the cursor and fill the empty List<Vehicle>
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			Vehicle vehicle = cursorToVehicle(cursor);
-			vehicle.setType(VehicleType.TROLLEY);
-			trolleys.add(vehicle);
-			cursor.moveToNext();
-		}
-
-		// Closing the cursor
-		cursor.close();
-
-		return trolleys;
-	}
-
-	/**
-	 * Delete all busses from the database;
-	 */
-	public void deleteAllTrolleys() {
-		database.delete(VehiclesSQLite.TABLE_TROLLEYS, null, null);
-	}
-
-	/**
-	 * Get all busses from the database
-	 * 
-	 * @return a list with all busses from the DB
-	 */
-	public List<Vehicle> getAllTrams() {
-		List<Vehicle> trams = new ArrayList<Vehicle>();
-
-		// Selecting all fields of the TABLE_VEHICLES
-		Cursor cursor = database.query(VehiclesSQLite.TABLE_TRAMS, allColumns,
-				null, null, null, null, null);
-
-		// Iterating the cursor and fill the empty List<Vehicle>
-		cursor.moveToFirst();
-		while (!cursor.isAfterLast()) {
-			Vehicle vehicle = cursorToVehicle(cursor);
-			vehicle.setType(VehicleType.TRAM);
-			trams.add(vehicle);
-			cursor.moveToNext();
-		}
-
-		// Closing the cursor
-		cursor.close();
-
-		return trams;
-	}
-
-	/**
-	 * Delete all busses from the database;
-	 */
-	public void deleteAllTrams() {
-		database.delete(VehiclesSQLite.TABLE_TRAMS, null, null);
+	public void deleteAllVehicles() {
+		database.delete(VehiclesSQLite.TABLE_VEHICLES, null, null);
 	}
 
 	/**
@@ -262,7 +191,7 @@ public class VehiclesDataSource {
 		Vehicle vehicle = new Vehicle();
 
 		// Check if have to translate the vehicle direction
-		String vehicleDirection = cursor.getString(1);
+		String vehicleDirection = cursor.getString(2);
 		if (!"bg".equals(language)) {
 			vehicleDirection = TranslatorCyrillicToLatin.translate(context,
 					vehicleDirection);
@@ -270,9 +199,9 @@ public class VehiclesDataSource {
 
 		// Getting all columns of the row and setting them to a Vehicle object
 		vehicle.setNumber(cursor.getString(0));
+		vehicle.setType(VehicleType.valueOf(cursor.getString(1)));
 		vehicle.setDirection(vehicleDirection);
 
 		return vehicle;
 	}
-
 }

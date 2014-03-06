@@ -53,9 +53,7 @@ public class VehiclesDatabaseUtils {
 	public static void deleteVehiclesDatabase(Context context) {
 		VehiclesDataSource vehiclesDatasource = new VehiclesDataSource(context);
 		vehiclesDatasource.open();
-		vehiclesDatasource.deleteAllBusses();
-		vehiclesDatasource.deleteAllTrolleys();
-		vehiclesDatasource.deleteAllTrams();
+		vehiclesDatasource.deleteAllVehicles();
 		vehiclesDatasource.close();
 	}
 
