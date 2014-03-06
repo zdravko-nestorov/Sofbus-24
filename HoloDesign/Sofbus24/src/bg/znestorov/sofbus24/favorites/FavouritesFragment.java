@@ -39,8 +39,10 @@ import bg.znestorov.sofbus24.utils.ActivityUtils;
  */
 public class FavouritesFragment extends ListFragment {
 
-	private FavouritesDataSource favouritesDatasource;
 	private Context context;
+
+	private FavouritesLoadStations fls;
+	private FavouritesDataSource favouritesDatasource;
 	private List<Station> favouritesStations;
 
 	public FavouritesFragment() {
@@ -49,17 +51,29 @@ public class FavouritesFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View myFragmentView = inflater.inflate(
+				R.layout.activity_favourites_fragment, container, false);
 
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
 
-		// Fill the list view with the stations from DB
+		// Load the Favourites Datasource
 		favouritesDatasource = new FavouritesDataSource(context);
 		favouritesDatasource.open();
-		favouritesStations = favouritesDatasource.getAllStations();
 
-		// Init the UIL image loader
-		ActivityUtils.initImageLoader(context);
+		// Fill the list view with the stations from the DB
+		fls = FavouritesLoadStations.getInstance(context);
+		favouritesStations = fls.getFavouriteStations();
+
+		// Searching over the Favourites
+		EditText searchEditText = (EditText) myFragmentView
+				.findViewById(R.id.favourites_search);
+		actionsOverSearchEditText(searchEditText);
 
 		// Use an ArrayAdapter to show the elements in a ListView
 		ArrayAdapter<Station> adapter = new FavouritesStationAdapter(context,
@@ -68,56 +82,12 @@ public class FavouritesFragment extends ListFragment {
 
 		// Activate the option menu
 		setHasOptionsMenu(true);
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		final View myFragmentView = inflater.inflate(
-				R.layout.activity_favourites_fragment, container, false);
 
 		// Set the message if the list is empty
 		TextView emptyList = (TextView) myFragmentView
 				.findViewById(R.id.favourites_list_empty_text);
 		emptyList.setText(Html
 				.fromHtml(getString(R.string.fav_item_empty_list)));
-
-		// Searching over the Favourites
-		final EditText searchEditText = (EditText) myFragmentView
-				.findViewById(R.id.favourites_search);
-		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
-
-		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (!hasFocus) {
-					ActivityUtils.hideKeyboard(context, searchEditText);
-				}
-			}
-		});
-
-		searchEditText.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				String searchText = searchEditText.getText().toString();
-				List<Station> searchStationList = favouritesDatasource
-						.getStationsViaSearch(searchText);
-				ArrayAdapter<Station> adapter = new FavouritesStationAdapter(
-						context, searchStationList);
-
-				setListAdapter(adapter);
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-
-			}
-		});
 
 		return myFragmentView;
 	}
@@ -205,5 +175,47 @@ public class FavouritesFragment extends ListFragment {
 		adapter.notifyDataSetChanged();
 
 		return true;
+	}
+
+	/**
+	 * Modify the Search EditText field and activate the listeners
+	 * 
+	 * @param searchEditText
+	 *            the search EditText
+	 */
+	private void actionsOverSearchEditText(final EditText searchEditText) {
+		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+
+		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					ActivityUtils.hideKeyboard(context, searchEditText);
+				}
+			}
+		});
+
+		searchEditText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				String searchText = searchEditText.getText().toString();
+				List<Station> searchStationList = favouritesDatasource
+						.getStationsViaSearch(searchText);
+				ArrayAdapter<Station> adapter = new FavouritesStationAdapter(
+						context, searchStationList);
+
+				setListAdapter(adapter);
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+		});
 	}
 }

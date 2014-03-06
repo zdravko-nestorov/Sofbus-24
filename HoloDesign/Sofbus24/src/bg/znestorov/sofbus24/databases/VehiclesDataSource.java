@@ -133,6 +133,8 @@ public class VehiclesDataSource {
 	/**
 	 * Get the vehicles which NUMBER or DIRECTION contains the searched text
 	 * 
+	 * @param type
+	 *            the type of the Vehicle
 	 * @param searchText
 	 *            the user search text
 	 * @return a list with all busses matching the input conditions

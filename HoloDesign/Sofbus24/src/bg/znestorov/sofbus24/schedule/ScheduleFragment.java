@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
+import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -26,13 +27,14 @@ import bg.znestorov.sofbus24.utils.ActivityUtils;
 
 public class ScheduleFragment extends ListFragment {
 
-	private VehiclesDataSource vehiclesDatasource;
 	private Context context;
 
 	private TextView busTextView;
 	private TextView trolleyTextView;
 	private TextView tramTextView;
 
+	private ScheduleLoadVehicles slv;
+	private VehiclesDataSource vehiclesDatasource;
 	private List<Vehicle> busses;
 	private List<Vehicle> trolleys;
 	private List<Vehicle> trams;
@@ -60,13 +62,15 @@ public class ScheduleFragment extends ListFragment {
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
 
-		// Fill the list view with the vehicles from DB
+		// Load the Vehicle Datasource
 		vehiclesDatasource = new VehiclesDataSource(context);
 		vehiclesDatasource.open();
-		busses = vehiclesDatasource.getVehiclesViaSearch(VehicleType.BUS, "");
-		trolleys = vehiclesDatasource.getVehiclesViaSearch(VehicleType.TROLLEY,
-				"");
-		trams = vehiclesDatasource.getVehiclesViaSearch(VehicleType.TRAM, "");
+
+		// Fill the list view with the vehicles from DB
+		slv = ScheduleLoadVehicles.getInstance(context);
+		busses = slv.getBusses();
+		trolleys = slv.getTrolleys();
+		trams = slv.getTrams();
 
 		// Find all of TextView tabs in the layout
 		busTextView = (TextView) myFragmentView
@@ -77,10 +81,12 @@ public class ScheduleFragment extends ListFragment {
 				.findViewById(R.id.schedule_tram_tab);
 		EditText searchEditText = (EditText) myFragmentView
 				.findViewById(R.id.schedule_search);
+		TextView emptyList = (TextView) myFragmentView
+				.findViewById(R.id.schedule_list_empty_text);
 
 		// Set the actions over the TextViews and EditText
-		actionsOverVehiclesEditText(searchEditText);
-		actionsOverSearchEditText(searchEditText);
+		actionsOverVehiclesTextViews(searchEditText);
+		actionsOverSearchEditText(searchEditText, emptyList);
 
 		// Use an ArrayAdapter to show the elements in a ListView
 		ArrayAdapter<Vehicle> adapter = new ScheduleStationAdapter(context,
@@ -88,7 +94,7 @@ public class ScheduleFragment extends ListFragment {
 		setListAdapter(adapter);
 
 		// Activate the bus tab
-		processOnClickedTab(searchEditText, VehicleType.BUS);
+		processOnClickedTab(searchEditText, vehicleType);
 
 		return myFragmentView;
 	}
@@ -112,18 +118,16 @@ public class ScheduleFragment extends ListFragment {
 	@Override
 	public void onPause() {
 		vehiclesDatasource.close();
-
-		busSearchText = "";
-		trolleySearchText = "";
-		tramSearchText = "";
-
 		super.onPause();
 	}
 
 	/**
 	 * Activate the listeners over the Vehicle TextView fields
+	 * 
+	 * @param searchEditText
+	 *            the text from the searched edit text
 	 */
-	private void actionsOverVehiclesEditText(final EditText searchEditText) {
+	private void actionsOverVehiclesTextViews(final EditText searchEditText) {
 		busTextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -154,7 +158,8 @@ public class ScheduleFragment extends ListFragment {
 	 * @param searchEditText
 	 *            the search EditText
 	 */
-	private void actionsOverSearchEditText(final EditText searchEditText) {
+	private void actionsOverSearchEditText(final EditText searchEditText,
+			final TextView emptyList) {
 		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
 
 		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -176,6 +181,13 @@ public class ScheduleFragment extends ListFragment {
 						context, searchStationList);
 
 				setListAdapter(adapter);
+
+				// Set a message if the list is empty
+				if (adapter.isEmpty()) {
+					emptyList.setText(Html.fromHtml(String
+							.format(getString(R.string.sch_item_empty_list),
+									searchText)));
+				}
 			}
 
 			@Override
@@ -193,8 +205,10 @@ public class ScheduleFragment extends ListFragment {
 	/**
 	 * Take needed actions according to the clicked tab
 	 * 
+	 * @param searchEditText
+	 *            the text from the searched edit text
 	 * @param tabType
-	 * 
+	 *            the choosen type
 	 */
 	private void processOnClickedTab(EditText searchEditText,
 			VehicleType tabType) {
@@ -237,8 +251,8 @@ public class ScheduleFragment extends ListFragment {
 						vehiclesDatasource.getVehiclesViaSearch(vehicleType,
 								busSearchText));
 			}
-			setListAdapter(adapter);
 
+			setListAdapter(adapter);
 			break;
 		case TROLLEY:
 			vehicleType = VehicleType.TROLLEY;
@@ -258,6 +272,7 @@ public class ScheduleFragment extends ListFragment {
 						vehiclesDatasource.getVehiclesViaSearch(vehicleType,
 								trolleySearchText));
 			}
+
 			setListAdapter(adapter);
 			break;
 		case TRAM:
@@ -277,7 +292,7 @@ public class ScheduleFragment extends ListFragment {
 						vehiclesDatasource.getVehiclesViaSearch(vehicleType,
 								tramSearchText));
 			}
-			setListAdapter(adapter);
+
 			adapter = new ScheduleStationAdapter(context, trams);
 			setListAdapter(adapter);
 			break;

@@ -18,7 +18,10 @@ import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
 import bg.znestorov.sofbus24.favorites.FavouritesFragment;
+import bg.znestorov.sofbus24.favorites.FavouritesLoadStations;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
+import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
+import bg.znestorov.sofbus24.utils.ActivityUtils;
 import bg.znestorov.sofbus24.utils.Constants;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -50,6 +53,15 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		setContentView(R.layout.activity_sofbus24);
 
 		context = Sofbus24.this;
+
+		// Load all vehicles from the Database, so use them lately
+		ScheduleLoadVehicles.getInstance(context);
+
+		// Load all favourites stations from the Database, so use them lately
+		FavouritesLoadStations.getInstance(context);
+
+		// Init the UIL image loader
+		ActivityUtils.initImageLoader(context);
 
 		// Creating and copying the DB to the SD card (used only for testing
 		// purposes) - DO NOT UNCOMMENT
