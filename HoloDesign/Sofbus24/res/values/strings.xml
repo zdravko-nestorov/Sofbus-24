@@ -49,5 +49,6 @@
     <string name="metro_item_add_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>
     <string name="metro_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
     <string name="metro_item_empty_list" formatted="false"><![CDATA[Няма намерени метростанции за <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
+    <string name="metro_menu_map_route">Маршрут</string>
 
 </resources>

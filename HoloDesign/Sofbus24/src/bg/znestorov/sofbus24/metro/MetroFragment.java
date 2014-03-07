@@ -10,6 +10,9 @@ import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -90,6 +93,9 @@ public class MetroFragment extends ListFragment {
 		// Activate the bus tab
 		processOnClickedTab(searchEditText, stationType);
 
+		// Activate the option menu
+		setHasOptionsMenu(true);
+
 		return myFragmentView;
 	}
 
@@ -113,6 +119,33 @@ public class MetroFragment extends ListFragment {
 	public void onPause() {
 		stationsDatasource.close();
 		super.onPause();
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.activity_metro_menu, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		ArrayAdapter<Station> adapter = (ArrayAdapter<Station>) getListAdapter();
+
+		switch (item.getItemId()) {
+		case R.id.metro_menu_map_route:
+
+			// TODO: Retrieve information about the vehicle
+
+			Toast.makeText(getActivity(),
+					context.getString(R.string.metro_menu_map_route),
+					Toast.LENGTH_SHORT).show();
+			break;
+		}
+
+		adapter.notifyDataSetChanged();
+
+		return true;
 	}
 
 	/**
