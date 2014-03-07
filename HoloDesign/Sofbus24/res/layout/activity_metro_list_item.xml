@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5sp"
+    android:paddingRight="?android:attr/scrollbarSize" >
+
+    <LinearLayout
+        android:id="@+id/metro_item_image_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2sp"
+        android:layout_marginRight="12sp"
+        android:minHeight="40sp"
+        android:minWidth="40sp" >
+
+        <ImageView
+            android:id="@+id/metro_item_favourite"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:contentDescription="@string/metro_item_favourite" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/metro_item_station_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/metro_item_image_layout"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/metro_item_station_number"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/metro_item_station_name"
+        android:layout_toRightOf="@+id/metro_item_image_layout"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="12sp" />
+
+</RelativeLayout>

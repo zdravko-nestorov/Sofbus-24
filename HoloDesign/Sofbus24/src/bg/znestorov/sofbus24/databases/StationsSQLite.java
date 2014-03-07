@@ -22,7 +22,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 
 	// Table and columns names
 	public static final String TABLE_STATIONS = "stations";
-	public static final String COULMN_NUMBER = "number";
+	public static final String COLUMN_NUMBER = "number";
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_LAT = "latitude";
 	public static final String COLUMN_LON = "longitude";
@@ -35,7 +35,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 
 	// Database creation SQL statement
 	private static final String DATABASE_CREATE_STATIONS = "CREATE TABLE "
-			+ TABLE_STATIONS + "(" + COULMN_NUMBER + " INTEGER PRIMARY KEY, "
+			+ TABLE_STATIONS + "(" + COLUMN_NUMBER + " INTEGER PRIMARY KEY, "
 			+ COLUMN_NAME + " TEXT NOT NULL, " + COLUMN_LAT
 			+ " TEXT NOT NULL, " + COLUMN_LON + " TEXT NOT NULL, "
 			+ COLUMN_TYPE + " TEXT NOT NULL" + ");";

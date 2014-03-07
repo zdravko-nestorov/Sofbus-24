@@ -2,9 +2,9 @@ package bg.znestorov.sofbus24.favorites;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.Html;
@@ -42,13 +42,22 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 	private final FavouritesDataSource favouritesDatasource;
-	private final Context context;
+	private final Activity context;
 	private final List<Station> stations;
+
+	// Used for optimize performance of the ListView
+	static class ViewHolder {
+		TextView stationName;
+		TextView stationNumber;
+		ImageView stationStreetView;
+		ImageButton editStation;
+		ImageButton removeStation;
+	}
 
 	private ImageLoader imageLoader = ImageLoader.getInstance();
 	private DisplayImageOptions displayImageOptions;
 
-	public FavouritesStationAdapter(Context context, List<Station> stations) {
+	public FavouritesStationAdapter(Activity context, List<Station> stations) {
 		super(context, R.layout.activity_favourites_list_item, stations);
 		this.context = context;
 		this.stations = stations;
@@ -62,49 +71,41 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View rowView = convertView;
+		ViewHolder viewHolder;
+
+		// Reuse views
+		if (rowView == null) {
+			LayoutInflater inflater = context.getLayoutInflater();
+			rowView = inflater.inflate(R.layout.activity_favourites_list_item,
+					null);
+
+			// Configure view holder
+			viewHolder = new ViewHolder();
+			viewHolder.stationName = (TextView) rowView
+					.findViewById(R.id.favourites_item_station_name);
+			viewHolder.stationNumber = (TextView) rowView
+					.findViewById(R.id.favourites_item_station_number);
+			viewHolder.stationStreetView = (ImageView) rowView
+					.findViewById(R.id.favourites_item_bg_image);
+			viewHolder.editStation = (ImageButton) rowView
+					.findViewById(R.id.favourites_item_rename);
+			viewHolder.removeStation = (ImageButton) rowView
+					.findViewById(R.id.favourites_item_remove);
+			rowView.setTag(viewHolder);
+		} else {
+			viewHolder = (ViewHolder) rowView.getTag();
+		}
 
 		Station station = stations.get(position);
-		View rowView = convertView;
-		rowView = setFavouritesRow(position, inflater, parent, station);
 
-		return rowView;
-	}
-
-	/**
-	 * Favourites row in the ListView
-	 * 
-	 * @param position
-	 *            the row number
-	 * @param inflater
-	 *            process the XML file for the visual part
-	 * @param parent
-	 *            used to create a multiple-exclusion scope for a set of radio
-	 *            buttons (not used)
-	 * @param station
-	 *            the station object on the current row
-	 * @return a view representing the look on the screen
-	 */
-	public View setFavouritesRow(int position, LayoutInflater inflater,
-			ViewGroup parent, final Station station) {
-		View rowView = inflater.inflate(R.layout.activity_favourites_list_item,
-				parent, false);
-
-		// Set the station name and number
-		TextView stationName = (TextView) rowView
-				.findViewById(R.id.favourites_item_station_name);
-		TextView stationNumber = (TextView) rowView
-				.findViewById(R.id.favourites_item_station_number);
-
-		stationName.setText(station.getName());
-		stationNumber.setText(String.format(
+		// Add the Station Name and the Station Number
+		viewHolder.stationName.setText(station.getName());
+		viewHolder.stationNumber.setText(String.format(
 				context.getString(R.string.fav_item_station_number_text),
 				station.getNumber()));
 
 		// Add the image of the station from the street view asynchronously
-		ImageView stationStreetView = (ImageView) rowView
-				.findViewById(R.id.favourites_item_bg_image);
 		String stationLat = station.getLat();
 		String stationLon = station.getLon();
 		String imageUrl;
@@ -117,12 +118,12 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 			imageUrl = "drawable://" + R.drawable.ic_no_image_available;
 		}
 
-		imageLoader.displayImage(imageUrl, stationStreetView,
+		imageLoader.displayImage(imageUrl, viewHolder.stationStreetView,
 				displayImageOptions, null);
 
 		// Attach click listeners to the EDIT and REMOVE buttons
-		editStation(position, rowView, station);
-		removeStation(rowView, station);
+		editStation(viewHolder.editStation, station, position);
+		removeStation(viewHolder.removeStation, station);
 
 		return rowView;
 	}
@@ -130,22 +131,22 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	/**
 	 * Attach a click listener to the EDIT button
 	 * 
-	 * @param rowView
-	 *            the current item of the ListView in Favourites section
+	 * @param editStation
+	 *            the edit ImageButton
 	 * @param station
 	 *            the station on the rowView
+	 * @param position
+	 *            the position of the station in the List
 	 */
-	private void editStation(final int position, View rowView,
-			final Station station) {
-		final ImageButton editStation = (ImageButton) rowView
-				.findViewById(R.id.favourites_item_rename);
+	private void editStation(final ImageButton editStation,
+			final Station station, final int position) {
 		editStation.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent me) {
 				if (me.getAction() == MotionEvent.ACTION_DOWN) {
 					editStation
 							.setColorFilter(Constants.FAVOURITES_IMG_BUTTON_ACTION_DOWN);
-					createEditDialog(position, station);
+					createEditDialog(station, position);
 					return true;
 				} else if (me.getAction() == MotionEvent.ACTION_UP) {
 					editStation
@@ -163,8 +164,10 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 * 
 	 * @param station
 	 *            the station on the current row
+	 * @param position
+	 *            the position of the station in the List
 	 */
-	private void createEditDialog(final int position, final Station station) {
+	private void createEditDialog(final Station station, final int position) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(context);
 		alert.setTitle(R.string.fav_item_rename_title);
 		alert.setIcon(android.R.drawable.ic_menu_edit);
@@ -182,7 +185,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		alert.setPositiveButton(context.getString(R.string.app_button_ok),
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						renameStation(position, station, input);
+						renameStation(input, station, position);
 					}
 				});
 
@@ -205,7 +208,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 						&& keyCode == KeyEvent.KEYCODE_ENTER) {
 					// Check if any value is entered and if so - rename the
 					// station and close the dialog
-					boolean isRenamed = renameStation(position, station, input);
+					boolean isRenamed = renameStation(input, station, position);
 					if (isRenamed) {
 						dialog.cancel();
 					}
@@ -259,15 +262,16 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 * Check if the text entered in the EditText field fulfill some conditions
 	 * and if yes - rename the station in the Favourites DB
 	 * 
-	 * @param position
-	 *            the row number
-	 * @param station
-	 *            the station object on the current row
+	 * 
 	 * @param input
 	 *            the EditText input field
+	 * @param station
+	 *            the station object on the current row
+	 * @param position
+	 *            the row number
 	 * @return if the station is renamed or not
 	 */
-	private boolean renameStation(int position, Station station, EditText input) {
+	private boolean renameStation(EditText input, Station station, int position) {
 		String editTextInput = input.getText().toString();
 
 		if (editTextInput != null && !"".equals(editTextInput)) {
@@ -308,14 +312,13 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	/**
 	 * Attach a click listener to the REMOVE button
 	 * 
-	 * @param rowView
-	 *            the current item of the ListView in Favourites section
+	 * @param removeStation
+	 *            the remove ImageButton
 	 * @param station
 	 *            the station on the rowView
 	 */
-	private void removeStation(View rowView, final Station station) {
-		final ImageButton removeStation = (ImageButton) rowView
-				.findViewById(R.id.favourites_item_remove);
+	private void removeStation(final ImageButton removeStation,
+			final Station station) {
 		removeStation.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent me) {

@@ -46,7 +46,7 @@
             android:layout_alignRight="@+id/favourites_list_empty_text"
             android:contentDescription="@string/app_img_empty_content_description"
             android:paddingBottom="20sp"
-            android:src="@drawable/ic_empty_list" />
+            android:src="@drawable/ic_empty_fav_list" />
 
         <TextView
             android:id="@+id/favourites_list_empty_text"

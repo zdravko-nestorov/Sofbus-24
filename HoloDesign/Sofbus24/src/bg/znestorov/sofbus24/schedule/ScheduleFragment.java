@@ -2,7 +2,7 @@ package bg.znestorov.sofbus24.schedule;
 
 import java.util.List;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
@@ -27,7 +27,7 @@ import bg.znestorov.sofbus24.utils.ActivityUtils;
 
 public class ScheduleFragment extends ListFragment {
 
-	private Context context;
+	private Activity context;
 
 	private TextView busTextView;
 	private TextView trolleyTextView;
@@ -318,7 +318,7 @@ public class ScheduleFragment extends ListFragment {
 	 */
 	private void setTabActive(TextView textView) {
 		textView.setBackgroundColor(getResources().getColor(
-				R.color.schedule_tab_grey));
+				R.color.inner_tab_grey));
 		textView.setTextColor(getResources().getColor(R.color.white));
 	}
 
@@ -329,8 +329,7 @@ public class ScheduleFragment extends ListFragment {
 	 *            the TextView that has to be deactivated
 	 */
 	private void setTabInactive(TextView textView) {
-		textView.setBackgroundResource(R.drawable.schedule_tab_border);
-		textView.setTextColor(getResources()
-				.getColor(R.color.schedule_tab_grey));
+		textView.setBackgroundResource(R.drawable.inner_tab_border);
+		textView.setTextColor(getResources().getColor(R.color.inner_tab_grey));
 	}
 }

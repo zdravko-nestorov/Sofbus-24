@@ -73,8 +73,9 @@ public class FavouritesDataSource {
 					getCoordinates(station.getNumber(), station.getLat()));
 			values.put(FavouritesSQLite.COLUMN_LON,
 					getCoordinates(station.getNumber(), station.getLon()));
+
 			values.put(FavouritesSQLite.COLUMN_CUSTOM_FIELD,
-					station.getCustomField());
+					getCustomField(station));
 
 			// Insert the ContentValues data into the database
 			database.insert(FavouritesSQLite.TABLE_FAVOURITES, null, values);
@@ -126,6 +127,29 @@ public class FavouritesDataSource {
 	}
 
 	/**
+	 * Define what to put in the custom field in the DB via the station type
+	 * 
+	 * @param station
+	 *            the inputStation
+	 * @return what to be inserted in the custom field in the DB
+	 */
+	private String getCustomField(Station station) {
+		String stationCustomField;
+
+		switch (station.getType()) {
+		case METRO1:
+		case METRO2:
+			stationCustomField = String.valueOf(station.getType());
+			break;
+		default:
+			stationCustomField = String.valueOf(station.getCustomField());
+			break;
+		}
+
+		return stationCustomField;
+	}
+
+	/**
 	 * Delete station from the database
 	 * 
 	 * @param station
@@ -167,11 +191,11 @@ public class FavouritesDataSource {
 	 *            the input station
 	 * @return the station if it is found in the DB and null otherwise
 	 */
-	public Station getStation(Station Station) {
+	public Station getStation(Station station) {
 		// Selecting the row that contains the station data
 		Cursor cursor = database.query(FavouritesSQLite.TABLE_FAVOURITES,
 				allColumns,
-				FavouritesSQLite.COLUMN_NUMBER + " = " + Station.getNumber(),
+				FavouritesSQLite.COLUMN_NUMBER + " = " + station.getNumber(),
 				null, null, null, null);
 
 		if (cursor.getCount() > 0) {
@@ -179,10 +203,10 @@ public class FavouritesDataSource {
 			cursor.moveToFirst();
 
 			// Creating station object and closing the cursor
-			Station station = cursorToStation(cursor);
+			Station foundStation = cursorToStation(cursor);
 			cursor.close();
 
-			return station;
+			return foundStation;
 		} else {
 			cursor.close();
 

@@ -3,8 +3,8 @@ package bg.znestorov.sofbus24.favorites;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -39,7 +39,7 @@ import bg.znestorov.sofbus24.utils.ActivityUtils;
  */
 public class FavouritesFragment extends ListFragment {
 
-	private Context context;
+	private Activity context;
 
 	private FavouritesLoadStations fls;
 	private FavouritesDataSource favouritesDatasource;

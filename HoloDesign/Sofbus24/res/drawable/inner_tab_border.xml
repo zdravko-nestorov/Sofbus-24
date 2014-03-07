@@ -6,6 +6,6 @@
 
     <stroke
         android:width="1sp"
-        android:color="@color/schedule_tab_grey" />
+        android:color="@color/inner_tab_grey" />
 
 </shape>

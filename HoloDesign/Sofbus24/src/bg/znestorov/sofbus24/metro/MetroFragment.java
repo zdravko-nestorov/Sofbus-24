@@ -1,0 +1,295 @@
+package bg.znestorov.sofbus24.metro;
+
+import java.util.List;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.text.Editable;
+import android.text.Html;
+import android.text.InputType;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+import bg.znestorov.sofbus24.databases.StationsDataSource;
+import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.ActivityUtils;
+
+public class MetroFragment extends ListFragment {
+
+	private Activity context;
+
+	private TextView direction1TextView;
+	private TextView direction2TextView;
+
+	private MetroLoadStations mls;
+	private StationsDataSource stationsDatasource;
+	private List<Station> metroDirection1;
+	private List<Station> metroDirection2;
+
+	private VehicleType stationType = VehicleType.METRO1;
+
+	private String metro1SearchText = "";
+	private String metro2SearchText = "";
+
+	public MetroFragment() {
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View myFragmentView = inflater.inflate(
+				R.layout.activity_metro_fragment, container, false);
+
+		// Set the context (activity) associated with this fragment
+		context = getActivity();
+
+		// Load the Stations Datasource
+		stationsDatasource = new StationsDataSource(context);
+		stationsDatasource.open();
+
+		// Fill the list view with the stations from DB
+		mls = MetroLoadStations.getInstance(context);
+		metroDirection1 = mls.getMetroDirection1();
+		metroDirection2 = mls.getMetroDirection2();
+
+		// Find all of TextView and EditText tabs in the layout
+		direction1TextView = (TextView) myFragmentView
+				.findViewById(R.id.metro_direction1_tab);
+		direction2TextView = (TextView) myFragmentView
+				.findViewById(R.id.metro_direction2_tab);
+		EditText searchEditText = (EditText) myFragmentView
+				.findViewById(R.id.metro_search);
+		TextView emptyList = (TextView) myFragmentView
+				.findViewById(R.id.metro_list_empty_text);
+
+		// Set the actions over the TextViews and EditText
+		actionsOverDirectionsTextViews(searchEditText);
+		actionsOverSearchEditText(searchEditText, emptyList);
+
+		// Use an ArrayAdapter to show the elements in a ListView
+		ArrayAdapter<Station> adapter = new MetroStationAdapter(context,
+				metroDirection1);
+		setListAdapter(adapter);
+
+		// Activate the bus tab
+		processOnClickedTab(searchEditText, stationType);
+
+		return myFragmentView;
+	}
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		Station station = (Station) getListAdapter().getItem(position);
+
+		// TODO: Retrieve information about the vehicle
+
+		Toast.makeText(getActivity(), station.getName(), Toast.LENGTH_SHORT)
+				.show();
+	}
+
+	@Override
+	public void onResume() {
+		stationsDatasource.open();
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		stationsDatasource.close();
+		super.onPause();
+	}
+
+	/**
+	 * Activate the listeners over the Metro Station TextView fields
+	 * 
+	 * @param searchEditText
+	 *            the text from the searched edit text
+	 */
+	private void actionsOverDirectionsTextViews(final EditText searchEditText) {
+		// Assign the Direction1 TextView a click listener
+		direction1TextView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				processOnClickedTab(searchEditText, VehicleType.METRO1);
+			}
+		});
+
+		// Assign the Direction2 TextView a click listener
+		direction2TextView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				processOnClickedTab(searchEditText, VehicleType.METRO2);
+			}
+		});
+	}
+
+	/**
+	 * Modify the Search EditText field and activate the listeners
+	 * 
+	 * @param searchEditText
+	 *            the search EditText
+	 */
+	private void actionsOverSearchEditText(final EditText searchEditText,
+			final TextView emptyList) {
+		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+
+		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					ActivityUtils.hideKeyboard(context, searchEditText);
+				}
+			}
+		});
+
+		searchEditText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				String searchText = searchEditText.getText().toString();
+				List<Station> searchStationList = stationsDatasource
+						.getStationsViaSearch(stationType, searchText);
+				ArrayAdapter<Station> adapter = new MetroStationAdapter(
+						context, searchStationList);
+
+				setListAdapter(adapter);
+
+				// Set a message if the list is empty
+				if (adapter.isEmpty()) {
+					emptyList.setText(Html.fromHtml(String.format(
+							getString(R.string.metro_item_empty_list),
+							searchText)));
+				}
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+		});
+	}
+
+	/**
+	 * Take needed actions according to the clicked tab
+	 * 
+	 * @param searchEditText
+	 *            the text from the searched edit text
+	 * @param tabType
+	 *            the choosen type
+	 */
+	private void processOnClickedTab(EditText searchEditText,
+			VehicleType tabType) {
+		ArrayAdapter<Station> adapter;
+
+		// Check which is previous clicked tab, so save the value to the
+		// appropriate variable
+		switch (stationType) {
+		case METRO1:
+			metro1SearchText = searchEditText.getText().toString();
+			break;
+		case METRO2:
+			metro2SearchText = searchEditText.getText().toString();
+			break;
+		default:
+			metro1SearchText = searchEditText.getText().toString();
+			break;
+		}
+
+		// Check which tab is clicked
+		switch (tabType) {
+		case METRO1:
+			stationType = VehicleType.METRO1;
+
+			setTabActive(direction1TextView);
+			setTabInactive(direction2TextView);
+
+			// Set the Search tab the appropriate search text
+			searchEditText.setText(metro1SearchText);
+
+			// Check if a search is already done
+			if ("".equals(metro1SearchText)) {
+				adapter = new MetroStationAdapter(context, metroDirection1);
+			} else {
+				adapter = new MetroStationAdapter(context,
+						stationsDatasource.getStationsViaSearch(stationType,
+								metro1SearchText));
+			}
+
+			setListAdapter(adapter);
+			break;
+		case METRO2:
+			stationType = VehicleType.METRO2;
+
+			setTabInactive(direction1TextView);
+			setTabActive(direction2TextView);
+
+			// Set the Search tab the appropriate search text
+			searchEditText.setText(metro2SearchText);
+
+			// Check if a search is already done
+			if ("".equals(metro2SearchText)) {
+				adapter = new MetroStationAdapter(context, metroDirection2);
+			} else {
+				adapter = new MetroStationAdapter(context,
+						stationsDatasource.getStationsViaSearch(stationType,
+								metro2SearchText));
+			}
+
+			setListAdapter(adapter);
+			break;
+		default:
+			stationType = VehicleType.BUS;
+			setTabActive(direction1TextView);
+			setTabInactive(direction2TextView);
+			adapter = new MetroStationAdapter(context, metroDirection1);
+			setListAdapter(adapter);
+			break;
+		}
+
+		// Set the marker at the end
+		searchEditText.setSelection(searchEditText.getText().length());
+	}
+
+	/**
+	 * Set a metro tab to be active - change the background and text colors
+	 * 
+	 * @param textView
+	 *            the TextView which is selected
+	 */
+	private void setTabActive(TextView textView) {
+		textView.setBackgroundColor(getResources().getColor(
+				R.color.inner_tab_grey));
+		textView.setTextColor(getResources().getColor(R.color.white));
+	}
+
+	/**
+	 * Set a metro tab to be inactive - change the background and text colors
+	 * 
+	 * @param textView
+	 *            the TextView that has to be deactivated
+	 */
+	private void setTabInactive(TextView textView) {
+		textView.setBackgroundResource(R.drawable.inner_tab_border);
+		textView.setTextColor(getResources().getColor(R.color.inner_tab_grey));
+	}
+}

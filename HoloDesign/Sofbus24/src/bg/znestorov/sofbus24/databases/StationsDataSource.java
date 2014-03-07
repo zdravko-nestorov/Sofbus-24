@@ -2,6 +2,7 @@ package bg.znestorov.sofbus24.databases;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -22,7 +23,7 @@ public class StationsDataSource {
 	// Database fields
 	private SQLiteDatabase database;
 	private StationsSQLite dbHelper;
-	private String[] allColumns = { StationsSQLite.COULMN_NUMBER,
+	private String[] allColumns = { StationsSQLite.COLUMN_NUMBER,
 			StationsSQLite.COLUMN_NAME, StationsSQLite.COLUMN_LAT,
 			StationsSQLite.COLUMN_LON, StationsSQLite.COLUMN_TYPE };
 
@@ -58,7 +59,7 @@ public class StationsDataSource {
 		if (getStation(station) == null) {
 			// Creating ContentValues object and insert the station data in it
 			ContentValues values = new ContentValues();
-			values.put(StationsSQLite.COULMN_NUMBER, station.getNumber());
+			values.put(StationsSQLite.COLUMN_NUMBER, station.getNumber());
 			values.put(StationsSQLite.COLUMN_NAME, station.getName());
 			values.put(StationsSQLite.COLUMN_LAT,
 					getCoordinates(station.getNumber(), station.getLat()));
@@ -72,7 +73,7 @@ public class StationsDataSource {
 			// Selecting the row that contains the station data
 			Cursor cursor = database.query(StationsSQLite.TABLE_STATIONS,
 					allColumns,
-					StationsSQLite.COULMN_NUMBER + " = " + station.getNumber(),
+					StationsSQLite.COLUMN_NUMBER + " = " + station.getNumber(),
 					null, null, null, null);
 
 			// Moving the cursor to the first column of the selected row
@@ -119,7 +120,7 @@ public class StationsDataSource {
 	 *            the input station
 	 */
 	public void deleteStation(Station station) {
-		String where = StationsSQLite.COULMN_NUMBER + " = ?";
+		String where = StationsSQLite.COLUMN_NUMBER + " = ?";
 		String[] whereArgs = new String[] { String.valueOf(station.getNumber()) };
 
 		database.delete(StationsSQLite.TABLE_STATIONS, where, whereArgs);
@@ -136,7 +137,7 @@ public class StationsDataSource {
 		// Selecting the row that contains the station data
 		Cursor cursor = database.query(StationsSQLite.TABLE_STATIONS,
 				allColumns,
-				StationsSQLite.COULMN_NUMBER + " = " + station.getNumber(),
+				StationsSQLite.COLUMN_NUMBER + " = " + station.getNumber(),
 				null, null, null, null);
 
 		if (cursor.getCount() > 0) {
@@ -165,7 +166,7 @@ public class StationsDataSource {
 	public Station getStation(String stationNumber) {
 		// Selecting the row that contains the station data
 		Cursor cursor = database.query(StationsSQLite.TABLE_STATIONS,
-				allColumns, StationsSQLite.COULMN_NUMBER + " = "
+				allColumns, StationsSQLite.COLUMN_NUMBER + " = "
 						+ stationNumber, null, null, null, null);
 
 		if (cursor.getCount() > 0) {
@@ -182,6 +183,84 @@ public class StationsDataSource {
 
 			return null;
 		}
+	}
+
+	/**
+	 * Get all stations via type from the database
+	 * 
+	 * @param vehicleType
+	 *            type of the station
+	 * @return a list with all stations matching the input type from the DB
+	 */
+	public List<Station> getStationsViaType(VehicleType vehicleType) {
+		List<Station> stations = new ArrayList<Station>();
+
+		String selection = StationsSQLite.COLUMN_TYPE + " = ?";
+		String[] selectionArgs = new String[] { String.valueOf(vehicleType) };
+
+		database.query(StationsSQLite.TABLE_STATIONS, allColumns, selection,
+				selectionArgs, null, null, null);
+
+		// Selecting all fields of the TABLE_STATIONS
+		Cursor cursor = database.query(StationsSQLite.TABLE_STATIONS,
+				allColumns, selection, selectionArgs, null, null, null);
+
+		// Iterating the cursor and fill the empty List<Station>
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Station station = cursorToStation(cursor);
+			stations.add(station);
+			cursor.moveToNext();
+		}
+
+		// Closing the cursor
+		cursor.close();
+
+		return stations;
+	}
+
+	/**
+	 * Get the stations which NUMBER or NAME contains the searched text
+	 * 
+	 * @param vehicleType
+	 *            the type of the Station
+	 * @param searchText
+	 *            the user search text
+	 * @return a list with all stations matching the input conditions
+	 */
+	public List<Station> getStationsViaSearch(VehicleType vehicleType,
+			String searchText) {
+		List<Station> stations = new ArrayList<Station>();
+		Locale currentLocale = new Locale(language);
+		searchText = searchText.toLowerCase(currentLocale);
+
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT * 											");
+		query.append(" FROM " + StationsSQLite.TABLE_STATIONS + "			");
+		query.append(" WHERE ( 												");
+		query.append(" 		lower(CAST(" + StationsSQLite.COLUMN_NUMBER
+				+ " AS TEXT)) LIKE '%" + searchText + "%'					");
+		query.append(" OR 													");
+		query.append(" 		lower(" + StationsSQLite.COLUMN_NAME + ") LIKE '%"
+				+ searchText + "%'		 					");
+		query.append(" ) AND												");
+		query.append(" 		" + VehiclesSQLite.COLUMN_TYPE + " LIKE '%"
+				+ vehicleType.toString() + "%'								");
+
+		Cursor cursor = database.rawQuery(query.toString(), null);
+
+		// Iterating the cursor and fill the empty List<Station>
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			Station station = cursorToStation(cursor);
+			stations.add(station);
+			cursor.moveToNext();
+		}
+
+		// Closing the cursor
+		cursor.close();
+
+		return stations;
 	}
 
 	/**

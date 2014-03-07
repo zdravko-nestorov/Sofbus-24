@@ -19,6 +19,8 @@ import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
 import bg.znestorov.sofbus24.favorites.FavouritesFragment;
 import bg.znestorov.sofbus24.favorites.FavouritesLoadStations;
+import bg.znestorov.sofbus24.metro.MetroFragment;
+import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
 import bg.znestorov.sofbus24.utils.ActivityUtils;
@@ -64,11 +66,14 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		StationsDatabaseUtils.createStationsDatabase(context);
 		VehiclesDatabaseUtils.createVehiclesDatabase(context);
 
+		// Load all favourites stations from the Database, so use them lately
+		FavouritesLoadStations.getInstance(context);
+
 		// Load all vehicles from the Database, so use them lately
 		ScheduleLoadVehicles.getInstance(context);
 
 		// Load all favourites stations from the Database, so use them lately
-		FavouritesLoadStations.getInstance(context);
+		MetroLoadStations.getInstance(context);
 
 		// Init the UIL image loader
 		ActivityUtils.initImageLoader(context);
@@ -188,6 +193,9 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 				break;
 			case 2:
 				fragment = new ScheduleFragment();
+				break;
+			case 3:
+				fragment = new MetroFragment();
 				break;
 			default:
 				fragment = new DummySectionFragment();

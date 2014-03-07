@@ -2,6 +2,7 @@ package bg.znestorov.sofbus24.schedule;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +22,17 @@ import bg.znestorov.sofbus24.main.R;
  */
 public class ScheduleStationAdapter extends ArrayAdapter<Vehicle> {
 
-	private final Context context;
+	private final Activity context;
 	private final List<Vehicle> vehicles;
 
-	public ScheduleStationAdapter(Context context, List<Vehicle> vehicles) {
+	// Used for optimize performance of the ListView
+	static class ViewHolder {
+		ImageView vehicleType;
+		TextView vehicleCaption;
+		TextView vehicleDirection;
+	}
+
+	public ScheduleStationAdapter(Activity context, List<Vehicle> vehicles) {
 		super(context, R.layout.activity_schedule_list_item, vehicles);
 		this.context = context;
 		this.vehicles = vehicles;
@@ -35,48 +43,36 @@ public class ScheduleStationAdapter extends ArrayAdapter<Vehicle> {
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View rowView = convertView;
+		ViewHolder viewHolder;
+
+		// Reuse views
+		if (rowView == null) {
+			LayoutInflater inflater = context.getLayoutInflater();
+			rowView = inflater.inflate(R.layout.activity_schedule_list_item,
+					null);
+
+			// Configure view holder
+			viewHolder = new ViewHolder();
+			viewHolder.vehicleType = (ImageView) rowView
+					.findViewById(R.id.schedule_item_vehicle_type);
+			viewHolder.vehicleCaption = (TextView) rowView
+					.findViewById(R.id.schedule_item_vehicle_caption);
+			viewHolder.vehicleDirection = (TextView) rowView
+					.findViewById(R.id.schedule_item_vehicle_direction);
+			rowView.setTag(viewHolder);
+		} else {
+			viewHolder = (ViewHolder) rowView.getTag();
+		}
 
 		Vehicle vehicle = vehicles.get(position);
-		View rowView = convertView;
-		rowView = setVehiclesRow(inflater, parent, vehicle);
-
-		return rowView;
-	}
-
-	/**
-	 * Vehicle row in the ListView
-	 * 
-	 * @param inflater
-	 *            process the XML file for the visual part
-	 * @param parent
-	 *            used to create a multiple-exclusion scope for a set of radio
-	 *            buttons (not used)
-	 * @param vehicle
-	 *            the station object on the current row
-	 * @return a view representing the look on the screen
-	 */
-	public View setVehiclesRow(LayoutInflater inflater, ViewGroup parent,
-			final Vehicle vehicle) {
-		View rowView = inflater.inflate(R.layout.activity_schedule_list_item,
-				parent, false);
-
-		// Set the vehicle caption and direction
-		ImageView vehicleType = (ImageView) rowView
-				.findViewById(R.id.schedule_item_vehicle_type);
-		TextView vehicleCaption = (TextView) rowView
-				.findViewById(R.id.schedule_item_vehicle_caption);
-		TextView vehicleDirection = (TextView) rowView
-				.findViewById(R.id.schedule_item_vehicle_direction);
-
 		int vehicleImage = getVehicleImage(context, vehicle);
 		String vehicleCaptionText = getVehicleCaption(context, vehicle);
 		String vehicleDirectionText = vehicle.getDirection();
 
-		vehicleType.setImageResource(vehicleImage);
-		vehicleCaption.setText(vehicleCaptionText);
-		vehicleDirection.setText(vehicleDirectionText);
+		viewHolder.vehicleType.setImageResource(vehicleImage);
+		viewHolder.vehicleCaption.setText(vehicleCaptionText);
+		viewHolder.vehicleDirection.setText(vehicleDirectionText);
 
 		return rowView;
 	}

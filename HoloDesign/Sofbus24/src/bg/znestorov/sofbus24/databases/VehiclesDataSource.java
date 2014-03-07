@@ -137,7 +137,7 @@ public class VehiclesDataSource {
 	 *            the type of the Vehicle
 	 * @param searchText
 	 *            the user search text
-	 * @return a list with all busses matching the input conditions
+	 * @return a list with all vehicles matching the input conditions
 	 */
 	public List<Vehicle> getVehiclesViaSearch(VehicleType type,
 			String searchText) {
