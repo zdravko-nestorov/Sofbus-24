@@ -15,15 +15,16 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.activity.ActivityUtils;
+import bg.znestorov.sofbus24.activity.DrawableClickListener;
+import bg.znestorov.sofbus24.activity.SearchEditText;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.utils.ActivityUtils;
 
 public class ScheduleFragment extends ListFragment {
 
@@ -79,7 +80,7 @@ public class ScheduleFragment extends ListFragment {
 				.findViewById(R.id.schedule_trolley_tab);
 		tramTextView = (TextView) myFragmentView
 				.findViewById(R.id.schedule_tram_tab);
-		EditText searchEditText = (EditText) myFragmentView
+		SearchEditText searchEditText = (SearchEditText) myFragmentView
 				.findViewById(R.id.schedule_search);
 		TextView emptyList = (TextView) myFragmentView
 				.findViewById(R.id.schedule_list_empty_text);
@@ -127,7 +128,8 @@ public class ScheduleFragment extends ListFragment {
 	 * @param searchEditText
 	 *            the text from the searched edit text
 	 */
-	private void actionsOverVehiclesTextViews(final EditText searchEditText) {
+	private void actionsOverVehiclesTextViews(
+			final SearchEditText searchEditText) {
 		busTextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -158,10 +160,11 @@ public class ScheduleFragment extends ListFragment {
 	 * @param searchEditText
 	 *            the search EditText
 	 */
-	private void actionsOverSearchEditText(final EditText searchEditText,
+	private void actionsOverSearchEditText(final SearchEditText searchEditText,
 			final TextView emptyList) {
 		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
 
+		// Add on focus listener
 		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
@@ -170,6 +173,7 @@ public class ScheduleFragment extends ListFragment {
 			}
 		});
 
+		// Add on text changes listener
 		searchEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
@@ -199,6 +203,21 @@ public class ScheduleFragment extends ListFragment {
 					int after) {
 
 			}
+		});
+
+		// Add a drawable listeners (search and clear icons)
+		searchEditText.setDrawableClickListener(new DrawableClickListener() {
+			@Override
+			public void onClick(DrawablePosition target) {
+				switch (target) {
+				case RIGHT:
+					searchEditText.setText("");
+					break;
+				default:
+					break;
+				}
+			}
+
 		});
 	}
 
@@ -236,7 +255,7 @@ public class ScheduleFragment extends ListFragment {
 	 * @param tabType
 	 *            the chosen type
 	 */
-	private void processOnClickedTab(EditText searchEditText,
+	private void processOnClickedTab(SearchEditText searchEditText,
 			VehicleType tabType) {
 		ArrayAdapter<Vehicle> adapter;
 

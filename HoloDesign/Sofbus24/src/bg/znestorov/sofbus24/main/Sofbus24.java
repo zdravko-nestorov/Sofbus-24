@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.activity.ActivityUtils;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
 import bg.znestorov.sofbus24.favorites.FavouritesFragment;
@@ -23,7 +24,6 @@ import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
-import bg.znestorov.sofbus24.utils.ActivityUtils;
 import bg.znestorov.sofbus24.utils.Constants;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;

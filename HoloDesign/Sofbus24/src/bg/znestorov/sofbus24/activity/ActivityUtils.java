@@ -1,4 +1,4 @@
-package bg.znestorov.sofbus24.utils;
+package bg.znestorov.sofbus24.activity;
 
 import java.io.File;
 

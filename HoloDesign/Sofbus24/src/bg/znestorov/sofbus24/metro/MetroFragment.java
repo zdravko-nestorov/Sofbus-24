@@ -18,16 +18,17 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.activity.ActivityUtils;
+import bg.znestorov.sofbus24.activity.DrawableClickListener;
+import bg.znestorov.sofbus24.activity.SearchEditText;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.utils.ActivityUtils;
 
 public class MetroFragment extends ListFragment {
 
@@ -75,17 +76,17 @@ public class MetroFragment extends ListFragment {
 		metroDirection1 = mls.getMetroDirection1();
 		metroDirection2 = mls.getMetroDirection2();
 
-		// Find all of TextView and EditText tabs in the layout
+		// Find all of TextView and SearchEditText tabs in the layout
 		direction1TextView = (TextView) myFragmentView
 				.findViewById(R.id.metro_direction1_tab);
 		direction2TextView = (TextView) myFragmentView
 				.findViewById(R.id.metro_direction2_tab);
-		EditText searchEditText = (EditText) myFragmentView
+		SearchEditText searchEditText = (SearchEditText) myFragmentView
 				.findViewById(R.id.metro_search);
 		TextView emptyList = (TextView) myFragmentView
 				.findViewById(R.id.metro_list_empty_text);
 
-		// Set the actions over the TextViews and EditText
+		// Set the actions over the TextViews and SearchEditText
 		actionsOverDirectionsTextViews(searchEditText);
 		actionsOverSearchEditText(searchEditText, emptyList);
 
@@ -160,7 +161,8 @@ public class MetroFragment extends ListFragment {
 	 * @param searchEditText
 	 *            the text from the searched edit text
 	 */
-	private void actionsOverDirectionsTextViews(final EditText searchEditText) {
+	private void actionsOverDirectionsTextViews(
+			final SearchEditText searchEditText) {
 		// Assign the Direction1 TextView a click listener
 		direction1TextView.setOnClickListener(new OnClickListener() {
 			@Override
@@ -184,10 +186,11 @@ public class MetroFragment extends ListFragment {
 	 * @param searchEditText
 	 *            the search EditText
 	 */
-	private void actionsOverSearchEditText(final EditText searchEditText,
+	private void actionsOverSearchEditText(final SearchEditText searchEditText,
 			final TextView emptyList) {
 		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
 
+		// Add on focus listener
 		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
@@ -196,6 +199,7 @@ public class MetroFragment extends ListFragment {
 			}
 		});
 
+		// Add on text changes listener
 		searchEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
@@ -212,10 +216,7 @@ public class MetroFragment extends ListFragment {
 				if (adapter.isEmpty()) {
 					emptyList.setText(Html.fromHtml(String.format(
 							getString(R.string.metro_item_empty_list),
-							searchText,
-							vehiclesDatasource
-									.getVehiclesViaSearch(stationType, "")
-									.get(0).getDirection())));
+							searchText, getDirectionName())));
 				}
 			}
 
@@ -229,6 +230,31 @@ public class MetroFragment extends ListFragment {
 
 			}
 		});
+
+		// Add a drawable listeners (search and clear icons)
+		searchEditText.setDrawableClickListener(new DrawableClickListener() {
+			@Override
+			public void onClick(DrawablePosition target) {
+				switch (target) {
+				case RIGHT:
+					searchEditText.setText("");
+					break;
+				default:
+					break;
+				}
+			}
+
+		});
+	}
+
+	/**
+	 * Get the direction name
+	 * 
+	 * @return the direction name of currently active tab
+	 */
+	private String getDirectionName() {
+		return vehiclesDatasource.getVehiclesViaSearch(stationType, "").get(0)
+				.getDirection();
 	}
 
 	/**
@@ -239,7 +265,7 @@ public class MetroFragment extends ListFragment {
 	 * @param tabType
 	 *            the chosen type
 	 */
-	private void processOnClickedTab(EditText searchEditText,
+	private void processOnClickedTab(SearchEditText searchEditText,
 			VehicleType tabType) {
 		ArrayAdapter<Station> adapter;
 

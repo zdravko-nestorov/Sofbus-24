@@ -20,15 +20,16 @@ import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.activity.ActivityUtils;
+import bg.znestorov.sofbus24.activity.DrawableClickListener;
+import bg.znestorov.sofbus24.activity.SearchEditText;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.FavouritesDatabaseUtils;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.utils.ActivityUtils;
 
 /**
  * Favourites fragment responsible for visualizing the items from Favourites DB
@@ -71,7 +72,7 @@ public class FavouritesFragment extends ListFragment {
 		favouritesStations = fls.getFavouriteStations();
 
 		// Searching over the Favourites
-		EditText searchEditText = (EditText) myFragmentView
+		SearchEditText searchEditText = (SearchEditText) myFragmentView
 				.findViewById(R.id.favourites_search);
 		actionsOverSearchEditText(searchEditText);
 
@@ -183,9 +184,10 @@ public class FavouritesFragment extends ListFragment {
 	 * @param searchEditText
 	 *            the search EditText
 	 */
-	private void actionsOverSearchEditText(final EditText searchEditText) {
+	private void actionsOverSearchEditText(final SearchEditText searchEditText) {
 		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
 
+		// Add on focus listener
 		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (!hasFocus) {
@@ -194,6 +196,7 @@ public class FavouritesFragment extends ListFragment {
 			}
 		});
 
+		// Add on text changes listener
 		searchEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
@@ -216,6 +219,21 @@ public class FavouritesFragment extends ListFragment {
 					int after) {
 
 			}
+		});
+
+		// Add a drawable listeners (search and clear icons)
+		searchEditText.setDrawableClickListener(new DrawableClickListener() {
+			@Override
+			public void onClick(DrawablePosition target) {
+				switch (target) {
+				case RIGHT:
+					searchEditText.setText("");
+					break;
+				default:
+					break;
+				}
+			}
+
 		});
 	}
 }

@@ -42,8 +42,8 @@
 
     <!-- Metro Fragment -->
     <string name="metro_search_hint">Търсене по име или номер</string>
-    <string name="metro_search_tab_direction1">Посока 1</string>
-    <string name="metro_search_tab_direction2">Посока 2</string>
+    <string name="metro_search_tab_direction1">Линия 1</string>
+    <string name="metro_search_tab_direction2">Линия 2</string>
     <string name="metro_item_favourite" />
     <string name="metro_item_station_number_text" formatted="false">Спирка номер: %s</string>
     <string name="metro_item_add_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>

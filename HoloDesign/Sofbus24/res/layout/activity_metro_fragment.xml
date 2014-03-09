@@ -48,12 +48,14 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <EditText
+    <bg.znestorov.sofbus24.activity.SearchEditText
         android:id="@+id/metro_search"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/metro_search_hint" >
-    </EditText>
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:drawablePadding="5sp"
+        android:drawableRight="@android:drawable/ic_menu_close_clear_cancel"
+        android:hint="@string/metro_search_hint" />
 
     <ListView
         android:id="@android:id/list"
