@@ -39,7 +39,7 @@ public class ScheduleFragment extends ListFragment {
 	private List<Vehicle> trolleys;
 	private List<Vehicle> trams;
 
-	private VehicleType vehicleType = VehicleType.BUS;
+	private static VehicleType vehicleType = VehicleType.BUS;
 
 	private String busSearchText = "";
 	private String trolleySearchText = "";
@@ -184,9 +184,9 @@ public class ScheduleFragment extends ListFragment {
 
 				// Set a message if the list is empty
 				if (adapter.isEmpty()) {
-					emptyList.setText(Html.fromHtml(String
-							.format(getString(R.string.sch_item_empty_list),
-									searchText)));
+					emptyList.setText(Html.fromHtml(String.format(
+							getString(R.string.sch_item_empty_list),
+							searchText, getActiveTabName())));
 				}
 			}
 
@@ -203,12 +203,38 @@ public class ScheduleFragment extends ListFragment {
 	}
 
 	/**
+	 * Get the name of the active tab
+	 * 
+	 * @return the name of the active tab seciton
+	 */
+	private String getActiveTabName() {
+		String activeTabName = "";
+
+		switch (vehicleType) {
+		case BUS:
+			activeTabName = getString(R.string.sch_search_tab_bus);
+			break;
+		case TROLLEY:
+			activeTabName = getString(R.string.sch_search_tab_trolley);
+			break;
+		case TRAM:
+			activeTabName = getString(R.string.sch_search_tab_tram);
+			break;
+		default:
+			activeTabName = getString(R.string.sch_search_tab_bus);
+			break;
+		}
+
+		return activeTabName;
+	}
+
+	/**
 	 * Take needed actions according to the clicked tab
 	 * 
 	 * @param searchEditText
 	 *            the text from the searched edit text
 	 * @param tabType
-	 *            the choosen type
+	 *            the chosen type
 	 */
 	private void processOnClickedTab(EditText searchEditText,
 			VehicleType tabType) {
@@ -293,7 +319,6 @@ public class ScheduleFragment extends ListFragment {
 								tramSearchText));
 			}
 
-			adapter = new ScheduleStationAdapter(context, trams);
 			setListAdapter(adapter);
 			break;
 		default:

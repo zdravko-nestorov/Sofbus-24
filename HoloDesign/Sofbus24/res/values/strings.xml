@@ -38,7 +38,7 @@
     <string name="sch_item_bus" formatted="false">Автобус №%s</string>
     <string name="sch_item_trolley" formatted="false">Тролей №%s</string>
     <string name="sch_item_tram" formatted="false">Трамвай №%s</string>
-    <string name="sch_item_empty_list" formatted="false"><![CDATA[Няма намерени резултати за <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
+    <string name="sch_item_empty_list" formatted="false"><![CDATA[Няма намерени резултати за <b>%s</b> в секция <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
 
     <!-- Metro Fragment -->
     <string name="metro_search_hint">Търсене по име или номер</string>
@@ -48,7 +48,7 @@
     <string name="metro_item_station_number_text" formatted="false">Спирка номер: %s</string>
     <string name="metro_item_add_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>
     <string name="metro_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
-    <string name="metro_item_empty_list" formatted="false"><![CDATA[Няма намерени метростанции за <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
+    <string name="metro_item_empty_list" formatted="false"><![CDATA[Няма намерени метростанции за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
     <string name="metro_menu_map_route">Маршрут</string>
 
 </resources>

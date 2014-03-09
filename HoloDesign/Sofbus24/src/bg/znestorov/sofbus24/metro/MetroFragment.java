@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
+import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
@@ -37,10 +38,11 @@ public class MetroFragment extends ListFragment {
 
 	private MetroLoadStations mls;
 	private StationsDataSource stationsDatasource;
+	private VehiclesDataSource vehiclesDatasource;
 	private List<Station> metroDirection1;
 	private List<Station> metroDirection2;
 
-	private VehicleType stationType = VehicleType.METRO1;
+	private static VehicleType stationType = VehicleType.METRO1;
 
 	private String metro1SearchText = "";
 	private String metro2SearchText = "";
@@ -64,7 +66,9 @@ public class MetroFragment extends ListFragment {
 
 		// Load the Stations Datasource
 		stationsDatasource = new StationsDataSource(context);
+		vehiclesDatasource = new VehiclesDataSource(context);
 		stationsDatasource.open();
+		vehiclesDatasource.open();
 
 		// Fill the list view with the stations from DB
 		mls = MetroLoadStations.getInstance(context);
@@ -112,12 +116,14 @@ public class MetroFragment extends ListFragment {
 	@Override
 	public void onResume() {
 		stationsDatasource.open();
+		vehiclesDatasource.open();
 		super.onResume();
 	}
 
 	@Override
 	public void onPause() {
 		stationsDatasource.close();
+		vehiclesDatasource.close();
 		super.onPause();
 	}
 
@@ -206,7 +212,10 @@ public class MetroFragment extends ListFragment {
 				if (adapter.isEmpty()) {
 					emptyList.setText(Html.fromHtml(String.format(
 							getString(R.string.metro_item_empty_list),
-							searchText)));
+							searchText,
+							vehiclesDatasource
+									.getVehiclesViaSearch(stationType, "")
+									.get(0).getDirection())));
 				}
 			}
 
@@ -228,7 +237,7 @@ public class MetroFragment extends ListFragment {
 	 * @param searchEditText
 	 *            the text from the searched edit text
 	 * @param tabType
-	 *            the choosen type
+	 *            the chosen type
 	 */
 	private void processOnClickedTab(EditText searchEditText,
 			VehicleType tabType) {
