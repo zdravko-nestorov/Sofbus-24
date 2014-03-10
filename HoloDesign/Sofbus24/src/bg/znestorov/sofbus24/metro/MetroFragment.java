@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -216,7 +217,7 @@ public class MetroFragment extends ListFragment {
 				if (adapter.isEmpty()) {
 					emptyList.setText(Html.fromHtml(String.format(
 							getString(R.string.metro_item_empty_list),
-							searchText, getDirectionName())));
+							searchText, getDirectionName(stationType, false))));
 				}
 			}
 
@@ -236,6 +237,10 @@ public class MetroFragment extends ListFragment {
 			@Override
 			public void onClick(DrawablePosition target) {
 				switch (target) {
+				case LEFT:
+					searchEditText.requestFocus();
+					ActivityUtils.showKeyboard(context, searchEditText);
+					break;
 				case RIGHT:
 					searchEditText.setText("");
 					break;
@@ -248,13 +253,24 @@ public class MetroFragment extends ListFragment {
 	}
 
 	/**
-	 * Get the direction name
+	 * Get the direction name and format it if needed
 	 * 
-	 * @return the direction name of currently active tab
+	 * @param vehicleType
+	 *            the vehicle type (in case of current active tab use the global
+	 *            variable - vehicleType)
+	 * @param formatted
+	 *            if the name should be formatted
+	 * @return the direction name
 	 */
-	private String getDirectionName() {
-		return vehiclesDatasource.getVehiclesViaSearch(stationType, "").get(0)
-				.getDirection();
+	private String getDirectionName(VehicleType vehicleType, boolean formatted) {
+		String directionName = vehiclesDatasource
+				.getVehiclesViaSearch(vehicleType, "").get(0).getDirection();
+
+		if (formatted) {
+			directionName = directionName.replaceAll("-", " - ");
+		}
+
+		return directionName;
 	}
 
 	/**
@@ -336,6 +352,12 @@ public class MetroFragment extends ListFragment {
 
 		// Set the marker at the end
 		searchEditText.setSelection(searchEditText.getText().length());
+
+		// Show a toast with the current direction info
+		Toast directionToast = Toast.makeText(context,
+				getDirectionName(stationType, true), Toast.LENGTH_LONG);
+		directionToast.setGravity(Gravity.CENTER, 0, 75);
+		directionToast.show();
 	}
 
 	/**

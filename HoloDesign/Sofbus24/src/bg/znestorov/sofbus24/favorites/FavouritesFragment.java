@@ -226,6 +226,10 @@ public class FavouritesFragment extends ListFragment {
 			@Override
 			public void onClick(DrawablePosition target) {
 				switch (target) {
+				case LEFT:
+					searchEditText.requestFocus();
+					ActivityUtils.showKeyboard(context, searchEditText);
+					break;
 				case RIGHT:
 					searchEditText.setText("");
 					break;
