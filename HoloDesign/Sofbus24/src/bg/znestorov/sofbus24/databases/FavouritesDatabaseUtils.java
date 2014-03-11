@@ -6,7 +6,7 @@ import android.content.Context;
  * Class containing all helping functions for creating and deleting the
  * Favourites DB
  * 
- * @author zanio
+ * @author Zdravko Nestorov
  * @version 1.0
  * 
  */

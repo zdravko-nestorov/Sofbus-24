@@ -65,7 +65,6 @@ public class ScheduleFragment extends ListFragment {
 
 		// Load the Vehicle Datasource
 		vehiclesDatasource = new VehiclesDataSource(context);
-		vehiclesDatasource.open();
 
 		// Fill the list view with the vehicles from DB
 		slv = ScheduleLoadVehicles.getInstance(context);
@@ -110,18 +109,6 @@ public class ScheduleFragment extends ListFragment {
 				.show();
 	}
 
-	@Override
-	public void onResume() {
-		vehiclesDatasource.open();
-		super.onResume();
-	}
-
-	@Override
-	public void onPause() {
-		vehiclesDatasource.close();
-		super.onPause();
-	}
-
 	/**
 	 * Activate the listeners over the Vehicle TextView fields
 	 * 
@@ -130,6 +117,7 @@ public class ScheduleFragment extends ListFragment {
 	 */
 	private void actionsOverVehiclesTextViews(
 			final SearchEditText searchEditText) {
+		// Assign the bus TextView a click listener
 		busTextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -179,8 +167,8 @@ public class ScheduleFragment extends ListFragment {
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				String searchText = searchEditText.getText().toString();
-				List<Vehicle> searchStationList = vehiclesDatasource
-						.getVehiclesViaSearch(vehicleType, searchText);
+				List<Vehicle> searchStationList = loadVehiclesList(vehicleType,
+						searchText);
 				ArrayAdapter<Vehicle> adapter = new ScheduleStationAdapter(
 						context, searchStationList);
 
@@ -228,7 +216,7 @@ public class ScheduleFragment extends ListFragment {
 	/**
 	 * Get the name of the active tab
 	 * 
-	 * @return the name of the active tab seciton
+	 * @return the name of the active tab section
 	 */
 	private String getActiveTabName() {
 		String activeTabName = "";
@@ -296,9 +284,8 @@ public class ScheduleFragment extends ListFragment {
 			if ("".equals(busSearchText)) {
 				adapter = new ScheduleStationAdapter(context, busses);
 			} else {
-				adapter = new ScheduleStationAdapter(context,
-						vehiclesDatasource.getVehiclesViaSearch(vehicleType,
-								busSearchText));
+				adapter = new ScheduleStationAdapter(context, loadVehiclesList(
+						vehicleType, busSearchText));
 			}
 
 			setListAdapter(adapter);
@@ -317,14 +304,13 @@ public class ScheduleFragment extends ListFragment {
 			if ("".equals(trolleySearchText)) {
 				adapter = new ScheduleStationAdapter(context, trolleys);
 			} else {
-				adapter = new ScheduleStationAdapter(context,
-						vehiclesDatasource.getVehiclesViaSearch(vehicleType,
-								trolleySearchText));
+				adapter = new ScheduleStationAdapter(context, loadVehiclesList(
+						vehicleType, trolleySearchText));
 			}
 
 			setListAdapter(adapter);
 			break;
-		case TRAM:
+		default:
 			vehicleType = VehicleType.TRAM;
 			setTabInactive(busTextView);
 			setTabInactive(trolleyTextView);
@@ -337,25 +323,42 @@ public class ScheduleFragment extends ListFragment {
 			if ("".equals(tramSearchText)) {
 				adapter = new ScheduleStationAdapter(context, trams);
 			} else {
-				adapter = new ScheduleStationAdapter(context,
-						vehiclesDatasource.getVehiclesViaSearch(vehicleType,
-								tramSearchText));
+				adapter = new ScheduleStationAdapter(context, loadVehiclesList(
+						vehicleType, tramSearchText));
 			}
 
-			setListAdapter(adapter);
-			break;
-		default:
-			vehicleType = VehicleType.BUS;
-			setTabActive(busTextView);
-			setTabInactive(trolleyTextView);
-			setTabInactive(tramTextView);
-			adapter = new ScheduleStationAdapter(context, busses);
 			setListAdapter(adapter);
 			break;
 		}
 
 		// Set the marker at the end
 		searchEditText.setSelection(searchEditText.getText().length());
+	}
+
+	/**
+	 * Load all vehicles according to a vehicle type and a search text
+	 * 
+	 * @param vehicleType
+	 *            the type of the searched vehicles
+	 * @param searchText
+	 *            the search text (if null - return all stations of the vehicle
+	 *            type)
+	 * @return all vehicles according to a vehicle type and a search text
+	 */
+	private List<Vehicle> loadVehiclesList(VehicleType vehicleType,
+			String searchText) {
+		List<Vehicle> vehiclesList;
+
+		if (vehiclesDatasource == null) {
+			vehiclesDatasource = new VehiclesDataSource(context);
+		}
+
+		vehiclesDatasource.open();
+		vehiclesList = vehiclesDatasource.getVehiclesViaSearch(vehicleType,
+				searchText);
+		vehiclesDatasource.close();
+
+		return vehiclesList;
 	}
 
 	/**

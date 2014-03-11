@@ -23,7 +23,7 @@ import bg.znestorov.sofbus24.entity.VehicleType;
  * Class containing all helping functions for creating the Vehicles DB from an
  * XML file, copying to the SD card, copying the DB from the assets and so on
  * 
- * @author zanio
+ * @author Zdravko Nestorov
  * @version 1.0
  * 
  */

@@ -118,7 +118,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 			final Station station) {
 		viewHolder.addToFavourites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Sofbus24.isFavouritesChanged = true;
+				Sofbus24.setFavouritesChanged(true);
 
 				favouritesDataSource.open();
 				if (favouritesDataSource.getStation(station) == null) {

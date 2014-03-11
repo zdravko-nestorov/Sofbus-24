@@ -28,6 +28,7 @@ import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.UpdateableFragment;
+import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
 
@@ -69,8 +70,6 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 		// Load the Stations Datasource
 		stationsDatasource = new StationsDataSource(context);
 		vehiclesDatasource = new VehiclesDataSource(context);
-		stationsDatasource.open();
-		vehiclesDatasource.open();
 
 		// Fill the list view with the stations from DB
 		mls = MetroLoadStations.getInstance(context);
@@ -122,20 +121,6 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 
 		Toast.makeText(getActivity(), station.getName(), Toast.LENGTH_SHORT)
 				.show();
-	}
-
-	@Override
-	public void onResume() {
-		stationsDatasource.open();
-		vehiclesDatasource.open();
-		super.onResume();
-	}
-
-	@Override
-	public void onPause() {
-		stationsDatasource.close();
-		vehiclesDatasource.close();
-		super.onPause();
 	}
 
 	@Override
@@ -191,6 +176,96 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	}
 
 	/**
+	 * Take needed actions according to the clicked tab
+	 * 
+	 * @param isTabClicked
+	 *            mark if the selected tab is clicked or directly loaded from
+	 *            the main TabHost
+	 * @param searchEditText
+	 *            the EditText search field (if null - just refresh the adater)
+	 * @param tabType
+	 *            the chosen station type (METRO1 or METRO2)
+	 */
+	private void processOnClickedTab(boolean isTabClicked,
+			SearchEditText searchEditText, VehicleType tabType) {
+		ArrayAdapter<Station> adapter;
+
+		// Check which is previous clicked tab, so save the value to the
+		// appropriate variable (in case of refresh just set an empty string)
+		if (searchEditText != null) {
+			switch (stationType) {
+			case METRO1:
+				metro1SearchText = searchEditText.getText().toString();
+				break;
+			case METRO2:
+				metro2SearchText = searchEditText.getText().toString();
+				break;
+			default:
+				metro1SearchText = searchEditText.getText().toString();
+				break;
+			}
+		} else {
+			metro1SearchText = "";
+		}
+		// Check which tab is clicked
+		switch (tabType) {
+		case METRO1:
+			stationType = VehicleType.METRO1;
+
+			setTabActive(direction1TextView);
+			setTabInactive(direction2TextView);
+
+			// Set the Search tab the appropriate search text
+			if (searchEditText != null) {
+				searchEditText.setText(metro1SearchText);
+			}
+
+			// Check if a search is already done
+			if ("".equals(metro1SearchText)) {
+				adapter = new MetroStationAdapter(context, metroDirection1);
+			} else {
+				adapter = new MetroStationAdapter(context,
+						loadStationsList(metro1SearchText));
+			}
+
+			setListAdapter(adapter);
+			break;
+		default:
+			stationType = VehicleType.METRO2;
+
+			setTabInactive(direction1TextView);
+			setTabActive(direction2TextView);
+
+			// Set the Search tab the appropriate search text
+			if (searchEditText != null) {
+				searchEditText.setText(metro2SearchText);
+			}
+
+			// Check if a search is already done
+			if ("".equals(metro2SearchText)) {
+				adapter = new MetroStationAdapter(context, metroDirection2);
+			} else {
+				adapter = new MetroStationAdapter(context,
+						loadStationsList(metro2SearchText));
+			}
+
+			setListAdapter(adapter);
+			break;
+		}
+
+		// Set the marker at the end
+		if (searchEditText != null) {
+			searchEditText.setSelection(searchEditText.getText().length());
+		}
+
+		// Check if the tab is clicked or just loaded because the fragment is
+		// selected from the TabHost
+		if (isTabClicked) {
+			showDirectionNameToast();
+		}
+	}
+
+	/**
 	 * Modify the Search EditText field and activate the listeners
 	 * 
 	 * @param searchEditText
@@ -215,8 +290,8 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				String searchText = searchEditText.getText().toString();
-				List<Station> searchStationList = stationsDatasource
-						.getStationsViaSearch(stationType, searchText);
+
+				List<Station> searchStationList = loadStationsList(searchText);
 				ArrayAdapter<Station> adapter = new MetroStationAdapter(
 						context, searchStationList);
 
@@ -237,7 +312,6 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
-
 			}
 		});
 
@@ -273,14 +347,14 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	 * @return the direction name
 	 */
 	private String getDirectionName(VehicleType vehicleType, boolean formatted) {
-		// If no vehicle type is passed as param, set the default one
+		// If no vehicle type is passed as a parameter, set the default one
 		if (vehicleType == null) {
 			vehicleType = stationType;
 		}
 
 		// Get the name of the current direction
-		String directionName = vehiclesDatasource
-				.getVehiclesViaSearch(vehicleType, "").get(0).getDirection();
+		String directionName = loadVehiclesList(vehicleType, "").get(0)
+				.getDirection();
 
 		// Check if the direction name should be formatted
 		if (formatted) {
@@ -298,107 +372,58 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	 */
 	public void showDirectionNameToast() {
 		Toast directionToast = Toast.makeText(context,
-				getDirectionName(stationType, false), Toast.LENGTH_LONG);
+				getDirectionName(stationType, true), Toast.LENGTH_LONG);
 		directionToast.show();
 	}
 
 	/**
-	 * Take needed actions according to the clicked tab
+	 * Load all stations according to a search text (if it is left as empty -
+	 * all stations of the current tab type are loaded)
 	 * 
-	 * @param isTabClicked
-	 *            mark is the selected tab is clicked or directly loaded from
-	 *            the main TabHost
-	 * @param searchEditText
-	 *            the text from the searched edit text
-	 * @param tabType
-	 *            the chosen type
+	 * @param searchText
+	 *            the search text (if null - return all stations of the current
+	 *            tab type)
+	 * @return all stations according to a search text
 	 */
-	private void processOnClickedTab(boolean isTabClicked,
-			SearchEditText searchEditText, VehicleType tabType) {
-		ArrayAdapter<Station> adapter;
+	private List<Station> loadStationsList(String searchText) {
+		List<Station> stationsList;
 
-		// Check which is previous clicked tab, so save the value to the
-		// appropriate variable
-		if (searchEditText != null) {
-			switch (stationType) {
-			case METRO1:
-				metro1SearchText = searchEditText.getText().toString();
-				break;
-			case METRO2:
-				metro2SearchText = searchEditText.getText().toString();
-				break;
-			default:
-				metro1SearchText = searchEditText.getText().toString();
-				break;
-			}
-		} else {
-			metro1SearchText = "";
-		}
-		// Check which tab is clicked
-		switch (tabType) {
-		case METRO1:
-			stationType = VehicleType.METRO1;
-
-			setTabActive(direction1TextView);
-			setTabInactive(direction2TextView);
-
-			// Set the Search tab the appropriate search text
-			if (searchEditText != null) {
-				searchEditText.setText(metro1SearchText);
-			}
-
-			// Check if a search is already done
-			if ("".equals(metro1SearchText)) {
-				adapter = new MetroStationAdapter(context, metroDirection1);
-			} else {
-				adapter = new MetroStationAdapter(context,
-						stationsDatasource.getStationsViaSearch(stationType,
-								metro1SearchText));
-			}
-
-			setListAdapter(adapter);
-			break;
-		case METRO2:
-			stationType = VehicleType.METRO2;
-
-			setTabInactive(direction1TextView);
-			setTabActive(direction2TextView);
-
-			// Set the Search tab the appropriate search text
-			if (searchEditText != null) {
-				searchEditText.setText(metro2SearchText);
-			}
-
-			// Check if a search is already done
-			if ("".equals(metro2SearchText)) {
-				adapter = new MetroStationAdapter(context, metroDirection2);
-			} else {
-				adapter = new MetroStationAdapter(context,
-						stationsDatasource.getStationsViaSearch(stationType,
-								metro2SearchText));
-			}
-
-			setListAdapter(adapter);
-			break;
-		default:
-			stationType = VehicleType.BUS;
-			setTabActive(direction1TextView);
-			setTabInactive(direction2TextView);
-			adapter = new MetroStationAdapter(context, metroDirection1);
-			setListAdapter(adapter);
-			break;
+		if (stationsDatasource == null) {
+			stationsDatasource = new StationsDataSource(context);
 		}
 
-		// Set the marker at the end
-		if (searchEditText != null) {
-			searchEditText.setSelection(searchEditText.getText().length());
+		stationsDatasource.open();
+		stationsList = stationsDatasource.getStationsViaSearch(stationType,
+				searchText);
+		stationsDatasource.close();
+
+		return stationsList;
+	}
+
+	/**
+	 * Load all vehicles according to a vehicle type and a search text
+	 * 
+	 * @param vehicleType
+	 *            the type of the searched vehicles
+	 * @param searchText
+	 *            the search text (if null - return all stations of the vehicle
+	 *            type)
+	 * @return all vehicles according to a vehicle type and a search text
+	 */
+	private List<Vehicle> loadVehiclesList(VehicleType vehicleType,
+			String searchText) {
+		List<Vehicle> vehiclesList;
+
+		if (vehiclesDatasource == null) {
+			vehiclesDatasource = new VehiclesDataSource(context);
 		}
 
-		// Check if the tab is clicked or just loaded because the fragment is
-		// selected from the TabHost
-		if (isTabClicked) {
-			showDirectionNameToast();
-		}
+		vehiclesDatasource.open();
+		vehiclesList = vehiclesDatasource.getVehiclesViaSearch(vehicleType,
+				searchText);
+		vehiclesDatasource.close();
+
+		return vehiclesList;
 	}
 
 	/**

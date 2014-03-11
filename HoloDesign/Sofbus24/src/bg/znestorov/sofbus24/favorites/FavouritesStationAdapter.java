@@ -340,7 +340,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 									station.getName(), station.getNumber())),
 							Toast.LENGTH_LONG).show();
 
-					Sofbus24.isMetroChanged = true;
+					Sofbus24.setMetroChanged(true);
 
 					return true;
 				} else if (me.getAction() == MotionEvent.ACTION_UP) {

@@ -64,12 +64,9 @@ public class FavouritesFragment extends ListFragment implements
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
 
-		// Load the Favourites Datasource
-		favouritesDatasource = new FavouritesDataSource(context);
-		favouritesDatasource.open();
-
-		// Fill the list view with the stations from the DB
-		favouritesStations = favouritesDatasource.getAllStations();
+		// Load the Favourites datasource and fill the list view with the
+		// stations from the DB
+		favouritesStations = loadFavouritesList(null);
 
 		// Searching over the Favourites
 		SearchEditText searchEditText = (SearchEditText) myFragmentView
@@ -81,14 +78,14 @@ public class FavouritesFragment extends ListFragment implements
 				favouritesStations);
 		setListAdapter(adapter);
 
-		// Activate the option menu
-		setHasOptionsMenu(true);
-
 		// Set the message if the list is empty
 		TextView emptyList = (TextView) myFragmentView
 				.findViewById(R.id.favourites_list_empty_text);
 		emptyList.setText(Html
 				.fromHtml(getString(R.string.fav_item_empty_list)));
+
+		// Activate the option menu
+		setHasOptionsMenu(true);
 
 		return myFragmentView;
 	}
@@ -99,10 +96,7 @@ public class FavouritesFragment extends ListFragment implements
 
 	@Override
 	public void update(Activity context) {
-		favouritesDatasource = new FavouritesDataSource(context);
-		favouritesDatasource.open();
-		favouritesStations = favouritesDatasource.getAllStations();
-		favouritesDatasource.close();
+		favouritesStations = loadFavouritesList(null);
 		setListAdapter(new FavouritesStationAdapter(context, favouritesStations));
 	}
 
@@ -114,18 +108,6 @@ public class FavouritesFragment extends ListFragment implements
 
 		Toast.makeText(getActivity(), station.getName(), Toast.LENGTH_SHORT)
 				.show();
-	}
-
-	@Override
-	public void onResume() {
-		favouritesDatasource.open();
-		super.onResume();
-	}
-
-	@Override
-	public void onPause() {
-		favouritesDatasource.close();
-		super.onPause();
 	}
 
 	@Override
@@ -215,8 +197,7 @@ public class FavouritesFragment extends ListFragment implements
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				String searchText = searchEditText.getText().toString();
-				List<Station> searchStationList = favouritesDatasource
-						.getStationsViaSearch(searchText);
+				List<Station> searchStationList = loadFavouritesList(searchText);
 				ArrayAdapter<Station> adapter = new FavouritesStationAdapter(
 						context, searchStationList);
 
@@ -252,5 +233,32 @@ public class FavouritesFragment extends ListFragment implements
 			}
 
 		});
+	}
+
+	/**
+	 * Load all stations, marked as favourites, according to a search text (if
+	 * it is left as empty - all favourites stations are loaded)
+	 * 
+	 * @param searchText
+	 *            the search text (if null - return all favourites stations)
+	 * @return all stations, marked as favourites, according to a search text
+	 */
+	private List<Station> loadFavouritesList(String searchText) {
+		List<Station> favouritesList;
+
+		if (favouritesDatasource == null) {
+			favouritesDatasource = new FavouritesDataSource(context);
+		}
+
+		favouritesDatasource.open();
+		if (searchText == null) {
+			favouritesList = favouritesDatasource.getAllStations();
+		} else {
+			favouritesList = favouritesDatasource
+					.getStationsViaSearch(searchText);
+		}
+		favouritesDatasource.close();
+
+		return favouritesList;
 	}
 }

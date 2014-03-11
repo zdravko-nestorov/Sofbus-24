@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,46 +26,21 @@ import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
-import bg.znestorov.sofbus24.utils.Constants;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener {
 
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the sections. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-	 * will keep every loaded fragment in memory. If this becomes too memory
-	 * intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
-	private SectionsPagerAdapter mSectionsPagerAdapter;
-
-	/**
-	 * The {@link ViewPager} that will host the section contents.
-	 */
-	private ViewPager mViewPager;
-
-	/**
-	 * Sliding menu (using external project)
-	 */
-	private SlidingMenu slidingMenu;
-
-	/**
-	 * The context to use. Usually your android.app.Application or
-	 * android.app.Activity object
-	 */
 	private Activity context;
 
-	/**
-	 * List containing all of the fragments in the TabHost
-	 */
+	private SectionsPagerAdapter mSectionsPagerAdapter;
+	private ViewPager mViewPager;
+	private SlidingMenu slidingMenu;
+
 	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
 
-	// Variables indicating if a fragment should be recreated
-	public static boolean isFavouritesChanged = false;
-	public static boolean isMetroChanged = false;
+	private static boolean isFavouritesChanged = false;
+	private static boolean isMetroChanged = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,14 +62,14 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		// Load all vehicles from the Database, so use them lately
 		ScheduleLoadVehicles.getInstance(context);
 
-		// Load all favourites stations from the Database, so use them lately
+		// Load all metro stations from the Database, so use them lately
 		MetroLoadStations.getInstance(context);
 
-		// Init the UIL image loader
+		// Initialize the UIL image loader
 		ActivityUtils.initImageLoader(context);
 
-		// Fill the fragment map
-		fillFragmentMap();
+		// Fill the fragments list
+		fillFragmentsList();
 
 		// Set up the action bar
 		final ActionBar actionBar = getActionBar();
@@ -106,7 +80,8 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
 
-		// Set up the ViewPager with the sections adapter.
+		// Set up the ViewPager with the sections adapter and load all tabs at
+		// once
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setOffscreenPageLimit(mSectionsPagerAdapter.getCount() - 1);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -122,12 +97,8 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 					}
 				});
 
-		// For each of the sections in the app, add a tab to the action bar.
+		// For each of the sections in the app, add a tab to the action bar
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-			// Create a tab with text corresponding to the page title defined by
-			// the adapter. Also specify this Activity object, which implements
-			// the TabListener interface, as the callback (listener) for when
-			// this tab is selected.
 			actionBar.addTab(actionBar.newTab()
 					.setIcon(mSectionsPagerAdapter.getPageIcon(i))
 					.setTabListener(this));
@@ -148,7 +119,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
+		// Inflate the menu; this adds items to the action bar if it is present
 		getMenuInflater().inflate(R.menu.activity_sofbus24_actions, menu);
 
 		return super.onCreateOptionsMenu(menu);
@@ -163,7 +134,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		// the ViewPager.
 		mViewPager.setCurrentItem(tabPosition);
 
-		// Show Toast with the Metro direction if the metro tab is selected
+		// Actions over each fragment
 		Fragment fragment = fragmentsList.get(tabPosition);
 
 		if (fragment instanceof FavouritesFragment && isFavouritesChanged) {
@@ -171,9 +142,13 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			isFavouritesChanged = false;
 		}
 
-		if (fragment instanceof MetroFragment && isMetroChanged) {
-			((MetroFragment) fragment).update();
-			isMetroChanged = false;
+		if (fragment instanceof MetroFragment) {
+			((MetroFragment) fragment).showDirectionNameToast();
+
+			if (isMetroChanged) {
+				((MetroFragment) fragment).update();
+				isMetroChanged = false;
+			}
 		}
 	}
 
@@ -211,7 +186,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
 	 */
-	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -224,7 +199,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		@Override
 		public int getCount() {
-			return Constants.GLOBAL_TAB_COUNT;
+			return fragmentsList.size();
 		}
 
 		public Integer getPageIcon(int position) {
@@ -235,17 +210,16 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 				return R.drawable.ic_tab_real_time;
 			case 2:
 				return R.drawable.ic_tab_schedule;
-			case 3:
+			default:
 				return R.drawable.ic_tab_metro;
 			}
-			return null;
 		}
 	}
 
 	/**
 	 * Fill the Fragment map with all fragments in the TabHost
 	 */
-	private void fillFragmentMap() {
+	private void fillFragmentsList() {
 		Fragment fragment;
 		Bundle bundle = new Bundle();
 
@@ -263,6 +237,14 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		// Add Metro fragment
 		fragmentsList.add(new MetroFragment());
+	}
+
+	public static void setFavouritesChanged(boolean isFavouritesChanged) {
+		Sofbus24.isFavouritesChanged = isFavouritesChanged;
+	}
+
+	public static void setMetroChanged(boolean isMetroChanged) {
+		Sofbus24.isMetroChanged = isMetroChanged;
 	}
 
 	/**
