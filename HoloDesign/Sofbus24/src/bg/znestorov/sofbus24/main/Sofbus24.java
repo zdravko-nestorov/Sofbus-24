@@ -158,8 +158,13 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		// Show Toast with the Metro direction if the metro tab is selected
 		Fragment fragment = fragmentsList.get(tabPosition);
+
 		if (fragment instanceof MetroFragment) {
 			((MetroFragment) fragment).showDirectionNameToast();
+		}
+
+		if (fragment instanceof FavouritesFragment) {
+			((FavouritesFragment) fragment).update(context);
 		}
 	}
 
@@ -201,15 +206,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
-		}
-
-		@Override
-		public int getItemPosition(Object item) {
-			if (item instanceof FavouritesFragment) {
-				((FavouritesFragment) item).update(context);
-			}
-
-			return super.getItemPosition(item);
 		}
 
 		@Override
