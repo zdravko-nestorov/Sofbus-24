@@ -27,6 +27,7 @@ import bg.znestorov.sofbus24.activity.ActivityUtils;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.Sofbus24;
 import bg.znestorov.sofbus24.utils.Constants;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -338,6 +339,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 									.getString(R.string.fav_item_remove_toast),
 									station.getName(), station.getNumber())),
 							Toast.LENGTH_LONG).show();
+
+					Sofbus24.isMetroChanged = true;
 
 					return true;
 				} else if (me.getAction() == MotionEvent.ACTION_UP) {

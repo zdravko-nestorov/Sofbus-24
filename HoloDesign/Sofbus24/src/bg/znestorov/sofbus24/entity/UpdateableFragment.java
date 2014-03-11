@@ -4,5 +4,7 @@ import android.app.Activity;
 
 public interface UpdateableFragment {
 
+	public void update();
+
 	public void update(Activity context);
 }

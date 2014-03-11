@@ -59,7 +59,14 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	 */
 	private Activity context;
 
+	/**
+	 * List containing all of the fragments in the TabHost
+	 */
 	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
+
+	// Variables indicating if a fragment should be recreated
+	public static boolean isFavouritesChanged = false;
+	public static boolean isMetroChanged = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -159,12 +166,14 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		// Show Toast with the Metro direction if the metro tab is selected
 		Fragment fragment = fragmentsList.get(tabPosition);
 
-		if (fragment instanceof MetroFragment) {
-			((MetroFragment) fragment).showDirectionNameToast();
+		if (fragment instanceof FavouritesFragment && isFavouritesChanged) {
+			((FavouritesFragment) fragment).update(context);
+			isFavouritesChanged = false;
 		}
 
-		if (fragment instanceof FavouritesFragment) {
-			((FavouritesFragment) fragment).update(context);
+		if (fragment instanceof MetroFragment && isMetroChanged) {
+			((MetroFragment) fragment).update();
+			isMetroChanged = false;
 		}
 	}
 

@@ -94,6 +94,10 @@ public class FavouritesFragment extends ListFragment implements
 	}
 
 	@Override
+	public void update() {
+	}
+
+	@Override
 	public void update(Activity context) {
 		favouritesDatasource = new FavouritesDataSource(context);
 		favouritesDatasource.open();

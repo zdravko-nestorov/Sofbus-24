@@ -27,10 +27,11 @@ import bg.znestorov.sofbus24.activity.SearchEditText;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.UpdateableFragment;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
 
-public class MetroFragment extends ListFragment {
+public class MetroFragment extends ListFragment implements UpdateableFragment {
 
 	private Activity context;
 
@@ -102,6 +103,15 @@ public class MetroFragment extends ListFragment {
 		setHasOptionsMenu(true);
 
 		return myFragmentView;
+	}
+
+	@Override
+	public void update() {
+		processOnClickedTab(true, null, stationType);
+	}
+
+	@Override
+	public void update(Activity context) {
 	}
 
 	@Override
@@ -309,18 +319,21 @@ public class MetroFragment extends ListFragment {
 
 		// Check which is previous clicked tab, so save the value to the
 		// appropriate variable
-		switch (stationType) {
-		case METRO1:
-			metro1SearchText = searchEditText.getText().toString();
-			break;
-		case METRO2:
-			metro2SearchText = searchEditText.getText().toString();
-			break;
-		default:
-			metro1SearchText = searchEditText.getText().toString();
-			break;
+		if (searchEditText != null) {
+			switch (stationType) {
+			case METRO1:
+				metro1SearchText = searchEditText.getText().toString();
+				break;
+			case METRO2:
+				metro2SearchText = searchEditText.getText().toString();
+				break;
+			default:
+				metro1SearchText = searchEditText.getText().toString();
+				break;
+			}
+		} else {
+			metro1SearchText = "";
 		}
-
 		// Check which tab is clicked
 		switch (tabType) {
 		case METRO1:
@@ -330,7 +343,9 @@ public class MetroFragment extends ListFragment {
 			setTabInactive(direction2TextView);
 
 			// Set the Search tab the appropriate search text
-			searchEditText.setText(metro1SearchText);
+			if (searchEditText != null) {
+				searchEditText.setText(metro1SearchText);
+			}
 
 			// Check if a search is already done
 			if ("".equals(metro1SearchText)) {
@@ -350,7 +365,9 @@ public class MetroFragment extends ListFragment {
 			setTabActive(direction2TextView);
 
 			// Set the Search tab the appropriate search text
-			searchEditText.setText(metro2SearchText);
+			if (searchEditText != null) {
+				searchEditText.setText(metro2SearchText);
+			}
 
 			// Check if a search is already done
 			if ("".equals(metro2SearchText)) {
@@ -373,7 +390,9 @@ public class MetroFragment extends ListFragment {
 		}
 
 		// Set the marker at the end
-		searchEditText.setSelection(searchEditText.getText().length());
+		if (searchEditText != null) {
+			searchEditText.setSelection(searchEditText.getText().length());
+		}
 
 		// Check if the tab is clicked or just loaded because the fragment is
 		// selected from the TabHost

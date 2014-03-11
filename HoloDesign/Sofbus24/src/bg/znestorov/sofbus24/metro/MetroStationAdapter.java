@@ -15,6 +15,7 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.Sofbus24;
 
 /**
  * Array Adapted user for set each row a station from the Vehicles DB
@@ -117,6 +118,8 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 			final Station station) {
 		viewHolder.addToFavourites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				Sofbus24.isFavouritesChanged = true;
+
 				favouritesDataSource.open();
 				if (favouritesDataSource.getStation(station) == null) {
 					favouritesDataSource.createStation(station);
