@@ -1,13 +1,17 @@
 package bg.znestorov.sofbus24.main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,7 +23,6 @@ import bg.znestorov.sofbus24.activity.ActivityUtils;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
 import bg.znestorov.sofbus24.favorites.FavouritesFragment;
-import bg.znestorov.sofbus24.favorites.FavouritesLoadStations;
 import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
@@ -45,9 +48,18 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	 */
 	private ViewPager mViewPager;
 
+	/**
+	 * Sliding menu (using external project)
+	 */
 	private SlidingMenu slidingMenu;
 
-	private Context context;
+	/**
+	 * The context to use. Usually your android.app.Application or
+	 * android.app.Activity object
+	 */
+	private Activity context;
+
+	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +78,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		StationsDatabaseUtils.createStationsDatabase(context);
 		VehiclesDatabaseUtils.createVehiclesDatabase(context);
 
-		// Load all favourites stations from the Database, so use them lately
-		FavouritesLoadStations.getInstance(context);
-
 		// Load all vehicles from the Database, so use them lately
 		ScheduleLoadVehicles.getInstance(context);
 
@@ -77,6 +86,9 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		// Init the UIL image loader
 		ActivityUtils.initImageLoader(context);
+
+		// Fill the fragment map
+		fillFragmentMap();
 
 		// Set up the action bar
 		final ActionBar actionBar = getActionBar();
@@ -89,6 +101,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mViewPager.setOffscreenPageLimit(mSectionsPagerAdapter.getCount() - 1);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		// When swiping between different sections, select the corresponding
@@ -137,9 +150,17 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
+		int tabPosition = tab.getPosition();
+
 		// When the given tab is selected, switch to the corresponding page in
 		// the ViewPager.
-		mViewPager.setCurrentItem(tab.getPosition());
+		mViewPager.setCurrentItem(tabPosition);
+
+		// Show Toast with the Metro direction if the metro tab is selected
+		Fragment fragment = fragmentsList.get(tabPosition);
+		if (fragment instanceof MetroFragment) {
+			((MetroFragment) fragment).showDirectionNameToast();
+		}
 	}
 
 	@Override
@@ -176,36 +197,24 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
 	 */
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
 
 		@Override
-		public Fragment getItem(int position) {
-			Fragment fragment = null;
-			Bundle bundle = new Bundle();
-
-			switch (position) {
-			case 0:
-				fragment = new FavouritesFragment();
-				break;
-			case 2:
-				fragment = new ScheduleFragment();
-				break;
-			case 3:
-				fragment = new MetroFragment();
-				break;
-			default:
-				fragment = new DummySectionFragment();
-				bundle.putInt(DummySectionFragment.ARG_SECTION_NUMBER,
-						position + 1);
-				fragment.setArguments(bundle);
-				break;
+		public int getItemPosition(Object item) {
+			if (item instanceof FavouritesFragment) {
+				((FavouritesFragment) item).update(context);
 			}
 
-			return fragment;
+			return super.getItemPosition(item);
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return fragmentsList.get(position);
 		}
 
 		@Override
@@ -226,6 +235,29 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			}
 			return null;
 		}
+	}
+
+	/**
+	 * Fill the Fragment map with all fragments in the TabHost
+	 */
+	private void fillFragmentMap() {
+		Fragment fragment;
+		Bundle bundle = new Bundle();
+
+		// Add Favourites fragment
+		fragmentsList.add(new FavouritesFragment());
+
+		// Add Virtual Boards fragment
+		fragment = new DummySectionFragment();
+		bundle.putInt(DummySectionFragment.ARG_SECTION_NUMBER, 1);
+		fragment.setArguments(bundle);
+		fragmentsList.add(fragment);
+
+		// Add Schedule fragment
+		fragmentsList.add(new ScheduleFragment());
+
+		// Add Metro fragment
+		fragmentsList.add(new MetroFragment());
 	}
 
 	/**

@@ -29,6 +29,7 @@ import bg.znestorov.sofbus24.activity.SearchEditText;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.FavouritesDatabaseUtils;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.UpdateableFragment;
 import bg.znestorov.sofbus24.main.R;
 
 /**
@@ -38,11 +39,11 @@ import bg.znestorov.sofbus24.main.R;
  * @version 1.0
  * 
  */
-public class FavouritesFragment extends ListFragment {
+public class FavouritesFragment extends ListFragment implements
+		UpdateableFragment {
 
 	private Activity context;
 
-	private FavouritesLoadStations fls;
 	private FavouritesDataSource favouritesDatasource;
 	private List<Station> favouritesStations;
 
@@ -68,8 +69,7 @@ public class FavouritesFragment extends ListFragment {
 		favouritesDatasource.open();
 
 		// Fill the list view with the stations from the DB
-		fls = FavouritesLoadStations.getInstance(context);
-		favouritesStations = fls.getFavouriteStations();
+		favouritesStations = favouritesDatasource.getAllStations();
 
 		// Searching over the Favourites
 		SearchEditText searchEditText = (SearchEditText) myFragmentView
@@ -91,6 +91,15 @@ public class FavouritesFragment extends ListFragment {
 				.fromHtml(getString(R.string.fav_item_empty_list)));
 
 		return myFragmentView;
+	}
+
+	@Override
+	public void update(Activity context) {
+		favouritesDatasource = new FavouritesDataSource(context);
+		favouritesDatasource.open();
+		favouritesStations = favouritesDatasource.getAllStations();
+		favouritesDatasource.close();
+		setListAdapter(new FavouritesStationAdapter(context, favouritesStations));
 	}
 
 	@Override

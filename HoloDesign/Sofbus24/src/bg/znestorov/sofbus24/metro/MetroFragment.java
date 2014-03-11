@@ -9,7 +9,6 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -97,7 +96,7 @@ public class MetroFragment extends ListFragment {
 		setListAdapter(adapter);
 
 		// Activate the bus tab
-		processOnClickedTab(searchEditText, stationType);
+		processOnClickedTab(false, searchEditText, stationType);
 
 		// Activate the option menu
 		setHasOptionsMenu(true);
@@ -168,7 +167,7 @@ public class MetroFragment extends ListFragment {
 		direction1TextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				processOnClickedTab(searchEditText, VehicleType.METRO1);
+				processOnClickedTab(true, searchEditText, VehicleType.METRO1);
 			}
 		});
 
@@ -176,7 +175,7 @@ public class MetroFragment extends ListFragment {
 		direction2TextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				processOnClickedTab(searchEditText, VehicleType.METRO2);
+				processOnClickedTab(true, searchEditText, VehicleType.METRO2);
 			}
 		});
 	}
@@ -253,7 +252,8 @@ public class MetroFragment extends ListFragment {
 	}
 
 	/**
-	 * Get the direction name and format it if needed
+	 * Get the direction name and format it if needed via the vehicle type. If
+	 * now vehicle type is entered - get the default one
 	 * 
 	 * @param vehicleType
 	 *            the vehicle type (in case of current active tab use the global
@@ -263,9 +263,16 @@ public class MetroFragment extends ListFragment {
 	 * @return the direction name
 	 */
 	private String getDirectionName(VehicleType vehicleType, boolean formatted) {
+		// If no vehicle type is passed as param, set the default one
+		if (vehicleType == null) {
+			vehicleType = stationType;
+		}
+
+		// Get the name of the current direction
 		String directionName = vehiclesDatasource
 				.getVehiclesViaSearch(vehicleType, "").get(0).getDirection();
 
+		// Check if the direction name should be formatted
 		if (formatted) {
 			directionName = directionName.replaceAll("-", " - ");
 		}
@@ -274,15 +281,30 @@ public class MetroFragment extends ListFragment {
 	}
 
 	/**
+	 * Show a Toast with the name of the metro direction
+	 * 
+	 * @param activityContext
+	 *            the current activity context
+	 */
+	public void showDirectionNameToast() {
+		Toast directionToast = Toast.makeText(context,
+				getDirectionName(stationType, false), Toast.LENGTH_LONG);
+		directionToast.show();
+	}
+
+	/**
 	 * Take needed actions according to the clicked tab
 	 * 
+	 * @param isTabClicked
+	 *            mark is the selected tab is clicked or directly loaded from
+	 *            the main TabHost
 	 * @param searchEditText
 	 *            the text from the searched edit text
 	 * @param tabType
 	 *            the chosen type
 	 */
-	private void processOnClickedTab(SearchEditText searchEditText,
-			VehicleType tabType) {
+	private void processOnClickedTab(boolean isTabClicked,
+			SearchEditText searchEditText, VehicleType tabType) {
 		ArrayAdapter<Station> adapter;
 
 		// Check which is previous clicked tab, so save the value to the
@@ -353,11 +375,11 @@ public class MetroFragment extends ListFragment {
 		// Set the marker at the end
 		searchEditText.setSelection(searchEditText.getText().length());
 
-		// Show a toast with the current direction info
-		Toast directionToast = Toast.makeText(context,
-				getDirectionName(stationType, true), Toast.LENGTH_LONG);
-		directionToast.setGravity(Gravity.CENTER, 0, 75);
-		directionToast.show();
+		// Check if the tab is clicked or just loaded because the fragment is
+		// selected from the TabHost
+		if (isTabClicked) {
+			showDirectionNameToast();
+		}
 	}
 
 	/**
@@ -382,4 +404,5 @@ public class MetroFragment extends ListFragment {
 		textView.setBackgroundResource(R.drawable.inner_tab_border);
 		textView.setTextColor(getResources().getColor(R.color.inner_tab_grey));
 	}
+
 }
