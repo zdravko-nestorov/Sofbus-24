@@ -230,6 +230,13 @@ public class StationsDataSource {
 	 */
 	public List<Station> getStationsViaSearch(VehicleType vehicleType,
 			String searchText) {
+		String searchType;
+		if (vehicleType == null) {
+			searchType = "";
+		} else {
+			searchType = vehicleType.toString();
+		}
+
 		List<Station> stations = new ArrayList<Station>();
 		Locale currentLocale = new Locale(language);
 		searchText = searchText.toLowerCase(currentLocale);
@@ -245,7 +252,7 @@ public class StationsDataSource {
 				+ searchText + "%'		 					");
 		query.append(" ) AND												");
 		query.append(" 		" + VehiclesSQLite.COLUMN_TYPE + " LIKE '%"
-				+ vehicleType.toString() + "%'								");
+				+ searchType + "%'								");
 
 		Cursor cursor = database.rawQuery(query.toString(), null);
 

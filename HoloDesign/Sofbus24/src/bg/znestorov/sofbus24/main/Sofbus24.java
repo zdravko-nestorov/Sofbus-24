@@ -12,12 +12,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import bg.znestorov.sofbus24.activity.ActivityUtils;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
@@ -26,6 +22,7 @@ import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
+import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
@@ -40,6 +37,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
 
 	private static boolean isFavouritesChanged = false;
+	private static boolean isVbChanged = false;
 	private static boolean isMetroChanged = false;
 
 	@Override
@@ -142,6 +140,11 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			isFavouritesChanged = false;
 		}
 
+		if (fragment instanceof VirtualBoardsFragment && isVbChanged) {
+			((VirtualBoardsFragment) fragment).update(context);
+			isVbChanged = false;
+		}
+
 		if (fragment instanceof MetroFragment) {
 			((MetroFragment) fragment).showDirectionNameToast();
 
@@ -220,17 +223,11 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	 * Fill the Fragment map with all fragments in the TabHost
 	 */
 	private void fillFragmentsList() {
-		Fragment fragment;
-		Bundle bundle = new Bundle();
-
 		// Add Favourites fragment
 		fragmentsList.add(new FavouritesFragment());
 
 		// Add Virtual Boards fragment
-		fragment = new DummySectionFragment();
-		bundle.putInt(DummySectionFragment.ARG_SECTION_NUMBER, 1);
-		fragment.setArguments(bundle);
-		fragmentsList.add(fragment);
+		fragmentsList.add(new VirtualBoardsFragment());
 
 		// Add Schedule fragment
 		fragmentsList.add(new ScheduleFragment());
@@ -243,35 +240,12 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		Sofbus24.isFavouritesChanged = isFavouritesChanged;
 	}
 
-	public static void setMetroChanged(boolean isMetroChanged) {
-		Sofbus24.isMetroChanged = isMetroChanged;
+	public static void setVBChanged(boolean isVbChanged) {
+		Sofbus24.isVbChanged = isVbChanged;
 	}
 
-	/**
-	 * A dummy fragment representing a section of the application, but that
-	 * simply displays dummy text.
-	 */
-	public static class DummySectionFragment extends Fragment {
-		/**
-		 * The fragment argument representing the section number for this
-		 * fragment.
-		 */
-		public static final String ARG_SECTION_NUMBER = "section_number";
-
-		public DummySectionFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_sofbus24_dummy,
-					container, false);
-			TextView dummyTextView = (TextView) rootView
-					.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
-			return rootView;
-		}
+	public static void setMetroChanged(boolean isMetroChanged) {
+		Sofbus24.isMetroChanged = isMetroChanged;
 	}
 
 }

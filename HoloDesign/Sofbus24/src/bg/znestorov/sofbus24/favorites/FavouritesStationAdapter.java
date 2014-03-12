@@ -25,7 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.activity.ActivityUtils;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.Sofbus24;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -42,6 +44,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
  */
 public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
+	private final StationsDataSource stationsDataSource;
 	private final FavouritesDataSource favouritesDatasource;
 	private final Activity context;
 	private final List<Station> stations;
@@ -63,6 +66,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		this.context = context;
 		this.stations = stations;
 		this.favouritesDatasource = new FavouritesDataSource(context);
+		this.stationsDataSource = new StationsDataSource(context);
 
 		displayImageOptions = ActivityUtils.displayImageOptions();
 	}
@@ -340,7 +344,18 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 									station.getName(), station.getNumber())),
 							Toast.LENGTH_LONG).show();
 
-					Sofbus24.setMetroChanged(true);
+					// Check which type of station is changed (METRO or OTHER)
+					stationsDataSource.open();
+					VehicleType stationType = stationsDataSource.getStation(
+							station).getType();
+					stationsDataSource.open();
+
+					if (stationType == VehicleType.METRO1
+							|| stationType == VehicleType.METRO2) {
+						Sofbus24.setMetroChanged(true);
+					} else {
+						Sofbus24.setVBChanged(true);
+					}
 
 					return true;
 				} else if (me.getAction() == MotionEvent.ACTION_UP) {
