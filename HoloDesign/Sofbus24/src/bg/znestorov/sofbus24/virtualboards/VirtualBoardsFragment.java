@@ -34,7 +34,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 
 	private StationsDataSource stationsDatasource;
 	private List<Station> vbList;
-	private String vbSearchText = "";
+	private static String vbSearchText = "";
 
 	public VirtualBoardsFragment() {
 	}
@@ -62,6 +62,9 @@ public class VirtualBoardsFragment extends ListFragment implements
 		TextView emptyList = (TextView) myFragmentView
 				.findViewById(R.id.vb_list_empty_text);
 
+		// In case of screen rotation (recreate screen)
+		searchEditText.setText(vbSearchText);
+
 		// Add an empty list to the Fragment
 		performSearch(searchEditText, emptyList);
 
@@ -72,11 +75,11 @@ public class VirtualBoardsFragment extends ListFragment implements
 	}
 
 	@Override
-	public void update() {
-	}
-
-	@Override
 	public void update(Activity context) {
+		if (this.context == null) {
+			this.context = context;
+		}
+
 		SearchEditText searchEditText = (SearchEditText) context
 				.findViewById(R.id.vb_search);
 		TextView emptyList = (TextView) context
@@ -166,6 +169,8 @@ public class VirtualBoardsFragment extends ListFragment implements
 		if (!checkSearchText(vbSearchText)) {
 			vbSearchText = "";
 		}
+
+		// TODO: Make the search via the SKGT site
 
 		vbList = loadStationsList(vbSearchText);
 		ArrayAdapter<Station> adapter = new VirtualBoardsAdapter(context,

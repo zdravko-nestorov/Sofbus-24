@@ -91,11 +91,11 @@ public class FavouritesFragment extends ListFragment implements
 	}
 
 	@Override
-	public void update() {
-	}
-
-	@Override
 	public void update(Activity context) {
+		if (this.context == null) {
+			this.context = context;
+		}
+
 		favouritesStations = loadFavouritesList(null);
 		setListAdapter(new FavouritesStationAdapter(context, favouritesStations));
 	}

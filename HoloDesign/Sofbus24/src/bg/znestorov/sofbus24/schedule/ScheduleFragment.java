@@ -42,9 +42,9 @@ public class ScheduleFragment extends ListFragment {
 
 	private static VehicleType vehicleType = VehicleType.BUS;
 
-	private String busSearchText = "";
-	private String trolleySearchText = "";
-	private String tramSearchText = "";
+	private static String busSearchText = "";
+	private static String trolleySearchText = "";
+	private static String tramSearchText = "";
 
 	public ScheduleFragment() {
 	}

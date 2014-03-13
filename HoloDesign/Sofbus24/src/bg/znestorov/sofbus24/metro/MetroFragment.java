@@ -47,8 +47,8 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 
 	private static VehicleType stationType = VehicleType.METRO1;
 
-	private String metro1SearchText = "";
-	private String metro2SearchText = "";
+	private static String metro1SearchText = "";
+	private static String metro2SearchText = "";
 
 	public MetroFragment() {
 	}
@@ -105,12 +105,12 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	}
 
 	@Override
-	public void update() {
-		processOnClickedTab(true, null, stationType);
-	}
-
-	@Override
 	public void update(Activity context) {
+		if (this.context == null) {
+			this.context = context;
+		}
+
+		processOnClickedTab(true, null, stationType);
 	}
 
 	@Override
@@ -261,7 +261,7 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 		// Check if the tab is clicked or just loaded because the fragment is
 		// selected from the TabHost
 		if (isTabClicked) {
-			showDirectionNameToast();
+			showDirectionNameToast(context);
 		}
 	}
 
@@ -370,7 +370,11 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	 * @param activityContext
 	 *            the current activity context
 	 */
-	public void showDirectionNameToast() {
+	public void showDirectionNameToast(Activity context) {
+		if (this.context == null) {
+			this.context = context;
+		}
+
 		Toast directionToast = Toast.makeText(context,
 				getDirectionName(stationType, true), Toast.LENGTH_LONG);
 		directionToast.show();

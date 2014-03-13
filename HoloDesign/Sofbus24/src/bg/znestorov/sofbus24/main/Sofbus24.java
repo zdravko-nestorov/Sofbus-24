@@ -146,10 +146,10 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		}
 
 		if (fragment instanceof MetroFragment) {
-			((MetroFragment) fragment).showDirectionNameToast();
+			((MetroFragment) fragment).showDirectionNameToast(context);
 
 			if (isMetroChanged) {
-				((MetroFragment) fragment).update();
+				((MetroFragment) fragment).update(context);
 				isMetroChanged = false;
 			}
 		}
