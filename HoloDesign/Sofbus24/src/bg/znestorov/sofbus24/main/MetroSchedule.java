@@ -4,24 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.format.DateFormat;
 import android.view.MenuItem;
-import bg.znestorov.sofbus24.favorites.FavouritesFragment;
-import bg.znestorov.sofbus24.schedule.ScheduleFragment;
+import android.widget.TextView;
+import bg.znestorov.sofbus24.entity.MetroStation;
+import bg.znestorov.sofbus24.metro.MetroScheduleFragment;
+import bg.znestorov.sofbus24.utils.Constants;
 
 public class MetroSchedule extends FragmentActivity {
-
-	private Activity context;
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
 
+	private MetroStation ms;
 	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
 
 	@Override
@@ -29,7 +30,11 @@ public class MetroSchedule extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_metro_schedule);
 
-		context = MetroSchedule.this;
+		// Get the MetroStation object from the Bundle
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			ms = (MetroStation) extras.get(Constants.BUNDLE_METRO_SCHEDULE);
+		}
 
 		// Fill the fragments list
 		fillFragmentsList();
@@ -46,10 +51,30 @@ public class MetroSchedule extends FragmentActivity {
 		// Set up the ViewPager with the sections adapter and load all tabs at
 		// once
 		mViewPager = (ViewPager) findViewById(R.id.metro_schedule_pager);
-		mViewPager.setOffscreenPageLimit(fragmentsList.size() - 1);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		// Get the header TextView views and set them labels
+		String stationNumber = String.format(
+				getString(R.string.metro_item_station_number_text_sign),
+				ms.getNumber());
+		String currentTime = String.format(
+				getString(R.string.metro_schedule_time_info), DateFormat
+						.format("dd.MM.yyy, kk:mm", new java.util.Date())
+						.toString());
+		String hourRange = DateFormat.format("kk", new java.util.Date())
+				.toString() + ":00";
+
+		TextView metroStationName = (TextView) findViewById(R.id.metro_schedule_station_name);
+		TextView metroDirection = (TextView) findViewById(R.id.metro_schedule_direction);
+		TextView metroScheduleTime = (TextView) findViewById(R.id.metro_schedule_time);
+
+		actionBar.setTitle(stationNumber);
+		actionBar.setSubtitle(currentTime);
+		metroStationName.setText(ms.getName());
+		metroDirection.setText(ms.getDirection());
+		metroScheduleTime.setText(hourRange);
 	}
 
 	@Override
@@ -88,8 +113,21 @@ public class MetroSchedule extends FragmentActivity {
 	 * Fill the Fragment map with all fragments in the TabHost
 	 */
 	private void fillFragmentsList() {
-		// Add Favourites fragment
-		fragmentsList.add(new ScheduleFragment());
-		fragmentsList.add(new ScheduleFragment());
+		Fragment fragment;
+
+		for (int i = 4; i <= 24; i++) {
+			ArrayList<String> metroSchedule = ms.getSchedule().get(i);
+
+			if (metroSchedule != null && !metroSchedule.isEmpty()) {
+				fragment = new MetroScheduleFragment();
+
+				Bundle bundle = new Bundle();
+				bundle.putSerializable(Constants.BUNDLE_METRO_SCHEDULE,
+						metroSchedule);
+
+				fragment.setArguments(bundle);
+				fragmentsList.add(fragment);
+			}
+		}
 	}
 }

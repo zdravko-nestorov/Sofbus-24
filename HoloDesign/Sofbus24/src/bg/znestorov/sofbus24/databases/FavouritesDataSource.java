@@ -139,7 +139,8 @@ public class FavouritesDataSource {
 		switch (station.getType()) {
 		case METRO1:
 		case METRO2:
-			stationCustomField = String.valueOf(station.getType());
+			stationCustomField = String.format(Constants.METRO_STATION_URL,
+					station.getNumber());
 			break;
 		default:
 			stationCustomField = String.valueOf(station.getCustomField());

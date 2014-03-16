@@ -37,7 +37,6 @@ public class Station implements Serializable {
 
 	public Station(String number, String name, String lat, String lon,
 			VehicleType type, String customField) {
-		super();
 		this.number = number;
 		this.name = name;
 		this.lat = lat;

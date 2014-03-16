@@ -91,15 +91,15 @@ public class StationsDataSource {
 
 	/**
 	 * Figure out which coordinate to be taken, so add the station in the
-	 * dabatase (lattitude and longitute)
+	 * dabatase (latitude and longitude)
 	 * 
 	 * @param stationNumber
 	 *            the number of the station (used to search the DB for the
 	 *            station)
 	 * @param stationCoordinate
-	 *            the coordinate of the station (lattitude or longitude)
-	 * @return the coordinate (lattitude or longitude), which will be inserted
-	 *         in the dabatase
+	 *            the coordinate of the station (latitude or longitude)
+	 * @return the coordinate (latitude or longitude), which will be inserted in
+	 *         the dabatase
 	 */
 	private String getCoordinates(String stationNumber, String stationCoordinate) {
 		String coordinate = Constants.GLOBAL_PARAM_EMPTY;
@@ -146,6 +146,12 @@ public class StationsDataSource {
 
 			// Creating station object and closing the cursor
 			Station foundStation = cursorToStation(cursor);
+			if (station.getType() == VehicleType.METRO1
+					|| station.getType() == VehicleType.METRO2) {
+				foundStation.setCustomField(String.format(
+						Constants.METRO_STATION_URL, foundStation.getNumber()));
+			}
+
 			cursor.close();
 
 			return foundStation;
@@ -175,6 +181,12 @@ public class StationsDataSource {
 
 			// Creating station object and closing the cursor
 			Station foundStation = cursorToStation(cursor);
+			if (foundStation.getType() == VehicleType.METRO1
+					|| foundStation.getType() == VehicleType.METRO2) {
+				foundStation.setCustomField(String.format(
+						Constants.METRO_STATION_URL, foundStation.getNumber()));
+			}
+
 			cursor.close();
 
 			return foundStation;
@@ -208,8 +220,14 @@ public class StationsDataSource {
 		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Station station = cursorToStation(cursor);
-			stations.add(station);
+			Station foundStation = cursorToStation(cursor);
+			if (vehicleType == VehicleType.METRO1
+					|| vehicleType == VehicleType.METRO2) {
+				foundStation.setCustomField(String.format(
+						Constants.METRO_STATION_URL, foundStation.getNumber()));
+			}
+
+			stations.add(foundStation);
 			cursor.moveToNext();
 		}
 
@@ -259,8 +277,14 @@ public class StationsDataSource {
 		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Station station = cursorToStation(cursor);
-			stations.add(station);
+			Station foundStation = cursorToStation(cursor);
+			if (vehicleType == VehicleType.METRO1
+					|| vehicleType == VehicleType.METRO2) {
+				foundStation.setCustomField(String.format(
+						Constants.METRO_STATION_URL, foundStation.getNumber()));
+			}
+
+			stations.add(foundStation);
 			cursor.moveToNext();
 		}
 
@@ -285,8 +309,14 @@ public class StationsDataSource {
 		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Station station = cursorToStation(cursor);
-			stations.add(station);
+			Station foundStation = cursorToStation(cursor);
+			if (foundStation.getType() == VehicleType.METRO1
+					|| foundStation.getType() == VehicleType.METRO2) {
+				foundStation.setCustomField(String.format(
+						Constants.METRO_STATION_URL, foundStation.getNumber()));
+			}
+
+			stations.add(foundStation);
 			cursor.moveToNext();
 		}
 
@@ -352,8 +382,14 @@ public class StationsDataSource {
 		cursor.moveToFirst();
 		int br = 0;
 		while (br < nearestStationsCount) {
-			Station station = cursorToStation(cursor);
-			stations.add(station);
+			Station foundStation = cursorToStation(cursor);
+			if (foundStation.getType() == VehicleType.METRO1
+					|| foundStation.getType() == VehicleType.METRO2) {
+				foundStation.setCustomField(String.format(
+						Constants.METRO_STATION_URL, foundStation.getNumber()));
+			}
+
+			stations.add(foundStation);
 			cursor.moveToNext();
 			br++;
 		}
@@ -385,8 +421,14 @@ public class StationsDataSource {
 		cursor.moveToFirst();
 		int br = 0;
 		while (br < nearestStationsCount) {
-			Station station = cursorToStation(cursor);
-			stations.add(station);
+			Station foundStation = cursorToStation(cursor);
+			if (foundStation.getType() == VehicleType.METRO1
+					|| foundStation.getType() == VehicleType.METRO2) {
+				foundStation.setCustomField(String.format(
+						Constants.METRO_STATION_URL, foundStation.getNumber()));
+			}
+
+			stations.add(foundStation);
 			cursor.moveToNext();
 			br++;
 		}

@@ -11,6 +11,12 @@ public class Constants {
 	public static final String GLOBAL_PARAM_EMPTY = "EMPTY";
 
 	/**
+	 * Bundle keys
+	 */
+	// MetroFragment --> MetroSchedule
+	public static final String BUNDLE_METRO_SCHEDULE = "METRO SCHEDULE";
+
+	/**
 	 * Preferences
 	 */
 	public static final String PREFERENCE_KEY_LANGUAGE = "language";
@@ -24,4 +30,9 @@ public class Constants {
 	public static final int FAVOURITES_IMG_BUTTON_ACTION_UP = Color.argb(0,
 			155, 155, 155);
 	public static final String FAVOURITES_IMAGE_URL = "https://geo0.ggpht.com/cbk?cb_client=maps_sv.tactile&output=thumbnail&thumb=2&w=500&h=165&yaw=1&pitch=1&ll=%s,%s";
+
+	/**
+	 * Metro Schedule
+	 */
+	public static final String METRO_STATION_URL = "https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station%s.xml";
 }

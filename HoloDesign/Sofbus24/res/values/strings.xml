@@ -3,12 +3,14 @@
 
     <!-- Global labels -->
     <string name="app_name">Софбус 24</string>
-    <string name="app_dialog_title_important">Важно</string>
     <string name="app_img_empty_content_description" />
     <string name="app_button_ok">OK</string>
     <string name="app_button_cancel">Отказ</string>
     <string name="app_button_yes">Да</string>
     <string name="app_button_no">Не</string>
+    <string name="app_dialog_title_important">Важно</string>
+    <string name="app_dialog_title_error">Грешка</string>
+    <string name="app_internet_error">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
 
     <!-- Action Bar -->
     <string name="action_switch_gps">Включване/изключване на GPS модула</string>
@@ -55,9 +57,12 @@
     <string name="metro_search_tab_direction2">Линия 2</string>
     <string name="metro_item_favourite" />
     <string name="metro_item_station_number_text" formatted="false">Спирка номер: %s</string>
+    <string name="metro_item_station_number_text_sign" formatted="false">Спирка №%s</string>
     <string name="metro_item_add_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>
     <string name="metro_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
     <string name="metro_item_empty_list" formatted="false"><![CDATA[Няма намерени метростанции за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
     <string name="metro_menu_map_route">Маршрут</string>
+    <string name="metro_loading_schedule" formatted="false"><![CDATA[Извличане на разписанието за спирка <b><i>%s (%s)</b></i>...]]></string>
+    <string name="metro_schedule_time_info" formatted="false"><![CDATA[Информация към %s]]></string>
 
 </resources>
