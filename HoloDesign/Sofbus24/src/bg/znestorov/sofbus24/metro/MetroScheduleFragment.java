@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import bg.znestorov.sofbus24.entity.UpdateableFragment;
+import bg.znestorov.sofbus24.main.MetroSchedule;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
@@ -131,12 +132,11 @@ public class MetroScheduleFragment extends ListFragment implements
 	private boolean isFragmentActive() {
 		boolean isActive = false;
 
-		int currentHour = Integer.parseInt(DateFormat.format("kk",
-				new java.util.Date()).toString());
+		int activePageHour = MetroSchedule.getActivePageHour();
 		int firstTimeHour = Integer.parseInt(metroScheduleList.get(0)
 				.replaceAll(":.*", ""));
 
-		if (currentHour == firstTimeHour) {
+		if (activePageHour == firstTimeHour) {
 			isActive = true;
 		}
 

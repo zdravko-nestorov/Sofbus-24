@@ -32,6 +32,7 @@ public class MetroSchedule extends FragmentActivity {
 	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
 	private List<ArrayList<String>> fragmentsScheduleList = new ArrayList<ArrayList<String>>();
 
+	private static int activePageHour;
 	private int currentPagePosition = 0;
 	private TextView metroScheduleTime;
 	private ImageButton leftArrow;
@@ -191,7 +192,14 @@ public class MetroSchedule extends FragmentActivity {
 			int firstTimeHour = Integer.parseInt(fragmentsScheduleList.get(i)
 					.get(0).replaceAll(":.*", ""));
 			if (firstTimeHour == currentHour) {
+				// Check if current hour exists in the schedule list
 				isCurrentHourInRange = true;
+
+				// Set the active page hour to a variable used in
+				// MetroScheduleFragments
+				activePageHour = currentHour;
+
+				// Set the position of the currently active fragment
 				currentPagePosition = i;
 				break;
 			}
@@ -200,6 +208,8 @@ public class MetroSchedule extends FragmentActivity {
 		// Check if the current hour is present in the schedule. If not - set it
 		// to the first fragment
 		if (!isCurrentHourInRange) {
+			activePageHour = Integer.parseInt(fragmentsScheduleList.get(0)
+					.get(0).replaceAll(":.*", ""));
 			currentPagePosition = 0;
 		}
 
@@ -269,5 +279,9 @@ public class MetroSchedule extends FragmentActivity {
 		actionBar.setSubtitle(currentTime);
 		metroStationName.setText(ms.getName());
 		metroDirection.setText(ms.getDirection());
+	}
+
+	public static int getActivePageHour() {
+		return activePageHour;
 	}
 }
