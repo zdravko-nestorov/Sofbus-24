@@ -37,6 +37,9 @@ public class MetroSchedule extends FragmentActivity {
 	private ImageButton leftArrow;
 	private ImageButton rightArrow;
 
+	private TextView metroStationName;
+	private TextView metroDirection;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,9 +74,9 @@ public class MetroSchedule extends FragmentActivity {
 		rightArrow = (ImageButton) findViewById(R.id.metro_schedule_img_right);
 
 		// Get the header TextView views and set them labels
-		TextView metroStationName = (TextView) findViewById(R.id.metro_schedule_station_name);
-		TextView metroDirection = (TextView) findViewById(R.id.metro_schedule_direction);
-		actionsOverTextViews(metroStationName, metroDirection);
+		metroStationName = (TextView) findViewById(R.id.metro_schedule_station_name);
+		metroDirection = (TextView) findViewById(R.id.metro_schedule_direction);
+		actionsOverTextViews();
 
 		// Set on page change listener
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
@@ -118,6 +121,11 @@ public class MetroSchedule extends FragmentActivity {
 				((MetroScheduleFragment) fragmentsList.get(i))
 						.update(MetroSchedule.this);
 			}
+
+			String currentTime = DateFormat.format("dd.MM.yyy, kk:mm",
+					new java.util.Date()).toString();
+			actionBar.setSubtitle(currentTime);
+
 			return true;
 		case R.id.action_ms_map:
 			// TODO: Open the map
@@ -177,14 +185,22 @@ public class MetroSchedule extends FragmentActivity {
 	private void setActiveTab() {
 		int currentHour = Integer.parseInt(DateFormat.format("kk",
 				new java.util.Date()).toString());
+		boolean isCurrentHourInRange = false;
 
 		for (int i = 0; i < fragmentsScheduleList.size(); i++) {
 			int firstTimeHour = Integer.parseInt(fragmentsScheduleList.get(i)
 					.get(0).replaceAll(":.*", ""));
 			if (firstTimeHour == currentHour) {
+				isCurrentHourInRange = true;
 				currentPagePosition = i;
 				break;
 			}
+		}
+
+		// Check if the current hour is present in the schedule. If not - set it
+		// to the first fragment
+		if (!isCurrentHourInRange) {
+			currentPagePosition = 0;
 		}
 
 		actionsOnPageSelected();
@@ -241,14 +257,8 @@ public class MetroSchedule extends FragmentActivity {
 
 	/**
 	 * Set labels on the TextViews
-	 * 
-	 * @param metroStationName
-	 *            TextView holding the metro station name
-	 * @param metroDirection
-	 *            TextView holding the metro direction
 	 */
-	private void actionsOverTextViews(TextView metroStationName,
-			TextView metroDirection) {
+	private void actionsOverTextViews() {
 		String stationNumber = String.format(
 				getString(R.string.metro_item_station_number_text_sign),
 				ms.getNumber());

@@ -9,17 +9,24 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import bg.znestorov.sofbus24.entity.UpdateableFragment;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
+/**
+ * Metro Schedule Fragment containing all information about the hours of
+ * arriving separated in different rows
+ * 
+ * @author Zdravko Nestorov
+ * @version 1.0
+ * 
+ */
 public class MetroScheduleFragment extends ListFragment implements
 		UpdateableFragment {
 
 	private Activity context;
-	private ArrayAdapter<String> metroArrayAdapter;
+	private MetroScheduleAdapter metroArrayAdapter;
 	private ArrayList<String> metroScheduleList;
 
 	public MetroScheduleFragment() {
@@ -71,7 +78,7 @@ public class MetroScheduleFragment extends ListFragment implements
 	 * 
 	 * @param context
 	 *            the current Activity context
-	 * @return an ArrayList containg the current time and the time left
+	 * @return an ArrayList containing the current time and the time left
 	 */
 	private ArrayList<String> formatMetroScheduleList(Activity context) {
 		ArrayList<String> formattedMetroScheduleList = new ArrayList<String>();
@@ -83,8 +90,12 @@ public class MetroScheduleFragment extends ListFragment implements
 			String differenceTime = Utils.getDifference(context,
 					metroScheduleTime, currentTime);
 
-			formattedMetroScheduleList.add(String.format(metroScheduleTime
-					+ " (%s)", differenceTime));
+			if (!"---".equals(differenceTime)) {
+				metroScheduleTime = String.format(metroScheduleTime + " (%s)",
+						differenceTime);
+			}
+
+			formattedMetroScheduleList.add(metroScheduleTime);
 		}
 
 		return formattedMetroScheduleList;
@@ -105,11 +116,30 @@ public class MetroScheduleFragment extends ListFragment implements
 		}
 
 		// Create the ListAdapter
-		metroArrayAdapter = new ArrayAdapter<String>(context,
-				R.layout.activity_metro_schedule_list_item,
-				R.id.metro_schedule_item_hour, formattedMetroScheduleList);
+		metroArrayAdapter = new MetroScheduleAdapter(context,
+				formattedMetroScheduleList, isFragmentActive());
 
 		// Set the ListAdapter
 		setListAdapter(metroArrayAdapter);
+	}
+
+	/**
+	 * Check if the current fragment is active
+	 * 
+	 * @return if the fragment is active
+	 */
+	private boolean isFragmentActive() {
+		boolean isActive = false;
+
+		int currentHour = Integer.parseInt(DateFormat.format("kk",
+				new java.util.Date()).toString());
+		int firstTimeHour = Integer.parseInt(metroScheduleList.get(0)
+				.replaceAll(":.*", ""));
+
+		if (currentHour == firstTimeHour) {
+			isActive = true;
+		}
+
+		return isActive;
 	}
 }

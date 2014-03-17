@@ -47,6 +47,13 @@ import bg.znestorov.sofbus24.main.MetroSchedule;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 
+/**
+ * Metro Fragment containing information about the metro stations
+ * 
+ * @author Zdravko Nestorov
+ * @version 1.0
+ * 
+ */
 public class MetroFragment extends ListFragment implements UpdateableFragment {
 
 	private Activity context;

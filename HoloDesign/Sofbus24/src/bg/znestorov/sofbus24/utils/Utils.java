@@ -48,11 +48,6 @@ public class Utils {
 		int afterTimeMilis = 0;
 		int currTimeMilis = 0;
 
-		// In cases when it is after midnight
-		if (currTime.startsWith("00:")) {
-			currTime = currTime.replaceAll("00:", "24:");
-		}
-
 		try {
 			afterTimeMilis = new BigDecimal(afterTime.split(":")[0]).intValue()
 					* 60 + new BigDecimal(afterTime.split(":")[1]).intValue();
@@ -86,7 +81,7 @@ public class Utils {
 	 * @return the difference in format ~1h,20m
 	 */
 	public static String formatTime(Context context, String difference) {
-		String diff = "---";
+		String diff = "";
 		String[] differenceArr = difference.split(":");
 
 		if (differenceArr.length == 2) {
