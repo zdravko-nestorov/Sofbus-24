@@ -43,51 +43,12 @@
         android:paddingTop="5sp"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="13sp"
-            android:background="@color/light_grey_transperent"
-            android:paddingBottom="10sp"
-            android:paddingTop="10sp" >
-
-            <ImageView
-                android:id="@+id/metro_schedule_img_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/app_img_empty_content_description"
-                android:minHeight="50sp"
-                android:minWidth="50sp"
-                android:src="@drawable/ic_previous_next" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="13sp"
-            android:background="@color/light_grey_transperent"
-            android:paddingBottom="10sp"
-            android:paddingTop="10sp" >
-
-            <ImageView
-                android:id="@+id/metro_schedule_img_right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/app_img_empty_content_description"
-                android:minHeight="50sp"
-                android:minWidth="50sp"
-                android:rotation="180"
-                android:src="@drawable/ic_previous_next" />
-        </RelativeLayout>
 
         <android.support.v4.view.ViewPager
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -96,6 +57,30 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             tools:context=".MetroSchedule" />
+
+        <ImageButton
+            android:id="@+id/metro_schedule_img_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="13sp"
+            android:contentDescription="@string/app_img_empty_content_description"
+            android:minHeight="75sp"
+            android:minWidth="50sp"
+            android:src="@drawable/ic_previous_next" />
+
+        <ImageButton
+            android:id="@+id/metro_schedule_img_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="13sp"
+            android:contentDescription="@string/app_img_empty_content_description"
+            android:minHeight="75sp"
+            android:minWidth="50sp"
+            android:rotation="180"
+            android:src="@drawable/ic_previous_next" />
     </RelativeLayout>
 
 </LinearLayout>

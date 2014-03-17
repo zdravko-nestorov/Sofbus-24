@@ -10,8 +10,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.format.DateFormat;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.metro.MetroScheduleFragment;
@@ -19,11 +23,19 @@ import bg.znestorov.sofbus24.utils.Constants;
 
 public class MetroSchedule extends FragmentActivity {
 
+	private ActionBar actionBar;
+
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
 
 	private MetroStation ms;
 	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
+	private List<ArrayList<String>> fragmentsScheduleList = new ArrayList<ArrayList<String>>();
+
+	private int currentPagePosition = 0;
+	private TextView metroScheduleTime;
+	private ImageButton leftArrow;
+	private ImageButton rightArrow;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +52,7 @@ public class MetroSchedule extends FragmentActivity {
 		fillFragmentsList();
 
 		// Set up the action bar
-		final ActionBar actionBar = getActionBar();
+		actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 
 		// Create the adapter that will return a fragment for each of the
@@ -53,28 +65,43 @@ public class MetroSchedule extends FragmentActivity {
 		mViewPager = (ViewPager) findViewById(R.id.metro_schedule_pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		// Get the time TextView and ImageButtons
+		metroScheduleTime = (TextView) findViewById(R.id.metro_schedule_time);
+		leftArrow = (ImageButton) findViewById(R.id.metro_schedule_img_left);
+		rightArrow = (ImageButton) findViewById(R.id.metro_schedule_img_right);
 
 		// Get the header TextView views and set them labels
-		String stationNumber = String.format(
-				getString(R.string.metro_item_station_number_text_sign),
-				ms.getNumber());
-		String currentTime = String.format(
-				getString(R.string.metro_schedule_time_info), DateFormat
-						.format("dd.MM.yyy, kk:mm", new java.util.Date())
-						.toString());
-		String hourRange = DateFormat.format("kk", new java.util.Date())
-				.toString() + ":00";
-
 		TextView metroStationName = (TextView) findViewById(R.id.metro_schedule_station_name);
 		TextView metroDirection = (TextView) findViewById(R.id.metro_schedule_direction);
-		TextView metroScheduleTime = (TextView) findViewById(R.id.metro_schedule_time);
+		actionsOverTextViews(metroStationName, metroDirection);
 
-		actionBar.setTitle(stationNumber);
-		actionBar.setSubtitle(currentTime);
-		metroStationName.setText(ms.getName());
-		metroDirection.setText(ms.getDirection());
-		metroScheduleTime.setText(hourRange);
+		// Set on page change listener
+		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+			public void onPageScrollStateChanged(int state) {
+			}
+
+			public void onPageScrolled(int position, float positionOffset,
+					int positionOffsetPixels) {
+			}
+
+			public void onPageSelected(int position) {
+				currentPagePosition = position;
+				actionsOnPageSelected();
+			}
+		});
+
+		// Set active tab
+		setActiveTab();
+
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present
+		getMenuInflater().inflate(R.menu.activity_metro_schedule_actions, menu);
+
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -82,6 +109,18 @@ public class MetroSchedule extends FragmentActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			return true;
+		case R.id.action_ms_reset:
+			setActiveTab();
+			return true;
+		case R.id.action_ms_refresh:
+			for (int i = 0; i < fragmentsList.size(); i++) {
+				((MetroScheduleFragment) fragmentsList.get(i))
+						.update(MetroSchedule.this);
+			}
+			return true;
+		case R.id.action_ms_map:
+			// TODO: Open the map
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -127,7 +166,98 @@ public class MetroSchedule extends FragmentActivity {
 
 				fragment.setArguments(bundle);
 				fragmentsList.add(fragment);
+				fragmentsScheduleList.add(metroSchedule);
 			}
 		}
+	}
+
+	/**
+	 * Set the current active tab
+	 */
+	private void setActiveTab() {
+		int currentHour = Integer.parseInt(DateFormat.format("kk",
+				new java.util.Date()).toString());
+
+		for (int i = 0; i < fragmentsScheduleList.size(); i++) {
+			int firstTimeHour = Integer.parseInt(fragmentsScheduleList.get(i)
+					.get(0).replaceAll(":.*", ""));
+			if (firstTimeHour == currentHour) {
+				currentPagePosition = i;
+				break;
+			}
+		}
+
+		actionsOnPageSelected();
+		actionsOverImageButtons();
+		mViewPager.setCurrentItem(currentPagePosition);
+	}
+
+	/**
+	 * Set the Fragment schedule hour label and show the needed arrows
+	 * 
+	 * @param position
+	 *            the position of the selected page
+	 */
+	private void actionsOnPageSelected() {
+		// Set the MetroScheduleTime label
+		String hourRange = fragmentsScheduleList.get(currentPagePosition)
+				.get(0).replaceAll(":.*", ":00");
+		metroScheduleTime.setText(hourRange);
+
+		// Show needed arrows
+		if (currentPagePosition == 0) {
+			leftArrow.setVisibility(View.GONE);
+		} else if (currentPagePosition == fragmentsList.size() - 1) {
+			rightArrow.setVisibility(View.GONE);
+		} else {
+			leftArrow.setVisibility(View.VISIBLE);
+			rightArrow.setVisibility(View.VISIBLE);
+		}
+	}
+
+	/**
+	 * Set onClickListeners over the ImageButtons
+	 * 
+	 * @param currentPagePosition
+	 *            position of the currently selected tab
+	 */
+	private void actionsOverImageButtons() {
+		// Set onClickListner over the left arrow
+		leftArrow.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mViewPager.setCurrentItem(currentPagePosition - 1);
+			}
+		});
+
+		// Set onClickListner over the right arrow
+		rightArrow.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mViewPager.setCurrentItem(currentPagePosition + 1);
+			}
+		});
+	}
+
+	/**
+	 * Set labels on the TextViews
+	 * 
+	 * @param metroStationName
+	 *            TextView holding the metro station name
+	 * @param metroDirection
+	 *            TextView holding the metro direction
+	 */
+	private void actionsOverTextViews(TextView metroStationName,
+			TextView metroDirection) {
+		String stationNumber = String.format(
+				getString(R.string.metro_item_station_number_text_sign),
+				ms.getNumber());
+		String currentTime = DateFormat.format("dd.MM.yyy, kk:mm",
+				new java.util.Date()).toString();
+
+		actionBar.setTitle(stationNumber);
+		actionBar.setSubtitle(currentTime);
+		metroStationName.setText(ms.getName());
+		metroDirection.setText(ms.getDirection());
 	}
 }
