@@ -20,10 +20,10 @@ import bg.znestorov.sofbus24.main.R;
  */
 public class MetroScheduleAdapter extends ArrayAdapter<String> {
 
-	private final Activity context;
-	private final List<String> metroScheduleList;
+	private Activity context;
+	private List<String> metroScheduleList;
 
-	private final boolean isActiveFragment;
+	private boolean isActiveFragment;
 	private boolean isClosestRowSet = false;
 
 	// Used for optimize performance of the ListView
@@ -69,7 +69,7 @@ public class MetroScheduleAdapter extends ArrayAdapter<String> {
 
 		// Check if this is the current Fragment, so mark the closest vehicle
 		if (isActiveFragment) {
-			if (metroSchedule.contains("(") && !isClosestRowSet) {
+			if (metroSchedule.contains("~") && !isClosestRowSet) {
 				isClosestRowSet = true;
 				rowView.setBackgroundColor(Color.parseColor("#80CEEA"));
 			}

@@ -16,8 +16,6 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 
-import com.google.android.maps.GeoPoint;
-
 public class StationsDataSource {
 
 	// Database fields
@@ -375,45 +373,6 @@ public class StationsDataSource {
 				+ StationsSQLite.COLUMN_LAT + " - " + location.getLatitude()
 				+ ")" + " + ABS(" + StationsSQLite.COLUMN_LON + " - "
 				+ location.getLongitude() + ")) ASC";
-
-		Cursor cursor = database.rawQuery(select, null);
-
-		// Iterating the cursor and fill the empty List<Station>
-		cursor.moveToFirst();
-		int br = 0;
-		while (br < nearestStationsCount) {
-			Station foundStation = cursorToStation(cursor);
-			if (foundStation.getType() == VehicleType.METRO1
-					|| foundStation.getType() == VehicleType.METRO2) {
-				foundStation.setCustomField(String.format(
-						Constants.METRO_STATION_URL, foundStation.getNumber()));
-			}
-
-			stations.add(foundStation);
-			cursor.moveToNext();
-			br++;
-		}
-
-		// Closing the cursor
-		cursor.close();
-
-		return stations;
-	}
-
-	/**
-	 * Get the nearest station from the DB to a GeoPoint
-	 * 
-	 * @param geoPoint
-	 *            the current GeoPoint
-	 * @return
-	 */
-	public List<Station> getClosestStations(GeoPoint geoPoint) {
-		List<Station> stations = new ArrayList<Station>();
-
-		String select = "SELECT * FROM stations ORDER BY (ABS("
-				+ StationsSQLite.COLUMN_LAT + " - " + geoPoint.getLatitudeE6()
-				/ 1E6 + ")" + " + ABS(" + StationsSQLite.COLUMN_LON + " - "
-				+ geoPoint.getLongitudeE6() / 1E6 + ")) ASC";
 
 		Cursor cursor = database.rawQuery(select, null);
 

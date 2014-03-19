@@ -56,6 +56,21 @@ public class MetroStation extends Station implements Serializable {
 		this.direction = direction;
 	}
 
+	public void setDirection(Document docStationSchedule) {
+		String direction = "";
+
+		try {
+			XPath xpath = XPathFactory.newInstance().newXPath();
+			Node directionNode = (Node) xpath.evaluate(
+					"Station/Direction/text()", docStationSchedule,
+					XPathConstants.NODE);
+			direction = directionNode.getTextContent();
+		} catch (Exception e) {
+		}
+
+		this.direction = direction;
+	}
+
 	public HashMap<Integer, ArrayList<String>> getHolidaySchedule() {
 		return holidaySchedule;
 	}

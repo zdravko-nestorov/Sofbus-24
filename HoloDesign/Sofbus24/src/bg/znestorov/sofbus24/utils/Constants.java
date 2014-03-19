@@ -9,12 +9,16 @@ public class Constants {
 	 */
 	public static final Integer GLOBAL_TAB_COUNT = 4;
 	public static final String GLOBAL_PARAM_EMPTY = "EMPTY";
+	public static final Double GLOBAL_PARAM_SOFIA_CENTER_LATITUDE = 42.696492;
+	public static final Double GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE = 23.326011;
 
 	/**
 	 * Bundle keys
 	 */
-	// MetroFragment --> MetroSchedule
+	// MetroFragment --> MetroSchedule --> MetroScheduleFragment
 	public static final String BUNDLE_METRO_SCHEDULE = "METRO SCHEDULE";
+	// MetroSchedule --> StationMap
+	public static final String BUNDLE_STATION_MAP = "STATION MAP";
 
 	/**
 	 * Preferences

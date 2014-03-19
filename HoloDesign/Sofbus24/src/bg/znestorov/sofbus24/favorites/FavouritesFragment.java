@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -31,6 +32,7 @@ import bg.znestorov.sofbus24.databases.FavouritesDatabaseUtils;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.UpdateableFragment;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 
 /**
  * Favourites fragment responsible for visualizing the items from Favourites DB
@@ -104,7 +106,25 @@ public class FavouritesFragment extends ListFragment implements
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Station station = (Station) getListAdapter().getItem(position);
 
-		// TODO: Retrieve information about the station
+		switch (station.getType()) {
+		case BUS:
+		case TROLLEY:
+		case TRAM:
+			// TODO: Retrieve information about the station
+			break;
+		case METRO1:
+		case METRO2:
+			ProgressDialog progressDialog = new ProgressDialog(context);
+			progressDialog.setMessage(Html.fromHtml(String.format(
+					getString(R.string.metro_loading_schedule),
+					station.getName(), station.getNumber())));
+			RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
+					context, progressDialog, station);
+			retrieveMetroSchedule.execute();
+			break;
+		default:
+			break;
+		}
 
 		Toast.makeText(getActivity(), station.getName(), Toast.LENGTH_SHORT)
 				.show();
@@ -112,7 +132,7 @@ public class FavouritesFragment extends ListFragment implements
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.activity_favourites_menu, menu);
+		inflater.inflate(R.menu.activity_favourites_fragment_menu, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 

@@ -23,6 +23,8 @@
     <string name="action_ms_reset">Нулиране</string>
     <string name="action_ms_refresh">Обнови</string>
     <string name="action_ms_map">Карта</string>
+    <!-- Station Map -->
+    <string name="action_sm_focus">Карта</string>
 
     <!-- Favourites Fragment -->
     <string name="fav_search_hint">Търсене по име или номер</string>
@@ -70,6 +72,6 @@
     <string name="metro_item_empty_list" formatted="false"><![CDATA[Няма намерени метростанции за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
     <string name="metro_menu_map_route">Маршрут</string>
     <string name="metro_loading_schedule" formatted="false"><![CDATA[Извличане на разписанието за спирка <b><i>%s (%s)</b></i>...]]></string>
-    <string name="metro_schedule_refresh" formatted="false"><![CDATA[Обновяване...]]></string>
+    <string name="metro_schedule_refresh" formatted="false"><![CDATA[Обновяване на оставащото време...]]></string>
 
 </resources>

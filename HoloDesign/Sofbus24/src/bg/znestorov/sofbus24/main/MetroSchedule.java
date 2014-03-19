@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -17,12 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.metro.MetroScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 
 public class MetroSchedule extends FragmentActivity {
 
+	private Activity context;
 	private ActionBar actionBar;
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -46,6 +50,9 @@ public class MetroSchedule extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_metro_schedule);
 
+		// Get the current context
+		context = MetroSchedule.this;
+
 		// Get the MetroStation object from the Bundle
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -58,6 +65,7 @@ public class MetroSchedule extends FragmentActivity {
 		// Set up the action bar
 		actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		// Create the adapter that will return a fragment for each of the
 		// primary sections of the application
@@ -96,8 +104,6 @@ public class MetroSchedule extends FragmentActivity {
 
 		// Set active tab
 		setActiveTab();
-
-		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -118,18 +124,25 @@ public class MetroSchedule extends FragmentActivity {
 			setActiveTab();
 			return true;
 		case R.id.action_ms_refresh:
+			// Show a Toast that the list is refreshing
+			Toast.makeText(context, getString(R.string.metro_schedule_refresh),
+					Toast.LENGTH_SHORT).show();
+
+			// Refresh all metro schedule fragments
 			for (int i = 0; i < fragmentsList.size(); i++) {
-				((MetroScheduleFragment) fragmentsList.get(i))
-						.update(MetroSchedule.this);
+				((MetroScheduleFragment) fragmentsList.get(i)).update(context);
 			}
 
+			// Change the time in the ActionBar
 			String currentTime = DateFormat.format("dd.MM.yyy, kk:mm",
 					new java.util.Date()).toString();
 			actionBar.setSubtitle(currentTime);
 
 			return true;
 		case R.id.action_ms_map:
-			// TODO: Open the map
+			Intent metroMapIntent = new Intent(context, StationMap.class);
+			metroMapIntent.putExtra(Constants.BUNDLE_STATION_MAP, ms);
+			startActivity(metroMapIntent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
