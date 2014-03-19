@@ -71,7 +71,7 @@ public class RetrieveInfoMain {
 							+ mapEntry.getKey());
 
 					MetroStationsScheduleMain.saveStationsScheduleToAFile(
-							logger, md.getId(), mapEntry, prop);
+							logger, md.getId(), md.getName(), mapEntry, prop);
 				}
 			}
 

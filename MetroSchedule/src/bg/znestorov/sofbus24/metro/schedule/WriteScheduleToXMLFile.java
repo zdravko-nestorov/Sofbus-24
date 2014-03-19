@@ -59,6 +59,12 @@ public class WriteScheduleToXMLFile {
 			name.appendChild(doc.createTextNode(ms.getName()));
 			station.appendChild(name);
 
+			// Create Direction element
+			Element direction = doc.createElement("Direction");
+			direction.appendChild(doc.createTextNode(ms.getDirection()
+					.replaceAll("-", " - ")));
+			station.appendChild(direction);
+
 			// Create Coordinates element
 			Element coordinates = doc.createElement("Coordinates");
 			station.appendChild(coordinates);

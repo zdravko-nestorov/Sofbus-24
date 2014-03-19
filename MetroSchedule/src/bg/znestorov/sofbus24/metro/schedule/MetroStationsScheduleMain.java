@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 public class MetroStationsScheduleMain {
 
 	public static void saveStationsScheduleToAFile(Logger logger,
-			String directionId, Map.Entry<String, String> station,
-			Properties coordinatesProp) {
+			String directionId, String directionName,
+			Map.Entry<String, String> station, Properties coordinatesProp) {
 		String htmlResponse = HtmlRequestStationSchedule.retrieveStationsInfo(
 				logger, directionId, station);
 
@@ -20,7 +20,8 @@ public class MetroStationsScheduleMain {
 
 		MetroStation ms = HtmlResultStationSchedule.getMetroDirections(logger,
 				htmlResponse,
-				new MetroStation(station.getKey(), station.getValue()));
+				new MetroStation(station.getKey(), station.getValue(),
+						directionName));
 
 		if (ms == null) {
 			logger.warning("Problem with parsing the schedule information from SGKT...");

@@ -8,12 +8,14 @@ public class MetroStation {
 
 	private String number;
 	private String name;
+	private String direction;
 	private HashMap<Integer, ArrayList<String>> holidaySchedule;
 	private HashMap<Integer, ArrayList<String>> weekdaySchedule;
 
-	public MetroStation(String number, String name) {
+	public MetroStation(String number, String name, String direction) {
 		this.number = number;
 		this.name = name;
+		this.direction = direction;
 
 		this.holidaySchedule = new LinkedHashMap<Integer, ArrayList<String>>();
 		this.weekdaySchedule = new LinkedHashMap<Integer, ArrayList<String>>();
@@ -37,6 +39,14 @@ public class MetroStation {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getDirection() {
+		return direction;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
 	}
 
 	public HashMap<Integer, ArrayList<String>> getHolidaySchedule() {
