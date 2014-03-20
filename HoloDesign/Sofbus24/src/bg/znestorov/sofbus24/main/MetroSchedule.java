@@ -180,13 +180,7 @@ public class MetroSchedule extends FragmentActivity {
 			ArrayList<String> metroSchedule = ms.getSchedule().get(i);
 
 			if (metroSchedule != null && !metroSchedule.isEmpty()) {
-				fragment = new MetroScheduleFragment();
-
-				Bundle bundle = new Bundle();
-				bundle.putSerializable(Constants.BUNDLE_METRO_SCHEDULE,
-						metroSchedule);
-
-				fragment.setArguments(bundle);
+				fragment = MetroScheduleFragment.newInstance(metroSchedule);
 				fragmentsList.add(fragment);
 				fragmentsScheduleList.add(metroSchedule);
 			}

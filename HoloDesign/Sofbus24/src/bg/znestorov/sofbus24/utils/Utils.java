@@ -9,6 +9,78 @@ import bg.znestorov.sofbus24.main.R;
 public class Utils {
 
 	/**
+	 * Get a value from a string BEFORE some REGEX
+	 * 
+	 * @param value
+	 *            the string value
+	 * @param regex
+	 *            the regex that is looked for
+	 * @return the substring value BEFORE the REGEX, or the value in case of no
+	 *         REGEX found
+	 */
+	public static String getValueBefore(String value, String regex) {
+		if (value.contains(regex)) {
+			return value.substring(0, value.indexOf(regex));
+		} else {
+			return value;
+		}
+	}
+
+	/**
+	 * Get a value from a string BEFORE some REGEX (LAST)
+	 * 
+	 * @param value
+	 *            the string value
+	 * @param regex
+	 *            the regex that is looked for
+	 * @return the substring value BEFORE the REGEX (LAST), or the value in case
+	 *         of no REGEX found
+	 */
+	public static String getValueBeforeLast(String value, String regex) {
+		if (value.contains(regex)) {
+			return value.substring(0, value.lastIndexOf(regex));
+		} else {
+			return value;
+		}
+	}
+
+	/**
+	 * Get a value from a string AFTER some REGEX
+	 * 
+	 * @param value
+	 *            the string value
+	 * @param regex
+	 *            the regex that is looked for
+	 * @return the substring value AFTER the REGEX, or the value in case of no
+	 *         REGEX found
+	 */
+	public static String getValueAfter(String value, String regex) {
+		if (value.contains(regex)) {
+			return value.substring(value.indexOf(regex) + regex.length());
+		} else {
+			return value;
+		}
+	}
+
+	/**
+	 * Get a value from a string AFTER some REGEX (LAST)
+	 * 
+	 * @param value
+	 *            the string value
+	 * @param regex
+	 *            the regex that is looked for
+	 * @return the substring value AFTER the REGEX (LAST), or the value in case
+	 *         of no REGEX found
+	 */
+	public static String getValueAfterLast(String value, String regex) {
+		if (value.contains(regex)) {
+			return value.substring(value.lastIndexOf(regex) + regex.length());
+		} else {
+			return value;
+		}
+	}
+
+	/**
 	 * Filling a number with zeroes ("0") if it is lower than "outputLength"
 	 * digits
 	 * 

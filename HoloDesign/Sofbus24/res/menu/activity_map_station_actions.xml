@@ -5,7 +5,41 @@
     <item
         android:id="@+id/action_sm_focus"
         android:icon="@android:drawable/ic_menu_mylocation"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="@string/action_sm_focus"/>
+
+    <!-- Map mode -->
+    <item
+        android:id="@+id/action_sm_map_mode"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:showAsAction="always"
+        android:title="@string/action_sm_map_mode">
+        <menu>
+
+            <!-- Normal map mode -->
+            <item
+                android:id="@+id/action_sm_map_mode_normal"
+                android:showAsAction="never"
+                android:title="@string/action_sm_map_mode_normal"/>
+
+            <!-- Terrain map mode -->
+            <item
+                android:id="@+id/action_sm_map_mode_terrain"
+                android:showAsAction="never"
+                android:title="@string/action_sm_map_mode_terrain"/>
+
+            <!-- Satellite map mode -->
+            <item
+                android:id="@+id/action_sm_map_mode_satellite"
+                android:showAsAction="never"
+                android:title="@string/action_sm_map_mode_satellite"/>
+
+            <!-- Hybrid map mode -->
+            <item
+                android:id="@+id/action_sm_map_mode_hybrid"
+                android:showAsAction="never"
+                android:title="@string/action_sm_map_mode_hybrid"/>
+        </menu>
+    </item>
 
 </menu>

@@ -25,6 +25,11 @@
     <string name="action_ms_map">Карта</string>
     <!-- Station Map -->
     <string name="action_sm_focus">Карта</string>
+    <string name="action_sm_map_mode">Режим на картата</string>
+    <string name="action_sm_map_mode_normal">Нормален</string>
+    <string name="action_sm_map_mode_terrain">Терен</string>
+    <string name="action_sm_map_mode_satellite">Сателит</string>
+    <string name="action_sm_map_mode_hybrid">Хибрид</string>
 
     <!-- Favourites Fragment -->
     <string name="fav_search_hint">Търсене по име или номер</string>

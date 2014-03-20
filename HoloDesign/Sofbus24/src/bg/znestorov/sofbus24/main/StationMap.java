@@ -48,8 +48,11 @@ public class StationMap extends Activity {
 			Station stationBundle = (Station) extras
 					.get(Constants.BUNDLE_STATION_MAP);
 
-			// Set ActionBar title
-			actionBar.setTitle(stationBundle.getName());
+			// Set ActionBar title and subtitle
+			actionBar.setTitle(String.format(
+					getString(R.string.metro_item_station_number_text_sign),
+					stationBundle.getNumber()));
+			actionBar.setSubtitle(stationBundle.getName());
 
 			// Check if the station has coordinates in the DB
 			try {
@@ -89,6 +92,18 @@ public class StationMap extends Activity {
 			return true;
 		case R.id.action_sm_focus:
 			animateMapFocus(stationLocation);
+			return true;
+		case R.id.action_sm_map_mode_normal:
+			stationMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			return true;
+		case R.id.action_sm_map_mode_terrain:
+			stationMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+			return true;
+		case R.id.action_sm_map_mode_satellite:
+			stationMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+			return true;
+		case R.id.action_sm_map_mode_hybrid:
+			stationMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

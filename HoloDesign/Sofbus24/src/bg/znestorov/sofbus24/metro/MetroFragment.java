@@ -1,9 +1,11 @@
 package bg.znestorov.sofbus24.metro;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
@@ -32,6 +34,8 @@ import bg.znestorov.sofbus24.entity.UpdateableFragment;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.StationRouteMap;
+import bg.znestorov.sofbus24.utils.Constants;
 
 /**
  * Metro Fragment containing information about the metro stations
@@ -144,23 +148,28 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		ArrayAdapter<Station> adapter = (ArrayAdapter<Station>) getListAdapter();
-
 		switch (item.getItemId()) {
 		case R.id.metro_menu_map_route:
+			Intent metroMapRouteIntent = new Intent(context,
+					StationRouteMap.class);
 
-			// TODO: Retrieve information about the vehicle
-
-			Toast.makeText(getActivity(),
-					context.getString(R.string.metro_menu_map_route),
-					Toast.LENGTH_SHORT).show();
+			switch (stationType) {
+			case METRO1:
+				metroMapRouteIntent.putExtra(
+						Constants.BUNDLE_STATION_ROUTE_MAP,
+						(ArrayList<Station>) metroDirection1);
+				break;
+			default:
+				metroMapRouteIntent.putExtra(
+						Constants.BUNDLE_STATION_ROUTE_MAP,
+						(ArrayList<Station>) metroDirection2);
+				break;
+			}
+			context.startActivity(metroMapRouteIntent);
 			break;
 		}
-
-		adapter.notifyDataSetChanged();
 
 		return true;
 	}

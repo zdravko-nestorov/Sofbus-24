@@ -30,7 +30,15 @@ public class MetroScheduleFragment extends ListFragment implements
 	private MetroScheduleAdapter metroArrayAdapter;
 	private ArrayList<String> metroScheduleList;
 
-	public MetroScheduleFragment() {
+	public static MetroScheduleFragment newInstance(
+			ArrayList<String> metroSchedule) {
+		MetroScheduleFragment metroScheduleFragment = new MetroScheduleFragment();
+
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Constants.BUNDLE_METRO_SCHEDULE, metroSchedule);
+		metroScheduleFragment.setArguments(bundle);
+
+		return metroScheduleFragment;
 	}
 
 	@Override

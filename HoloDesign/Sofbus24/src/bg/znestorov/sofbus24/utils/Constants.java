@@ -19,6 +19,8 @@ public class Constants {
 	public static final String BUNDLE_METRO_SCHEDULE = "METRO SCHEDULE";
 	// MetroSchedule --> StationMap
 	public static final String BUNDLE_STATION_MAP = "STATION MAP";
+	// MetroSchedule --> StationRouteMap
+	public static final String BUNDLE_STATION_ROUTE_MAP = "STATION ROUTE MAP";
 
 	/**
 	 * Preferences

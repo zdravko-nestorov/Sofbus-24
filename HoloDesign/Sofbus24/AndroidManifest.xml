@@ -48,6 +48,10 @@
             android:name="bg.znestorov.sofbus24.main.StationMap"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="bg.znestorov.sofbus24.main.StationRouteMap"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>

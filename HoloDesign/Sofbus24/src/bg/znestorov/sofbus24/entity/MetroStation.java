@@ -48,6 +48,20 @@ public class MetroStation extends Station implements Serializable {
 		}
 	}
 
+	public MetroStation(Station station, String direction) {
+		super(station.getNumber(), station.getName(), station.getLat(), station
+				.getLon(), station.getType(), station.getCustomField());
+
+		this.direction = direction;
+		this.holidaySchedule = new LinkedHashMap<Integer, ArrayList<String>>();
+		this.weekdaySchedule = new LinkedHashMap<Integer, ArrayList<String>>();
+
+		for (int i = 4; i <= 24; i++) {
+			this.holidaySchedule.put(i, new ArrayList<String>());
+			this.weekdaySchedule.put(i, new ArrayList<String>());
+		}
+	}
+
 	public String getDirection() {
 		return direction;
 	}
