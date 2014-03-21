@@ -66,10 +66,9 @@ public class StationRouteMap extends Activity {
 					.get(Constants.BUNDLE_STATION_ROUTE_MAP);
 
 			// Set ActionBar title and subtitle
-			actionBar.setTitle(String.format(
-					getString(R.string.metro_item_station_number_text_sign),
-					stationsList.get(0).getNumber()));
-			actionBar.setSubtitle(stationsList.get(0).getName());
+			actionBar.setTitle(getLineName(stationsList.get(0).getType()));
+			actionBar.setSubtitle(getDirectionName(stationsList.get(0)
+					.getType()));
 
 			// Check the type of the bundle object
 			if (VehicleType.METRO1.equals(stationsList.get(0).getType())
@@ -177,8 +176,30 @@ public class StationRouteMap extends Activity {
 	 * @param stationType
 	 *            the vehicle type (in case of current active tab use the global
 	 *            variable - vehicleType)
-	 * @param formatted
-	 *            if the name should be formatted
+	 * @return the direction name
+	 */
+	private String getLineName(VehicleType stationType) {
+		String lineName;
+
+		switch (stationType) {
+		case METRO1:
+			lineName = getString(R.string.metro_search_tab_direction1);
+			break;
+		default:
+			lineName = getString(R.string.metro_search_tab_direction2);
+			break;
+		}
+
+		return lineName;
+	}
+
+	/**
+	 * Get the direction name and format it if needed via the vehicle type. If
+	 * now vehicle type is entered - get the default one
+	 * 
+	 * @param stationType
+	 *            the vehicle type (in case of current active tab use the global
+	 *            variable - vehicleType)
 	 * @return the direction name
 	 */
 	private String getDirectionName(VehicleType stationType) {
