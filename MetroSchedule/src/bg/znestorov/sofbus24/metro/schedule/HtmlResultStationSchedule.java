@@ -22,44 +22,34 @@ import bg.znestorov.sobusf24.metro.utils.Constants;
 public class HtmlResultStationSchedule {
 
 	public static MetroStation getMetroDirections(Logger logger,
-			String htmlSrc, MetroStation ms) {
+			String weekdayHtmlResponse, String holidayHtmlResponse,
+			MetroStation ms) {
 
 		logger.info("Start parsing the information...");
 
-		// Split the HTML in five parts (first containing only info about the
-		// directions, and the others - about the schedule timing)
-		String[] htmlSrcParts = htmlSrc.split(Constants.METRO_REGEX_PARTS);
+		for (int i = 1; i < 3; i++) {
+			String htmlResponse;
+			if (i == 1) {
+				htmlResponse = weekdayHtmlResponse;
+			} else {
+				htmlResponse = holidayHtmlResponse;
+			}
 
-		if (htmlSrcParts.length >= 5) {
+			Pattern stationPattern = Pattern
+					.compile(Constants.METRO_REGEX_TIME);
+			Matcher stationMatcher = stationPattern.matcher(htmlResponse);
 
-			// This will be executed twice - for weekdays and holidays
-			for (int i = 1; i < 4; i = i + 2) {
-				// Split the HTML in two parts (first containing only info about
-				// each station, and the other - about the schedule timing)
-				String[] htmlSrcPartsSchedule = htmlSrcParts[i]
-						.split(Constants.METRO_REGEX_STATION_SCHEDULE_PARTS);
+			while (stationMatcher.find()) {
+				String hour = getHour(stationMatcher.group(1));
 
-				if (htmlSrcPartsSchedule.length == 2) {
-					Pattern stationPattern = Pattern
-							.compile(Constants.METRO_REGEX_TIME);
-					Matcher stationMatcher = stationPattern
-							.matcher(htmlSrcPartsSchedule[1]);
-
-					while (stationMatcher.find()) {
-						String hour = getHour(stationMatcher.group(1));
-
-						if (hour != null) {
-							// Check if it is a WEEKDAY or HOLIDAY
-							if (i == 1) {
-								ms.getWeekdaySchedule()
-										.get(Integer.parseInt(hour))
-										.add(stationMatcher.group(1));
-							} else {
-								ms.getHolidaySchedule()
-										.get(Integer.parseInt(hour))
-										.add(stationMatcher.group(1));
-							}
-						}
+				if (hour != null) {
+					// Check if it is a WEEKDAY or HOLIDAY
+					if (i == 1) {
+						ms.getWeekdaySchedule().get(Integer.parseInt(hour))
+								.add(stationMatcher.group(1));
+					} else {
+						ms.getHolidaySchedule().get(Integer.parseInt(hour))
+								.add(stationMatcher.group(1));
 					}
 				}
 			}
