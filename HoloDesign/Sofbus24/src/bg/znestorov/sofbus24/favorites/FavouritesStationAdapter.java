@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.Html;
@@ -13,14 +14,16 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.activity.ActivityUtils;
@@ -30,6 +33,7 @@ import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.Sofbus24;
+import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -51,9 +55,12 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
+		ProgressBar progressBar;
+		FrameLayout favItemLayout;
 		TextView stationName;
 		TextView stationNumber;
-		ImageView stationStreetView;
+		ImageButton stationStreetView;
+		ImageButton expandStation;
 		ImageButton editStation;
 		ImageButton removeStation;
 	}
@@ -87,12 +94,18 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 			// Configure view holder
 			viewHolder = new ViewHolder();
+			viewHolder.progressBar = (ProgressBar) rowView
+					.findViewById(R.id.favourites_item_progress_bar);
+			viewHolder.favItemLayout = (FrameLayout) rowView
+					.findViewById(R.id.favourites_item_frame_layout);
 			viewHolder.stationName = (TextView) rowView
 					.findViewById(R.id.favourites_item_station_name);
 			viewHolder.stationNumber = (TextView) rowView
 					.findViewById(R.id.favourites_item_station_number);
-			viewHolder.stationStreetView = (ImageView) rowView
+			viewHolder.stationStreetView = (ImageButton) rowView
 					.findViewById(R.id.favourites_item_bg_image);
+			viewHolder.expandStation = (ImageButton) rowView
+					.findViewById(R.id.favourites_item_expand);
 			viewHolder.editStation = (ImageButton) rowView
 					.findViewById(R.id.favourites_item_rename);
 			viewHolder.removeStation = (ImageButton) rowView
@@ -110,7 +123,61 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 				context.getString(R.string.fav_item_station_number_text),
 				station.getNumber()));
 
-		// Add the image of the station from the street view asynchronously
+		// Attach click listeners to the EXPAND, EDIT and REMOVE buttons
+		expandStation(viewHolder, station);
+		editStation(viewHolder.editStation, station, position);
+		removeStation(viewHolder.removeStation, station);
+		chooseStation(viewHolder.stationStreetView, station);
+
+		return rowView;
+	}
+
+	/**
+	 * Attach a click listener to the EXPAND button
+	 * 
+	 * @param viewHolder
+	 *            the holder containing all elements from the list item layout
+	 * @param station
+	 *            the station on the current row
+	 */
+	private void expandStation(final ViewHolder viewHolder,
+			final Station station) {
+		viewHolder.expandStation.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				boolean isExpanded = viewHolder.progressBar.getVisibility() == View.VISIBLE;
+
+				if (!isExpanded) {
+					expandListItem(viewHolder, station);
+				} else {
+					collapseListItem(viewHolder);
+				}
+			}
+		});
+	}
+
+	/**
+	 * Expand the list item
+	 * 
+	 * @param viewHolder
+	 *            the holder containing all elements from the list item layout
+	 * @param station
+	 *            the station on the current row
+	 */
+	private void expandListItem(final ViewHolder viewHolder,
+			final Station station) {
+		// Set the visibility of the progress bar
+		viewHolder.progressBar.setVisibility(View.VISIBLE);
+
+		// Set the visibility and height of the favourites item
+		viewHolder.stationStreetView.setVisibility(View.VISIBLE);
+		viewHolder.favItemLayout.setMinimumHeight(260);
+
+		// Change the expand image
+		viewHolder.expandStation.setImageResource(R.drawable.ic_collapse);
+
+		// Add the image of the station from the street view
+		// asynchronously
 		String stationLat = station.getLat();
 		String stationLon = station.getLon();
 		String imageUrl;
@@ -125,12 +192,27 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 		imageLoader.displayImage(imageUrl, viewHolder.stationStreetView,
 				displayImageOptions, null);
+	}
 
-		// Attach click listeners to the EDIT and REMOVE buttons
-		editStation(viewHolder.editStation, station, position);
-		removeStation(viewHolder.removeStation, station);
+	/**
+	 * Collapse the list item
+	 * 
+	 * @param viewHolder
+	 *            the holder containing all elements from the list item layout
+	 */
+	private void collapseListItem(final ViewHolder viewHolder) {
+		// Set the visibility of the progress bar
+		viewHolder.progressBar.setVisibility(View.INVISIBLE);
 
-		return rowView;
+		// Set the visibility and height of the favourites item
+		viewHolder.favItemLayout.setMinimumHeight(0);
+
+		// Change the expand image
+		viewHolder.expandStation.setImageResource(R.drawable.ic_expand);
+
+		// Remove the image
+		viewHolder.stationStreetView
+				.setImageResource(android.R.color.transparent);
 	}
 
 	/**
@@ -365,6 +447,41 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 				}
 
 				return false;
+			}
+		});
+	}
+
+	/**
+	 * Attach a click listener to the current row of the list view
+	 * 
+	 * @param stationStreetView
+	 *            the current row image button
+	 * @param station
+	 *            the station on the current row
+	 */
+	private void chooseStation(ImageButton stationStreetView,
+			final Station station) {
+		stationStreetView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String stationCustomField = station.getCustomField();
+				String metroCustomField = String.format(
+						Constants.METRO_STATION_URL, station.getNumber());
+
+				// Check if the type of the station - BTT or METRO
+				if (!stationCustomField.equals(metroCustomField)) {
+					// TODO: Retrieve information about the station
+					Toast.makeText(context, station.getName(),
+							Toast.LENGTH_SHORT).show();
+				} else {
+					ProgressDialog progressDialog = new ProgressDialog(context);
+					progressDialog.setMessage(Html.fromHtml(String.format(
+							context.getString(R.string.metro_loading_schedule),
+							station.getName(), station.getNumber())));
+					RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
+							context, progressDialog, station);
+					retrieveMetroSchedule.execute();
+				}
 			}
 		});
 	}

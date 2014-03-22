@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/favourites_item_frame_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="185dip" >
+    android:layout_height="wrap_content" >
 
     <ProgressBar
         android:id="@+id/favourites_item_progress_bar"
         style="@android:style/Widget.ProgressBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:visibility="invisible" />
 
     <ImageButton
         android:id="@+id/favourites_item_bg_image"
@@ -29,13 +30,13 @@
         android:background="#60000000" >
 
         <ImageButton
-            android:id="@+id/favourites_item_rename"
+            android:id="@+id/favourites_item_expand"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:background="#00000000"
             android:contentDescription="@string/fav_item_rename_toast"
             android:paddingLeft="5dip"
-            android:src="@android:drawable/ic_menu_edit" />
+            android:src="@drawable/ic_expand" />
 
         <RelativeLayout
             android:layout_width="0dip"
@@ -70,6 +71,15 @@
                 android:textColor="#FFFFFF"
                 android:textSize="12sp" />
         </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/favourites_item_rename"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="#00000000"
+            android:contentDescription="@string/fav_item_rename_toast"
+            android:paddingLeft="5dip"
+            android:src="@android:drawable/ic_menu_edit" />
 
         <ImageButton
             android:id="@+id/favourites_item_remove"

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -16,6 +17,7 @@ import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.Utils;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,6 +28,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class StationRouteMap extends Activity {
 
@@ -115,6 +118,13 @@ public class StationRouteMap extends Activity {
 	 * Process the list of MetroStation objects
 	 */
 	private void processListOfMetroStationObjects() {
+		// Create an object consisted of a set of all points of the route
+		PolylineOptions metroRouteOptionsM1 = new PolylineOptions().width(4)
+				.color(Color.RED);
+		PolylineOptions metroRouteOptionsM2 = new PolylineOptions().width(4)
+				.color(Color.BLUE);
+
+		// Process all stations of the metro route
 		for (int i = 0; i < stationsList.size(); i++) {
 			Station station = stationsList.get(i);
 			MetroStation ms = new MetroStation(station,
@@ -125,6 +135,18 @@ public class StationRouteMap extends Activity {
 				LatLng msLocation = new LatLng(Double.parseDouble(ms.getLat()),
 						Double.parseDouble(ms.getLon()));
 
+				// Add the msLocation to the appropriate route options object
+				int stationNumber = Integer.parseInt(station.getNumber());
+				if (stationNumber < 2999) {
+					metroRouteOptionsM2.add(msLocation);
+				} else if (stationNumber > 3000) {
+					metroRouteOptionsM1.add(msLocation);
+				} else {
+					metroRouteOptionsM1.add(msLocation);
+					metroRouteOptionsM2.add(msLocation);
+				}
+
+				// Create a marker on the msLocation and set some options
 				MarkerOptions stationMarkerOptions = new MarkerOptions()
 						.position(msLocation)
 						.title(String.format(ms.getName() + " (%s)",
@@ -136,37 +158,42 @@ public class StationRouteMap extends Activity {
 			} catch (NumberFormatException nfe) {
 				// In case no coordinates are found for the station
 			}
-
-			stationMap
-					.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
-						@Override
-						public void onInfoWindowClick(Marker marker) {
-							// Get the station number
-							String stationNumber = marker.getTitle()
-									.replaceAll("\\D+", "");
-
-							// Get the station from the DB
-							StationsDataSource stationDatasource = new StationsDataSource(
-									context);
-							stationDatasource.open();
-							Station station = stationDatasource
-									.getStation(stationNumber);
-							stationDatasource.close();
-
-							// Getting the Metro schedule from the station URL
-							// address
-							ProgressDialog progressDialog = new ProgressDialog(
-									context);
-							progressDialog.setMessage(Html.fromHtml(String
-									.format(getString(R.string.metro_loading_schedule),
-											station.getName(),
-											station.getNumber())));
-							RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
-									context, progressDialog, station);
-							retrieveMetroSchedule.execute();
-						}
-					});
 		}
+
+		// Set a click listener over the markers'snippets
+		stationMap
+				.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+					@Override
+					public void onInfoWindowClick(Marker marker) {
+						// Get the station number
+						String markerTitle = marker.getTitle();
+						String stationNumber = Utils.getValueBeforeLast(
+								Utils.getValueAfterLast(markerTitle, "("), ")");
+
+						// Get the station from the DB
+						StationsDataSource stationDatasource = new StationsDataSource(
+								context);
+						stationDatasource.open();
+						Station station = stationDatasource
+								.getStation(stationNumber);
+						stationDatasource.close();
+
+						// Getting the Metro schedule from the station URL
+						// address
+						ProgressDialog progressDialog = new ProgressDialog(
+								context);
+						progressDialog.setMessage(Html.fromHtml(String.format(
+								getString(R.string.metro_loading_schedule),
+								station.getName(), station.getNumber())));
+						RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
+								context, progressDialog, station);
+						retrieveMetroSchedule.execute();
+					}
+				});
+
+		// Draw a line between all the markers
+		stationMap.addPolyline(metroRouteOptionsM1);
+		stationMap.addPolyline(metroRouteOptionsM2);
 	}
 
 	/**
