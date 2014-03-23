@@ -16,9 +16,12 @@
 
     <!-- Action Bar -->
     <!-- Sofbus24 -->
-    <string name="action_switch_gps">Включване/изключване на GPS модула</string>
-    <string name="action_check_updates">Проверка за нова версия</string>
-    <string name="action_settings">Настройки</string>
+    <string name="action_closest_stations">Най-близки спирки</string>
+    <string name="action_closest_stations_map">Карта</string>
+    <string name="action_closest_stations_list">Списък</string>
+    <string name="action_more">Повече</string>
+    <string name="action_settints">Настройки</string>
+    <string name="action_about">Информация</string>
     <!-- Metro Schedule -->
     <string name="action_ms_reset">Нулиране</string>
     <string name="action_ms_refresh">Обнови</string>

@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -123,6 +124,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 				context.getString(R.string.fav_item_station_number_text),
 				station.getNumber()));
 
+		// Add the image of the station from the street view asynchronously
+		loadStationImage(viewHolder, station);
+
 		// Attach click listeners to the EXPAND, EDIT and REMOVE buttons
 		expandStation(viewHolder, station);
 		editStation(viewHolder.editStation, station, position);
@@ -171,27 +175,13 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 		// Set the visibility and height of the favourites item
 		viewHolder.stationStreetView.setVisibility(View.VISIBLE);
-		viewHolder.favItemLayout.setMinimumHeight(260);
+		viewHolder.favItemLayout.setMinimumHeight(getStationImageHeight());
 
 		// Change the expand image
 		viewHolder.expandStation.setImageResource(R.drawable.ic_collapse);
 
-		// Add the image of the station from the street view
-		// asynchronously
-		String stationLat = station.getLat();
-		String stationLon = station.getLon();
-		String imageUrl;
-
-		// TODO: Find better approach
-		if (stationLat.contains(",") || stationLat.contains(".")) {
-			imageUrl = String.format(Constants.FAVOURITES_IMAGE_URL,
-					stationLat, stationLon);
-		} else {
-			imageUrl = "drawable://" + R.drawable.ic_no_image_available;
-		}
-
-		imageLoader.displayImage(imageUrl, viewHolder.stationStreetView,
-				displayImageOptions, null);
+		// Add the image of the station from the street view asynchronously
+		loadStationImage(viewHolder, station);
 	}
 
 	/**
@@ -213,6 +203,44 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		// Remove the image
 		viewHolder.stationStreetView
 				.setImageResource(android.R.color.transparent);
+	}
+
+	/**
+	 * Get the height of the StationImage in pixels
+	 * 
+	 * @return the height of the StationImage in pixels
+	 */
+	private int getStationImageHeight() {
+		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		float sp = 185f;
+		int pixels = (int) (metrics.density * sp + 0.5f);
+
+		return pixels;
+	}
+
+	/**
+	 * Add the image of the station from the street view asynchronously
+	 * 
+	 * @param viewHolder
+	 *            the holder containing all elements from the list item layout
+	 * @param station
+	 *            the station on the current row
+	 */
+	private void loadStationImage(ViewHolder viewHolder, Station station) {
+		String stationLat = station.getLat();
+		String stationLon = station.getLon();
+		String imageUrl;
+
+		// TODO: Find better approach
+		if (stationLat.contains(",") || stationLat.contains(".")) {
+			imageUrl = String.format(Constants.FAVOURITES_IMAGE_URL,
+					stationLat, stationLon);
+		} else {
+			imageUrl = "drawable://" + R.drawable.ic_no_image_available;
+		}
+
+		imageLoader.displayImage(imageUrl, viewHolder.stationStreetView,
+				displayImageOptions, null);
 	}
 
 	/**
