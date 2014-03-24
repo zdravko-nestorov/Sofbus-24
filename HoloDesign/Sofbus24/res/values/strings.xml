@@ -33,6 +33,9 @@
     <string name="action_sm_map_mode_terrain">Терен</string>
     <string name="action_sm_map_mode_satellite">Сателит</string>
     <string name="action_sm_map_mode_hybrid">Хибрид</string>
+    <!-- About -->
+    <string name="action_about_update_db">Обновяване на спирките</string>
+    <string name="action_about_update_app">Проверка за нова версия</string>
 
     <!-- Favourites Fragment -->
     <string name="fav_search_hint">Търсене по име или номер</string>
@@ -81,5 +84,14 @@
     <string name="metro_menu_map_route">Маршрут</string>
     <string name="metro_loading_schedule" formatted="false"><![CDATA[Извличане на разписанието за спирка <b><i>%s (%s)</b></i>...]]></string>
     <string name="metro_schedule_refresh" formatted="false"><![CDATA[Обновяване на оставащото време...]]></string>
+
+    <!-- About -->
+    <string name="about_title" formatted="false"><![CDATA[%s - версия %s]]></string>
+    <string name="about_information" formatted="false">
+<![CDATA[<b>%s версия %s<br>© 2012 by Zdravko Nestorov. All rights reserved</b><br><br>Android системата предоставя подробна информация, 
+		свързана с използването на градския транпорт в София, като часове на пристигане в реално време, разписания на превозните средства, 
+		разположения на спирките на територията на София, както и локализиране на най-близките спирки, в зависимост от текущото местоположение.<br><br>
+		<i>Данните се извличат от: <b><u><a href="http://m.sumc.bg">http://m.sumc.bg</a></u></b></i>]]>
+    </string>
 
 </resources>

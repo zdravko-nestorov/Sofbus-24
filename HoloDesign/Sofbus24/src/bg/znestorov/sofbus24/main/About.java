@@ -2,9 +2,12 @@ package bg.znestorov.sofbus24.main;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class About extends Activity {
 
@@ -13,17 +16,34 @@ public class About extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_map_station);
+		setContentView(R.layout.activity_about);
+
+		// Find the TextViews over the layout
+		TextView aboutInformation = (TextView) findViewById(R.id.about_information);
+
+		// Set the TextViews a formatted text
+		String appVersion;
+		try {
+			appVersion = getPackageManager()
+					.getPackageInfo(getPackageName(), 0).versionName;
+		} catch (NameNotFoundException e) {
+			appVersion = null;
+		}
+		aboutInformation.setText(Html.fromHtml(String.format(
+				getString(R.string.about_information),
+				getString(R.string.app_name), appVersion)));
 
 		// Set up the action bar
 		actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(String.format(getString(R.string.about_title),
+				getString(R.string.app_name), appVersion));
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present
-		getMenuInflater().inflate(R.menu.activity_map_station_actions, menu);
+		getMenuInflater().inflate(R.menu.activity_about_actions, menu);
 
 		return super.onCreateOptionsMenu(menu);
 	}

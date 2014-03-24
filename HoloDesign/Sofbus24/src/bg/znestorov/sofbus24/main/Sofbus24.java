@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -179,6 +180,10 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			this.slidingMenu.toggle();
+			return true;
+		case R.id.action_about:
+			Intent aboutIntent = new Intent(context, About.class);
+			startActivity(aboutIntent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
