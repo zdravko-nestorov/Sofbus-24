@@ -2,6 +2,6 @@
 <Configuration>
 	<NewVersionCode>13</NewVersionCode>
 	<NewVersionName>2.0</NewVersionName>
-	<NewStationsDBVersion>2</NewStationsDBVersion>
-	<NewVehiclesDBVersion>2</NewVehiclesDBVersion>
+	<NewStationsDBVersion>1</NewStationsDBVersion>
+	<NewVehiclesDBVersion>1</NewVehiclesDBVersion>
 </Configuration>
