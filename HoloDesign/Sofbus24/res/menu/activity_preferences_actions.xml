@@ -3,9 +3,9 @@
 
     <!-- Information -->
     <item
-        android:id="@+id/action_pref_settings"
+        android:id="@+id/action_pref_info_details"
         android:icon="@android:drawable/ic_menu_info_details"
         android:showAsAction="always"
-        android:title="@string/action_pref_settings"/>
+        android:title="@string/action_pref_info_details"/>
 
 </menu>

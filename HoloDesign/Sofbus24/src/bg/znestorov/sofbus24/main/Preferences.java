@@ -20,6 +20,8 @@ public class Preferences extends Activity {
 
 	private PreferencesFragment preferencesFragment = new PreferencesFragment();
 
+	public static boolean hasToRestart = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,12 +51,12 @@ public class Preferences extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			if (preferencesFragment.isHasToRestart()) {
+			if (hasToRestart) {
 				restartApplication();
 			}
 
 			return true;
-		case R.id.action_pref_settings:
+		case R.id.action_pref_info_details:
 			Intent aboutIntent = new Intent(context, About.class);
 			startActivity(aboutIntent);
 			return true;
@@ -65,8 +67,7 @@ public class Preferences extends Activity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK
-				&& preferencesFragment.isHasToRestart()) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && hasToRestart) {
 			restartApplication();
 
 			return true;

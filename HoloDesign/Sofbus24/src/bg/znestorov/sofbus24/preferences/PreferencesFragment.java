@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import bg.znestorov.sofbus24.main.Preferences;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -13,7 +14,6 @@ public class PreferencesFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
 
 	private Activity context;
-	private boolean hasToRestart = false;
 
 	public PreferencesFragment() {
 	}
@@ -40,6 +40,13 @@ public class PreferencesFragment extends PreferenceFragment implements
 	}
 
 	@Override
+	public void onResume() {
+		super.onStop();
+		getPreferenceScreen().getSharedPreferences()
+				.registerOnSharedPreferenceChangeListener(this);
+	}
+
+	@Override
 	public void onStop() {
 		super.onStop();
 		getPreferenceScreen().getSharedPreferences()
@@ -51,11 +58,7 @@ public class PreferencesFragment extends PreferenceFragment implements
 		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)
 				|| key.equals(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED)) {
 			LanguageChange.selectLocale(context);
-			hasToRestart = true;
+			Preferences.hasToRestart = true;
 		}
-	}
-
-	public boolean isHasToRestart() {
-		return hasToRestart;
 	}
 }

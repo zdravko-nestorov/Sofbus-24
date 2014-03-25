@@ -217,8 +217,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		viewHolder.expandStation.setImageResource(R.drawable.ic_expand);
 
 		// Remove the image
-		viewHolder.stationStreetView
-				.setImageResource(android.R.color.transparent);
+		viewHolder.stationStreetView.setVisibility(View.GONE);
 	}
 
 	/**

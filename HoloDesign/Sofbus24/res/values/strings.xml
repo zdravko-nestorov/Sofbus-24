@@ -38,7 +38,7 @@
     <string name="action_about_update_db">Обновяване на спирките</string>
     <string name="action_about_update_app">Проверка за нова версия</string>
     <!-- Preferences -->
-    <string name="action_pref_settings">Информация</string>
+    <string name="action_pref_info_details">Информация</string>
 
     <!-- Favourites Fragment -->
     <string name="fav_search_hint">Търсене по име или номер</string>
@@ -120,6 +120,6 @@
     <string name="pref_category_stations_closest_title">Брой най-близки спирки</string>
     <string name="pref_category_stations_closest_summary">Колко спирки да се визуализират около текущото местоположение или избрана точка</string>
     <string name="pref_category_stations_timeInfoRetrieval_title">Извлечена информация</string>
-    <string name="pref_category_stations_timeInfoRetrieval_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация (Виртуални табла)</string>
+    <string name="pref_category_stations_timeInfoRetrieval_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация</string>
 
 </resources>
