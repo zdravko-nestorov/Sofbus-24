@@ -41,14 +41,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="bg.znestorov.sofbus24.main.MetroSchedule" >
-        </activity>
-        <activity android:name="bg.znestorov.sofbus24.main.StationMap" >
-        </activity>
-        <activity android:name="bg.znestorov.sofbus24.main.StationRouteMap" >
-        </activity>
-        <activity android:name="bg.znestorov.sofbus24.main.About" >
-        </activity>
+        <activity android:name="bg.znestorov.sofbus24.main.MetroSchedule" />
+        <activity android:name="bg.znestorov.sofbus24.main.StationMap" />
+        <activity android:name="bg.znestorov.sofbus24.main.StationRouteMap" />
+        <activity android:name="bg.znestorov.sofbus24.main.About" />
+        <activity android:name="bg.znestorov.sofbus24.main.Preferences" />
     </application>
 
 </manifest>

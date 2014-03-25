@@ -65,8 +65,8 @@ public class StationsSQLite extends SQLiteOpenHelper {
 		Log.w(FavouritesSQLite.class.getName(),
 				"Upgrading database from version " + oldVersion + " to "
 						+ newVersion + ", which will destroy all old data.");
-		context.deleteDatabase("stations.db");
-		createDataBase();
+		context.deleteDatabase(DB_NAME);
+		createDataBase(null);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	 * Create an empty database on the system and rewrites it with the ready
 	 * database
 	 */
-	public void createDataBase() {
+	public void createDataBase(InputStream is) {
 		// Check if the DB already exists
 		boolean dbExist = checkDataBase();
 
@@ -89,7 +89,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 			this.getReadableDatabase().close();
 
 			try {
-				copyDataBase();
+				copyDataBase(is);
 			} catch (IOException e) {
 				throw new Error("Error copying database");
 			}
@@ -115,9 +115,14 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	 * 
 	 * @throws IOException
 	 */
-	private void copyDataBase() throws IOException {
+	private void copyDataBase(InputStream is) throws IOException {
 		// Open the local DB as the input stream
 		InputStream myInput = context.getAssets().open(DB_NAME);
+		if (is != null) {
+			myInput = is;
+		} else {
+			myInput = context.getAssets().open(DB_NAME);
+		}
 
 		// Path to the just created empty DB
 		String outFileName = DB_PATH + DB_NAME;
@@ -137,6 +142,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 		myOutput.flush();
 		myOutput.close();
 		myInput.close();
+
 	}
 
 	/**

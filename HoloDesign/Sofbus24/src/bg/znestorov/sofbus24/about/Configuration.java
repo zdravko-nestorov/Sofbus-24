@@ -103,10 +103,10 @@ public class Configuration {
 		final Editor edit = sharedPreferences.edit();
 
 		edit.clear();
-		edit.putLong(Constants.CONFIGURATION_PREF_STATIONS_KEY,
-				newConfig.getStationsDbVersion());
-		edit.putLong(Constants.CONFIGURATION_PREF_VEHICLES_KEY,
-				newConfig.getVehiclesDbVersion());
+		edit.putString(Constants.CONFIGURATION_PREF_STATIONS_KEY,
+				newConfig.getStationsDbVersion() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_VEHICLES_KEY,
+				newConfig.getVehiclesDbVersion() + "");
 		edit.commit();
 	}
 }

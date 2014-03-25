@@ -31,13 +31,13 @@ public class LanguageChange {
 	public static String getUserLocale(Context context) {
 		try {
 			// Get SharedPreferences from option menu
-			final SharedPreferences sharedPreferences = PreferenceManager
+			SharedPreferences sharedPreferences = PreferenceManager
 					.getDefaultSharedPreferences(context);
 
 			// Get "language" value from the Shared Preferences
-			final String language = sharedPreferences.getString(
-					Constants.PREFERENCE_KEY_LANGUAGE,
-					Constants.PREFERENCE_DEFAULT_VALUE_LANGUAGE);
+			String language = sharedPreferences.getString(
+					Constants.PREFERENCE_KEY_APP_LANGUAGE,
+					Constants.PREFERENCE_DEFAULT_VALUE_APP_LANGUAGE);
 
 			return language;
 		} catch (Exception e) {

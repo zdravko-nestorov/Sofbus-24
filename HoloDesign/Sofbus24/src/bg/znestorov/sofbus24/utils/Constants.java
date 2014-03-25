@@ -25,8 +25,16 @@ public class Constants {
 	/**
 	 * Preferences
 	 */
-	public static final String PREFERENCE_KEY_LANGUAGE = "language";
-	public static final String PREFERENCE_DEFAULT_VALUE_LANGUAGE = "bg";
+	public static final String PREFERENCE_KEY_APP_LANGUAGE = "appLanguage";
+	public static final String PREFERENCE_DEFAULT_VALUE_APP_LANGUAGE = "bg";
+	public static final String PREFERENCE_KEY_FAVOURITES_EXPANDED = "favouritesExpanded";
+	public static final boolean PREFERENCE_DEFAULT_VALUE_FAVOURITES_EXPANDED = true;
+	public static final String PREFERENCE_KEY_TIME_VEHICLES = "timeVehicles";
+	public static final String PREFERENCE_DEFAULT_VALUE_TIME_VEHICLES = "timeRemaining";
+	public static final String PREFERENCE_KEY_CLOSEST_STATIONS = "closestStations";
+	public static final String PREFERENCE_DEFAULT_VALUE_CLOSEST_STATIONS = "8";
+	public static final String PREFERENCE_KEY_TIME_INFO_RETRIEVAL = "timeInfoRetrieval";
+	public static final String PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL = "time_skgt";
 
 	/**
 	 * Favorites
@@ -46,8 +54,8 @@ public class Constants {
 	 * About
 	 */
 	public static final String CONFIGURATION_URL = "https://sofia-stations.googlecode.com/svn/Sofbus24_ConfigData/ConfigurationDetails/configuration.xml";
-	public static final String CONFIGURATION_STATIONS_DB = "https://sofia-stations.googlecode.com/svn/Sofbus24_ConfigData/Databases/stations.db";
-	public static final String CONFIGURATION_VEHICLES_DB = "https://sofia-stations.googlecode.com/svn/Sofbus24_ConfigData/Databases/vehicles.db";
+	public static final String CONFIGURATION_STATIONS_DB_URL = "https://sofia-stations.googlecode.com/svn/Sofbus24_ConfigData/Databases/stations.db";
+	public static final String CONFIGURATION_VEHICLES_DB_URL = "https://sofia-stations.googlecode.com/svn/Sofbus24_ConfigData/Databases/vehicles.db";
 	public static final String CONFIGURATION_PREF_NAME = "configuration";
 	public static final String CONFIGURATION_PREF_STATIONS_KEY = "CurrentStationsDBVersion";
 	public static final String CONFIGURATION_PREF_VEHICLES_KEY = "CurrentVehiclesDBVersion";

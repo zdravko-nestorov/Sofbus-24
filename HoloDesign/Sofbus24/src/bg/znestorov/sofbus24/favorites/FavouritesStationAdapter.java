@@ -7,6 +7,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -69,6 +71,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	private ImageLoader imageLoader = ImageLoader.getInstance();
 	private DisplayImageOptions displayImageOptions;
 
+	private boolean expandedListItem;
+
 	public FavouritesStationAdapter(Activity context, List<Station> stations) {
 		super(context, R.layout.activity_favourites_list_item, stations);
 		this.context = context;
@@ -77,6 +81,13 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		this.stationsDataSource = new StationsDataSource(context);
 
 		displayImageOptions = ActivityUtils.displayImageOptions();
+
+		// Get the current state of the Favourites ListItems
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		expandedListItem = sharedPreferences.getBoolean(
+				Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED,
+				Constants.PREFERENCE_DEFAULT_VALUE_FAVOURITES_EXPANDED);
 	}
 
 	/**
@@ -132,6 +143,11 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		editStation(viewHolder.editStation, station, position);
 		removeStation(viewHolder.removeStation, station);
 		chooseStation(viewHolder.stationStreetView, station);
+
+		// Check the state of the ListItems
+		if (!expandedListItem) {
+			collapseListItem(viewHolder);
+		}
 
 		return rowView;
 	}

@@ -8,7 +8,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -92,7 +91,7 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 				updateDb(currentConfig, newConfig);
 			}
 		} else {
-			ActivityUtils.showNoInternetDialog(context);
+			ActivityUtils.showNoInternetAlertDialog(context);
 		}
 	}
 
@@ -116,8 +115,52 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 	 * @param newConfig
 	 *            the new application config
 	 */
-	private void updateDb(Config currentConfig, Config newConfig) {
+	private void updateDb(Config currentConfig, final Config newConfig) {
+		String stationsDatabaseUrl = null;
+		String vehiclesDatabaseUrl = null;
 
+		if (currentConfig.getStationsDbVersion() < newConfig
+				.getStationsDbVersion()) {
+			stationsDatabaseUrl = Constants.CONFIGURATION_STATIONS_DB_URL;
+		}
+
+		if (currentConfig.getVehiclesDbVersion() < newConfig
+				.getVehiclesDbVersion()) {
+			vehiclesDatabaseUrl = Constants.CONFIGURATION_VEHICLES_DB_URL;
+		}
+
+		// Check if new DB is available
+		if (stationsDatabaseUrl != null || vehiclesDatabaseUrl != null) {
+			final String finalStationsDatabaseUrl = stationsDatabaseUrl;
+			final String finalVehiclesDatabaseUrl = vehiclesDatabaseUrl;
+
+			OnClickListener positiveOnClickListener = new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					ProgressDialog progressDialog = new ProgressDialog(context);
+					progressDialog.setMessage(Html.fromHtml(context
+							.getString(R.string.about_update_db_copy)));
+					RetrieveDatabases retrieveDatabases = new RetrieveDatabases(
+							context, progressDialog, finalStationsDatabaseUrl,
+							finalVehiclesDatabaseUrl, newConfig);
+					retrieveDatabases.execute();
+				}
+			};
+
+			ActivityUtils.showCustomAlertDialog(context,
+					android.R.drawable.ic_menu_info_details,
+					context.getString(R.string.app_dialog_title_important),
+					context.getString(R.string.about_update_db_new),
+					context.getString(R.string.app_button_yes),
+					positiveOnClickListener,
+					context.getString(R.string.app_button_no), null);
+		} else {
+			ActivityUtils.showCustomAlertDialog(context,
+					android.R.drawable.ic_menu_info_details,
+					context.getString(R.string.app_dialog_title_info),
+					context.getString(R.string.about_update_db_last), null,
+					null, context.getString(R.string.app_button_ok), null);
+		}
 	}
 
 	/**
@@ -129,51 +172,43 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 	 *            the new application config
 	 */
 	private void updateApp(Config currentConfig, Config newConfig) {
+		// Check if new application version is available
 		if (currentConfig.getVersionCode() < newConfig.getVersionCode()) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(context);
-			builder.setIcon(android.R.drawable.ic_menu_info_details)
-					.setTitle(
-							context.getString(R.string.app_dialog_title_important))
-					.setMessage(
-							Html.fromHtml(String.format(context
-									.getString(R.string.about_update_app_new),
-									newConfig.getVersionName())))
-					.setPositiveButton(
-							context.getString(R.string.app_button_yes),
-							new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									String appPackageName = context
-											.getPackageName();
+			OnClickListener positiveOnClickListener = new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					String appPackageName = context.getPackageName();
 
-									try {
-										context.startActivity(new Intent(
-												Intent.ACTION_VIEW,
-												Uri.parse("market://details?id="
-														+ appPackageName)));
-									} catch (android.content.ActivityNotFoundException anfe) {
-										context.startActivity(new Intent(
-												Intent.ACTION_VIEW,
-												Uri.parse("http://play.google.com/store/apps/details?id="
-														+ appPackageName)));
-									}
-								}
-							})
-					.setNegativeButton(
-							context.getString(R.string.app_button_no), null)
-					.show();
+					try {
+						context.startActivity(new Intent(Intent.ACTION_VIEW,
+								Uri.parse("market://details?id="
+										+ appPackageName)));
+					} catch (android.content.ActivityNotFoundException anfe) {
+						context.startActivity(new Intent(
+								Intent.ACTION_VIEW,
+								Uri.parse("http://play.google.com/store/apps/details?id="
+										+ appPackageName)));
+					}
+				}
+			};
+
+			ActivityUtils.showCustomAlertDialog(context,
+					android.R.drawable.ic_menu_info_details, context
+							.getString(R.string.app_dialog_title_important),
+					Html.fromHtml(String.format(
+							context.getString(R.string.about_update_app_new),
+							newConfig.getVersionName())), context
+							.getString(R.string.app_button_yes),
+					positiveOnClickListener, context
+							.getString(R.string.app_button_no), null);
 		} else {
-			AlertDialog.Builder builder = new AlertDialog.Builder(context);
-			builder.setIcon(android.R.drawable.ic_menu_info_details)
-					.setTitle(context.getString(R.string.app_dialog_title_info))
-					.setMessage(
-							Html.fromHtml(String.format(context
+			ActivityUtils.showCustomAlertDialog(context,
+					android.R.drawable.ic_menu_info_details, context
+							.getString(R.string.app_dialog_title_info), Html
+							.fromHtml(String.format(context
 									.getString(R.string.about_update_app_last),
-									currentConfig.getVersionName())))
-					.setNegativeButton(
-							context.getString(R.string.app_button_ok), null)
-					.show();
+									currentConfig.getVersionName())), null,
+					null, context.getString(R.string.app_button_ok), null);
 		}
 	}
 }

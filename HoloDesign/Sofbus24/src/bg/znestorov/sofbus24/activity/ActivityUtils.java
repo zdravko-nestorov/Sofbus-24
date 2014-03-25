@@ -5,6 +5,8 @@ import java.io.File;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -109,13 +111,70 @@ public class ActivityUtils {
 	 * @param context
 	 *            current Activity context
 	 */
-	public static void showNoInternetDialog(Activity context) {
+	public static void showNoInternetAlertDialog(Activity context) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setIcon(android.R.drawable.ic_menu_info_details)
 				.setTitle(context.getString(R.string.app_dialog_title_error))
 				.setMessage(context.getString(R.string.app_internet_error))
 				.setNegativeButton(context.getString(R.string.app_button_ok),
 						null).show();
+	}
+
+	/**
+	 * Create custom AlertDialog with custom fields
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @param icon
+	 *            the icon of the AlertDialog
+	 * @param title
+	 *            the title of the AlertDialog
+	 * @param message
+	 *            the message content of the AlertDialog
+	 * @param positiveButton
+	 *            the positive button text of the AlertDialog
+	 * @param positiveOnClickListener
+	 *            the positive onClickListener of the AlertDialog
+	 * @param negativeButton
+	 *            the negative button text of the AlertDialog
+	 * @param negativeOnClickListener
+	 *            the negative onClickListener of the AlertDialog
+	 */
+	public static void showCustomAlertDialog(Activity context, int icon,
+			CharSequence title, CharSequence message,
+			CharSequence positiveButton,
+			OnClickListener positiveOnClickListener,
+			CharSequence negativeButton, OnClickListener negativeOnClickListener) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setIcon(icon).setTitle(title).setMessage(message);
+
+		if (positiveButton != null) {
+			builder.setPositiveButton(positiveButton, positiveOnClickListener);
+		}
+
+		if (negativeButton != null) {
+			builder.setNegativeButton(negativeButton, negativeOnClickListener);
+		}
+
+		builder.show();
+	}
+
+	/**
+	 * Restart the application
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 */
+	public static void restartApplication(Activity context) {
+		// Close the application
+		context.finish();
+		android.os.Process.killProcess(android.os.Process.myPid());
+
+		// Start the application again
+		Intent i = context.getPackageManager().getLaunchIntentForPackage(
+				context.getPackageName());
+		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		context.startActivity(i);
 	}
 
 }

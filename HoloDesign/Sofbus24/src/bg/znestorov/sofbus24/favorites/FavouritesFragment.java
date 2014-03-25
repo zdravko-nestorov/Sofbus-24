@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
@@ -121,37 +121,29 @@ public class FavouritesFragment extends ListFragment implements
 
 			// Check if the Favourites database is empty or not
 			if (favouritesCount > 0) {
-				// Create an Alert Dialog to ensure that the user wants to clear
-				// the list
-				DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+				OnClickListener positiveOnClickListener = new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						switch (which) {
-						case DialogInterface.BUTTON_POSITIVE:
-							setListAdapter(new FavouritesStationAdapter(
-									context, new ArrayList<Station>()));
-							FavouritesDatabaseUtils
-									.deleteFavouriteDatabase(context);
-							Toast.makeText(
-									context,
-									Html.fromHtml(getString(R.string.fav_menu_remove_all_toast)),
-									Toast.LENGTH_LONG).show();
-						case DialogInterface.BUTTON_NEGATIVE:
-							break;
-						}
+						setListAdapter(new FavouritesStationAdapter(context,
+								new ArrayList<Station>()));
+						FavouritesDatabaseUtils
+								.deleteFavouriteDatabase(context);
+						Toast.makeText(
+								context,
+								Html.fromHtml(getString(R.string.fav_menu_remove_all_toast)),
+								Toast.LENGTH_LONG).show();
 					}
 				};
 
-				AlertDialog.Builder builder = new AlertDialog.Builder(context);
-				builder.setIcon(android.R.drawable.ic_menu_delete)
-						.setTitle(
-								getString(R.string.app_dialog_title_important))
-						.setMessage(
-								Html.fromHtml(getString(R.string.fav_menu_remove_all_confirmation)))
-						.setPositiveButton(getString(R.string.app_button_yes),
-								dialogClickListener)
-						.setNegativeButton(getString(R.string.app_button_no),
-								dialogClickListener).show();
+				ActivityUtils
+						.showCustomAlertDialog(
+								context,
+								android.R.drawable.ic_menu_delete,
+								getString(R.string.app_dialog_title_important),
+								Html.fromHtml(getString(R.string.fav_menu_remove_all_confirmation)),
+								getString(R.string.app_button_yes),
+								positiveOnClickListener,
+								getString(R.string.app_button_no), null);
 			} else {
 				Toast.makeText(
 						context,

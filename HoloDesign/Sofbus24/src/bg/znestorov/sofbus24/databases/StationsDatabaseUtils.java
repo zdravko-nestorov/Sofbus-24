@@ -40,7 +40,7 @@ public class StationsDatabaseUtils {
 	 */
 	public static void createStationsDatabase(Context context) {
 		StationsSQLite myDbHelper = new StationsSQLite(context);
-		myDbHelper.createDataBase();
+		myDbHelper.createDataBase(null);
 	}
 
 	/**

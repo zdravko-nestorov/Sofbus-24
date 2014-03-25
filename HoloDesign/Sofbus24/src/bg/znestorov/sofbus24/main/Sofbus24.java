@@ -185,6 +185,10 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		case android.R.id.home:
 			this.slidingMenu.toggle();
 			return true;
+		case R.id.action_settings:
+			Intent preferencesIntent = new Intent(context, Preferences.class);
+			startActivity(preferencesIntent);
+			return true;
 		case R.id.action_about:
 			Intent aboutIntent = new Intent(context, About.class);
 			startActivity(aboutIntent);

@@ -37,6 +37,8 @@
     <!-- About -->
     <string name="action_about_update_db">Обновяване на спирките</string>
     <string name="action_about_update_app">Проверка за нова версия</string>
+    <!-- Preferences -->
+    <string name="action_pref_settings">Информация</string>
 
     <!-- Favourites Fragment -->
     <string name="fav_search_hint">Търсене по име или номер</string>
@@ -95,8 +97,29 @@
 		<i>Данните се извличат от: <b><u><a href="http://m.sumc.bg">http://m.sumc.bg</a></u></b></i>]]>
     </string>
     <string name="about_update_app" formatted="false"><![CDATA[Проверка за нова версия на приложението...]]></string>
-    <string name="about_update_app_last" formatted="false"><![CDATA[В момента използвате последната версия на приложението - <b>Софбус 24 - %s</b>. Моля опитайте по-късно.]]></string>
-    <string name="about_update_app_new" formatted="false"><![CDATA[Налична е нова версия - <b>Софбус 24 - %s</b>. Бихте ли желали да обновите приложението?]]></string>
+    <string name="about_update_app_last" formatted="false"><![CDATA[В момента използвате последната версия на приложението - <b>Софбус 24 - версия %s</b>. Моля опитайте по-късно.]]></string>
+    <string name="about_update_app_new" formatted="false"><![CDATA[Налична е нова версия - <b>Софбус 24 - версия %s</b>. Бихте ли желали да обновите приложението?]]></string>
     <string name="about_update_db" formatted="false"><![CDATA[Проверка за обновление на спирките...]]></string>
+    <string name="about_update_db_last">В момента няма налично обновление на спирките. Моля опитайте по-късно.</string>
+    <string name="about_update_db_new">Налично е обновление на спирките. Бихте ли желали да добавите новите спирки?</string>
+    <string name="about_update_db_copy" formatted="false"><![CDATA[Обновяване на спирките на градския транспорт...]]></string>
+    <string name="about_update_db_restart" formatted="false"><![CDATA[Новите спирки бяха добавени успешно. Ще трябва да рестартирате приложението, за да използвате обновената информация. Искате ли да рестартирате <b>Софбус 24</b> сега?]]></string>
+
+    <!-- Preferences -->
+    <string name="pref_restart_app" formatted="false"><![CDATA[Ще трябва да рестартирате приложението, за да има резултат от направените промени. Искате ли да рестартирате <b>Софбус 24</b> сега?]]></string>
+    <string name="pref_title">Настройки</string>
+    <string name="pref_category_common">ОБЩИ</string>
+    <string name="pref_category_common_language_title">Език</string>
+    <string name="pref_category_common_language_summary">Избор на език</string>
+    <string name="pref_category_visual">ВИЗУАЛНИ</string>
+    <string name="pref_category_visual_fav_title">Фаворити</string>
+    <string name="pref_category_visual_fav_summary">Визуализиране на фаворитите с показана картинка от GoogleMaps StreetView</string>
+    <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
+    <string name="pref_category_stations_title">Времена на градския транспорт</string>
+    <string name="pref_category_stations_summary">Оставащо време или времена на пристигане</string>
+    <string name="pref_category_stations_closest_title">Брой най-близки спирки</string>
+    <string name="pref_category_stations_closest_summary">Колко спирки да се визуализират около текущото местоположение или избрана точка</string>
+    <string name="pref_category_stations_timeInfoRetrieval_title">Извлечена информация</string>
+    <string name="pref_category_stations_timeInfoRetrieval_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация (Виртуални табла)</string>
 
 </resources>
