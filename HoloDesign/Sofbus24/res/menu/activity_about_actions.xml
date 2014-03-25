@@ -4,14 +4,14 @@
     <!-- Update database -->
     <item
         android:id="@+id/action_about_update_db"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@android:drawable/ic_menu_view"
         android:showAsAction="always"
         android:title="@string/action_about_update_db"/>
 
     <!-- Check for updates (GooglePlay updates) -->
     <item
         android:id="@+id/action_about_update_app"
-        android:icon="@android:drawable/ic_menu_view"
+        android:icon="@android:drawable/ic_menu_upload"
         android:showAsAction="always"
         android:title="@string/action_about_update_app"/>
 

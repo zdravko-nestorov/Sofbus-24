@@ -38,6 +38,7 @@
     <string name="action_about_update_db">Обновяване на спирките</string>
     <string name="action_about_update_app">Проверка за нова версия</string>
     <!-- Preferences -->
+    <string name="action_pref_reset">Нулиране</string>
     <string name="action_pref_info_details">Информация</string>
 
     <!-- Favourites Fragment -->
@@ -107,6 +108,7 @@
 
     <!-- Preferences -->
     <string name="pref_restart_app" formatted="false"><![CDATA[Ще трябва да рестартирате приложението, за да има резултат от направените промени. Искате ли да рестартирате <b>Софбус 24</b> сега?]]></string>
+    <string name="pref_reset">Сигурни ли сте, че искате да нулирате всички настройки и да ги върнете в началното им положение.</string>
     <string name="pref_title">Настройки</string>
     <string name="pref_category_common">ОБЩИ</string>
     <string name="pref_category_common_language_title">Език</string>

@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -52,9 +54,14 @@ public class Preferences extends Activity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			if (hasToRestart) {
-				restartApplication();
+				restartApplication(true);
+			} else {
+				finish();
 			}
 
+			return true;
+		case R.id.action_pref_reset:
+			resetPreferences();
 			return true;
 		case R.id.action_pref_info_details:
 			Intent aboutIntent = new Intent(context, About.class);
@@ -68,7 +75,7 @@ public class Preferences extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && hasToRestart) {
-			restartApplication();
+			restartApplication(true);
 
 			return true;
 		}
@@ -78,8 +85,12 @@ public class Preferences extends Activity {
 
 	/**
 	 * Restart the application after showing an AlertDialog
+	 * 
+	 * @param hasToFinish
+	 *            checks if the Preferences screen should be closed if NO button
+	 *            is pressed
 	 */
-	private void restartApplication() {
+	private void restartApplication(final boolean hasToFinish) {
 		OnClickListener positiveOnClickListener = new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -90,7 +101,9 @@ public class Preferences extends Activity {
 		OnClickListener negativeOnClickListener = new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				finish();
+				if (hasToFinish) {
+					finish();
+				}
 			}
 		};
 
@@ -102,5 +115,32 @@ public class Preferences extends Activity {
 				positiveOnClickListener,
 				context.getString(R.string.app_button_no),
 				negativeOnClickListener);
+	}
+
+	/**
+	 * Reset the preferences to default
+	 */
+	private void resetPreferences() {
+		OnClickListener positiveOnClickListener = new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				SharedPreferences preferences = PreferenceManager
+						.getDefaultSharedPreferences(context);
+				SharedPreferences.Editor editor = preferences.edit();
+				editor.clear();
+				editor.commit();
+
+				// Check if the user wants to restart the application
+				restartApplication(false);
+			}
+		};
+
+		ActivityUtils.showCustomAlertDialog(context,
+				android.R.drawable.ic_menu_info_details,
+				context.getString(R.string.app_dialog_title_important),
+				context.getString(R.string.pref_reset),
+				context.getString(R.string.app_button_yes),
+				positiveOnClickListener,
+				context.getString(R.string.app_button_no), null);
 	}
 }
