@@ -71,18 +71,15 @@
         android:id="@android:id/empty"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:gravity="center_vertical"
-        android:paddingBottom="30sp"
-        android:paddingLeft="30sp"
-        android:paddingRight="30sp"
-        android:paddingTop="50sp" >
+        android:layout_marginLeft="25sp"
+        android:layout_marginRight="25sp"
+        android:layout_marginTop="-25sp"
+        android:gravity="center" >
 
         <ImageView
             android:id="@+id/metro_list_empty_image"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/metro_list_empty_text"
-            android:layout_alignRight="@+id/metro_list_empty_text"
             android:contentDescription="@string/app_img_empty_content_description"
             android:paddingBottom="20sp"
             android:src="@drawable/ic_empty_metro_list" />
@@ -90,7 +87,7 @@
         <TextView
             android:id="@+id/metro_list_empty_text"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/metro_list_empty_image"
             android:gravity="center_horizontal"
             android:textColor="#080808"

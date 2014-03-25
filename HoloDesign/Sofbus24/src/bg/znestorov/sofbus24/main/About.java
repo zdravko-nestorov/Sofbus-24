@@ -2,21 +2,27 @@ package bg.znestorov.sofbus24.main;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.about.RetrieveAppConfiguration;
 
 public class About extends Activity {
 
+	private Activity context;
 	private ActionBar actionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
+
+		// Get the current context
+		context = About.this;
 
 		// Find the TextViews over the layout
 		TextView aboutInformation = (TextView) findViewById(R.id.about_information);
@@ -50,12 +56,28 @@ public class About extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		RetrieveAppConfiguration retrieveAppConfiguration;
+		ProgressDialog progressDialog = new ProgressDialog(context);
+
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			return true;
+		case R.id.action_about_update_db:
+			progressDialog.setMessage(getString(R.string.about_update_db));
+			retrieveAppConfiguration = new RetrieveAppConfiguration(context,
+					progressDialog, false);
+			retrieveAppConfiguration.execute();
+			return true;
+		case R.id.action_about_update_app:
+			progressDialog.setMessage(getString(R.string.about_update_app));
+			retrieveAppConfiguration = new RetrieveAppConfiguration(context,
+					progressDialog, true);
+			retrieveAppConfiguration.execute();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
 }

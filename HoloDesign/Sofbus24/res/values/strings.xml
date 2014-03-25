@@ -8,6 +8,7 @@
     <string name="app_button_cancel">Отказ</string>
     <string name="app_button_yes">Да</string>
     <string name="app_button_no">Не</string>
+    <string name="app_dialog_title_info">Информация</string>
     <string name="app_dialog_title_important">Важно</string>
     <string name="app_dialog_title_error">Грешка</string>
     <string name="app_internet_error">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
@@ -93,5 +94,9 @@
 		разположения на спирките на територията на София, както и локализиране на най-близките спирки, в зависимост от текущото местоположение.<br><br>
 		<i>Данните се извличат от: <b><u><a href="http://m.sumc.bg">http://m.sumc.bg</a></u></b></i>]]>
     </string>
+    <string name="about_update_app" formatted="false"><![CDATA[Проверка за нова версия на приложението...]]></string>
+    <string name="about_update_app_last" formatted="false"><![CDATA[В момента използвате последната версия на приложението - <b>Софбус 24 - %s</b>. Моля опитайте по-късно.]]></string>
+    <string name="about_update_app_new" formatted="false"><![CDATA[Налична е нова версия - <b>Софбус 24 - %s</b>. Бихте ли желали да обновите приложението?]]></string>
+    <string name="about_update_db" formatted="false"><![CDATA[Проверка за обновление на спирките...]]></string>
 
 </resources>

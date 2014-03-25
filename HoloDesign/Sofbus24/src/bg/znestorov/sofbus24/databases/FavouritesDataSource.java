@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
@@ -100,15 +101,15 @@ public class FavouritesDataSource {
 
 	/**
 	 * Figure out which coordinate to be taken, so add the station in the
-	 * dabatase (lattitude and longitute)
+	 * database (latitude and longitude)
 	 * 
 	 * @param stationNumber
 	 *            the number of the station (used to search the DB for the
 	 *            station)
 	 * @param stationCoordinate
-	 *            the coordinate of the station (lattitude or longitude)
-	 * @return the coordinate (lattitude or longitude), which will be inserted
-	 *         in the dabatase
+	 *            the coordinate of the station (latitude or longitude)
+	 * @return the coordinate (latitude or longitude), which will be inserted in
+	 *         the database
 	 */
 	private String getCoordinates(String stationNumber, String stationCoordinate) {
 		String coordinate = Constants.GLOBAL_PARAM_EMPTY;
@@ -297,6 +298,9 @@ public class FavouritesDataSource {
 	private Station cursorToStation(Cursor cursor) {
 		Station station = new Station();
 
+		// Get station number
+		String stationNumber = cursor.getString(0);
+
 		// Check if have to translate the station name
 		String stationName = cursor.getString(1);
 		if (!"bg".equals(language)) {
@@ -304,11 +308,19 @@ public class FavouritesDataSource {
 					stationName);
 		}
 
+		// Get the station type
+		StationsDataSource stationDatasource = new StationsDataSource(context);
+		stationDatasource.open();
+		VehicleType stationType = stationDatasource.getStation(stationNumber)
+				.getType();
+		stationDatasource.close();
+
 		// Getting all columns of the row and setting them to a Station object
-		station.setNumber(cursor.getString(0));
+		station.setNumber(stationNumber);
 		station.setName(stationName);
 		station.setLat(cursor.getString(2));
 		station.setLon(cursor.getString(3));
+		station.setType(stationType);
 		station.setCustomField(cursor.getString(4));
 
 		return station;

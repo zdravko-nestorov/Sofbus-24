@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.activity.ActivityUtils;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
@@ -57,6 +58,9 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		// internal memory
 		StationsDatabaseUtils.createStationsDatabase(context);
 		VehiclesDatabaseUtils.createVehiclesDatabase(context);
+
+		// Creates the configuration file
+		Configuration.createConfiguration(context);
 
 		// Load all vehicles from the Database, so use them lately
 		ScheduleLoadVehicles.getInstance(context);

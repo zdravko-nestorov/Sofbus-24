@@ -7,16 +7,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import bg.znestorov.sofbus24.activity.ActivityUtils;
 import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.MetroSchedule;
-import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 
 /**
@@ -28,11 +27,11 @@ import bg.znestorov.sofbus24.utils.Constants;
  */
 public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStation> {
 
-	private Context context;
+	private Activity context;
 	private ProgressDialog progressDialog;
 	private Station station;
 
-	public RetrieveMetroSchedule(Context context,
+	public RetrieveMetroSchedule(Activity context,
 			ProgressDialog progressDialog, Station station) {
 		this.context = context;
 		this.progressDialog = progressDialog;
@@ -89,14 +88,7 @@ public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStation> {
 			metroScheduleIntent.putExtra(Constants.BUNDLE_METRO_SCHEDULE, ms);
 			context.startActivity(metroScheduleIntent);
 		} else {
-			AlertDialog.Builder builder = new AlertDialog.Builder(context);
-			builder.setIcon(android.R.drawable.ic_menu_info_details)
-					.setTitle(
-							context.getString(R.string.app_dialog_title_error))
-					.setMessage(context.getString(R.string.app_internet_error))
-					.setNegativeButton(
-							context.getString(R.string.app_button_ok), null)
-					.show();
+			ActivityUtils.showNoInternetDialog(context);
 		}
 	}
 

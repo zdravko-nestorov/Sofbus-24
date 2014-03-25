@@ -86,24 +86,25 @@
         android:id="@android:id/empty"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="25sp"
-        android:layout_marginRight="25sp"
-        android:layout_marginTop="-25sp"
+        android:layout_marginLeft="35sp"
+        android:layout_marginRight="35sp"
         android:gravity="center" >
 
         <ImageView
             android:id="@+id/schedule_list_empty_image"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:contentDescription="@string/app_img_empty_content_description"
-            android:paddingBottom="20sp"
+            android:padding="25sp"
             android:src="@drawable/ic_empty_schedule_list" />
 
         <TextView
             android:id="@+id/schedule_list_empty_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/schedule_list_empty_image"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="15sp"
+            android:layout_marginRight="15sp"
+            android:layout_toRightOf="@+id/schedule_list_empty_image"
             android:gravity="center"
             android:textColor="#080808"
             android:textSize="15sp" />

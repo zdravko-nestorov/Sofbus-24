@@ -29,26 +29,32 @@
         android:focusable="true" >
     </ListView>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@android:id/empty"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_below="@+id/favourites_search"
-        android:baselineAligned="true"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:layout_marginLeft="35sp"
+        android:layout_marginRight="35sp"
+        android:gravity="center" >
+
+        <ImageView
+            android:id="@+id/favourites_list_empty_image"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:contentDescription="@string/app_img_empty_content_description"
+            android:src="@drawable/ic_empty_fav_list" />
 
         <TextView
             android:id="@+id/favourites_list_empty_text"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:layout_margin="25sp"
-            android:drawableLeft="@drawable/ic_empty_fav_list"
-            android:drawablePadding="25sp"
+            android:layout_marginLeft="15sp"
+            android:layout_marginRight="15sp"
+            android:layout_toRightOf="@+id/favourites_list_empty_image"
             android:gravity="center"
             android:textColor="#080808"
             android:textSize="15sp" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

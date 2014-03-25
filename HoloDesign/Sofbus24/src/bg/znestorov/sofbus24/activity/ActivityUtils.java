@@ -2,6 +2,14 @@ package bg.znestorov.sofbus24.activity;
 
 import java.io.File;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import bg.znestorov.sofbus24.main.R;
+
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
@@ -11,11 +19,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
-
-import android.content.Context;
-import android.os.AsyncTask;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 /**
  * The class contains only a static methods, helping with Activity interactions
@@ -98,6 +101,21 @@ public class ActivityUtils {
 				.build();
 
 		return displayImageOptions;
+	}
+
+	/**
+	 * Show no Internet alert dialog
+	 * 
+	 * @param context
+	 *            current Activity context
+	 */
+	public static void showNoInternetDialog(Activity context) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setIcon(android.R.drawable.ic_menu_info_details)
+				.setTitle(context.getString(R.string.app_dialog_title_error))
+				.setMessage(context.getString(R.string.app_internet_error))
+				.setNegativeButton(context.getString(R.string.app_button_ok),
+						null).show();
 	}
 
 }
