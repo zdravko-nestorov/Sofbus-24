@@ -2,102 +2,43 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/pref_category_common" >
-
-        <!--
-             <ListPreference
-            android:defaultValue="version_2"
-            android:entries="@array/versionChoice"
-            android:entryValues="@array/versionChoiceValues"
-            android:key="homeScreen"
-            android:summary="@string/common_home_screen_summary"
-            android:title="@string/common_home_screen_title" />
-        -->
-
         <ListPreference
             android:defaultValue="bg"
             android:entries="@array/languagenChoice"
             android:entryValues="@array/languagenChoiceValues"
-            android:key="language"
-            android:summary="@string/common_language_summary"
-            android:title="@string/common_language_title" />
+            android:key="appLanguage"
+            android:summary="@string/pref_category_common_language_summary"
+            android:title="@string/pref_category_common_language_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_category_home_screen" >
-        <ListPreference
-            android:defaultValue="funct_1"
-            android:entries="@array/gpsMapFunct"
-            android:entryValues="@array/gpsMapFunctValues"
-            android:key="gpsMapFunct"
-            android:summary="@string/home_screen_gps_map_summary"
-            android:title="@string/home_screen_gps_map_title" />
-
+    <PreferenceCategory android:title="@string/pref_category_visual" >
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="exitAlert"
-            android:summary="@string/home_screen_exit_summary"
-            android:title="@string/home_screen_exit_title" />
+            android:defaultValue="true"
+            android:key="favouritesExpanded"
+            android:summary="@string/pref_category_visual_fav_summary"
+            android:title="@string/pref_category_visual_fav_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_stations" >
         <ListPreference
-            android:defaultValue="timeGPS_remaining"
-            android:entries="@array/timeGPS"
-            android:entryValues="@array/timeGPSValues"
-            android:key="timeGPS_NEW"
-            android:summary="@string/stations_timeGPS_summary"
-            android:title="@string/stations_timeGPS_title" />
-        <ListPreference
-            android:defaultValue="timeSchedule_remaining"
-            android:entries="@array/timeSchedule"
-            android:entryValues="@array/timeScheduleValues"
-            android:key="timeSchedule_NEW"
-            android:summary="@string/stations_timeSchedule_summary"
-            android:title="@string/stations_timeSchedule_title" />
+            android:defaultValue="timeRemaining"
+            android:entries="@array/timeVehicles"
+            android:entryValues="@array/timeVehiclesValues"
+            android:key="timeVehicles"
+            android:summary="@string/pref_category_stations_summary"
+            android:title="@string/pref_category_stations_title" />
         <ListPreference
             android:defaultValue="8"
             android:entries="@array/closestStations"
             android:entryValues="@array/closestStationsValues"
             android:key="closestStations"
-            android:summary="@string/stations_closestST_summary"
-            android:title="@string/stations_closestST_title" />
+            android:summary="@string/pref_category_stations_closest_summary"
+            android:title="@string/pref_category_stations_closest_title" />
         <ListPreference
             android:defaultValue="time_skgt"
             android:entries="@array/timeInfoRetrieval"
             android:entryValues="@array/timeInfoRetrievalValues"
             android:key="timeInfoRetrieval"
-            android:summary="@string/stations_timeInfoRetrieval_summary"
-            android:title="@string/stations_timeInfoRetrieval_title" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_category_map" >
-        <ListPreference
-            android:defaultValue="map_street"
-            android:entries="@array/mapType"
-            android:entryValues="@array/mapTypeValues"
-            android:key="mapType"
-            android:summary="@string/map_satellite_summary"
-            android:title="@string/map_satellite_title" />
-
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="compass"
-            android:summary="@string/map_compass_summary"
-            android:title="@string/map_compass_title" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="mapView"
-            android:summary="@string/map_mapView_summary"
-            android:title="@string/map_mapView_title" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="position"
-            android:summary="@string/map_position_summary"
-            android:title="@string/map_position_title" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_category_other" >
-        <PreferenceScreen
-            android:key="information"
-            android:summary="@string/other_info_summary"
-            android:title="@string/other_info_title" >
-            <intent android:action="android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS" />
-        </PreferenceScreen>
+            android:summary="@string/pref_category_stations_timeInfoRetrieval_summary"
+            android:title="@string/pref_category_stations_timeInfoRetrieval_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>
