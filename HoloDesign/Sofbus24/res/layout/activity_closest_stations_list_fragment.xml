@@ -6,6 +6,14 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
+    <ImageView
+        android:id="@+id/cs_list_street_view_image"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/app_img_empty_content_description"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop" />
+
     <bg.znestorov.sofbus24.utils.activity.SearchEditText
         android:id="@+id/cs_list_search"
         android:layout_width="fill_parent"

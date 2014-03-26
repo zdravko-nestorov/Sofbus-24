@@ -269,7 +269,7 @@ public class StationsDataSource {
 				+ searchText + "%'		 					");
 		query.append(" ) AND												");
 		query.append(" 		" + VehiclesSQLite.COLUMN_TYPE + " LIKE '%"
-				+ searchType + "%'								");
+				+ searchType + "%'											");
 
 		Cursor cursor = database.rawQuery(query.toString(), null);
 
@@ -343,21 +343,39 @@ public class StationsDataSource {
 	 * @return a list with the closest station
 	 */
 	public List<Station> getClosestStations(LatLng currentPosition,
-			int stationPage) {
+			int stationPage, String searchText) {
 		List<Station> stations = new ArrayList<Station>();
 
-		String select = "SELECT * FROM stations ORDER BY (ABS("
-				+ StationsSQLite.COLUMN_LAT + " - " + currentPosition.latitude
-				+ ")" + " + ABS(" + StationsSQLite.COLUMN_LON + " - "
-				+ currentPosition.longitude + ")) ASC";
+		Locale currentLocale = new Locale(language);
+		searchText = searchText.toLowerCase(currentLocale);
 
-		Cursor cursor = database.rawQuery(select, null);
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT * 											");
+		query.append(" FROM stations	 									");
+		query.append(" WHERE ( 												");
+		query.append(" 		lower(CAST(" + StationsSQLite.COLUMN_NUMBER
+				+ " AS TEXT)) LIKE '%" + searchText + "%'					");
+		query.append(" OR 													");
+		query.append(" 		lower(" + StationsSQLite.COLUMN_NAME + ") LIKE '%"
+				+ searchText + "%'		 									");
+		query.append(" )													");
+		query.append(" ORDER BY												");
+		query.append(" 		( ABS(											");
+		query.append(StationsSQLite.COLUMN_LAT + " - "
+				+ currentPosition.latitude);
+		query.append(" 		) + 											");
+		query.append(" 		ABS(											");
+		query.append(StationsSQLite.COLUMN_LON + " - "
+				+ currentPosition.longitude);
+		query.append(" 		) ) ASC											");
+
+		Cursor cursor = database.rawQuery(query.toString(), null);
 
 		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
 
 		int stationsCount = 1;
-		while (!cursor.isAfterLast() || stationsCount > stationPage * 10) {
+		while (!cursor.isAfterLast() && stationsCount <= stationPage * 10) {
 			if (stationsCount >= ((stationPage - 1) * 10)) {
 				Station foundStation = cursorToStation(cursor);
 

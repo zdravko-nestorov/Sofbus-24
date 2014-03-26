@@ -128,5 +128,6 @@
     <string name="cs_list_search_hint">Търсене по име или номер</string>
     <string name="cs_list_item_station_number_text" formatted="false">Спирка номер: %s</string>
     <string name="cs_list_loading_current_location" formatted="false"><![CDATA[Изчисляване на текущите координати...]]></string>
+    <string name="cs_list_item_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
 
 </resources>

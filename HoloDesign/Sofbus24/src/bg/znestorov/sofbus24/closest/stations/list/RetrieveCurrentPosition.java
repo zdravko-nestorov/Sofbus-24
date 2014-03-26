@@ -31,9 +31,10 @@ public class RetrieveCurrentPosition extends AsyncTask<Void, Void, Void> {
 	private Activity context;
 	private ProgressDialog progressDialog;
 
+	// TODO: SET TO 0.0 - NOW JUST FOR TESTING
 	// Default latitude and longitude
-	private double latitude = 0.0;
-	private double longitude = 0.0;
+	private double latitude = 48.8224387;
+	private double longitude = 2.2266533;
 
 	// Location Managers responsible for the current location
 	private LocationManager locationManager;

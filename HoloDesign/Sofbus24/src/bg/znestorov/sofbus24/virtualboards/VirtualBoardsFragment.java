@@ -116,7 +116,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 			}
 		});
 
-		// Àdd the editor action listener
+		// Add the editor action listener
 		searchEditText.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId,
@@ -191,11 +191,11 @@ public class VirtualBoardsFragment extends ListFragment implements
 
 	/**
 	 * Check the searched text is containing only digits and if not - if its
-	 * size is more than 3 charecters
+	 * size is more than 3 characters
 	 * 
 	 * @param searchText
 	 *            the searched text
-	 * @return if the searched text fullfill the criterias
+	 * @return if the searched text fulfill the criteria
 	 */
 	private boolean checkSearchText(String searchText) {
 		boolean result = false;
