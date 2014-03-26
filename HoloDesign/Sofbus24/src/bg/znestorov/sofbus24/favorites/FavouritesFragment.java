@@ -23,14 +23,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import bg.znestorov.sofbus24.activity.ActivityUtils;
-import bg.znestorov.sofbus24.activity.DrawableClickListener;
-import bg.znestorov.sofbus24.activity.SearchEditText;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.FavouritesDatabaseUtils;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.UpdateableFragment;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
+import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
 /**
  * Favourites fragment responsible for visualizing the items from Favourites DB

@@ -18,13 +18,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import bg.znestorov.sofbus24.activity.ActivityUtils;
-import bg.znestorov.sofbus24.activity.DrawableClickListener;
-import bg.znestorov.sofbus24.activity.SearchEditText;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
+import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
 public class ScheduleFragment extends ListFragment {
 

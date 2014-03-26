@@ -7,7 +7,7 @@
     android:paddingRight="?android:attr/scrollbarSize" >
 
     <LinearLayout
-        android:id="@+id/vb_item_image_layout"
+        android:id="@+id/cs_list_item_image_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2sp"
@@ -16,28 +16,28 @@
         android:minWidth="40sp" >
 
         <ImageView
-            android:id="@+id/vb_item_favourite"
+            android:id="@+id/cs_list_item_favourite"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:contentDescription="@string/app_img_empty_content_description" />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/vb_item_station_name"
+        android:id="@+id/cs_list_item_station_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/vb_item_image_layout"
+        android:layout_toRightOf="@+id/cs_list_item_image_layout"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="15sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/vb_item_station_number"
+        android:id="@+id/cs_list_item_station_number"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/vb_item_station_name"
-        android:layout_toRightOf="@+id/vb_item_image_layout"
+        android:layout_below="@+id/cs_list_item_station_name"
+        android:layout_toRightOf="@+id/cs_list_item_image_layout"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorSecondary"

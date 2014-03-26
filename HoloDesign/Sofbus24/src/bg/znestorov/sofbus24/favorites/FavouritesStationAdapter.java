@@ -29,7 +29,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import bg.znestorov.sofbus24.activity.ActivityUtils;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.Station;
@@ -38,6 +37,7 @@ import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.Sofbus24;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;

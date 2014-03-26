@@ -5,7 +5,7 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true" >
 
-    <bg.znestorov.sofbus24.activity.SearchEditText
+    <bg.znestorov.sofbus24.utils.activity.SearchEditText
         android:id="@+id/favourites_search"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

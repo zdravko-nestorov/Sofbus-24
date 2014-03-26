@@ -15,10 +15,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.Html;
-import bg.znestorov.sofbus24.activity.ActivityUtils;
 import bg.znestorov.sofbus24.entity.Config;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * Async class used for retrieving the application configuration from a URL

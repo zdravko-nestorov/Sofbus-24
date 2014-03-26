@@ -9,12 +9,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Location;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class StationsDataSource {
 
@@ -332,6 +333,55 @@ public class StationsDataSource {
 	}
 
 	/**
+	 * Get the nearest station from the DB to a location according to the needed
+	 * page
+	 * 
+	 * @param currentPosition
+	 *            the current position
+	 * @param stationPage
+	 *            each page contains 10 stations
+	 * @return a list with the closest station
+	 */
+	public List<Station> getClosestStations(LatLng currentPosition,
+			int stationPage) {
+		List<Station> stations = new ArrayList<Station>();
+
+		String select = "SELECT * FROM stations ORDER BY (ABS("
+				+ StationsSQLite.COLUMN_LAT + " - " + currentPosition.latitude
+				+ ")" + " + ABS(" + StationsSQLite.COLUMN_LON + " - "
+				+ currentPosition.longitude + ")) ASC";
+
+		Cursor cursor = database.rawQuery(select, null);
+
+		// Iterating the cursor and fill the empty List<Station>
+		cursor.moveToFirst();
+
+		int stationsCount = 1;
+		while (!cursor.isAfterLast() || stationsCount > stationPage * 10) {
+			if (stationsCount >= ((stationPage - 1) * 10)) {
+				Station foundStation = cursorToStation(cursor);
+
+				if (foundStation.getType() == VehicleType.METRO1
+						|| foundStation.getType() == VehicleType.METRO2) {
+					foundStation.setCustomField(String.format(
+							Constants.METRO_STATION_URL,
+							foundStation.getNumber()));
+				}
+
+				stations.add(foundStation);
+			}
+
+			stationsCount++;
+			cursor.moveToNext();
+		}
+
+		// Closing the cursor
+		cursor.close();
+
+		return stations;
+	}
+
+	/**
 	 * Creating new Station object with the data of the current row of the
 	 * database
 	 * 
@@ -358,44 +408,4 @@ public class StationsDataSource {
 
 		return station;
 	}
-
-	/**
-	 * Get the nearest station from the DB to a location
-	 * 
-	 * @param location
-	 *            the current location
-	 * @return a list with the closest station
-	 */
-	public List<Station> getClosestStations(Location location) {
-		List<Station> stations = new ArrayList<Station>();
-
-		String select = "SELECT * FROM stations ORDER BY (ABS("
-				+ StationsSQLite.COLUMN_LAT + " - " + location.getLatitude()
-				+ ")" + " + ABS(" + StationsSQLite.COLUMN_LON + " - "
-				+ location.getLongitude() + ")) ASC";
-
-		Cursor cursor = database.rawQuery(select, null);
-
-		// Iterating the cursor and fill the empty List<Station>
-		cursor.moveToFirst();
-		int br = 0;
-		while (br < nearestStationsCount) {
-			Station foundStation = cursorToStation(cursor);
-			if (foundStation.getType() == VehicleType.METRO1
-					|| foundStation.getType() == VehicleType.METRO2) {
-				foundStation.setCustomField(String.format(
-						Constants.METRO_STATION_URL, foundStation.getNumber()));
-			}
-
-			stations.add(foundStation);
-			cursor.moveToNext();
-			br++;
-		}
-
-		// Closing the cursor
-		cursor.close();
-
-		return stations;
-	}
-
 }

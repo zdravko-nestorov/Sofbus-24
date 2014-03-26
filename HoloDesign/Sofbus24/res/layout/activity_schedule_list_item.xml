@@ -19,7 +19,7 @@
             android:id="@+id/schedule_item_vehicle_type"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:contentDescription="@string/sch_item_vehicle_type" />
+            android:contentDescription="@string/app_img_empty_content_description" />
     </LinearLayout>
 
     <TextView

@@ -15,6 +15,8 @@ public class Constants {
 	/**
 	 * Bundle keys
 	 */
+	// Sofbus24 --> ClosestStationsList --> ClosestStationsListFragment
+	public static final String BUNDLE_CLOSEST_STATIONS_LIST = "CLOSEST STATIONS LIST";
 	// MetroFragment --> MetroSchedule --> MetroScheduleFragment
 	public static final String BUNDLE_METRO_SCHEDULE = "METRO SCHEDULE";
 	// MetroSchedule --> StationMap

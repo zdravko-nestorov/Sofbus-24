@@ -48,7 +48,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <bg.znestorov.sofbus24.activity.SearchEditText
+    <bg.znestorov.sofbus24.utils.activity.SearchEditText
         android:id="@+id/metro_search"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

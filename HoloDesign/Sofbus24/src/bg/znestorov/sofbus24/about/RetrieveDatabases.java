@@ -10,12 +10,12 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.text.Html;
-import bg.znestorov.sofbus24.activity.ActivityUtils;
 import bg.znestorov.sofbus24.databases.StationsSQLite;
 import bg.znestorov.sofbus24.databases.VehiclesSQLite;
 import bg.znestorov.sofbus24.entity.Config;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * Async class used for retrieving the Databases from URL addresses and replace

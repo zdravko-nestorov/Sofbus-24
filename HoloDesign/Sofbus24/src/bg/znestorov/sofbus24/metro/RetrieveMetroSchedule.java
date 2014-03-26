@@ -12,11 +12,11 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import bg.znestorov.sofbus24.activity.ActivityUtils;
 import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.MetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * Async class used for retrieving the Metro schedule from a URL address and

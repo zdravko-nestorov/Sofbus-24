@@ -19,13 +19,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
-import bg.znestorov.sofbus24.activity.ActivityUtils;
-import bg.znestorov.sofbus24.activity.DrawableClickListener;
-import bg.znestorov.sofbus24.activity.SearchEditText;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.UpdateableFragment;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
+import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
 public class VirtualBoardsFragment extends ListFragment implements
 		UpdateableFragment {

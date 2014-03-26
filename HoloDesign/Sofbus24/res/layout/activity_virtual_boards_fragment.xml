@@ -6,7 +6,7 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
-    <bg.znestorov.sofbus24.activity.SearchEditText
+    <bg.znestorov.sofbus24.utils.activity.SearchEditText
         android:id="@+id/vb_search"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
