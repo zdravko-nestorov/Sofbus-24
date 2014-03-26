@@ -25,7 +25,7 @@
             android:key="timeVehicles"
             android:summary="@string/pref_category_stations_summary"
             android:title="@string/pref_category_stations_title" />
-        <ListPreference
+        <ListPreference 
             android:defaultValue="8"
             android:entries="@array/closestStations"
             android:entryValues="@array/closestStationsValues"
