@@ -12,8 +12,8 @@ import android.text.Html;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import bg.znestorov.sofbus24.activity.ActivityUtils;
 import bg.znestorov.sofbus24.preferences.PreferencesFragment;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 public class Preferences extends Activity {
 

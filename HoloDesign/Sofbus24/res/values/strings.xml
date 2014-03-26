@@ -12,6 +12,7 @@
     <string name="app_dialog_title_important">Важно</string>
     <string name="app_dialog_title_error">Грешка</string>
     <string name="app_internet_error">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
+    <string name="app_location_error">Моля включете поне едно от устройствата (GPS или WiFi), за да бъде засечено текущото ви местоположение.</string>
     <string name="app_remaining_minutes">м</string>
     <string name="app_remaining_hours">ч</string>
 
@@ -57,7 +58,6 @@
 
     <!-- Virtual Boards Fragment -->
     <string name="vb_search_hint">Търсене по име или номер</string>
-    <string name="vb_item_favourite" />
     <string name="vb_item_station_number_text" formatted="false">Спирка номер: %s</string>
     <string name="vb_item_add_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>
     <string name="vb_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
@@ -69,7 +69,6 @@
     <string name="sch_search_tab_bus">Автобуси</string>
     <string name="sch_search_tab_trolley">Тролеи</string>
     <string name="sch_search_tab_tram">Трамваи</string>
-    <string name="sch_item_vehicle_type" />
     <string name="sch_item_bus" formatted="false">Автобус №%s</string>
     <string name="sch_item_trolley" formatted="false">Тролей №%s</string>
     <string name="sch_item_tram" formatted="false">Трамвай №%s</string>
@@ -107,9 +106,9 @@
     <string name="about_update_db_restart" formatted="false"><![CDATA[Новите спирки бяха добавени успешно. Ще трябва да рестартирате приложението, за да използвате обновената информация. Искате ли да рестартирате <b>Софбус 24</b> сега?]]></string>
 
     <!-- Preferences -->
-    <string name="pref_restart_app" formatted="false"><![CDATA[Ще трябва да рестартирате приложението, за да има резултат от направените промени. Искате ли да рестартирате <b>Софбус 24</b> сега?]]></string>
     <string name="pref_reset">Сигурни ли сте, че искате да нулирате всички настройки и да ги върнете в началното им положение.</string>
     <string name="pref_title">Настройки</string>
+    <string name="pref_restart_app" formatted="false"><![CDATA[Ще трябва да рестартирате приложението, за да има резултат от направените промени. Искате ли да рестартирате <b>Софбус 24</b> сега?]]></string>
     <string name="pref_category_common">ОБЩИ</string>
     <string name="pref_category_common_language_title">Език</string>
     <string name="pref_category_common_language_summary">Избор на език</string>
@@ -123,5 +122,11 @@
     <string name="pref_category_stations_closest_summary">Колко спирки да се визуализират около текущото местоположение или избрана точка</string>
     <string name="pref_category_stations_timeInfoRetrieval_title">Извлечена информация</string>
     <string name="pref_category_stations_timeInfoRetrieval_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация</string>
+
+    <!-- Closest Stations List -->
+    <string name="cs_list_title">Най-близки спирки</string>
+    <string name="cs_list_search_hint">Търсене по име или номер</string>
+    <string name="cs_list_item_station_number_text" formatted="false">Спирка номер: %s</string>
+    <string name="cs_list_loading_current_location" formatted="false"><![CDATA[Изчисляване на текущите координати...]]></string>
 
 </resources>

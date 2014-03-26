@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,7 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import bg.znestorov.sofbus24.about.Configuration;
-import bg.znestorov.sofbus24.activity.ActivityUtils;
+import bg.znestorov.sofbus24.closest.stations.list.RetrieveCurrentPosition;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
 import bg.znestorov.sofbus24.favorites.FavouritesFragment;
@@ -24,6 +25,7 @@ import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -184,6 +186,17 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			this.slidingMenu.toggle();
+			return true;
+		case R.id.action_closest_stations_map:
+			return super.onOptionsItemSelected(item);
+		case R.id.action_closest_stations_list:
+			ProgressDialog progressDialog = new ProgressDialog(context);
+			progressDialog
+					.setMessage(String
+							.format(getString(R.string.cs_list_loading_current_location)));
+			RetrieveCurrentPosition retrieveCurrentPosition = new RetrieveCurrentPosition(
+					context, progressDialog);
+			retrieveCurrentPosition.execute();
 			return true;
 		case R.id.action_settings:
 			Intent preferencesIntent = new Intent(context, Preferences.class);
