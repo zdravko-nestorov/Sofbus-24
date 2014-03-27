@@ -1,18 +1,12 @@
 package bg.znestorov.sofbus24.gps;
 
-import static bg.znestorov.sofbus24.utils.Utils.formatNumberOfDigits;
-import static bg.znestorov.sofbus24.utils.Utils.isTimeInRange;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -68,6 +62,7 @@ public class HtmlRequestSumc {
 	private static String[] coordinates = new String[2];
 
 	// Consecutive requests in case of an error
+	@SuppressWarnings("unused")
 	private static int requestsCount = 0;
 
 	/**
@@ -97,6 +92,9 @@ public class HtmlRequestSumc {
 	 */
 	public void getInformation(Context context, String stationCode,
 			String stationCodeO, String[] transferCoordinates) {
+		// Format the station code to be always 4 digits
+		stationCode = Utils.formatNumberOfDigits(stationCode, 4);
+
 		// Assigning the transfer coordinates to a global variable
 		if (transferCoordinates != null) {
 			coordinates = transferCoordinates;
@@ -216,6 +214,13 @@ public class HtmlRequestSumc {
 	 *            <li>favorites - in case the method is called from FAVORITES
 	 *            section</li>
 	 *            </ul>
+	 * @param vehicleTypeId
+	 *            the searched vehicle type:
+	 *            <ul>
+	 *            <li>0 - stands for TRAMs</li>
+	 *            <li>1 - stands for BUSES</li>
+	 *            <li>2 - stands for TROLLEYS</li>
+	 *            </ul>
 	 * @param captchaText
 	 *            The text that the user entered according to the CAPTCHA image
 	 * @param captchaId
@@ -223,15 +228,16 @@ public class HtmlRequestSumc {
 	 * @return an HTTP POST object, created with the needed params
 	 */
 	private static HttpPost createSumcRequest(String stationCode,
-			String stationCodeO, String captchaText, String captchaId) {
+			String stationCodeO, String vehicleTypeId, String captchaText,
+			String captchaId) {
 		final HttpPost result = new HttpPost(Constants.VB_URL);
 		result.addHeader("User-Agent", Constants.USER_AGENT);
 		result.addHeader("Referer", Constants.REFERER);
 
 		try {
 			final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(
-					parameters(stationCode, stationCodeO, captchaText,
-							captchaId), "UTF-8");
+					parameters(stationCode, stationCodeO, vehicleTypeId,
+							captchaText, captchaId), "UTF-8");
 			result.setEntity(entity);
 		} catch (UnsupportedEncodingException e) {
 			throw new IllegalStateException("Not supported default encoding?",
@@ -261,6 +267,13 @@ public class HtmlRequestSumc {
 	 *            <li>favorites - in case the method is called from FAVORITES
 	 *            section</li>
 	 *            </ul>
+	 * @param vehicleTypeId
+	 *            the searched vehicle type:
+	 *            <ul>
+	 *            <li>0 - stands for TRAMs</li>
+	 *            <li>1 - stands for BUSES</li>
+	 *            <li>2 - stands for TROLLEYS</li>
+	 *            </ul>
 	 * @param captchaText
 	 *            The text that the user entered according to the CAPTCHA image
 	 * @param captchaId
@@ -269,7 +282,8 @@ public class HtmlRequestSumc {
 	 *         request
 	 */
 	private static List<BasicNameValuePair> parameters(String stationCode,
-			String stationCodeO, String captchaText, String captchaId) {
+			String stationCodeO, String vehicleTypeId, String captchaText,
+			String captchaId) {
 		// Ensure that the search will return results
 		if ("-1".equals(stationCodeO)
 				|| Constants.SCHEDULE_GPS_PARAM.equals(stationCodeO)) {
@@ -281,7 +295,9 @@ public class HtmlRequestSumc {
 		result.addAll(Arrays.asList(new BasicNameValuePair(
 				Constants.QUERY_BUS_STOP_ID, stationCode),
 				new BasicNameValuePair(Constants.QUERY_GO, "1"),
-				new BasicNameValuePair(Constants.QUERY_O, stationCodeO)));
+				new BasicNameValuePair(Constants.QUERY_O, stationCodeO),
+				new BasicNameValuePair(Constants.QUERY_VEHICLE_TYPE_ID,
+						vehicleTypeId)));
 
 		if (captchaText != null && captchaId != null) {
 			result.add(new BasicNameValuePair(Constants.QUERY_CAPTCHA_ID,
@@ -791,19 +807,22 @@ public class HtmlRequestSumc {
 
 		@Override
 		protected String doInBackground(Void... params) {
-			String htmlSourceCode = null;
+			StringBuilder htmlSourceCode = new StringBuilder();
 
 			try {
-				httpPost = createSumcRequest(stationCode, stationCodeO,
-						captchaText, captchaId);
-				htmlSourceCode = client.execute(httpPost,
-						new BasicResponseHandler());
+				for (int i = 0; i < 3; i++) {
+					httpPost = createSumcRequest(stationCode, stationCodeO, i
+							+ "", captchaText, captchaId);
+					String tempHtmlSourceCode = client.execute(httpPost,
+							new BasicResponseHandler());
+					htmlSourceCode.append(tempHtmlSourceCode);
+				}
 			} catch (Exception e) {
 				Log.e(TAG, "Could not get data for station " + stationCode, e);
-				htmlSourceCode = Constants.EXCEPTION;
+				htmlSourceCode.append(Constants.EXCEPTION);
 			}
 
-			return htmlSourceCode;
+			return htmlSourceCode.toString();
 		}
 
 		@Override
@@ -955,39 +974,46 @@ public class HtmlRequestSumc {
 	 */
 	private void startAnErrorActivity(Context context, String stationCode,
 			String stationCodeO, String transferredText) {
-		requestsCount++;
-
-		TimeZone timeZone = TimeZone.getTimeZone(Constants.TIME_ZONE);
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTimeZone(timeZone);
-
-		String currentTime = calendar.get(Calendar.HOUR_OF_DAY)
-				+ formatNumberOfDigits("" + calendar.get(Calendar.MINUTE), 2);
-
-		// In case of an error with the mobile version of the site, make another
-		// 2 requests (if the current time is between [05:00 and 24:00] and
-		// [00:00 and 01:00])
-		if (requestsCount <= Constants.MAX_CONSECUTIVE_REQUESTS_1
-				&& !isTimeInRange(currentTime,
-						Constants.CONSECUTIVE_REQUESTS_START_HOUR_1,
-						Constants.CONSECUTIVE_REQUESTS_END_HOUR_1)) {
-			new HtmlRequestSumc().getInformation(context, stationCode,
-					stationCodeO, null);
-			return;
-		}
-
-		// In case of an error with the mobile version of the site, make another
-		// 1 request (if the current time is between [04:00 and 05:00])
-		if (requestsCount <= Constants.MAX_CONSECUTIVE_REQUESTS_2
-				&& isTimeInRange(currentTime,
-						Constants.CONSECUTIVE_REQUESTS_START_HOUR_2,
-						Constants.CONSECUTIVE_REQUESTS_END_HOUR_2)) {
-			new HtmlRequestSumc().getInformation(context, stationCode,
-					stationCodeO, null);
-			return;
-		}
-
-		requestsCount = 0;
+		/**
+		 * This code was used to send multiple requests to the SKGT site, as
+		 * there was an error that was stopping the application to view the
+		 * schedule from the first try - the site is now fixed, and this is not
+		 * needed anymore
+		 * 
+		 * <code>
+			requestsCount++;
+	
+			TimeZone timeZone = TimeZone.getTimeZone(Constants.TIME_ZONE);
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTimeZone(timeZone);
+	
+			String currentTime = calendar.get(Calendar.HOUR_OF_DAY)
+					+ formatNumberOfDigits("" + calendar.get(Calendar.MINUTE), 2);
+	
+			
+			// In case of an error with the mobile version of the site, make another 2 requests (if the current time is between [05:00 and 24:00] and [00:00 and 01:00])
+			if (requestsCount <= Constants.MAX_CONSECUTIVE_REQUESTS_1
+					&& !isTimeInRange(currentTime,
+							Constants.CONSECUTIVE_REQUESTS_START_HOUR_1,
+							Constants.CONSECUTIVE_REQUESTS_END_HOUR_1)) {
+				new HtmlRequestSumc().getInformation(context, stationCode,
+						stationCodeO, null);
+				return;
+			}
+	
+			// In case of an error with the mobile version of the site, make another 1 request (if the current time is between [04:00 and 05:00])
+			if (requestsCount <= Constants.MAX_CONSECUTIVE_REQUESTS_2
+					&& isTimeInRange(currentTime,
+							Constants.CONSECUTIVE_REQUESTS_START_HOUR_2,
+							Constants.CONSECUTIVE_REQUESTS_END_HOUR_2)) {
+				new HtmlRequestSumc().getInformation(context, stationCode,
+						stationCodeO, null);
+				return;
+			}
+			
+			requestsCount = 0;
+			</code>
+		 **/
 
 		Intent intent = new Intent(context, VirtualBoardsStationChoice.class);
 		intent.putExtra(Constants.KEYWORD_HTML_RESULT, transferredText);

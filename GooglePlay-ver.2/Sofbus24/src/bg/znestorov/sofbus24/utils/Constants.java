@@ -58,6 +58,7 @@ public class Constants {
 	public static final String QUERY_BUS_STOP_ID = "q";
 	public static final String QUERY_O = "o";
 	public static final String QUERY_GO = "go";
+	public static final String QUERY_VEHICLE_TYPE_ID = "vehicleTypeId";
 	public static final String QUERY_CAPTCHA_TEXT = "sc";
 	public static final String QUERY_CAPTCHA_ID = "poleicngi";
 	// User Agent and Referrer
