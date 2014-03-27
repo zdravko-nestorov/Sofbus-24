@@ -50,14 +50,14 @@ public class Constants {
 	/**
 	 * Metro Schedule
 	 */
-	public static final String METRO_STATION_URL = "https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station%s.xml";
+	public static final String METRO_STATION_URL = "https://sofia-stations.googlecode.com/svn/HoloDesign-ver.3/MetroSchedule/schedule/Station%s.xml";
 
 	/**
 	 * About
 	 */
-	public static final String CONFIGURATION_URL = "https://sofia-stations.googlecode.com/svn/Sofbus24_ConfigData/ConfigurationDetails/configuration.xml";
-	public static final String CONFIGURATION_STATIONS_DB_URL = "https://sofia-stations.googlecode.com/svn/Sofbus24_ConfigData/Databases/stations.db";
-	public static final String CONFIGURATION_VEHICLES_DB_URL = "https://sofia-stations.googlecode.com/svn/Sofbus24_ConfigData/Databases/vehicles.db";
+	public static final String CONFIGURATION_URL = "https://sofia-stations.googlecode.com/svn/HoloDesign-ver.3/ConfigData/ConfigurationDetails/configuration.xml";
+	public static final String CONFIGURATION_STATIONS_DB_URL = "https://sofia-stations.googlecode.com/svn/HoloDesign-ver.3/ConfigData/Databases/stations.db";
+	public static final String CONFIGURATION_VEHICLES_DB_URL = "https://sofia-stations.googlecode.com/svn/HoloDesign-ver.3/ConfigData/Databases/vehicles.db";
 	public static final String CONFIGURATION_PREF_NAME = "configuration";
 	public static final String CONFIGURATION_PREF_STATIONS_KEY = "CurrentStationsDBVersion";
 	public static final String CONFIGURATION_PREF_VEHICLES_KEY = "CurrentVehiclesDBVersion";
