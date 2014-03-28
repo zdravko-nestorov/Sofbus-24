@@ -11,10 +11,13 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -94,6 +97,22 @@ public class ClosestStationsListFragment extends ListFragment implements
 		ArrayAdapter<Station> adapter = new ClosestStationsListAdapter(context,
 				currentLocation, closestStations);
 		setListAdapter(adapter);
+		getListView().setOnScrollListener(new OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				if (visibleItemCount > 0) {
+					int lastInScreen = firstVisibleItem + visibleItemCount;
+					if (lastInScreen == totalItemCount) {
+						Log.d("ASDASDAS", lastInScreen + "");
+					}
+				}
+			}
+		});
 
 		return myFragmentView;
 	}
