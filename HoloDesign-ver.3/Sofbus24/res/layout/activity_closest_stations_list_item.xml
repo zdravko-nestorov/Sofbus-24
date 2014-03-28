@@ -23,7 +23,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/cs_list_item_station_name"
+        android:id="@+id/cs_list_item_station_caption"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/cs_list_item_image_layout"
@@ -33,10 +33,10 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/cs_list_item_station_number"
+        android:id="@+id/cs_list_item_station_distance"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cs_list_item_station_name"
+        android:layout_below="@+id/cs_list_item_station_caption"
         android:layout_toRightOf="@+id/cs_list_item_image_layout"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceSmall"

@@ -11,7 +11,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.main.ClosestStationsList;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -29,29 +28,27 @@ import com.google.android.gms.maps.model.LatLng;
 public class RetrieveCurrentPosition extends AsyncTask<Void, Void, Void> {
 
 	private Activity context;
+	private ClosestStationsListFragment closestStationsListFragment;
 	private ProgressDialog progressDialog;
 
-	// TODO: SET TO 0.0 - NOW JUST FOR TESTING
 	// Default latitude and longitude
-	private double latitude = 48.8224387;
-	private double longitude = 2.2266533;
+	private double latitude = 0.0;
+	private double longitude = 0.0;
 
 	// Location Managers responsible for the current location
 	private LocationManager locationManager;
 	private MyLocationListener myLocationListener;
-
-	// Database
-	StationsDataSource datasource;
 
 	// Available Location providers
 	private boolean isNetworkProviderOn = true;
 	private boolean isGpsProviderOn = true;
 
 	public RetrieveCurrentPosition(Activity context,
+			ClosestStationsListFragment closestStationsListFragment,
 			ProgressDialog progressDialog) {
 		this.context = context;
+		this.closestStationsListFragment = closestStationsListFragment;
 		this.progressDialog = progressDialog;
-		this.datasource = new StationsDataSource(this.context);
 	}
 
 	@Override
@@ -75,15 +72,17 @@ public class RetrieveCurrentPosition extends AsyncTask<Void, Void, Void> {
 		}
 
 		// Create progress dialog showing the loading message
-		progressDialog.setIndeterminate(true);
-		progressDialog.setCancelable(true);
-		progressDialog
-				.setOnCancelListener(new DialogInterface.OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
-						cancel(true);
-					}
-				});
-		progressDialog.show();
+		if (progressDialog != null) {
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						public void onCancel(DialogInterface dialog) {
+							cancel(true);
+						}
+					});
+			progressDialog.show();
+		}
 	}
 
 	@Override
@@ -99,16 +98,25 @@ public class RetrieveCurrentPosition extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected void onPostExecute(Void result) {
-		progressDialog.dismiss();
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+		}
 
 		if (isNetworkProviderOn || isGpsProviderOn) {
 			LatLng currentLocation = new LatLng(this.latitude, this.longitude);
 
-			Intent closestStationsListIntent = new Intent(context,
-					ClosestStationsList.class);
-			closestStationsListIntent.putExtra(
-					Constants.BUNDLE_CLOSEST_STATIONS_LIST, currentLocation);
-			context.startActivity(closestStationsListIntent);
+			// Check what have to be done - start new activity or update
+			// fragment
+			if (closestStationsListFragment == null) {
+				Intent closestStationsListIntent = new Intent(context,
+						ClosestStationsList.class);
+				closestStationsListIntent
+						.putExtra(Constants.BUNDLE_CLOSEST_STATIONS_LIST,
+								currentLocation);
+				context.startActivity(closestStationsListIntent);
+			} else {
+				closestStationsListFragment.update(context, currentLocation);
+			}
 		} else {
 			OnClickListener positiveOnClickListener = new OnClickListener() {
 				public void onClick(DialogInterface dialog, int i) {

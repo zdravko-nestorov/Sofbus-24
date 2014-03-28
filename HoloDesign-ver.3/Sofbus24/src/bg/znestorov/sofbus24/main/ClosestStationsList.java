@@ -48,6 +48,12 @@ public class ClosestStationsList extends Activity {
 		case android.R.id.home:
 			finish();
 			return true;
+		case R.id.action_cs_list_refresh:
+			closestStationsListFragment.update(ClosestStationsList.this, null);
+			return true;
+		case R.id.action_cs_list_map:
+			// TODO: Set the event on clicking the button
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
@@ -91,17 +90,13 @@ public class FavouritesFragment extends ListFragment implements
 	}
 
 	@Override
-	public void update(Activity context) {
+	public void update(Activity context, Object obj) {
 		if (this.context == null) {
 			this.context = context;
 		}
 
 		favouritesStations = loadFavouritesList(null);
 		setListAdapter(new FavouritesStationAdapter(context, favouritesStations));
-	}
-
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
 	}
 
 	@Override

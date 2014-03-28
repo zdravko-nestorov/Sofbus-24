@@ -68,7 +68,7 @@ public class MetroScheduleFragment extends ListFragment implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void update(Activity context) {
+	public void update(Activity context, Object obj) {
 		if (this.context == null) {
 			this.context = context;
 		}

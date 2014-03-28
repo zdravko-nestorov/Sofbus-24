@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
@@ -41,6 +42,8 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 /**
  * Array Adapted user for set each row a station from the Favourites DB
@@ -241,7 +244,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 * @param station
 	 *            the station on the current row
 	 */
-	private void loadStationImage(ViewHolder viewHolder, Station station) {
+	private void loadStationImage(final ViewHolder viewHolder, Station station) {
 		String stationLat = station.getLat();
 		String stationLon = station.getLon();
 		String imageUrl;
@@ -255,7 +258,24 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		}
 
 		imageLoader.displayImage(imageUrl, viewHolder.stationStreetView,
-				displayImageOptions, null);
+				displayImageOptions, new SimpleImageLoadingListener() {
+					@Override
+					public void onLoadingStarted(String imageUri, View view) {
+						viewHolder.progressBar.setVisibility(View.VISIBLE);
+					}
+
+					@Override
+					public void onLoadingFailed(String imageUri, View view,
+							FailReason failReason) {
+						viewHolder.progressBar.setVisibility(View.GONE);
+					}
+
+					@Override
+					public void onLoadingComplete(String imageUri, View view,
+							Bitmap loadedImage) {
+						viewHolder.progressBar.setVisibility(View.GONE);
+					}
+				});
 	}
 
 	/**

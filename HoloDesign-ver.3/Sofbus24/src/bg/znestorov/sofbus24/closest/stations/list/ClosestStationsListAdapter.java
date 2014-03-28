@@ -16,6 +16,9 @@ import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.Sofbus24;
+import bg.znestorov.sofbus24.utils.MapUtils;
+
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Array Adapter used to set each row of the ClosestStations Fragment
@@ -28,18 +31,21 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 
 	private final FavouritesDataSource favouritesDataSource;
 	private final Activity context;
+	private final LatLng currentLocation;
 	private final List<Station> stations;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
 		ImageView addToFavourites;
-		TextView stationName;
-		TextView stationNumber;
+		TextView stationCaption;
+		TextView stationDistance;
 	}
 
-	public ClosestStationsListAdapter(Activity context, List<Station> stations) {
+	public ClosestStationsListAdapter(Activity context, LatLng currentLocation,
+			List<Station> stations) {
 		super(context, R.layout.activity_closest_stations_list_item, stations);
 		this.context = context;
+		this.currentLocation = currentLocation;
 		this.stations = stations;
 		this.favouritesDataSource = new FavouritesDataSource(context);
 	}
@@ -62,10 +68,10 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 			viewHolder = new ViewHolder();
 			viewHolder.addToFavourites = (ImageView) rowView
 					.findViewById(R.id.cs_list_item_favourite);
-			viewHolder.stationName = (TextView) rowView
-					.findViewById(R.id.cs_list_item_station_name);
-			viewHolder.stationNumber = (TextView) rowView
-					.findViewById(R.id.cs_list_item_station_number);
+			viewHolder.stationCaption = (TextView) rowView
+					.findViewById(R.id.cs_list_item_station_caption);
+			viewHolder.stationDistance = (TextView) rowView
+					.findViewById(R.id.cs_list_item_station_distance);
 			rowView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) rowView.getTag();
@@ -74,10 +80,12 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 		// Fill the data
 		Station station = stations.get(position);
 		viewHolder.addToFavourites.setImageResource(getFavouriteImage(station));
-		viewHolder.stationName.setText(station.getName());
-		viewHolder.stationNumber.setText(String.format(
-				context.getString(R.string.cs_list_item_station_number_text),
-				station.getNumber()));
+		viewHolder.stationCaption.setText(String.format(station.getName()
+				+ " (%s)", station.getNumber()));
+		viewHolder.stationDistance.setText(String.format(
+				context.getString(R.string.cs_list_item_distance_text),
+				MapUtils.getMapDistance(currentLocation, station))
+				+ context.getString(R.string.app_distance_meters));
 
 		// Set the actions over the ImageView
 		actionsOverFavouritesImageViews(viewHolder, station);

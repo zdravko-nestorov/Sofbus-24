@@ -130,7 +130,8 @@ public class MetroSchedule extends FragmentActivity {
 
 			// Refresh all metro schedule fragments
 			for (int i = 0; i < fragmentsList.size(); i++) {
-				((MetroScheduleFragment) fragmentsList.get(i)).update(context);
+				((MetroScheduleFragment) fragmentsList.get(i)).update(context,
+						null);
 			}
 
 			// Change the time in the ActionBar

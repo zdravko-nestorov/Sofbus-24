@@ -1,5 +1,7 @@
 package bg.znestorov.sofbus24.utils;
 
+import java.math.BigDecimal;
+
 import android.graphics.Color;
 
 public class Constants {
@@ -11,6 +13,8 @@ public class Constants {
 	public static final String GLOBAL_PARAM_EMPTY = "EMPTY";
 	public static final Double GLOBAL_PARAM_SOFIA_CENTER_LATITUDE = 42.696492;
 	public static final Double GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE = 23.326011;
+	public static final BigDecimal GLOBAL_PARAM_CLOSEST_STATION_DISTANCE = new BigDecimal(
+			100000);
 
 	/**
 	 * Bundle keys

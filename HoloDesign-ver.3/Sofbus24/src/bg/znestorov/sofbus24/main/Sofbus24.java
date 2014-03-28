@@ -143,12 +143,12 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		Fragment fragment = fragmentsList.get(tabPosition);
 
 		if (fragment instanceof FavouritesFragment && isFavouritesChanged) {
-			((FavouritesFragment) fragment).update(context);
+			((FavouritesFragment) fragment).update(context, null);
 			isFavouritesChanged = false;
 		}
 
 		if (fragment instanceof VirtualBoardsFragment && isVbChanged) {
-			((VirtualBoardsFragment) fragment).update(context);
+			((VirtualBoardsFragment) fragment).update(context, null);
 			isVbChanged = false;
 		}
 
@@ -156,7 +156,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			((MetroFragment) fragment).showDirectionNameToast(context);
 
 			if (isMetroChanged) {
-				((MetroFragment) fragment).update(context);
+				((MetroFragment) fragment).update(context, null);
 				isMetroChanged = false;
 			}
 		}
@@ -188,14 +188,15 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			this.slidingMenu.toggle();
 			return true;
 		case R.id.action_closest_stations_map:
-			return super.onOptionsItemSelected(item);
+			// TODO: Set the event on clicking the button
+			return true;
 		case R.id.action_closest_stations_list:
 			ProgressDialog progressDialog = new ProgressDialog(context);
 			progressDialog
 					.setMessage(String
 							.format(getString(R.string.cs_list_loading_current_location)));
 			RetrieveCurrentPosition retrieveCurrentPosition = new RetrieveCurrentPosition(
-					context, progressDialog);
+					context, null, progressDialog);
 			retrieveCurrentPosition.execute();
 			return true;
 		case R.id.action_settings:

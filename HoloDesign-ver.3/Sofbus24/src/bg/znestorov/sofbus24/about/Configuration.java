@@ -66,6 +66,11 @@ public class Configuration {
 	 * @throws IOException
 	 */
 	private static void copyConfiguration(Activity context) throws IOException {
+		File prefFolder = new File(CONFIGURATION_PATH);
+		if (!prefFolder.exists()) {
+			prefFolder.mkdir();
+		}
+
 		// Open the local DB as the input stream
 		InputStream myInput = context.getAssets().open(CONFIGURATION_NAME);
 

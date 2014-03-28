@@ -13,6 +13,7 @@
     <string name="app_dialog_title_error">Грешка</string>
     <string name="app_internet_error">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
     <string name="app_location_error">Моля включете поне едно от устройствата (GPS или WiFi), за да бъде засечено текущото ви местоположение.</string>
+    <string name="app_distance_meters">&#160;м.</string>
     <string name="app_remaining_minutes">м</string>
     <string name="app_remaining_hours">ч</string>
 
@@ -41,6 +42,9 @@
     <!-- Preferences -->
     <string name="action_pref_reset">Нулиране</string>
     <string name="action_pref_info_details">Информация</string>
+    <!-- Closest Stations -->
+    <string name="action_cs_list_refresh">Обнови</string>
+    <string name="action_cs_list_map">Карта</string>
 
     <!-- Favourites Fragment -->
     <string name="fav_search_hint">Търсене по име или номер</string>
@@ -126,8 +130,8 @@
     <!-- Closest Stations List -->
     <string name="cs_list_title">Най-близки спирки</string>
     <string name="cs_list_search_hint">Търсене по име или номер</string>
-    <string name="cs_list_item_station_number_text" formatted="false">Спирка номер: %s</string>
+    <string name="cs_list_item_distance_text" formatted="false">Разстояние: %s</string>
     <string name="cs_list_loading_current_location" formatted="false"><![CDATA[Изчисляване на текущите координати...]]></string>
-    <string name="cs_list_item_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
+    <string name="cs_list_item_empty_list">Няма намерени спирки в радиус от 100 км. за това търсене. Моля опитайте с други критерии или се приближете до София.</string>
 
 </resources>

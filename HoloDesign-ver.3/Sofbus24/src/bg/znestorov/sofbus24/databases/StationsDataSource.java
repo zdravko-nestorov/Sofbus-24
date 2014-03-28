@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.databases;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -13,6 +14,7 @@ import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.MapUtils;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -376,21 +378,37 @@ public class StationsDataSource {
 
 		int stationsCount = 1;
 		while (!cursor.isAfterLast() && stationsCount <= stationPage * 10) {
-			if (stationsCount >= ((stationPage - 1) * 10)) {
-				Station foundStation = cursorToStation(cursor);
-
-				if (foundStation.getType() == VehicleType.METRO1
-						|| foundStation.getType() == VehicleType.METRO2) {
-					foundStation.setCustomField(String.format(
-							Constants.METRO_STATION_URL,
-							foundStation.getNumber()));
+			Station foundStation = cursorToStation(cursor);
+			boolean isStationInRange = true;
+			try {
+				BigDecimal distance = new BigDecimal(MapUtils.getMapDistance(
+						currentPosition, foundStation));
+				if (distance
+						.compareTo(Constants.GLOBAL_PARAM_CLOSEST_STATION_DISTANCE) == 1) {
+					isStationInRange = false;
 				}
-
-				stations.add(foundStation);
+			} catch (Exception e) {
+				isStationInRange = false;
 			}
 
-			stationsCount++;
-			cursor.moveToNext();
+			// Check if the station is in range
+			if (isStationInRange) {
+				if (stationsCount >= ((stationPage - 1) * 10)) {
+					if (foundStation.getType() == VehicleType.METRO1
+							|| foundStation.getType() == VehicleType.METRO2) {
+						foundStation.setCustomField(String.format(
+								Constants.METRO_STATION_URL,
+								foundStation.getNumber()));
+					}
+
+					stations.add(foundStation);
+				}
+
+				stationsCount++;
+				cursor.moveToNext();
+			} else {
+				break;
+			}
 		}
 
 		// Closing the cursor
@@ -423,7 +441,32 @@ public class StationsDataSource {
 		station.setLat(cursor.getString(2));
 		station.setLon(cursor.getString(3));
 		station.setType(VehicleType.valueOf(cursor.getString(4)));
+		station.setCustomField(getCustomField(station));
 
 		return station;
+	}
+
+	/**
+	 * Define what to put in the custom field in the DB via the station type
+	 * 
+	 * @param station
+	 *            the inputStation
+	 * @return what to be inserted in the custom field in the DB
+	 */
+	private String getCustomField(Station station) {
+		String stationCustomField;
+
+		switch (station.getType()) {
+		case METRO1:
+		case METRO2:
+			stationCustomField = String.format(Constants.METRO_STATION_URL,
+					station.getNumber());
+			break;
+		default:
+			stationCustomField = "";
+			break;
+		}
+
+		return stationCustomField;
 	}
 }

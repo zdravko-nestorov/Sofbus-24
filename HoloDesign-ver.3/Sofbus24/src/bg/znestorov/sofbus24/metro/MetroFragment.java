@@ -117,7 +117,7 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	}
 
 	@Override
-	public void update(Activity context) {
+	public void update(Activity context, Object obj) {
 		if (this.context == null) {
 			this.context = context;
 		}
