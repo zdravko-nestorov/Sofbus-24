@@ -3,15 +3,14 @@ package bg.znestorov.sofbus24.closest.stations.list;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -49,7 +48,11 @@ public class ClosestStationsListFragment extends ListFragment implements
 	private StationsDataSource stationsDatasource;
 
 	private List<Station> closestStations;
-	private static String closestStationsSearchText = "";
+	private String closestStationsSearchText = "";
+
+	private boolean isListFullLoaded = false;
+
+	private ArrayAdapter<Station> closestStationsAdapter;
 
 	public ClosestStationsListFragment() {
 	}
@@ -57,6 +60,34 @@ public class ClosestStationsListFragment extends ListFragment implements
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
+		// Create endless ListView (has to be in this method, as it is called
+		// after the view is created)
+		getListView().setOnScrollListener(new OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				if (visibleItemCount > 0) {
+					int lastInScreen = firstVisibleItem + visibleItemCount;
+					if (totalItemCount >= 10 && !isListFullLoaded
+							&& lastInScreen >= totalItemCount - 5) {
+						closestStations = loadStationsList(
+								(totalItemCount + 10) / 10,
+								closestStationsSearchText);
+
+						if (closestStations.size() > 0) {
+							closestStationsAdapter.addAll(closestStations);
+						} else {
+							isListFullLoaded = true;
+						}
+					}
+				}
+			}
+		});
 	}
 
 	@Override
@@ -94,25 +125,10 @@ public class ClosestStationsListFragment extends ListFragment implements
 		actionsOverSearchEditText(searchEditText);
 
 		// Use an ArrayAdapter to show the elements in a ListView
-		ArrayAdapter<Station> adapter = new ClosestStationsListAdapter(context,
+		closestStationsAdapter = new ClosestStationsListAdapter(context,
 				currentLocation, closestStations);
-		setListAdapter(adapter);
-		getListView().setOnScrollListener(new OnScrollListener() {
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				if (visibleItemCount > 0) {
-					int lastInScreen = firstVisibleItem + visibleItemCount;
-					if (lastInScreen == totalItemCount) {
-						Log.d("ASDASDAS", lastInScreen + "");
-					}
-				}
-			}
-		});
+		setListAdapter(closestStationsAdapter);
+		closestStationsAdapter.setNotifyOnChange(true);
 
 		return myFragmentView;
 	}
@@ -131,7 +147,7 @@ public class ClosestStationsListFragment extends ListFragment implements
 				.findViewById(R.id.cs_list_empty_progress);
 
 		// Check if the update method is called just to reset the current
-		// fragmnt or to update it (null - to reset, any other - to update)
+		// fragment or to update it (null - to reset, any other - to update)
 		if (obj == null) {
 			SearchEditText searchEditText = (SearchEditText) context
 					.findViewById(R.id.cs_list_search);
@@ -162,9 +178,9 @@ public class ClosestStationsListFragment extends ListFragment implements
 			imageView.setImageResource(android.R.color.transparent);
 			loadLocationStreetView(imageView, progressBar);
 
-			ArrayAdapter<Station> adapter = new ClosestStationsListAdapter(
-					context, currentLocation, closestStations);
-			setListAdapter(adapter);
+			closestStationsAdapter = new ClosestStationsListAdapter(context,
+					currentLocation, closestStations);
+			setListAdapter(closestStationsAdapter);
 		}
 	}
 
@@ -257,10 +273,10 @@ public class ClosestStationsListFragment extends ListFragment implements
 
 				List<Station> searchStationList = loadStationsList(1,
 						closestStationsSearchText);
-				ArrayAdapter<Station> adapter = new ClosestStationsListAdapter(
+				closestStationsAdapter = new ClosestStationsListAdapter(
 						context, currentLocation, searchStationList);
 
-				setListAdapter(adapter);
+				setListAdapter(closestStationsAdapter);
 			}
 
 			@Override
@@ -283,7 +299,7 @@ public class ClosestStationsListFragment extends ListFragment implements
 					ActivityUtils.showKeyboard(context, searchEditText);
 					break;
 				case RIGHT:
-					searchEditText.setText("");
+					update(context, null);
 					break;
 				default:
 					break;
@@ -291,6 +307,8 @@ public class ClosestStationsListFragment extends ListFragment implements
 			}
 
 		});
+
+		searchEditText.setText(closestStationsSearchText);
 	}
 
 	/**
@@ -308,6 +326,9 @@ public class ClosestStationsListFragment extends ListFragment implements
 	 *         to the current location
 	 */
 	private List<Station> loadStationsList(int stationPage, String searchText) {
+		// Set to false at each time of new search
+		isListFullLoaded = false;
+
 		List<Station> stationsList;
 
 		if (stationsDatasource == null) {

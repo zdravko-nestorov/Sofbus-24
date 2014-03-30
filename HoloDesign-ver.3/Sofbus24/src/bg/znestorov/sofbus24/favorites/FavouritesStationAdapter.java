@@ -139,18 +139,17 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 				station.getNumber()));
 
 		// Add the image of the station from the street view asynchronously
-		loadStationImage(viewHolder, station);
+		if (expandedListItem) {
+			expandListItem(viewHolder, station);
+		} else {
+			collapseListItem(viewHolder);
+		}
 
 		// Attach click listeners to the EXPAND, EDIT and REMOVE buttons
 		expandStation(viewHolder, station);
 		editStation(viewHolder.editStation, station, position);
 		removeStation(viewHolder.removeStation, station);
 		chooseStation(viewHolder.stationStreetView, station);
-
-		// Check the state of the ListItems
-		if (!expandedListItem) {
-			collapseListItem(viewHolder);
-		}
 
 		return rowView;
 	}
@@ -168,7 +167,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		viewHolder.expandStation.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean isExpanded = viewHolder.progressBar.getVisibility() == View.VISIBLE;
+				boolean isExpanded = viewHolder.stationStreetView
+						.getVisibility() == View.VISIBLE;
 
 				if (!isExpanded) {
 					expandListItem(viewHolder, station);
@@ -211,7 +211,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 */
 	private void collapseListItem(final ViewHolder viewHolder) {
 		// Set the visibility of the progress bar
-		viewHolder.progressBar.setVisibility(View.INVISIBLE);
+		viewHolder.progressBar.setVisibility(View.GONE);
 
 		// Set the visibility and height of the favourites item
 		viewHolder.favItemLayout.setMinimumHeight(0);

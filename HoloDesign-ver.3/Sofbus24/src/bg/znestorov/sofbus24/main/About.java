@@ -42,8 +42,8 @@ public class About extends Activity {
 		// Set up the action bar
 		actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(String.format(getString(R.string.about_title),
-				getString(R.string.app_name), appVersion));
+		actionBar.setSubtitle(String.format(getString(R.string.about_subtitle),
+				appVersion));
 	}
 
 	@Override

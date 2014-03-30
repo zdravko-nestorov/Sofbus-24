@@ -93,7 +93,7 @@
     <string name="metro_schedule_refresh" formatted="false"><![CDATA[Обновяване на оставащото време...]]></string>
 
     <!-- About -->
-    <string name="about_title" formatted="false"><![CDATA[%s - версия %s]]></string>
+    <string name="about_subtitle" formatted="false"><![CDATA[Версия %s]]></string>
     <string name="about_information" formatted="false">
 <![CDATA[<b>%s версия %s<br>© 2012 by Zdravko Nestorov. All rights reserved</b><br><br>Android системата предоставя подробна информация, 
 		свързана с използването на градския транпорт в София, като часове на пристигане в реално време, разписания на превозните средства, 

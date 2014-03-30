@@ -275,4 +275,17 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		Sofbus24.isMetroChanged = isMetroChanged;
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		// Actions over Favourites fragment
+		Fragment fragment = fragmentsList.get(mViewPager.getCurrentItem());
+
+		if (fragment instanceof FavouritesFragment && isFavouritesChanged) {
+			((FavouritesFragment) fragment).update(context, null);
+			isFavouritesChanged = false;
+		}
+	}
+
 }

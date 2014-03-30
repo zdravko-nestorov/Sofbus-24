@@ -351,6 +351,10 @@ public class StationsDataSource {
 		Locale currentLocale = new Locale(language);
 		searchText = searchText.toLowerCase(currentLocale);
 
+		// IMPORTANT: Used for correct ordering
+		Double fudge = Math.pow(
+				Math.cos(Math.toRadians(currentPosition.latitude)), 2);
+
 		StringBuilder query = new StringBuilder();
 		query.append(" SELECT * 											");
 		query.append(" FROM stations	 									");
@@ -362,14 +366,19 @@ public class StationsDataSource {
 				+ searchText + "%'		 									");
 		query.append(" )													");
 		query.append(" ORDER BY												");
-		query.append(" 		( ABS(											");
+		query.append(" 		( (												");
 		query.append(StationsSQLite.COLUMN_LAT + " - "
 				+ currentPosition.latitude);
-		query.append(" 		) + 											");
-		query.append(" 		ABS(											");
+		query.append(" 		) * (											");
+		query.append(StationsSQLite.COLUMN_LAT + " - "
+				+ currentPosition.latitude);
+		query.append(" 		) + (											");
 		query.append(StationsSQLite.COLUMN_LON + " - "
 				+ currentPosition.longitude);
-		query.append(" 		) ) ASC											");
+		query.append(" 		) * (											");
+		query.append(StationsSQLite.COLUMN_LON + " - "
+				+ currentPosition.longitude);
+		query.append(" 		) * " + fudge + " ) ASC							");
 
 		Cursor cursor = database.rawQuery(query.toString(), null);
 
@@ -393,7 +402,7 @@ public class StationsDataSource {
 
 			// Check if the station is in range
 			if (isStationInRange) {
-				if (stationsCount >= ((stationPage - 1) * 10)) {
+				if (stationsCount > ((stationPage - 1) * 10)) {
 					if (foundStation.getType() == VehicleType.METRO1
 							|| foundStation.getType() == VehicleType.METRO2) {
 						foundStation.setCustomField(String.format(
