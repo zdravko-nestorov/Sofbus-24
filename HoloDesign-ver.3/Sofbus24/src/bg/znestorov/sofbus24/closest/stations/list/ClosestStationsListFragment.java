@@ -299,7 +299,7 @@ public class ClosestStationsListFragment extends ListFragment implements
 					ActivityUtils.showKeyboard(context, searchEditText);
 					break;
 				case RIGHT:
-					update(context, null);
+					searchEditText.setText("");
 					break;
 				default:
 					break;
