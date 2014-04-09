@@ -6,7 +6,10 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -92,9 +95,6 @@ public class HtmlRequestSumc {
 	 */
 	public void getInformation(Context context, String stationCode,
 			String stationCodeO, String[] transferCoordinates) {
-		// Format the station code to be always 4 digits
-		stationCode = Utils.formatNumberOfDigits(stationCode, 4);
-
 		// Assigning the transfer coordinates to a global variable
 		if (transferCoordinates != null) {
 			coordinates = transferCoordinates;
@@ -291,13 +291,16 @@ public class HtmlRequestSumc {
 		}
 
 		final List<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>(
-				5);
+				6);
 		result.addAll(Arrays.asList(new BasicNameValuePair(
 				Constants.QUERY_BUS_STOP_ID, stationCode),
 				new BasicNameValuePair(Constants.QUERY_GO, "1"),
-				new BasicNameValuePair(Constants.QUERY_O, stationCodeO),
-				new BasicNameValuePair(Constants.QUERY_VEHICLE_TYPE_ID,
-						vehicleTypeId)));
+				new BasicNameValuePair(Constants.QUERY_O, stationCodeO)));
+
+		if (vehicleTypeId != null) {
+			result.add(new BasicNameValuePair(Constants.QUERY_VEHICLE_TYPE_ID,
+					vehicleTypeId));
+		}
 
 		if (captchaText != null && captchaId != null) {
 			result.add(new BasicNameValuePair(Constants.QUERY_CAPTCHA_ID,
@@ -807,22 +810,55 @@ public class HtmlRequestSumc {
 
 		@Override
 		protected String doInBackground(Void... params) {
-			StringBuilder htmlSourceCode = new StringBuilder();
+			String htmlSourceCode;
 
 			try {
-				for (int i = 0; i < 3; i++) {
-					httpPost = createSumcRequest(stationCode, stationCodeO, i
-							+ "", captchaText, captchaId);
-					String tempHtmlSourceCode = client.execute(httpPost,
-							new BasicResponseHandler());
-					htmlSourceCode.append(tempHtmlSourceCode);
+				// Create a standard HTML request (without vehicleTypeId param)
+				httpPost = createSumcRequest(stationCode, stationCodeO, null,
+						captchaText, captchaId);
+				htmlSourceCode = client.execute(httpPost,
+						new BasicResponseHandler());
+
+				// Check how many unique station numbers are returned
+				LinkedHashSet<String> stationNumbers = getStationNumbers(htmlSourceCode);
+
+				/*
+				 * Proceed according to the unique station numbers in the
+				 * request:
+				 * 
+				 * - in case of empty list - there is an error
+				 * 
+				 * - in case of one station number - check the schedule for all
+				 * type of vehciles
+				 * 
+				 * - in case of more than one station number - show a list with
+				 * all stations
+				 */
+				if (stationNumbers.isEmpty()) {
+					throw new Exception();
+				} else if (stationNumbers.size() == 1) {
+					htmlSourceCode = "";
+
+					String tempHtmlSourceCode;
+					for (int i = 0; i < 3; i++) {
+						httpPost = createSumcRequest(stationCode, stationCodeO,
+								i + "", captchaText, captchaId);
+						tempHtmlSourceCode = client.execute(httpPost,
+								new BasicResponseHandler());
+						htmlSourceCode = createHtmlSourceOutput(htmlSourceCode,
+								tempHtmlSourceCode);
+					}
+
+					if (htmlSourceCode == null || "".equals(htmlSourceCode)) {
+						throw new Exception();
+					}
 				}
 			} catch (Exception e) {
 				Log.e(TAG, "Could not get data for station " + stationCode, e);
-				htmlSourceCode.append(Constants.EXCEPTION);
+				htmlSourceCode = Constants.EXCEPTION;
 			}
 
-			return htmlSourceCode.toString();
+			return htmlSourceCode;
 		}
 
 		@Override
@@ -854,6 +890,85 @@ public class HtmlRequestSumc {
 				// Workaround used just in case when this activity is destroyed
 				// before the dialog
 			}
+		}
+
+		/**
+		 * Greate a list with all unique station numbers, so check the way to
+		 * proceed with the HTML result
+		 * 
+		 * @param htmlSourceCode
+		 *            the html source returned by the standard HTML request
+		 *            (without vehicleTypeId param)
+		 * @return a list with all unique station numbers from the HTML source
+		 */
+		private LinkedHashSet<String> getStationNumbers(String htmlSourceCode) {
+			LinkedHashSet<String> stationNumbers = new LinkedHashSet<String>();
+
+			Pattern pattern = Pattern.compile("(&nbsp;\\([0-9]{4}\\)&nbsp;)");
+			Matcher matcher = pattern.matcher(htmlSourceCode);
+			while (matcher.find()) {
+				try {
+					stationNumbers.add(Utils.getOnlyDigits(matcher.group(1)));
+				} catch (Exception e) {
+				}
+			}
+
+			return stationNumbers;
+		}
+
+		private String createHtmlSourceOutput(String htmlSourceCode,
+				String tempHtmlSourceCode) {
+			// Check if the global source code is empty or there is no available
+			// information
+			if (htmlSourceCode == null
+					|| "".equals(htmlSourceCode)
+					|| (htmlSourceCode != null && !"".equals(htmlSourceCode) && !htmlSourceCode
+							.contains("<div class=\"arrivals\">"))) {
+				htmlSourceCode = "";
+			}
+
+			// Check if the current source code is not empty
+			if (tempHtmlSourceCode != null && !"".equals(tempHtmlSourceCode)) {
+				// Check if the current source code contains schedule info
+				if (tempHtmlSourceCode.contains("<div class=\"arrivals\">")) {
+					htmlSourceCode = appendArrivals(htmlSourceCode,
+							tempHtmlSourceCode);
+				} else if (htmlSourceCode == null || "".equals(htmlSourceCode)) {
+					htmlSourceCode = tempHtmlSourceCode;
+				}
+			}
+
+			return htmlSourceCode;
+		}
+
+		private String appendArrivals(String htmlSourceCode,
+				String tempHtmlSourceCode) {
+			Pattern pattern = Pattern
+					.compile("<div class=\"arrivals\">([^~]*?)\n<\\/div>");
+
+			// Find arrivals (from the global source code)
+			String arrivals = "";
+			Matcher matcher = pattern.matcher(htmlSourceCode);
+			try {
+				if (matcher.find()) {
+					arrivals = matcher.group(1).trim();
+				}
+			} catch (Exception e) {
+			}
+
+			// Find temp arrivals (from the current source code)
+			String tempArrivals = "";
+			Matcher tempMatcher = pattern.matcher(tempHtmlSourceCode);
+			if (tempMatcher.find()) {
+				tempArrivals = tempMatcher.group(1).trim();
+			}
+
+			tempHtmlSourceCode = tempHtmlSourceCode.replaceAll(
+					"<div class=\"arrivals\">([^~]*?)\n<\\/div>",
+					"<div class=\"arrivals\">" + arrivals + "\n" + tempArrivals
+							+ "\n</div>");
+
+			return tempHtmlSourceCode;
 		}
 	}
 

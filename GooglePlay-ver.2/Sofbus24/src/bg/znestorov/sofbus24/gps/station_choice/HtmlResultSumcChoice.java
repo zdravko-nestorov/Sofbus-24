@@ -2,6 +2,7 @@ package bg.znestorov.sofbus24.gps.station_choice;
 
 import static bg.znestorov.sofbus24.utils.Utils.getValueAfter;
 import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
+import static bg.znestorov.sofbus24.utils.Utils.getValueBeforeLast;
 
 import java.util.ArrayList;
 
@@ -78,8 +79,7 @@ public class HtmlResultSumcChoice {
 
 			// Case in which there is no info after refresh
 			if (htmlSrc.contains(Constants.SEARCH_ERROR_WITH_REFRESH)) {
-				gpsStation
-						.setTime_stamp(Constants.SEARCH_ERROR_WITH_REFRESH);
+				gpsStation.setTime_stamp(Constants.SEARCH_ERROR_WITH_REFRESH);
 				listOfVehicles.add(gpsStation);
 				return listOfVehicles;
 				// Strange case in which the station is found, but there is
@@ -135,7 +135,7 @@ public class HtmlResultSumcChoice {
 		}
 
 		htmlSrc = getValueAfter(htmlSrc, Constants.MULTIPLE_RESULTS_SEPARATOR_1);
-		htmlSrc = getValueBefore(htmlSrc, Constants.MULTIPLE_RESULTS_END)
+		htmlSrc = getValueBeforeLast(htmlSrc, Constants.MULTIPLE_RESULTS_END)
 				.trim();
 
 		String[] array = htmlSrc.split(Constants.MULTIPLE_RESULTS_SEPARATOR_1);
