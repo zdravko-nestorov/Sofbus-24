@@ -42,9 +42,12 @@ public class HtmlResultStation {
 					tempTimeStamp = tempTimeStamp.replaceAll("00:", "24:");
 				}
 
-				if (station_hour > hour) {
+				if (station_hour > hour
+						&& time_stamp.size() < Constants.MAX_COUNT_SCHEDULE_TIME) {
 					time_stamp.add(tempTimeStamp);
-				} else if (station_hour == hour && station_minute >= minute) {
+				} else if (station_hour == hour
+						&& station_minute >= minute
+						&& time_stamp.size() < Constants.MAX_COUNT_SCHEDULE_TIME) {
 					time_stamp.add(tempTimeStamp);
 				}
 

@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.ListActivity;
-import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -25,7 +25,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 
 public class VirtualBoardsMapStationChoice extends ListActivity {
 
-	private Context context;
+	private Activity context;
 	private String station_string;
 	private List<GPSStation> station_list = new ArrayList<GPSStation>();
 	private TextView errorLabel;

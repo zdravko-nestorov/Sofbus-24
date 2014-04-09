@@ -3,8 +3,8 @@ package bg.znestorov.sofbus24.main;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -33,7 +33,7 @@ public class VirtualBoardsStationChoice extends ListActivity {
 	// Check if codeO is present
 	public static boolean checkCodeO = false;
 
-	private Context context;
+	private Activity context;
 	private String stationCode;
 	private String stationName;
 	private List<GPSStation> station_list;

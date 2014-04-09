@@ -41,7 +41,7 @@ public class StationListView extends Activity {
 
 	ListView listView;
 
-	Context context;
+	Activity context;
 	FavouritesDataSource datasource;
 
 	@Override

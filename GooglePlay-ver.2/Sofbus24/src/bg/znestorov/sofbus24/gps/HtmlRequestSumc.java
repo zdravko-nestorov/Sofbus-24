@@ -826,7 +826,8 @@ public class HtmlRequestSumc {
 				 * Proceed according to the unique station numbers in the
 				 * request:
 				 * 
-				 * - in case of empty list - there is an error
+				 * - in case of empty list and no captcha needed - no info
+				 * available
 				 * 
 				 * - in case of one station number - check the schedule for all
 				 * type of vehciles
@@ -834,8 +835,9 @@ public class HtmlRequestSumc {
 				 * - in case of more than one station number - show a list with
 				 * all stations
 				 */
-				if (stationNumbers.isEmpty()) {
-					throw new Exception();
+				if (stationNumbers.isEmpty()
+						&& !htmlSourceCode.contains(Constants.REQUIRES_CAPTCHA)) {
+					htmlSourceCode = Constants.ERROR_NO_INFO_STATION;
 				} else if (stationNumbers.size() == 1) {
 					htmlSourceCode = "";
 
@@ -893,12 +895,12 @@ public class HtmlRequestSumc {
 		}
 
 		/**
-		 * Greate a list with all unique station numbers, so check the way to
+		 * Create a list with all unique station numbers, so check the way to
 		 * proceed with the HTML result
 		 * 
 		 * @param htmlSourceCode
-		 *            the html source returned by the standard HTML request
-		 *            (without vehicleTypeId param)
+		 *            the HTML source returned by the standard HTML request
+		 *            (without vehicleTypeId parameter)
 		 * @return a list with all unique station numbers from the HTML source
 		 */
 		private LinkedHashSet<String> getStationNumbers(String htmlSourceCode) {
@@ -916,6 +918,17 @@ public class HtmlRequestSumc {
 			return stationNumbers;
 		}
 
+		/**
+		 * Create the HTML source by combining only the needed information from
+		 * each of the 3 requests (bus, trolley, tram)
+		 * 
+		 * @param htmlSourceCode
+		 *            the global HTML source code
+		 * @param tempHtmlSourceCode
+		 *            the current HTML source code (bus, trolley or tram)
+		 * @return the combined output between the global and current HTML
+		 *         results
+		 */
 		private String createHtmlSourceOutput(String htmlSourceCode,
 				String tempHtmlSourceCode) {
 			// Check if the global source code is empty or there is no available
@@ -941,6 +954,16 @@ public class HtmlRequestSumc {
 			return htmlSourceCode;
 		}
 
+		/**
+		 * Append the arrivals from the global and current HTML source codes
+		 * 
+		 * @param htmlSourceCode
+		 *            the global HTML source code
+		 * @param tempHtmlSourceCode
+		 *            the current HTML source code (bus, trolley or tram)
+		 * @return the combined output between the global and current HTML
+		 *         results (with replaced arrivarls section)
+		 */
 		private String appendArrivals(String htmlSourceCode,
 				String tempHtmlSourceCode) {
 			Pattern pattern = Pattern

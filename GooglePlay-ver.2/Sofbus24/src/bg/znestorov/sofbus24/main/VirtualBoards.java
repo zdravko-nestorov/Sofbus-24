@@ -34,7 +34,7 @@ public class VirtualBoards extends Activity {
 
 	ListView listView;
 
-	Context context;
+	Activity context;
 	Builder dialog;
 
 	// ArrayList of GPSStations

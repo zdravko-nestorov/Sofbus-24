@@ -2,7 +2,7 @@ package bg.znestorov.sofbus24.metro_schedule_stations;
 
 import java.util.ArrayList;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,10 +20,16 @@ import bg.znestorov.sofbus24.utils.Utils;
 public class MetroStationAdapter extends ArrayAdapter<MetroStation> {
 
 	private final FavouritesDataSource datasource;
-	private final Context context;
+	private final Activity context;
 	private final ArrayList<MetroStation> metroStations;
 
-	public MetroStationAdapter(Context context,
+	static class ViewHolder {
+		TextView stationInfo;
+		TextView stationCode;
+		ImageView stationFavorites;
+	}
+
+	public MetroStationAdapter(Activity context,
 			ArrayList<MetroStation> metroStations) {
 		super(context, R.layout.activity_vehicle, metroStations);
 		this.context = context;
@@ -34,62 +40,75 @@ public class MetroStationAdapter extends ArrayAdapter<MetroStation> {
 	// Creating the elements of the ListView
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
 		MetroStation ms = metroStations.get(position);
-		View rowView = convertView;
-		rowView = setDirectionRow(inflater, parent, ms);
-
-		return rowView;
+		return setDirectionRow(convertView, ms);
 	}
 
 	// Direction row in the ListView
-	public View setDirectionRow(LayoutInflater inflater, ViewGroup parent,
-			MetroStation ms) {
-		View rowView = inflater.inflate(
-				R.layout.activity_gps_map_station_choice_list_row, parent,
-				false);
+	public View setDirectionRow(View convertView, MetroStation ms) {
+		View rowView = convertView;
+		ViewHolder viewHolder;
 
-		TextView stationInfo = (TextView) rowView
-				.findViewById(R.id.station_info);
-		TextView stationCode = (TextView) rowView
-				.findViewById(R.id.station_distance);
+		if (rowView == null) {
+			LayoutInflater inflater = context.getLayoutInflater();
+			rowView = inflater.inflate(
+					R.layout.activity_gps_map_station_choice_list_row, null);
+
+			// Configure view holder
+			viewHolder = new ViewHolder();
+			viewHolder.stationInfo = (TextView) rowView
+					.findViewById(R.id.station_info);
+			viewHolder.stationCode = (TextView) rowView
+					.findViewById(R.id.station_distance);
+			viewHolder.stationFavorites = (ImageView) rowView
+					.findViewById(R.id.station_favorite);
+			rowView.setTag(viewHolder);
+		} else {
+			viewHolder = (ViewHolder) rowView.getTag();
+		}
 
 		String stationName = ms.getName();
 		String stationNumber = ms.getNumber();
 
 		final GPSStation gpsStation = new GPSStation(stationNumber, stationName);
-		final ImageView stationFavorites = (ImageView) rowView
-				.findViewById(R.id.station_favorite);
 
 		// Set image on the imageView
 		datasource.open();
 		if (datasource.getStation(gpsStation) == null) {
-			stationFavorites.setImageResource(R.drawable.favorites_empty);
+			viewHolder.stationFavorites
+					.setImageResource(R.drawable.favorites_empty);
 		} else {
-			stationFavorites.setImageResource(R.drawable.favorites_full);
+			viewHolder.stationFavorites
+					.setImageResource(R.drawable.favorites_full);
 		}
 		datasource.close();
 
-		stationInfo.setText(stationName);
-		stationCode.setText(context
+		viewHolder.stationInfo.setText(stationName);
+		viewHolder.stationCode.setText(context
 				.getString(R.string.gps_station_choice_station_code)
 				+ Utils.formatNumberOfDigits(stationNumber, 4));
 
+		actionsOverStationFavourites(viewHolder, gpsStation);
+
+		return rowView;
+	}
+
+	// Activate the onClickListener over the Favourites ImageView
+	private void actionsOverStationFavourites(final ViewHolder viewHolder,
+			final GPSStation gpsStation) {
 		// Set onClick listener
-		stationFavorites.setOnClickListener(new OnClickListener() {
+		viewHolder.stationFavorites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				datasource.open();
 				if (datasource.getStation(gpsStation) == null) {
 					datasource.createStation(gpsStation);
-					stationFavorites
+					viewHolder.stationFavorites
 							.setImageResource(R.drawable.favorites_full);
 					Toast.makeText(context, R.string.toast_favorites_add,
 							Toast.LENGTH_SHORT).show();
 				} else {
 					datasource.deleteStation(gpsStation);
-					stationFavorites
+					viewHolder.stationFavorites
 							.setImageResource(R.drawable.favorites_empty);
 					Toast.makeText(context, R.string.toast_favorites_remove,
 							Toast.LENGTH_SHORT).show();
@@ -97,7 +116,5 @@ public class MetroStationAdapter extends ArrayAdapter<MetroStation> {
 				datasource.close();
 			}
 		});
-
-		return rowView;
 	}
 }

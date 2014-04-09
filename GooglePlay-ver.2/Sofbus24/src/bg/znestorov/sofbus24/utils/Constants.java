@@ -195,6 +195,11 @@ public class Constants {
 	public static final String STOP_ID_BEGIN = "\" value=\"";
 	public static final String STOP_ID_END = "\">";
 
+	// PARAMS WHICH HELP TO GET THE STATION SCHEDULE
+	// (CLASS: HtmlResultStation)
+	// MAX count of time schedules from the SKGT site
+	public static final int MAX_COUNT_SCHEDULE_TIME = 10;
+
 	// PARAMS WHICH HELP TO EXTRACT STATION ID, NAME AND CODEO FROM HTML SOURCE
 	// (CLASS: Utils)
 	// HTML source variables

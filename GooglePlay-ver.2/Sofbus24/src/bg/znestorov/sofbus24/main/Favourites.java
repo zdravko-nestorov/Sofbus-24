@@ -74,8 +74,6 @@ public class Favourites extends ListActivity {
 			sumc.getInformation(context, station.getId(), station.getCodeO(),
 					coordinates);
 		}
-
-		datasource.close();
 	}
 
 	@Override

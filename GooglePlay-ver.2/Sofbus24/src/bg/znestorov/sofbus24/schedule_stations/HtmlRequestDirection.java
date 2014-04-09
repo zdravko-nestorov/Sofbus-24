@@ -39,7 +39,7 @@ public class HtmlRequestDirection {
 				.getString(R.string.title_trolley))) {
 			this.vehicleType = "2";
 		} else {
-			this.vehicleType = "3";
+			this.vehicleType = "0";
 		}
 
 		this.vehicleNumber = getValueAfter(vehicleChoice, "$");
@@ -49,7 +49,7 @@ public class HtmlRequestDirection {
 	public String getInformation(HttpGet httpGet) {
 		// HTTP Client - created once (final)
 		final DefaultHttpClient client = new DefaultHttpClient();
-		
+
 		// Create a response handler
 		String htmlResult = null;
 

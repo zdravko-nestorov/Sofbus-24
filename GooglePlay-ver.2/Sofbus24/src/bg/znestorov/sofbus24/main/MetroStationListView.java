@@ -29,7 +29,7 @@ public class MetroStationListView extends Activity {
 	private ListView listView;
 	private EditText editText;
 
-	private Context context;
+	private Activity context;
 	private FavouritesDataSource datasource;
 	private ArrayList<MetroStation> metroStations;
 

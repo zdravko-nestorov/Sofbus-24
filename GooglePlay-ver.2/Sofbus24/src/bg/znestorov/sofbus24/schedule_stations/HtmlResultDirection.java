@@ -90,6 +90,8 @@ public class HtmlResultDirection {
 			String direction = getValueAfter(localResult[br],
 					Constants.DIRECTION_BEGIN);
 			direction = getValueBefore(direction, Constants.DIRECTION_END);
+			direction = getValueBefore(direction, "(");
+			direction = getValueBefore(direction, "  ");
 			dir.setDirection(direction.trim());
 
 			String vt = getValueAfter(localResult[br], Constants.VAR_BEGIN);

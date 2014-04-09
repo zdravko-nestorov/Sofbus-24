@@ -2,7 +2,7 @@ package bg.znestorov.sofbus24.gps_map.station_choice;
 
 import java.util.List;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,10 +19,16 @@ import bg.znestorov.sofbus24.station_database.GPSStation;
 public class VBMapStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 
 	private final FavouritesDataSource datasource;
-	private final Context context;
+	private final Activity context;
 	private final List<GPSStation> stations;
 
-	public VBMapStationChoiceAdapter(Context context, List<GPSStation> stations) {
+	static class ViewHolder {
+		TextView stationInfo;
+		TextView stationDistance;
+		ImageView stationFavorites;
+	}
+
+	public VBMapStationChoiceAdapter(Activity context, List<GPSStation> stations) {
 		super(context, R.layout.activity_gps_station_choice, stations);
 		this.context = context;
 		this.stations = stations;
@@ -32,64 +38,77 @@ public class VBMapStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 	// Creating the elements of the ListView
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
 		GPSStation station = stations.get(position);
-		View rowView = convertView;
 
-		rowView = setRow(inflater, parent, station);
-
-		return rowView;
+		return setRow(convertView, station);
 	}
 
 	// Station row in the ListView
-	public View setRow(LayoutInflater inflater, ViewGroup parent,
-			GPSStation station) {
-		View rowView = inflater.inflate(
-				R.layout.activity_gps_map_station_choice_list_row, parent,
-				false);
+	public View setRow(View convertView, GPSStation station) {
+		View rowView = convertView;
+		ViewHolder viewHolder;
 
-		TextView stationInfo = (TextView) rowView
-				.findViewById(R.id.station_info);
-		TextView stationDistance = (TextView) rowView
-				.findViewById(R.id.station_distance);
+		if (rowView == null) {
+			LayoutInflater inflater = context.getLayoutInflater();
+			rowView = inflater.inflate(
+					R.layout.activity_gps_map_station_choice_list_row, null);
+
+			// Configure view holder
+			viewHolder = new ViewHolder();
+			viewHolder.stationInfo = (TextView) rowView
+					.findViewById(R.id.station_info);
+			viewHolder.stationDistance = (TextView) rowView
+					.findViewById(R.id.station_distance);
+			viewHolder.stationFavorites = (ImageView) rowView
+					.findViewById(R.id.station_favorite);
+			rowView.setTag(viewHolder);
+		} else {
+			viewHolder = (ViewHolder) rowView.getTag();
+		}
 
 		// Create final variable for GPSStation, so can be used in
 		// onClickListener
 		final GPSStation gpsStation = station;
-		final ImageView stationFavorites = (ImageView) rowView
-				.findViewById(R.id.station_favorite);
 
 		// Set image on the imageView
 		datasource.open();
 		if (datasource.getStation(gpsStation) == null) {
-			stationFavorites.setImageResource(R.drawable.favorites_empty);
+			viewHolder.stationFavorites
+					.setImageResource(R.drawable.favorites_empty);
 		} else {
-			stationFavorites.setImageResource(R.drawable.favorites_full);
+			viewHolder.stationFavorites
+					.setImageResource(R.drawable.favorites_full);
 		}
 		datasource.close();
 
-		stationInfo.setText(gpsStation.getName() + " (" + gpsStation.getId()
-				+ ")");
-		stationDistance.setText(context
+		viewHolder.stationInfo.setText(gpsStation.getName() + " ("
+				+ gpsStation.getId() + ")");
+		viewHolder.stationDistance.setText(context
 				.getString(R.string.gps_map_station_choice_distance)
 				+ gpsStation.getTime_stamp()
 				+ context.getString(R.string.gps_map_station_choice_meters));
 
+		actionsOverStationFavourites(viewHolder, gpsStation);
+
+		return rowView;
+	}
+
+	// Activate the onClickListener over the Favourites ImageView
+	private void actionsOverStationFavourites(final ViewHolder viewHolder,
+			final GPSStation gpsStation) {
 		// Set onClick listener
-		stationFavorites.setOnClickListener(new OnClickListener() {
+		viewHolder.stationFavorites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				datasource.open();
 				if (datasource.getStation(gpsStation) == null) {
 					datasource.createStation(gpsStation);
-					stationFavorites
+					viewHolder.stationFavorites
 							.setImageResource(R.drawable.favorites_full);
 					Toast.makeText(context, R.string.toast_favorites_add,
 							Toast.LENGTH_SHORT).show();
 				} else {
 					datasource.deleteStation(gpsStation);
-					stationFavorites
+					viewHolder.stationFavorites
 							.setImageResource(R.drawable.favorites_empty);
 					Toast.makeText(context, R.string.toast_favorites_remove,
 							Toast.LENGTH_SHORT).show();
@@ -97,7 +116,5 @@ public class VBMapStationChoiceAdapter extends ArrayAdapter<GPSStation> {
 				datasource.close();
 			}
 		});
-
-		return rowView;
 	}
 }
