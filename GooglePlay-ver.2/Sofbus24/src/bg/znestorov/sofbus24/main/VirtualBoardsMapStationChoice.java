@@ -112,8 +112,8 @@ public class VirtualBoardsMapStationChoice extends ListActivity {
 		String selectedRow = station.getName();
 		Toast.makeText(this, selectedRow, Toast.LENGTH_SHORT).show();
 
-		new HtmlRequestSumc().getInformation(context, station.getId(),
-				Integer.toString(position + 1), null);
+		new HtmlRequestSumc().getInformation(context, station.getId(), "1",
+				null);
 	}
 
 	@Override

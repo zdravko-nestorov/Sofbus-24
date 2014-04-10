@@ -931,8 +931,8 @@ public class HtmlRequestSumc {
 		 */
 		private String createHtmlSourceOutput(String htmlSourceCode,
 				String tempHtmlSourceCode) {
-			// Check if the global source code is empty or there is no available
-			// information
+			// Check if the global source code is empty or there is no
+			// available information
 			if (htmlSourceCode == null
 					|| "".equals(htmlSourceCode)
 					|| (htmlSourceCode != null && !"".equals(htmlSourceCode) && !htmlSourceCode
@@ -946,7 +946,10 @@ public class HtmlRequestSumc {
 				if (tempHtmlSourceCode.contains("<div class=\"arrivals\">")) {
 					htmlSourceCode = appendArrivals(htmlSourceCode,
 							tempHtmlSourceCode);
-				} else if (htmlSourceCode == null || "".equals(htmlSourceCode)) {
+				} else if (htmlSourceCode == null
+						|| "".equals(htmlSourceCode)
+						|| tempHtmlSourceCode
+								.contains(Constants.REQUIRES_CAPTCHA)) {
 					htmlSourceCode = tempHtmlSourceCode;
 				}
 			}

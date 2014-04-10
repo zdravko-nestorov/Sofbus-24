@@ -5,6 +5,8 @@ import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 import static bg.znestorov.sofbus24.utils.Utils.getValueBeforeLast;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -147,14 +149,7 @@ public class HtmlResultSumcChoice {
 					" ");
 
 			String name = getValueBefore(array[i], "(").trim();
-			String number = getValueAfter(array[i], "(");
-
-			// In case the name contains multiple brackets
-			while (number.contains("(")) {
-				number = getValueAfter(number, "(");
-			}
-
-			number = getValueBefore(number, ")").trim();
+			String number = getStationNumber(array[i]);
 
 			if (name != null && !"".equals(name) && number != null
 					&& !"".equals(number)) {
@@ -166,5 +161,21 @@ public class HtmlResultSumcChoice {
 		}
 
 		return listOfVehicles;
+	}
+
+	// Get the station number from the html source part
+	private String getStationNumber(String htmlSourcePart) {
+		String stationNumber = "";
+
+		Pattern pattern = Pattern.compile("\\((\\d{4})\\)");
+		Matcher matcher = pattern.matcher(htmlSourcePart);
+		try {
+			if (matcher.find()) {
+				stationNumber = matcher.group(1).trim();
+			}
+		} catch (Exception e) {
+		}
+
+		return stationNumber;
 	}
 }

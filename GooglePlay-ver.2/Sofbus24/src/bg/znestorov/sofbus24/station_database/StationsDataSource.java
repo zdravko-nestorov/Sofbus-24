@@ -13,6 +13,7 @@ import android.location.Location;
 import android.preference.PreferenceManager;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.Utils;
 
 import com.google.android.maps.GeoPoint;
 
@@ -199,6 +200,10 @@ public class StationsDataSource {
 	private GPSStation cursorToStation(Cursor cursor) {
 		GPSStation station = new GPSStation();
 
+		// Format station number to be always 4 digits (or more)
+		String stationNumber = cursor.getString(0);
+		stationNumber = Utils.formatNumberOfDigits(stationNumber, 4);
+
 		// Check if have to translate the station name
 		String stationName = cursor.getString(1);
 		if (!"bg".equals(language)) {
@@ -206,7 +211,7 @@ public class StationsDataSource {
 		}
 
 		// Getting all columns of the row and setting them to a Station object
-		station.setId(cursor.getString(0));
+		station.setId(stationNumber);
 		station.setName(stationName);
 		station.setLat(cursor.getString(2));
 		station.setLon(cursor.getString(3));
