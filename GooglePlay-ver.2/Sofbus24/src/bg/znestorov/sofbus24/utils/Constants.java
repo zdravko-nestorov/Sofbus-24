@@ -36,7 +36,7 @@ public class Constants {
 	// PARAMS WHICH HELPS TO EXTRACT THE METRO STATIONS
 	// (CLASS: HtmlRequestMetroDirection)
 	// METRO - URL address
-	public static final String METRO_SCHEDULE_URL = "https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/MetroSchedule.xml";
+	public static final String METRO_SCHEDULE_URL = "https://sofia-stations.googlecode.com/svn/HoloDesign-ver.3/MetroSchedule/schedule/MetroSchedule.xml";
 	// Possible HTML errors while retrieving information
 	public static final String METRO_INTERNET_PROBLEM = "METRO INTERNET PROBLEM";
 

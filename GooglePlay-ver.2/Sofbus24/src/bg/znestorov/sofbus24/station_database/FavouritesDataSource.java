@@ -125,10 +125,13 @@ public class FavouritesDataSource {
 		String where = FavouritesSQLite.COLUMN_ID + " = ?";
 		String[] whereArgs = new String[] { String.valueOf(station.getId()) };
 
+		// Added as some people in GooglePlay experience an exception when
+		// removing a station from Favourites
 		if (!database.isOpen()) {
 			this.open();
-			database.delete(FavouritesSQLite.TABLE_FAVOURITES, where, whereArgs);
 		}
+
+		database.delete(FavouritesSQLite.TABLE_FAVOURITES, where, whereArgs);
 	}
 
 	// Update station from the database

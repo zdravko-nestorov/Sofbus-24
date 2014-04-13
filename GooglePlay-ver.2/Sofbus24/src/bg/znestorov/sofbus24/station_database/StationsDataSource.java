@@ -223,12 +223,34 @@ public class StationsDataSource {
 	public List<GPSStation> getClosestStations(Location location) {
 		List<GPSStation> stations = new ArrayList<GPSStation>();
 
-		String select = "SELECT * FROM stations ORDER BY (ABS("
-				+ StationsSQLite.COLUMN_LAT + " - " + location.getLatitude()
-				+ ")" + " + ABS(" + StationsSQLite.COLUMN_LON + " - "
-				+ location.getLongitude() + ")) ASC";
+		// IMPORTANT: Used for correct ordering
+		Double fudge = Math.pow(
+				Math.cos(Math.toRadians(location.getLatitude())), 2);
 
-		Cursor cursor = database.rawQuery(select, null);
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT * 												");
+		query.append(" FROM stations	 										");
+		query.append(" WHERE ( 													");
+		query.append(" 		lower(CAST(" + StationsSQLite.COLUMN_ID
+				+ " AS TEXT)) LIKE '%%'											");
+		query.append(" OR 														");
+		query.append(" 		lower(" + StationsSQLite.COLUMN_NAME
+				+ ") LIKE '%%'			 										");
+		query.append(" )														");
+		query.append(" ORDER BY													");
+		query.append(" 		( (													");
+		query.append(StationsSQLite.COLUMN_LAT + " - " + location.getLatitude());
+		query.append(" 		) * (												");
+		query.append(StationsSQLite.COLUMN_LAT + " - " + location.getLatitude());
+		query.append(" 		) + (												");
+		query.append(StationsSQLite.COLUMN_LON + " - "
+				+ location.getLongitude());
+		query.append(" 		) * (												");
+		query.append(StationsSQLite.COLUMN_LON + " - "
+				+ location.getLongitude());
+		query.append(" 		) * " + fudge + " ) ASC								");
+
+		Cursor cursor = database.rawQuery(query.toString(), null);
 
 		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
