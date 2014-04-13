@@ -72,6 +72,13 @@ public class Constants {
 	public static final String PREFERENCES_COOKIE_VALUE = "value";
 	// In case of HTML Request error
 	public static final String EXCEPTION = "EXCEPTION";
+	// Used for extracting the information for all types of vehicles
+	public static final String VB_REGEX_SCHEDULE_START = "<div class=\"arrivals\">";
+	public static final String VB_REGEX_SCHEDULE_BODY = "<div class=\"arrivals\">([^~]*?)\n<\\/div>";
+	public static final String VB_REGEX_VEHICLE_TYPES = "<a\\s*?href=\"#\"\\s*?onClick=\"closethisasap\\('form[0-9]*?'\\)\">([^~]*?&nbsp;[^~]*?&nbsp;){2}([^~]*?)</a>";
+	public static final String VB_VEHICLE_TYPE_BUS = "юбрнася";
+	public static final String VB_VEHICLE_TYPE_TROLLEY = "рпнке";
+	public static final String VB_VEHICLE_TYPE_TRAM = "рпюл";
 
 	// (CLASS: HtmlRequestSumc)
 	// GPS times taken through SCHEDULE

@@ -23,7 +23,7 @@
 
     <!-- SUMC GPS -->
     <string name="sumc_captcha">Essai de sécurité</string>
-    <string name="sumc_captcha_msg">Veuillez introduire les caractères de l\'image ci-dessous:</string>
+    <string name="sumc_captcha_msg">Veuillez introduire les caractères de l\'image ci-dessous (en cirylic ou latin):</string>
     <string name="sumc_button_label">OK</string>
 
     <!-- GPS Station Choice -->

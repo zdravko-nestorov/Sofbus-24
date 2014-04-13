@@ -5,7 +5,7 @@
     <string name="app_name">Софбус 24</string>
     <string name="ss_name">Софийски градски транспорт</string>
     <string name="btn_gps">Виртуални табла</string>
-    <string name="gps_msg">Моля въведете код (цифри) или име (на кирилица или латиница) на спирка:</string>
+    <string name="gps_msg">Моля въведете четирицифрен код (пр. 0013) или име (цифра/и или букви на кирилица или латиница) на спирка:</string>
     <string name="btn_map">GPS времена - Google Maps</string>
     <string name="btn_schedule">Разписания</string>
     <string name="btn_favourite">Любими</string>
@@ -23,7 +23,7 @@
 
     <!-- SUMC GPS -->
     <string name="sumc_captcha">Тест за сигурност</string>
-    <string name="sumc_captcha_msg">Моля въведете символите от изображението:</string>
+    <string name="sumc_captcha_msg">Моля въведете символите от изображението (на кирилица или латиница):</string>
     <string name="sumc_button_label">OK</string>
 
     <!-- GPS Station Choice -->
@@ -235,11 +235,11 @@
     <string name="toast_favorites_no_stations">Няма добавени спирки в секцията \"Любими\".</string>
     <!-- Rename message -->
     <string name="toast_station_rename">Спирката беше успешно преименувана.</string>
-    
+
     <!-- METRO MESSAGES -->
     <!-- Loading messages on progressDialogs -->
     <string name="loading_message_metro_schedule">Извличане на разписанието на метрото&#8230;</string>
-    
+
     <!-- Metro Station Choice -->
     <string name="metro_st_ch_name">Направления</string>
     <string name="metro_st_ch_choice">Изберете направление</string>

@@ -51,6 +51,7 @@ import bg.znestorov.sofbus24.main.VirtualBoards;
 import bg.znestorov.sofbus24.main.VirtualBoardsStationChoice;
 import bg.znestorov.sofbus24.station_database.FavouritesDataSource;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.Utils;
 
 public class HtmlRequestSumc {
@@ -568,7 +569,7 @@ public class HtmlRequestSumc {
 	 */
 	private void processCaptchaText(DefaultHttpClient client, Context context,
 			String stationCode, String stationCodeO, String captchaId) {
-		String captchaText = dialogResult;
+		String captchaText = TranslatorCyrillicToLatin.translate(dialogResult);
 		dialogResult = null;
 
 		// Making HttpRequest and showing a progress dialog
@@ -700,6 +701,7 @@ public class HtmlRequestSumc {
 		if (src.toUpperCase().contains(Constants.SEARCH_TYPE_COUNT_RESULTS_1)
 				&& src.toUpperCase().contains(
 						Constants.SEARCH_TYPE_COUNT_RESULTS_2)
+				&& getStationNumbers(text).size() > 1
 				&& "-1".equals(stationCodeO)) {
 			requestsCount = 0;
 
@@ -839,16 +841,40 @@ public class HtmlRequestSumc {
 						&& !htmlSourceCode.contains(Constants.REQUIRES_CAPTCHA)) {
 					htmlSourceCode = Constants.ERROR_NO_INFO_STATION;
 				} else if (stationNumbers.size() == 1) {
-					htmlSourceCode = "";
+					ArrayList<String> stationVehicleTypes = getStationVehicleTypes(htmlSourceCode);
+					int vehicleTypesCount = stationVehicleTypes.size();
 
+					/*
+					 * Check what types of vehicles pass through the station
+					 * 
+					 * - in case of 1 type - no more requests needed (the first
+					 * requests take the time schedule)
+					 * 
+					 * - in case of 2 types - make one more requests to get the
+					 * times of arrival of other types of vehicles
+					 * 
+					 * - in case of 3 types - make two more requests to get the
+					 * times of arrival of other types of vehicles
+					 */
 					String tempHtmlSourceCode;
-					for (int i = 0; i < 3; i++) {
+					if (vehicleTypesCount == 2) {
 						httpPost = createSumcRequest(stationCode, stationCodeO,
-								i + "", captchaText, captchaId);
+								stationVehicleTypes.get(1), captchaText,
+								captchaId);
 						tempHtmlSourceCode = client.execute(httpPost,
 								new BasicResponseHandler());
 						htmlSourceCode = createHtmlSourceOutput(htmlSourceCode,
 								tempHtmlSourceCode);
+					} else if (vehicleTypesCount == 3) {
+						for (int i = 1; i < 3; i++) {
+							httpPost = createSumcRequest(stationCode,
+									stationCodeO, stationVehicleTypes.get(i),
+									captchaText, captchaId);
+							tempHtmlSourceCode = client.execute(httpPost,
+									new BasicResponseHandler());
+							htmlSourceCode = createHtmlSourceOutput(
+									htmlSourceCode, tempHtmlSourceCode);
+						}
 					}
 
 					if (htmlSourceCode == null || "".equals(htmlSourceCode)) {
@@ -895,30 +921,6 @@ public class HtmlRequestSumc {
 		}
 
 		/**
-		 * Create a list with all unique station numbers, so check the way to
-		 * proceed with the HTML result
-		 * 
-		 * @param htmlSourceCode
-		 *            the HTML source returned by the standard HTML request
-		 *            (without vehicleTypeId parameter)
-		 * @return a list with all unique station numbers from the HTML source
-		 */
-		private LinkedHashSet<String> getStationNumbers(String htmlSourceCode) {
-			LinkedHashSet<String> stationNumbers = new LinkedHashSet<String>();
-
-			Pattern pattern = Pattern.compile("(&nbsp;\\([0-9]{4}\\)&nbsp;)");
-			Matcher matcher = pattern.matcher(htmlSourceCode);
-			while (matcher.find()) {
-				try {
-					stationNumbers.add(Utils.getOnlyDigits(matcher.group(1)));
-				} catch (Exception e) {
-				}
-			}
-
-			return stationNumbers;
-		}
-
-		/**
 		 * Create the HTML source by combining only the needed information from
 		 * each of the 3 requests (bus, trolley, tram)
 		 * 
@@ -936,14 +938,15 @@ public class HtmlRequestSumc {
 			if (htmlSourceCode == null
 					|| "".equals(htmlSourceCode)
 					|| (htmlSourceCode != null && !"".equals(htmlSourceCode) && !htmlSourceCode
-							.contains("<div class=\"arrivals\">"))) {
+							.contains(Constants.VB_REGEX_SCHEDULE_START))) {
 				htmlSourceCode = "";
 			}
 
 			// Check if the current source code is not empty
 			if (tempHtmlSourceCode != null && !"".equals(tempHtmlSourceCode)) {
 				// Check if the current source code contains schedule info
-				if (tempHtmlSourceCode.contains("<div class=\"arrivals\">")) {
+				if (tempHtmlSourceCode
+						.contains(Constants.VB_REGEX_SCHEDULE_START)) {
 					htmlSourceCode = appendArrivals(htmlSourceCode,
 							tempHtmlSourceCode);
 				} else if (htmlSourceCode == null
@@ -969,8 +972,7 @@ public class HtmlRequestSumc {
 		 */
 		private String appendArrivals(String htmlSourceCode,
 				String tempHtmlSourceCode) {
-			Pattern pattern = Pattern
-					.compile("<div class=\"arrivals\">([^~]*?)\n<\\/div>");
+			Pattern pattern = Pattern.compile(Constants.VB_REGEX_SCHEDULE_BODY);
 
 			// Find arrivals (from the global source code)
 			String arrivals = "";
@@ -990,11 +992,52 @@ public class HtmlRequestSumc {
 			}
 
 			tempHtmlSourceCode = tempHtmlSourceCode.replaceAll(
-					"<div class=\"arrivals\">([^~]*?)\n<\\/div>",
+					Constants.VB_REGEX_SCHEDULE_BODY,
 					"<div class=\"arrivals\">" + arrivals + "\n" + tempArrivals
 							+ "\n</div>");
 
 			return tempHtmlSourceCode;
+		}
+
+		/**
+		 * Get the vehicles types of the cars passing through this station via
+		 * the response HTML source code, as follows:<br/>
+		 * <ul>
+		 * <li>0 - for TRAMS</li>
+		 * <li>1 - for BUSSES</li>
+		 * <li>2 - for TROLLEYS</li>
+		 * </ul>
+		 * 
+		 * @param htmlSourceCode
+		 *            the response HTML code
+		 * @return an ArrayList with the different types of vehicles passing
+		 *         through the station
+		 */
+		private ArrayList<String> getStationVehicleTypes(String htmlSourceCode) {
+			ArrayList<String> stationVehicleTypes = new ArrayList<String>();
+
+			Pattern pattern = Pattern.compile(Constants.VB_REGEX_VEHICLE_TYPES);
+			Matcher matcher = pattern.matcher(htmlSourceCode);
+			while (matcher.find()) {
+				try {
+					String vehicleName = matcher.group(2).trim().toUpperCase();
+					String vehicleType;
+
+					if (vehicleName.contains(Constants.VB_VEHICLE_TYPE_TROLLEY)) {
+						vehicleType = "2";
+					} else if (vehicleName
+							.contains(Constants.VB_VEHICLE_TYPE_TRAM)) {
+						vehicleType = "0";
+					} else {
+						vehicleType = "1";
+					}
+
+					stationVehicleTypes.add(vehicleType);
+				} catch (Exception e) {
+				}
+			}
+
+			return stationVehicleTypes;
 		}
 	}
 
@@ -1078,6 +1121,30 @@ public class HtmlRequestSumc {
 				// before the dialog
 			}
 		}
+	}
+
+	/**
+	 * Create a list with all unique station numbers, so check the way to
+	 * proceed with the HTML result
+	 * 
+	 * @param htmlSourceCode
+	 *            the HTML source returned by the standard HTML request (without
+	 *            vehicleTypeId parameter)
+	 * @return a list with all unique station numbers from the HTML source
+	 */
+	private LinkedHashSet<String> getStationNumbers(String htmlSourceCode) {
+		LinkedHashSet<String> stationNumbers = new LinkedHashSet<String>();
+
+		Pattern pattern = Pattern.compile("(&nbsp;\\([0-9]{4}\\)&nbsp;)");
+		Matcher matcher = pattern.matcher(htmlSourceCode);
+		while (matcher.find()) {
+			try {
+				stationNumbers.add(Utils.getOnlyDigits(matcher.group(1)));
+			} catch (Exception e) {
+			}
+		}
+
+		return stationNumbers;
 	}
 
 	/**

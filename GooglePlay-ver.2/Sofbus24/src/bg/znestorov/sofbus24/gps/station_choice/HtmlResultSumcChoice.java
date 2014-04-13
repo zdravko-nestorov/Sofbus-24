@@ -5,6 +5,7 @@ import static bg.znestorov.sofbus24.utils.Utils.getValueBefore;
 import static bg.znestorov.sofbus24.utils.Utils.getValueBeforeLast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -141,6 +142,7 @@ public class HtmlResultSumcChoice {
 				.trim();
 
 		String[] array = htmlSrc.split(Constants.MULTIPLE_RESULTS_SEPARATOR_1);
+		HashSet<String> uniqueStations = new HashSet<String>();
 
 		for (int i = 0; i < array.length; i++) {
 			array[i] = getValueBefore(array[i],
@@ -152,7 +154,7 @@ public class HtmlResultSumcChoice {
 			String number = getStationNumber(array[i]);
 
 			if (name != null && !"".equals(name) && number != null
-					&& !"".equals(number)) {
+					&& !"".equals(number) && uniqueStations.add(number)) {
 				GPSStation tempGPSStation = new GPSStation(number, name);
 				tempGPSStation.setTime_stamp("OK");
 

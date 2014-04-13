@@ -4,7 +4,7 @@
     <!-- Main -->
     <string name="ss_name">Sofia public transport</string>
     <string name="btn_gps">Virtual boards</string>
-    <string name="gps_msg">Please enter the code (digits) or the name (in cyrillic or latin) of a station:</string>
+    <string name="gps_msg">Please enter a four digit code (ex. 0013) or a name (digit/s or symbols in cyrillic or latin) of a station:</string>
     <string name="btn_map">GPS times - Google Maps</string>
     <string name="btn_schedule">Schedules</string>
     <string name="btn_favourite">Favorites</string>
@@ -22,7 +22,7 @@
 
     <!-- SUMC GPS -->
     <string name="sumc_captcha">Security test</string>
-    <string name="sumc_captcha_msg">Please enter the characters from the image:</string>
+    <string name="sumc_captcha_msg">Please enter the characters from the image (cyrillic or latin):</string>
     <string name="sumc_button_label">OK</string>
 
     <!-- GPS Station Choice -->
