@@ -21,7 +21,7 @@ public class Constants {
 
 	public static final String METRO_SCHEDULE_FILE = "schedule/MetroSchedule.xml";
 
-	public static final String STATION_SCHEDULE_FILE_LOCATION = "https://sofia-stations.googlecode.com/svn/MetroSchedule/schedule/Station%s.xml";
+	public static final String STATION_SCHEDULE_FILE_LOCATION = "https://sofia-stations.googlecode.com/svn/HoloDesign-ver.3/MetroSchedule/schedule/Station%s.xml";
 
 	/**
 	 * METRO SCHEDULE CONSTANTS
