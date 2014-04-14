@@ -83,8 +83,6 @@ public class VehiclesSQLite extends SQLiteOpenHelper {
 		boolean dbExist = checkDataBase();
 
 		if (!dbExist) {
-			this.getReadableDatabase().close();
-
 			try {
 				copyDataBase(is);
 			} catch (IOException e) {

@@ -31,7 +31,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	// The Android's default system path of the database
 	private static String DB_PATH = "//data//data//bg.znestorov.sofbus24.main//databases//";
 	private static String DB_NAME = "stations.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	// Database creation SQL statement
 	private static final String DATABASE_CREATE_STATIONS = "CREATE TABLE "
@@ -86,8 +86,6 @@ public class StationsSQLite extends SQLiteOpenHelper {
 		boolean dbExist = checkDataBase();
 
 		if (!dbExist) {
-			this.getReadableDatabase().close();
-
 			try {
 				copyDataBase(is);
 			} catch (IOException e) {
