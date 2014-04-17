@@ -119,6 +119,12 @@ public class VehiclesSQLite extends SQLiteOpenHelper {
 			myInput = context.getAssets().open(DB_NAME);
 		}
 
+		// Create the folder if it is not already created
+		File dbFolder = new File(DB_PATH);
+		if (!dbFolder.exists()) {
+			dbFolder.mkdir();
+		}
+
 		// Path to the just created empty DB
 		String outFileName = DB_PATH + DB_NAME;
 

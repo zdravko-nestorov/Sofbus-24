@@ -66,6 +66,7 @@ public class Configuration {
 	 * @throws IOException
 	 */
 	private static void copyConfiguration(Activity context) throws IOException {
+		// Create the folder if it is not already created
 		File prefFolder = new File(CONFIGURATION_PATH);
 		if (!prefFolder.exists()) {
 			prefFolder.mkdir();
