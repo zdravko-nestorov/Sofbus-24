@@ -1,7 +1,6 @@
 package bg.znestorov.sofbus24.main;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -9,41 +8,38 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+import bg.znestorov.sofbus24.entity.MetroFragmentEntity;
 import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.metro.MetroScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.Utils;
 
 public class MetroSchedule extends FragmentActivity {
 
 	private Activity context;
+
 	private ActionBar actionBar;
 
-	private SectionsPagerAdapter mSectionsPagerAdapter;
-	private ViewPager mViewPager;
-
-	private MetroStation ms;
-	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
-	private List<ArrayList<String>> fragmentsScheduleList = new ArrayList<ArrayList<String>>();
-
-	private static int activePageHour;
-	private int currentPagePosition = 0;
-	private TextView metroScheduleTime;
 	private ImageButton leftArrow;
 	private ImageButton rightArrow;
 
+	private TextView metroScheduleTime;
 	private TextView metroStationName;
 	private TextView metroDirection;
+
+	private View metroScheduleFragment;
+	private ProgressBar metroScheduleLoading;
+
+	private MetroStation ms;
+	private ArrayList<ArrayList<String>> scheduleHourList;
+	private int currentScheduleHourIndex;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,57 +49,9 @@ public class MetroSchedule extends FragmentActivity {
 		// Get the current context
 		context = MetroSchedule.this;
 
-		// Get the MetroStation object from the Bundle
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			ms = (MetroStation) extras.get(Constants.BUNDLE_METRO_SCHEDULE);
-		}
-
-		// Fill the fragments list
-		fillFragmentsList();
-
-		// Set up the action bar
-		actionBar = getActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setDisplayHomeAsUpEnabled(true);
-
-		// Create the adapter that will return a fragment for each of the
-		// primary sections of the application
-		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());
-
-		// Set up the ViewPager with the sections adapter and load all tabs at
-		// once
-		mViewPager = (ViewPager) findViewById(R.id.metro_schedule_pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
-
-		// Get the time TextView and ImageButtons
-		metroScheduleTime = (TextView) findViewById(R.id.metro_schedule_time);
-		leftArrow = (ImageButton) findViewById(R.id.metro_schedule_img_left);
-		rightArrow = (ImageButton) findViewById(R.id.metro_schedule_img_right);
-
-		// Get the header TextView views and set them labels
-		metroStationName = (TextView) findViewById(R.id.metro_schedule_station_name);
-		metroDirection = (TextView) findViewById(R.id.metro_schedule_direction);
-		actionsOverTextViews();
-
-		// Set on page change listener
-		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
-			public void onPageScrollStateChanged(int state) {
-			}
-
-			public void onPageScrolled(int position, float positionOffset,
-					int positionOffsetPixels) {
-			}
-
-			public void onPageSelected(int position) {
-				currentPagePosition = position;
-				actionsOnPageSelected();
-			}
-		});
-
-		// Set active tab
-		setActiveTab();
+		initBundleInfo();
+		initLayoutFields();
+		initActiveFragmentContent();
 	}
 
 	@Override
@@ -121,24 +69,10 @@ public class MetroSchedule extends FragmentActivity {
 			finish();
 			return true;
 		case R.id.action_ms_reset:
-			setActiveTab();
+			initActiveFragmentContent();
 			return true;
 		case R.id.action_ms_refresh:
-			// Show a Toast that the list is refreshing
-			Toast.makeText(context, getString(R.string.metro_schedule_refresh),
-					Toast.LENGTH_SHORT).show();
-
-			// Refresh all metro schedule fragments
-			for (int i = 0; i < fragmentsList.size(); i++) {
-				((MetroScheduleFragment) fragmentsList.get(i)).update(context,
-						null);
-			}
-
-			// Change the time in the ActionBar
-			String currentTime = DateFormat.format("dd.MM.yyy, kk:mm",
-					new java.util.Date()).toString();
-			actionBar.setSubtitle(currentTime);
-
+			initRefresh();
 			return true;
 		case R.id.action_ms_map:
 			Intent metroMapIntent = new Intent(context, StationMap.class);
@@ -150,117 +84,68 @@ public class MetroSchedule extends FragmentActivity {
 		}
 	}
 
-	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-	 * one of the sections/tabs/pages.
-	 */
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+	private void initRefresh() {
+		metroScheduleFragment.setVisibility(View.GONE);
+		metroScheduleLoading.setVisibility(View.VISIBLE);
 
-		public SectionsPagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
-
-		@Override
-		public Fragment getItem(int position) {
-			return fragmentsList.get(position);
-		}
-
-		@Override
-		public int getCount() {
-			return fragmentsList.size();
-		}
-	}
-
-	/**
-	 * Fill the Fragment map with all fragments in the TabHost
-	 */
-	private void fillFragmentsList() {
-		Fragment fragment;
-
-		for (int i = 4; i <= 24; i++) {
-			ArrayList<String> metroSchedule = ms.getSchedule().get(i);
-
-			if (metroSchedule != null && !metroSchedule.isEmpty()) {
-				fragment = MetroScheduleFragment.newInstance(metroSchedule);
-				fragmentsList.add(fragment);
-				fragmentsScheduleList.add(metroSchedule);
-			}
-		}
-	}
-
-	/**
-	 * Set the current active tab
-	 */
-	private void setActiveTab() {
-		int currentHour = Integer.parseInt(DateFormat.format("kk",
-				new java.util.Date()).toString());
-		boolean isCurrentHourInRange = false;
-
-		for (int i = 0; i < fragmentsScheduleList.size(); i++) {
-			int firstTimeHour = Integer.parseInt(fragmentsScheduleList.get(i)
-					.get(0).replaceAll(":.*", ""));
-			if (firstTimeHour == currentHour) {
-				// Check if current hour exists in the schedule list
-				isCurrentHourInRange = true;
-
-				// Set the active page hour to a variable used in
-				// MetroScheduleFragments
-				activePageHour = currentHour;
-
-				// Set the position of the currently active fragment
-				currentPagePosition = i;
-				break;
-			}
-		}
-
-		// Check if the current hour is present in the schedule. If not - set it
-		// to the first fragment
-		if (!isCurrentHourInRange) {
-			activePageHour = Integer.parseInt(fragmentsScheduleList.get(0)
-					.get(0).replaceAll(":.*", ""));
-			currentPagePosition = 0;
-		}
-
-		actionsOnPageSelected();
-		actionsOverImageButtons();
-		mViewPager.setCurrentItem(currentPagePosition);
-	}
-
-	/**
-	 * Set the Fragment schedule hour label and show the needed arrows
-	 * 
-	 * @param position
-	 *            the position of the selected page
-	 */
-	private void actionsOnPageSelected() {
-		// Set the MetroScheduleTime label
-		String hourRange = fragmentsScheduleList.get(currentPagePosition)
-				.get(0).replaceAll(":.*", ":00");
-		metroScheduleTime.setText(hourRange);
-
-		// Show needed arrows
-		if (currentPagePosition == 0) {
-			leftArrow.setVisibility(View.GONE);
-		} else if (currentPagePosition == fragmentsList.size() - 1) {
-			rightArrow.setVisibility(View.GONE);
+		if (currentScheduleHourIndex == getActiveScheduleHourIndex(scheduleHourList)) {
+			initActiveFragmentContent();
 		} else {
-			leftArrow.setVisibility(View.VISIBLE);
-			rightArrow.setVisibility(View.VISIBLE);
+			initFragmentContent();
 		}
+
+	}
+
+	/**
+	 * Get and process the Bundle information
+	 */
+	private void initBundleInfo() {
+		// Get the MetroStation object from Bundle
+		Bundle extras = getIntent().getExtras();
+		ms = (MetroStation) extras.get(Constants.BUNDLE_METRO_SCHEDULE);
+
+		// Get an ArrayList of ArrayList with all active schedules
+		scheduleHourList = getScheduleHourList(ms);
+
+		// Get the active schedule (according to the current hour)
+		currentScheduleHourIndex = getActiveScheduleHourIndex(scheduleHourList);
+	}
+
+	/**
+	 * Init the layout fields (ActionBar, ImageViews and TextVies)
+	 */
+	private void initLayoutFields() {
+		// Get the Action Bar
+		actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		// Get the arrow ImageButtons
+		leftArrow = (ImageButton) findViewById(R.id.metro_schedule_img_left);
+		rightArrow = (ImageButton) findViewById(R.id.metro_schedule_img_right);
+		actionsOverImageButtons();
+
+		// Get the header TextView views and set them labels
+		metroScheduleTime = (TextView) findViewById(R.id.metro_schedule_time);
+		metroStationName = (TextView) findViewById(R.id.metro_schedule_station_name);
+		metroDirection = (TextView) findViewById(R.id.metro_schedule_direction);
+		actionsOverTextViews();
+
+		// Get the Fragment and the loading ProgressBar
+		metroScheduleFragment = findViewById(R.id.metro_schedule_fragment);
+		metroScheduleLoading = (ProgressBar) findViewById(R.id.metro_schedule_loading);
 	}
 
 	/**
 	 * Set onClickListeners over the ImageButtons
-	 * 
-	 * @param currentPagePosition
-	 *            position of the currently selected tab
 	 */
 	private void actionsOverImageButtons() {
 		// Set onClickListner over the left arrow
 		leftArrow.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mViewPager.setCurrentItem(currentPagePosition - 1);
+				currentScheduleHourIndex--;
+				initFragmentContent();
 			}
 		});
 
@@ -268,7 +153,8 @@ public class MetroSchedule extends FragmentActivity {
 		rightArrow.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mViewPager.setCurrentItem(currentPagePosition + 1);
+				currentScheduleHourIndex++;
+				initFragmentContent();
 			}
 		});
 	}
@@ -282,14 +168,263 @@ public class MetroSchedule extends FragmentActivity {
 				ms.getNumber());
 		String currentTime = DateFormat.format("dd.MM.yyy, kk:mm",
 				new java.util.Date()).toString();
+		String stationName = ms.getName();
+		String stationDirection = ms.getDirection();
 
 		actionBar.setTitle(stationNumber);
 		actionBar.setSubtitle(currentTime);
-		metroStationName.setText(ms.getName());
-		metroDirection.setText(ms.getDirection());
+		metroStationName.setText(stationName);
+		metroDirection.setText(stationDirection);
 	}
 
-	public static int getActivePageHour() {
-		return activePageHour;
+	/**
+	 * Initialize the active fragment
+	 */
+	private void initActiveFragmentContent() {
+		// Get the active schedule (according to the current hour)
+		currentScheduleHourIndex = getActiveScheduleHourIndex(scheduleHourList);
+
+		// Format the schedule list
+		ArrayList<String> formattedScheduleList = formatScheduleList(scheduleHourList
+				.get(currentScheduleHourIndex));
+
+		// Get the active hour of the schedule (according to the current time
+		// for this hour)
+		int activeScheduleIndex = getActiveScheduleIndex(formattedScheduleList);
+
+		// Initialize the active fragment
+		startFragment(formattedScheduleList, true, activeScheduleIndex);
+	}
+
+	/**
+	 * Initialize the current fragment
+	 */
+	private void initFragmentContent() {
+		// Format the schedule list
+		ArrayList<String> formattedScheduleList = formatScheduleList(scheduleHourList
+				.get(currentScheduleHourIndex));
+
+		// Get the active hour of the schedule (according to the current time
+		// for this hour)
+		int activeScheduleIndex = getActiveScheduleIndex(formattedScheduleList);
+
+		// Initialize the active fragment
+		startFragment(formattedScheduleList, false, activeScheduleIndex);
+	}
+
+	/**
+	 * Create a new MetroScheduleFragment with all needed information
+	 * 
+	 * @param formattedScheduleList
+	 *            a formatted schedule list with current times of arrival and
+	 *            remaining times
+	 * @param isActive
+	 *            if the fragment is active
+	 * @param scheduleIndex
+	 *            the active hour of the schedule (according to the current time
+	 *            for this hour)
+	 */
+	private void startFragment(ArrayList<String> formattedScheduleList,
+			boolean isActive, int scheduleIndex) {
+		MetroFragmentEntity mfe = new MetroFragmentEntity(
+				formattedScheduleList, isActive, scheduleIndex);
+		Fragment fragment = MetroScheduleFragment.newInstance(mfe);
+
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.metro_schedule_fragment, fragment).commit();
+
+		actionsOnFragmentChange();
+	}
+
+	/**
+	 * Set the Fragment schedule hour label and show the needed arrows
+	 */
+	private void actionsOnFragmentChange() {
+		// Set the MetroScheduleTime label
+		String hourRange = getHour(scheduleHourList.get(
+				currentScheduleHourIndex).get(0))
+				+ ":00";
+		metroScheduleTime.setText(hourRange);
+
+		// Show needed arrows
+		if (currentScheduleHourIndex == 0) {
+			leftArrow.setVisibility(View.GONE);
+		} else if (currentScheduleHourIndex == scheduleHourList.size() - 1) {
+			rightArrow.setVisibility(View.GONE);
+		} else {
+			leftArrow.setVisibility(View.VISIBLE);
+			rightArrow.setVisibility(View.VISIBLE);
+		}
+
+		metroScheduleFragment.setVisibility(View.VISIBLE);
+		metroScheduleLoading.setVisibility(View.GONE);
+	}
+
+	/**
+	 * Get a list with all schedule hours for this station (if for some hour
+	 * there is no times of arrival - it is not added to the list)
+	 * 
+	 * @param ms
+	 *            the MetroStation object retrieved from the Bundle
+	 * @return a list with the schedule hours
+	 */
+	private ArrayList<ArrayList<String>> getScheduleHourList(MetroStation ms) {
+		ArrayList<ArrayList<String>> scheduleHourList = new ArrayList<ArrayList<String>>();
+
+		for (int i = 4; i <= 24; i++) {
+			ArrayList<String> metroSchedule = ms.getSchedule().get(i);
+
+			if (metroSchedule != null && !metroSchedule.isEmpty()) {
+				scheduleHourList.add(metroSchedule);
+			}
+		}
+
+		return scheduleHourList;
+	}
+
+	/**
+	 * Get the index of the current metro schedule in the scheduleHourList
+	 * 
+	 * @param scheduleHourList
+	 *            a list containing all schedules for this station (that has
+	 *            time of arrivals)
+	 * @return the index of the current schedule hour
+	 */
+	private int getActiveScheduleHourIndex(
+			ArrayList<ArrayList<String>> scheduleHourList) {
+		int currentScheduleHourIndex = -1;
+
+		int currentHour = Integer.parseInt(DateFormat.format("kk",
+				new java.util.Date()).toString());
+		boolean isCurrentHourInRange = false;
+
+		for (int i = 0; i < scheduleHourList.size(); i++) {
+			int scheduleHour = getHour(scheduleHourList.get(i).get(0));
+			if (scheduleHour == currentHour) {
+				// This rule is set in case the current hour is after the last
+				// time schedule for the current fragment (if the current hour
+				// is 15:59, and the last schedule is 15:50). In this case we
+				// get the next hour as the current one
+				if (isScheduleActive(scheduleHourList.get(i))) {
+					isCurrentHourInRange = true;
+					currentScheduleHourIndex = i;
+				} else {
+					// Check if this is the last hour that there is a schedule.
+					// If so - do nothing
+					if (i != scheduleHourList.size() - 1) {
+						isCurrentHourInRange = true;
+						currentScheduleHourIndex = i + 1;
+					}
+				}
+
+				break;
+			}
+		}
+
+		// Check if the current hour is present in the schedule. If not - set it
+		// to the first fragment
+		if (!isCurrentHourInRange) {
+			currentScheduleHourIndex = 0;
+		}
+
+		return currentScheduleHourIndex;
+	}
+
+	/**
+	 * Get the hour part of a time input in format HH:MM
+	 * 
+	 * @param time
+	 *            the time input in format HH:MM
+	 * @return the hour part of the time input
+	 */
+	private int getHour(String time) {
+		int hour;
+
+		if (time != null && time.contains(":")) {
+			hour = Integer.parseInt(time.replaceAll(":.*", ""));
+		} else {
+			hour = -1;
+		}
+
+		return hour;
+	}
+
+	/**
+	 * Check if the current fragment contains a schedule that is after the
+	 * current hour. For example:<br/>
+	 * <b>If the last schedule time is 15:50 and the current hour is 15:59 - the
+	 * fragment is not Active</b>
+	 * 
+	 * @param scheduleList
+	 *            the current fragment schedule time list
+	 * @return if the fragment is active or not
+	 */
+	private boolean isScheduleActive(ArrayList<String> scheduleList) {
+		boolean isScheduleActive = false;
+
+		if (scheduleList != null && scheduleList.size() > 0) {
+			String currentTime = DateFormat.format("kk:mm",
+					new java.util.Date()).toString();
+			String metroScheduleTime = scheduleList
+					.get(scheduleList.size() - 1);
+			String differenceTime = Utils.getDifference(context,
+					metroScheduleTime, currentTime);
+
+			if (!"---".equals(differenceTime)) {
+				isScheduleActive = true;
+			}
+		}
+
+		return isScheduleActive;
+	}
+
+	/**
+	 * Find the difference between the current time and the metro schedule time
+	 * and create new list containing both
+	 * 
+	 * @param scheduleList
+	 *            the current fragment schedule time list
+	 * @return an ArrayList containing the current time and the time left
+	 */
+	private ArrayList<String> formatScheduleList(ArrayList<String> scheduleList) {
+		ArrayList<String> formattedMetroScheduleList = new ArrayList<String>();
+		String currentTime = DateFormat.format("kk:mm", new java.util.Date())
+				.toString();
+
+		for (int i = 0; i < scheduleList.size(); i++) {
+			String metroScheduleTime = scheduleList.get(i);
+			String differenceTime = Utils.getDifference(context,
+					metroScheduleTime, currentTime);
+
+			if (!"---".equals(differenceTime)) {
+				metroScheduleTime = String.format(metroScheduleTime + " (%s)",
+						differenceTime);
+			}
+
+			formattedMetroScheduleList.add(metroScheduleTime);
+		}
+
+		return formattedMetroScheduleList;
+	}
+
+	/**
+	 * Get the current active schedule time from the active schedule list
+	 * 
+	 * @param scheduleList
+	 *            the current fragment schedule time list (must be formatted
+	 *            list)
+	 * @return the index of the current schedule
+	 */
+	private int getActiveScheduleIndex(ArrayList<String> scheduleList) {
+		int currentScheduleIndex = -1;
+
+		for (int i = 0; i < scheduleList.size(); i++) {
+			if (scheduleList.get(i).contains("~")) {
+				currentScheduleIndex = i;
+				break;
+			}
+		}
+
+		return currentScheduleIndex;
 	}
 }

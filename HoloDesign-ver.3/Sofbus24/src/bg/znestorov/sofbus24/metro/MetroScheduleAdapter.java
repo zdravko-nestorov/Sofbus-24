@@ -1,7 +1,5 @@
 package bg.znestorov.sofbus24.metro;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -9,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.entity.MetroFragmentEntity;
 import bg.znestorov.sofbus24.main.R;
 
 /**
@@ -21,23 +20,18 @@ import bg.znestorov.sofbus24.main.R;
 public class MetroScheduleAdapter extends ArrayAdapter<String> {
 
 	private Activity context;
-	private List<String> metroScheduleList;
-
-	private boolean isActiveFragment;
-	private boolean isClosestRowSet = false;
+	private MetroFragmentEntity mfe;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
 		TextView scheduleMetroHour;
 	}
 
-	public MetroScheduleAdapter(Activity context,
-			List<String> metroScheduleList, boolean isActiveFragment) {
-		super(context, R.layout.activity_metro_schedule_list_item,
-				metroScheduleList);
+	public MetroScheduleAdapter(Activity context, MetroFragmentEntity mfe) {
+		super(context, R.layout.activity_metro_schedule_list_item, mfe
+				.getFormattedScheduleList());
 		this.context = context;
-		this.metroScheduleList = metroScheduleList;
-		this.isActiveFragment = isActiveFragment;
+		this.mfe = mfe;
 	}
 
 	/**
@@ -48,13 +42,13 @@ public class MetroScheduleAdapter extends ArrayAdapter<String> {
 		View rowView = convertView;
 		ViewHolder viewHolder;
 
-		// Reuse views
+		// Used to reuse views
 		if (rowView == null) {
 			LayoutInflater inflater = context.getLayoutInflater();
 			rowView = inflater.inflate(
 					R.layout.activity_metro_schedule_list_item, null);
 
-			// Configure view holder
+			// Configure the view holder
 			viewHolder = new ViewHolder();
 			viewHolder.scheduleMetroHour = (TextView) rowView
 					.findViewById(R.id.metro_schedule_item_hour);
@@ -64,15 +58,14 @@ public class MetroScheduleAdapter extends ArrayAdapter<String> {
 		}
 
 		// Fill the data
-		String metroSchedule = metroScheduleList.get(position);
+		String metroSchedule = mfe.getFormattedScheduleList().get(position);
 		viewHolder.scheduleMetroHour.setText(metroSchedule);
 
 		// Check if this is the current Fragment, so mark the closest vehicle
-		if (isActiveFragment) {
-			if (metroSchedule.contains("~") && !isClosestRowSet) {
-				isClosestRowSet = true;
-				rowView.setBackgroundColor(Color.parseColor("#80CEEA"));
-			}
+		if (mfe.isActive() && position == mfe.getCurrentScheduleIndex()) {
+			rowView.setBackgroundColor(Color.parseColor("#80CEEA"));
+		} else if (position % 2 == 1) {
+			rowView.setBackgroundColor(Color.parseColor("#E5E5E5"));
 		}
 
 		rowView.setOnClickListener(null);

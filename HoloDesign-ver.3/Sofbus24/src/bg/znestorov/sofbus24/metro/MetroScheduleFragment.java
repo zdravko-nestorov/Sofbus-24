@@ -1,19 +1,14 @@
 package bg.znestorov.sofbus24.metro;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import bg.znestorov.sofbus24.entity.UpdateableFragment;
-import bg.znestorov.sofbus24.main.MetroSchedule;
+import bg.znestorov.sofbus24.entity.MetroFragmentEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
-import bg.znestorov.sofbus24.utils.Utils;
 
 /**
  * Metro Schedule Fragment containing all information about the hours of
@@ -23,19 +18,17 @@ import bg.znestorov.sofbus24.utils.Utils;
  * @version 1.0
  * 
  */
-public class MetroScheduleFragment extends ListFragment implements
-		UpdateableFragment {
+public class MetroScheduleFragment extends ListFragment {
 
 	private Activity context;
 	private MetroScheduleAdapter metroArrayAdapter;
-	private ArrayList<String> metroScheduleList;
+	private MetroFragmentEntity mfe;
 
-	public static MetroScheduleFragment newInstance(
-			ArrayList<String> metroSchedule) {
+	public static MetroScheduleFragment newInstance(MetroFragmentEntity mfe) {
 		MetroScheduleFragment metroScheduleFragment = new MetroScheduleFragment();
 
 		Bundle bundle = new Bundle();
-		bundle.putSerializable(Constants.BUNDLE_METRO_SCHEDULE, metroSchedule);
+		bundle.putSerializable(Constants.BUNDLE_METRO_SCHEDULE, mfe);
 		metroScheduleFragment.setArguments(bundle);
 
 		return metroScheduleFragment;
@@ -46,7 +39,6 @@ public class MetroScheduleFragment extends ListFragment implements
 		super.onActivityCreated(savedInstanceState);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -57,97 +49,15 @@ public class MetroScheduleFragment extends ListFragment implements
 		context = getActivity();
 
 		// Get the Fragment position and MetroStation object from the Bundle
-		metroScheduleList = (ArrayList<String>) getArguments().getSerializable(
+		mfe = (MetroFragmentEntity) getArguments().getSerializable(
 				Constants.BUNDLE_METRO_SCHEDULE);
 
-		// Set the fragment content
-		setListFragmentContent(context);
-
-		return myFragmentView;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void update(Activity context, Object obj) {
-		if (this.context == null) {
-			this.context = context;
-		}
-
-		if (metroScheduleList == null || metroScheduleList.isEmpty()) {
-			metroScheduleList = (ArrayList<String>) getArguments()
-					.getSerializable(Constants.BUNDLE_METRO_SCHEDULE);
-		}
-
-		setListFragmentContent(context);
-	}
-
-	/**
-	 * Find the difference between the current time and the metro schedule time
-	 * and create new list containing both
-	 * 
-	 * @param context
-	 *            the current Activity context
-	 * @return an ArrayList containing the current time and the time left
-	 */
-	private ArrayList<String> formatMetroScheduleList(Activity context) {
-		ArrayList<String> formattedMetroScheduleList = new ArrayList<String>();
-		String currentTime = DateFormat.format("kk:mm", new java.util.Date())
-				.toString();
-
-		for (int i = 0; i < metroScheduleList.size(); i++) {
-			String metroScheduleTime = metroScheduleList.get(i);
-			String differenceTime = Utils.getDifference(context,
-					metroScheduleTime, currentTime);
-
-			if (!"---".equals(differenceTime)) {
-				metroScheduleTime = String.format(metroScheduleTime + " (%s)",
-						differenceTime);
-			}
-
-			formattedMetroScheduleList.add(metroScheduleTime);
-		}
-
-		return formattedMetroScheduleList;
-	}
-
-	/**
-	 * Set the Fragment content
-	 * 
-	 * @param context
-	 *            the current Activity context
-	 */
-	private void setListFragmentContent(Activity context) {
-		ArrayList<String> formattedMetroScheduleList = formatMetroScheduleList(context);
-
-		// Empty the ListAdapter
-		if (metroArrayAdapter != null && !metroArrayAdapter.isEmpty()) {
-			metroArrayAdapter.clear();
-		}
-
 		// Create the ListAdapter
-		metroArrayAdapter = new MetroScheduleAdapter(context,
-				formattedMetroScheduleList, isFragmentActive());
+		metroArrayAdapter = new MetroScheduleAdapter(context, mfe);
 
 		// Set the ListAdapter
 		setListAdapter(metroArrayAdapter);
-	}
 
-	/**
-	 * Check if the current fragment is active
-	 * 
-	 * @return if the fragment is active
-	 */
-	private boolean isFragmentActive() {
-		boolean isActive = false;
-
-		int activePageHour = MetroSchedule.getActivePageHour();
-		int firstTimeHour = Integer.parseInt(metroScheduleList.get(0)
-				.replaceAll(":.*", ""));
-
-		if (activePageHour == firstTimeHour) {
-			isActive = true;
-		}
-
-		return isActive;
+		return myFragmentView;
 	}
 }
