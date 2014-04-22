@@ -6,6 +6,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
@@ -84,16 +85,25 @@ public class MetroSchedule extends FragmentActivity {
 		}
 	}
 
+	/**
+	 * Initialize the refresh by putting a 500 ms delay
+	 */
 	private void initRefresh() {
 		metroScheduleFragment.setVisibility(View.GONE);
 		metroScheduleLoading.setVisibility(View.VISIBLE);
 
-		if (currentScheduleHourIndex == getActiveScheduleHourIndex(scheduleHourList)) {
-			initActiveFragmentContent();
-		} else {
-			initFragmentContent();
-		}
+		// Start a new thread - just to wait 500 ms
+		Handler handler = new Handler();
+		Runnable myrunnable = new Runnable() {
+			public void run() {
+				try {
+					initFragmentContent();
+				} catch (Exception e) {
+				}
+			}
+		};
 
+		handler.postDelayed(myrunnable, 500);
 	}
 
 	/**
@@ -112,7 +122,7 @@ public class MetroSchedule extends FragmentActivity {
 	}
 
 	/**
-	 * Init the layout fields (ActionBar, ImageViews and TextVies)
+	 * Initialize the layout fields (ActionBar, ImageViews and TextVies)
 	 */
 	private void initLayoutFields() {
 		// Get the Action Bar
@@ -178,6 +188,17 @@ public class MetroSchedule extends FragmentActivity {
 	}
 
 	/**
+	 * Check which fragment should be loaded
+	 */
+	private void initFragmentContent() {
+		if (currentScheduleHourIndex == getActiveScheduleHourIndex(scheduleHourList)) {
+			initActiveFragmentContent();
+		} else {
+			initCurrentFragmentContent();
+		}
+	}
+
+	/**
 	 * Initialize the active fragment
 	 */
 	private void initActiveFragmentContent() {
@@ -199,7 +220,7 @@ public class MetroSchedule extends FragmentActivity {
 	/**
 	 * Initialize the current fragment
 	 */
-	private void initFragmentContent() {
+	private void initCurrentFragmentContent() {
 		// Format the schedule list
 		ArrayList<String> formattedScheduleList = formatScheduleList(scheduleHourList
 				.get(currentScheduleHourIndex));

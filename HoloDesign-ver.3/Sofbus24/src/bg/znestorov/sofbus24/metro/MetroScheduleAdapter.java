@@ -64,8 +64,12 @@ public class MetroScheduleAdapter extends ArrayAdapter<String> {
 		// Check if this is the current Fragment, so mark the closest vehicle
 		if (mfe.isActive() && position == mfe.getCurrentScheduleIndex()) {
 			rowView.setBackgroundColor(Color.parseColor("#80CEEA"));
-		} else if (position % 2 == 1) {
-			rowView.setBackgroundColor(Color.parseColor("#E5E5E5"));
+		} else {
+			if (position % 2 == 1) {
+				rowView.setBackgroundColor(Color.parseColor("#E5E5E5"));
+			} else {
+				rowView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+			}
 		}
 
 		rowView.setOnClickListener(null);
