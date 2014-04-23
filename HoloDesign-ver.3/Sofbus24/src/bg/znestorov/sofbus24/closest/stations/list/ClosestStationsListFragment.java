@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
@@ -18,14 +17,10 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.UpdateableFragment;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -34,13 +29,8 @@ import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
-public class ClosestStationsListFragment extends ListFragment implements
-		UpdateableFragment {
+public class ClosestStationsListFragment extends ListFragment {
 
 	private Activity context;
 
@@ -54,7 +44,15 @@ public class ClosestStationsListFragment extends ListFragment implements
 
 	private ArrayAdapter<Station> closestStationsAdapter;
 
-	public ClosestStationsListFragment() {
+	public static ClosestStationsListFragment newInstance(LatLng currentLocation) {
+		Bundle bundle = new Bundle();
+		bundle.putParcelable(Constants.BUNDLE_CLOSEST_STATIONS_LIST,
+				currentLocation);
+
+		ClosestStationsListFragment closestStationsListFragment = new ClosestStationsListFragment();
+		closestStationsListFragment.setArguments(bundle);
+
+		return closestStationsListFragment;
 	}
 
 	@Override
@@ -109,17 +107,9 @@ public class ClosestStationsListFragment extends ListFragment implements
 		stationsDatasource = new StationsDataSource(context);
 		closestStations = loadStationsList(1, closestStationsSearchText);
 
-		// Find the ImageView, ProgressBar, SearchEditText and TextView in the
-		// layout
-		ImageView imageView = (ImageView) myFragmentView
-				.findViewById(R.id.cs_list_street_view_image);
-		ProgressBar progressBar = (ProgressBar) myFragmentView
-				.findViewById(R.id.cs_list_street_view_progress);
-		SearchEditText searchEditText = (SearchEditText) myFragmentView
+		// Find the SearchEditText in the layout
+		SearchEditText searchEditText = (SearchEditText) context
 				.findViewById(R.id.cs_list_search);
-
-		// Load the current location street view
-		loadLocationStreetView(imageView, progressBar);
 
 		// Set the actions over the SearchEditText
 		actionsOverSearchEditText(searchEditText);
@@ -131,57 +121,6 @@ public class ClosestStationsListFragment extends ListFragment implements
 		closestStationsAdapter.setNotifyOnChange(true);
 
 		return myFragmentView;
-	}
-
-	@Override
-	public void update(Activity context, Object obj) {
-		if (this.context == null) {
-			this.context = context;
-		}
-
-		ImageView emptyListImage = (ImageView) context
-				.findViewById(R.id.cs_list_empty_image);
-		TextView emptyListText = (TextView) context
-				.findViewById(R.id.cs_list_empty_text);
-		ProgressBar emptyProgressBar = (ProgressBar) context
-				.findViewById(R.id.cs_list_empty_progress);
-
-		// Check if the update method is called just to reset the current
-		// fragment or to update it (null - to reset, any other - to update)
-		if (obj == null) {
-			SearchEditText searchEditText = (SearchEditText) context
-					.findViewById(R.id.cs_list_search);
-
-			emptyListImage.setVisibility(View.GONE);
-			emptyListText.setVisibility(View.GONE);
-			emptyProgressBar.setVisibility(View.VISIBLE);
-
-			closestStationsSearchText = "";
-
-			searchEditText.setText(closestStationsSearchText);
-			setListAdapter(null);
-
-			new RetrieveCurrentPosition(context, this, null).execute();
-		} else {
-			ImageView imageView = (ImageView) context
-					.findViewById(R.id.cs_list_street_view_image);
-			ProgressBar progressBar = (ProgressBar) context
-					.findViewById(R.id.cs_list_street_view_progress);
-
-			emptyListImage.setVisibility(View.VISIBLE);
-			emptyListText.setVisibility(View.VISIBLE);
-			emptyProgressBar.setVisibility(View.GONE);
-
-			currentLocation = (LatLng) obj;
-			closestStations = loadStationsList(1, closestStationsSearchText);
-
-			imageView.setImageResource(android.R.color.transparent);
-			loadLocationStreetView(imageView, progressBar);
-
-			closestStationsAdapter = new ClosestStationsListAdapter(context,
-					currentLocation, closestStations);
-			setListAdapter(closestStationsAdapter);
-		}
 	}
 
 	@Override
@@ -207,43 +146,6 @@ public class ClosestStationsListFragment extends ListFragment implements
 					context, progressDialog, station);
 			retrieveMetroSchedule.execute();
 		}
-	}
-
-	/**
-	 * Load the current location StreetView
-	 * 
-	 * @param imageView
-	 *            the ImageView of the StreetView from the layout
-	 * @param progressBar
-	 *            the ProgressBar shown when the image is loading
-	 */
-	private void loadLocationStreetView(ImageView imageView,
-			final ProgressBar progressBar) {
-		ImageLoader imageLoader = ImageLoader.getInstance();
-		DisplayImageOptions displayImageOptions = ActivityUtils
-				.displayImageOptions();
-
-		String imageUrl = String.format(Constants.FAVOURITES_IMAGE_URL,
-				currentLocation.latitude + "", currentLocation.longitude + "");
-		imageLoader.displayImage(imageUrl, imageView, displayImageOptions,
-				new SimpleImageLoadingListener() {
-					@Override
-					public void onLoadingStarted(String imageUri, View view) {
-						progressBar.setVisibility(View.VISIBLE);
-					}
-
-					@Override
-					public void onLoadingFailed(String imageUri, View view,
-							FailReason failReason) {
-						progressBar.setVisibility(View.GONE);
-					}
-
-					@Override
-					public void onLoadingComplete(String imageUri, View view,
-							Bitmap loadedImage) {
-						progressBar.setVisibility(View.GONE);
-					}
-				});
 	}
 
 	/**

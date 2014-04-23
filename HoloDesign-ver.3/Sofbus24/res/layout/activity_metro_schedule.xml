@@ -33,18 +33,31 @@
             android:textSize="13sp" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/metro_schedule_time"
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#D0D0D0"
         android:paddingBottom="5sp"
         android:paddingLeft="15sp"
-        android:paddingTop="5sp"
-        android:singleLine="true"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="22sp"
-        android:textStyle="bold" />
+        android:paddingRight="20sp"
+        android:paddingTop="5sp" >
+
+        <TextView
+            android:id="@+id/metro_schedule_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/metro_schedule_favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/app_img_empty_content_description" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"

@@ -9,15 +9,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.MetroFragmentEntity;
 import bg.znestorov.sofbus24.entity.MetroStation;
+import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.metro.MetroScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
@@ -25,9 +31,12 @@ import bg.znestorov.sofbus24.utils.Utils;
 public class MetroSchedule extends FragmentActivity {
 
 	private Activity context;
+	private Bundle savedInstanceState;
+	private FavouritesDataSource favouritesDataSource;
 
 	private ActionBar actionBar;
 
+	private ImageView addToFavourites;
 	private ImageButton leftArrow;
 	private ImageButton rightArrow;
 
@@ -40,19 +49,31 @@ public class MetroSchedule extends FragmentActivity {
 
 	private MetroStation ms;
 	private ArrayList<ArrayList<String>> scheduleHourList;
-	private int currentScheduleHourIndex;
+	private int currentScheduleHourIndex = 0;
+
+	private static final String SAVED_STATE_KEY = "Current Schedule Hour Index";
+	private static final String FRAGMENT_TAG_NAME = "Metro Schedule Fragment";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_metro_schedule);
 
-		// Get the current context
+		// Get the current context and create a FavouritesDatasource and
+		// a SavedInstanceState objects
 		context = MetroSchedule.this;
+		favouritesDataSource = new FavouritesDataSource(context);
+		this.savedInstanceState = savedInstanceState;
 
 		initBundleInfo();
 		initLayoutFields();
-		initActiveFragmentContent();
+		initFragmentContent();
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putInt(SAVED_STATE_KEY, currentScheduleHourIndex);
 	}
 
 	@Override
@@ -89,6 +110,10 @@ public class MetroSchedule extends FragmentActivity {
 	 * Initialize the refresh by putting a 500 ms delay
 	 */
 	private void initRefresh() {
+		// This is needed, because the fragment should be restarted
+		savedInstanceState = null;
+
+		// Show the loading ProgressBar
 		metroScheduleFragment.setVisibility(View.GONE);
 		metroScheduleLoading.setVisibility(View.VISIBLE);
 
@@ -118,7 +143,12 @@ public class MetroSchedule extends FragmentActivity {
 		scheduleHourList = getScheduleHourList(ms);
 
 		// Get the active schedule (according to the current hour)
-		currentScheduleHourIndex = getActiveScheduleHourIndex(scheduleHourList);
+		if (savedInstanceState != null) {
+			currentScheduleHourIndex = savedInstanceState
+					.getInt(SAVED_STATE_KEY);
+		} else {
+			currentScheduleHourIndex = getActiveScheduleHourIndex(scheduleHourList);
+		}
 	}
 
 	/**
@@ -130,7 +160,8 @@ public class MetroSchedule extends FragmentActivity {
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
-		// Get the arrow ImageButtons
+		// Get the Favourite ImageView and the Arrow ImageButtons
+		addToFavourites = (ImageView) findViewById(R.id.metro_schedule_favourite);
 		leftArrow = (ImageButton) findViewById(R.id.metro_schedule_img_left);
 		rightArrow = (ImageButton) findViewById(R.id.metro_schedule_img_right);
 		actionsOverImageButtons();
@@ -150,10 +181,41 @@ public class MetroSchedule extends FragmentActivity {
 	 * Set onClickListeners over the ImageButtons
 	 */
 	private void actionsOverImageButtons() {
+		// Set onClickListner over the Favourites ImageView
+		addToFavourites.setImageResource(getFavouriteImage(ms));
+		addToFavourites.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Sofbus24.setFavouritesChanged(true);
+
+				favouritesDataSource.open();
+				if (favouritesDataSource.getStation(ms) == null) {
+					favouritesDataSource.createStation(ms);
+					addToFavourites.setImageResource(R.drawable.ic_fav_full);
+					Toast.makeText(
+							context,
+							Html.fromHtml(String.format(context
+									.getString(R.string.metro_item_add_toast),
+									ms.getName(), ms.getNumber())),
+							Toast.LENGTH_SHORT).show();
+				} else {
+					favouritesDataSource.deleteStation(ms);
+					addToFavourites.setImageResource(R.drawable.ic_fav_empty);
+					Toast.makeText(
+							context,
+							Html.fromHtml(String.format(
+									context.getString(R.string.metro_item_remove_toast),
+									ms.getName(), ms.getNumber())),
+							Toast.LENGTH_SHORT).show();
+				}
+				favouritesDataSource.close();
+			}
+		});
+
 		// Set onClickListner over the left arrow
 		leftArrow.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				savedInstanceState = null;
 				currentScheduleHourIndex--;
 				initFragmentContent();
 			}
@@ -163,10 +225,33 @@ public class MetroSchedule extends FragmentActivity {
 		rightArrow.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				savedInstanceState = null;
 				currentScheduleHourIndex++;
 				initFragmentContent();
 			}
 		});
+	}
+
+	/**
+	 * Get the favourites image according to this if exists in the Favourites
+	 * Database
+	 * 
+	 * @param station
+	 *            the station on the current row
+	 * @return the station image id
+	 */
+	private Integer getFavouriteImage(Station station) {
+		Integer favouriteImage;
+
+		favouritesDataSource.open();
+		if (favouritesDataSource.getStation(station) == null) {
+			favouriteImage = R.drawable.ic_fav_empty;
+		} else {
+			favouriteImage = R.drawable.ic_fav_full;
+		}
+		favouritesDataSource.close();
+
+		return favouriteImage;
 	}
 
 	/**
@@ -247,12 +332,21 @@ public class MetroSchedule extends FragmentActivity {
 	 */
 	private void startFragment(ArrayList<String> formattedScheduleList,
 			boolean isActive, int scheduleIndex) {
-		MetroFragmentEntity mfe = new MetroFragmentEntity(
-				formattedScheduleList, isActive, scheduleIndex);
-		Fragment fragment = MetroScheduleFragment.newInstance(mfe);
+		Fragment fragment;
 
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.metro_schedule_fragment, fragment).commit();
+		if (savedInstanceState == null) {
+			MetroFragmentEntity mfe = new MetroFragmentEntity(
+					formattedScheduleList, isActive, scheduleIndex);
+			fragment = MetroScheduleFragment.newInstance(mfe);
+		} else {
+			fragment = getSupportFragmentManager().findFragmentByTag(
+					FRAGMENT_TAG_NAME);
+		}
+
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.metro_schedule_fragment, fragment,
+						FRAGMENT_TAG_NAME).commit();
 
 		actionsOnFragmentChange();
 	}

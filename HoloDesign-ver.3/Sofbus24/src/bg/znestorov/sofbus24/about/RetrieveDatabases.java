@@ -98,31 +98,37 @@ public class RetrieveDatabases extends
 
 	@Override
 	protected void onPostExecute(HashMap<String, InputStream> databases) {
-		progressDialog.dismiss();
+		try {
+			progressDialog.dismiss();
 
-		// Check if the information is successfully retrieved or an Internet
-		// error occurred
-		if (databases.size() > 0) {
-			Configuration.editConfiguration(context, newConfig);
+			// Check if the information is successfully retrieved or an Internet
+			// error occurred
+			if (databases.size() > 0) {
+				Configuration.editConfiguration(context, newConfig);
 
-			// Showing an AlertDialog with info that the app must be restarted
-			OnClickListener positiveOnClickListener = new OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					ActivityUtils.restartApplication(context);
-				}
-			};
+				// Showing an AlertDialog with info that the app must be
+				// restarted
+				OnClickListener positiveOnClickListener = new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						ActivityUtils.restartApplication(context);
+					}
+				};
 
-			ActivityUtils.showCustomAlertDialog(context,
-					android.R.drawable.ic_menu_info_details, context
-							.getString(R.string.app_dialog_title_important),
-					Html.fromHtml(context
-							.getString(R.string.about_update_db_restart)),
-					context.getString(R.string.app_button_yes),
-					positiveOnClickListener, context
-							.getString(R.string.app_button_no), null);
-		} else {
-			ActivityUtils.showNoInternetAlertDialog(context);
+				ActivityUtils.showCustomAlertDialog(context,
+						android.R.drawable.ic_menu_info_details,
+						context.getString(R.string.app_dialog_title_important),
+						Html.fromHtml(context
+								.getString(R.string.about_update_db_restart)),
+						context.getString(R.string.app_button_yes),
+						positiveOnClickListener, context
+								.getString(R.string.app_button_no), null);
+			} else {
+				ActivityUtils.showNoInternetAlertDialog(context);
+			}
+		} catch (Exception e) {
+			// Workaround used just in case the orientation is changed once
+			// retrieving info
 		}
 	}
 

@@ -37,6 +37,18 @@ public class MetroScheduleFragment extends ListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
+		// Set the first visible row of the list if this is the active fragment
+		if (mfe.isActive()) {
+			int currentScheduleIndex = mfe.getCurrentScheduleIndex();
+			if (currentScheduleIndex >= 0 && currentScheduleIndex <= 2) {
+				currentScheduleIndex = 0;
+			} else {
+				currentScheduleIndex = currentScheduleIndex - 2;
+			}
+
+			setSelection(currentScheduleIndex);
+		}
 	}
 
 	@Override

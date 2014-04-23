@@ -294,13 +294,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent me) {
 				if (me.getAction() == MotionEvent.ACTION_DOWN) {
-					editStation
-							.setColorFilter(Constants.FAVOURITES_IMG_BUTTON_ACTION_DOWN);
 					createEditDialog(station, position);
-					return true;
-				} else if (me.getAction() == MotionEvent.ACTION_UP) {
-					editStation
-							.setColorFilter(Constants.FAVOURITES_IMG_BUTTON_ACTION_UP);
 					return true;
 				}
 
@@ -473,9 +467,6 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent me) {
 				if (me.getAction() == MotionEvent.ACTION_DOWN) {
-					removeStation
-							.setColorFilter(Constants.FAVOURITES_IMG_BUTTON_ACTION_DOWN);
-
 					favouritesDatasource.open();
 					favouritesDatasource.deleteStation(station);
 					favouritesDatasource.close();
@@ -502,10 +493,6 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 						Sofbus24.setVBChanged(true);
 					}
 
-					return true;
-				} else if (me.getAction() == MotionEvent.ACTION_UP) {
-					removeStation
-							.setColorFilter(Constants.FAVOURITES_IMG_BUTTON_ACTION_UP);
 					return true;
 				}
 

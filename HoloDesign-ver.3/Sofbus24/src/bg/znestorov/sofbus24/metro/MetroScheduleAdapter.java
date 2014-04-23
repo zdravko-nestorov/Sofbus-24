@@ -66,7 +66,7 @@ public class MetroScheduleAdapter extends ArrayAdapter<String> {
 			rowView.setBackgroundColor(Color.parseColor("#80CEEA"));
 		} else {
 			if (position % 2 == 1) {
-				rowView.setBackgroundColor(Color.parseColor("#E5E5E5"));
+				rowView.setBackgroundColor(Color.parseColor("#F5F5F5"));
 			} else {
 				rowView.setBackgroundColor(Color.parseColor("#FFFFFF"));
 			}

@@ -78,20 +78,25 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 
 	@Override
 	protected void onPostExecute(Config newConfig) {
-		progressDialog.dismiss();
+		try {
+			progressDialog.dismiss();
 
-		// Check if the information is successfully retrieved or an Internet
-		// error occurred
-		if (newConfig.isValidConfig()) {
-			Config currentConfig = new Config(context);
+			// Check if the information is successfully retrieved or an Internet
+			// error occurred
+			if (newConfig.isValidConfig()) {
+				Config currentConfig = new Config(context);
 
-			if (updateApp) {
-				updateApp(currentConfig, newConfig);
+				if (updateApp) {
+					updateApp(currentConfig, newConfig);
+				} else {
+					updateDb(currentConfig, newConfig);
+				}
 			} else {
-				updateDb(currentConfig, newConfig);
+				ActivityUtils.showNoInternetAlertDialog(context);
 			}
-		} else {
-			ActivityUtils.showNoInternetAlertDialog(context);
+		} catch (Exception e) {
+			// Workaround used just in case the orientation is changed once
+			// retrieving info
 		}
 	}
 

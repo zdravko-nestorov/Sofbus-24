@@ -6,39 +6,6 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="130sp" >
-
-        <ImageView
-            android:id="@+id/cs_list_street_view_image"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/app_img_empty_content_description"
-            android:cropToPadding="true"
-            android:minHeight="130sp"
-            android:scaleType="centerCrop" />
-
-        <ProgressBar
-            android:id="@+id/cs_list_street_view_progress"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="visible" />
-    </RelativeLayout>
-
-    <bg.znestorov.sofbus24.utils.activity.SearchEditText
-        android:id="@+id/cs_list_search"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2sp"
-        android:drawableLeft="@android:drawable/ic_menu_search"
-        android:drawablePadding="5sp"
-        android:drawableRight="@android:drawable/ic_menu_close_clear_cancel"
-        android:hint="@string/cs_list_search_hint" />
-
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
@@ -56,14 +23,6 @@
         android:layout_marginLeft="35sp"
         android:layout_marginRight="35sp"
         android:gravity="center" >
-
-        <ProgressBar
-            android:id="@+id/cs_list_empty_progress"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_centerInParent="true"
-            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/cs_list_empty_image"

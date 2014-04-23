@@ -137,9 +137,6 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 		RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
 				context, progressDialog, station);
 		retrieveMetroSchedule.execute();
-
-		Toast.makeText(getActivity(), station.getName(), Toast.LENGTH_SHORT)
-				.show();
 	}
 
 	@Override

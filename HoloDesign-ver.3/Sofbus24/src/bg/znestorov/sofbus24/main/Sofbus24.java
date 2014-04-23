@@ -17,7 +17,6 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import bg.znestorov.sofbus24.about.Configuration;
-import bg.znestorov.sofbus24.closest.stations.list.RetrieveCurrentPosition;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
 import bg.znestorov.sofbus24.favorites.FavouritesFragment;
@@ -195,8 +194,10 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			progressDialog
 					.setMessage(String
 							.format(getString(R.string.cs_list_loading_current_location)));
-			RetrieveCurrentPosition retrieveCurrentPosition = new RetrieveCurrentPosition(
-					context, null, progressDialog);
+
+			ClosestStationsList closestStationsList = new ClosestStationsList();
+			ClosestStationsList.RetrieveCurrentPosition retrieveCurrentPosition = closestStationsList.new RetrieveCurrentPosition(
+					context, progressDialog);
 			retrieveCurrentPosition.execute();
 			return true;
 		case R.id.action_settings:
