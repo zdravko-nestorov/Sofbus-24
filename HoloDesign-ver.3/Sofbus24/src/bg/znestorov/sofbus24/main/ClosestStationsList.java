@@ -104,7 +104,7 @@ public class ClosestStationsList extends FragmentActivity {
 	}
 
 	/**
-	 * Get the current location coordintaes from the Bundle object
+	 * Get the current location coordinates from the Bundle object
 	 */
 	private void initBundleInfo() {
 		Bundle extras = getIntent().getExtras();
@@ -274,43 +274,48 @@ public class ClosestStationsList extends FragmentActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-			if (progressDialog != null) {
-				progressDialog.dismiss();
-			}
-
-			if (isNetworkProviderOn || isGpsProviderOn) {
-				LatLng currentLocation = new LatLng(this.latitude,
-						this.longitude);
-
-				// Check what have to be done - start new activity or update
-				// fragment
+			try {
 				if (progressDialog != null) {
-					Intent closestStationsListIntent = new Intent(context,
-							ClosestStationsList.class);
-					closestStationsListIntent.putExtra(
-							Constants.BUNDLE_CLOSEST_STATIONS_LIST,
-							currentLocation);
-					context.startActivity(closestStationsListIntent);
-				} else {
-					startClosestStationsListFragment();
+					progressDialog.dismiss();
 				}
-			} else {
-				OnClickListener positiveOnClickListener = new OnClickListener() {
-					public void onClick(DialogInterface dialog, int i) {
-						Intent intent = new Intent(
-								android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-						context.startActivity(intent);
+
+				if (isNetworkProviderOn || isGpsProviderOn) {
+					LatLng currentLocation = new LatLng(this.latitude,
+							this.longitude);
+
+					// Check what have to be done - start new activity or update
+					// fragment
+					if (progressDialog != null) {
+						Intent closestStationsListIntent = new Intent(context,
+								ClosestStationsList.class);
+						closestStationsListIntent.putExtra(
+								Constants.BUNDLE_CLOSEST_STATIONS_LIST,
+								currentLocation);
+						context.startActivity(closestStationsListIntent);
+					} else {
+						startClosestStationsListFragment();
 					}
+				} else {
+					OnClickListener positiveOnClickListener = new OnClickListener() {
+						public void onClick(DialogInterface dialog, int i) {
+							Intent intent = new Intent(
+									android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+							context.startActivity(intent);
+						}
 
-				};
+					};
 
-				ActivityUtils.showCustomAlertDialog(context,
-						android.R.drawable.ic_dialog_alert,
-						context.getString(R.string.app_dialog_title_error),
-						context.getString(R.string.app_location_error),
-						context.getString(R.string.app_button_yes),
-						positiveOnClickListener,
-						context.getString(R.string.app_button_no), null);
+					ActivityUtils.showCustomAlertDialog(context,
+							android.R.drawable.ic_dialog_alert,
+							context.getString(R.string.app_dialog_title_error),
+							context.getString(R.string.app_location_error),
+							context.getString(R.string.app_button_yes),
+							positiveOnClickListener,
+							context.getString(R.string.app_button_no), null);
+				}
+			} catch (Exception e) {
+				// Workaround used just in case the orientation is changed once
+				// retrieving info
 			}
 		}
 

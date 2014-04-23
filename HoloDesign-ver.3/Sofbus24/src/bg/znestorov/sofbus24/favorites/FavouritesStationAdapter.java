@@ -66,6 +66,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		TextView stationName;
 		TextView stationNumber;
 		ImageButton stationStreetView;
+		View barView;
 		ImageButton expandStation;
 		ImageButton editStation;
 		ImageButton removeStation;
@@ -119,6 +120,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 					.findViewById(R.id.favourites_item_station_number);
 			viewHolder.stationStreetView = (ImageButton) rowView
 					.findViewById(R.id.favourites_item_bg_image);
+			viewHolder.barView = rowView.findViewById(R.id.favourites_item_bar);
 			viewHolder.expandStation = (ImageButton) rowView
 					.findViewById(R.id.favourites_item_expand);
 			viewHolder.editStation = (ImageButton) rowView
@@ -149,7 +151,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		expandStation(viewHolder, station);
 		editStation(viewHolder.editStation, station, position);
 		removeStation(viewHolder.removeStation, station);
-		chooseStation(viewHolder.stationStreetView, station);
+		chooseStation(viewHolder.stationStreetView, viewHolder.barView, station);
 
 		return rowView;
 	}
@@ -506,33 +508,52 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 * 
 	 * @param stationStreetView
 	 *            the current row image button
+	 * @param barView
+	 *            the current row LinearLayout bar
 	 * @param station
 	 *            the station on the current row
 	 */
-	private void chooseStation(ImageButton stationStreetView,
-			final Station station) {
+	private void chooseStation(final ImageButton stationStreetView,
+			View barView, final Station station) {
 		stationStreetView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String stationCustomField = station.getCustomField();
-				String metroCustomField = String.format(
-						Constants.METRO_STATION_URL, station.getNumber());
-
-				// Check if the type of the station - BTT or METRO
-				if (!stationCustomField.equals(metroCustomField)) {
-					// TODO: Retrieve information about the station
-					Toast.makeText(context, station.getName(),
-							Toast.LENGTH_SHORT).show();
-				} else {
-					ProgressDialog progressDialog = new ProgressDialog(context);
-					progressDialog.setMessage(Html.fromHtml(String.format(
-							context.getString(R.string.metro_loading_schedule),
-							station.getName(), station.getNumber())));
-					RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
-							context, progressDialog, station);
-					retrieveMetroSchedule.execute();
-				}
+				onChooseStation(station);
 			}
 		});
+
+		barView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				stationStreetView.performClick();
+			}
+		});
+	}
+
+	/**
+	 * Actions taken when a row is selected
+	 * 
+	 * @param station
+	 *            the station on the current row
+	 */
+	private void onChooseStation(Station station) {
+		String stationCustomField = station.getCustomField();
+		String metroCustomField = String.format(Constants.METRO_STATION_URL,
+				station.getNumber());
+
+		// Check if the type of the station - BTT or METRO
+		if (!stationCustomField.equals(metroCustomField)) {
+			// TODO: Retrieve information about the station
+			Toast.makeText(context, station.getName(), Toast.LENGTH_SHORT)
+					.show();
+		} else {
+			ProgressDialog progressDialog = new ProgressDialog(context);
+			progressDialog.setMessage(Html.fromHtml(String.format(
+					context.getString(R.string.metro_loading_schedule),
+					station.getName(), station.getNumber())));
+			RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
+					context, progressDialog, station);
+			retrieveMetroSchedule.execute();
+		}
 	}
 }
