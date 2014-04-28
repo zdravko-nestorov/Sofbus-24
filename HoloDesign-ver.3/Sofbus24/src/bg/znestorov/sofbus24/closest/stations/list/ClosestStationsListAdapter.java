@@ -93,6 +93,11 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 		return rowView;
 	}
 
+	@Override
+	public int getCount() {
+		return stations.size();
+	}
+
 	/**
 	 * Get the favourites image according to this if exists in the Favourites
 	 * Database

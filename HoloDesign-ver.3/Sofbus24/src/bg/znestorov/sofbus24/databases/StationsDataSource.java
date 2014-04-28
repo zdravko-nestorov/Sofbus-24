@@ -340,11 +340,105 @@ public class StationsDataSource {
 	 * 
 	 * @param currentPosition
 	 *            the current position
-	 * @param stationPage
-	 *            each page contains 10 stations
+	 * @param stationsToLoad
+	 *            number of stations to load
+	 * @param searchText
+	 *            if there is any criteria for searching
 	 * @return a list with the closest station
 	 */
 	public List<Station> getClosestStations(LatLng currentPosition,
+			int stationsToLoad, String searchText) {
+		List<Station> stations = new ArrayList<Station>();
+
+		Locale currentLocale = new Locale(language);
+		searchText = searchText.toLowerCase(currentLocale);
+
+		// IMPORTANT: Used for correct ordering
+		Double fudge = Math.pow(
+				Math.cos(Math.toRadians(currentPosition.latitude)), 2);
+
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT * 											");
+		query.append(" FROM stations	 									");
+		query.append(" WHERE ( 												");
+		query.append(" 		lower(CAST(" + StationsSQLite.COLUMN_NUMBER
+				+ " AS TEXT)) LIKE '%" + searchText + "%'					");
+		query.append(" OR 													");
+		query.append(" 		lower(" + StationsSQLite.COLUMN_NAME + ") LIKE '%"
+				+ searchText + "%'		 									");
+		query.append(" )													");
+		query.append(" ORDER BY												");
+		query.append(" 		( (												");
+		query.append(StationsSQLite.COLUMN_LAT + " - "
+				+ currentPosition.latitude);
+		query.append(" 		) * (											");
+		query.append(StationsSQLite.COLUMN_LAT + " - "
+				+ currentPosition.latitude);
+		query.append(" 		) + (											");
+		query.append(StationsSQLite.COLUMN_LON + " - "
+				+ currentPosition.longitude);
+		query.append(" 		) * (											");
+		query.append(StationsSQLite.COLUMN_LON + " - "
+				+ currentPosition.longitude);
+		query.append(" 		) * " + fudge + " ) ASC							");
+
+		Cursor cursor = database.rawQuery(query.toString(), null);
+
+		// Iterating the cursor and fill the empty List<Station>
+		cursor.moveToFirst();
+
+		int stationsCount = 1;
+		while (!cursor.isAfterLast() && stationsCount <= stationsToLoad) {
+			Station foundStation = cursorToStation(cursor);
+			boolean isStationInRange = true;
+			try {
+				BigDecimal distance = new BigDecimal(MapUtils.getMapDistance(
+						currentPosition, foundStation));
+				if (distance
+						.compareTo(Constants.GLOBAL_PARAM_CLOSEST_STATION_DISTANCE) == 1) {
+					isStationInRange = false;
+				}
+			} catch (Exception e) {
+				isStationInRange = false;
+			}
+
+			// Check if the station is in range
+			if (isStationInRange) {
+				if ((foundStation.getType() == VehicleType.METRO1 || foundStation
+						.getType() == VehicleType.METRO2)) {
+					foundStation.setCustomField(String.format(
+							Constants.METRO_STATION_URL,
+							foundStation.getNumber()));
+				}
+
+				stations.add(foundStation);
+
+				stationsCount++;
+				cursor.moveToNext();
+			} else {
+				break;
+			}
+		}
+
+		// Closing the cursor
+		cursor.close();
+
+		return stations;
+	}
+
+	/**
+	 * Get the nearest station from the DB to a location according to the needed
+	 * page
+	 * 
+	 * @param currentPosition
+	 *            the current position
+	 * @param stationPage
+	 *            each page contains 10 stations
+	 * @param searchText
+	 *            if there is any criteria for searching
+	 * @return a list with the closest station
+	 */
+	public List<Station> getClosestStationsByPage(LatLng currentPosition,
 			int stationPage, String searchText) {
 		List<Station> stations = new ArrayList<Station>();
 

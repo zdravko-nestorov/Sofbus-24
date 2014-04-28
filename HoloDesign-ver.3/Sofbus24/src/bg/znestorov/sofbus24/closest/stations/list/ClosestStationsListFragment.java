@@ -37,12 +37,13 @@ public class ClosestStationsListFragment extends ListFragment {
 	private LatLng currentLocation;
 	private StationsDataSource stationsDatasource;
 
-	private List<Station> closestStations;
+	private int closestStationsCount;
 	private String closestStationsSearchText = "";
 
 	private boolean isListFullLoaded = false;
-
 	private ArrayAdapter<Station> closestStationsAdapter;
+
+	private static final String SAVED_STATE_KEY = "Closest stations count";
 
 	public static ClosestStationsListFragment newInstance(LatLng currentLocation) {
 		Bundle bundle = new Bundle();
@@ -69,19 +70,18 @@ public class ClosestStationsListFragment extends ListFragment {
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-				if (visibleItemCount > 0) {
-					int lastInScreen = firstVisibleItem + visibleItemCount;
-					if (totalItemCount >= 10 && !isListFullLoaded
-							&& lastInScreen >= totalItemCount - 5) {
-						closestStations = loadStationsList(
-								(totalItemCount + 10) / 10,
-								closestStationsSearchText);
+				if (view.getLastVisiblePosition() + 1 > totalItemCount - 5
+						&& !isListFullLoaded) {
+					int pageToLoad = (totalItemCount + 10) / 10;
+					List<Station> closestStations = loadStationsList(true,
+							pageToLoad, closestStationsSearchText);
 
-						if (closestStations.size() > 0) {
-							closestStationsAdapter.addAll(closestStations);
-						} else {
-							isListFullLoaded = true;
-						}
+					if (closestStations.size() > 0) {
+						closestStationsAdapter.addAll(closestStations);
+						closestStationsCount = closestStationsAdapter
+								.getCount();
+					} else {
+						isListFullLoaded = true;
 					}
 				}
 			}
@@ -103,9 +103,17 @@ public class ClosestStationsListFragment extends ListFragment {
 		currentLocation = (LatLng) bundle
 				.get(Constants.BUNDLE_CLOSEST_STATIONS_LIST);
 
+		// Get the already loaded stations (in case of orientation change)
+		if (savedInstanceState != null) {
+			closestStationsCount = savedInstanceState.getInt(SAVED_STATE_KEY);
+		} else {
+			closestStationsCount = 10;
+		}
+
 		// Load the closest stations
 		stationsDatasource = new StationsDataSource(context);
-		closestStations = loadStationsList(1, closestStationsSearchText);
+		List<Station> closestStations = loadStationsList(false,
+				closestStationsCount, closestStationsSearchText);
 
 		// Find the SearchEditText in the layout
 		SearchEditText searchEditText = (SearchEditText) context
@@ -115,12 +123,20 @@ public class ClosestStationsListFragment extends ListFragment {
 		actionsOverSearchEditText(searchEditText);
 
 		// Use an ArrayAdapter to show the elements in a ListView
+		if (!closestStationsAdapter.isEmpty()) {
+			closestStationsAdapter.clear();
+		}
 		closestStationsAdapter = new ClosestStationsListAdapter(context,
 				currentLocation, closestStations);
 		setListAdapter(closestStationsAdapter);
-		closestStationsAdapter.setNotifyOnChange(true);
 
 		return myFragmentView;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putInt(SAVED_STATE_KEY, closestStationsCount);
 	}
 
 	@Override
@@ -173,7 +189,7 @@ public class ClosestStationsListFragment extends ListFragment {
 					int count) {
 				closestStationsSearchText = searchEditText.getText().toString();
 
-				List<Station> searchStationList = loadStationsList(1,
+				List<Station> searchStationList = loadStationsList(true, 1,
 						closestStationsSearchText);
 				closestStationsAdapter = new ClosestStationsListAdapter(
 						context, currentLocation, searchStationList);
@@ -218,7 +234,10 @@ public class ClosestStationsListFragment extends ListFragment {
 	 * position to the current location (shows as much as the stationPage
 	 * multiplied by 10)
 	 * 
-	 * @param stationPage
+	 * @param loadByPage
+	 *            point if the method is called to load a page or a whole list
+	 *            with stations
+	 * @param stationPageOrCount
 	 *            shows which part results to show (each part contains 10
 	 *            stations)
 	 * @param searchText
@@ -227,10 +246,8 @@ public class ClosestStationsListFragment extends ListFragment {
 	 * @return all stations according to a search text ordered by their position
 	 *         to the current location
 	 */
-	private List<Station> loadStationsList(int stationPage, String searchText) {
-		// Set to false at each time of new search
-		isListFullLoaded = false;
-
+	private List<Station> loadStationsList(boolean loadByPage,
+			int stationPageOrCount, String searchText) {
 		List<Station> stationsList;
 
 		if (stationsDatasource == null) {
@@ -238,8 +255,15 @@ public class ClosestStationsListFragment extends ListFragment {
 		}
 
 		stationsDatasource.open();
-		stationsList = stationsDatasource.getClosestStations(currentLocation,
-				stationPage, searchText);
+		if (loadByPage) {
+			// Set to false at each time of new search by page
+			isListFullLoaded = false;
+			stationsList = stationsDatasource.getClosestStationsByPage(
+					currentLocation, stationPageOrCount, searchText);
+		} else {
+			stationsList = stationsDatasource.getClosestStations(
+					currentLocation, stationPageOrCount, searchText);
+		}
 		stationsDatasource.close();
 
 		return stationsList;
