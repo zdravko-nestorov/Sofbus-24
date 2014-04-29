@@ -110,11 +110,6 @@ public class ClosestStationsListFragment extends ListFragment {
 			closestStationsCount = 10;
 		}
 
-		// Load the closest stations
-		stationsDatasource = new StationsDataSource(context);
-		List<Station> closestStations = loadStationsList(false,
-				closestStationsCount, closestStationsSearchText);
-
 		// Find the SearchEditText in the layout
 		SearchEditText searchEditText = (SearchEditText) context
 				.findViewById(R.id.cs_list_search);
@@ -122,13 +117,11 @@ public class ClosestStationsListFragment extends ListFragment {
 		// Set the actions over the SearchEditText
 		actionsOverSearchEditText(searchEditText);
 
-		// Use an ArrayAdapter to show the elements in a ListView
-		if (!closestStationsAdapter.isEmpty()) {
-			closestStationsAdapter.clear();
-		}
-		closestStationsAdapter = new ClosestStationsListAdapter(context,
-				currentLocation, closestStations);
-		setListAdapter(closestStationsAdapter);
+		// Load the closest stations
+		stationsDatasource = new StationsDataSource(context);
+
+		// Set the ArrayList to the Fragment
+		setListFragmentAdapter();
 
 		return myFragmentView;
 	}
@@ -136,6 +129,7 @@ public class ClosestStationsListFragment extends ListFragment {
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
+
 		savedInstanceState.putInt(SAVED_STATE_KEY, closestStationsCount);
 	}
 
@@ -189,12 +183,11 @@ public class ClosestStationsListFragment extends ListFragment {
 					int count) {
 				closestStationsSearchText = searchEditText.getText().toString();
 
-				List<Station> searchStationList = loadStationsList(true, 1,
-						closestStationsSearchText);
-				closestStationsAdapter = new ClosestStationsListAdapter(
-						context, currentLocation, searchStationList);
-
-				setListAdapter(closestStationsAdapter);
+				// Check if the text is really changed or this is called because
+				// of the activity started
+				if (before > 0 || count > 0) {
+					setListFragmentAdapter();
+				}
 			}
 
 			@Override
@@ -226,7 +219,19 @@ public class ClosestStationsListFragment extends ListFragment {
 
 		});
 
-		searchEditText.setText(closestStationsSearchText);
+		closestStationsSearchText = searchEditText.getText().toString();
+	}
+
+	/**
+	 * Assign an ArrayList to the ListFragment
+	 */
+	private void setListFragmentAdapter() {
+		List<Station> searchStationList = loadStationsList(false,
+				closestStationsCount, closestStationsSearchText);
+
+		closestStationsAdapter = new ClosestStationsListAdapter(context,
+				currentLocation, searchStationList);
+		setListAdapter(closestStationsAdapter);
 	}
 
 	/**
