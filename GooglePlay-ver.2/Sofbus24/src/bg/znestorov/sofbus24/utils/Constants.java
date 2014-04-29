@@ -55,7 +55,7 @@ public class Constants {
 	public static final String CAPTCHA_IMAGE = "http://m.sofiatraffic.bg/captcha/%s";
 	// SUMC - URL and variables
 	public static final String VB_URL = "http://m.sofiatraffic.bg/vt";
-	public static final String QUERY_BUS_STOP_ID = "q";
+	public static final String QUERY_BUS_STOP_ID = "stopCodee";
 	public static final String QUERY_O = "o";
 	public static final String QUERY_GO = "go";
 	public static final String QUERY_VEHICLE_TYPE_ID = "vehicleTypeId";
