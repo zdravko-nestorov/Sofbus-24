@@ -55,12 +55,13 @@ public class Constants {
 	public static final String CAPTCHA_IMAGE = "http://m.sofiatraffic.bg/captcha/%s";
 	// SUMC - URL and variables
 	public static final String VB_URL = "http://m.sofiatraffic.bg/vt";
-	public static final String QUERY_BUS_STOP_ID = "stopCodee";
+	public static final String QUERY_BUS_STOP_ID = "stopCode";
 	public static final String QUERY_O = "o";
-	public static final String QUERY_GO = "go";
+	public static final String QUERY_SEC = "sec";
 	public static final String QUERY_VEHICLE_TYPE_ID = "vehicleTypeId";
 	public static final String QUERY_CAPTCHA_TEXT = "sc";
 	public static final String QUERY_CAPTCHA_ID = "poleicngi";
+	public static final String QUERY_GO = "go";
 	// User Agent and Referrer
 	public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1017.2 Safari/535.19";
 	public static final String REFERER = "http://m.sofiatraffic.bg/vt/";

@@ -91,7 +91,7 @@ public class HtmlRequestSumc {
 	 *            section</li>
 	 *            </ul>
 	 * @param transferCoordinates
-	 *            array with length 2 - containg the longitude and latitude of
+	 *            array with length 2 - contains the longitude and latitude of
 	 *            the station
 	 */
 	public void getInformation(Context context, String stationCode,
@@ -292,10 +292,11 @@ public class HtmlRequestSumc {
 		}
 
 		final List<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>(
-				6);
+				7);
 		result.addAll(Arrays.asList(new BasicNameValuePair(
 				Constants.QUERY_BUS_STOP_ID, stationCode),
 				new BasicNameValuePair(Constants.QUERY_GO, "1"),
+				new BasicNameValuePair(Constants.QUERY_SEC, "5"),
 				new BasicNameValuePair(Constants.QUERY_O, stationCodeO)));
 
 		if (vehicleTypeId != null) {

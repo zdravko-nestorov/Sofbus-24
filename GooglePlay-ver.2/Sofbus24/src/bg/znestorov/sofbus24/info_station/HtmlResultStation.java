@@ -25,6 +25,7 @@ public class HtmlResultStation {
 		ArrayList<String> time_stamp = null;
 
 		if (htmlResult != null && !"".equals(htmlResult)) {
+			htmlResult = htmlResult.replaceAll("\\s+", "");
 			time_stamp = new ArrayList<String>();
 			Pattern pattern = Pattern.compile("(\\d{2}):(\\d{2})");
 			Matcher matcher = pattern.matcher(htmlResult);
@@ -42,12 +43,9 @@ public class HtmlResultStation {
 					tempTimeStamp = tempTimeStamp.replaceAll("00:", "24:");
 				}
 
-				if (station_hour > hour
-						&& time_stamp.size() < Constants.MAX_COUNT_SCHEDULE_TIME) {
+				if (station_hour > hour) {
 					time_stamp.add(tempTimeStamp);
-				} else if (station_hour == hour
-						&& station_minute >= minute
-						&& time_stamp.size() < Constants.MAX_COUNT_SCHEDULE_TIME) {
+				} else if (station_hour == hour && station_minute >= minute) {
 					time_stamp.add(tempTimeStamp);
 				}
 
@@ -55,6 +53,7 @@ public class HtmlResultStation {
 
 			// Sort the array in ASC order
 			Collections.sort(time_stamp);
+			time_stamp = getSublist(time_stamp);
 
 			// Get current time
 			Calendar cal = Calendar.getInstance();
@@ -102,4 +101,20 @@ public class HtmlResultStation {
 		return null;
 	}
 
+	// Creating a sublist with exact size
+	private static ArrayList<String> getSublist(ArrayList<String> arrayList) {
+		ArrayList<String> sublist = new ArrayList<String>();
+
+		if (arrayList != null && arrayList.size() > 0) {
+			if (arrayList.size() > Constants.MAX_COUNT_SCHEDULE_TIME) {
+				for (int i = 0; i < Constants.MAX_COUNT_SCHEDULE_TIME; i++) {
+					sublist.add(arrayList.get(i));
+				}
+			} else {
+				sublist.addAll(arrayList);
+			}
+		}
+
+		return sublist;
+	}
 }
