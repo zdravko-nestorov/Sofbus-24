@@ -41,6 +41,8 @@ public class VehiclesDatabaseUtils {
 	public static void createVehiclesDatabase(Context context) {
 		VehiclesSQLite myDbHelper = new VehiclesSQLite(context);
 		myDbHelper.createDataBase(null);
+		myDbHelper.getWritableDatabase();
+		myDbHelper.close();
 	}
 
 	/**

@@ -160,6 +160,17 @@ public class ActivityUtils {
 	}
 
 	/**
+	 * Close the application
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 */
+	public static void closeApplication(Activity context) {
+		context.finish();
+		android.os.Process.killProcess(android.os.Process.myPid());
+	}
+
+	/**
 	 * Restart the application
 	 * 
 	 * @param context

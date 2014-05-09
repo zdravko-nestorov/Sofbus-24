@@ -12,6 +12,7 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
@@ -38,9 +39,11 @@ public class StationsDatabaseUtils {
 	 * @param context
 	 *            the current activity context
 	 */
-	public static void createStationsDatabase(Context context) {
+	public static void createStationsDatabase(Activity context) {
 		StationsSQLite myDbHelper = new StationsSQLite(context);
 		myDbHelper.createDataBase(null);
+		myDbHelper.getWritableDatabase();
+		myDbHelper.close();
 	}
 
 	/**
@@ -50,7 +53,7 @@ public class StationsDatabaseUtils {
 	 * @param context
 	 *            the current activity context
 	 */
-	public static void deleteStationDatabase(Context context) {
+	public static void deleteStationDatabase(Activity context) {
 		StationsDataSource stationsDatasource = new StationsDataSource(context);
 		stationsDatasource.open();
 		stationsDatasource.deleteAllStations();
@@ -64,7 +67,7 @@ public class StationsDatabaseUtils {
 	 * @param context
 	 *            the current activity context
 	 */
-	public static void generateAndCopyStationsDB(Context context) {
+	public static void generateAndCopyStationsDB(Activity context) {
 		generateStationsDB(context);
 		copyStationsDB(context);
 	}
@@ -76,7 +79,7 @@ public class StationsDatabaseUtils {
 	 * @param context
 	 *            the current activity context
 	 */
-	private static void generateStationsDB(Context context) {
+	private static void generateStationsDB(Activity context) {
 		long startTime = System.currentTimeMillis();
 
 		StationsDataSource datasource = new StationsDataSource(context);

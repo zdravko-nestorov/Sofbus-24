@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import android.content.Context;
+import android.app.Activity;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -31,7 +31,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	// The Android's default system path of the database
 	private static String DB_PATH = "//data//data//bg.znestorov.sofbus24.main//databases//";
 	private static String DB_NAME = "stations.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 3;
 
 	// Database creation SQL statement
 	private static final String DATABASE_CREATE_STATIONS = "CREATE TABLE "
@@ -41,7 +41,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 			+ COLUMN_TYPE + " TEXT NOT NULL" + ");";
 
 	private SQLiteDatabase dbStations;
-	private final Context context;
+	private final Activity context;
 
 	/**
 	 * The constructor takes and keeps a reference of the passed context in
@@ -50,7 +50,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	 * @param context
 	 *            the current context
 	 */
-	public StationsSQLite(Context context) {
+	public StationsSQLite(Activity context) {
 		super(context, DB_NAME, null, DATABASE_VERSION);
 		this.context = context;
 	}

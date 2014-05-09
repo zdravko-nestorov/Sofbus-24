@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,10 +31,10 @@ public class FavouritesDataSource {
 			FavouritesSQLite.COLUMN_NAME, FavouritesSQLite.COLUMN_LAT,
 			FavouritesSQLite.COLUMN_LON, FavouritesSQLite.COLUMN_CUSTOM_FIELD };
 
-	private Context context;
+	private Activity context;
 	private String language;
 
-	public FavouritesDataSource(Context context) {
+	public FavouritesDataSource(Activity context) {
 		this.context = context;
 		dbHelper = new FavouritesSQLite(context);
 		language = LanguageChange.getUserLocale(context);

@@ -1,6 +1,6 @@
 package bg.znestorov.sofbus24.databases;
 
-import android.content.Context;
+import android.app.Activity;
 
 /**
  * Class containing all helping functions for creating and deleting the
@@ -19,7 +19,7 @@ public class FavouritesDatabaseUtils {
 	 * @param context
 	 *            the current activity context
 	 */
-	public static void deleteFavouriteDatabase(Context context) {
+	public static void deleteFavouriteDatabase(Activity context) {
 		FavouritesDataSource favouritesDatasource = new FavouritesDataSource(
 				context);
 		favouritesDatasource.open();

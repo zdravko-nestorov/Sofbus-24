@@ -2,7 +2,7 @@ package bg.znestorov.sofbus24.metro;
 
 import java.util.List;
 
-import android.content.Context;
+import android.app.Activity;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.VehicleType;
@@ -21,7 +21,7 @@ public class MetroLoadStations {
 	private List<Station> metroDirection1;
 	private List<Station> metroDirection2;
 
-	protected MetroLoadStations(Context context) {
+	protected MetroLoadStations(Activity context) {
 		StationsDataSource stationsDatasource = new StationsDataSource(context);
 
 		stationsDatasource.open();
@@ -32,7 +32,7 @@ public class MetroLoadStations {
 		stationsDatasource.close();
 	}
 
-	public static MetroLoadStations getInstance(Context context) {
+	public static MetroLoadStations getInstance(Activity context) {
 		if (instance == null) {
 			instance = new MetroLoadStations(context);
 		}

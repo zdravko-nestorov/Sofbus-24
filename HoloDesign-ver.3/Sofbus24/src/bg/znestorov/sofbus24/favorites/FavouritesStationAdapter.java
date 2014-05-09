@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
@@ -169,8 +170,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		viewHolder.expandStation.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean isExpanded = viewHolder.stationStreetView
-						.getVisibility() == View.VISIBLE;
+				boolean isExpanded = viewHolder.favItemLayout.getHeight() == getExpandedStationImageHeight();
 
 				if (!isExpanded) {
 					expandListItem(viewHolder, station);
@@ -195,14 +195,27 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		viewHolder.progressBar.setVisibility(View.VISIBLE);
 
 		// Set the visibility and height of the favourites item
-		viewHolder.stationStreetView.setVisibility(View.VISIBLE);
-		viewHolder.favItemLayout.setMinimumHeight(getStationImageHeight());
+		viewHolder.favItemLayout
+				.setMinimumHeight(getExpandedStationImageHeight());
 
 		// Change the expand image
 		viewHolder.expandStation.setImageResource(R.drawable.ic_collapse);
 
 		// Add the image of the station from the street view asynchronously
 		loadStationImage(viewHolder, station);
+	}
+
+	/**
+	 * Get the height of the Expanded StationImage in pixels
+	 * 
+	 * @return the height of the StationImage in pixels
+	 */
+	private int getExpandedStationImageHeight() {
+		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		float sp = 185f;
+		int pixels = (int) (metrics.density * sp + 0.5f);
+
+		return pixels;
 	}
 
 	/**
@@ -216,24 +229,26 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		viewHolder.progressBar.setVisibility(View.GONE);
 
 		// Set the visibility and height of the favourites item
-		viewHolder.favItemLayout.setMinimumHeight(0);
+		viewHolder.favItemLayout
+				.setMinimumHeight(getCollapsedStationImageHeight(viewHolder.barView));
 
 		// Change the expand image
 		viewHolder.expandStation.setImageResource(R.drawable.ic_expand);
 
 		// Remove the image
-		viewHolder.stationStreetView.setVisibility(View.GONE);
+		viewHolder.stationStreetView
+				.setMinimumHeight(getCollapsedStationImageHeight(viewHolder.barView));
+		viewHolder.stationStreetView
+				.setImageResource(android.R.color.transparent);
 	}
 
 	/**
-	 * Get the height of the StationImage in pixels
+	 * Get the height of the Collapsed StationImage in pixels
 	 * 
 	 * @return the height of the StationImage in pixels
 	 */
-	private int getStationImageHeight() {
-		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-		float sp = 185f;
-		int pixels = (int) (metrics.density * sp + 0.5f);
+	private int getCollapsedStationImageHeight(View barView) {
+		int pixels = (int) barView.getHeight();
 
 		return pixels;
 	}
@@ -525,7 +540,26 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		barView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				stationStreetView.performClick();
+				Handler handler = new Handler();
+				Runnable r = new Runnable() {
+					public void run() {
+						stationStreetView.setPressed(true);
+						stationStreetView.invalidate();
+						stationStreetView.performClick();
+
+						Handler handler1 = new Handler();
+						Runnable r1 = new Runnable() {
+							public void run() {
+								stationStreetView.setPressed(false);
+								stationStreetView.invalidate();
+
+							}
+						};
+						handler1.postDelayed(r1, 150);
+
+					}
+				};
+				handler.postDelayed(r, 150);
 			}
 		});
 	}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -34,7 +35,7 @@ public class StationsDataSource {
 	// Number of nearest stations
 	public static int nearestStationsCount = 8;
 
-	public StationsDataSource(Context context) {
+	public StationsDataSource(Activity context) {
 		this.context = context;
 		dbHelper = new StationsSQLite(context);
 		language = LanguageChange.getUserLocale(context);

@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,6 +17,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
@@ -50,75 +55,20 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		context = Sofbus24.this;
 
-		// Creating and copying the DB to the SD card (used only for testing
-		// purposes) - DO NOT UNCOMMENT
-		// StationsDatabaseUtils.generateAndCopyStationsDB(context);
-		// VehiclesDatabaseUtils.generateAndCopyStationsDB(context);
+		// Get the fields in the layout
+		ViewPager sofbusViewPager = (ViewPager) findViewById(R.id.sofbus24_pager);
+		ProgressBar sofbusLoading = (ProgressBar) findViewById(R.id.sofbus24_loading);
+		ImageButton sofbusRetry = (ImageButton) findViewById(R.id.sofbus24_retry);
 
-		// Create the database by copying it from the assets folder to the
-		// internal memory
-		StationsDatabaseUtils.createStationsDatabase(context);
-		VehiclesDatabaseUtils.createVehiclesDatabase(context);
-
-		// Creates the configuration file
-		Configuration.createConfiguration(context);
-
-		// Load all vehicles from the Database, so use them lately
-		ScheduleLoadVehicles.getInstance(context);
-
-		// Load all metro stations from the Database, so use them lately
-		MetroLoadStations.getInstance(context);
-
-		// Initialize the UIL image loader
-		ActivityUtils.initImageLoader(context);
-
-		// Fill the fragments list
-		fillFragmentsList();
-
-		// Set up the action bar
-		final ActionBar actionBar = getActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-		// Create the adapter that will return a fragment for each of the
-		// primary sections of the application
-		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());
-
-		// Set up the ViewPager with the sections adapter and load all tabs at
-		// once
-		mViewPager = (ViewPager) findViewById(R.id.sofbus24_pager);
-		mViewPager.setOffscreenPageLimit(mSectionsPagerAdapter.getCount() - 1);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
-
-		// When swiping between different sections, select the corresponding
-		// tab. We can also use ActionBar.Tab#select() to do this if we have
-		// a reference to the Tab.
-		mViewPager
-				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						actionBar.setSelectedNavigationItem(position);
-					}
-				});
-
-		// For each of the sections in the app, add a tab to the action bar
-		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-			actionBar.addTab(actionBar.newTab()
-					.setIcon(mSectionsPagerAdapter.getPageIcon(i))
-					.setTabListener(this));
+		if (savedInstanceState == null) {
+			// Retrieve the information from the DB and set up the layout fields
+			CreateDatabases createDatabases = new CreateDatabases(context,
+					sofbusViewPager, sofbusLoading, sofbusRetry);
+			createDatabases.execute();
+		} else {
+			actionsOnPostExecute(sofbusViewPager, sofbusLoading, sofbusRetry);
+			initLayoutFields();
 		}
-
-		// Create the sliding menu
-		slidingMenu = new SlidingMenu(this);
-		slidingMenu.setMode(SlidingMenu.LEFT);
-		slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-		slidingMenu.setShadowWidthRes(R.dimen.slidingmenu_shadow_width);
-		slidingMenu.setShadowDrawable(R.drawable.slide_menu_shadow);
-		slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		slidingMenu.setFadeDegree(0.35f);
-		slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		slidingMenu.setMenu(R.layout.activity_sliding_menu);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -176,7 +126,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		if (slidingMenu.isMenuShowing()) {
 			slidingMenu.toggle();
 		} else {
-			super.onBackPressed();
+			ActivityUtils.closeApplication(context);
 		}
 	}
 
@@ -211,6 +161,66 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	/**
+	 * Initialize the layout fields (ActionBar, ViewPager, SectionsPagerAdapter
+	 * and SlidingMenu)
+	 */
+	private void initLayoutFields() {
+		// Creates the configuration file
+		Configuration.createConfiguration(context);
+
+		// Initialize the UIL image loader
+		ActivityUtils.initImageLoader(context);
+
+		// Set up the ActionBar
+		final ActionBar actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		// Fill the fragments list
+		fillFragmentsList();
+
+		// Create the adapter that will return a fragment for each of the
+		// primary sections of the application
+		mSectionsPagerAdapter = new SectionsPagerAdapter(
+				getSupportFragmentManager());
+
+		// Set up the ViewPager with the sections adapter and load all tabs at
+		// once
+		mViewPager = (ViewPager) findViewById(R.id.sofbus24_pager);
+		mViewPager.setOffscreenPageLimit(mSectionsPagerAdapter.getCount() - 1);
+		mViewPager.setAdapter(mSectionsPagerAdapter);
+
+		// When swiping between different sections, select the corresponding
+		// tab. We can also use ActionBar.Tab#select() to do this if we have
+		// a reference to the Tab.
+		mViewPager
+				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+					@Override
+					public void onPageSelected(int position) {
+						actionBar.setSelectedNavigationItem(position);
+					}
+				});
+
+		// For each of the sections in the app, add a tab to the action bar
+		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+			actionBar.addTab(actionBar.newTab()
+					.setIcon(mSectionsPagerAdapter.getPageIcon(i))
+					.setTabListener(this));
+		}
+
+		// Create the sliding menu
+		slidingMenu = new SlidingMenu(this);
+		slidingMenu.setMode(SlidingMenu.LEFT);
+		slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+		slidingMenu.setShadowWidthRes(R.dimen.slidingmenu_shadow_width);
+		slidingMenu.setShadowDrawable(R.drawable.slide_menu_shadow);
+		slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+		slidingMenu.setFadeDegree(0.35f);
+		slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
+		slidingMenu.setMenu(R.layout.activity_sliding_menu);
 	}
 
 	/**
@@ -281,12 +291,200 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		super.onResume();
 
 		// Actions over Favourites fragment
-		Fragment fragment = fragmentsList.get(mViewPager.getCurrentItem());
+		if (mViewPager != null) {
+			Fragment fragment = fragmentsList.get(mViewPager.getCurrentItem());
 
-		if (fragment instanceof FavouritesFragment && isFavouritesChanged) {
-			((FavouritesFragment) fragment).update(context, null);
-			isFavouritesChanged = false;
+			if (fragment instanceof FavouritesFragment && isFavouritesChanged) {
+				((FavouritesFragment) fragment).update(context, null);
+				isFavouritesChanged = false;
+			}
 		}
 	}
 
+	/**
+	 * Class responsible for async creation of the databases
+	 * 
+	 * @author Zdravko Nestorov
+	 * @version 1.0
+	 * 
+	 */
+	public class CreateDatabases extends AsyncTask<Void, Void, Void> {
+
+		private Activity context;
+		private ViewPager sofbusViewPager;
+		private ProgressBar sofbusLoading;
+		private ImageButton sofbusRetry;
+
+		public CreateDatabases(Activity context, ViewPager sofbusViewPager,
+				ProgressBar sofbusLoading, ImageButton sofbusRetry) {
+			this.context = context;
+			this.sofbusViewPager = sofbusViewPager;
+			this.sofbusLoading = sofbusLoading;
+			this.sofbusRetry = sofbusRetry;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			actionsOnPreExecute(sofbusViewPager, sofbusLoading, sofbusRetry);
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			// Creating and copying the DB to the SD card (used only for testing
+			// purposes) - DO NOT UNCOMMENT
+			// StationsDatabaseUtils.generateAndCopyStationsDB(context);
+			// VehiclesDatabaseUtils.generateAndCopyStationsDB(context);
+
+			// Create the database by copying it from the assets folder to the
+			// internal memory
+			StationsDatabaseUtils.createStationsDatabase(context);
+			VehiclesDatabaseUtils.createVehiclesDatabase(context);
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			LoadStartingData loadStartingData = new LoadStartingData(context,
+					sofbusViewPager, sofbusLoading, sofbusRetry);
+			loadStartingData.execute();
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+
+			// Actions over the LayoutFields (which to be shown and visible)
+			actionsOnCancelled(sofbusViewPager, sofbusLoading, sofbusRetry);
+
+			// Set onClickListener to the retry button
+			sofbusRetry.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					CreateDatabases createDatabases = new CreateDatabases(
+							context, sofbusViewPager, sofbusLoading,
+							sofbusRetry);
+					createDatabases.execute();
+				}
+			});
+		}
+	}
+
+	/**
+	 * Class responsible for AsyncLoad of the DB information
+	 * 
+	 * @author Zdravko Nestorov
+	 * @version 1.0
+	 * 
+	 */
+	public class LoadStartingData extends AsyncTask<Void, Void, Void> {
+
+		private Activity context;
+		private ViewPager sofbusViewPager;
+		private ProgressBar sofbusLoading;
+		private ImageButton sofbusRetry;
+
+		public LoadStartingData(Activity context, ViewPager sofbusViewPager,
+				ProgressBar sofbusLoading, ImageButton sofbusRetry) {
+			this.context = context;
+			this.sofbusViewPager = sofbusViewPager;
+			this.sofbusLoading = sofbusLoading;
+			this.sofbusRetry = sofbusRetry;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			actionsOnPreExecute(sofbusViewPager, sofbusLoading, sofbusRetry);
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			// Load all vehicles from the Database, so use them lately
+			ScheduleLoadVehicles.getInstance(context);
+
+			// Load all metro stations from the Database, so use them lately
+			MetroLoadStations.getInstance(context);
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			actionsOnPostExecute(sofbusViewPager, sofbusLoading, sofbusRetry);
+			initLayoutFields();
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+
+			// Actions over the LayoutFields (which to be shown and visible)
+			actionsOnCancelled(sofbusViewPager, sofbusLoading, sofbusRetry);
+
+			// Set onClickListener to the retry button
+			sofbusRetry.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					LoadStartingData loadStartingData = new LoadStartingData(
+							context, sofbusViewPager, sofbusLoading,
+							sofbusRetry);
+					loadStartingData.execute();
+				}
+			});
+		}
+	}
+
+	/**
+	 * Actions over the LayoutFields (which to be shown and visible) - in
+	 * onPreExecute method of the AsyncTask
+	 * 
+	 * @param sofbusViewPager
+	 *            the ViewPager of the Layout
+	 * @param sofbusLoading
+	 *            the ProgressBar of the Layout
+	 * @param sofbusRetry
+	 *            the ImageButton of the Layout
+	 */
+	private void actionsOnPreExecute(ViewPager sofbusViewPager,
+			ProgressBar sofbusLoading, ImageButton sofbusRetry) {
+		sofbusViewPager.setVisibility(View.GONE);
+		sofbusLoading.setVisibility(View.VISIBLE);
+		sofbusRetry.setVisibility(View.GONE);
+	}
+
+	/**
+	 * Actions over the LayoutFields (which to be shown and visible) - in
+	 * onPostExecute method of the AsyncTask
+	 * 
+	 * @param sofbusViewPager
+	 *            the ViewPager of the Layout
+	 * @param sofbusLoading
+	 *            the ProgressBar of the Layout
+	 * @param sofbusRetry
+	 *            the ImageButton of the Layout
+	 */
+	private void actionsOnPostExecute(ViewPager sofbusViewPager,
+			ProgressBar sofbusLoading, ImageButton sofbusRetry) {
+		sofbusViewPager.setVisibility(View.VISIBLE);
+		sofbusLoading.setVisibility(View.GONE);
+		sofbusRetry.setVisibility(View.GONE);
+	}
+
+	/**
+	 * Actions over the LayoutFields (which to be shown and visible) - in
+	 * onCancelled method of the AsyncTask
+	 * 
+	 * @param sofbusViewPager
+	 *            the ViewPager of the Layout
+	 * @param sofbusLoading
+	 *            the ProgressBar of the Layout
+	 * @param sofbusRetry
+	 *            the ImageButton of the Layout
+	 */
+	private void actionsOnCancelled(ViewPager sofbusViewPager,
+			ProgressBar sofbusLoading, ImageButton sofbusRetry) {
+		sofbusViewPager.setVisibility(View.GONE);
+		sofbusLoading.setVisibility(View.GONE);
+		sofbusRetry.setVisibility(View.VISIBLE);
+	}
 }
