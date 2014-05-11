@@ -1,5 +1,7 @@
 package bg.znestorov.sofbus24.entity;
 
+import java.io.Serializable;
+
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -20,16 +22,38 @@ import bg.znestorov.sofbus24.utils.Constants;
  * @version 1.0
  * 
  */
-public class Config {
+public class Config implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private int versionCode;
 	private String versionName;
+
+	private boolean favouritesVisibilå;
+	private int favouritesPosition;
+	private boolean searchVisibile;
+	private int searchPosition;
+	private boolean scheduleVisibile;
+	private int schedulePosition;
+	private boolean metroVisibile;
+	private int metroPosition;
+
 	private int stationsDbVersion;
 	private int vehiclesDbVersion;
 
 	public Config() {
 		this.versionCode = 0;
 		this.versionName = null;
+
+		this.favouritesVisibilå = true;
+		this.favouritesPosition = 1;
+		this.searchVisibile = true;
+		this.searchPosition = 2;
+		this.scheduleVisibile = true;
+		this.schedulePosition = 3;
+		this.metroVisibile = true;
+		this.metroPosition = 4;
+
 		this.stationsDbVersion = 0;
 		this.vehiclesDbVersion = 0;
 	}
@@ -52,6 +76,28 @@ public class Config {
 
 		this.versionCode = versionCode;
 		this.versionName = versionName;
+
+		this.favouritesVisibilå = Boolean.parseBoolean(sharedPreferences
+				.getString(
+						Constants.CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY,
+						null));
+		this.favouritesPosition = Integer.parseInt(sharedPreferences.getString(
+				Constants.CONFIGURATION_PREF_FAVOURITES_POSITION_KEY, null));
+		this.searchVisibile = Boolean.parseBoolean(sharedPreferences.getString(
+				Constants.CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY, null));
+		this.searchPosition = Integer.parseInt(sharedPreferences.getString(
+				Constants.CONFIGURATION_PREF_SEARCH_POSITION_KEY, null));
+		this.scheduleVisibile = Boolean.parseBoolean(sharedPreferences
+				.getString(
+						Constants.CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY,
+						null));
+		this.schedulePosition = Integer.parseInt(sharedPreferences.getString(
+				Constants.CONFIGURATION_PREF_SCHEDULE_POSITION_KEY, null));
+		this.metroVisibile = Boolean.parseBoolean(sharedPreferences.getString(
+				Constants.CONFIGURATION_PREF_METRO_VISIBILITY_KEY, null));
+		this.metroPosition = Integer.parseInt(sharedPreferences.getString(
+				Constants.CONFIGURATION_PREF_METRO_POSITION_KEY, null));
+
 		this.stationsDbVersion = Integer.parseInt(sharedPreferences.getString(
 				Constants.CONFIGURATION_PREF_STATIONS_KEY, null));
 		this.vehiclesDbVersion = Integer.parseInt(sharedPreferences.getString(
@@ -98,9 +144,22 @@ public class Config {
 	}
 
 	public Config(int versionCode, String versionName, int stationsDbVersion,
-			int vehiclesDbVersion) {
+			boolean favouritesVisibilå, int favouritesPosition,
+			boolean searchVisibile, int searchPosition,
+			boolean scheduleVisibile, int schedulePosition,
+			boolean metroVisibile, int metroPosition, int vehiclesDbVersion) {
 		this.versionCode = versionCode;
 		this.versionName = versionName;
+
+		this.favouritesVisibilå = favouritesVisibilå;
+		this.favouritesPosition = favouritesPosition;
+		this.searchVisibile = searchVisibile;
+		this.searchPosition = searchPosition;
+		this.scheduleVisibile = scheduleVisibile;
+		this.schedulePosition = schedulePosition;
+		this.metroVisibile = metroVisibile;
+		this.metroPosition = metroPosition;
+
 		this.stationsDbVersion = stationsDbVersion;
 		this.vehiclesDbVersion = vehiclesDbVersion;
 	}
@@ -119,6 +178,70 @@ public class Config {
 
 	public void setVersionName(String versionName) {
 		this.versionName = versionName;
+	}
+
+	public boolean isFavouritesVisibilå() {
+		return favouritesVisibilå;
+	}
+
+	public void setFavouritesVisibilå(boolean favouritesVisibilå) {
+		this.favouritesVisibilå = favouritesVisibilå;
+	}
+
+	public int getFavouritesPosition() {
+		return favouritesPosition;
+	}
+
+	public void setFavouritesPosition(int favouritesPosition) {
+		this.favouritesPosition = favouritesPosition;
+	}
+
+	public boolean isSearchVisibile() {
+		return searchVisibile;
+	}
+
+	public void setSearchVisibile(boolean searchVisibile) {
+		this.searchVisibile = searchVisibile;
+	}
+
+	public int getSearchPosition() {
+		return searchPosition;
+	}
+
+	public void setSearchPosition(int searchPosition) {
+		this.searchPosition = searchPosition;
+	}
+
+	public boolean isScheduleVisibile() {
+		return scheduleVisibile;
+	}
+
+	public void setScheduleVisibile(boolean scheduleVisibile) {
+		this.scheduleVisibile = scheduleVisibile;
+	}
+
+	public int getSchedulePosition() {
+		return schedulePosition;
+	}
+
+	public void setSchedulePosition(int schedulePosition) {
+		this.schedulePosition = schedulePosition;
+	}
+
+	public boolean isMetroVisibile() {
+		return metroVisibile;
+	}
+
+	public void setMetroVisibile(boolean metroVisibile) {
+		this.metroVisibile = metroVisibile;
+	}
+
+	public int getMetroPosition() {
+		return metroPosition;
+	}
+
+	public void setMetroPosition(int metroPosition) {
+		this.metroPosition = metroPosition;
 	}
 
 	public int getStationsDbVersion() {
@@ -156,7 +279,13 @@ public class Config {
 	@Override
 	public String toString() {
 		return "Config [versionCode=" + versionCode + ", versionName="
-				+ versionName + ", stationsDbVersion=" + stationsDbVersion
+				+ versionName + ", favouritesVisibility=" + favouritesVisibilå
+				+ ", facouritesPosition=" + favouritesPosition
+				+ ", searchVisibility=" + searchVisibile + ", searchPosition="
+				+ searchPosition + ", scheduleVisibility=" + scheduleVisibile
+				+ ", schedulePosition=" + schedulePosition
+				+ ", metroVisibility=" + metroVisibile + ", metroPosition="
+				+ metroPosition + ", stationsDbVersion=" + stationsDbVersion
 				+ ", vehiclesDbVersion=" + vehiclesDbVersion + "]";
 	}
 

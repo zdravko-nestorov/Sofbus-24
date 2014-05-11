@@ -27,15 +27,15 @@ public class Configuration {
 	private static String CONFIGURATION_NAME = "configuration.xml";
 
 	/**
-	 * Creates a configuration files by copying the ready one in the assets
+	 * Creates a configuration file by copying the ready one in the assets
 	 * 
 	 * @param context
 	 *            current Activity context
 	 */
 	public static void createConfiguration(Activity context) {
-		boolean dbExist = checkConfiguration();
+		boolean configExist = checkConfiguration();
 
-		if (!dbExist) {
+		if (!configExist) {
 			try {
 				copyConfiguration(context);
 			} catch (IOException e) {
@@ -57,9 +57,9 @@ public class Configuration {
 	}
 
 	/**
-	 * Copies the stations database from the local assets-folder to the just
-	 * created empty database in the system folder, from where it can be
-	 * accessed and handled. This is done by transferring ByteStream.
+	 * Copies the configuration file from the local assets-folder in the system
+	 * folder, from where it can be accessed and handled. This is done by
+	 * transferring ByteStream.
 	 * 
 	 * @param context
 	 *            current Activity context
@@ -101,9 +101,47 @@ public class Configuration {
 	 * @param context
 	 *            the current Activity context
 	 * @param newConfig
-	 *            the new Cofiguration object
+	 *            the new Configuration object
 	 */
 	public static void editConfiguration(Activity context, Config newConfig) {
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);
+		final Editor edit = sharedPreferences.edit();
+
+		edit.clear();
+		edit.putString(Constants.CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY,
+				newConfig.isFavouritesVisibilå() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_FAVOURITES_POSITION_KEY,
+				newConfig.getFavouritesPosition() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY,
+				newConfig.isSearchVisibile() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_SEARCH_POSITION_KEY,
+				newConfig.getSearchPosition() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY,
+				newConfig.isScheduleVisibile() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_SCHEDULE_POSITION_KEY,
+				newConfig.getSchedulePosition() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_METRO_VISIBILITY_KEY,
+				newConfig.isMetroVisibile() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_METRO_POSITION_KEY,
+				newConfig.getMetroPosition() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_STATIONS_KEY,
+				newConfig.getStationsDbVersion() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_VEHICLES_KEY,
+				newConfig.getVehiclesDbVersion() + "");
+		edit.commit();
+	}
+
+	/**
+	 * Edit the configuration file (only for DBs)
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @param newConfig
+	 *            the new Configuration object
+	 */
+	public static void editDbConfigurationFileds(Activity context,
+			Config newConfig) {
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);
 		final Editor edit = sharedPreferences.edit();
@@ -113,6 +151,40 @@ public class Configuration {
 				newConfig.getStationsDbVersion() + "");
 		edit.putString(Constants.CONFIGURATION_PREF_VEHICLES_KEY,
 				newConfig.getVehiclesDbVersion() + "");
+		edit.commit();
+	}
+
+	/**
+	 * Edit the configuration file (only for Sofbus24 start screen tabs)
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @param newConfig
+	 *            the new Configuration object
+	 */
+	public static void editTabConfigurationFileds(Activity context,
+			Config newConfig) {
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);
+		final Editor edit = sharedPreferences.edit();
+
+		edit.clear();
+		edit.putString(Constants.CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY,
+				newConfig.isFavouritesVisibilå() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_FAVOURITES_POSITION_KEY,
+				newConfig.getFavouritesPosition() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY,
+				newConfig.isSearchVisibile() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_SEARCH_POSITION_KEY,
+				newConfig.getSearchPosition() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY,
+				newConfig.isScheduleVisibile() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_SCHEDULE_POSITION_KEY,
+				newConfig.getSchedulePosition() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_METRO_VISIBILITY_KEY,
+				newConfig.isMetroVisibile() + "");
+		edit.putString(Constants.CONFIGURATION_PREF_METRO_POSITION_KEY,
+				newConfig.getMetroPosition() + "");
 		edit.commit();
 	}
 }

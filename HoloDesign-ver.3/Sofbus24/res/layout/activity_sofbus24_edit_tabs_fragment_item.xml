@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <CheckBox
+        android:id="@+id/edit_tabs_visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:layout_weight="0" />
+
+    <TextView
+        android:id="@+id/edit_tabs_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:minHeight="55sp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="22sp" />
+
+    <ImageView
+        android:id="@+id/edit_tabs_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:layout_marginRight="20sp"
+        android:layout_weight="0"
+        android:background="@drawable/ic_arrange"
+        android:contentDescription="@string/app_img_empty_content_description"
+        android:minHeight="45sp"
+        android:minWidth="45sp" />
+
+</LinearLayout>

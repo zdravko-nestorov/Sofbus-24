@@ -21,6 +21,8 @@ public class Constants {
 	 */
 	// Sofbus24 --> ClosestStationsList --> ClosestStationsListFragment
 	public static final String BUNDLE_CLOSEST_STATIONS_LIST = "CLOSEST STATIONS LIST";
+	// EditTabs --> EditTabsFragment
+	public static final String BUNDLE_EDIT_TABS = "EDIT TABS";
 	// MetroFragment --> MetroSchedule --> MetroScheduleFragment
 	public static final String BUNDLE_METRO_SCHEDULE = "METRO SCHEDULE";
 	// MetroSchedule --> StationMap
@@ -65,4 +67,16 @@ public class Constants {
 	public static final String CONFIGURATION_PREF_NAME = "configuration";
 	public static final String CONFIGURATION_PREF_STATIONS_KEY = "CurrentStationsDBVersion";
 	public static final String CONFIGURATION_PREF_VEHICLES_KEY = "CurrentVehiclesDBVersion";
+
+	/**
+	 * Edit Tabs
+	 */
+	public static final String CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY = "FavouritesTabVisibility";
+	public static final String CONFIGURATION_PREF_FAVOURITES_POSITION_KEY = "FavouritesTabPosition";
+	public static final String CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY = "SearchTabVisibility";
+	public static final String CONFIGURATION_PREF_SEARCH_POSITION_KEY = "SearchTabVisibility";
+	public static final String CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY = "ScheduleTabVisibility";
+	public static final String CONFIGURATION_PREF_SCHEDULE_POSITION_KEY = "ScheduleTabPosition";
+	public static final String CONFIGURATION_PREF_METRO_VISIBILITY_KEY = "MetroTabVisibility";
+	public static final String CONFIGURATION_PREF_METRO_POSITION_KEY = "MetroTabPosition";
 }

@@ -41,6 +41,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="bg.znestorov.sofbus24.main.EditTabs" />
         <activity android:name="bg.znestorov.sofbus24.main.MetroSchedule" />
         <activity android:name="bg.znestorov.sofbus24.main.StationMap" />
         <activity android:name="bg.znestorov.sofbus24.main.StationRouteMap" />

@@ -104,7 +104,7 @@ public class RetrieveDatabases extends
 			// Check if the information is successfully retrieved or an Internet
 			// error occurred
 			if (databases.size() > 0) {
-				Configuration.editConfiguration(context, newConfig);
+				Configuration.editDbConfigurationFileds(context, newConfig);
 
 				// Showing an AlertDialog with info that the app must be
 				// restarted

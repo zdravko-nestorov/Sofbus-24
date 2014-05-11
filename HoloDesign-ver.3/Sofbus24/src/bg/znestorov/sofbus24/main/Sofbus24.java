@@ -150,6 +150,10 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 					context, progressDialog);
 			retrieveCurrentPosition.execute();
 			return true;
+		case R.id.action_edit_tabs:
+			Intent editTabsIntent = new Intent(context, EditTabs.class);
+			startActivity(editTabsIntent);
+			return true;
 		case R.id.action_settings:
 			Intent preferencesIntent = new Intent(context, Preferences.class);
 			startActivity(preferencesIntent);

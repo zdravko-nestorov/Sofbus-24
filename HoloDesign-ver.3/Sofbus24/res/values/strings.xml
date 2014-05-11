@@ -5,6 +5,7 @@
     <string name="app_name">Софбус 24</string>
     <string name="app_img_empty_content_description" />
     <string name="app_button_ok">OK</string>
+    <string name="app_button_save">Запази</string>
     <string name="app_button_cancel">Отказ</string>
     <string name="app_button_yes">Да</string>
     <string name="app_button_no">Не</string>
@@ -23,6 +24,7 @@
     <string name="action_closest_stations_map">Карта</string>
     <string name="action_closest_stations_list">Списък</string>
     <string name="action_more">Повече</string>
+    <string name="action_edit_tabs">Секции</string>
     <string name="action_settints">Настройки</string>
     <string name="action_about">Информация</string>
     <!-- Metro Schedule -->
