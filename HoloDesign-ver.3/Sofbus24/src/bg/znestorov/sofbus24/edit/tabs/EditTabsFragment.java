@@ -28,6 +28,7 @@ public class EditTabsFragment extends ListFragment {
 	private static final int DRAG_START_MODE = DragSortController.ON_DOWN;
 	private static final boolean REMOVE_ENABLED = false;
 	private static final boolean DRAG_ENABLED = true;
+	private static final int HOME_TABS_COUNT = 4;
 
 	private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
 		@Override
@@ -90,21 +91,46 @@ public class EditTabsFragment extends ListFragment {
 	 * Create the list adapter and set it to the Fragment ListView
 	 */
 	private void setListAdapter() {
-		ArrayList<HomeTabs> homeTabs = new ArrayList<HomeTabs>();
-		homeTabs.add(new HomeTabs(config.isFavouritesVisibilå(),
-				getString(R.string.edit_tabs_favourites), config
-						.getFavouritesPosition()));
-		homeTabs.add(new HomeTabs(config.isSearchVisibile(),
-				getString(R.string.edit_tabs_search), config
-						.getSearchPosition()));
-		homeTabs.add(new HomeTabs(config.isScheduleVisibile(),
-				getString(R.string.edit_tabs_schedule), config
-						.getSchedulePosition()));
-		homeTabs.add(new HomeTabs(config.isMetroVisibile(),
-				getString(R.string.edit_tabs_metro), config.getMetroPosition()));
+		ArrayList<HomeTabs> homeTabs = createEmptyArrayList();
+		homeTabs.set(
+				config.getFavouritesPosition(),
+				new HomeTabs(config.isFavouritesVisibilå(),
+						getString(R.string.edit_tabs_favourites), config
+								.getFavouritesPosition()));
+		homeTabs.set(
+				config.getSearchPosition(),
+				new HomeTabs(config.isSearchVisibile(),
+						getString(R.string.edit_tabs_search), config
+								.getSearchPosition()));
+		homeTabs.set(
+				config.getSchedulePosition(),
+				new HomeTabs(config.isScheduleVisibile(),
+						getString(R.string.edit_tabs_schedule), config
+								.getSchedulePosition()));
+		homeTabs.set(
+				config.getMetroPosition(),
+				new HomeTabs(config.isMetroVisibile(),
+						getString(R.string.edit_tabs_metro), config
+								.getMetroPosition()));
 
 		editTabsAdapter = new EditTabsAdapter(context, homeTabs);
 		setListAdapter(editTabsAdapter);
+	}
+
+	/**
+	 * Create empty ArrayList<HomeTabs>, which contains only null objects (this
+	 * is workaround as the ArrayList should be ordered at the time of creation)
+	 * 
+	 * @return an empty ArrayList<HomeTabs>
+	 */
+	private ArrayList<HomeTabs> createEmptyArrayList() {
+		ArrayList<HomeTabs> homeTabs = new ArrayList<HomeTabs>(HOME_TABS_COUNT);
+
+		for (int i = 0; i < HOME_TABS_COUNT; i++) {
+			homeTabs.add(null);
+		}
+
+		return homeTabs;
 	}
 
 	/**
@@ -125,4 +151,36 @@ public class EditTabsFragment extends ListFragment {
 		return controller;
 	}
 
+	/**
+	 * Get the current Configuration according to the ListView ordering and
+	 * checks
+	 * 
+	 * @return the current configuration
+	 */
+	public Config getNewConfig() {
+		Config currentConfig = new Config(context);
+
+		for (int i = 0; i < HOME_TABS_COUNT; i++) {
+			HomeTabs adapterItem = editTabsAdapter.getItem(i);
+			String tabName = adapterItem.getTabName();
+			int tabPosition = adapterItem.getTabPosition();
+			boolean isTabVisible = adapterItem.isTabVisible();
+
+			if (tabName.equals(getString(R.string.edit_tabs_favourites))) {
+				currentConfig.setFavouritesPosition(tabPosition);
+				currentConfig.setFavouritesVisibilå(isTabVisible);
+			} else if (tabName.equals(getString(R.string.edit_tabs_search))) {
+				currentConfig.setSearchPosition(tabPosition);
+				currentConfig.setSearchVisibile(isTabVisible);
+			} else if (tabName.equals(getString(R.string.edit_tabs_schedule))) {
+				currentConfig.setSchedulePosition(tabPosition);
+				currentConfig.setScheduleVisibile(isTabVisible);
+			} else {
+				currentConfig.setMetroPosition(tabPosition);
+				currentConfig.setMetroVisibile(isTabVisible);
+			}
+		}
+
+		return currentConfig;
+	}
 }

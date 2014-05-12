@@ -24,7 +24,7 @@
     <string name="action_closest_stations_map">Карта</string>
     <string name="action_closest_stations_list">Списък</string>
     <string name="action_more">Повече</string>
-    <string name="action_edit_tabs">Секции</string>
+    <string name="action_edit_tabs">Категории</string>
     <string name="action_settints">Настройки</string>
     <string name="action_about">Информация</string>
     <!-- Metro Schedule -->

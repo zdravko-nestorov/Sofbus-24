@@ -74,7 +74,7 @@ public class EditTabsAdapter extends ArrayAdapter<HomeTabs> {
 	}
 
 	/**
-	 * Assaing actions over the fields of the current list item
+	 * Assign actions over the fields of the current list item
 	 * 
 	 * @param viewHolder
 	 *            holder containing all elements in the layout

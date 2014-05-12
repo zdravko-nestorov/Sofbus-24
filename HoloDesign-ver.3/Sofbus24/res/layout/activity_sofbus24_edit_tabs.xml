@@ -10,9 +10,11 @@
         android:layout_height="fill_parent" />
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
+        android:layout_alignParentBottom="true"
+        android:background="#E2E2E2" >
 
         <Button
             android:id="@+id/sofbus_24_edit_tabs_cancel"
@@ -20,7 +22,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/inner_button_border"
             android:text="@string/app_button_cancel" />
 
         <Button
@@ -30,7 +31,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="-1sp"
             android:layout_weight="1"
-            android:background="@drawable/inner_button_border"
             android:text="@string/app_button_save" />
     </LinearLayout>
 

@@ -1,10 +1,15 @@
 package bg.znestorov.sofbus24.main;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.edit.tabs.EditTabsFragment;
 import bg.znestorov.sofbus24.entity.Config;
 
@@ -12,6 +17,13 @@ public class EditTabs extends FragmentActivity {
 
 	private Activity context;
 	private Bundle savedInstanceState;
+
+	private ActionBar actionBar;
+
+	private Button cancelChanges;
+	private Button saveChanges;
+
+	private Fragment editTabsFragment;
 
 	private static final String FRAGMENT_TAG_NAME = "EditTabs Fragment";
 
@@ -24,6 +36,7 @@ public class EditTabs extends FragmentActivity {
 		context = EditTabs.this;
 		this.savedInstanceState = savedInstanceState;
 
+		initLayoutFields();
 		startFragment();
 	}
 
@@ -44,21 +57,57 @@ public class EditTabs extends FragmentActivity {
 	}
 
 	/**
+	 * Initialize the layout fields (ActionBar, ImageViews and TextVies)
+	 */
+	private void initLayoutFields() {
+		// Get the Action Bar
+		actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+
+		// Get the Cancel and Save Buttons
+		cancelChanges = (Button) findViewById(R.id.sofbus_24_edit_tabs_cancel);
+		saveChanges = (Button) findViewById(R.id.sofbus_24_edit_tabs_save);
+		actionsOverButtons();
+	}
+
+	/**
+	 * Set onClickListeners over the ImageButtons
+	 */
+	private void actionsOverButtons() {
+		// Set onClickListner over the Cancel Button
+		cancelChanges.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				finish();
+			}
+		});
+
+		// Set onClickListner over the Cancel Button
+		saveChanges.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Config newConfig = ((EditTabsFragment) editTabsFragment)
+						.getNewConfig();
+				Configuration.editTabConfigurationFileds(context, newConfig);
+				finish();
+			}
+		});
+	}
+
+	/**
 	 * Create and start a new EditTabsFragment with all needed information
 	 */
 	private void startFragment() {
-		Fragment fragment;
-
 		if (savedInstanceState == null) {
-			fragment = EditTabsFragment.newInstance(new Config(context));
+			editTabsFragment = EditTabsFragment
+					.newInstance(new Config(context));
 		} else {
-			fragment = getSupportFragmentManager().findFragmentByTag(
+			editTabsFragment = getSupportFragmentManager().findFragmentByTag(
 					FRAGMENT_TAG_NAME);
 		}
 
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.metro_schedule_fragment, fragment,
+				.replace(R.id.metro_schedule_fragment, editTabsFragment,
 						FRAGMENT_TAG_NAME).commit();
 	}
 }
