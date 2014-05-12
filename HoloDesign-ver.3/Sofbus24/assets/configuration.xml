@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone='yes'?>
 <map>
 	<string name="FavouritesTabVisibility">true</string>
-	<string name="FavouritesTabPosition">1</string>
+	<string name="FavouritesTabPosition">0</string>
 	<string name="SearchTabVisibility">true</string>
-	<string name="SearchTabVisibility">2</string>
+	<string name="SearchTabPosition">1</string>
 	<string name="ScheduleTabVisibility">true</string>
-	<string name="ScheduleTabPosition">3</string>
+	<string name="ScheduleTabPosition">2</string>
 	<string name="MetroTabVisibility">true</string>
-	<string name="MetroTabPosition">4</string>
+	<string name="MetroTabPosition">3</string>
 	<string name="CurrentStationsDBVersion">3</string>
 	<string name="CurrentVehiclesDBVersion">1</string>
 </map>

@@ -2,14 +2,15 @@ package bg.znestorov.sofbus24.edit.tabs;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import bg.znestorov.sofbus24.entity.Config;
+import bg.znestorov.sofbus24.entity.HomeTabs;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 
@@ -19,7 +20,10 @@ import com.mobeta.android.dslv.SimpleFloatViewManager;
 
 public class EditTabsFragment extends ListFragment {
 
-	private ArrayAdapter<String> editTabsAdapter;
+	private Activity context;
+	private Config config;
+
+	private EditTabsAdapter editTabsAdapter;
 
 	private static final int DRAG_START_MODE = DragSortController.ON_DOWN;
 	private static final boolean REMOVE_ENABLED = false;
@@ -29,9 +33,7 @@ public class EditTabsFragment extends ListFragment {
 		@Override
 		public void drop(int from, int to) {
 			if (from != to) {
-				String item = editTabsAdapter.getItem(from);
-				editTabsAdapter.remove(item);
-				editTabsAdapter.insert(item, to);
+				editTabsAdapter.rearrangeView(from, to);
 			}
 		}
 	};
@@ -68,6 +70,14 @@ public class EditTabsFragment extends ListFragment {
 				.inflate(R.layout.activity_sofbus24_edit_tabs_fragment,
 						container, false);
 
+		// Set the context (activity) associated with this fragment
+		context = getActivity();
+
+		// Get the Fragment position and MetroStation object from the Bundle
+		config = (Config) getArguments().getSerializable(
+				Constants.BUNDLE_EDIT_TABS);
+
+		// Create the DSLV controller and assign to the view (DragSortListView)
 		DragSortController mController = buildController(myFragmentView);
 		myFragmentView.setFloatViewManager(mController);
 		myFragmentView.setOnTouchListener(mController);
@@ -80,15 +90,20 @@ public class EditTabsFragment extends ListFragment {
 	 * Create the list adapter and set it to the Fragment ListView
 	 */
 	private void setListAdapter() {
-		ArrayList<String> list = new ArrayList<String>();
-		list.add("a");
-		list.add("b");
-		list.add("c");
-		list.add("d");
+		ArrayList<HomeTabs> homeTabs = new ArrayList<HomeTabs>();
+		homeTabs.add(new HomeTabs(config.isFavouritesVisibilå(),
+				getString(R.string.edit_tabs_favourites), config
+						.getFavouritesPosition()));
+		homeTabs.add(new HomeTabs(config.isSearchVisibile(),
+				getString(R.string.edit_tabs_search), config
+						.getSearchPosition()));
+		homeTabs.add(new HomeTabs(config.isScheduleVisibile(),
+				getString(R.string.edit_tabs_schedule), config
+						.getSchedulePosition()));
+		homeTabs.add(new HomeTabs(config.isMetroVisibile(),
+				getString(R.string.edit_tabs_metro), config.getMetroPosition()));
 
-		editTabsAdapter = new ArrayAdapter<String>(getActivity(),
-				R.layout.activity_sofbus24_edit_tabs_fragment_item,
-				R.id.edit_tabs_name, list);
+		editTabsAdapter = new EditTabsAdapter(context, homeTabs);
 		setListAdapter(editTabsAdapter);
 	}
 
@@ -100,7 +115,7 @@ public class EditTabsFragment extends ListFragment {
 	 *            the listView of the ListFragment
 	 * @return a DragSortController with the appropriate settings
 	 */
-	public DragSortController buildController(DragSortListView dragListView) {
+	private DragSortController buildController(DragSortListView dragListView) {
 		DragSortController controller = new DragSortController(dragListView);
 
 		controller.setDragHandleId(R.id.edit_tabs_position);

@@ -48,6 +48,12 @@
     <string name="action_cs_list_refresh">Обнови</string>
     <string name="action_cs_list_map">Карта</string>
 
+    <!-- Edit Tabs Fragment -->
+    <string name="edit_tabs_favourites">Фаворити</string>
+    <string name="edit_tabs_search">Търсене</string>
+    <string name="edit_tabs_schedule">Разписание</string>
+    <string name="edit_tabs_metro">Метро</string>
+
     <!-- Favourites Fragment -->
     <string name="fav_search_hint">Търсене по име или номер</string>
     <string name="fav_item_station_number_text" formatted="false">Спирка номер: %s</string>

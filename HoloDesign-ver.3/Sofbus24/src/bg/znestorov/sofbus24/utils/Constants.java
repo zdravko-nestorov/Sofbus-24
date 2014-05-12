@@ -74,7 +74,7 @@ public class Constants {
 	public static final String CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY = "FavouritesTabVisibility";
 	public static final String CONFIGURATION_PREF_FAVOURITES_POSITION_KEY = "FavouritesTabPosition";
 	public static final String CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY = "SearchTabVisibility";
-	public static final String CONFIGURATION_PREF_SEARCH_POSITION_KEY = "SearchTabVisibility";
+	public static final String CONFIGURATION_PREF_SEARCH_POSITION_KEY = "SearchTabPosition";
 	public static final String CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY = "ScheduleTabVisibility";
 	public static final String CONFIGURATION_PREF_SCHEDULE_POSITION_KEY = "ScheduleTabPosition";
 	public static final String CONFIGURATION_PREF_METRO_VISIBILITY_KEY = "MetroTabVisibility";
