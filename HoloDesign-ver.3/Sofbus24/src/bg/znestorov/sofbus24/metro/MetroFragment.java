@@ -397,7 +397,7 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 		}
 
 		Toast directionToast = Toast.makeText(context,
-				getDirectionName(stationType, true), Toast.LENGTH_LONG);
+				getDirectionName(stationType, true), Toast.LENGTH_SHORT);
 		directionToast.show();
 	}
 

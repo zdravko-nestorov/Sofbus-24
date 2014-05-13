@@ -24,7 +24,7 @@
     <string name="action_closest_stations_map">Карта</string>
     <string name="action_closest_stations_list">Списък</string>
     <string name="action_more">Повече</string>
-    <string name="action_edit_tabs">Категории</string>
+    <string name="action_edit_tabs">Начален екран</string>
     <string name="action_settints">Настройки</string>
     <string name="action_about">Информация</string>
     <!-- Metro Schedule -->
@@ -38,21 +38,24 @@
     <string name="action_sm_map_mode_terrain">Терен</string>
     <string name="action_sm_map_mode_satellite">Сателит</string>
     <string name="action_sm_map_mode_hybrid">Хибрид</string>
-    <!-- About -->
-    <string name="action_about_update_db">Обновяване на спирките</string>
-    <string name="action_about_update_app">Проверка за нова версия</string>
+    <!-- Edit Tabs -->
+    <string name="action_edit_tabs_reset">Нулиране</string>
     <!-- Preferences -->
     <string name="action_pref_reset">Нулиране</string>
     <string name="action_pref_info_details">Информация</string>
+    <!-- About -->
+    <string name="action_about_update_db">Обновяване на спирките</string>
+    <string name="action_about_update_app">Проверка за нова версия</string>
     <!-- Closest Stations -->
     <string name="action_cs_list_refresh">Обнови</string>
     <string name="action_cs_list_map">Карта</string>
 
     <!-- Edit Tabs Fragment -->
     <string name="edit_tabs_favourites">Фаворити</string>
-    <string name="edit_tabs_search">Търсене</string>
+    <string name="edit_tabs_search">Виртуални табла</string>
     <string name="edit_tabs_schedule">Разписание</string>
     <string name="edit_tabs_metro">Метро</string>
+    <string name="edit_tabs_toast">Началният екран беше променен.</string>
 
     <!-- Favourites Fragment -->
     <string name="fav_search_hint">Търсене по име или номер</string>

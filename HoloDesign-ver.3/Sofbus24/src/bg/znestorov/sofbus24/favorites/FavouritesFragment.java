@@ -126,7 +126,7 @@ public class FavouritesFragment extends ListFragment implements
 						Toast.makeText(
 								context,
 								Html.fromHtml(getString(R.string.fav_menu_remove_all_toast)),
-								Toast.LENGTH_LONG).show();
+								Toast.LENGTH_SHORT).show();
 					}
 				};
 
@@ -143,7 +143,7 @@ public class FavouritesFragment extends ListFragment implements
 				Toast.makeText(
 						context,
 						Html.fromHtml(getString(R.string.fav_menu_remove_all_empty_toast)),
-						Toast.LENGTH_LONG).show();
+						Toast.LENGTH_SHORT).show();
 			}
 
 			break;

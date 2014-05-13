@@ -24,6 +24,7 @@ public class Constants {
 	public static final String BUNDLE_CLOSEST_STATIONS_LIST = "CLOSEST STATIONS LIST";
 	// EditTabs --> EditTabsFragment
 	public static final String BUNDLE_EDIT_TABS = "EDIT TABS";
+	public static final String BUNDLE_EDIT_TABS_RESET = "EDIT TABS RESET";
 	// MetroFragment --> MetroSchedule --> MetroScheduleFragment
 	public static final String BUNDLE_METRO_SCHEDULE = "METRO SCHEDULE";
 	// MetroSchedule --> StationMap

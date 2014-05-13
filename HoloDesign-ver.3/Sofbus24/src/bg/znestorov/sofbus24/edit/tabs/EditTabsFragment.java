@@ -22,6 +22,7 @@ public class EditTabsFragment extends ListFragment {
 
 	private Activity context;
 	private Config config;
+	private boolean isReset;
 
 	private EditTabsAdapter editTabsAdapter;
 
@@ -38,11 +39,12 @@ public class EditTabsFragment extends ListFragment {
 		}
 	};
 
-	public static EditTabsFragment newInstance(Config config) {
+	public static EditTabsFragment newInstance(Config config, boolean isReset) {
 		EditTabsFragment editTabsFragment = new EditTabsFragment();
 
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Constants.BUNDLE_EDIT_TABS, config);
+		bundle.putBoolean(Constants.BUNDLE_EDIT_TABS_RESET, isReset);
 		editTabsFragment.setArguments(bundle);
 
 		return editTabsFragment;
@@ -73,9 +75,11 @@ public class EditTabsFragment extends ListFragment {
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
 
-		// Get the Fragment position and MetroStation object from the Bundle
+		// Get the configuration object and if the Fragment is started or
+		// reset from the Bundle
 		config = (Config) getArguments().getSerializable(
 				Constants.BUNDLE_EDIT_TABS);
+		isReset = getArguments().getBoolean(Constants.BUNDLE_EDIT_TABS_RESET);
 
 		// Create the DSLV controller and assign to the view (DragSortListView)
 		DragSortController mController = buildController(myFragmentView);
@@ -90,45 +94,81 @@ public class EditTabsFragment extends ListFragment {
 	 * Create the list adapter and set it to the Fragment ListView
 	 */
 	private void setListAdapter() {
-		ArrayList<HomeTab> homeTabs = createEmptyArrayList();
-		homeTabs.set(
-				config.getFavouritesPosition(),
-				new HomeTab(config.isFavouritesVisibilå(),
-						getString(R.string.edit_tabs_favourites), config
-								.getFavouritesPosition()));
-		homeTabs.set(
-				config.getSearchPosition(),
-				new HomeTab(config.isSearchVisibile(),
-						getString(R.string.edit_tabs_search), config
-								.getSearchPosition()));
-		homeTabs.set(
-				config.getSchedulePosition(),
-				new HomeTab(config.isScheduleVisibile(),
-						getString(R.string.edit_tabs_schedule), config
-								.getSchedulePosition()));
-		homeTabs.set(
-				config.getMetroPosition(),
-				new HomeTab(config.isMetroVisibile(),
-						getString(R.string.edit_tabs_metro), config
-								.getMetroPosition()));
+		ArrayList<HomeTab> homeTabs;
+
+		// Check if the fragment is reset or not
+		if (isReset) {
+			homeTabs = createDefaultList();
+		} else {
+			homeTabs = createConfigList();
+		}
 
 		editTabsAdapter = new EditTabsAdapter(context, homeTabs);
 		setListAdapter(editTabsAdapter);
 	}
 
 	/**
-	 * Create empty ArrayList<HomeTabs>, which contains only null objects (this
-	 * is workaround as the ArrayList should be ordered at the time of creation)
+	 * Create a List containing the tabs and their visibility according to the
+	 * configuration file
 	 * 
-	 * @return an empty ArrayList<HomeTabs>
+	 * @return an ArrayList<HomeTabs> with the home tabs, according to the
+	 *         configuration file
 	 */
-	private ArrayList<HomeTab> createEmptyArrayList() {
+	private ArrayList<HomeTab> createConfigList() {
+		// Create empty ArrayList<HomeTab>, which contains only null objects
+		// (this is workaround as the ArrayList should be ordered at the time of
+		// creation)
 		ArrayList<HomeTab> homeTabs = new ArrayList<HomeTab>(
 				Constants.GLOBAL_PARAM_HOME_TABS_COUNT);
 
 		for (int i = 0; i < Constants.GLOBAL_PARAM_HOME_TABS_COUNT; i++) {
 			homeTabs.add(null);
 		}
+
+		// Create each home tab according to the configuration
+		HomeTab homeTabFavourites = new HomeTab(config.isFavouritesVisibilå(),
+				getString(R.string.edit_tabs_favourites),
+				config.getFavouritesPosition());
+		HomeTab homeTabSearch = new HomeTab(config.isSearchVisibile(),
+				getString(R.string.edit_tabs_search),
+				config.getSearchPosition());
+		HomeTab homeTabSchedule = new HomeTab(config.isScheduleVisibile(),
+				getString(R.string.edit_tabs_schedule),
+				config.getSchedulePosition());
+		HomeTab homeTabMetro = new HomeTab(config.isMetroVisibile(),
+				getString(R.string.edit_tabs_metro), config.getMetroPosition());
+
+		// Build the List with the home tabs in the correct ordering
+		homeTabs.set(config.getFavouritesPosition(), homeTabFavourites);
+		homeTabs.set(config.getSearchPosition(), homeTabSearch);
+		homeTabs.set(config.getSchedulePosition(), homeTabSchedule);
+		homeTabs.set(config.getMetroPosition(), homeTabMetro);
+
+		return homeTabs;
+	}
+
+	/**
+	 * Create a default list containing the tabs and their visibility
+	 * 
+	 * @return a default ArrayList<HomeTabs> with the home tabs
+	 */
+	private ArrayList<HomeTab> createDefaultList() {
+		// Create the home tabs (with their default state)
+		HomeTab homeTabFavourites = new HomeTab(true,
+				getString(R.string.edit_tabs_favourites), 0);
+		HomeTab homeTabSearch = new HomeTab(true,
+				getString(R.string.edit_tabs_search), 1);
+		HomeTab homeTabSchedule = new HomeTab(true,
+				getString(R.string.edit_tabs_schedule), 2);
+		HomeTab homeTabMetro = new HomeTab(true,
+				getString(R.string.edit_tabs_metro), 3);
+
+		// Build the List with the home tabs in the default ordering
+		ArrayList<HomeTab> homeTabs = new ArrayList<HomeTab>();
+		homeTabs.add(homeTabFavourites);
+		homeTabs.add(homeTabSearch);
+		homeTabs.add(homeTabSchedule);
+		homeTabs.add(homeTabMetro);
 
 		return homeTabs;
 	}

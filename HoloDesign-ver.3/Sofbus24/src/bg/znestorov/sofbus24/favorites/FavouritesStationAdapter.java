@@ -495,7 +495,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 							Html.fromHtml(String.format(context
 									.getString(R.string.fav_item_remove_toast),
 									station.getName(), station.getNumber())),
-							Toast.LENGTH_LONG).show();
+							Toast.LENGTH_SHORT).show();
 
 					// Check which type of station is changed (METRO or OTHER)
 					stationsDataSource.open();

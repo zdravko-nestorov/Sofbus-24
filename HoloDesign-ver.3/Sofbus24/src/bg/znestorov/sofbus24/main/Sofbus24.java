@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
@@ -107,6 +108,11 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 				// ActionBar
 				initTabs();
 
+				// Show a message that the home screen is changed
+				Toast.makeText(context, getString(R.string.edit_tabs_toast),
+						Toast.LENGTH_SHORT).show();
+
+				// Reset to default
 				isHomeScreenChanged = false;
 			}
 		}
@@ -191,13 +197,13 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 					context, progressDialog);
 			retrieveCurrentPosition.execute();
 			return true;
-		case R.id.action_edit_tabs:
-			Intent editTabsIntent = new Intent(context, EditTabs.class);
-			startActivity(editTabsIntent);
-			return true;
 		case R.id.action_settings:
 			Intent preferencesIntent = new Intent(context, Preferences.class);
 			startActivity(preferencesIntent);
+			return true;
+		case R.id.action_edit_tabs:
+			Intent editTabsIntent = new Intent(context, EditTabs.class);
+			startActivity(editTabsIntent);
 			return true;
 		case R.id.action_about:
 			Intent aboutIntent = new Intent(context, About.class);

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,7 +38,7 @@ public class EditTabs extends FragmentActivity {
 		this.savedInstanceState = savedInstanceState;
 
 		initLayoutFields();
-		startFragment();
+		startFragment(false);
 	}
 
 	@Override
@@ -46,10 +47,21 @@ public class EditTabs extends FragmentActivity {
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present
+		getMenuInflater().inflate(R.menu.activity_edit_tabs_actions, menu);
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			return true;
+		case R.id.action_edit_tabs_reset:
+			startFragment(true);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -95,13 +107,12 @@ public class EditTabs extends FragmentActivity {
 		});
 	}
 
-	/**
-	 * Create and start a new EditTabsFragment with all needed information
-	 */
-	private void startFragment() {
-		if (savedInstanceState == null) {
-			editTabsFragment = EditTabsFragment
-					.newInstance(new Config(context));
+	// Create and start a new EditTabsFragment with all needed information
+
+	private void startFragment(boolean isReset) {
+		if (savedInstanceState == null || isReset) {
+			editTabsFragment = EditTabsFragment.newInstance(
+					new Config(context), isReset);
 		} else {
 			editTabsFragment = getSupportFragmentManager().findFragmentByTag(
 					FRAGMENT_TAG_NAME);

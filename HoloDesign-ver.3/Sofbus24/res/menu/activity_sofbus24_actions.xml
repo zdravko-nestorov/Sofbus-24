@@ -29,15 +29,15 @@
         android:title="@string/action_more">
         <menu>
             <item
-                android:id="@+id/action_edit_tabs"
-                android:icon="@android:drawable/ic_menu_edit"
-                android:showAsAction="never"
-                android:title="@string/action_edit_tabs"/>
-            <item
                 android:id="@+id/action_settings"
                 android:icon="@android:drawable/ic_menu_preferences"
                 android:showAsAction="never"
                 android:title="@string/action_settints"/>
+            <item
+                android:id="@+id/action_edit_tabs"
+                android:icon="@android:drawable/ic_menu_edit"
+                android:showAsAction="never"
+                android:title="@string/action_edit_tabs"/>
             <item
                 android:id="@+id/action_about"
                 android:icon="@android:drawable/ic_menu_info_details"
