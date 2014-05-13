@@ -15,6 +15,7 @@ public class Constants {
 	public static final Double GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE = 23.326011;
 	public static final BigDecimal GLOBAL_PARAM_CLOSEST_STATION_DISTANCE = new BigDecimal(
 			100000);
+	public static final int GLOBAL_PARAM_HOME_TABS_COUNT = 4;
 
 	/**
 	 * Bundle keys

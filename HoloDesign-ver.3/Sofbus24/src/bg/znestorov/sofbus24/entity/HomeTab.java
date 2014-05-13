@@ -7,13 +7,16 @@ package bg.znestorov.sofbus24.entity;
  * @version 1.0
  * 
  */
-public class HomeTabs {
+public class HomeTab {
 
 	private boolean tabVisible;
 	private String tabName;
 	private int tabPosition;
 
-	public HomeTabs(boolean tabVisible, String tabName, int tabPosition) {
+	public HomeTab() {
+	}
+
+	public HomeTab(boolean tabVisible, String tabName, int tabPosition) {
 		this.tabVisible = tabVisible;
 		this.tabName = tabName;
 		this.tabPosition = tabPosition;

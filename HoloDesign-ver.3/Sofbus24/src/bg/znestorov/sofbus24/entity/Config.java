@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 
 /**
@@ -258,6 +259,31 @@ public class Config implements Serializable {
 
 	public void setVehiclesDbVersion(int vehiclesDbVersion) {
 		this.vehiclesDbVersion = vehiclesDbVersion;
+	}
+
+	public HomeTab getTabByPosition(Activity context, int position) {
+		if (position >= 0 || position < Constants.GLOBAL_PARAM_HOME_TABS_COUNT) {
+			boolean tabVisible;
+			String tabName;
+
+			if (favouritesPosition == position) {
+				tabVisible = favouritesVisibilå;
+				tabName = context.getString(R.string.edit_tabs_favourites);
+			} else if (searchPosition == position) {
+				tabVisible = searchVisibile;
+				tabName = context.getString(R.string.edit_tabs_search);
+			} else if (schedulePosition == position) {
+				tabVisible = scheduleVisibile;
+				tabName = context.getString(R.string.edit_tabs_schedule);
+			} else {
+				tabVisible = metroVisibile;
+				tabName = context.getString(R.string.edit_tabs_metro);
+			}
+
+			return new HomeTab(tabVisible, tabName, position);
+		} else {
+			return new HomeTab();
+		}
 	}
 
 	/**

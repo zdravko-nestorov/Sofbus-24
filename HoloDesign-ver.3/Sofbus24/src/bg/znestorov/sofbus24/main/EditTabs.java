@@ -88,6 +88,8 @@ public class EditTabs extends FragmentActivity {
 				Config newConfig = ((EditTabsFragment) editTabsFragment)
 						.getNewConfig();
 				Configuration.editTabConfigurationFileds(context, newConfig);
+
+				Sofbus24.setHomeScreenChanged(true);
 				finish();
 			}
 		});

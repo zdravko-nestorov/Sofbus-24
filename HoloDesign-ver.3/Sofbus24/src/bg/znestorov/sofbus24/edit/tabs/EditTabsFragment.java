@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import bg.znestorov.sofbus24.entity.Config;
-import bg.znestorov.sofbus24.entity.HomeTabs;
+import bg.znestorov.sofbus24.entity.HomeTab;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 
@@ -28,7 +28,6 @@ public class EditTabsFragment extends ListFragment {
 	private static final int DRAG_START_MODE = DragSortController.ON_DOWN;
 	private static final boolean REMOVE_ENABLED = false;
 	private static final boolean DRAG_ENABLED = true;
-	private static final int HOME_TABS_COUNT = 4;
 
 	private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
 		@Override
@@ -91,25 +90,25 @@ public class EditTabsFragment extends ListFragment {
 	 * Create the list adapter and set it to the Fragment ListView
 	 */
 	private void setListAdapter() {
-		ArrayList<HomeTabs> homeTabs = createEmptyArrayList();
+		ArrayList<HomeTab> homeTabs = createEmptyArrayList();
 		homeTabs.set(
 				config.getFavouritesPosition(),
-				new HomeTabs(config.isFavouritesVisibilå(),
+				new HomeTab(config.isFavouritesVisibilå(),
 						getString(R.string.edit_tabs_favourites), config
 								.getFavouritesPosition()));
 		homeTabs.set(
 				config.getSearchPosition(),
-				new HomeTabs(config.isSearchVisibile(),
+				new HomeTab(config.isSearchVisibile(),
 						getString(R.string.edit_tabs_search), config
 								.getSearchPosition()));
 		homeTabs.set(
 				config.getSchedulePosition(),
-				new HomeTabs(config.isScheduleVisibile(),
+				new HomeTab(config.isScheduleVisibile(),
 						getString(R.string.edit_tabs_schedule), config
 								.getSchedulePosition()));
 		homeTabs.set(
 				config.getMetroPosition(),
-				new HomeTabs(config.isMetroVisibile(),
+				new HomeTab(config.isMetroVisibile(),
 						getString(R.string.edit_tabs_metro), config
 								.getMetroPosition()));
 
@@ -123,10 +122,11 @@ public class EditTabsFragment extends ListFragment {
 	 * 
 	 * @return an empty ArrayList<HomeTabs>
 	 */
-	private ArrayList<HomeTabs> createEmptyArrayList() {
-		ArrayList<HomeTabs> homeTabs = new ArrayList<HomeTabs>(HOME_TABS_COUNT);
+	private ArrayList<HomeTab> createEmptyArrayList() {
+		ArrayList<HomeTab> homeTabs = new ArrayList<HomeTab>(
+				Constants.GLOBAL_PARAM_HOME_TABS_COUNT);
 
-		for (int i = 0; i < HOME_TABS_COUNT; i++) {
+		for (int i = 0; i < Constants.GLOBAL_PARAM_HOME_TABS_COUNT; i++) {
 			homeTabs.add(null);
 		}
 
@@ -160,8 +160,8 @@ public class EditTabsFragment extends ListFragment {
 	public Config getNewConfig() {
 		Config currentConfig = new Config(context);
 
-		for (int i = 0; i < HOME_TABS_COUNT; i++) {
-			HomeTabs adapterItem = editTabsAdapter.getItem(i);
+		for (int i = 0; i < Constants.GLOBAL_PARAM_HOME_TABS_COUNT; i++) {
+			HomeTab adapterItem = editTabsAdapter.getItem(i);
 			String tabName = adapterItem.getTabName();
 			int tabPosition = adapterItem.getTabPosition();
 			boolean isTabVisible = adapterItem.isTabVisible();

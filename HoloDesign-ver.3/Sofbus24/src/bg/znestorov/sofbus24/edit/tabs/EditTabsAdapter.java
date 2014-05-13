@@ -11,7 +11,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import bg.znestorov.sofbus24.entity.HomeTabs;
+import bg.znestorov.sofbus24.entity.HomeTab;
 import bg.znestorov.sofbus24.main.R;
 
 /**
@@ -21,10 +21,10 @@ import bg.znestorov.sofbus24.main.R;
  * @version 1.0
  * 
  */
-public class EditTabsAdapter extends ArrayAdapter<HomeTabs> {
+public class EditTabsAdapter extends ArrayAdapter<HomeTab> {
 
 	private Activity context;
-	private List<HomeTabs> editTabsList;
+	private List<HomeTab> editTabsList;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
@@ -33,7 +33,7 @@ public class EditTabsAdapter extends ArrayAdapter<HomeTabs> {
 		ImageView tabPosition;
 	}
 
-	public EditTabsAdapter(Activity context, List<HomeTabs> editTabsList) {
+	public EditTabsAdapter(Activity context, List<HomeTab> editTabsList) {
 		super(context, R.layout.activity_sofbus24_edit_tabs_fragment_item,
 				editTabsList);
 
@@ -116,7 +116,7 @@ public class EditTabsAdapter extends ArrayAdapter<HomeTabs> {
 	 *            the end position of the drop action
 	 */
 	public void rearrangeView(int from, int to) {
-		HomeTabs itemFrom = this.getItem(from);
+		HomeTab itemFrom = this.getItem(from);
 		this.remove(itemFrom);
 		this.insert(itemFrom, to);
 

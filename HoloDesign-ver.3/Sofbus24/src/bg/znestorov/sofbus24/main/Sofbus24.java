@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,11 +25,14 @@ import android.widget.ProgressBar;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
+import bg.znestorov.sofbus24.entity.Config;
+import bg.znestorov.sofbus24.entity.HomeTab;
 import bg.znestorov.sofbus24.favorites.FavouritesFragment;
 import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
 
@@ -37,16 +41,22 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener {
 
 	private Activity context;
+	private ActionBar actionBar;
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
 	private SlidingMenu slidingMenu;
 
 	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
+	private FavouritesFragment favouritesFragment;
+	private VirtualBoardsFragment virtualBoardsFragment;
+	private ScheduleFragment scheduleFragment;
+	private MetroFragment metroFragment;
 
 	private static boolean isFavouritesChanged = false;
 	private static boolean isVbChanged = false;
 	private static boolean isMetroChanged = false;
+	private static boolean isHomeScreenChanged = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +78,37 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		} else {
 			actionsOnPostExecute(sofbusViewPager, sofbusLoading, sofbusRetry);
 			initLayoutFields();
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (mViewPager != null) {
+			// Actions over Favourites fragment (in case some station is added
+			// to the Favourites once this activity was paused)
+			Fragment fragment = fragmentsList.get(mViewPager.getCurrentItem());
+
+			if (fragment instanceof FavouritesFragment && isFavouritesChanged) {
+				((FavouritesFragment) fragment).update(context, null);
+				isFavouritesChanged = false;
+			}
+
+			// Update the ordering and visibility of the tabs
+			if (isHomeScreenChanged) {
+				// Rearrange the fragmentsList
+				createFragmentsList();
+
+				// Notify the adapter for the changes in the fragmentsList
+				mSectionsPagerAdapter.notifyDataSetChanged();
+
+				// For each of the sections in the app, add a tab to the
+				// ActionBar
+				initTabs();
+
+				isHomeScreenChanged = false;
+			}
 		}
 	}
 
@@ -179,12 +220,12 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		ActivityUtils.initImageLoader(context);
 
 		// Set up the ActionBar
-		final ActionBar actionBar = getActionBar();
+		actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
-		// Fill the fragments list
-		fillFragmentsList();
+		// Create the fragments list
+		createFragmentsList();
 
 		// Create the adapter that will return a fragment for each of the
 		// primary sections of the application
@@ -194,7 +235,8 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		// Set up the ViewPager with the sections adapter and load all tabs at
 		// once
 		mViewPager = (ViewPager) findViewById(R.id.sofbus24_pager);
-		mViewPager.setOffscreenPageLimit(mSectionsPagerAdapter.getCount() - 1);
+		mViewPager
+				.setOffscreenPageLimit(Constants.GLOBAL_PARAM_HOME_TABS_COUNT - 1);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		// When swiping between different sections, select the corresponding
@@ -209,13 +251,31 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 				});
 
 		// For each of the sections in the app, add a tab to the action bar
+		initTabs();
+
+		// Create the sliding menu
+		initSlidingMenu();
+	}
+
+	/**
+	 * For each of the sections in the app, add a tab to the action bar
+	 */
+	private void initTabs() {
+		if (actionBar.getTabCount() > 0) {
+			actionBar.removeAllTabs();
+		}
+
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
 			actionBar.addTab(actionBar.newTab()
 					.setIcon(mSectionsPagerAdapter.getPageIcon(i))
 					.setTabListener(this));
 		}
+	}
 
-		// Create the sliding menu
+	/**
+	 * Initialize the sliding menu
+	 */
+	private void initSlidingMenu() {
 		slidingMenu = new SlidingMenu(this);
 		slidingMenu.setMode(SlidingMenu.LEFT);
 		slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
@@ -228,10 +288,83 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	}
 
 	/**
+	 * Create or rearrange (if already created) the FragmentsList, using the
+	 * current application config file
+	 */
+	private void createFragmentsList() {
+		// Get the application cofig file
+		Config config = new Config(context);
+
+		// Create and assaign each fragment to a variable, so be used once the
+		// Tabs ordering and visibility is changed
+		createSofbus24Fragments();
+
+		// Emtpy the fragmentsList if contains any elements
+		if (!fragmentsList.isEmpty()) {
+			fragmentsList.clear();
+		}
+
+		// Create a new ordered list with fragments (according to the
+		// configuration file)
+		for (int i = 0; i < Constants.GLOBAL_PARAM_HOME_TABS_COUNT; i++) {
+			HomeTab homeTab = config.getTabByPosition(context, i);
+			if (homeTab.isTabVisible()) {
+				fragmentsList.add(getFragmentByTagName(homeTab));
+			}
+		}
+	}
+
+	/**
+	 * Create (if not created already) and assaign each fragment to a variable,
+	 * so be used once the Tabs ordering and visibility is changed
+	 */
+	private void createSofbus24Fragments() {
+		if (favouritesFragment == null) {
+			favouritesFragment = new FavouritesFragment();
+		}
+
+		if (virtualBoardsFragment == null) {
+			virtualBoardsFragment = new VirtualBoardsFragment();
+		}
+
+		if (scheduleFragment == null) {
+			scheduleFragment = new ScheduleFragment();
+		}
+
+		if (metroFragment == null) {
+			metroFragment = new MetroFragment();
+		}
+	}
+
+	/**
+	 * Get the fragment according to the given HomeTab
+	 * 
+	 * @param homeTab
+	 *            HomeTab object pointing which fragment to be choosen
+	 * @return the fragment associated to the given HomeTab
+	 */
+	private Fragment getFragmentByTagName(HomeTab homeTab) {
+		Fragment fragment;
+
+		String homeTabName = homeTab.getTabName();
+		if (homeTabName.equals(getString(R.string.edit_tabs_favourites))) {
+			fragment = favouritesFragment;
+		} else if (homeTabName.equals(getString(R.string.edit_tabs_search))) {
+			fragment = virtualBoardsFragment;
+		} else if (homeTabName.equals(getString(R.string.edit_tabs_schedule))) {
+			fragment = scheduleFragment;
+		} else {
+			fragment = metroFragment;
+		}
+
+		return fragment;
+	}
+
+	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
 	 */
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -242,40 +375,47 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			return fragmentsList.get(position);
 		}
 
+		/**
+		 * This way, when you call notifyDataSetChanged(), the view pager will
+		 * remove all views and reload them all. As so the reload effect is
+		 * obtained.
+		 */
+		@Override
+		public int getItemPosition(Object object) {
+			return POSITION_NONE;
+		}
+
 		@Override
 		public int getCount() {
 			return fragmentsList.size();
 		}
 
 		public Integer getPageIcon(int position) {
-			switch (position) {
-			case 0:
-				return R.drawable.ic_tab_favorites;
-			case 1:
-				return R.drawable.ic_tab_real_time;
-			case 2:
-				return R.drawable.ic_tab_schedule;
-			default:
-				return R.drawable.ic_tab_metro;
-			}
+			return getPageIconByTagName(fragmentsList.get(position));
 		}
-	}
 
-	/**
-	 * Fill the Fragment map with all fragments in the TabHost
-	 */
-	private void fillFragmentsList() {
-		// Add Favourites fragment
-		fragmentsList.add(new FavouritesFragment());
+		/**
+		 * Get the current item page icon according to the fragment type
+		 * 
+		 * @param fragment
+		 *            the fragment set on this tab
+		 * @return the icon associated to the given fragment
+		 */
+		private int getPageIconByTagName(Fragment fragment) {
+			int pageIcon;
 
-		// Add Virtual Boards fragment
-		fragmentsList.add(new VirtualBoardsFragment());
+			if (fragment instanceof FavouritesFragment) {
+				pageIcon = R.drawable.ic_tab_favorites;
+			} else if (fragment instanceof VirtualBoardsFragment) {
+				pageIcon = R.drawable.ic_tab_real_time;
+			} else if (fragment instanceof ScheduleFragment) {
+				pageIcon = R.drawable.ic_tab_schedule;
+			} else {
+				pageIcon = R.drawable.ic_tab_metro;
+			}
 
-		// Add Schedule fragment
-		fragmentsList.add(new ScheduleFragment());
-
-		// Add Metro fragment
-		fragmentsList.add(new MetroFragment());
+			return pageIcon;
+		}
 	}
 
 	public static void setFavouritesChanged(boolean isFavouritesChanged) {
@@ -290,19 +430,8 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		Sofbus24.isMetroChanged = isMetroChanged;
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		// Actions over Favourites fragment
-		if (mViewPager != null) {
-			Fragment fragment = fragmentsList.get(mViewPager.getCurrentItem());
-
-			if (fragment instanceof FavouritesFragment && isFavouritesChanged) {
-				((FavouritesFragment) fragment).update(context, null);
-				isFavouritesChanged = false;
-			}
-		}
+	public static void setHomeScreenChanged(boolean isHomeScreenChanged) {
+		Sofbus24.isHomeScreenChanged = isHomeScreenChanged;
 	}
 
 	/**
