@@ -3,7 +3,9 @@ package bg.znestorov.sofbus24.utils.activity;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -11,6 +13,7 @@ import android.os.AsyncTask;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.Sofbus24;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
@@ -171,21 +174,27 @@ public class ActivityUtils {
 	}
 
 	/**
-	 * Restart the application
+	 * Restart the application (using PendingIntent to setup launching the
+	 * activity in future and than close the application)
 	 * 
 	 * @param context
 	 *            the current Activity context
 	 */
 	public static void restartApplication(Activity context) {
+		// Set the application to be started again after 100 ms
+		Intent mStartActivity = new Intent(context, Sofbus24.class);
+		int mPendingIntentId = 123456;
+		PendingIntent mPendingIntent = PendingIntent.getActivity(context,
+				mPendingIntentId, mStartActivity,
+				PendingIntent.FLAG_CANCEL_CURRENT);
+		AlarmManager mgr = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100,
+				mPendingIntent);
+
 		// Close the application
 		context.finish();
 		android.os.Process.killProcess(android.os.Process.myPid());
-
-		// Start the application again
-		Intent i = context.getPackageManager().getLaunchIntentForPackage(
-				context.getPackageName());
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		context.startActivity(i);
 	}
 
 }

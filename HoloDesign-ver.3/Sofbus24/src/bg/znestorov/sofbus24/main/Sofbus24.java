@@ -54,6 +54,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	private ScheduleFragment scheduleFragment;
 	private MetroFragment metroFragment;
 
+	private static boolean hasToRestart = false;
 	private static boolean isFavouritesChanged = false;
 	private static boolean isVbChanged = false;
 	private static boolean isMetroChanged = false;
@@ -86,34 +87,42 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	protected void onResume() {
 		super.onResume();
 
-		if (mViewPager != null) {
-			// Actions over Favourites fragment (in case some station is added
-			// to the Favourites once this activity was paused)
-			Fragment fragment = fragmentsList.get(mViewPager.getCurrentItem());
+		if (hasToRestart) {
+			ActivityUtils.restartApplication(context);
+		} else {
+			if (mViewPager != null) {
+				// Actions over Favourites fragment (in case some station is
+				// added
+				// to the Favourites once this activity was paused)
+				Fragment fragment = fragmentsList.get(mViewPager
+						.getCurrentItem());
 
-			if (fragment instanceof FavouritesFragment && isFavouritesChanged) {
-				((FavouritesFragment) fragment).update(context, null);
-				isFavouritesChanged = false;
-			}
+				if (fragment instanceof FavouritesFragment
+						&& isFavouritesChanged) {
+					((FavouritesFragment) fragment).update(context, null);
+					isFavouritesChanged = false;
+				}
 
-			// Update the ordering and visibility of the tabs
-			if (isHomeScreenChanged) {
-				// Rearrange the fragmentsList
-				createFragmentsList();
+				// Update the ordering and visibility of the tabs
+				if (isHomeScreenChanged) {
+					// Rearrange the fragmentsList
+					createFragmentsList();
 
-				// Notify the adapter for the changes in the fragmentsList
-				mSectionsPagerAdapter.notifyDataSetChanged();
+					// Notify the adapter for the changes in the fragmentsList
+					mSectionsPagerAdapter.notifyDataSetChanged();
 
-				// For each of the sections in the app, add a tab to the
-				// ActionBar
-				initTabs();
+					// For each of the sections in the app, add a tab to the
+					// ActionBar
+					initTabs();
 
-				// Show a message that the home screen is changed
-				Toast.makeText(context, getString(R.string.edit_tabs_toast),
-						Toast.LENGTH_SHORT).show();
+					// Show a message that the home screen is changed
+					Toast.makeText(context,
+							getString(R.string.edit_tabs_toast),
+							Toast.LENGTH_SHORT).show();
 
-				// Reset to default
-				isHomeScreenChanged = false;
+					// Reset to default
+					isHomeScreenChanged = false;
+				}
 			}
 		}
 	}
@@ -435,6 +444,10 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 			return pageIcon;
 		}
+	}
+
+	public static void setHastToResrart(boolean hasToRestart) {
+		Sofbus24.hasToRestart = hasToRestart;
 	}
 
 	public static void setFavouritesChanged(boolean isFavouritesChanged) {

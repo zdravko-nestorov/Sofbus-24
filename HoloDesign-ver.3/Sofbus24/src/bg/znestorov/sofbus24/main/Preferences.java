@@ -94,7 +94,8 @@ public class Preferences extends Activity {
 		OnClickListener positiveOnClickListener = new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				ActivityUtils.restartApplication(context);
+				Sofbus24.setHastToResrart(true);
+				finish();
 			}
 		};
 

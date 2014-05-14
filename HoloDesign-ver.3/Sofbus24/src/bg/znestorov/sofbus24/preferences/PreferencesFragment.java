@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import bg.znestorov.sofbus24.main.Preferences;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.Sofbus24;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 
@@ -55,8 +56,11 @@ public class PreferencesFragment extends PreferenceFragment implements
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)
-				|| key.equals(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED)) {
+		if (key.equals(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED)) {
+			Sofbus24.setFavouritesChanged(true);
+		}
+
+		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
 			LanguageChange.selectLocale(context);
 			Preferences.hasToRestart = true;
 		}
