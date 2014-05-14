@@ -138,17 +138,30 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		// Actions over each fragment
 		Fragment fragment = fragmentsList.get(tabPosition);
 
-		if (fragment instanceof FavouritesFragment && isFavouritesChanged) {
-			((FavouritesFragment) fragment).update(context, null);
-			isFavouritesChanged = false;
+		if (fragment instanceof FavouritesFragment) {
+			actionBar.setSubtitle(getString(R.string.edit_tabs_favourites));
+
+			if (isFavouritesChanged) {
+				((FavouritesFragment) fragment).update(context, null);
+				isFavouritesChanged = false;
+			}
 		}
 
-		if (fragment instanceof VirtualBoardsFragment && isVbChanged) {
-			((VirtualBoardsFragment) fragment).update(context, null);
-			isVbChanged = false;
+		if (fragment instanceof VirtualBoardsFragment) {
+			actionBar.setSubtitle(getString(R.string.edit_tabs_search));
+
+			if (isVbChanged) {
+				((VirtualBoardsFragment) fragment).update(context, null);
+				isVbChanged = false;
+			}
+		}
+
+		if (fragment instanceof ScheduleFragment) {
+			actionBar.setSubtitle(getString(R.string.edit_tabs_schedule));
 		}
 
 		if (fragment instanceof MetroFragment) {
+			actionBar.setSubtitle(getString(R.string.edit_tabs_metro));
 			((MetroFragment) fragment).showDirectionNameToast(context);
 
 			if (isMetroChanged) {

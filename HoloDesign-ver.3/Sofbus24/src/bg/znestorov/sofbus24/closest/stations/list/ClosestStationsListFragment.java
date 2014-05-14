@@ -43,7 +43,8 @@ public class ClosestStationsListFragment extends ListFragment {
 	private boolean isListFullLoaded = false;
 	private ArrayAdapter<Station> closestStationsAdapter;
 
-	private static final String SAVED_STATE_KEY = "Closest stations count";
+	private static final String SAVED_STATE_STATIONS_COUNT_KEY = "Closest stations count";
+	private static final String SAVED_STATE_SEARCH_TEXT_KEY = "Closest Stations Search Text";
 
 	public static ClosestStationsListFragment newInstance(LatLng currentLocation) {
 		Bundle bundle = new Bundle();
@@ -98,6 +99,10 @@ public class ClosestStationsListFragment extends ListFragment {
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
 
+		// Find the SearchEditText in the layout
+		SearchEditText searchEditText = (SearchEditText) context
+				.findViewById(R.id.cs_list_search);
+
 		// Get Bundle arguments
 		Bundle bundle = getArguments();
 		currentLocation = (LatLng) bundle
@@ -105,14 +110,14 @@ public class ClosestStationsListFragment extends ListFragment {
 
 		// Get the already loaded stations (in case of orientation change)
 		if (savedInstanceState != null) {
-			closestStationsCount = savedInstanceState.getInt(SAVED_STATE_KEY);
+			closestStationsCount = savedInstanceState
+					.getInt(SAVED_STATE_STATIONS_COUNT_KEY);
+			closestStationsSearchText = savedInstanceState
+					.getString(SAVED_STATE_SEARCH_TEXT_KEY);
 		} else {
 			closestStationsCount = 10;
+			closestStationsSearchText = searchEditText.getText().toString();
 		}
-
-		// Find the SearchEditText in the layout
-		SearchEditText searchEditText = (SearchEditText) context
-				.findViewById(R.id.cs_list_search);
 
 		// Set the actions over the SearchEditText
 		actionsOverSearchEditText(searchEditText);
@@ -130,7 +135,10 @@ public class ClosestStationsListFragment extends ListFragment {
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 
-		savedInstanceState.putInt(SAVED_STATE_KEY, closestStationsCount);
+		savedInstanceState.putInt(SAVED_STATE_STATIONS_COUNT_KEY,
+				closestStationsCount);
+		savedInstanceState.putString(SAVED_STATE_SEARCH_TEXT_KEY,
+				closestStationsSearchText);
 	}
 
 	@Override
@@ -181,11 +189,12 @@ public class ClosestStationsListFragment extends ListFragment {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				closestStationsSearchText = searchEditText.getText().toString();
-
 				// Check if the text is really changed or this is called because
 				// of the activity started
-				if (before > 0 || count > 0) {
+				if (!closestStationsSearchText.equals(s.toString())) {
+					closestStationsCount = 10;
+					closestStationsSearchText = searchEditText.getText()
+							.toString();
 					setListFragmentAdapter();
 				}
 			}
@@ -218,8 +227,6 @@ public class ClosestStationsListFragment extends ListFragment {
 			}
 
 		});
-
-		closestStationsSearchText = searchEditText.getText().toString();
 	}
 
 	/**

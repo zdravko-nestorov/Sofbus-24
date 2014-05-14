@@ -47,7 +47,9 @@
         <activity android:name="bg.znestorov.sofbus24.main.StationRouteMap" />
         <activity android:name="bg.znestorov.sofbus24.main.About" />
         <activity android:name="bg.znestorov.sofbus24.main.Preferences" />
-        <activity android:name="bg.znestorov.sofbus24.main.ClosestStationsList" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.ClosestStationsList"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
     </application>
 
 </manifest>

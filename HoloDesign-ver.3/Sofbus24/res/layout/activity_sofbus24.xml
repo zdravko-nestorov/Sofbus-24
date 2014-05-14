@@ -25,8 +25,8 @@
         android:layout_centerInParent="true"
         android:background="@drawable/ic_action_ms_refresh"
         android:contentDescription="@string/app_img_empty_content_description"
-        android:minHeight="75sp"
-        android:minWidth="75sp"
+        android:minHeight="@dimen/sofbus24_image_retry_height"
+        android:minWidth="@dimen/sofbus24_image_retry_width"
         android:visibility="visible" />
 
 </RelativeLayout>

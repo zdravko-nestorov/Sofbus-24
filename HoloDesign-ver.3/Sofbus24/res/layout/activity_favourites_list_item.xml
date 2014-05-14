@@ -3,7 +3,7 @@
     android:id="@+id/favourites_item_frame_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="185sp" >
+    android:minHeight="@dimen/favourites_item_height" >
 
     <ProgressBar
         android:id="@+id/favourites_item_progress_bar"

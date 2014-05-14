@@ -22,8 +22,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="15sp"
         android:contentDescription="@string/app_img_empty_content_description"
-        android:minHeight="175sp"
-        android:minWidth="175sp"
+        android:minHeight="@dimen/about_image_height"
+        android:minWidth="@dimen/about_image_width"
         android:src="@drawable/ic_about" />
 
     <TextView

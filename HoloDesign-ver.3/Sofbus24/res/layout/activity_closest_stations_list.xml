@@ -9,7 +9,7 @@
         android:id="@+id/cs_list_street_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="140sp" >
+        android:minHeight="@dimen/cs_list_image_street_view_height" >
 
         <ImageView
             android:id="@+id/cs_list_street_view_image"
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_img_empty_content_description"
             android:cropToPadding="true"
-            android:minHeight="140sp"
+            android:minHeight="@dimen/cs_list_image_street_view_height"
             android:scaleType="centerCrop" />
 
         <ProgressBar

@@ -120,6 +120,7 @@ public class ClosestStationsList extends FragmentActivity {
 		actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(getString(R.string.cs_list_title));
 
 		// Get the Fragment and the loading ProgressBar
 		csListFragment = findViewById(R.id.cs_list_fragment);

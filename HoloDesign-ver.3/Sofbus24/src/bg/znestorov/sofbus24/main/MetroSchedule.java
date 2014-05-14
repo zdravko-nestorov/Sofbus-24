@@ -91,6 +91,9 @@ public class MetroSchedule extends FragmentActivity {
 			finish();
 			return true;
 		case R.id.action_ms_reset:
+			// This is needed, because the fragment should be restarted
+			savedInstanceState = null;
+
 			initActiveFragmentContent();
 			return true;
 		case R.id.action_ms_refresh:

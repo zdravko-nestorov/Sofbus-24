@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -211,9 +210,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 * @return the height of the StationImage in pixels
 	 */
 	private int getExpandedStationImageHeight() {
-		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-		float sp = 185f;
-		int pixels = (int) (metrics.density * sp + 0.5f);
+		int pixels = (int) context.getResources().getDimension(
+				R.dimen.favourites_item_height);
 
 		return pixels;
 	}

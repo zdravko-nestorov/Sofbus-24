@@ -76,6 +76,7 @@ public class EditTabs extends FragmentActivity {
 		actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(getString(R.string.edit_tabs_title));
 
 		// Get the Cancel and Save Buttons
 		cancelChanges = (Button) findViewById(R.id.sofbus_24_edit_tabs_cancel);

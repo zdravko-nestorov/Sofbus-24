@@ -65,10 +65,20 @@ public class MetroScheduleAdapter extends ArrayAdapter<String> {
 		if (mfe.isActive() && position == mfe.getCurrentScheduleIndex()) {
 			rowView.setBackgroundColor(Color.parseColor("#80CEEA"));
 		} else {
+			// Set the bacground to each row (even or odd)
 			if (position % 2 == 1) {
-				rowView.setBackgroundColor(Color.parseColor("#F5F5F5"));
+				rowView.setBackgroundColor(Color.parseColor("#F1F1F1"));
 			} else {
 				rowView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+			}
+
+			// Make the rows that the vehicle already passed inactive
+			if (metroSchedule.contains("~")) {
+				viewHolder.scheduleMetroHour.setTextColor(Color
+						.parseColor("#000000"));
+			} else {
+				viewHolder.scheduleMetroHour.setTextColor(Color
+						.parseColor("#8B8B8B"));
 			}
 		}
 
