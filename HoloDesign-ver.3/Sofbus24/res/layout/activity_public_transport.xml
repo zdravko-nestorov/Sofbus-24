@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true" >
+
+    <bg.znestorov.sofbus24.utils.activity.SearchEditText
+        android:id="@+id/pt_search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:drawablePadding="5sp"
+        android:drawableRight="@android:drawable/ic_menu_close_clear_cancel"
+        android:hint="@string/pt_search_hint" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pt_pager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/pt_search"
+        android:focusable="true"
+        tools:context=".PublicTransport" />
+
+</RelativeLayout>

@@ -76,10 +76,18 @@ public class EditTabsFragment extends ListFragment {
 		context = getActivity();
 
 		// Get the configuration object and if the Fragment is started or
-		// reset from the Bundle
-		config = (Config) getArguments().getSerializable(
-				Constants.BUNDLE_EDIT_TABS);
-		isReset = getArguments().getBoolean(Constants.BUNDLE_EDIT_TABS_RESET);
+		// reset from the Bundle or SavedInstanceState
+		if (savedInstanceState == null) {
+			config = (Config) getArguments().getSerializable(
+					Constants.BUNDLE_EDIT_TABS);
+			isReset = getArguments().getBoolean(
+					Constants.BUNDLE_EDIT_TABS_RESET);
+		} else {
+			config = (Config) savedInstanceState
+					.getSerializable(Constants.BUNDLE_EDIT_TABS);
+			isReset = savedInstanceState
+					.getBoolean(Constants.BUNDLE_EDIT_TABS_RESET);
+		}
 
 		// Create the DSLV controller and assign to the view (DragSortListView)
 		DragSortController mController = buildController(myFragmentView);
@@ -88,6 +96,15 @@ public class EditTabsFragment extends ListFragment {
 		myFragmentView.setDragEnabled(DRAG_ENABLED);
 
 		return myFragmentView;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+
+		savedInstanceState.putSerializable(Constants.BUNDLE_EDIT_TABS,
+				getNewConfig());
+		savedInstanceState.putBoolean(Constants.BUNDLE_EDIT_TABS_RESET, false);
 	}
 
 	/**

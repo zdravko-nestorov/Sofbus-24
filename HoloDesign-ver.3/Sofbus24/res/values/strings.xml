@@ -132,6 +132,15 @@
     <string name="sch_item_tram" formatted="false">Трамвай №%s</string>
     <string name="sch_item_empty_list" formatted="false"><![CDATA[Няма намерени резултати за <b>%s</b> в секция <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
 
+    <!-- Public Transport -->
+    <string name="pt_title">Разписание</string>
+    <string name="pt_search_hint">Търсене по име или номер</string>
+    <string name="pt_bus" formatted="false">Автобус №%s</string>
+    <string name="pt_trolley" formatted="false">Тролей №%s</string>
+    <string name="pt_tram" formatted="false">Трамвай №%s</string>
+    <string name="pt_item_station_number_text" formatted="false">Спирка номер: %s</string>
+    <string name="pt_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
+
     <!-- Metro Fragment -->
     <string name="metro_search_hint">Търсене по име или номер</string>
     <string name="metro_search_tab_direction1">Линия 1</string>

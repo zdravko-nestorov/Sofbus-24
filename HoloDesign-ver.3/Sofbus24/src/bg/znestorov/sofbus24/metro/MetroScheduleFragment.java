@@ -6,7 +6,7 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import bg.znestorov.sofbus24.entity.MetroFragmentEntity;
+import bg.znestorov.sofbus24.entity.ScheduleFragmentEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 
@@ -22,9 +22,9 @@ public class MetroScheduleFragment extends ListFragment {
 
 	private Activity context;
 	private MetroScheduleAdapter metroArrayAdapter;
-	private MetroFragmentEntity mfe;
+	private ScheduleFragmentEntity mfe;
 
-	public static MetroScheduleFragment newInstance(MetroFragmentEntity mfe) {
+	public static MetroScheduleFragment newInstance(ScheduleFragmentEntity mfe) {
 		MetroScheduleFragment metroScheduleFragment = new MetroScheduleFragment();
 
 		Bundle bundle = new Bundle();
@@ -61,7 +61,7 @@ public class MetroScheduleFragment extends ListFragment {
 		context = getActivity();
 
 		// Get the Fragment position and MetroStation object from the Bundle
-		mfe = (MetroFragmentEntity) getArguments().getSerializable(
+		mfe = (ScheduleFragmentEntity) getArguments().getSerializable(
 				Constants.BUNDLE_METRO_SCHEDULE);
 
 		// Create the ListAdapter

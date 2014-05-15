@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * This class is used to send data from the MetroScehdule fragment to all
- * MetroFragments
+ * This class is used to send data from the MetroScehdule and PublicTransport
+ * fragment to all Metro and PublicTransport Fragments
  * 
  * @author Zdravko Nestorov
  * @version 1.0
  * 
  */
-public class MetroFragmentEntity implements Serializable {
+public class ScheduleFragmentEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -19,7 +19,7 @@ public class MetroFragmentEntity implements Serializable {
 	private boolean isActive;
 	private int currentScheduleIndex;
 
-	public MetroFragmentEntity(ArrayList<String> metroScheduleList,
+	public ScheduleFragmentEntity(ArrayList<String> metroScheduleList,
 			boolean isActive, int currentActiveRow) {
 		this.isActive = isActive;
 		this.currentScheduleIndex = currentActiveRow;

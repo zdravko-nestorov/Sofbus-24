@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import bg.znestorov.sofbus24.entity.MetroFragmentEntity;
+import bg.znestorov.sofbus24.entity.ScheduleFragmentEntity;
 import bg.znestorov.sofbus24.main.R;
 
 /**
@@ -20,14 +20,14 @@ import bg.znestorov.sofbus24.main.R;
 public class MetroScheduleAdapter extends ArrayAdapter<String> {
 
 	private Activity context;
-	private MetroFragmentEntity mfe;
+	private ScheduleFragmentEntity mfe;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
 		TextView scheduleMetroHour;
 	}
 
-	public MetroScheduleAdapter(Activity context, MetroFragmentEntity mfe) {
+	public MetroScheduleAdapter(Activity context, ScheduleFragmentEntity mfe) {
 		super(context, R.layout.activity_metro_schedule_list_item, mfe
 				.getFormattedScheduleList());
 		this.context = context;

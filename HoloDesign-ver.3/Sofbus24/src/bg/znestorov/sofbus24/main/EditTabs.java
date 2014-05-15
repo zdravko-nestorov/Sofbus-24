@@ -42,11 +42,6 @@ public class EditTabs extends FragmentActivity {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present
 		getMenuInflater().inflate(R.menu.activity_edit_tabs_actions, menu);
@@ -108,8 +103,13 @@ public class EditTabs extends FragmentActivity {
 		});
 	}
 
-	// Create and start a new EditTabsFragment with all needed information
-
+	/**
+	 * Create and start/restart a new EditTabsFragment with all needed
+	 * information
+	 * 
+	 * @param isReset
+	 *            if true - create new Fragment, otherwise act by default
+	 */
 	private void startFragment(boolean isReset) {
 		if (savedInstanceState == null || isReset) {
 			editTabsFragment = EditTabsFragment.newInstance(

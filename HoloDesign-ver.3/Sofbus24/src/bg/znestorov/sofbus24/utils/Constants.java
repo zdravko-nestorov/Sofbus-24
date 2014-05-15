@@ -25,6 +25,8 @@ public class Constants {
 	// EditTabs --> EditTabsFragment
 	public static final String BUNDLE_EDIT_TABS = "EDIT TABS";
 	public static final String BUNDLE_EDIT_TABS_RESET = "EDIT TABS RESET";
+	// ScheduleFragment --> PublicTransport --> PublicTransportFragment
+	public static final String BUNDLE_PUBLIC_TRANSPORT_SCHEDULE = "PUBLIC TRANSPORT SCHEDULE";
 	// MetroFragment --> MetroSchedule --> MetroScheduleFragment
 	public static final String BUNDLE_METRO_SCHEDULE = "METRO SCHEDULE";
 	// MetroSchedule --> StationMap

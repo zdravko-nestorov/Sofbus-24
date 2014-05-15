@@ -41,14 +41,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="bg.znestorov.sofbus24.main.EditTabs" />
-        <activity android:name="bg.znestorov.sofbus24.main.MetroSchedule" />
-        <activity android:name="bg.znestorov.sofbus24.main.StationMap" />
-        <activity android:name="bg.znestorov.sofbus24.main.StationRouteMap" />
-        <activity android:name="bg.znestorov.sofbus24.main.About" />
-        <activity android:name="bg.znestorov.sofbus24.main.Preferences" />
         <activity
             android:name="bg.znestorov.sofbus24.main.ClosestStationsList"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name="bg.znestorov.sofbus24.main.EditTabs" />
+        <activity android:name="bg.znestorov.sofbus24.main.About" />
+        <activity android:name="bg.znestorov.sofbus24.main.Preferences" />
+        <activity android:name="bg.znestorov.sofbus24.main.StationRouteMap" />
+        <activity android:name="bg.znestorov.sofbus24.main.MetroSchedule" />
+        <activity android:name="bg.znestorov.sofbus24.main.StationMap" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.PublicTransport"
             android:windowSoftInputMode="stateHidden|adjustPan" />
     </application>
 
