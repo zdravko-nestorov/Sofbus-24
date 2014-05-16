@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
 import android.view.MenuItem;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.publictransport.PublicTransportDirections;
@@ -25,6 +26,7 @@ public class PublicTransport extends FragmentActivity implements
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
 
+	private int activeDirection;
 	private PublicTransportDirections ptDirections;
 	private ArrayList<Fragment> fragmentsList = new ArrayList<Fragment>();
 
@@ -35,6 +37,16 @@ public class PublicTransport extends FragmentActivity implements
 
 		initBundleInfo();
 		initLayoutFields();
+		setActiveFragment();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present
+		getMenuInflater().inflate(R.menu.activity_public_transport_actions,
+				menu);
+
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -68,6 +80,7 @@ public class PublicTransport extends FragmentActivity implements
 		Bundle extras = getIntent().getExtras();
 		ptDirections = (PublicTransportDirections) extras
 				.get(Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE);
+		activeDirection = ptDirections.getActiveDirection();
 	}
 
 	/**
@@ -150,11 +163,23 @@ public class PublicTransport extends FragmentActivity implements
 	 * direction
 	 */
 	private void createFragmentsList() {
-		ptDirections.setActiveDirection(0);
-		fragmentsList.add(PublicTransportFragment.newInstance(ptDirections));
+		PublicTransportDirections ptDirections1 = new PublicTransportDirections(
+				ptDirections);
+		ptDirections1.setActiveDirection(0);
+		fragmentsList.add(PublicTransportFragment.newInstance(ptDirections1));
 
-		ptDirections.setActiveDirection(1);
-		fragmentsList.add(PublicTransportFragment.newInstance(ptDirections));
+		PublicTransportDirections ptDirections2 = new PublicTransportDirections(
+				ptDirections);
+		ptDirections2.setActiveDirection(1);
+		fragmentsList.add(PublicTransportFragment.newInstance(ptDirections2));
+	}
+
+	/**
+	 * Set the active fragment to be firstly visible (the choosen from the
+	 * AlertDialog)
+	 */
+	private void setActiveFragment() {
+		mViewPager.setCurrentItem(activeDirection);
 	}
 
 	/**

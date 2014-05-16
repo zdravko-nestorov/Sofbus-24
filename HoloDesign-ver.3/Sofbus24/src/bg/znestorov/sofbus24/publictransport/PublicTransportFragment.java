@@ -3,6 +3,7 @@ package bg.znestorov.sofbus24.publictransport;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
@@ -10,6 +11,7 @@ import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.StationRouteMap;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
@@ -79,7 +82,7 @@ public class PublicTransportFragment extends ListFragment {
 		}
 
 		// Find all of TextView and SearchEditText tabs in the layout
-		SearchEditText searchEditText = (SearchEditText) context
+		SearchEditText searchEditText = (SearchEditText) myFragmentView
 				.findViewById(R.id.pt_search);
 		TextView emptyList = (TextView) myFragmentView
 				.findViewById(R.id.pt_list_empty_text);
@@ -106,6 +109,23 @@ public class PublicTransportFragment extends ListFragment {
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_pt_route_map:
+			Intent ptMapRouteIntent = new Intent(context, StationRouteMap.class);
+			int activeDirection = ptDirections.getActiveDirection();
+			ArrayList<Station> directionList = ptDirections.getDirectionsList()
+					.get(activeDirection);
+			ptMapRouteIntent.putExtra(Constants.BUNDLE_STATION_ROUTE_MAP,
+					directionList);
+			this.startActivity(ptMapRouteIntent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Station station = (Station) getListAdapter().getItem(position);
 
@@ -123,8 +143,8 @@ public class PublicTransportFragment extends ListFragment {
 	 */
 	private void actionsOverSearchEditText(final SearchEditText searchEditText,
 			final TextView emptyList) {
-		searchEditText.setText(stationSearchText);
 		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+		searchEditText.setText(stationSearchText);
 
 		// Add on focus listener
 		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -181,7 +201,6 @@ public class PublicTransportFragment extends ListFragment {
 					break;
 				}
 			}
-
 		});
 	}
 

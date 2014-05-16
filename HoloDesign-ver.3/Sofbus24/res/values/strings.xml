@@ -49,6 +49,8 @@
     <!-- Closest Stations -->
     <string name="action_cs_list_refresh">Обнови</string>
     <string name="action_cs_list_map">Карта</string>
+    <!-- Public Transport -->
+    <string name="action_pt_route_map">Карта</string>
 
     <!-- Closest Stations List -->
     <string name="cs_list_title">Най-близки спирки</string>

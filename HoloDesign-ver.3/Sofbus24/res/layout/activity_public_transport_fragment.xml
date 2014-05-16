@@ -2,7 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     android:orientation="vertical" >
+
+    <bg.znestorov.sofbus24.utils.activity.SearchEditText
+        android:id="@+id/pt_search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:drawablePadding="5sp"
+        android:drawableRight="@android:drawable/ic_menu_close_clear_cancel"
+        android:hint="@string/pt_search_hint" />
 
     <ListView
         android:id="@android:id/list"

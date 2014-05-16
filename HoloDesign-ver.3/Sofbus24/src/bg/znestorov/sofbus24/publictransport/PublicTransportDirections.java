@@ -27,6 +27,12 @@ public class PublicTransportDirections implements Serializable {
 	public PublicTransportDirections() {
 	}
 
+	public PublicTransportDirections(PublicTransportDirections ptDirections) {
+		this.vehicle = ptDirections.getVehicle();
+		this.directionsNames = ptDirections.getDirectionsNames();
+		this.directionsList = ptDirections.getDirectionsList();
+	}
+
 	public PublicTransportDirections(Vehicle vehicle, int activeDirection,
 			ArrayList<String> directionsNames,
 			ArrayList<ArrayList<Station>> directionsList) {

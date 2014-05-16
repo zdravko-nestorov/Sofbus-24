@@ -30,9 +30,11 @@ import bg.znestorov.sofbus24.main.Sofbus24;
 public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 		Filterable {
 
-	private FavouritesDataSource favouritesDataSource;
 	private Activity context;
-	private List<Station> stations;
+	private FavouritesDataSource favouritesDataSource;
+
+	private List<Station> originalStations;
+	private List<Station> filteredStations;
 
 	private Filter stationsFilter;
 
@@ -46,8 +48,10 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	public PublicTransportAdapter(Activity context, List<Station> stations) {
 		super(context, R.layout.activity_public_transport_list_item, stations);
 		this.context = context;
-		this.stations = stations;
 		this.favouritesDataSource = new FavouritesDataSource(context);
+
+		this.originalStations = stations;
+		this.filteredStations = stations;
 
 		this.stationsFilter = createFilter();
 	}
@@ -80,7 +84,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 		}
 
 		// Fill the data
-		Station station = stations.get(position);
+		Station station = filteredStations.get(position);
 		viewHolder.addToFavourites.setImageResource(getFavouriteImage(station));
 		viewHolder.stationName.setText(station.getName());
 		viewHolder.stationNumber.setText(String.format(
@@ -95,7 +99,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 
 	@Override
 	public int getCount() {
-		return stations != null ? stations.size() : 0;
+		return filteredStations != null ? filteredStations.size() : 0;
 	}
 
 	/**
@@ -126,8 +130,8 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 				// If there's nothing to filter on, return the original data for
 				// your list
 				if (constraint == null || constraint.length() == 0) {
-					results.values = stations;
-					results.count = stations.size();
+					results.values = originalStations;
+					results.count = originalStations.size();
 				} else {
 					List<Station> filterResultsData = new ArrayList<Station>();
 
@@ -138,7 +142,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 
 					// Itterate over all stations and search which ones match
 					// the filter
-					for (Station station : stations) {
+					for (Station station : originalStations) {
 						filterebaleName = station.getName().toUpperCase();
 						filterebaleNumber = station.getNumber().toUpperCase();
 
@@ -159,12 +163,8 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 			@Override
 			protected void publishResults(CharSequence constraint,
 					FilterResults filterResults) {
-				if (filterResults.count == 0)
-					notifyDataSetInvalidated();
-				else {
-					stations = (ArrayList<Station>) filterResults.values;
-					notifyDataSetChanged();
-				}
+				filteredStations = (ArrayList<Station>) filterResults.values;
+				notifyDataSetChanged();
 			}
 		};
 	}
