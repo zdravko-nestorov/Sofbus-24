@@ -4,7 +4,12 @@ import java.util.ArrayList;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -21,6 +26,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 public class PublicTransport extends FragmentActivity implements
 		ActionBar.TabListener {
 
+	private Activity context;
 	private ActionBar actionBar;
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -34,6 +40,9 @@ public class PublicTransport extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_public_transport);
+
+		// Get the current activity context
+		context = PublicTransport.this;
 
 		initBundleInfo();
 		initLayoutFields();
@@ -54,6 +63,14 @@ public class PublicTransport extends FragmentActivity implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			return true;
+		case R.id.action_pt_route_map:
+			ProgressDialog progressDialog = new ProgressDialog(context);
+			progressDialog
+					.setMessage(getString(R.string.pt_menu_map_route_loading));
+			RetrievePTRoute retrievePTRoute = new RetrievePTRoute(context,
+					progressDialog);
+			retrievePTRoute.execute();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -164,14 +181,14 @@ public class PublicTransport extends FragmentActivity implements
 	 */
 	private void createFragmentsList() {
 		DirectionsEntity ptDirectionsEntity1 = new DirectionsEntity(
-				ptDirectionsEntity);
-		ptDirectionsEntity1.setActiveDirection(0);
-		fragmentsList.add(PublicTransportFragment.newInstance(ptDirectionsEntity1));
+				ptDirectionsEntity, 0);
+		fragmentsList.add(PublicTransportFragment
+				.newInstance(ptDirectionsEntity1));
 
 		DirectionsEntity ptDirectionsEntity2 = new DirectionsEntity(
-				ptDirectionsEntity);
-		ptDirectionsEntity2.setActiveDirection(1);
-		fragmentsList.add(PublicTransportFragment.newInstance(ptDirectionsEntity2));
+				ptDirectionsEntity, 1);
+		fragmentsList.add(PublicTransportFragment
+				.newInstance(ptDirectionsEntity2));
 	}
 
 	/**
@@ -218,6 +235,70 @@ public class PublicTransport extends FragmentActivity implements
 			}
 
 			return tabName;
+		}
+	}
+
+	/**
+	 * Async class used for retrieving the Public Transport route
+	 * 
+	 * @author Zdravko Nestorov
+	 */
+	public class RetrievePTRoute extends AsyncTask<Void, Void, Intent> {
+
+		private Activity context;
+		private ProgressDialog progressDialog;
+
+		public RetrievePTRoute(Activity context, ProgressDialog progressDialog) {
+			this.context = context;
+			this.progressDialog = progressDialog;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						public void onCancel(DialogInterface dialog) {
+							cancel(true);
+						}
+					});
+			progressDialog.show();
+		}
+
+		@Override
+		protected Intent doInBackground(Void... params) {
+			Intent ptMapRouteIntent = new Intent(context, StationRouteMap.class);
+			DirectionsEntity ptDirectionsEntityTransfer = new DirectionsEntity(
+					ptDirectionsEntity, mViewPager.getCurrentItem());
+			ptMapRouteIntent.putExtra(Constants.BUNDLE_STATION_ROUTE_MAP,
+					ptDirectionsEntityTransfer);
+
+			return ptMapRouteIntent;
+		}
+
+		@Override
+		protected void onPostExecute(Intent ptMapRouteIntent) {
+			context.startActivity(ptMapRouteIntent);
+
+			try {
+				progressDialog.dismiss();
+			} catch (Exception e) {
+				// Workaround used just in case the orientation is changed once
+				// retrieving info
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+
+			try {
+				progressDialog.dismiss();
+			} catch (Exception e) {
+				// Workaround used just in case when this activity is destroyed
+				// before the dialog
+			}
 		}
 	}
 }

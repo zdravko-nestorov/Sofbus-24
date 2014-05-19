@@ -24,8 +24,10 @@ public class DirectionsEntity implements Serializable {
 	public DirectionsEntity() {
 	}
 
-	public DirectionsEntity(DirectionsEntity directionsEntity) {
+	public DirectionsEntity(DirectionsEntity directionsEntity,
+			int activeDirection) {
 		this.vehicle = directionsEntity.getVehicle();
+		this.activeDirection = activeDirection;
 		this.directionsNames = directionsEntity.getDirectionsNames();
 		this.directionsList = directionsEntity.getDirectionsList();
 	}

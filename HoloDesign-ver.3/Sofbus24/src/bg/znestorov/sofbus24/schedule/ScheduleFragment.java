@@ -123,8 +123,8 @@ public class ScheduleFragment extends ListFragment {
 		directionsList.add((ArrayList<Station>) mls.getMetroDirection2());
 
 		Intent publicTransport = new Intent(context, PublicTransport.class);
-		DirectionsEntity ptDirectionsEntity = new DirectionsEntity(vehicle,
-				1, directionsNames, directionsList);
+		DirectionsEntity ptDirectionsEntity = new DirectionsEntity(vehicle, 0,
+				directionsNames, directionsList);
 		publicTransport.putExtra(Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE,
 				ptDirectionsEntity);
 		startActivity(publicTransport);

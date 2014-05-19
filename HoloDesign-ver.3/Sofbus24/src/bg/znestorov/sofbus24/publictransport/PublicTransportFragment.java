@@ -3,7 +3,6 @@ package bg.znestorov.sofbus24.publictransport;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
@@ -11,7 +10,6 @@ import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
@@ -21,14 +19,13 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.main.StationRouteMap;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
 /**
- * Metro Fragment containing information about the metro stations
+ * Public Transport Fragment containing information about the stations
  * 
  * @author Zdravko Nestorov
  * @version 1.0
@@ -71,8 +68,8 @@ public class PublicTransportFragment extends ListFragment {
 		context = getActivity();
 
 		// Get the Fragment position and MetroStation object from the Bundle
-		ptDirectionsEntity = (DirectionsEntity) getArguments()
-				.getSerializable(Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE);
+		ptDirectionsEntity = (DirectionsEntity) getArguments().getSerializable(
+				Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE);
 
 		// Get the stationSearchText from the Bundle (savedInstanceState)
 		if (savedInstanceState != null) {
@@ -91,8 +88,8 @@ public class PublicTransportFragment extends ListFragment {
 
 		// Create the ListAdapter
 		int activeDirection = ptDirectionsEntity.getActiveDirection();
-		ArrayList<Station> directionList = ptDirectionsEntity.getDirectionsList()
-				.get(activeDirection);
+		ArrayList<Station> directionList = ptDirectionsEntity
+				.getDirectionsList().get(activeDirection);
 		ptAdapter = new PublicTransportAdapter(context, directionList);
 
 		// Set the ListAdapter
@@ -107,23 +104,6 @@ public class PublicTransportFragment extends ListFragment {
 
 		savedInstanceState.putString(BUNDLE_STATION_SEARCH_TEXT,
 				stationSearchText);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_pt_route_map:
-			Intent ptMapRouteIntent = new Intent(context, StationRouteMap.class);
-			int activeDirection = ptDirectionsEntity.getActiveDirection();
-			ArrayList<Station> directionList = ptDirectionsEntity.getDirectionsList()
-					.get(activeDirection);
-			ptMapRouteIntent.putExtra(Constants.BUNDLE_STATION_ROUTE_MAP,
-					directionList);
-			this.startActivity(ptMapRouteIntent);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
 	}
 
 	@Override
@@ -166,9 +146,10 @@ public class PublicTransportFragment extends ListFragment {
 
 				// Set a message if the list is empty
 				if (ptAdapter.isEmpty()) {
-					int activeDirection = ptDirectionsEntity.getActiveDirection();
-					String directionName = ptDirectionsEntity.getDirectionsNames()
-							.get(activeDirection);
+					int activeDirection = ptDirectionsEntity
+							.getActiveDirection();
+					String directionName = ptDirectionsEntity
+							.getDirectionsNames().get(activeDirection);
 
 					emptyList.setText(Html.fromHtml(String.format(
 							getString(R.string.pt_empty_list),

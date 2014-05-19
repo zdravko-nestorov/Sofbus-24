@@ -5,7 +5,9 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
@@ -150,43 +152,12 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.metro_menu_map_route:
-			Intent metroMapRouteIntent = new Intent(context,
-					StationRouteMap.class);
-
-			Vehicle metroVehicle;
-			int activeMetroDirection;
-			DirectionsEntity metroDirectionsEntity;
-
-			ArrayList<String> metroDirectionsNames = new ArrayList<String>();
-			metroDirectionsNames.add(getDirectionName(VehicleType.METRO1,
-					false, true));
-			metroDirectionsNames.add(getDirectionName(VehicleType.METRO2,
-					false, true));
-
-			ArrayList<ArrayList<Station>> metroDirectionsList = new ArrayList<ArrayList<Station>>();
-			metroDirectionsList.add((ArrayList<Station>) metroDirection1);
-			metroDirectionsList.add((ArrayList<Station>) metroDirection2);
-
-			switch (stationType) {
-			case METRO1:
-				metroVehicle = new Vehicle("1", VehicleType.METRO1,
-						getDirectionName(stationType, false, true));
-				activeMetroDirection = 0;
-				break;
-			default:
-				metroVehicle = new Vehicle("1", VehicleType.METRO2,
-						getDirectionName(stationType, false, true));
-				activeMetroDirection = 1;
-				break;
-			}
-
-			metroDirectionsEntity = new DirectionsEntity(metroVehicle,
-					activeMetroDirection, metroDirectionsNames,
-					metroDirectionsList);
-			metroMapRouteIntent.putExtra(Constants.BUNDLE_STATION_ROUTE_MAP,
-					metroDirectionsEntity);
-
-			context.startActivity(metroMapRouteIntent);
+			ProgressDialog progressDialog = new ProgressDialog(context);
+			progressDialog
+					.setMessage(getString(R.string.metro_menu_map_route_loading));
+			RetrieveMetroRoute retrieveMetroRoute = new RetrieveMetroRoute(
+					context, progressDialog);
+			retrieveMetroRoute.execute();
 			break;
 		}
 
@@ -507,6 +478,101 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	private void setTabInactive(TextView textView) {
 		textView.setBackgroundResource(R.drawable.inner_tab_border);
 		textView.setTextColor(getResources().getColor(R.color.inner_tab_grey));
+	}
+
+	/**
+	 * Async class used for retrieving the Metro route
+	 * 
+	 * @author Zdravko Nestorov
+	 */
+	public class RetrieveMetroRoute extends AsyncTask<Void, Void, Intent> {
+
+		private Activity context;
+		private ProgressDialog progressDialog;
+
+		public RetrieveMetroRoute(Activity context,
+				ProgressDialog progressDialog) {
+			this.context = context;
+			this.progressDialog = progressDialog;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						public void onCancel(DialogInterface dialog) {
+							cancel(true);
+						}
+					});
+			progressDialog.show();
+		}
+
+		@Override
+		protected Intent doInBackground(Void... params) {
+			Intent metroMapRouteIntent = new Intent(context,
+					StationRouteMap.class);
+
+			Vehicle metroVehicle;
+			int activeMetroDirection;
+			DirectionsEntity metroDirectionsEntity;
+
+			ArrayList<String> metroDirectionsNames = new ArrayList<String>();
+			metroDirectionsNames.add(getDirectionName(VehicleType.METRO1,
+					false, true));
+			metroDirectionsNames.add(getDirectionName(VehicleType.METRO2,
+					false, true));
+
+			ArrayList<ArrayList<Station>> metroDirectionsList = new ArrayList<ArrayList<Station>>();
+			metroDirectionsList.add((ArrayList<Station>) metroDirection1);
+			metroDirectionsList.add((ArrayList<Station>) metroDirection2);
+
+			switch (stationType) {
+			case METRO1:
+				metroVehicle = new Vehicle("1", VehicleType.METRO1,
+						getDirectionName(stationType, false, true));
+				activeMetroDirection = 0;
+				break;
+			default:
+				metroVehicle = new Vehicle("1", VehicleType.METRO2,
+						getDirectionName(stationType, false, true));
+				activeMetroDirection = 1;
+				break;
+			}
+
+			metroDirectionsEntity = new DirectionsEntity(metroVehicle,
+					activeMetroDirection, metroDirectionsNames,
+					metroDirectionsList);
+			metroMapRouteIntent.putExtra(Constants.BUNDLE_STATION_ROUTE_MAP,
+					metroDirectionsEntity);
+
+			return metroMapRouteIntent;
+		}
+
+		@Override
+		protected void onPostExecute(Intent metroMapRouteIntent) {
+			context.startActivity(metroMapRouteIntent);
+
+			try {
+				progressDialog.dismiss();
+			} catch (Exception e) {
+				// Workaround used just in case the orientation is changed once
+				// retrieving info
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+
+			try {
+				progressDialog.dismiss();
+			} catch (Exception e) {
+				// Workaround used just in case when this activity is destroyed
+				// before the dialog
+			}
+		}
 	}
 
 }

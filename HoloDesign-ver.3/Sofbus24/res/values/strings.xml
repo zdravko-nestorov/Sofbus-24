@@ -50,7 +50,7 @@
     <string name="action_cs_list_refresh">Обнови</string>
     <string name="action_cs_list_map">Карта</string>
     <!-- Public Transport -->
-    <string name="action_pt_route_map">Карта</string>
+    <string name="action_pt_route_map">Маршрут</string>
 
     <!-- Closest Stations List -->
     <string name="cs_list_title">Най-близки спирки</string>
@@ -142,6 +142,7 @@
     <string name="pt_tram" formatted="false">Трамвай №%s</string>
     <string name="pt_item_station_number_text" formatted="false">Спирка номер: %s</string>
     <string name="pt_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
+    <string name="pt_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
 
     <!-- Metro Fragment -->
     <string name="metro_search_hint">Търсене по име или номер</string>
@@ -154,6 +155,7 @@
     <string name="metro_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
     <string name="metro_item_empty_list" formatted="false"><![CDATA[Няма намерени метростанции за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
     <string name="metro_menu_map_route">Маршрут</string>
+    <string name="metro_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
     <string name="metro_loading_schedule" formatted="false"><![CDATA[Извличане на разписанието за спирка <b><i>%s (%s)</b></i>...]]></string>
     <string name="metro_schedule_refresh" formatted="false"><![CDATA[Обновяване на оставащото време...]]></string>
 

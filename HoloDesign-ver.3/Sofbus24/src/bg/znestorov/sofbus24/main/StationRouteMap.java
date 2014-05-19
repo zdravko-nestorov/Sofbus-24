@@ -14,6 +14,7 @@ import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -67,11 +68,24 @@ public class StationRouteMap extends Activity {
 			directionsEntity = (DirectionsEntity) extras
 					.get(Constants.BUNDLE_STATION_ROUTE_MAP);
 
+			// Get the needed fields from the bundle object to form the action
+			// bar title and subtitle
+			Vehicle vehicle = directionsEntity.getVehicle();
+			VehicleType stationType = vehicle.getType();
+			int ptActiveDirection = directionsEntity.getActiveDirection();
+			String directionName = directionsEntity.getDirectionsNames().get(
+					ptActiveDirection);
+
+			// Set ActionBar title and subtitle
+			actionBar.setTitle(getLineName(vehicle));
+			actionBar.setSubtitle(directionName);
+
 			// Check the type of the bundle object
-			VehicleType stationType = directionsEntity.getVehicle().getType();
 			if (VehicleType.METRO1.equals(stationType)
 					|| VehicleType.METRO2.equals(stationType)) {
-				processListOfMetroStationObjects(stationType);
+				processListOfMetroStationObjects();
+			} else {
+				processListOfPTStationObjects();
 			}
 		}
 	}
@@ -112,21 +126,14 @@ public class StationRouteMap extends Activity {
 
 	/**
 	 * Process the list of MetroStation objects
-	 * 
-	 * @param stationType
-	 *            the type of the Stations
 	 */
-	private void processListOfMetroStationObjects(VehicleType stationType) {
+	private void processListOfMetroStationObjects() {
 		// Get the active direction parameters
 		int metroActiveDirection = directionsEntity.getActiveDirection();
 		String metroDirectionName = directionsEntity.getDirectionsNames().get(
 				metroActiveDirection);
 		ArrayList<Station> metroDirectionStations = directionsEntity
 				.getDirectionsList().get(metroActiveDirection);
-
-		// Set ActionBar title and subtitle
-		actionBar.setTitle(getLineName(stationType));
-		actionBar.setSubtitle(metroDirectionName);
 
 		// Create an object consisted of a set of all points of the route
 		PolylineOptions metroRouteOptionsM1 = new PolylineOptions().width(4)
@@ -206,23 +213,94 @@ public class StationRouteMap extends Activity {
 	}
 
 	/**
-	 * Get the direction name and format it if needed via the vehicle type. If
-	 * now vehicle type is entered - get the default one
-	 * 
-	 * @param stationType
-	 *            the vehicle type (in case of current active tab use the global
-	 *            variable - vehicleType)
-	 * @return the direction name
+	 * Process the list of Public Transport (busses, trolleys and trams) objects
 	 */
-	private String getLineName(VehicleType stationType) {
+	private void processListOfPTStationObjects() {
+		// Get the active direction parameters
+		int ptActiveDirection = directionsEntity.getActiveDirection();
+		String ptDirectionName = directionsEntity.getDirectionsNames().get(
+				ptActiveDirection);
+		ArrayList<Station> ptDirectionStations = directionsEntity
+				.getDirectionsList().get(ptActiveDirection);
+
+		// Create an object consisted of a set of all points of the route
+		PolylineOptions ptRouteOptions = new PolylineOptions().width(4).color(
+				Color.DKGRAY);
+
+		// Process all stations of the public transport route
+		for (int i = 0; i < ptDirectionStations.size(); i++) {
+			Station ptStation = ptDirectionStations.get(i);
+
+			// Create the marker over the map
+			try {
+				LatLng msLocation = new LatLng(Double.parseDouble(ptStation
+						.getLat()), Double.parseDouble(ptStation.getLon()));
+
+				// Add the msLocation to the appropriate route options object
+				ptRouteOptions.add(msLocation);
+
+				// Create a marker on the msLocation and set some options
+				MarkerOptions stationMarkerOptions = new MarkerOptions()
+						.position(msLocation)
+						.title(String.format(ptStation.getName() + " (%s)",
+								ptStation.getNumber()))
+						.snippet(ptDirectionName)
+						.icon(BitmapDescriptorFactory
+								.fromResource(getMarkerIcon(ptStation.getType())));
+				stationMap.addMarker(stationMarkerOptions);
+			} catch (NumberFormatException nfe) {
+				// In case no coordinates are found for the station
+			}
+		}
+
+		// Set a click listener over the markers'snippets
+		stationMap
+				.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+					@Override
+					public void onInfoWindowClick(Marker marker) {
+						// TODO: Get the vehicle schedule
+					}
+				});
+
+		// Draw a line between all the markers
+		stationMap.addPolyline(ptRouteOptions);
+	}
+
+	/**
+	 * Process the vehicle type and format the action bar title (for PT (public
+	 * transport) - [line name] ¹[line number], and for METRO - [line number])
+	 * 
+	 * @param vehicle
+	 *            the chosen vehicle
+	 * @return the direction name in format<br>
+	 *         for PT (public transport) - [line name] ¹[line number], and for
+	 *         METRO - [line number]
+	 */
+	private String getLineName(Vehicle vehicle) {
 		String lineName;
 
-		switch (stationType) {
+		switch (vehicle.getType()) {
+		case BUS:
+			lineName = String.format(getString(R.string.pt_bus),
+					vehicle.getNumber());
+			break;
+		case TROLLEY:
+			lineName = String.format(getString(R.string.pt_trolley),
+					vehicle.getNumber());
+			break;
+		case TRAM:
+			lineName = String.format(getString(R.string.pt_tram),
+					vehicle.getNumber());
+			break;
 		case METRO1:
 			lineName = getString(R.string.metro_search_tab_direction1);
 			break;
+		case METRO2:
+			lineName = getString(R.string.metro_search_tab_direction1);
+			break;
 		default:
-			lineName = getString(R.string.metro_search_tab_direction2);
+			lineName = String.format(getString(R.string.pt_bus),
+					vehicle.getNumber());
 			break;
 		}
 
