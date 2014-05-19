@@ -21,7 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
-import bg.znestorov.sofbus24.entity.ScheduleFragmentEntity;
+import bg.znestorov.sofbus24.entity.ScheduleEntity;
 import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.metro.MetroScheduleFragment;
@@ -338,9 +338,9 @@ public class MetroSchedule extends FragmentActivity {
 		Fragment fragment;
 
 		if (savedInstanceState == null) {
-			ScheduleFragmentEntity mfe = new ScheduleFragmentEntity(
+			ScheduleEntity metroScheduleEntity = new ScheduleEntity(
 					formattedScheduleList, isActive, scheduleIndex);
-			fragment = MetroScheduleFragment.newInstance(mfe);
+			fragment = MetroScheduleFragment.newInstance(metroScheduleEntity);
 		} else {
 			fragment = getSupportFragmentManager().findFragmentByTag(
 					FRAGMENT_TAG_NAME);

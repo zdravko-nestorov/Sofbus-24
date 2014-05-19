@@ -1,10 +1,7 @@
-package bg.znestorov.sofbus24.publictransport;
+package bg.znestorov.sofbus24.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.Vehicle;
 
 /**
  * Used for transferring information from ScheduleFragment (HomeScreen) to the
@@ -14,7 +11,7 @@ import bg.znestorov.sofbus24.entity.Vehicle;
  * @version 1.0
  * 
  */
-public class PublicTransportDirections implements Serializable {
+public class DirectionsEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,16 +21,16 @@ public class PublicTransportDirections implements Serializable {
 	private ArrayList<String> directionsNames;
 	private ArrayList<ArrayList<Station>> directionsList;
 
-	public PublicTransportDirections() {
+	public DirectionsEntity() {
 	}
 
-	public PublicTransportDirections(PublicTransportDirections ptDirections) {
-		this.vehicle = ptDirections.getVehicle();
-		this.directionsNames = ptDirections.getDirectionsNames();
-		this.directionsList = ptDirections.getDirectionsList();
+	public DirectionsEntity(DirectionsEntity directionsEntity) {
+		this.vehicle = directionsEntity.getVehicle();
+		this.directionsNames = directionsEntity.getDirectionsNames();
+		this.directionsList = directionsEntity.getDirectionsList();
 	}
 
-	public PublicTransportDirections(Vehicle vehicle, int activeDirection,
+	public DirectionsEntity(Vehicle vehicle, int activeDirection,
 			ArrayList<String> directionsNames,
 			ArrayList<ArrayList<Station>> directionsList) {
 		this.vehicle = vehicle;

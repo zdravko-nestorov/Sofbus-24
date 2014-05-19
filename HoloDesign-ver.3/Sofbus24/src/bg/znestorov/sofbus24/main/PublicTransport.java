@@ -13,8 +13,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.Vehicle;
-import bg.znestorov.sofbus24.publictransport.PublicTransportDirections;
 import bg.znestorov.sofbus24.publictransport.PublicTransportFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 
@@ -27,7 +27,7 @@ public class PublicTransport extends FragmentActivity implements
 	private ViewPager mViewPager;
 
 	private int activeDirection;
-	private PublicTransportDirections ptDirections;
+	private DirectionsEntity ptDirectionsEntity;
 	private ArrayList<Fragment> fragmentsList = new ArrayList<Fragment>();
 
 	@Override
@@ -78,9 +78,9 @@ public class PublicTransport extends FragmentActivity implements
 	 */
 	private void initBundleInfo() {
 		Bundle extras = getIntent().getExtras();
-		ptDirections = (PublicTransportDirections) extras
+		ptDirectionsEntity = (DirectionsEntity) extras
 				.get(Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE);
-		activeDirection = ptDirections.getActiveDirection();
+		activeDirection = ptDirectionsEntity.getActiveDirection();
 	}
 
 	/**
@@ -133,7 +133,7 @@ public class PublicTransport extends FragmentActivity implements
 	 * @return the actionBar subtitle in format - [VehicleType] ¹[VehicleNumber]
 	 */
 	private String getSubtitle() {
-		Vehicle vehicle = ptDirections.getVehicle();
+		Vehicle vehicle = ptDirectionsEntity.getVehicle();
 		String subtitle;
 
 		switch (vehicle.getType()) {
@@ -163,15 +163,15 @@ public class PublicTransport extends FragmentActivity implements
 	 * direction
 	 */
 	private void createFragmentsList() {
-		PublicTransportDirections ptDirections1 = new PublicTransportDirections(
-				ptDirections);
-		ptDirections1.setActiveDirection(0);
-		fragmentsList.add(PublicTransportFragment.newInstance(ptDirections1));
+		DirectionsEntity ptDirectionsEntity1 = new DirectionsEntity(
+				ptDirectionsEntity);
+		ptDirectionsEntity1.setActiveDirection(0);
+		fragmentsList.add(PublicTransportFragment.newInstance(ptDirectionsEntity1));
 
-		PublicTransportDirections ptDirections2 = new PublicTransportDirections(
-				ptDirections);
-		ptDirections2.setActiveDirection(1);
-		fragmentsList.add(PublicTransportFragment.newInstance(ptDirections2));
+		DirectionsEntity ptDirectionsEntity2 = new DirectionsEntity(
+				ptDirectionsEntity);
+		ptDirectionsEntity2.setActiveDirection(1);
+		fragmentsList.add(PublicTransportFragment.newInstance(ptDirectionsEntity2));
 	}
 
 	/**
@@ -207,13 +207,13 @@ public class PublicTransport extends FragmentActivity implements
 
 			switch (i) {
 			case 0:
-				tabName = ptDirections.getDirectionsNames().get(0);
+				tabName = ptDirectionsEntity.getDirectionsNames().get(0);
 				break;
 			case 1:
-				tabName = ptDirections.getDirectionsNames().get(1);
+				tabName = ptDirectionsEntity.getDirectionsNames().get(1);
 				break;
 			default:
-				tabName = ptDirections.getDirectionsNames().get(0);
+				tabName = ptDirectionsEntity.getDirectionsNames().get(0);
 				break;
 			}
 

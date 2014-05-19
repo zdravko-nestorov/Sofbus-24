@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
+import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.UpdateableFragment;
 import bg.znestorov.sofbus24.entity.Vehicle;
@@ -152,18 +153,39 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 			Intent metroMapRouteIntent = new Intent(context,
 					StationRouteMap.class);
 
+			Vehicle metroVehicle;
+			int activeMetroDirection;
+			DirectionsEntity metroDirectionsEntity;
+
+			ArrayList<String> metroDirectionsNames = new ArrayList<String>();
+			metroDirectionsNames.add(getDirectionName(VehicleType.METRO1,
+					false, true));
+			metroDirectionsNames.add(getDirectionName(VehicleType.METRO2,
+					false, true));
+
+			ArrayList<ArrayList<Station>> metroDirectionsList = new ArrayList<ArrayList<Station>>();
+			metroDirectionsList.add((ArrayList<Station>) metroDirection1);
+			metroDirectionsList.add((ArrayList<Station>) metroDirection2);
+
 			switch (stationType) {
 			case METRO1:
-				metroMapRouteIntent.putExtra(
-						Constants.BUNDLE_STATION_ROUTE_MAP,
-						(ArrayList<Station>) metroDirection1);
+				metroVehicle = new Vehicle("1", VehicleType.METRO1,
+						getDirectionName(stationType, false, true));
+				activeMetroDirection = 0;
 				break;
 			default:
-				metroMapRouteIntent.putExtra(
-						Constants.BUNDLE_STATION_ROUTE_MAP,
-						(ArrayList<Station>) metroDirection2);
+				metroVehicle = new Vehicle("1", VehicleType.METRO2,
+						getDirectionName(stationType, false, true));
+				activeMetroDirection = 1;
 				break;
 			}
+
+			metroDirectionsEntity = new DirectionsEntity(metroVehicle,
+					activeMetroDirection, metroDirectionsNames,
+					metroDirectionsList);
+			metroMapRouteIntent.putExtra(Constants.BUNDLE_STATION_ROUTE_MAP,
+					metroDirectionsEntity);
+
 			context.startActivity(metroMapRouteIntent);
 			break;
 		}
@@ -322,7 +344,8 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 				if (adapter.isEmpty()) {
 					emptyList.setText(Html.fromHtml(String.format(
 							getString(R.string.metro_item_empty_list),
-							searchText, getDirectionName(stationType, false))));
+							searchText,
+							getDirectionName(stationType, false, false))));
 				}
 			}
 
@@ -364,10 +387,14 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	 *            the vehicle type (in case of current active tab use the global
 	 *            variable - vehicleType)
 	 * @param formatted
-	 *            if the name should be formatted
+	 *            if the direction name should be formatted
+	 * @param truncated
+	 *            if the direction name should be truncated (the middle part to
+	 *            be removed)
 	 * @return the direction name
 	 */
-	private String getDirectionName(VehicleType vehicleType, boolean formatted) {
+	private String getDirectionName(VehicleType vehicleType, boolean formatted,
+			boolean truncated) {
 		// If no vehicle type is passed as a parameter, set the default one
 		if (vehicleType == null) {
 			vehicleType = stationType;
@@ -381,6 +408,14 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 		if (formatted) {
 			directionName = directionName.replaceAll("-", " - ");
 		}
+
+		// Check if the direction name should be truncated
+		if (truncated) {
+			directionName = directionName.replaceAll("-.*-", "-");
+		}
+
+		// Remove multiple spaces between words
+		directionName = directionName.trim().replaceAll(" +", " ");
 
 		return directionName;
 	}
@@ -397,7 +432,7 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 		}
 
 		Toast directionToast = Toast.makeText(context,
-				getDirectionName(stationType, true), Toast.LENGTH_SHORT);
+				getDirectionName(stationType, true, false), Toast.LENGTH_SHORT);
 		directionToast.show();
 	}
 

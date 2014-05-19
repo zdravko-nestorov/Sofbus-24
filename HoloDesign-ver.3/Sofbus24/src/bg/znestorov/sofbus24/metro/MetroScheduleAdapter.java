@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import bg.znestorov.sofbus24.entity.ScheduleFragmentEntity;
+import bg.znestorov.sofbus24.entity.ScheduleEntity;
 import bg.znestorov.sofbus24.main.R;
 
 /**
@@ -20,18 +20,19 @@ import bg.znestorov.sofbus24.main.R;
 public class MetroScheduleAdapter extends ArrayAdapter<String> {
 
 	private Activity context;
-	private ScheduleFragmentEntity mfe;
+	private ScheduleEntity metroScheduleEntity;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
 		TextView scheduleMetroHour;
 	}
 
-	public MetroScheduleAdapter(Activity context, ScheduleFragmentEntity mfe) {
-		super(context, R.layout.activity_metro_schedule_list_item, mfe
+	public MetroScheduleAdapter(Activity context,
+			ScheduleEntity metroScheduleEntity) {
+		super(context, R.layout.activity_metro_schedule_list_item, metroScheduleEntity
 				.getFormattedScheduleList());
 		this.context = context;
-		this.mfe = mfe;
+		this.metroScheduleEntity = metroScheduleEntity;
 	}
 
 	/**
@@ -58,11 +59,11 @@ public class MetroScheduleAdapter extends ArrayAdapter<String> {
 		}
 
 		// Fill the data
-		String metroSchedule = mfe.getFormattedScheduleList().get(position);
+		String metroSchedule = metroScheduleEntity.getFormattedScheduleList().get(position);
 		viewHolder.scheduleMetroHour.setText(metroSchedule);
 
 		// Check if this is the current Fragment, so mark the closest vehicle
-		if (mfe.isActive() && position == mfe.getCurrentScheduleIndex()) {
+		if (metroScheduleEntity.isActive() && position == metroScheduleEntity.getCurrentScheduleIndex()) {
 			rowView.setBackgroundColor(Color.parseColor("#80CEEA"));
 		} else {
 			// Set the bacground to each row (even or odd)

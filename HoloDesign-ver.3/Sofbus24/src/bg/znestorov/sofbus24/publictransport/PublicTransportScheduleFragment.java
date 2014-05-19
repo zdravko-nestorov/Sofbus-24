@@ -5,7 +5,7 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import bg.znestorov.sofbus24.entity.ScheduleFragmentEntity;
+import bg.znestorov.sofbus24.entity.ScheduleEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 
@@ -18,11 +18,13 @@ import bg.znestorov.sofbus24.utils.Constants;
  */
 public class PublicTransportScheduleFragment extends ListFragment {
 
-	public static PublicTransportScheduleFragment newInstance(ScheduleFragmentEntity tfe) {
+	public static PublicTransportScheduleFragment newInstance(
+			ScheduleEntity ptScheduleEntity) {
 		PublicTransportScheduleFragment publicTransportFragment = new PublicTransportScheduleFragment();
 
 		Bundle bundle = new Bundle();
-		bundle.putSerializable(Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE, tfe);
+		bundle.putSerializable(Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE,
+				ptScheduleEntity);
 		publicTransportFragment.setArguments(bundle);
 
 		return publicTransportFragment;

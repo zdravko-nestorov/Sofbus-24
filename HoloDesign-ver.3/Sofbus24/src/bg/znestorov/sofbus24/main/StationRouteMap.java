@@ -11,7 +11,7 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
-import bg.znestorov.sofbus24.databases.VehiclesDataSource;
+import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.VehicleType;
@@ -35,14 +35,13 @@ public class StationRouteMap extends Activity {
 	private Activity context;
 	private ActionBar actionBar;
 
-	private ArrayList<Station> stationsList;
+	private DirectionsEntity directionsEntity;
 
 	private GoogleMap stationMap;
 	private final LatLng centerStationLocation = new LatLng(
 			Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE,
 			Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE);
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,18 +64,15 @@ public class StationRouteMap extends Activity {
 		if (stationMap != null) {
 			// Get the list of MetroStation objects from the Bundle
 			Bundle extras = getIntent().getExtras();
-			stationsList = (ArrayList<Station>) extras
+			directionsEntity = (DirectionsEntity) extras
 					.get(Constants.BUNDLE_STATION_ROUTE_MAP);
 
-			// Set ActionBar title and subtitle
-			actionBar.setTitle(getLineName(stationsList.get(0).getType()));
-			actionBar.setSubtitle(getDirectionName(stationsList.get(0)
-					.getType()));
-
 			// Check the type of the bundle object
-			if (VehicleType.METRO1.equals(stationsList.get(0).getType())
-					|| VehicleType.METRO2.equals(stationsList.get(0).getType()))
-				processListOfMetroStationObjects();
+			VehicleType stationType = directionsEntity.getVehicle().getType();
+			if (VehicleType.METRO1.equals(stationType)
+					|| VehicleType.METRO2.equals(stationType)) {
+				processListOfMetroStationObjects(stationType);
+			}
 		}
 	}
 
@@ -116,8 +112,22 @@ public class StationRouteMap extends Activity {
 
 	/**
 	 * Process the list of MetroStation objects
+	 * 
+	 * @param stationType
+	 *            the type of the Stations
 	 */
-	private void processListOfMetroStationObjects() {
+	private void processListOfMetroStationObjects(VehicleType stationType) {
+		// Get the active direction parameters
+		int metroActiveDirection = directionsEntity.getActiveDirection();
+		String metroDirectionName = directionsEntity.getDirectionsNames().get(
+				metroActiveDirection);
+		ArrayList<Station> metroDirectionStations = directionsEntity
+				.getDirectionsList().get(metroActiveDirection);
+
+		// Set ActionBar title and subtitle
+		actionBar.setTitle(getLineName(stationType));
+		actionBar.setSubtitle(metroDirectionName);
+
 		// Create an object consisted of a set of all points of the route
 		PolylineOptions metroRouteOptionsM1 = new PolylineOptions().width(4)
 				.color(Color.RED);
@@ -125,10 +135,9 @@ public class StationRouteMap extends Activity {
 				.color(Color.BLUE);
 
 		// Process all stations of the metro route
-		for (int i = 0; i < stationsList.size(); i++) {
-			Station station = stationsList.get(i);
-			MetroStation ms = new MetroStation(station,
-					getDirectionName(station.getType()));
+		for (int i = 0; i < metroDirectionStations.size(); i++) {
+			Station station = metroDirectionStations.get(i);
+			MetroStation ms = new MetroStation(station, metroDirectionName);
 
 			// Create the marker over the map
 			try {
@@ -218,27 +227,6 @@ public class StationRouteMap extends Activity {
 		}
 
 		return lineName;
-	}
-
-	/**
-	 * Get the direction name and format it if needed via the vehicle type. If
-	 * now vehicle type is entered - get the default one
-	 * 
-	 * @param stationType
-	 *            the vehicle type (in case of current active tab use the global
-	 *            variable - vehicleType)
-	 * @return the direction name
-	 */
-	private String getDirectionName(VehicleType stationType) {
-		VehiclesDataSource vehiclesDatasource = new VehiclesDataSource(context);
-
-		vehiclesDatasource.open();
-		String directionName = vehiclesDatasource
-				.getVehiclesViaSearch(stationType, "").get(0).getDirection()
-				.replaceAll("-.*-", "-");
-		vehiclesDatasource.close();
-
-		return directionName;
 	}
 
 	/**

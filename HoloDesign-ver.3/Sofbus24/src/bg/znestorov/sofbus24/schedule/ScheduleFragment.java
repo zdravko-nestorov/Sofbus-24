@@ -21,13 +21,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
+import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.PublicTransport;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
-import bg.znestorov.sofbus24.publictransport.PublicTransportDirections;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
@@ -123,10 +123,10 @@ public class ScheduleFragment extends ListFragment {
 		directionsList.add((ArrayList<Station>) mls.getMetroDirection2());
 
 		Intent publicTransport = new Intent(context, PublicTransport.class);
-		PublicTransportDirections ptd = new PublicTransportDirections(vehicle,
+		DirectionsEntity ptDirectionsEntity = new DirectionsEntity(vehicle,
 				1, directionsNames, directionsList);
 		publicTransport.putExtra(Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE,
-				ptd);
+				ptDirectionsEntity);
 		startActivity(publicTransport);
 
 		Toast.makeText(getActivity(), vehicle.getNumber(), Toast.LENGTH_SHORT)

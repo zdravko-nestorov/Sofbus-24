@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @version 1.0
  * 
  */
-public class ScheduleFragmentEntity implements Serializable {
+public class ScheduleEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -19,7 +19,7 @@ public class ScheduleFragmentEntity implements Serializable {
 	private boolean isActive;
 	private int currentScheduleIndex;
 
-	public ScheduleFragmentEntity(ArrayList<String> metroScheduleList,
+	public ScheduleEntity(ArrayList<String> metroScheduleList,
 			boolean isActive, int currentActiveRow) {
 		this.isActive = isActive;
 		this.currentScheduleIndex = currentActiveRow;
