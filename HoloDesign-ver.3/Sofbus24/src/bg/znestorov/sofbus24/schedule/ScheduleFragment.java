@@ -110,6 +110,9 @@ public class ScheduleFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Vehicle vehicle = (Vehicle) getListAdapter().getItem(position);
 
+		Toast.makeText(getActivity(), vehicle.getNumber(), Toast.LENGTH_SHORT)
+				.show();
+
 		// TODO: Retrieve information about the vehicle
 		ArrayList<String> directionsNames = new ArrayList<String>();
 		directionsNames.add(loadVehiclesList(VehicleType.METRO1, "").get(0)
@@ -128,9 +131,6 @@ public class ScheduleFragment extends ListFragment {
 		publicTransport.putExtra(Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE,
 				ptDirectionsEntity);
 		startActivity(publicTransport);
-
-		Toast.makeText(getActivity(), vehicle.getNumber(), Toast.LENGTH_SHORT)
-				.show();
 	}
 
 	/**

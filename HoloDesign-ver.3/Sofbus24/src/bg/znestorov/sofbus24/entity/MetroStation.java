@@ -15,6 +15,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * Class representing each station of the metro (add direction and schedule)
+ * 
+ * @author Zdravko Nestorov
+ * 
+ */
 public class MetroStation extends Station implements Serializable {
 
 	private static final long serialVersionUID = 1L;

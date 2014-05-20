@@ -53,6 +53,7 @@
         <activity
             android:name="bg.znestorov.sofbus24.main.PublicTransport"
             android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name="bg.znestorov.sofbus24.main.PublicTransportSchedule" />
     </application>
 
 </manifest>

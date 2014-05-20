@@ -223,10 +223,6 @@ public class StationRouteMap extends Activity {
 		ArrayList<Station> ptDirectionStations = directionsEntity
 				.getDirectionsList().get(ptActiveDirection);
 
-		// Create an object consisted of a set of all points of the route
-		PolylineOptions ptRouteOptions = new PolylineOptions().width(4).color(
-				Color.DKGRAY);
-
 		// Process all stations of the public transport route
 		for (int i = 0; i < ptDirectionStations.size(); i++) {
 			Station ptStation = ptDirectionStations.get(i);
@@ -235,9 +231,6 @@ public class StationRouteMap extends Activity {
 			try {
 				LatLng msLocation = new LatLng(Double.parseDouble(ptStation
 						.getLat()), Double.parseDouble(ptStation.getLon()));
-
-				// Add the msLocation to the appropriate route options object
-				ptRouteOptions.add(msLocation);
 
 				// Create a marker on the msLocation and set some options
 				MarkerOptions stationMarkerOptions = new MarkerOptions()
@@ -261,9 +254,6 @@ public class StationRouteMap extends Activity {
 						// TODO: Get the vehicle schedule
 					}
 				});
-
-		// Draw a line between all the markers
-		stationMap.addPolyline(ptRouteOptions);
 	}
 
 	/**
@@ -316,7 +306,7 @@ public class StationRouteMap extends Activity {
 	 */
 	private void animateMapFocus(LatLng stationLocation) {
 		CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(stationLocation).zoom(12).build();
+				.target(stationLocation).zoom(11.5f).build();
 		stationMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
 	}

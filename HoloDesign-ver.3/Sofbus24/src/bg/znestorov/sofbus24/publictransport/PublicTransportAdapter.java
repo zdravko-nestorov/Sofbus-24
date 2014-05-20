@@ -33,6 +33,9 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	private Activity context;
 	private FavouritesDataSource favouritesDataSource;
 
+	private TextView emptyList;
+	private String directionName;
+
 	private List<Station> originalStations;
 	private List<Station> filteredStations;
 
@@ -45,10 +48,15 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 		TextView stationNumber;
 	}
 
-	public PublicTransportAdapter(Activity context, List<Station> stations) {
+	public PublicTransportAdapter(Activity context, TextView emptyList,
+			String directionName, List<Station> stations) {
 		super(context, R.layout.activity_public_transport_list_item, stations);
+
 		this.context = context;
 		this.favouritesDataSource = new FavouritesDataSource(context);
+
+		this.emptyList = emptyList;
+		this.directionName = directionName;
 
 		this.originalStations = stations;
 		this.filteredStations = stations;
@@ -100,6 +108,11 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	@Override
 	public int getCount() {
 		return filteredStations != null ? filteredStations.size() : 0;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return filteredStations.isEmpty();
 	}
 
 	/**
@@ -165,6 +178,12 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 					FilterResults filterResults) {
 				filteredStations = (ArrayList<Station>) filterResults.values;
 				notifyDataSetChanged();
+
+				if (isEmpty()) {
+					emptyList.setText(Html.fromHtml(String.format(
+							context.getString(R.string.pt_empty_list),
+							constraint, directionName)));
+				}
 			}
 		};
 	}

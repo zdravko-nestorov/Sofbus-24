@@ -3,6 +3,7 @@ package bg.znestorov.sofbus24.publictransport;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
@@ -15,11 +16,14 @@ import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
@@ -34,6 +38,7 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 public class PublicTransportFragment extends ListFragment {
 
 	private Activity context;
+	private String language;
 
 	private DirectionsEntity ptDirectionsEntity;
 	private PublicTransportAdapter ptAdapter;
@@ -64,8 +69,10 @@ public class PublicTransportFragment extends ListFragment {
 		View myFragmentView = inflater.inflate(
 				R.layout.activity_public_transport_fragment, container, false);
 
-		// Set the context (activity) associated with this fragment
+		// Set the context (activity) associated with this fragment and get the
+		// current application language
 		context = getActivity();
+		language = LanguageChange.getUserLocale(context);
 
 		// Get the Fragment position and MetroStation object from the Bundle
 		ptDirectionsEntity = (DirectionsEntity) getArguments().getSerializable(
@@ -88,9 +95,12 @@ public class PublicTransportFragment extends ListFragment {
 
 		// Create the ListAdapter
 		int activeDirection = ptDirectionsEntity.getActiveDirection();
+		String directionName = ptDirectionsEntity.getDirectionsNames().get(
+				activeDirection);
 		ArrayList<Station> directionList = ptDirectionsEntity
 				.getDirectionsList().get(activeDirection);
-		ptAdapter = new PublicTransportAdapter(context, directionList);
+		ptAdapter = new PublicTransportAdapter(context, emptyList,
+				directionName, directionList);
 
 		// Set the ListAdapter
 		setListAdapter(ptAdapter);
@@ -110,10 +120,15 @@ public class PublicTransportFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Station station = (Station) getListAdapter().getItem(position);
 
-		// TODO: Retrieve information about the vehicle
-
-		String toastText = station.getName() + " " + station.getNumber();
-		Toast.makeText(getActivity(), toastText, Toast.LENGTH_SHORT).show();
+		// TODO: Do it for public transport (now it is in testing phase)
+		// Getting the Metro schedule from the station URL address
+		ProgressDialog progressDialog = new ProgressDialog(context);
+		progressDialog.setMessage(Html.fromHtml(String.format(
+				getString(R.string.metro_loading_schedule), station.getName(),
+				station.getNumber())));
+		RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
+				context, progressDialog, station);
+		retrieveMetroSchedule.execute();
 	}
 
 	/**
@@ -142,19 +157,15 @@ public class PublicTransportFragment extends ListFragment {
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				stationSearchText = searchEditText.getText().toString();
-				ptAdapter.getFilter().filter(stationSearchText);
-
-				// Set a message if the list is empty
-				if (ptAdapter.isEmpty()) {
-					int activeDirection = ptDirectionsEntity
-							.getActiveDirection();
-					String directionName = ptDirectionsEntity
-							.getDirectionsNames().get(activeDirection);
-
-					emptyList.setText(Html.fromHtml(String.format(
-							getString(R.string.pt_empty_list),
-							stationSearchText, directionName)));
+				if ("bg".equals(language)) {
+					stationSearchText = TranslatorLatinToCyrillic.translate(
+							context, stationSearchText);
+				} else {
+					stationSearchText = TranslatorCyrillicToLatin.translate(
+							context, stationSearchText);
 				}
+
+				ptAdapter.getFilter().filter(stationSearchText);
 			}
 
 			@Override

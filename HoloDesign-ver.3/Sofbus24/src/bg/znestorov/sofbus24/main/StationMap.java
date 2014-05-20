@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import bg.znestorov.sofbus24.entity.MetroStation;
+import bg.znestorov.sofbus24.entity.PublicTransportStation;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -22,8 +23,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class StationMap extends Activity {
 
 	private ActionBar actionBar;
-
-	private MetroStation ms;
 
 	private GoogleMap stationMap;
 	private LatLng stationLocation;
@@ -49,9 +48,7 @@ public class StationMap extends Activity {
 					.get(Constants.BUNDLE_STATION_MAP);
 
 			// Set ActionBar title and subtitle
-			actionBar.setTitle(String.format(
-					getString(R.string.metro_item_station_number_text_sign),
-					stationBundle.getNumber()));
+			actionBar.setTitle(getActionBarTitle(stationBundle));
 			actionBar.setSubtitle(stationBundle.getName());
 
 			// Check if the station has coordinates in the DB
@@ -70,8 +67,11 @@ public class StationMap extends Activity {
 
 			// Check the type of the bundle object
 			if (stationBundle instanceof MetroStation) {
-				ms = (MetroStation) stationBundle;
-				processMetroStationObject();
+				MetroStation metroStation = (MetroStation) stationBundle;
+				processMetroStationObject(metroStation);
+			} else {
+				PublicTransportStation ptStation = (PublicTransportStation) stationBundle;
+				processPTStationObject(ptStation);
 			}
 		}
 	}
@@ -112,14 +112,33 @@ public class StationMap extends Activity {
 
 	/**
 	 * Process the MetroStation object
+	 * 
+	 * @param metroStation
+	 *            the choosen metro station
 	 */
-	private void processMetroStationObject() {
+	private void processMetroStationObject(MetroStation metroStation) {
 		MarkerOptions stationMarkerOptions = new MarkerOptions()
 				.position(stationLocation)
-				.title(String.format(ms.getName() + " (%s)", ms.getNumber()))
-				.snippet(ms.getDirection().replaceAll("-.*-", "-"))
-				.icon(BitmapDescriptorFactory.fromResource(getMarkerIcon(ms
-						.getType())));
+				.title(String.format(metroStation.getName() + " (%s)",
+						metroStation.getNumber()))
+				.snippet(metroStation.getDirection().replaceAll("-.*-", "-"))
+				.icon(BitmapDescriptorFactory
+						.fromResource(getMarkerIcon(metroStation.getType())));
+		Marker stationMarker = stationMap.addMarker(stationMarkerOptions);
+		stationMarker.showInfoWindow();
+	}
+
+	/**
+	 * Process the PublicTranspStation object
+	 */
+	private void processPTStationObject(PublicTransportStation ptStation) {
+		MarkerOptions stationMarkerOptions = new MarkerOptions()
+				.position(stationLocation)
+				.title(String.format(ptStation.getName() + " (%s)",
+						ptStation.getNumber()))
+				.snippet(ptStation.getDirection().replaceAll("-.*-", "-"))
+				.icon(BitmapDescriptorFactory
+						.fromResource(getMarkerIcon(ptStation.getType())));
 		Marker stationMarker = stationMap.addMarker(stationMarkerOptions);
 		stationMarker.showInfoWindow();
 	}
@@ -136,6 +155,32 @@ public class StationMap extends Activity {
 				.target(stationLocation).zoom(17).build();
 		stationMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
+	}
+
+	/**
+	 * Form the ActionBar title, according to the type of the vehicle and its
+	 * number
+	 * 
+	 * @param station
+	 *            the choosed station
+	 * @return the action bar title
+	 */
+	private String getActionBarTitle(Station station) {
+		String stationText;
+
+		switch (station.getType()) {
+		case METRO1:
+		case METRO2:
+			stationText = getString(R.string.metro_item_station_number_text_sign);
+			break;
+		default:
+			stationText = getString(R.string.pt_item_station_number_text_sign);
+			break;
+		}
+
+		String actionBarTitle = String.format(stationText, station.getNumber());
+
+		return actionBarTitle;
 	}
 
 	/**
