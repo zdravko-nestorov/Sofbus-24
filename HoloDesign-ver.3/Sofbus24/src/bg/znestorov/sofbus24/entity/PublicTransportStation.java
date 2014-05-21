@@ -88,8 +88,8 @@ public class PublicTransportStation extends Station implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PublicTransportStation [direction=" + direction + ", schedule="
-				+ schedule + "]";
+		return getClass().getName() + " {\n\tdirection: " + direction
+				+ "\n\tschedule: " + schedule + "\n}";
 	}
 
 }

@@ -95,8 +95,8 @@ public class Station implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Station [number=" + number + ", name=" + name + ", lat=" + lat
-				+ ", lon=" + lon + ", type=" + type + ", customField="
-				+ customField + "]";
+		return getClass().getName() + " {\n\tnumber: " + number + "\n\tname: "
+				+ name + "\n\tlat: " + lat + "\n\tlon: " + lon + "\n\ttype: "
+				+ type + "\n\tcustomField: " + customField + "\n}";
 	}
 }

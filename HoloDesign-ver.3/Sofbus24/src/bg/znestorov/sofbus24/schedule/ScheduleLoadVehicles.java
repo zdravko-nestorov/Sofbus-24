@@ -69,8 +69,8 @@ public class ScheduleLoadVehicles {
 
 	@Override
 	public String toString() {
-		return "ScheduleLoadVehicles [busses=" + busses + ", trolleys="
-				+ trolleys + ", trams=" + trams + "]";
+		return getClass().getName() + " {\n\tbusses: " + busses
+				+ "\n\ttrolleys: " + trolleys + "\n\ttrams: " + trams + "\n}";
 	}
 
 }

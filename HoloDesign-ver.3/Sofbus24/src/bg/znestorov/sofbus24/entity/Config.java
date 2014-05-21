@@ -304,15 +304,17 @@ public class Config implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Config [versionCode=" + versionCode + ", versionName="
-				+ versionName + ", favouritesVisibility=" + favouritesVisibilå
-				+ ", facouritesPosition=" + favouritesPosition
-				+ ", searchVisibility=" + searchVisibile + ", searchPosition="
-				+ searchPosition + ", scheduleVisibility=" + scheduleVisibile
-				+ ", schedulePosition=" + schedulePosition
-				+ ", metroVisibility=" + metroVisibile + ", metroPosition="
-				+ metroPosition + ", stationsDbVersion=" + stationsDbVersion
-				+ ", vehiclesDbVersion=" + vehiclesDbVersion + "]";
+		return getClass().getName() + " {\n\tversionCode: " + versionCode
+				+ "\n\tversionName: " + versionName
+				+ "\n\tfavouritesVisibilå: " + favouritesVisibilå
+				+ "\n\tfavouritesPosition: " + favouritesPosition
+				+ "\n\tsearchVisibile: " + searchVisibile
+				+ "\n\tsearchPosition: " + searchPosition
+				+ "\n\tscheduleVisibile: " + scheduleVisibile
+				+ "\n\tschedulePosition: " + schedulePosition
+				+ "\n\tmetroVisibile: " + metroVisibile + "\n\tmetroPosition: "
+				+ metroPosition + "\n\tstationsDbVersion: " + stationsDbVersion
+				+ "\n\tvehiclesDbVersion: " + vehiclesDbVersion + "\n}";
 	}
 
 }

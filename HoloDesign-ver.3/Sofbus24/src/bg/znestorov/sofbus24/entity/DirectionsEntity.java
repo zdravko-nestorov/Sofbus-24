@@ -79,9 +79,10 @@ public class DirectionsEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PublicTransportDirections [vehicle=" + vehicle
-				+ ", activeDirection=" + activeDirection + ", directionsNames="
-				+ directionsNames + ", directionsList=" + directionsList + "]";
+		return getClass().getName() + " {\n\tvehicle: " + vehicle
+				+ "\n\tactiveDirection: " + activeDirection
+				+ "\n\tdirectionsNames: " + directionsNames
+				+ "\n\tdirectionsList: " + directionsList + "\n}";
 	}
 
 }

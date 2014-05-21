@@ -1,6 +1,7 @@
 package bg.znestorov.sofbus24.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Class representing a vehicle structure with all common fields (implements
@@ -17,6 +18,7 @@ public class Vehicle implements Serializable {
 	private String number;
 	private VehicleType type;
 	private String direction;
+	private ArrayList<String> arrivalTimes;
 
 	public Vehicle() {
 	}
@@ -25,6 +27,15 @@ public class Vehicle implements Serializable {
 		this.number = number;
 		this.type = type;
 		this.direction = direction;
+		this.arrivalTimes = new ArrayList<String>();
+	}
+
+	public Vehicle(String number, VehicleType type, String direction,
+			ArrayList<String> arrivalTimes) {
+		this.number = number;
+		this.type = type;
+		this.direction = direction;
+		this.arrivalTimes = arrivalTimes;
 	}
 
 	public String getNumber() {
@@ -51,10 +62,19 @@ public class Vehicle implements Serializable {
 		this.direction = direction;
 	}
 
+	public ArrayList<String> getArrivalTimes() {
+		return arrivalTimes;
+	}
+
+	public void setArrivalTimes(ArrayList<String> arrivalTimes) {
+		this.arrivalTimes = arrivalTimes;
+	}
+
 	@Override
 	public String toString() {
-		return "Vehicle [number=" + number + ", type=" + type + ", direction="
-				+ direction + "]";
+		return getClass().getName() + " {\n\tnumber: " + number + "\n\ttype: "
+				+ type + "\n\tdirection: " + direction + "\n\tarrivalTimes: "
+				+ arrivalTimes + "\n}";
 	}
 
 }

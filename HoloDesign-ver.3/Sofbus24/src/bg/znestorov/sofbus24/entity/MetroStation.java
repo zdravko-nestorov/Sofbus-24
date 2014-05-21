@@ -188,8 +188,8 @@ public class MetroStation extends Station implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MetroStation [direction=" + direction + ", holidaySchedule="
-				+ holidaySchedule + ", weekdaySchedule=" + weekdaySchedule
-				+ "]";
+		return getClass().getName() + " {\n\tdirection: " + direction
+				+ "\n\tholidaySchedule: " + holidaySchedule
+				+ "\n\tweekdaySchedule: " + weekdaySchedule + "\n}";
 	}
 }

@@ -48,8 +48,9 @@ public class HomeTab {
 
 	@Override
 	public String toString() {
-		return "HomeTabs [tabVisible=" + tabVisible + ", tabName=" + tabName
-				+ ", tabPosition=" + tabPosition + "]";
+		return getClass().getName() + " {\n\ttabVisible: " + tabVisible
+				+ "\n\ttabName: " + tabName + "\n\ttabPosition: " + tabPosition
+				+ "\n}";
 	}
 
 }

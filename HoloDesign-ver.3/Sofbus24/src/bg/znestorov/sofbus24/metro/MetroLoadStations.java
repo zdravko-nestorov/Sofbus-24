@@ -58,8 +58,9 @@ public class MetroLoadStations {
 
 	@Override
 	public String toString() {
-		return "MetroLoadStations [metroDirection1=" + metroDirection1
-				+ ", metroDirection2=" + metroDirection2 + "]";
+		return getClass().getName() + " {\n\tmetroDirection1: "
+				+ metroDirection1 + "\n\tmetroDirection2: " + metroDirection2
+				+ "\n}";
 	}
 
 }
