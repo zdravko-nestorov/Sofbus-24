@@ -33,6 +33,11 @@
     <dimen name="vb_image_height">40sp</dimen>
     <dimen name="vb_image_width">40sp</dimen>
 
+    <!-- Virtual Boards Time -->
+    <dimen name="vb_time_image_street_view_height">115sp</dimen>
+    <dimen name="vb_time_image_vehicle_height">40sp</dimen>
+    <dimen name="vb_time_image_vehicle_width">40sp</dimen>
+
     <!-- Schedule -->
     <dimen name="schedule_image_vehicle_type_height">40sp</dimen>
     <dimen name="schedule_image_vehicle_type_width">40sp</dimen>

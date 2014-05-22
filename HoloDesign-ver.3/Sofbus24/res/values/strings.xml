@@ -128,6 +128,13 @@
     <string name="vb_item_search_list" formatted="false"><![CDATA[Моля въведете вашите критерии за търсене (осъществява се на базата на <b>номера</b> или <b>името</b> на спирката). Ако търсите по име е нужно да въведете <b>поне 3 символа</b>.]]></string>
     <string name="vb_item_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
 
+    <!-- Virtual Boards Time Fragment -->
+    <string name="vb_time_bus" formatted="false">Автобус №%s</string>
+    <string name="vb_time_trolley" formatted="false">Тролей №%s</string>
+    <string name="vb_time_tram" formatted="false">Трамвай №%s</string>
+    <string name="vb_time_item_time_of_arrival" formatted="false"><![CDATA[<b>Часове на пристигане:</b> <font color="red">%s</font>]]></string>
+    <string name="vb_time_item_remaining_time" formatted="false"><![CDATA[<b>Оставащо време:</b> <font color="red">%s</font>]]></string>
+
     <!-- Schedule Fragment -->
     <string name="sch_search_hint">Търсене по номер или посока</string>
     <string name="sch_search_tab_bus">Автобуси</string>
