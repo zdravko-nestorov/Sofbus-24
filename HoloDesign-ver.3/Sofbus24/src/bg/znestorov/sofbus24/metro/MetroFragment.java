@@ -15,8 +15,6 @@ import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -143,15 +141,9 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.activity_metro_fragment_menu, menu);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.metro_menu_map_route:
+		case R.id.action_metro_map_route:
 			ProgressDialog progressDialog = new ProgressDialog(context);
 			progressDialog
 					.setMessage(getString(R.string.metro_menu_map_route_loading));

@@ -19,6 +19,9 @@ import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.Sofbus24;
+import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 
 /**
  * Array Adapted user for set each row a station from the SKGT site
@@ -31,6 +34,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 		Filterable {
 
 	private Activity context;
+	private String language;
 	private FavouritesDataSource favouritesDataSource;
 
 	private TextView emptyList;
@@ -53,6 +57,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 		super(context, R.layout.activity_public_transport_list_item, stations);
 
 		this.context = context;
+		this.language = LanguageChange.getUserLocale(context);
 		this.favouritesDataSource = new FavouritesDataSource(context);
 
 		this.emptyList = emptyList;
@@ -150,6 +155,14 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 
 					String filterString = constraint.toString().trim()
 							.toUpperCase();
+					if ("bg".equals(language)) {
+						filterString = TranslatorLatinToCyrillic.translate(
+								context, filterString);
+					} else {
+						filterString = TranslatorCyrillicToLatin.translate(
+								context, filterString);
+					}
+
 					String filterebaleName;
 					String filterebaleNumber;
 

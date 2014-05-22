@@ -29,6 +29,16 @@
         android:title="@string/action_more">
         <menu>
             <item
+                android:id="@+id/action_favourites_remove_all"
+                android:icon="@drawable/ic_menu_clear_list"
+                android:showAsAction="never"
+                android:title="@string/action_favourites_remove_all"/>
+            <item
+                android:id="@+id/action_metro_map_route"
+                android:icon="@android:drawable/ic_menu_mapmode"
+                android:showAsAction="never"
+                android:title="@string/action_metro_map_route"/>
+            <item
                 android:id="@+id/action_settings"
                 android:icon="@android:drawable/ic_menu_preferences"
                 android:showAsAction="never"

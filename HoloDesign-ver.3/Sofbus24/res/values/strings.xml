@@ -24,6 +24,8 @@
     <string name="action_closest_stations_map">Карта</string>
     <string name="action_closest_stations_list">Списък</string>
     <string name="action_more">Повече</string>
+    <string name="action_favourites_remove_all">Изтрий всички</string>
+    <string name="action_metro_map_route">Маршрут</string>
     <string name="action_edit_tabs">Начален екран</string>
     <string name="action_settints">Настройки</string>
     <string name="action_about">Информация</string>
@@ -32,7 +34,7 @@
     <string name="action_ms_refresh">Обнови</string>
     <string name="action_ms_map">Карта</string>
     <!-- Station Map -->
-    <string name="action_sm_focus">Карта</string>
+    <string name="action_sm_focus">Позиционирай</string>
     <string name="action_sm_map_mode">Режим на картата</string>
     <string name="action_sm_map_mode_normal">Нормален</string>
     <string name="action_sm_map_mode_terrain">Терен</string>
@@ -114,7 +116,6 @@
     <string name="fav_item_rename_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше преименувана на <b><i>%s (%s)</b></i>.]]></string>
     <string name="fav_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
     <string name="fav_item_empty_list" formatted="false"><![CDATA[Няма намерени спирки в секцията <b>Любими</b>. За да добавите спирката, която търсите, намерете я в някой от останалите табове и маркирайте звездата пред нея.]]></string>
-    <string name="fav_menu_remove_all">Изтрий всички</string>
     <string name="fav_menu_remove_all_confirmation" formatted="false"><![CDATA[Сигурни ли сте, че искате да премахнете всички спирки от <b>Любими?</b>]]></string>
     <string name="fav_menu_remove_all_toast" formatted="false"><![CDATA[Всички спирки бяха премахнати от секцията <b>Любими.</b>]]></string>
     <string name="fav_menu_remove_all_empty_toast" formatted="false"><![CDATA[Няма добавени спирки в секцията <b>Любими.</b>]]></string>
@@ -160,7 +161,6 @@
     <string name="metro_item_add_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>
     <string name="metro_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
     <string name="metro_item_empty_list" formatted="false"><![CDATA[Няма намерени метростанции за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
-    <string name="metro_menu_map_route">Маршрут</string>
     <string name="metro_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
     <string name="metro_loading_schedule" formatted="false"><![CDATA[Извличане на разписанието за спирка <b><i>%s (%s)</b></i>...]]></string>
     <string name="metro_schedule_refresh" formatted="false"><![CDATA[Обновяване на оставащото време...]]></string>

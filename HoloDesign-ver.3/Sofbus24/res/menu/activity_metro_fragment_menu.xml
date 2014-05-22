@@ -1,7 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/metro_menu_map_route"
-        android:title="@string/metro_menu_map_route"/>
-
-</menu>

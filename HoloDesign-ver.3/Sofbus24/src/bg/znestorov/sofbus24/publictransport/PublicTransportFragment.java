@@ -21,9 +21,6 @@ import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
-import bg.znestorov.sofbus24.utils.LanguageChange;
-import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
-import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
@@ -38,7 +35,6 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 public class PublicTransportFragment extends ListFragment {
 
 	private Activity context;
-	private String language;
 
 	private DirectionsEntity ptDirectionsEntity;
 	private PublicTransportAdapter ptAdapter;
@@ -69,10 +65,8 @@ public class PublicTransportFragment extends ListFragment {
 		View myFragmentView = inflater.inflate(
 				R.layout.activity_public_transport_fragment, container, false);
 
-		// Set the context (activity) associated with this fragment and get the
-		// current application language
+		// Set the context (activity) associated with this fragment
 		context = getActivity();
-		language = LanguageChange.getUserLocale(context);
 
 		// Get the Fragment position and MetroStation object from the Bundle
 		ptDirectionsEntity = (DirectionsEntity) getArguments().getSerializable(
@@ -157,14 +151,6 @@ public class PublicTransportFragment extends ListFragment {
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				stationSearchText = searchEditText.getText().toString();
-				if ("bg".equals(language)) {
-					stationSearchText = TranslatorLatinToCyrillic.translate(
-							context, stationSearchText);
-				} else {
-					stationSearchText = TranslatorCyrillicToLatin.translate(
-							context, stationSearchText);
-				}
-
 				ptAdapter.getFilter().filter(stationSearchText);
 			}
 

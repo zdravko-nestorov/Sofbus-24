@@ -13,8 +13,6 @@ import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -99,19 +97,13 @@ public class FavouritesFragment extends ListFragment implements
 		setListAdapter(new FavouritesStationAdapter(context, favouritesStations));
 	}
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.activity_favourites_fragment_menu, menu);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		ArrayAdapter<Station> adapter = (ArrayAdapter<Station>) getListAdapter();
 
 		switch (item.getItemId()) {
-		case R.id.favourites_menu_remove_all:
+		case R.id.action_favourites_remove_all:
 			int favouritesCount = favouritesStations.size();
 
 			// Check if the Favourites database is empty or not

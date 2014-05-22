@@ -128,6 +128,33 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	}
 
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if (mViewPager != null) {
+			int currentTab = mViewPager.getCurrentItem();
+			Fragment currentFragment = fragmentsList.get(currentTab);
+
+			MenuItem favouritesRemoveAll = menu
+					.findItem(R.id.action_favourites_remove_all);
+			MenuItem metroMapRoute = menu.findItem(R.id.action_metro_map_route);
+
+			if (currentFragment instanceof FavouritesFragment) {
+				favouritesRemoveAll.setVisible(true);
+				metroMapRoute.setVisible(false);
+			} else if (currentFragment instanceof MetroFragment) {
+				favouritesRemoveAll.setVisible(false);
+				metroMapRoute.setVisible(true);
+			} else {
+				favouritesRemoveAll.setVisible(false);
+				metroMapRoute.setVisible(false);
+			}
+
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present
 		getMenuInflater().inflate(R.menu.activity_sofbus24_actions, menu);
@@ -138,6 +165,11 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
+		// Declare that the options menu has changed, so should be recreated
+		// (make the system calls the method onPrepareOptionsMenu)
+		supportInvalidateOptionsMenu();
+
+		// Get the selected tab from the action bar
 		int tabPosition = tab.getPosition();
 
 		// When the given tab is selected, switch to the corresponding page in
