@@ -7,7 +7,7 @@
     android:paddingRight="?android:attr/scrollbarSize" >
 
     <LinearLayout
-        android:id="@+id/vb_time_item_image_layout"
+        android:id="@+id/vb_time_item_image_vehicle_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2sp"
@@ -16,38 +16,39 @@
         android:minWidth="@dimen/vb_time_image_vehicle_width" >
 
         <ImageView
-            android:id="@+id/vb_time_item_favourite"
+            android:id="@+id/vb_time_item_image_vehicle"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:contentDescription="@string/app_img_empty_content_description" />
     </LinearLayout>
 
     <TextView
-        android:id="@+id/vb_time_item_station_caption"
+        android:id="@+id/vb_time_item_vehicle_caption"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/vb_time_item_image_layout"
+        android:layout_toRightOf="@+id/vb_time_item_image_vehicle_layout"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="15sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/vb_time_item_station_distance"
+        android:id="@+id/vb_time_item_vehicle_direction"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/vb_time_item_station_caption"
-        android:layout_toRightOf="@+id/vb_time_item_image_layout"
+        android:layout_below="@+id/vb_time_item_vehicle_caption"
+        android:layout_toRightOf="@+id/vb_time_item_image_vehicle_layout"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorSecondary"
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/cs_list_item_station_distance"
+        android:id="@+id/cs_list_item_vehicle_time"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/vb_time_item_image_layout"
+        android:layout_alignLeft="@+id/vb_time_item_image_vehicle_layout"
+        android:layout_below="@+id/vb_time_item_image_vehicle_layout"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorSecondary"

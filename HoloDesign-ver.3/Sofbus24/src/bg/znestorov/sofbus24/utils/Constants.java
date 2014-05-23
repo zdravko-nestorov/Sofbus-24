@@ -25,6 +25,8 @@ public class Constants {
 	// EditTabs --> EditTabsFragment
 	public static final String BUNDLE_EDIT_TABS = "EDIT TABS";
 	public static final String BUNDLE_EDIT_TABS_RESET = "EDIT TABS RESET";
+	// VirtualBoardsFragment --> VirtualBoardsTime
+	public static final String BUNDLE_VIRTUAL_BOARDS_TIME = "VIRTUAL BOARDS TIME";
 	// ScheduleFragment --> PublicTransport --> PublicTransportFragment
 	public static final String BUNDLE_PUBLIC_TRANSPORT_SCHEDULE = "PUBLIC TRANSPORT SCHEDULE";
 	// MetroFragment --> MetroSchedule --> MetroScheduleFragment
@@ -41,12 +43,12 @@ public class Constants {
 	public static final String PREFERENCE_DEFAULT_VALUE_APP_LANGUAGE = "bg";
 	public static final String PREFERENCE_KEY_FAVOURITES_EXPANDED = "favouritesExpanded";
 	public static final boolean PREFERENCE_DEFAULT_VALUE_FAVOURITES_EXPANDED = true;
-	public static final String PREFERENCE_KEY_TIME_VEHICLES = "timeVehicles";
-	public static final String PREFERENCE_DEFAULT_VALUE_TIME_VEHICLES = "timeRemaining";
+	public static final String PREFERENCE_KEY_TIME_TYPE = "timeType";
+	public static final String PREFERENCE_DEFAULT_VALUE_TIME_TYPE = "timeRemaining";
+	public static final String PREFERENCE_KEY_TIME_SOURCE = "timeSource";
+	public static final String PREFERENCE_DEFAULT_VALUE_TIME_SOURCE = "timeSkgt";
 	public static final String PREFERENCE_KEY_CLOSEST_STATIONS = "closestStations";
 	public static final String PREFERENCE_DEFAULT_VALUE_CLOSEST_STATIONS = "8";
-	public static final String PREFERENCE_KEY_TIME_INFO_RETRIEVAL = "timeInfoRetrieval";
-	public static final String PREFERENCE_DEFAULT_VALUE_TIME_INFO_RETRIEVAL = "time_skgt";
 
 	/**
 	 * Favorites

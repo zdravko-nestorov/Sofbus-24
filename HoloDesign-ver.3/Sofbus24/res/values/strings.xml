@@ -51,6 +51,9 @@
     <!-- Closest Stations -->
     <string name="action_cs_list_refresh">Обнови</string>
     <string name="action_cs_list_map">Карта</string>
+    <!-- Virtual Boards Time -->
+    <string name="action_vb_time_refresh">Обнови</string>
+    <string name="action_vb_time_map">Карта</string>
     <!-- Public Transport -->
     <string name="action_pt_route_map">Маршрут</string>
     <string name="action_pt_reset">Нулиране</string>
@@ -75,12 +78,12 @@
     <string name="pref_category_visual_fav_title">Фаворити</string>
     <string name="pref_category_visual_fav_summary">Визуализиране на фаворитите с показана картинка от GoogleMaps StreetView</string>
     <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
-    <string name="pref_category_stations_title">Времена на градския транспорт</string>
-    <string name="pref_category_stations_summary">Оставащо време или времена на пристигане</string>
+    <string name="pref_category_stations_timeType_title">Извлечена информация</string>
+    <string name="pref_category_stations_timeType_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация</string>
+    <string name="pref_category_stations_timeSource_title">Времена на градския транспорт</string>
+    <string name="pref_category_stations_timeSource_summary">Оставащо време или времена на пристигане</string>
     <string name="pref_category_stations_closest_title">Брой най-близки спирки</string>
     <string name="pref_category_stations_closest_summary">Колко спирки да се визуализират около текущото местоположение или избрана точка</string>
-    <string name="pref_category_stations_timeInfoRetrieval_title">Извлечена информация</string>
-    <string name="pref_category_stations_timeInfoRetrieval_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация</string>
 
     <!-- Edit Tabs Fragment -->
     <string name="edit_tabs_title">Начален екран</string>
@@ -129,6 +132,8 @@
     <string name="vb_item_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
 
     <!-- Virtual Boards Time Fragment -->
+    <string name="vb_time_title">Виртуални табла</string>
+    <string name="vb_time_current_time" formatted="false">Информация към %s</string>
     <string name="vb_time_bus" formatted="false">Автобус №%s</string>
     <string name="vb_time_trolley" formatted="false">Тролей №%s</string>
     <string name="vb_time_tram" formatted="false">Трамвай №%s</string>
@@ -171,5 +176,10 @@
     <string name="metro_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
     <string name="metro_loading_schedule" formatted="false"><![CDATA[Извличане на разписанието за спирка <b><i>%s (%s)</b></i>...]]></string>
     <string name="metro_schedule_refresh" formatted="false"><![CDATA[Обновяване на оставащото време...]]></string>
+
+    <!-- Station Map Fragment -->
+    <string name="station_map_buses"><![CDATA[Автобуси: ]]></string>
+    <string name="station_map_trolleys"><![CDATA[Тролеи: ]]></string>
+    <string name="station_map_trams"><![CDATA[Трамваи: ]]></string>
 
 </resources>

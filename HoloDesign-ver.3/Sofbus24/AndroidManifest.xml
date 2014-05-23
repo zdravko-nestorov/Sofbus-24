@@ -50,6 +50,7 @@
         <activity android:name="bg.znestorov.sofbus24.main.StationRouteMap" />
         <activity android:name="bg.znestorov.sofbus24.main.MetroSchedule" />
         <activity android:name="bg.znestorov.sofbus24.main.StationMap" />
+        <activity android:name="bg.znestorov.sofbus24.main.VirtualBoardsTime" />
         <activity
             android:name="bg.znestorov.sofbus24.main.PublicTransport"
             android:windowSoftInputMode="stateHidden|adjustPan" />

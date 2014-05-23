@@ -10,14 +10,22 @@
         <item name="en">en</item>
     </string-array>
 
-    <!-- Virtual Boards Time -->
-    <string-array name="timeVehicles">
+    <!-- Virtual Boards -->
+    <string-array name="timeType">
         <item name="timeRemaining">Оставащо време</item>
         <item name="timeArrival">Времена на пристигане</item>
     </string-array>
-    <string-array name="timeVehiclesValues">
+    <string-array name="timeTypeValues">
         <item name="timeRemaining">timeRemaining</item>
         <item name="timeArrival">timeArrival</item>
+    </string-array>
+    <string-array name="timeSource">
+        <item name="timeSkgt">От сайта на СКГТ</item>
+        <item name="timeSystem">Системно време</item>
+    </string-array>
+    <string-array name="timeSourceValues">
+        <item name="timeSkgt">timeSkgt</item>
+        <item name="timeSystem">timeSystem</item>
     </string-array>
 
     <!-- Closest stations -->
@@ -34,16 +42,6 @@
         <item name="8">8</item>
         <item name="9">9</item>
         <item name="10">10</item>
-    </string-array>
-
-    <!-- Virtual Borads (Information retrieval time) -->
-    <string-array name="timeInfoRetrieval">
-        <item name="time_skgt">От сайта на СКГТ</item>
-        <item name="time_real">Системно време</item>
-    </string-array>
-    <string-array name="timeInfoRetrievalValues">
-        <item name="time_skgt">time_skgt</item>
-        <item name="time_real">time_real</item>
     </string-array>
 
 </resources>

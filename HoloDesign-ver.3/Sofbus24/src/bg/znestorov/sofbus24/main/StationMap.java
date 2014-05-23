@@ -1,5 +1,7 @@
 package bg.znestorov.sofbus24.main;
 
+import java.util.ArrayList;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,7 +10,9 @@ import android.view.MenuItem;
 import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.entity.PublicTransportStation;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.utils.Constants;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -69,9 +73,12 @@ public class StationMap extends Activity {
 			if (stationBundle instanceof MetroStation) {
 				MetroStation metroStation = (MetroStation) stationBundle;
 				processMetroStationObject(metroStation);
-			} else {
+			} else if (stationBundle instanceof PublicTransportStation) {
 				PublicTransportStation ptStation = (PublicTransportStation) stationBundle;
 				processPTStationObject(ptStation);
+			} else {
+				VirtualBoardsStation vbTimeStation = (VirtualBoardsStation) stationBundle;
+				processVBTimeStationObject(vbTimeStation);
 			}
 		}
 	}
@@ -144,6 +151,89 @@ public class StationMap extends Activity {
 	}
 
 	/**
+	 * Process the VirtualBoardsTime station object
+	 */
+	private void processVBTimeStationObject(VirtualBoardsStation vbTimeStation) {
+		MarkerOptions stationMarkerOptions = new MarkerOptions()
+				.position(stationLocation)
+				.title(String.format(vbTimeStation.getName() + " (%s)",
+						vbTimeStation.getNumber()))
+				.snippet(getPassingStationVehicles(vbTimeStation))
+				.icon(BitmapDescriptorFactory
+						.fromResource(getMarkerIcon(vbTimeStation.getType())));
+		Marker stationMarker = stationMap.addMarker(stationMarkerOptions);
+		stationMarker.showInfoWindow();
+	}
+
+	/**
+	 * Get the passing vehicles through this station and format them appropriate
+	 */
+	private String getPassingStationVehicles(VirtualBoardsStation vbTimeStation) {
+		ArrayList<Vehicle> stationVehiclesList = vbTimeStation
+				.getVehiclesList();
+
+		StringBuilder stationVehicles = new StringBuilder();
+		boolean flag_a = false;
+		boolean flag_tl = false;
+		boolean flag_tm = false;
+
+		for (int i = 0; i < stationVehiclesList.size(); i++) {
+			Vehicle stationVehicle = stationVehiclesList.get(i);
+
+			switch (stationVehicle.getType()) {
+			case BUS:
+				if (flag_a) {
+					stationVehicles.append(", ").append(
+							stationVehicle.getNumber());
+				} else {
+					flag_a = true;
+					stationVehicles.append(
+							getString(R.string.station_map_buses)).append(
+							stationVehicle.getNumber());
+				}
+				break;
+			case TROLLEY:
+				if (flag_tl) {
+					stationVehicles.append(", ").append(
+							stationVehicle.getNumber());
+				} else {
+					flag_tl = true;
+					if (flag_a) {
+						stationVehicles
+								.append("\n"
+										+ getString(R.string.station_map_trolleys))
+								.append(stationVehicle.getNumber());
+					} else {
+						stationVehicles.append(
+								getString(R.string.station_map_trolleys))
+								.append(stationVehicle.getNumber());
+					}
+				}
+				break;
+			default:
+				if (flag_tm) {
+					stationVehicles.append(", ").append(
+							stationVehicle.getNumber());
+				} else {
+					flag_tm = true;
+					if (flag_a || flag_tl) {
+						stationVehicles.append(
+								"\n" + getString(R.string.station_map_trams))
+								.append(stationVehicle.getNumber());
+					} else {
+						stationVehicles.append(
+								getString(R.string.station_map_trams)).append(
+								stationVehicle.getNumber());
+					}
+				}
+				break;
+			}
+		}
+
+		return stationVehicles.toString();
+	}
+
+	/**
 	 * Construct a CameraPosition focusing on Mountain View and animate the
 	 * camera to that position
 	 * 
@@ -202,6 +292,9 @@ public class StationMap extends Activity {
 			break;
 		case TRAM:
 			markerIcon = R.drawable.ic_tram_map_marker;
+			break;
+		case BTT:
+			markerIcon = R.drawable.ic_station_map_marker;
 			break;
 		case METRO1:
 		case METRO2:
