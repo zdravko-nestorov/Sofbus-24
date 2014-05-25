@@ -51,18 +51,16 @@ public class Constants {
 	public static final String PREFERENCE_DEFAULT_VALUE_CLOSEST_STATIONS = "8";
 
 	/**
-	 * Favorites
+	 * Edit Tabs
 	 */
-	public static final int FAVOURITES_IMG_BUTTON_ACTION_DOWN = Color.argb(150,
-			51, 181, 229);
-	public static final int FAVOURITES_IMG_BUTTON_ACTION_UP = Color.argb(0,
-			155, 155, 155);
-	public static final String FAVOURITES_IMAGE_URL = "https://geo0.ggpht.com/cbk?cb_client=maps_sv.tactile&output=thumbnail&thumb=2&w=500&h=165&yaw=1&pitch=1&ll=%s,%s";
-
-	/**
-	 * Metro Schedule
-	 */
-	public static final String METRO_STATION_URL = "https://sofia-stations.googlecode.com/svn/HoloDesign-ver.3/MetroSchedule/schedule/Station%s.xml";
+	public static final String CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY = "FavouritesTabVisibility";
+	public static final String CONFIGURATION_PREF_FAVOURITES_POSITION_KEY = "FavouritesTabPosition";
+	public static final String CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY = "SearchTabVisibility";
+	public static final String CONFIGURATION_PREF_SEARCH_POSITION_KEY = "SearchTabPosition";
+	public static final String CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY = "ScheduleTabVisibility";
+	public static final String CONFIGURATION_PREF_SCHEDULE_POSITION_KEY = "ScheduleTabPosition";
+	public static final String CONFIGURATION_PREF_METRO_VISIBILITY_KEY = "MetroTabVisibility";
+	public static final String CONFIGURATION_PREF_METRO_POSITION_KEY = "MetroTabPosition";
 
 	/**
 	 * About
@@ -75,14 +73,29 @@ public class Constants {
 	public static final String CONFIGURATION_PREF_VEHICLES_KEY = "CurrentVehiclesDBVersion";
 
 	/**
-	 * Edit Tabs
+	 * Favorites
 	 */
-	public static final String CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY = "FavouritesTabVisibility";
-	public static final String CONFIGURATION_PREF_FAVOURITES_POSITION_KEY = "FavouritesTabPosition";
-	public static final String CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY = "SearchTabVisibility";
-	public static final String CONFIGURATION_PREF_SEARCH_POSITION_KEY = "SearchTabPosition";
-	public static final String CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY = "ScheduleTabVisibility";
-	public static final String CONFIGURATION_PREF_SCHEDULE_POSITION_KEY = "ScheduleTabPosition";
-	public static final String CONFIGURATION_PREF_METRO_VISIBILITY_KEY = "MetroTabVisibility";
-	public static final String CONFIGURATION_PREF_METRO_POSITION_KEY = "MetroTabPosition";
+	public static final int FAVOURITES_IMG_BUTTON_ACTION_DOWN = Color.argb(150,
+			51, 181, 229);
+	public static final int FAVOURITES_IMG_BUTTON_ACTION_UP = Color.argb(0,
+			155, 155, 155);
+	public static final String FAVOURITES_IMAGE_URL = "https://geo0.ggpht.com/cbk?cb_client=maps_sv.tactile&output=thumbnail&thumb=2&w=500&h=165&yaw=1&pitch=1&ll=%s,%s";
+
+	/**
+	 * Schedule direction
+	 */
+	public static final String URL_DIRECTION = "http://m.sofiatraffic.bg/schedules?";
+	public static final String URL_DIRECTION_BUS_TYPE = "tt";
+	public static final String URL_DIRECTION_LINE = "ln";
+	public static final String URL_DIRECTION_SEARCH = "s";
+	public static final String URL_DIRECTION_SEARCH_VALUE = "Търсене";
+	public static final String REGEX_DIRECTION_PARTS = "<form method=\"get\" action=\"/schedules/vehicle\">";
+	public static final String REGEX_DIRECTION_NAME = "<div class=\"info\">(.*?)<\\/div>";
+	public static final String REGEX_DIRECTION_HIDDEN_VARIABLE = "<input type=\"hidden\" value=\"(.*?)\" name=\"%s\"\\/>";
+	public static final String REGEX_DIRECTION_STATION = "<option id=\"(.*?)\" value=\".*?\">([^^]*?)<\\/option>";
+
+	/**
+	 * Metro Schedule
+	 */
+	public static final String METRO_STATION_URL = "https://sofia-stations.googlecode.com/svn/HoloDesign-ver.3/MetroSchedule/schedule/Station%s.xml";
 }

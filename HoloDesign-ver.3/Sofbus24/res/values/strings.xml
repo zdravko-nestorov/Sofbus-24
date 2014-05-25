@@ -150,6 +150,7 @@
     <string name="sch_item_trolley" formatted="false">Тролей №%s</string>
     <string name="sch_item_tram" formatted="false">Трамвай №%s</string>
     <string name="sch_item_empty_list" formatted="false"><![CDATA[Няма намерени резултати за <b>%s</b> в секция <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
+    <string name="sch_item_direction_choice">Изберете направление</string>
 
     <!-- Public Transport -->
     <string name="pt_title">Разписание</string>
@@ -157,6 +158,7 @@
     <string name="pt_bus" formatted="false">Автобус №%s</string>
     <string name="pt_trolley" formatted="false">Тролей №%s</string>
     <string name="pt_tram" formatted="false">Трамвай №%s</string>
+    <string name="pt_item_loading_schedule" formatted="false"><![CDATA[Извличане на разписанието за <b><i>%s</b></i>...]]></string>
     <string name="pt_item_station_number_text" formatted="false">Спирка номер: %s</string>
     <string name="pt_item_station_number_text_sign" formatted="false">Спирка №%s</string>
     <string name="pt_item_add_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>

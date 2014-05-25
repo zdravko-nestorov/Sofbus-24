@@ -39,7 +39,7 @@ public class StationRouteMap extends Activity {
 	private DirectionsEntity directionsEntity;
 
 	private GoogleMap stationMap;
-	private final LatLng centerStationLocation = new LatLng(
+	private LatLng centerStationLocation = new LatLng(
 			Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE,
 			Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE);
 
@@ -58,8 +58,6 @@ public class StationRouteMap extends Activity {
 		// Get the station map fragment
 		stationMap = ((MapFragment) getFragmentManager().findFragmentById(
 				R.id.station_route_map)).getMap();
-
-		animateMapFocus(centerStationLocation);
 
 		// Check if the station map is found
 		if (stationMap != null) {
@@ -87,6 +85,8 @@ public class StationRouteMap extends Activity {
 			} else {
 				processListOfPTStationObjects();
 			}
+
+			animateMapFocus(centerStationLocation);
 		}
 	}
 
@@ -232,6 +232,11 @@ public class StationRouteMap extends Activity {
 				LatLng msLocation = new LatLng(Double.parseDouble(ptStation
 						.getLat()), Double.parseDouble(ptStation.getLon()));
 
+				// Center the map over the central station of the route
+				if (i == ptDirectionStations.size() / 2) {
+					centerStationLocation = msLocation;
+				}
+
 				// Create a marker on the msLocation and set some options
 				MarkerOptions stationMarkerOptions = new MarkerOptions()
 						.position(msLocation)
@@ -306,7 +311,7 @@ public class StationRouteMap extends Activity {
 	 */
 	private void animateMapFocus(LatLng stationLocation) {
 		CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(stationLocation).zoom(11.5f).build();
+				.target(stationLocation).zoom(11.8f).build();
 		stationMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
 	}

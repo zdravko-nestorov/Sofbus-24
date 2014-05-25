@@ -16,6 +16,7 @@ public class PublicTransportStation extends Station implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private String id;
 	private String direction;
 	private HashMap<Integer, ArrayList<String>> schedule;
 
@@ -40,16 +41,24 @@ public class PublicTransportStation extends Station implements Serializable {
 		}
 	}
 
-	public PublicTransportStation(Station station, String direction) {
+	public PublicTransportStation(Station station, String id) {
 		super(station.getNumber(), station.getName(), station.getLat(), station
 				.getLon(), station.getType(), station.getCustomField());
 
-		this.direction = direction;
+		this.id = id;
 		this.schedule = new LinkedHashMap<Integer, ArrayList<String>>();
 
 		for (int i = 4; i <= 24; i++) {
 			this.schedule.put(i, new ArrayList<String>());
 		}
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getDirection() {
@@ -88,8 +97,8 @@ public class PublicTransportStation extends Station implements Serializable {
 
 	@Override
 	public String toString() {
-		return getClass().getName() + " {\n\tdirection: " + direction
-				+ "\n\tschedule: " + schedule + "\n}";
+		return getClass().getName() + " {\n\tid: " + id + "\n\tdirection: "
+				+ direction + "\n\tschedule: " + schedule + "\n}";
 	}
 
 }

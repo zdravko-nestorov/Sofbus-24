@@ -116,7 +116,7 @@ public class ScheduleStationAdapter extends ArrayAdapter<Vehicle> {
 	 *            the vehicle on the current row
 	 * @return the vehicle caption in format: <b>Bus ¹xxx</b>
 	 */
-	private String getVehicleCaption(Context context, Vehicle vehicle) {
+	public String getVehicleCaption(Context context, Vehicle vehicle) {
 		String vehicleCaption;
 
 		switch (vehicle.getType()) {

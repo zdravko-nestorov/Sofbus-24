@@ -1,10 +1,9 @@
 package bg.znestorov.sofbus24.schedule;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
@@ -21,14 +20,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
-import bg.znestorov.sofbus24.entity.DirectionsEntity;
-import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
-import bg.znestorov.sofbus24.main.PublicTransport;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.metro.MetroLoadStations;
-import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.publictransport.RetrievePublicTransportDirection;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
@@ -108,29 +103,20 @@ public class ScheduleFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Vehicle vehicle = (Vehicle) getListAdapter().getItem(position);
+		ScheduleStationAdapter scheduleStationAdapter = (ScheduleStationAdapter) getListAdapter();
+		Vehicle vehicle = (Vehicle) scheduleStationAdapter.getItem(position);
+		String rowCaption = scheduleStationAdapter.getVehicleCaption(context,
+				vehicle);
 
-		Toast.makeText(getActivity(), vehicle.getNumber(), Toast.LENGTH_SHORT)
-				.show();
+		// Getting the PublicTransport schedule from the SKGT site
+		ProgressDialog progressDialog = new ProgressDialog(context);
+		progressDialog.setMessage(Html.fromHtml(String.format(
+				getString(R.string.pt_item_loading_schedule), rowCaption)));
+		RetrievePublicTransportDirection retrievePublicTransportDirection = new RetrievePublicTransportDirection(
+				context, progressDialog, vehicle);
+		retrievePublicTransportDirection.execute();
 
-		// TODO: Retrieve information about the vehicle
-		ArrayList<String> directionsNames = new ArrayList<String>();
-		directionsNames.add(loadVehiclesList(VehicleType.METRO1, "").get(0)
-				.getDirection().replaceAll("-.*?-", " - "));
-		directionsNames.add(loadVehiclesList(VehicleType.METRO2, "").get(0)
-				.getDirection().replaceAll("-.*?-", " - "));
-
-		MetroLoadStations mls = MetroLoadStations.getInstance(context);
-		ArrayList<ArrayList<Station>> directionsList = new ArrayList<ArrayList<Station>>();
-		directionsList.add((ArrayList<Station>) mls.getMetroDirection1());
-		directionsList.add((ArrayList<Station>) mls.getMetroDirection2());
-
-		Intent publicTransport = new Intent(context, PublicTransport.class);
-		DirectionsEntity ptDirectionsEntity = new DirectionsEntity(vehicle, 0,
-				directionsNames, directionsList);
-		publicTransport.putExtra(Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE,
-				ptDirectionsEntity);
-		startActivity(publicTransport);
+		Toast.makeText(getActivity(), rowCaption, Toast.LENGTH_SHORT).show();
 	}
 
 	/**

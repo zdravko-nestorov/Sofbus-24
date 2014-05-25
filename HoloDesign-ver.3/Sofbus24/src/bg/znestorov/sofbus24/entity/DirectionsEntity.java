@@ -18,10 +18,16 @@ public class DirectionsEntity implements Serializable {
 	private Vehicle vehicle;
 	private int activeDirection;
 
+	private ArrayList<String> vt;
+	private ArrayList<String> lid;
+	private ArrayList<String> rid;
+
 	private ArrayList<String> directionsNames;
 	private ArrayList<ArrayList<Station>> directionsList;
 
 	public DirectionsEntity() {
+		this.directionsNames = new ArrayList<String>();
+		this.directionsList = new ArrayList<ArrayList<Station>>();
 	}
 
 	public DirectionsEntity(DirectionsEntity directionsEntity,
@@ -37,6 +43,19 @@ public class DirectionsEntity implements Serializable {
 			ArrayList<ArrayList<Station>> directionsList) {
 		this.vehicle = vehicle;
 		this.activeDirection = activeDirection;
+		this.directionsNames = directionsNames;
+		this.directionsList = directionsList;
+	}
+
+	public DirectionsEntity(Vehicle vehicle, int activeDirection,
+			ArrayList<String> vt, ArrayList<String> lid, ArrayList<String> rid,
+			ArrayList<String> directionsNames,
+			ArrayList<ArrayList<Station>> directionsList) {
+		this.vehicle = vehicle;
+		this.activeDirection = activeDirection;
+		this.vt = vt;
+		this.lid = lid;
+		this.rid = rid;
 		this.directionsNames = directionsNames;
 		this.directionsList = directionsList;
 	}
@@ -73,14 +92,45 @@ public class DirectionsEntity implements Serializable {
 		this.directionsList = directionsList;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public ArrayList<String> getVt() {
+		return vt;
+	}
+
+	public void setVt(ArrayList<String> vt) {
+		this.vt = vt;
+	}
+
+	public ArrayList<String> getLid() {
+		return lid;
+	}
+
+	public void setLid(ArrayList<String> lid) {
+		this.lid = lid;
+	}
+
+	public ArrayList<String> getRid() {
+		return rid;
+	}
+
+	public void setRid(ArrayList<String> rid) {
+		this.rid = rid;
+	}
+
+	/**
+	 * Check if the direction entity is set correctly
+	 * 
+	 * @return if the directions' names and stations are set
+	 */
+	public boolean isDirectionSet() {
+		return directionsNames.size() > 0 && directionsList.size() > 0
+				&& directionsNames.size() == directionsList.size();
 	}
 
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tvehicle: " + vehicle
-				+ "\n\tactiveDirection: " + activeDirection
+				+ "\n\tactiveDirection: " + activeDirection + "\n\tvt: " + vt
+				+ "\n\tlid: " + lid + "\n\trid: " + rid
 				+ "\n\tdirectionsNames: " + directionsNames
 				+ "\n\tdirectionsList: " + directionsList + "\n}";
 	}

@@ -9,6 +9,24 @@ import bg.znestorov.sofbus24.main.R;
 public class Utils {
 
 	/**
+	 * Function that extracts only digits from a given String. In case of an
+	 * empty string - return "".
+	 * 
+	 * @param value
+	 *            the input String
+	 * @return the digits from the String
+	 */
+	public static String getOnlyDigits(String value) {
+		if (value != null && !"".equals(value)) {
+			value = value.replaceAll("\\D+", "");
+		} else {
+			value = "";
+		}
+
+		return value;
+	}
+
+	/**
 	 * Get a value from a string BEFORE some REGEX
 	 * 
 	 * @param value
