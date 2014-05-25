@@ -10,7 +10,7 @@
         android:id="@+id/vb_time_item_image_vehicle_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="2sp"
+        android:layout_marginLeft="3sp"
         android:layout_marginRight="12sp"
         android:minHeight="@dimen/vb_time_image_vehicle_height"
         android:minWidth="@dimen/vb_time_image_vehicle_width" >
@@ -27,9 +27,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/vb_time_item_image_vehicle_layout"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
@@ -49,9 +51,9 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/vb_time_item_image_vehicle_layout"
         android:layout_below="@+id/vb_time_item_image_vehicle_layout"
-        android:singleLine="true"
+        android:singleLine="false"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="12sp" />
+        android:textSize="13sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

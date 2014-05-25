@@ -12,7 +12,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 
 /**
  * Virtual Boards Time Fragment containing information about the vehicles in
- * real time for a choosen station
+ * real time for a chosen station
  * 
  * @author Zdravko Nestorov
  * @version 1.0

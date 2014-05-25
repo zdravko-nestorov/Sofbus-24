@@ -14,6 +14,7 @@
     <string name="app_dialog_title_error">Грешка</string>
     <string name="app_internet_error">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
     <string name="app_location_error">Моля включете поне едно от устройствата (GPS или WiFi), за да бъде засечено текущото ви местоположение.</string>
+    <string name="app_coordinates_error">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
     <string name="app_distance_meters">&#160;м.</string>
     <string name="app_remaining_minutes">м</string>
     <string name="app_remaining_hours">ч</string>
@@ -128,7 +129,7 @@
     <string name="vb_item_station_number_text" formatted="false">Спирка номер: %s</string>
     <string name="vb_item_add_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>
     <string name="vb_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
-    <string name="vb_item_search_list" formatted="false"><![CDATA[Моля въведете вашите критерии за търсене (осъществява се на базата на <b>номера</b> или <b>името</b> на спирката). Ако търсите по име е нужно да въведете <b>поне 3 символа</b>.]]></string>
+    <string name="vb_item_search_list" formatted="false"><![CDATA[Моля въведете вашите критерии за търсене (осъществява се на базата на <b>номера - четирицидрен код (пр. 0013)</b> или <b>името (цифра/и или букви на кирилица или латиница)</b> на спирката). Ако търсите по име е нужно да въведете <b>поне 3 символа</b>.]]></string>
     <string name="vb_item_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
 
     <!-- Virtual Boards Time Fragment -->
@@ -138,7 +139,7 @@
     <string name="vb_time_trolley" formatted="false">Тролей №%s</string>
     <string name="vb_time_tram" formatted="false">Трамвай №%s</string>
     <string name="vb_time_item_time_of_arrival" formatted="false"><![CDATA[<b>Часове на пристигане:</b> <font color="red">%s</font>]]></string>
-    <string name="vb_time_item_remaining_time" formatted="false"><![CDATA[<b>Оставащо време:</b> <font color="red">%s</font>]]></string>
+    <string name="vb_time_item_remaining_time" formatted="false"><![CDATA[<b><font color="#FF2727">Оставащо време: %s</font></b>]]></string>
 
     <!-- Schedule Fragment -->
     <string name="sch_search_hint">Търсене по номер или посока</string>

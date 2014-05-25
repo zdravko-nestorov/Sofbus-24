@@ -109,6 +109,20 @@ public class ActivityUtils {
 	}
 
 	/**
+	 * Show no station coordinates alert dialog
+	 * 
+	 * @param context
+	 *            current Activity context
+	 */
+	public static void showNoCoordinatesAlertDialog(Activity context) {
+		ActivityUtils.showCustomAlertDialog(context,
+				android.R.drawable.ic_menu_report_image,
+				context.getString(R.string.app_dialog_title_error),
+				context.getString(R.string.app_coordinates_error),
+				context.getString(R.string.app_button_ok), null, null, null);
+	}
+
+	/**
 	 * Show no Internet alert dialog
 	 * 
 	 * @param context

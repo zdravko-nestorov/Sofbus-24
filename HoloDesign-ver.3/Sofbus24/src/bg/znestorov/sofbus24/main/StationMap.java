@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.entity.PublicTransportStation;
 import bg.znestorov.sofbus24.entity.Station;
@@ -14,9 +18,11 @@ import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.Utils;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -26,6 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class StationMap extends Activity {
 
+	private Activity context;
 	private ActionBar actionBar;
 
 	private GoogleMap stationMap;
@@ -35,6 +42,9 @@ public class StationMap extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map_station);
+
+		// Get the current activity context
+		context = StationMap.this;
 
 		// Set up the action bar
 		actionBar = getActionBar();
@@ -121,7 +131,7 @@ public class StationMap extends Activity {
 	 * Process the MetroStation object
 	 * 
 	 * @param metroStation
-	 *            the choosen metro station
+	 *            the chosen metro station
 	 */
 	private void processMetroStationObject(MetroStation metroStation) {
 		MarkerOptions stationMarkerOptions = new MarkerOptions()
@@ -162,6 +172,9 @@ public class StationMap extends Activity {
 				.icon(BitmapDescriptorFactory
 						.fromResource(getMarkerIcon(vbTimeStation.getType())));
 		Marker stationMarker = stationMap.addMarker(stationMarkerOptions);
+		stationMap
+				.setInfoWindowAdapter(new CustomMapMarker(getLayoutInflater()));
+
 		stationMarker.showInfoWindow();
 	}
 
@@ -171,6 +184,8 @@ public class StationMap extends Activity {
 	private String getPassingStationVehicles(VirtualBoardsStation vbTimeStation) {
 		ArrayList<Vehicle> stationVehiclesList = vbTimeStation
 				.getVehiclesList();
+		String currentTime = Utils.getValueAfterLast(
+				vbTimeStation.getTime(context), ",").trim();
 
 		StringBuilder stationVehicles = new StringBuilder();
 		boolean flag_a = false;
@@ -179,53 +194,55 @@ public class StationMap extends Activity {
 
 		for (int i = 0; i < stationVehiclesList.size(); i++) {
 			Vehicle stationVehicle = stationVehiclesList.get(i);
+			String timeToUse = Utils.getDifference(context, stationVehicle
+					.getArrivalTimes().get(0), currentTime);
 
 			switch (stationVehicle.getType()) {
 			case BUS:
 				if (flag_a) {
-					stationVehicles.append(", ").append(
-							stationVehicle.getNumber());
+					stationVehicles.append(",");
 				} else {
 					flag_a = true;
-					stationVehicles.append(
-							getString(R.string.station_map_buses)).append(
-							stationVehicle.getNumber());
+					stationVehicles.append("<b>"
+							+ getString(R.string.station_map_buses) + "</b>");
 				}
+
+				stationVehicles.append(" ¹").append(stationVehicle.getNumber())
+						.append(" <b>(").append(timeToUse).append(")</b>");
 				break;
 			case TROLLEY:
 				if (flag_tl) {
-					stationVehicles.append(", ").append(
-							stationVehicle.getNumber());
+					stationVehicles.append(",");
 				} else {
 					flag_tl = true;
 					if (flag_a) {
-						stationVehicles
-								.append("\n"
-										+ getString(R.string.station_map_trolleys))
-								.append(stationVehicle.getNumber());
-					} else {
-						stationVehicles.append(
-								getString(R.string.station_map_trolleys))
-								.append(stationVehicle.getNumber());
+						stationVehicles.append("<br/>");
 					}
+
+					stationVehicles
+							.append("<b>"
+									+ getString(R.string.station_map_trolleys)
+									+ "</b>");
 				}
+
+				stationVehicles.append(" ¹").append(stationVehicle.getNumber())
+						.append(" <b>(").append(timeToUse).append(")</b>");
 				break;
 			default:
 				if (flag_tm) {
-					stationVehicles.append(", ").append(
-							stationVehicle.getNumber());
+					stationVehicles.append(",");
 				} else {
 					flag_tm = true;
 					if (flag_a || flag_tl) {
-						stationVehicles.append(
-								"\n" + getString(R.string.station_map_trams))
-								.append(stationVehicle.getNumber());
-					} else {
-						stationVehicles.append(
-								getString(R.string.station_map_trams)).append(
-								stationVehicle.getNumber());
+						stationVehicles.append("<br/>");
 					}
+
+					stationVehicles.append("<b>"
+							+ getString(R.string.station_map_trams) + "</b>");
 				}
+
+				stationVehicles.append(" ¹").append(stationVehicle.getNumber())
+						.append(" <b>(").append(timeToUse).append(")</b>");
 				break;
 			}
 		}
@@ -252,7 +269,7 @@ public class StationMap extends Activity {
 	 * number
 	 * 
 	 * @param station
-	 *            the choosed station
+	 *            the chosen station
 	 * @return the action bar title
 	 */
 	private String getActionBarTitle(Station station) {
@@ -306,5 +323,42 @@ public class StationMap extends Activity {
 		}
 
 		return markerIcon;
+	}
+
+	/**
+	 * Class used to create custom map marker (to use new lines)
+	 * 
+	 * @author Zdravko Nestorov
+	 * @version 1.0
+	 * 
+	 */
+	private class CustomMapMarker implements InfoWindowAdapter {
+
+		LayoutInflater inflater = null;
+
+		CustomMapMarker(LayoutInflater inflater) {
+			this.inflater = inflater;
+		}
+
+		@Override
+		public View getInfoWindow(Marker marker) {
+			return null;
+		}
+
+		@Override
+		public View getInfoContents(Marker marker) {
+			View customMapMarker = inflater.inflate(R.layout.map_marker_layout,
+					null);
+
+			TextView tv = (TextView) customMapMarker
+					.findViewById(R.id.custom_marker_title);
+			tv.setText(marker.getTitle());
+
+			tv = (TextView) customMapMarker
+					.findViewById(R.id.custom_marker_snippet);
+			tv.setText(Html.fromHtml(marker.getSnippet()));
+
+			return customMapMarker;
+		}
 	}
 }

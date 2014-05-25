@@ -93,6 +93,10 @@ public class Station implements Serializable {
 		this.customField = customField;
 	}
 
+	public boolean hasCoordinates() {
+		return lat != null && lon != null && !"".equals(lat) && !"".equals(lon);
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tnumber: " + number + "\n\tname: "

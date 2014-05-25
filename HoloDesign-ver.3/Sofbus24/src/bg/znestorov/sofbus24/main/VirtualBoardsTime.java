@@ -75,10 +75,14 @@ public class VirtualBoardsTime extends FragmentActivity {
 			initRefresh();
 			return true;
 		case R.id.action_vb_time_map:
-			Intent metroMapIntent = new Intent(context, StationMap.class);
-			metroMapIntent
-					.putExtra(Constants.BUNDLE_STATION_MAP, vbTimeStation);
-			startActivity(metroMapIntent);
+			if (vbTimeStation.hasCoordinates()) {
+				Intent metroMapIntent = new Intent(context, StationMap.class);
+				metroMapIntent.putExtra(Constants.BUNDLE_STATION_MAP,
+						vbTimeStation);
+				startActivity(metroMapIntent);
+			} else {
+				ActivityUtils.showNoCoordinatesAlertDialog(context);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -117,7 +121,6 @@ public class VirtualBoardsTime extends FragmentActivity {
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(getString(R.string.vb_time_title));
-		actionBar.setSubtitle(getStationCaption());
 
 		// Get the Fragment and the loading ProgressBar
 		vbTimeFragment = findViewById(R.id.vb_time_fragment);

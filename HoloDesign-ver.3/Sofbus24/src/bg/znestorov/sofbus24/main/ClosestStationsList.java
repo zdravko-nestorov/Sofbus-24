@@ -307,7 +307,7 @@ public class ClosestStationsList extends FragmentActivity {
 					};
 
 					ActivityUtils.showCustomAlertDialog(context,
-							android.R.drawable.ic_dialog_alert,
+							android.R.drawable.ic_menu_mylocation,
 							context.getString(R.string.app_dialog_title_error),
 							context.getString(R.string.app_location_error),
 							context.getString(R.string.app_button_yes),

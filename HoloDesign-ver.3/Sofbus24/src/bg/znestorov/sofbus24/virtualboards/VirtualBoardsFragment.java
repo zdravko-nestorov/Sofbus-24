@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Html;
@@ -22,7 +23,12 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.UpdateableFragment;
+import bg.znestorov.sofbus24.entity.Vehicle;
+import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.VirtualBoardsTime;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
@@ -92,9 +98,32 @@ public class VirtualBoardsFragment extends ListFragment implements
 		Station station = (Station) getListAdapter().getItem(position);
 
 		// TODO: Retrieve information about the vehicle
-
 		Toast.makeText(getActivity(), station.getName(), Toast.LENGTH_SHORT)
 				.show();
+
+		ArrayList<String> arrivalTime = new ArrayList<String>();
+		arrivalTime.add("23:10");
+		arrivalTime.add("23:12");
+		arrivalTime.add("23:14");
+
+		ArrayList<Vehicle> vehiclesList = new ArrayList<Vehicle>();
+		vehiclesList.add(new Vehicle("1", VehicleType.BUS,
+				"Цариградско Шосе - Обеля", arrivalTime));
+		vehiclesList.add(new Vehicle("2", VehicleType.BUS,
+				"Цариградско Шосе - Обеля", arrivalTime));
+		vehiclesList.add(new Vehicle("3", VehicleType.TROLLEY,
+				"Цариградско Шосе - Обеля", arrivalTime));
+		vehiclesList.add(new Vehicle("4", VehicleType.TRAM,
+				"Цариградско Шосе - Обеля", arrivalTime));
+		vehiclesList.add(new Vehicle("5", VehicleType.TRAM,
+				"Цариградско Шосе - Обеля", arrivalTime));
+
+		Intent vbTimeIntent = new Intent(context, VirtualBoardsTime.class);
+		VirtualBoardsStation vbTimeStation = new VirtualBoardsStation(station,
+				"30.05.2014, 22:30", vehiclesList);
+		vbTimeIntent.putExtra(Constants.BUNDLE_VIRTUAL_BOARDS_TIME,
+				vbTimeStation);
+		startActivity(vbTimeIntent);
 	}
 
 	/**

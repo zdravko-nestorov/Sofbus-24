@@ -96,12 +96,16 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
 		viewHolder.stationDirection.setText(stationVehicle.getDirection());
 		viewHolder.stationTime.setText(getRowTimeCaption(stationVehicle));
 
+		rowView.setOnClickListener(null);
+		rowView.setOnLongClickListener(null);
+		rowView.setLongClickable(false);
+
 		return rowView;
 	}
 
 	/**
-	 * Choose the coresponding image from the resources according to the vehicle
-	 * type
+	 * Choose the corresponding image from the resources according to the
+	 * vehicle type
 	 * 
 	 * @param stationVehicle
 	 *            the station vehicle
@@ -183,7 +187,8 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
 	 */
 	private String getRemainingTimes(Vehicle stationVehicle) {
 		ArrayList<String> arrivalTimesList = stationVehicle.getArrivalTimes();
-		String currentTime = vbTimeStation.getTime(context);
+		String currentTime = Utils.getValueAfterLast(
+				vbTimeStation.getTime(context), ",").trim();
 		StringBuilder arrivalTimes = new StringBuilder("");
 
 		for (int i = 0; i < arrivalTimesList.size(); i++) {

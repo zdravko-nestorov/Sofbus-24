@@ -2,14 +2,12 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.    -->
     <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
+            backward-compatibility can go here.        -->
     </style>
 
     <!-- Application theme -->
@@ -22,21 +20,6 @@
     </style>
 
     <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <!-- Home Screen theme -->
-    <style name="HomeScreenTheme" parent="AppBaseTheme">
-        <item name="android:actionBarStyle">@style/MyTheme.HomeScreenTheme</item>
-    </style>
-
-    <style name="MyTheme.HomeScreenTheme" parent="@android:style/Widget.Holo.Light.ActionBar">
-    	<item name="android:homeAsUpIndicator">@drawable/ic_action_ms_map</item>
-        <item name="android:titleTextStyle">@style/MyTheme.ActionBar.HomeScreenTheme</item>
-    </style>
-
-    <style name="MyTheme.ActionBar.HomeScreenTheme" parent="@android:style/TextAppearance">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
     </style>

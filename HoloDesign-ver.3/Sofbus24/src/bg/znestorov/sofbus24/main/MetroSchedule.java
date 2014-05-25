@@ -21,8 +21,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
-import bg.znestorov.sofbus24.entity.ScheduleEntity;
 import bg.znestorov.sofbus24.entity.MetroStation;
+import bg.znestorov.sofbus24.entity.ScheduleEntity;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.metro.MetroScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -125,6 +125,11 @@ public class MetroSchedule extends FragmentActivity {
 		Runnable myrunnable = new Runnable() {
 			public void run() {
 				try {
+					// Reset the time shown in the action bar
+					actionBar.setSubtitle(DateFormat.format("dd.MM.yyy, kk:mm",
+							new java.util.Date()).toString());
+
+					// Initialize the fragment content
 					initFragmentContent();
 				} catch (Exception e) {
 				}

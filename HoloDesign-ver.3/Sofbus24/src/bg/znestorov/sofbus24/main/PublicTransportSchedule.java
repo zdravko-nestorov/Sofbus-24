@@ -27,6 +27,7 @@ import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.publictransport.PublicTransportScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 public class PublicTransportSchedule extends FragmentActivity {
 
@@ -101,9 +102,13 @@ public class PublicTransportSchedule extends FragmentActivity {
 			initRefresh();
 			return true;
 		case R.id.action_pt_map:
-			Intent ptMapIntent = new Intent(context, StationMap.class);
-			ptMapIntent.putExtra(Constants.BUNDLE_STATION_MAP, ptStation);
-			startActivity(ptMapIntent);
+			if (ptStation.hasCoordinates()) {
+				Intent ptMapIntent = new Intent(context, StationMap.class);
+				ptMapIntent.putExtra(Constants.BUNDLE_STATION_MAP, ptStation);
+				startActivity(ptMapIntent);
+			} else {
+				ActivityUtils.showNoCoordinatesAlertDialog(context);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
