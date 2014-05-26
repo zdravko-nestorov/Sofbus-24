@@ -14,7 +14,15 @@ import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
-public class ProcessPublicTranportDirection {
+/**
+ * Used to process the information from SKGT site, using REGEX and set it to a
+ * DirectionsEntity entity
+ * 
+ * @author Zdravko Nestorov
+ * @version 1.0
+ * 
+ */
+public class ProcessPublicTransportDirection {
 
 	private Activity context;
 	private Vehicle vehicle;
@@ -22,7 +30,7 @@ public class ProcessPublicTranportDirection {
 
 	private StationsDataSource stationDatasource;
 
-	public ProcessPublicTranportDirection(Activity context, Vehicle vehicle,
+	public ProcessPublicTransportDirection(Activity context, Vehicle vehicle,
 			String htmlResult) {
 		this.context = context;
 		this.vehicle = vehicle;
@@ -141,31 +149,40 @@ public class ProcessPublicTranportDirection {
 			ArrayList<Station> ptStationsList = new ArrayList<Station>();
 
 			while (matcher.find()) {
-				// Get the station id (special number used to retrieve
-				// information) and station name
-				String stationId = matcher.group(1);
-				String stationName = matcher.group(2).trim();
-				stationName = Utils.getValueBeforeLast(stationName, "(");
+				try {
+					// Get the station id (special number used to retrieve
+					// information) and station name
+					String stationId = matcher.group(1);
+					String stationName = matcher.group(2).trim();
+					stationName = Utils.getValueBeforeLast(stationName, "(");
 
-				// Get the station number
-				String stationNumber = matcher.group(2).trim();
-				stationNumber = Utils.getValueAfterLast(stationNumber, "(");
-				stationNumber = Utils.getValueBefore(stationNumber, ")");
-				stationNumber = Utils.getOnlyDigits(stationNumber);
+					// Get the station number
+					String stationNumber = matcher.group(2).trim();
+					stationNumber = Utils.getValueAfterLast(stationNumber, "(");
+					stationNumber = Utils.getValueBefore(stationNumber, ")");
+					stationNumber = Utils.getOnlyDigits(stationNumber);
 
-				// Get the station coordinates from the DB (if exists)
-				Station dbStation = stationDatasource.getStation(stationNumber);
-				String stationLat = dbStation.getLat();
-				String stationLon = dbStation.getLon();
+					// Get the station coordinates from the DB (if exists)
+					Station dbStation = stationDatasource
+							.getStation(stationNumber);
+					String stationLat = null;
+					String stationLon = null;
 
-				// Get the station type
-				VehicleType stationType = vehicle.getType();
+					if (dbStation != null) {
+						stationLat = dbStation.getLat();
+						stationLon = dbStation.getLon();
+					}
 
-				// Create the PublicTransport station and add it to the list
-				PublicTransportStation ptStation = new PublicTransportStation(
-						new Station(stationNumber, stationName, stationLat,
-								stationLon, stationType, null), stationId);
-				ptStationsList.add(ptStation);
+					// Get the station type
+					VehicleType stationType = vehicle.getType();
+
+					// Create the PublicTransport station and add it to the list
+					PublicTransportStation ptStation = new PublicTransportStation(
+							new Station(stationNumber, stationName, stationLat,
+									stationLon, stationType, null), stationId);
+					ptStationsList.add(ptStation);
+				} catch (Exception e) {
+				}
 			}
 
 			// Add the stations to the directions list

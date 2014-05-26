@@ -171,7 +171,7 @@ public class StationRouteMap extends Activity {
 						.icon(BitmapDescriptorFactory
 								.fromResource(getMarkerIcon(ms.getType())));
 				stationMap.addMarker(stationMarkerOptions);
-			} catch (NumberFormatException nfe) {
+			} catch (Exception e) {
 				// In case no coordinates are found for the station
 			}
 		}
@@ -246,7 +246,7 @@ public class StationRouteMap extends Activity {
 						.icon(BitmapDescriptorFactory
 								.fromResource(getMarkerIcon(ptStation.getType())));
 				stationMap.addMarker(stationMarkerOptions);
-			} catch (NumberFormatException nfe) {
+			} catch (Exception e) {
 				// In case no coordinates are found for the station
 			}
 		}

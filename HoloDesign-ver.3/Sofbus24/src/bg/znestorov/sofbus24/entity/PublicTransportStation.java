@@ -78,6 +78,18 @@ public class PublicTransportStation extends Station implements Serializable {
 	}
 
 	/**
+	 * Set the schedule to the relevant index of the HashMap schedule
+	 * 
+	 * @param hour
+	 *            the hour of the schedule time
+	 * @param time
+	 *            the whole schedule time in format [hh:mm]
+	 */
+	public void setScheduleHour(int hour, String time) {
+		this.schedule.get(hour).add(time);
+	}
+
+	/**
 	 * Check if the schedule is set to the PublicTransportStation object
 	 * 
 	 * @return if the object is filled with the time schedule

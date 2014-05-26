@@ -122,6 +122,23 @@ public class Utils {
 	}
 
 	/**
+	 * Remove the leading zeros in alphanumeric text with regex
+	 * 
+	 * @param input
+	 *            an input string containing a number
+	 * @return a number (in string format) with removed leading zeroes (if
+	 *         exist)
+	 */
+	public static String removeLeadingZeroes(String input) {
+		try {
+			input = input.replaceFirst("^0+(?!$)", "");
+		} catch (Exception e) {
+		}
+
+		return input;
+	}
+
+	/**
 	 * Get the difference between two hours in format HH:MM
 	 * 
 	 * @param context

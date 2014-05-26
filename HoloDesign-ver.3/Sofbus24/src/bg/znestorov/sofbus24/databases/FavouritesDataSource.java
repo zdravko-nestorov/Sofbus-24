@@ -311,8 +311,9 @@ public class FavouritesDataSource {
 		// Get the station type
 		StationsDataSource stationDatasource = new StationsDataSource(context);
 		stationDatasource.open();
-		VehicleType stationType = stationDatasource.getStation(stationNumber)
-				.getType();
+		Station dbStation = stationDatasource.getStation(stationNumber);
+		VehicleType stationType = dbStation != null ? dbStation.getType()
+				: VehicleType.BTT;
 		stationDatasource.close();
 
 		// Getting all columns of the row and setting them to a Station object

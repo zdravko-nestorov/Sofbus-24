@@ -17,9 +17,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
+import bg.znestorov.sofbus24.entity.PublicTransportStation;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
@@ -112,17 +112,19 @@ public class PublicTransportFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Station station = (Station) getListAdapter().getItem(position);
+		ptDirectionsEntity.setActiveStation(position);
+		PublicTransportStation ptStation = (PublicTransportStation) getListAdapter()
+				.getItem(position);
 
-		// TODO: Do it for public transport (now it is in testing phase)
-		// Getting the Metro schedule from the station URL address
+		// Getting the PublicTransport schedule from the station URL address
 		ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setMessage(Html.fromHtml(String.format(
-				getString(R.string.metro_loading_schedule), station.getName(),
-				station.getNumber())));
-		RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
-				context, progressDialog, station);
-		retrieveMetroSchedule.execute();
+				getString(R.string.pt_item_loading_schedule),
+				String.format(ptStation.getName() + " (%s)",
+						ptStation.getNumber()))));
+		RetrievePublicTransportStation retrievePublicTransportStation = new RetrievePublicTransportStation(
+				context, progressDialog, ptDirectionsEntity);
+		retrievePublicTransportStation.execute();
 	}
 
 	/**

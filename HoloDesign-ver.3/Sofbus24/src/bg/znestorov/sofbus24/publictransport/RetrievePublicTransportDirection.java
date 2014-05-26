@@ -71,7 +71,7 @@ public class RetrievePublicTransportDirection extends
 			String htmlResult = directionHttpClient.execute(
 					directionHttpRequest, new BasicResponseHandler());
 
-			ProcessPublicTranportDirection processPtDirection = new ProcessPublicTranportDirection(
+			ProcessPublicTransportDirection processPtDirection = new ProcessPublicTransportDirection(
 					context, vehicle, htmlResult);
 			ptDirectionsEntity = processPtDirection.getDirectionsFromHtml();
 		} catch (Exception e) {
@@ -117,7 +117,7 @@ public class RetrievePublicTransportDirection extends
 								}
 							}).show();
 		} else {
-			ActivityUtils.showNoInternetAlertDialog(context);
+			ActivityUtils.showNoInternetOrInfoAlertDialog(context);
 		}
 	}
 

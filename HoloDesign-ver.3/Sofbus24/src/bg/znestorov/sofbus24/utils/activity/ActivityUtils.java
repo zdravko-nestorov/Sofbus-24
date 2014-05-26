@@ -138,6 +138,22 @@ public class ActivityUtils {
 	}
 
 	/**
+	 * Show no Internet or Schedule alert dialog
+	 * 
+	 * @param context
+	 *            current Activity context
+	 */
+	public static void showNoInternetOrInfoAlertDialog(Activity context) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setIcon(android.R.drawable.ic_menu_info_details)
+				.setTitle(context.getString(R.string.app_dialog_title_error))
+				.setMessage(
+						context.getString(R.string.app_internet_or_info_error))
+				.setNegativeButton(context.getString(R.string.app_button_ok),
+						null).show();
+	}
+
+	/**
 	 * Create custom AlertDialog with custom fields
 	 * 
 	 * @param context

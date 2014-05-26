@@ -93,6 +93,16 @@ public class Constants {
 	public static final String REGEX_DIRECTION_NAME = "<div class=\"info\">(.*?)<\\/div>";
 	public static final String REGEX_DIRECTION_HIDDEN_VARIABLE = "<input type=\"hidden\" value=\"(.*?)\" name=\"%s\"\\/>";
 	public static final String REGEX_DIRECTION_STATION = "<option id=\"(.*?)\" value=\".*?\">([^^]*?)<\\/option>";
+	public static final String URL_STATION_SCHEDULE = "http://m.sofiatraffic.bg/schedules/vehicle?";
+	public static final String URL_STATION_SCHEDULE_STOP = "stop";
+	public static final String URL_STATION_SCHEDULE_CH = "ch";
+	public static final String URL_STATION_SCHEDULE_CH_VALUE = "Провери";
+	public static final String URL_STATION_SCHEDULE_VT = "vt";
+	public static final String URL_STATION_SCHEDULE_LID = "lid";
+	public static final String URL_STATION_SCHEDULE_RID = "rid";
+	public static final String URL_STATION_SCHEDULE_H = "h";
+	public static final String URL_STATION_SCHEDULE_H_VALUE = "0";
+	public static final String REGEX_STATION_SCHEDULE = "<td class=\"(schTdBrd|schTdNoBrd)\" align=\"center\">([^^]*?)<\\/td>";
 
 	/**
 	 * Metro Schedule

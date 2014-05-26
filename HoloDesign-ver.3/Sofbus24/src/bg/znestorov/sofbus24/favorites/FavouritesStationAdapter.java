@@ -497,8 +497,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 					// Check which type of station is changed (METRO or OTHER)
 					stationsDataSource.open();
-					VehicleType stationType = stationsDataSource.getStation(
-							station).getType();
+					Station dbStation = stationsDataSource.getStation(station);
+					VehicleType stationType = dbStation != null ? dbStation
+							.getType() : VehicleType.BTT;
 					stationsDataSource.open();
 
 					if (stationType == VehicleType.METRO1
