@@ -32,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
@@ -39,6 +40,7 @@ import bg.znestorov.sofbus24.main.Sofbus24;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -577,6 +579,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		// Check if the type of the station - BTT or METRO
 		if (!stationCustomField.equals(metroCustomField)) {
 			// TODO: Retrieve information about the station
+			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
+					context, station, HtmlRequestCodes.FAVOURITES);
+			retrieveVirtualBoards.getSumcInformation();
 			Toast.makeText(context, station.getName(), Toast.LENGTH_SHORT)
 					.show();
 		} else {

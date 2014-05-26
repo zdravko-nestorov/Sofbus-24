@@ -82,6 +82,37 @@ public class Constants {
 	public static final String FAVOURITES_IMAGE_URL = "https://geo0.ggpht.com/cbk?cb_client=maps_sv.tactile&output=thumbnail&thumb=2&w=500&h=165&yaw=1&pitch=1&ll=%s,%s";
 
 	/**
+	 * Virtual Boards
+	 */
+	public static final String VB_PREFERENCES_NAME_SUMC_COOKIES = "sumc_cookies";
+	public static final String VB_PREFERENCES_COOKIE_NAME = "name";
+	public static final String VB_PREFERENCES_COOKIE_DOMAIN = "domain";
+	public static final String VB_PREFERENCES_COOKIE_PATH = "path";
+	public static final String VB_PREFERENCES_COOKIE_VALUE = "value";
+
+	public static final String VB_URL_USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1017.2 Safari/535.19";
+	public static final String VB_URL_REFERER = "http://m.sofiatraffic.bg/vt/";
+	public static final String VB_URL = "http://m.sofiatraffic.bg/vt";
+	public static final String VB_URL_STOP_CODE = "stopCode";
+	public static final String VB_URL_O = "o";
+	public static final String VB_URL_SEC = "sec";
+	public static final String VB_URL_VEHICLE_TYPE_ID = "vehicleTypeId";
+	public static final String VB_URL_CAPTCHA_TEXT = "sc";
+	public static final String VB_URL_CAPTCHA_ID = "poleicngi";
+	public static final String VB_URL_GO = "go";
+
+	public static final String VB_CAPTCHA_URL = "http://m.sofiatraffic.bg/captcha/%s";
+	public static final String VB_CAPTCHA_REQUIRED = "Въведете символите от изображението";
+	public static final String VB_CAPTCHA_REGEX = "<input name=\"poleicngi\" type=\"hidden\" value=\"(.*?)\"\\/>";
+
+	public static final String VB_REGEX_SCHEDULE_START = "<div class=\"arrivals\">";
+	public static final String VB_REGEX_SCHEDULE_BODY = "<div class=\"arrivals\">([^~]*?)\n<\\/div>";
+	public static final String VB_REGEX_VEHICLE_TYPES = "<a\\s*?href=\"#\"\\s*?onClick=\"closethisasap\\('form[0-9]*?'\\)\">([^~]*?&nbsp;[^~]*?&nbsp;){2}([^~]*?)</a>";
+	public static final String VB_VEHICLE_TYPE_BUS = "АВТОБУС";
+	public static final String VB_VEHICLE_TYPE_TROLLEY = "ТРОЛЕ";
+	public static final String VB_VEHICLE_TYPE_TRAM = "ТРАМ";
+
+	/**
 	 * Schedule direction
 	 */
 	public static final String URL_DIRECTION = "http://m.sofiatraffic.bg/schedules?";

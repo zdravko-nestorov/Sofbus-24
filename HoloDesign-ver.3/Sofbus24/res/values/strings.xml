@@ -139,6 +139,10 @@
     <string name="vb_time_bus" formatted="false">Автобус №%s</string>
     <string name="vb_time_trolley" formatted="false">Тролей №%s</string>
     <string name="vb_time_tram" formatted="false">Трамвай №%s</string>
+    <string name="vb_time_retrieve_info" formatted="false"><![CDATA[Извличане времената на пристигане за <b><i>%s</b></i>...]]></string>
+    <string name="vb_time_captcha_check" formatted="false"><![CDATA[Проверка на CAPTCHA изображението...]]></string>
+    <string name="vb_time_sumc_captcha">Тест за сигурност</string>
+    <string name="vb_time_sumc_captcha_msg">Моля въведете символите от изображението (на кирилица или латиница):</string>
     <string name="vb_time_item_time_of_arrival" formatted="false"><![CDATA[<b>Часове на пристигане:</b> <font color="red">%s</font>]]></string>
     <string name="vb_time_item_remaining_time" formatted="false"><![CDATA[<b><font color="#FF2727">Оставащо време: %s</font></b>]]></string>
 

@@ -446,6 +446,14 @@ public class PublicTransportSchedule extends FragmentActivity {
 				}
 
 				break;
+				// Just in case when there is no schedule hour matching the
+				// current hour
+			} else if (scheduleHour == currentHour + 1
+					|| scheduleHour == currentHour + 2) {
+				isCurrentHourInRange = true;
+				currentScheduleHourIndex = i;
+
+				break;
 			}
 		}
 
