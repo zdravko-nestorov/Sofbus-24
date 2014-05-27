@@ -145,22 +145,22 @@ public class RetrievePublicTransportStation extends
 	private String createStationUrlAddress() {
 		final List<NameValuePair> result = new ArrayList<NameValuePair>();
 
-		result.add(new BasicNameValuePair(Constants.URL_STATION_SCHEDULE_STOP,
+		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_STOP,
 				ptStation.getId()));
-		result.add(new BasicNameValuePair(Constants.URL_STATION_SCHEDULE_CH,
-				Constants.URL_STATION_SCHEDULE_CH_VALUE));
-		result.add(new BasicNameValuePair(Constants.URL_STATION_SCHEDULE_VT,
+		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_CH,
+				Constants.SCHECULE_URL_STATION_SCHEDULE_CH_VALUE));
+		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_VT,
 				ptDirectionsEntity.getVt().get(activeDirection)));
-		result.add(new BasicNameValuePair(Constants.URL_STATION_SCHEDULE_VT,
+		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_VT,
 				ptDirectionsEntity.getVt().get(activeDirection)));
-		result.add(new BasicNameValuePair(Constants.URL_STATION_SCHEDULE_LID,
+		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_LID,
 				ptDirectionsEntity.getLid().get(activeDirection)));
-		result.add(new BasicNameValuePair(Constants.URL_STATION_SCHEDULE_RID,
+		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_RID,
 				ptDirectionsEntity.getRid().get(activeDirection)));
-		result.add(new BasicNameValuePair(Constants.URL_STATION_SCHEDULE_H,
-				Constants.URL_STATION_SCHEDULE_H_VALUE));
+		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_H,
+				Constants.SCHECULE_URL_STATION_SCHEDULE_H_VALUE));
 
-		String returnURL = Constants.URL_STATION_SCHEDULE
+		String returnURL = Constants.SCHECULE_URL_STATION_SCHEDULE
 				+ URLEncodedUtils.format(result, "UTF-8");
 
 		return returnURL;

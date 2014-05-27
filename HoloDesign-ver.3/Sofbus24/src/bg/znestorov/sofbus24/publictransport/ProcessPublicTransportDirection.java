@@ -59,7 +59,7 @@ public class ProcessPublicTransportDirection {
 		DirectionsEntity ptDirectionEntity = new DirectionsEntity();
 
 		String[] htmlDirectionsParts = htmlResult
-				.split(Constants.REGEX_DIRECTION_PARTS);
+				.split(Constants.SCHECULE_REGEX_DIRECTION_PARTS);
 		if (htmlDirectionsParts.length > 2) {
 			ptDirectionEntity.setVehicle(vehicle);
 			ptDirectionEntity.setVt(getDirectionsHiddenVariables("vt",
@@ -90,7 +90,7 @@ public class ProcessPublicTransportDirection {
 			String... htmlDirectionsParts) {
 		ArrayList<String> hiddenVariableValues = new ArrayList<String>();
 		Pattern pattern = Pattern.compile(String.format(
-				Constants.REGEX_DIRECTION_HIDDEN_VARIABLE, name));
+				Constants.SCHECULE_REGEX_DIRECTION_HIDDEN_VARIABLE, name));
 
 		for (int i = 0; i < htmlDirectionsParts.length; i++) {
 			Matcher matcher = pattern.matcher(htmlDirectionsParts[i]);
@@ -112,7 +112,7 @@ public class ProcessPublicTransportDirection {
 	 */
 	private ArrayList<String> getDirectionsNames(String... htmlDirectionsParts) {
 		ArrayList<String> directionsNames = new ArrayList<String>();
-		Pattern pattern = Pattern.compile(Constants.REGEX_DIRECTION_NAME);
+		Pattern pattern = Pattern.compile(Constants.SCHECULE_REGEX_DIRECTION_NAME);
 
 		for (int i = 0; i < htmlDirectionsParts.length; i++) {
 			Matcher matcher = pattern.matcher(htmlDirectionsParts[i]);
@@ -141,7 +141,7 @@ public class ProcessPublicTransportDirection {
 	private ArrayList<ArrayList<Station>> getDirectionsList(
 			String... htmlDirectionsParts) {
 		ArrayList<ArrayList<Station>> ptDirectionsList = new ArrayList<ArrayList<Station>>();
-		Pattern pattern = Pattern.compile(Constants.REGEX_DIRECTION_STATION);
+		Pattern pattern = Pattern.compile(Constants.SCHECULE_REGEX_DIRECTION_STATION);
 
 		stationDatasource.open();
 		for (int i = 0; i < htmlDirectionsParts.length; i++) {

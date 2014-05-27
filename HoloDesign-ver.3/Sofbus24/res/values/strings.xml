@@ -13,6 +13,7 @@
     <string name="app_dialog_title_important">Важно</string>
     <string name="app_dialog_title_error">Грешка</string>
     <string name="app_internet_error">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
+    <string name="app_info_error" formatted="false"><![CDATA[>В момента сайта за градска мобилност не предоставя информация за <b>%s</b>. Моля опитайте пак по-късно.]]></string>
     <string name="app_internet_or_info_error">В момента няма намерена информация. Моля проверете вашата интернет връзка или опитайте по-късно.</string>
     <string name="app_location_error">Моля включете поне едно от устройствата (GPS или WiFi), за да бъде засечено текущото ви местоположение.</string>
     <string name="app_coordinates_error">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
@@ -143,7 +144,7 @@
     <string name="vb_time_captcha_check" formatted="false"><![CDATA[Проверка на CAPTCHA изображението...]]></string>
     <string name="vb_time_sumc_captcha">Тест за сигурност</string>
     <string name="vb_time_sumc_captcha_msg">Моля въведете символите от изображението (на кирилица или латиница):</string>
-    <string name="vb_time_item_time_of_arrival" formatted="false"><![CDATA[<b>Часове на пристигане:</b> <font color="red">%s</font>]]></string>
+    <string name="vb_time_item_time_of_arrival" formatted="false"><![CDATA[<b><font color="#FF2727">Часове на пристигане: %s</font></b>]]></string>
     <string name="vb_time_item_remaining_time" formatted="false"><![CDATA[<b><font color="#FF2727">Оставащо време: %s</font></b>]]></string>
 
     <!-- Schedule Fragment -->

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.text.Spanned;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import bg.znestorov.sofbus24.main.R;
@@ -133,6 +134,21 @@ public class ActivityUtils {
 		builder.setIcon(android.R.drawable.ic_menu_info_details)
 				.setTitle(context.getString(R.string.app_dialog_title_error))
 				.setMessage(context.getString(R.string.app_internet_error))
+				.setNegativeButton(context.getString(R.string.app_button_ok),
+						null).show();
+	}
+
+	/**
+	 * Show no Info alert dialog
+	 * 
+	 * @param context
+	 *            current Activity context
+	 */
+	public static void showNoInfoAlertDialog(Activity context, Spanned msg) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setIcon(android.R.drawable.ic_menu_info_details)
+				.setTitle(context.getString(R.string.app_dialog_title_error))
+				.setMessage(msg)
 				.setNegativeButton(context.getString(R.string.app_button_ok),
 						null).show();
 	}

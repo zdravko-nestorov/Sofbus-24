@@ -59,7 +59,7 @@ public class ProcessPublicTransportStation {
 	 * @return PublicTransportStation object with schedule set
 	 */
 	public PublicTransportStation getStationFromHtml() {
-		Pattern pattern = Pattern.compile(Constants.REGEX_STATION_SCHEDULE);
+		Pattern pattern = Pattern.compile(Constants.SCHECULE_REGEX_STATION_SCHEDULE);
 		Matcher matcher = pattern.matcher(htmlResult);
 
 		while (matcher.find()) {

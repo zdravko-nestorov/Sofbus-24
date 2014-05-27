@@ -155,14 +155,14 @@ public class RetrievePublicTransportDirection extends
 	private String createDirectionUrlAddress() {
 		final List<NameValuePair> result = new ArrayList<NameValuePair>();
 
-		result.add(new BasicNameValuePair(Constants.URL_DIRECTION_BUS_TYPE,
+		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_DIRECTION_BUS_TYPE,
 				getVehicleType(vehicle)));
-		result.add(new BasicNameValuePair(Constants.URL_DIRECTION_LINE, vehicle
+		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_DIRECTION_LINE, vehicle
 				.getNumber()));
-		result.add(new BasicNameValuePair(Constants.URL_DIRECTION_SEARCH,
-				Constants.URL_DIRECTION_SEARCH_VALUE));
+		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_DIRECTION_SEARCH,
+				Constants.SCHECULE_URL_DIRECTION_SEARCH_VALUE));
 
-		String returnURL = Constants.URL_DIRECTION
+		String returnURL = Constants.SCHECULE_URL_DIRECTION
 				+ URLEncodedUtils.format(result, "UTF-8");
 
 		return returnURL;

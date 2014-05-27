@@ -52,6 +52,7 @@ import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 public class RetrieveVirtualBoards {
 
@@ -69,8 +70,9 @@ public class RetrieveVirtualBoards {
 		this.context = context;
 
 		// Set the selected station
-		if (station.getCustomField() == null) {
-			station.setCustomField("-1");
+		if (station.getCustomField() == null
+				|| "".equals(station.getCustomField())) {
+			station.setCustomField("1");
 		}
 		this.station = station;
 
@@ -88,20 +90,8 @@ public class RetrieveVirtualBoards {
 		// Create the appropriate progress dialog message (if searched by
 		// HomeScreen - show only the searched string, otherwise - the station
 		// caption)
-		Spanned progressDialogMsg;
-		switch (htmlRequestCode) {
-		case MULTIPLE_RESULTS:
-			progressDialogMsg = Html.fromHtml(String.format(
-					context.getString(R.string.vb_time_retrieve_info),
-					station.getNumber()));
-			break;
-		default:
-			progressDialogMsg = Html.fromHtml(String.format(
-					context.getString(R.string.vb_time_retrieve_info),
-					String.format(station.getName() + " (%s)",
-							station.getNumber())));
-			break;
-		}
+		Spanned progressDialogMsg = getProgressDialogMsg(context
+				.getString(R.string.vb_time_retrieve_info));
 
 		// Making HttpRequest and showing a progress dialog
 		ProgressDialog progressDialog = new ProgressDialog(context);
@@ -799,39 +789,75 @@ public class RetrieveVirtualBoards {
 		httpClient.getConnectionManager().shutdown();
 
 		// TODO: Continue with the result accordingly
-		HtmlResultCodes emptyListMsg;
+		switch (htmlResultCode) {
+		// In case of an error with the result (no internet or no information)
+		case NO_INTERNET:
+		case NO_INFORMATION:
+			switch (htmlRequestCode) {
+			case REFRESH:
 
-		switch (htmlRequestCode) {
-		case MULTIPLE_RESULTS:
-			emptyListMsg = htmlResultCode;
-			ArrayList<Station> vbStationsList;
-
-			switch (htmlResultCode) {
-			case SINGLE_RESULT:
-			case MULTIPLE_RESULTS:
-				// TODO: Create a list with the station from the html result
 				break;
 			default:
-				vbStationsList = new ArrayList<Station>();
+				Spanned progressDialogMsg = getProgressDialogMsg(context
+						.getString(R.string.app_info_error));
+				ActivityUtils.showNoInfoAlertDialog(context, progressDialogMsg);
 				break;
 			}
 
 			break;
-		default:
-			emptyListMsg = htmlResultCode;
-			Station vbStation;
-
-			switch (htmlResultCode) {
-			case SINGLE_RESULT:
+		// In case of single result (only one station found)
+		case SINGLE_RESULT:
+			switch (htmlRequestCode) {
 			case MULTIPLE_RESULTS:
 
 				break;
-
 			default:
+
+				break;
+			}
+
+			break;
+		// In case of multiple result (more than one station found)
+		default:
+			switch (htmlRequestCode) {
+			case FAVOURITES:
+			case SINGLE_RESULT:
+			case REFRESH:
+
+				break;
+			default:
+
 				break;
 			}
 
 			break;
 		}
+
+	}
+
+	/**
+	 * Get the progress dialog message according to the htmlRequestCode
+	 * 
+	 * @param msg
+	 *            the unformatted message from strings
+	 * @return the formatted message
+	 */
+	private Spanned getProgressDialogMsg(String msg) {
+		Spanned progressDialogMsg;
+
+		switch (htmlRequestCode) {
+		case MULTIPLE_RESULTS:
+			progressDialogMsg = Html.fromHtml(String.format(msg,
+					station.getNumber()));
+			break;
+		default:
+			progressDialogMsg = Html.fromHtml(String.format(
+					msg,
+					String.format(station.getName() + " (%s)",
+							station.getNumber())));
+			break;
+		}
+
+		return progressDialogMsg;
 	}
 }
