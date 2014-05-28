@@ -192,7 +192,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
 		StringBuilder arrivalTimes = new StringBuilder("");
 
 		for (int i = 0; i < arrivalTimesList.size(); i++) {
-			String timeToUse = Utils.getDifference(context,
+			String timeToUse = Utils.getTimeDifference(context,
 					arrivalTimesList.get(i), currentTime);
 			arrivalTimes.append(timeToUse).append(", ");
 		}

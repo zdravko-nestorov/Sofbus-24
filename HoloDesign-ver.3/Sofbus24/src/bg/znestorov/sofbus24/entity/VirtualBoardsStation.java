@@ -25,12 +25,26 @@ public class VirtualBoardsStation extends Station implements Serializable {
 
 	public VirtualBoardsStation() {
 		super();
+
+		this.systemTime = android.text.format.DateFormat.format(
+				"dd.MM.yyy, kk:mm", new java.util.Date()).toString();
+		this.vehiclesList = new ArrayList<Vehicle>();
+	}
+
+	public VirtualBoardsStation(Station station) {
+		super(station.getNumber(), station.getName(), station.getLat(), station
+				.getLon(), station.getType(), station.getCustomField());
+
+		this.systemTime = android.text.format.DateFormat.format(
+				"dd.MM.yyy, kk:mm", new java.util.Date()).toString();
+		this.vehiclesList = new ArrayList<Vehicle>();
 	}
 
 	public VirtualBoardsStation(Station station, String skgtTime,
 			ArrayList<Vehicle> vehiclesList) {
 		super(station.getNumber(), station.getName(), station.getLat(), station
 				.getLon(), station.getType(), station.getCustomField());
+
 		this.skgtTime = skgtTime;
 		this.systemTime = android.text.format.DateFormat.format(
 				"dd.MM.yyy, kk:mm", new java.util.Date()).toString();

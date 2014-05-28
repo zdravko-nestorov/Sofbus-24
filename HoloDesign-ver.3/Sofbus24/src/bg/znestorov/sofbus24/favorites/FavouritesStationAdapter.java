@@ -578,9 +578,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 		// Check if the type of the station - BTT or METRO
 		if (!stationCustomField.equals(metroCustomField)) {
-			// TODO: Retrieve information about the station
 			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-					context, station, HtmlRequestCodes.FAVOURITES);
+					context, null, station, HtmlRequestCodes.FAVOURITES);
 			retrieveVirtualBoards.getSumcInformation();
 			Toast.makeText(context, station.getName(), Toast.LENGTH_SHORT)
 					.show();

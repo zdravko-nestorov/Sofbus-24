@@ -490,7 +490,7 @@ public class MetroSchedule extends FragmentActivity {
 					new java.util.Date()).toString();
 			String metroScheduleTime = scheduleList
 					.get(scheduleList.size() - 1);
-			String differenceTime = Utils.getDifference(context,
+			String differenceTime = Utils.getTimeDifference(context,
 					metroScheduleTime, currentTime);
 
 			if (!"---".equals(differenceTime)) {
@@ -516,7 +516,7 @@ public class MetroSchedule extends FragmentActivity {
 
 		for (int i = 0; i < scheduleList.size(); i++) {
 			String metroScheduleTime = scheduleList.get(i);
-			String differenceTime = Utils.getDifference(context,
+			String differenceTime = Utils.getTimeDifference(context,
 					metroScheduleTime, currentTime);
 
 			if (!"---".equals(differenceTime)) {

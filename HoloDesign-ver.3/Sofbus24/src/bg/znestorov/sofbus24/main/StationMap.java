@@ -194,7 +194,7 @@ public class StationMap extends Activity {
 
 		for (int i = 0; i < stationVehiclesList.size(); i++) {
 			Vehicle stationVehicle = stationVehiclesList.get(i);
-			String timeToUse = Utils.getDifference(context, stationVehicle
+			String timeToUse = Utils.getTimeDifference(context, stationVehicle
 					.getArrivalTimes().get(0), currentTime);
 
 			switch (stationVehicle.getType()) {

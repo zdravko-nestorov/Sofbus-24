@@ -37,7 +37,7 @@ public class Station implements Serializable {
 
 	public Station(String number, String name, String lat, String lon,
 			VehicleType type, String customField) {
-		this.number = number;
+		this.number = Utils.formatNumberOfDigits(number, 4);
 		this.name = name;
 		this.lat = lat;
 		this.lon = lon;
@@ -46,10 +46,14 @@ public class Station implements Serializable {
 	}
 
 	public String getNumber() {
-		return Utils.formatNumberOfDigits(number, 4);
+		return number;
 	}
 
 	public void setNumber(String number) {
+		this.number = Utils.formatNumberOfDigits(number, 4);
+	}
+
+	public void setNumberUnformatted(String number) {
 		this.number = number;
 	}
 

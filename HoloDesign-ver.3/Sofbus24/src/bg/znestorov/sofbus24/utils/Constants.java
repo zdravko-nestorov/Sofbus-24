@@ -107,6 +107,14 @@ public class Constants {
 
 	public static final String VB_REGEX_SCHEDULE_START = "<div class=\"arrivals\">";
 	public static final String VB_REGEX_SCHEDULE_BODY = "<div class=\"arrivals\">([^~]*?)\n<\\/div>";
+
+	public static final String VB_REGEX_SKGT_TIME = "<b>Информация към (.*?)<\\/b>";
+	public static final String VB_REGEX_STATION_INFO = "(.*?)&nbsp;\\(([0-9]{4})\\)&nbsp;";
+	public static final String VB_REGEX_MULTIPLE_STATION_INFO = "<input type=\"hidden\" name=\"stopCode\" value=\"([0-9]*)\">\\s+<input type=\"hidden\" name=\"o\" value=\"([0-9]*)\">[^^]*?&nbsp;спирка&nbsp;([^^]*?)&nbsp;";
+	public static final String VB_REGEX_VEHICLE_PARTS = "<div class=\"arr_title_[0-9]{1,}\">";
+	public static final String VB_REGEX_VEHICLE_TYPE = "<b>\\n(.*?)<\\/b>";
+	public static final String VB_REGEX_VEHICLE_INFO = "<div class=\"arr_info_.*?\">[^^]*?<a href=\".*?\"><b>(.*?)<\\/b><\\/a>&nbsp;-&nbsp;([^^]*?)<br \\/>([^^]*?)<\\/div>";
+
 	public static final String VB_REGEX_VEHICLE_TYPES = "<a\\s*?href=\"#\"\\s*?onClick=\"closethisasap\\('form[0-9]*?'\\)\">([^~]*?&nbsp;[^~]*?&nbsp;){2}([^~]*?)</a>";
 	public static final String VB_VEHICLE_TYPE_BUS = "АВТОБУС";
 	public static final String VB_VEHICLE_TYPE_TROLLEY = "ТРОЛЕ";

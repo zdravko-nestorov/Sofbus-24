@@ -1,14 +1,14 @@
 package bg.znestorov.sofbus24.virtualboards;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,15 +20,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
-import bg.znestorov.sofbus24.databases.StationsDataSource;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.UpdateableFragment;
-import bg.znestorov.sofbus24.entity.Vehicle;
-import bg.znestorov.sofbus24.entity.VehicleType;
-import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.main.VirtualBoardsTime;
-import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
@@ -37,10 +32,14 @@ public class VirtualBoardsFragment extends ListFragment implements
 		UpdateableFragment {
 
 	private Activity context;
+	private TextView emptyList;
+	private SearchEditText searchEditText;
 
-	private StationsDataSource stationsDatasource;
-	private List<Station> vbList;
-	private static String vbSearchText = "";
+	private String vbSearchText;
+	private ArrayList<Station> vbList;
+
+	private static final String BUNDLE_VB_SEARCH_TEXT = "VB SEARCH TEXT";
+	private static final String BUNDLE_VB_STATIONS_LIST = "VB STATION LIST";
 
 	public VirtualBoardsFragment() {
 	}
@@ -51,6 +50,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View myFragmentView = inflater.inflate(
@@ -59,71 +59,108 @@ public class VirtualBoardsFragment extends ListFragment implements
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
 
-		// Load the Stations Datasource
-		stationsDatasource = new StationsDataSource(context);
+		// Get the vbSearchText and vbList from the Bundle (savedInstanceState)
+		if (savedInstanceState != null) {
+			vbSearchText = savedInstanceState.getString(BUNDLE_VB_SEARCH_TEXT);
+			vbList = (ArrayList<Station>) savedInstanceState
+					.getSerializable(BUNDLE_VB_STATIONS_LIST);
+		} else {
+			vbSearchText = "";
+		}
 
 		// Find all of TextView and SearchEditText tabs in the layout
-		SearchEditText searchEditText = (SearchEditText) myFragmentView
-				.findViewById(R.id.vb_search);
-		TextView emptyList = (TextView) myFragmentView
+		emptyList = (TextView) myFragmentView
 				.findViewById(R.id.vb_list_empty_text);
+		searchEditText = (SearchEditText) myFragmentView
+				.findViewById(R.id.vb_search);
 
 		// In case of screen rotation (recreate screen)
 		searchEditText.setText(vbSearchText);
 
-		// Add an empty list to the Fragment
-		performSearch(searchEditText, emptyList);
+		// Set the list adapter to the Fragment
+		setListAdapterViaSearch();
 
 		// Set the actions over the TextViews and SearchEditText
-		actionsOverSearchEditText(searchEditText, emptyList);
+		actionsOverSearchEditText();
 
 		return myFragmentView;
 	}
 
 	@Override
 	public void update(Activity context, Object obj) {
-		if (this.context == null) {
-			this.context = context;
-		}
+		setListAdapterViaSearch();
+	}
 
-		SearchEditText searchEditText = (SearchEditText) context
-				.findViewById(R.id.vb_search);
-		TextView emptyList = (TextView) context
-				.findViewById(R.id.vb_list_empty_text);
-		performSearch(searchEditText, emptyList);
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+
+		savedInstanceState.putString(BUNDLE_VB_SEARCH_TEXT, vbSearchText);
+		savedInstanceState.putSerializable(BUNDLE_VB_STATIONS_LIST, vbList);
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Station station = (Station) getListAdapter().getItem(position);
 
-		// TODO: Retrieve information about the vehicle
+		RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
+				context, this, station, HtmlRequestCodes.SINGLE_RESULT);
+		retrieveVirtualBoards.getSumcInformation();
+
 		Toast.makeText(getActivity(), station.getName(), Toast.LENGTH_SHORT)
 				.show();
+	}
 
-		ArrayList<String> arrivalTime = new ArrayList<String>();
-		arrivalTime.add("23:10");
-		arrivalTime.add("23:12");
-		arrivalTime.add("23:14");
+	/**
+	 * Set list adapter and the appropriate text message to it (using a list as
+	 * a parameter)
+	 * 
+	 * @param stationsList
+	 *            the stationList that need to be set to the listView
+	 */
+	public void setListAdapterViaSearch(ArrayList<Station> stationsList) {
+		vbList = stationsList;
+		setListAdapterViaSearch();
+	}
 
-		ArrayList<Vehicle> vehiclesList = new ArrayList<Vehicle>();
-		vehiclesList.add(new Vehicle("1", VehicleType.BUS,
-				"Цариградско Шосе - Обеля", arrivalTime));
-		vehiclesList.add(new Vehicle("2", VehicleType.BUS,
-				"Цариградско Шосе - Обеля", arrivalTime));
-		vehiclesList.add(new Vehicle("3", VehicleType.TROLLEY,
-				"Цариградско Шосе - Обеля", arrivalTime));
-		vehiclesList.add(new Vehicle("4", VehicleType.TRAM,
-				"Цариградско Шосе - Обеля", arrivalTime));
-		vehiclesList.add(new Vehicle("5", VehicleType.TRAM,
-				"Цариградско Шосе - Обеля", arrivalTime));
+	/**
+	 * Set list adapter and the appropriate text message to it, using the
+	 * default fragment list (vbList)
+	 */
+	private void setListAdapterViaSearch() {
+		ArrayAdapter<Station> adapter = new VirtualBoardsAdapter(context,
+				vbList);
 
-		Intent vbTimeIntent = new Intent(context, VirtualBoardsTime.class);
-		VirtualBoardsStation vbTimeStation = new VirtualBoardsStation(station,
-				"30.05.2014, 22:30", vehiclesList);
-		vbTimeIntent.putExtra(Constants.BUNDLE_VIRTUAL_BOARDS_TIME,
-				vbTimeStation);
-		startActivity(vbTimeIntent);
+		if (adapter.isEmpty()) {
+			setEmptyListAdapter();
+		} else {
+			setListAdapter(adapter);
+		}
+	}
+
+	/**
+	 * Set an empty list adapter and the appropriate text message to it
+	 */
+	private void setEmptyListAdapter() {
+		setListAdapter(null);
+		setEmptyListText();
+	}
+
+	/**
+	 * Set a message to the empty list according to the search text view:
+	 * <ul>
+	 * <li>If contains <b>no</b> text - set the default search message</li>
+	 * <li>If contains <b>some</b> text - set that there are no results</li>
+	 * </ul>
+	 */
+	private void setEmptyListText() {
+		if (vbSearchText == null || "".equals(vbSearchText)) {
+			emptyList.setText(Html
+					.fromHtml(getString(R.string.vb_item_search_list)));
+		} else {
+			emptyList.setText(Html.fromHtml(String.format(
+					getString(R.string.vb_item_empty_list), vbSearchText)));
+		}
 	}
 
 	/**
@@ -132,8 +169,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 	 * @param searchEditText
 	 *            the search EditText
 	 */
-	private void actionsOverSearchEditText(final SearchEditText searchEditText,
-			final TextView emptyList) {
+	private void actionsOverSearchEditText() {
 		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
 
 		// Add on focus listener
@@ -145,13 +181,32 @@ public class VirtualBoardsFragment extends ListFragment implements
 			}
 		});
 
+		// Add on text changes listener
+		searchEditText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				vbSearchText = searchEditText.getText().toString();
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+		});
+
 		// Add the editor action listener
 		searchEditText.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-					performSearch(searchEditText, emptyList);
+					performSearch();
 
 					return true;
 				}
@@ -166,12 +221,12 @@ public class VirtualBoardsFragment extends ListFragment implements
 			public void onClick(DrawablePosition target) {
 				switch (target) {
 				case LEFT:
-					performSearch(searchEditText, emptyList);
+					performSearch();
 
 					break;
 				case RIGHT:
 					searchEditText.setText("");
-					performSearch(searchEditText, emptyList);
+					performSearch();
 
 					break;
 				default:
@@ -184,37 +239,17 @@ public class VirtualBoardsFragment extends ListFragment implements
 
 	/**
 	 * Perform a search via the search text from the SearchEditText
-	 * 
-	 * @param searchEditText
-	 *            the SearchEditText
-	 * @param emptyList
-	 *            the empty list
 	 */
-	private void performSearch(final SearchEditText searchEditText,
-			final TextView emptyList) {
-		vbSearchText = searchEditText.getText().toString();
+	private void performSearch() {
+		if (checkSearchText(vbSearchText)) {
+			Station station = new Station();
+			station.setNumberUnformatted(vbSearchText);
 
-		// Check if the search is legal
-		if (!checkSearchText(vbSearchText)) {
-			vbSearchText = "";
-		}
-
-		// TODO: Make the search via the SKGT site
-
-		vbList = loadStationsList(vbSearchText);
-		ArrayAdapter<Station> adapter = new VirtualBoardsAdapter(context,
-				vbList);
-		setListAdapter(adapter);
-
-		// Set a message if the list is empty
-		if (adapter.isEmpty()) {
-			if (!"".equals(vbSearchText)) {
-				emptyList.setText(Html.fromHtml(String.format(
-						getString(R.string.vb_item_empty_list), vbSearchText)));
-			} else {
-				emptyList.setText(Html
-						.fromHtml(getString(R.string.vb_item_search_list)));
-			}
+			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
+					context, this, station, HtmlRequestCodes.MULTIPLE_RESULTS);
+			retrieveVirtualBoards.getSumcInformation();
+		} else {
+			setEmptyListAdapter();
 		}
 	}
 
@@ -242,33 +277,6 @@ public class VirtualBoardsFragment extends ListFragment implements
 		}
 
 		return result;
-	}
-
-	/**
-	 * Load all stations according to a search text (if it is left as empty -
-	 * all stations of the current tab type are loaded)
-	 * 
-	 * @param searchText
-	 *            the search text
-	 * @return all stations according to a search text
-	 */
-	private List<Station> loadStationsList(String searchText) {
-		List<Station> stationsList;
-
-		if (searchText != null && !"".equals(searchText)) {
-			if (stationsDatasource == null) {
-				stationsDatasource = new StationsDataSource(context);
-			}
-
-			stationsDatasource.open();
-			stationsList = stationsDatasource.getStationsViaSearch(null,
-					searchText);
-			stationsDatasource.close();
-		} else {
-			stationsList = new ArrayList<Station>();
-		}
-
-		return stationsList;
 	}
 
 }

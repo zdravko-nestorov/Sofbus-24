@@ -27,6 +27,24 @@ public class Utils {
 	}
 
 	/**
+	 * Function that remove all whitespaces and non visible characters such as
+	 * tab, \n from a string text. In case of an empty string - return "".
+	 * 
+	 * @param value
+	 *            the input String
+	 * @return the digits from the String
+	 */
+	public static String removeSpaces(String value) {
+		if (value != null && !"".equals(value)) {
+			value = value.replaceAll("\\s+", "");
+		} else {
+			value = "";
+		}
+
+		return value;
+	}
+
+	/**
 	 * Get a value from a string BEFORE some REGEX
 	 * 
 	 * @param value
@@ -149,7 +167,7 @@ public class Utils {
 	 *            the current time in format HH:MM
 	 * @return the difference between the times
 	 */
-	public static String getDifference(Context context, String afterTime,
+	public static String getTimeDifference(Context context, String afterTime,
 			String currTime) {
 		String diff = "";
 		int afterTimeMilis = 0;
@@ -219,6 +237,43 @@ public class Utils {
 		}
 
 		return diff;
+	}
+
+	/**
+	 * Function that format the direction name of the station or vehicle to be
+	 * in correct format. In case of an empty string - return "".
+	 * 
+	 * @param directionName
+	 *            the name of the direction
+	 * @return the digits from the String
+	 */
+	public static String formatDirectionName(String directionName) {
+		if (directionName != null && !"".equals(directionName)) {
+			directionName = directionName.trim();
+			directionName = getValueBefore(directionName, "(");
+			directionName = getValueBefore(directionName, "/");
+			directionName = getValueBefore(directionName, "   ").trim();
+			directionName = directionName.replaceAll(" +", " ");
+
+			String[] directionNameParts = directionName.split("-");
+			switch (directionNameParts.length) {
+			case 1:
+				directionName = directionNameParts[0];
+				break;
+			case 2:
+				directionName = directionNameParts[0] + " - "
+						+ directionNameParts[1];
+				break;
+			default:
+				directionName = directionNameParts[0] + " - "
+						+ directionNameParts[1] + " - " + directionNameParts[2];
+				break;
+			}
+		} else {
+			directionName = "";
+		}
+
+		return directionName;
 	}
 
 }

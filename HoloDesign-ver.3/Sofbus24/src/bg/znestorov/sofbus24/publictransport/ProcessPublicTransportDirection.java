@@ -112,17 +112,15 @@ public class ProcessPublicTransportDirection {
 	 */
 	private ArrayList<String> getDirectionsNames(String... htmlDirectionsParts) {
 		ArrayList<String> directionsNames = new ArrayList<String>();
-		Pattern pattern = Pattern.compile(Constants.SCHECULE_REGEX_DIRECTION_NAME);
+		Pattern pattern = Pattern
+				.compile(Constants.SCHECULE_REGEX_DIRECTION_NAME);
 
 		for (int i = 0; i < htmlDirectionsParts.length; i++) {
 			Matcher matcher = pattern.matcher(htmlDirectionsParts[i]);
 
 			if (matcher.find()) {
-				String directionName = matcher.group(1);
-				directionName = Utils.getValueBefore(directionName, "(");
-				directionName = Utils.getValueBefore(directionName, "/");
-				directionName = Utils.getValueBefore(directionName, "   ")
-						.trim();
+				String directionName = Utils.formatDirectionName(matcher
+						.group(1));
 				directionsNames.add(directionName);
 			}
 		}
@@ -141,7 +139,8 @@ public class ProcessPublicTransportDirection {
 	private ArrayList<ArrayList<Station>> getDirectionsList(
 			String... htmlDirectionsParts) {
 		ArrayList<ArrayList<Station>> ptDirectionsList = new ArrayList<ArrayList<Station>>();
-		Pattern pattern = Pattern.compile(Constants.SCHECULE_REGEX_DIRECTION_STATION);
+		Pattern pattern = Pattern
+				.compile(Constants.SCHECULE_REGEX_DIRECTION_STATION);
 
 		stationDatasource.open();
 		for (int i = 0; i < htmlDirectionsParts.length; i++) {

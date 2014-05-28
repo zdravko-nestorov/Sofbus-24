@@ -502,7 +502,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 			String currentTime = DateFormat.format("kk:mm",
 					new java.util.Date()).toString();
 			String ptScheduleTime = scheduleList.get(scheduleList.size() - 1);
-			String differenceTime = Utils.getDifference(context,
+			String differenceTime = Utils.getTimeDifference(context,
 					ptScheduleTime, currentTime);
 
 			if (!"---".equals(differenceTime)) {
@@ -528,7 +528,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 
 		for (int i = 0; i < scheduleList.size(); i++) {
 			String ptScheduleTime = scheduleList.get(i);
-			String differenceTime = Utils.getDifference(context,
+			String differenceTime = Utils.getTimeDifference(context,
 					ptScheduleTime, currentTime);
 
 			if (!"---".equals(differenceTime)) {

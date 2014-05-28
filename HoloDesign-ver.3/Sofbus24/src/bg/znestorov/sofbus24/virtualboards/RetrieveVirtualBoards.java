@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -32,6 +33,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
@@ -45,10 +47,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.HtmlResultCodes;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.VirtualBoardsTime;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.Utils;
@@ -57,17 +62,22 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 public class RetrieveVirtualBoards {
 
 	private Activity context;
+	private Object callerInstance;
+
 	private Station station;
 
 	private HtmlRequestCodes htmlRequestCode;
 	private HtmlResultCodes htmlResultCode;
 
 	private DefaultHttpClient httpClient;
+	private FavouritesDataSource favouriteDatasource;
 
-	public RetrieveVirtualBoards(Activity context, Station station,
-			HtmlRequestCodes htmlRequestCode) {
-		// Set the current activity context
+	public RetrieveVirtualBoards(Activity context, Object callerInstance,
+			Station station, HtmlRequestCodes htmlRequestCode) {
+		// Set the current activity context and the object that created an
+		// instance of this class
 		this.context = context;
+		this.callerInstance = callerInstance;
 
 		// Set the selected station
 		if (station.getCustomField() == null
@@ -81,6 +91,9 @@ public class RetrieveVirtualBoards {
 
 		// Creating a HTTP Client
 		this.httpClient = new DefaultHttpClient();
+
+		// Create an instance of the favourite database
+		this.favouriteDatasource = new FavouritesDataSource(context);
 	}
 
 	public void getSumcInformation() {
@@ -249,11 +262,11 @@ public class RetrieveVirtualBoards {
 	private LinkedHashSet<String> getStationNumbers(String htmlSourceCode) {
 		LinkedHashSet<String> stationNumbers = new LinkedHashSet<String>();
 
-		Pattern pattern = Pattern.compile("(&nbsp;\\([0-9]{4}\\)&nbsp;)");
+		Pattern pattern = Pattern.compile(Constants.VB_REGEX_STATION_INFO);
 		Matcher matcher = pattern.matcher(htmlSourceCode);
 		while (matcher.find()) {
 			try {
-				stationNumbers.add(Utils.getOnlyDigits(matcher.group(1)));
+				stationNumbers.add(Utils.getOnlyDigits(matcher.group(2)));
 			} catch (Exception e) {
 			}
 		}
@@ -789,6 +802,9 @@ public class RetrieveVirtualBoards {
 		httpClient.getConnectionManager().shutdown();
 
 		// TODO: Continue with the result accordingly
+		ProcessVirtualBoards processVirtualBoards = new ProcessVirtualBoards(
+				context, htmlResult);
+
 		switch (htmlResultCode) {
 		// In case of an error with the result (no internet or no information)
 		case NO_INTERNET:
@@ -809,23 +825,52 @@ public class RetrieveVirtualBoards {
 		case SINGLE_RESULT:
 			switch (htmlRequestCode) {
 			case MULTIPLE_RESULTS:
+				ArrayList<Station> stationsList = new ArrayList<Station>(
+						processVirtualBoards.getMultipleStationsFromHtml()
+								.values());
+				((VirtualBoardsFragment) callerInstance)
+						.setListAdapterViaSearch(stationsList);
 
 				break;
 			default:
-
+				VirtualBoardsStation vbTimeStation = processVirtualBoards
+						.getVBSingleStationFromHtml();
+				Intent vbTimeIntent = new Intent(context,
+						VirtualBoardsTime.class);
+				vbTimeIntent.putExtra(Constants.BUNDLE_VIRTUAL_BOARDS_TIME,
+						vbTimeStation);
+				context.startActivity(vbTimeIntent);
 				break;
 			}
 
 			break;
 		// In case of multiple result (more than one station found)
 		default:
+			HashMap<String, Station> stationsMap;
+
 			switch (htmlRequestCode) {
-			case FAVOURITES:
-			case SINGLE_RESULT:
 			case REFRESH:
+			case SINGLE_RESULT:
+				stationsMap = processVirtualBoards
+						.getMultipleStationsFromHtml();
+				station = stationsMap.get(station.getNumber());
+				getSumcInformation();
+
+				break;
+			case FAVOURITES:
+				stationsMap = processVirtualBoards
+						.getMultipleStationsFromHtml();
+				station = stationsMap.get(station.getNumber());
+				updateFavouritesStation(station);
+				getSumcInformation();
 
 				break;
 			default:
+				ArrayList<Station> stationsList = new ArrayList<Station>(
+						processVirtualBoards.getMultipleStationsFromHtml()
+								.values());
+				((VirtualBoardsFragment) callerInstance)
+						.setListAdapterViaSearch(stationsList);
 
 				break;
 			}
@@ -859,5 +904,17 @@ public class RetrieveVirtualBoards {
 		}
 
 		return progressDialogMsg;
+	}
+
+	/**
+	 * Update the station in the favourites database
+	 * 
+	 * @param stationToUpdate
+	 *            the new station (fullfilled with all information)
+	 */
+	private void updateFavouritesStation(Station stationToUpdate) {
+		favouriteDatasource.open();
+		favouriteDatasource.updateStation(stationToUpdate);
+		favouriteDatasource.close();
 	}
 }
