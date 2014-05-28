@@ -59,7 +59,13 @@ public class ProcessPublicTransportStation {
 	 * @return PublicTransportStation object with schedule set
 	 */
 	public PublicTransportStation getStationFromHtml() {
-		Pattern pattern = Pattern.compile(Constants.SCHECULE_REGEX_STATION_SCHEDULE);
+		// Reset the schedule, because the station is passed by reference, not
+		// by value
+		ptStation.resetSchedule();
+
+		// Create the pattern and process the htmlResult
+		Pattern pattern = Pattern
+				.compile(Constants.SCHECULE_REGEX_STATION_SCHEDULE);
 		Matcher matcher = pattern.matcher(htmlResult);
 
 		while (matcher.find()) {

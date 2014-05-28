@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
- * Class representing each station of the public tranport (add direction and
+ * Class representing each station of the public transport (add direction and
  * schedule)
  * 
  * @author Zdravko Nestorov
@@ -22,12 +22,7 @@ public class PublicTransportStation extends Station implements Serializable {
 
 	public PublicTransportStation() {
 		super();
-
-		this.schedule = new LinkedHashMap<Integer, ArrayList<String>>();
-
-		for (int i = 4; i <= 24; i++) {
-			this.schedule.put(i, new ArrayList<String>());
-		}
+		this.setScheduleMap();
 	}
 
 	public PublicTransportStation(Station station) {
@@ -87,6 +82,28 @@ public class PublicTransportStation extends Station implements Serializable {
 	 */
 	public void setScheduleHour(int hour, String time) {
 		this.schedule.get(hour).add(time);
+	}
+
+	/**
+	 * Clear the schedule and prepare the instance to set a new one
+	 */
+	public void resetSchedule() {
+		this.setScheduleMap();
+	}
+
+	/**
+	 * Reset the schedule map to the default condition
+	 */
+	private void setScheduleMap() {
+		if (this.schedule != null) {
+			this.schedule.clear();
+		} else {
+			this.schedule = new LinkedHashMap<Integer, ArrayList<String>>();
+		}
+
+		for (int i = 4; i <= 24; i++) {
+			this.schedule.put(i, new ArrayList<String>());
+		}
 	}
 
 	/**

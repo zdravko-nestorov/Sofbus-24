@@ -258,15 +258,16 @@ public class Utils {
 			String[] directionNameParts = directionName.split("-");
 			switch (directionNameParts.length) {
 			case 1:
-				directionName = directionNameParts[0];
+				directionName = directionNameParts[0].trim();
 				break;
 			case 2:
-				directionName = directionNameParts[0] + " - "
-						+ directionNameParts[1];
+				directionName = directionNameParts[0].trim() + " - "
+						+ directionNameParts[1].trim();
 				break;
 			default:
-				directionName = directionNameParts[0] + " - "
-						+ directionNameParts[1] + " - " + directionNameParts[2];
+				directionName = directionNameParts[0].trim() + " - "
+						+ directionNameParts[1].trim() + " - "
+						+ directionNameParts[2].trim();
 				break;
 			}
 		} else {
