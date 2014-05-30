@@ -27,6 +27,7 @@ public class Constants {
 	public static final String BUNDLE_EDIT_TABS_RESET = "EDIT TABS RESET";
 	// VirtualBoardsFragment --> VirtualBoardsTime
 	public static final String BUNDLE_VIRTUAL_BOARDS_TIME = "VIRTUAL BOARDS TIME";
+	public static final String BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST = "VIRTUAL BOARDS TIME EMPTY LIST";
 	// ScheduleFragment --> PublicTransport --> PublicTransportFragment
 	public static final String BUNDLE_PUBLIC_TRANSPORT_SCHEDULE = "PUBLIC TRANSPORT SCHEDULE";
 	// MetroFragment --> MetroSchedule --> MetroScheduleFragment

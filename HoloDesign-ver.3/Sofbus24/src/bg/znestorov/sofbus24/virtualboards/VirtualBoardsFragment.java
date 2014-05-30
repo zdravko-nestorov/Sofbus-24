@@ -249,6 +249,8 @@ public class VirtualBoardsFragment extends ListFragment implements
 					context, this, station, HtmlRequestCodes.MULTIPLE_RESULTS);
 			retrieveVirtualBoards.getSumcInformation();
 		} else {
+			vbSearchText = "";
+			vbList.clear();
 			setEmptyListAdapter();
 		}
 	}

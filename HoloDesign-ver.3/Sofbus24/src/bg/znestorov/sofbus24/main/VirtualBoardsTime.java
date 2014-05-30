@@ -13,9 +13,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsTimeFragment;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -53,7 +55,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 
 		initBundleInfo();
 		initLayoutFields();
-		startVirtualBoardsTimeFragment();
+		startVirtualBoardsTimeFragment("");
 	}
 
 	@Override
@@ -100,7 +102,10 @@ public class VirtualBoardsTime extends FragmentActivity {
 		vbTimeFragment.setVisibility(View.GONE);
 		vbTimeLoading.setVisibility(View.VISIBLE);
 
-		// TODO: Retrieve the refreshed information from SKGT site
+		// Retrieve the refreshed information from SKGT site
+		RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
+				context, this, vbTimeStation, HtmlRequestCodes.REFRESH);
+		retrieveVirtualBoards.getSumcInformation();
 	}
 
 	/**
@@ -159,13 +164,40 @@ public class VirtualBoardsTime extends FragmentActivity {
 	}
 
 	/**
-	 * Create a new VirtualBoardsTimeFragment with all needed information
+	 * Overwrite the information from the vbTimeStation object with the new
+	 * information retrieved from the SKGT site
+	 * 
+	 * @param newVBTimeStation
+	 *            the new station with all info, retrieved from SKGT site (if
+	 *            null - clear the vehicles list)
+	 * @param vbTimeEmptyText
+	 *            the text that has to be shown if the list is empty
 	 */
-	private void startVirtualBoardsTimeFragment() {
+	public void startVirtualBoardsTimeFragment(
+			VirtualBoardsStation newVBTimeStation, String vbTimeEmptyText) {
+		vbTimeStation.getVehiclesList().clear();
+		if (newVBTimeStation != null) {
+			vbTimeStation.setSystemTime(newVBTimeStation.getSystemTime());
+			vbTimeStation.getVehiclesList().addAll(
+					newVBTimeStation.getVehiclesList());
+		}
+
+		startVirtualBoardsTimeFragment(vbTimeEmptyText);
+	}
+
+	/**
+	 * Create a new VirtualBoardsTimeFragment with all needed information
+	 * 
+	 * @param vbTimeEmptyText
+	 *            the text that has to be shown if the list is empty
+	 */
+	private void startVirtualBoardsTimeFragment(String vbTimeEmptyText) {
 		Fragment fragment;
 
+		// Check if a new fragment should be created
 		if (savedInstanceState == null) {
-			fragment = VirtualBoardsTimeFragment.newInstance(vbTimeStation);
+			fragment = VirtualBoardsTimeFragment.newInstance(vbTimeStation,
+					vbTimeEmptyText);
 		} else {
 			fragment = getSupportFragmentManager().findFragmentByTag(
 					FRAGMENT_TAG_NAME);
@@ -186,6 +218,8 @@ public class VirtualBoardsTime extends FragmentActivity {
 
 		vbTimeFragment.setVisibility(View.VISIBLE);
 		vbTimeLoading.setVisibility(View.GONE);
+
+		actionsOverStreetViewFileds();
 	}
 
 	/**

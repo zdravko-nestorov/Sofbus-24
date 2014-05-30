@@ -16,12 +16,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.Sofbus24;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
+import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
 /**
  * Array Adapted user for set each row a station from the SKGT site
@@ -50,6 +52,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 		ImageView addToFavourites;
 		TextView stationName;
 		TextView stationNumber;
+		ImageView stationVBTime;
 	}
 
 	public PublicTransportAdapter(Activity context, TextView emptyList,
@@ -91,6 +94,8 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 					.findViewById(R.id.pt_item_station_name);
 			viewHolder.stationNumber = (TextView) rowView
 					.findViewById(R.id.pt_item_station_number);
+			viewHolder.stationVBTime = (ImageView) rowView
+					.findViewById(R.id.pt_item_virtual_boards);
 			rowView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) rowView.getTag();
@@ -104,7 +109,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 				context.getString(R.string.pt_item_station_number_text),
 				station.getNumber()));
 
-		// Set the actions over the ImageView
+		// Set the actions over the ImageView and ImageButton
 		actionsOverFavouritesImageViews(viewHolder, station);
 
 		return rowView;
@@ -233,6 +238,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	 */
 	public void actionsOverFavouritesImageViews(final ViewHolder viewHolder,
 			final Station station) {
+		// Add onClickListener over the addToFavourites ImageView
 		viewHolder.addToFavourites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Sofbus24.setFavouritesChanged(true);
@@ -260,6 +266,20 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 							Toast.LENGTH_SHORT).show();
 				}
 				favouritesDataSource.close();
+			}
+		});
+
+		// Add onClickListener over the VirtualBoards ImageButton
+		viewHolder.stationVBTime.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
+						context, null, station, HtmlRequestCodes.SINGLE_RESULT);
+				retrieveVirtualBoards.getSumcInformation();
+				Toast.makeText(
+						context,
+						String.format(station.getName() + " (%s)",
+								station.getNumber()), Toast.LENGTH_SHORT)
+						.show();
 			}
 		});
 	}

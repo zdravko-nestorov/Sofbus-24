@@ -1,7 +1,6 @@
 package bg.znestorov.sofbus24.virtualboards;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.text.format.DateFormat;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.Vehicle;
@@ -207,8 +207,8 @@ public class ProcessVirtualBoards {
 			// Get and format the vehicle times of arrival
 			String vehicleTimes = matcher.group(2);
 			vehicleTimes = Utils.removeSpaces(vehicleTimes);
-			ArrayList<String> arrivalTimes = new ArrayList<String>(
-					Arrays.asList(vehicleTimes.split(",")));
+			ArrayList<String> arrivalTimes = formatArrivalTimes(vehicleTimes
+					.split(","));
 
 			// Get and format the vehicle direction
 			String vehicleDirection = matcher.group(3);
@@ -235,6 +235,30 @@ public class ProcessVirtualBoards {
 		});
 
 		return vehiclesList;
+	}
+
+	/**
+	 * Transform the arrivalTimes array into a list. It is also checking for
+	 * each time of arrival if it is after the current hour
+	 * 
+	 * @param arrivalTimes
+	 *            an array with the arrival times
+	 * @return an array list, containing all times after the current hour
+	 */
+	private ArrayList<String> formatArrivalTimes(String[] arrivalTimes) {
+		ArrayList<String> arrivalTimesList = new ArrayList<String>();
+		String currentTime = DateFormat.format("kk:mm", new java.util.Date())
+				.toString();
+
+		for (int i = 0; i < arrivalTimes.length; i++) {
+			String differenceTime = Utils.getTimeDifference(context,
+					arrivalTimes[i], currentTime);
+			if (!"".equals(differenceTime) && !"---".equals(differenceTime)) {
+				arrivalTimesList.add(arrivalTimes[i]);
+			}
+		}
+
+		return arrivalTimesList;
 	}
 
 	/**

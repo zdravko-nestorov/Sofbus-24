@@ -3,9 +3,11 @@ package bg.znestorov.sofbus24.virtualboards;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -22,16 +24,15 @@ public class VirtualBoardsTimeFragment extends ListFragment {
 
 	private Activity context;
 
-	private VirtualBoardsStation vbTimeStation;
-	private VirtualBoardsTimeAdapter vbTimeAdapter;
-
 	public static VirtualBoardsTimeFragment newInstance(
-			VirtualBoardsStation vbTimeStation) {
+			VirtualBoardsStation vbTimeStation, String vbTimeEmptyText) {
 		VirtualBoardsTimeFragment vbTimeFragment = new VirtualBoardsTimeFragment();
 
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Constants.BUNDLE_VIRTUAL_BOARDS_TIME,
 				vbTimeStation);
+		bundle.putString(Constants.BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST,
+				vbTimeEmptyText);
 		vbTimeFragment.setArguments(bundle);
 
 		return vbTimeFragment;
@@ -52,17 +53,37 @@ public class VirtualBoardsTimeFragment extends ListFragment {
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
 
-		// Get the Fragment position and MetroStation object from the Bundle
-		vbTimeStation = (VirtualBoardsStation) getArguments().getSerializable(
-				Constants.BUNDLE_VIRTUAL_BOARDS_TIME);
+		// Get the empty list TextView
+		TextView vbListEmptyTextView = (TextView) myFragmentView
+				.findViewById(R.id.vb_list_empty_text);
 
-		// Create the ListAdapter
-		vbTimeAdapter = new VirtualBoardsTimeAdapter(context, vbTimeStation);
+		// Get the VirtualBoardsStation object and the empty list text from the
+		// Bundle
+		String vbTimeEmptyText = getArguments().getString(
+				Constants.BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST);
+		VirtualBoardsStation vbTimeStation = (VirtualBoardsStation) getArguments()
+				.getSerializable(Constants.BUNDLE_VIRTUAL_BOARDS_TIME);
 
 		// Set the ListAdapter
-		setListAdapter(vbTimeAdapter);
+		setListAdapter(vbListEmptyTextView, vbTimeEmptyText, vbTimeStation);
 
 		return myFragmentView;
+	}
+
+	/**
+	 * Set list adapter and the appropriate text message to it
+	 */
+	private void setListAdapter(TextView vbListEmptyTextView,
+			String vbTimeEmptyText, VirtualBoardsStation vbTimeStation) {
+		VirtualBoardsTimeAdapter vbTimeAdapter = new VirtualBoardsTimeAdapter(
+				context, vbTimeStation);
+
+		if (vbTimeAdapter.isEmpty()) {
+			setListAdapter(null);
+			vbListEmptyTextView.setText(Html.fromHtml(vbTimeEmptyText));
+		} else {
+			setListAdapter(vbTimeAdapter);
+		}
 	}
 
 }

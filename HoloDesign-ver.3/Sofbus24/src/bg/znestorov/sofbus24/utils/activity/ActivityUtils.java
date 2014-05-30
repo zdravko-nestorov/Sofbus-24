@@ -143,6 +143,8 @@ public class ActivityUtils {
 	 * 
 	 * @param context
 	 *            current Activity context
+	 * @param msg
+	 *            message to be shown on the alert dialog
 	 */
 	public static void showNoInfoAlertDialog(Activity context, Spanned msg) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);

@@ -96,6 +96,9 @@ public class RetrieveVirtualBoards {
 		this.favouriteDatasource = new FavouritesDataSource(context);
 	}
 
+	/**
+	 * Retrieve the information for the selected station
+	 */
 	public void getSumcInformation() {
 		// Load the cookies from the preferences (if exists)
 		loadCookiesFromPreferences();
@@ -106,9 +109,8 @@ public class RetrieveVirtualBoards {
 		Spanned progressDialogMsg = getProgressDialogMsg(context
 				.getString(R.string.vb_time_retrieve_info));
 
-		// Making HttpRequest and showing a progress dialog
-		ProgressDialog progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage(progressDialogMsg);
+		// Making HttpRequest and showing a progress dialog if needed
+		ProgressDialog progressDialog = createProgressDialog(progressDialogMsg);
 		RetrieveSumcInformation retrieveSumcInformation = new RetrieveSumcInformation(
 				progressDialog, null, null);
 		retrieveSumcInformation.execute();
@@ -416,15 +418,17 @@ public class RetrieveVirtualBoards {
 
 		@Override
 		protected void onPreExecute() {
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(true);
-			progressDialog
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						public void onCancel(DialogInterface dialog) {
-							cancel(true);
-						}
-					});
-			progressDialog.show();
+			if (progressDialog != null) {
+				progressDialog.setIndeterminate(true);
+				progressDialog.setCancelable(true);
+				progressDialog
+						.setOnCancelListener(new DialogInterface.OnCancelListener() {
+							public void onCancel(DialogInterface dialog) {
+								cancel(true);
+							}
+						});
+				progressDialog.show();
+			}
 		}
 
 		@Override
@@ -489,11 +493,22 @@ public class RetrieveVirtualBoards {
 							}
 						}
 
-						// Check if the SKGT site returned all needed
-						// information
-						// (single station result) or an Internet error occured
+						/**
+						 * Check if the SKGT site returned all needed
+						 * information
+						 * <ul>
+						 * <li>No result - INTERNER ERROR</li>
+						 * <li>Result with information about captcha (in case
+						 * there are more than one vehicle and some of the
+						 * requests face captcha image) - CAPTCHA NEEDED</li>
+						 * <li>No problem - SINGLE RESULT</li>
+						 * </ul>
+						 */
 						if (htmlResult == null || "".equals(htmlResult)) {
 							throw new Exception();
+						} else if (htmlResult
+								.contains(Constants.VB_CAPTCHA_REQUIRED)) {
+							htmlResultCode = HtmlResultCodes.CAPTCHA_NEEDED;
 						} else {
 							htmlResultCode = HtmlResultCodes.SINGLE_RESULT;
 						}
@@ -552,10 +567,9 @@ public class RetrieveVirtualBoards {
 		// Get the captcha id (poleicngi) from the HTML source result
 		String captchaId = getCaptchaId(htmlResult);
 
-		// Making HttpRequest and showing a progress dialog
-		ProgressDialog progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage(context
-				.getString(R.string.vb_time_captcha_check));
+		// Making HttpRequest and showing a progress dialog if needed
+		ProgressDialog progressDialog = createProgressDialog(Html
+				.fromHtml(context.getString(R.string.vb_time_captcha_check)));
 		RetrieveCaptchaInformation retrieveCaptchaInformation = new RetrieveCaptchaInformation(
 				progressDialog, captchaId);
 		retrieveCaptchaInformation.execute();
@@ -649,10 +663,10 @@ public class RetrieveVirtualBoards {
 		captchaText = TranslatorCyrillicToLatin.translate(context, captchaText);
 
 		// Making HttpRequest and showing a progress dialog
-		ProgressDialog progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage(Html.fromHtml(String.format(
-				context.getString(R.string.vb_time_retrieve_info),
-				station.getNumber())));
+		ProgressDialog progressDialog = createProgressDialog(Html
+				.fromHtml(String.format(
+						context.getString(R.string.vb_time_retrieve_info),
+						station.getNumber())));
 		RetrieveSumcInformation retrieveSumcInformation = new RetrieveSumcInformation(
 				progressDialog, captchaText, captchaId);
 		retrieveSumcInformation.execute();
@@ -705,6 +719,7 @@ public class RetrieveVirtualBoards {
 
 		dialogBuilder.setOnCancelListener(new OnCancelListener() {
 			public void onCancel(DialogInterface arg0) {
+				proccessHtmlResult(null);
 			}
 		});
 
@@ -739,15 +754,17 @@ public class RetrieveVirtualBoards {
 
 		@Override
 		protected void onPreExecute() {
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(true);
-			progressDialog
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						public void onCancel(DialogInterface dialog) {
-							cancel(true);
-						}
-					});
-			progressDialog.show();
+			if (progressDialog != null) {
+				progressDialog.setIndeterminate(true);
+				progressDialog.setCancelable(true);
+				progressDialog
+						.setOnCancelListener(new DialogInterface.OnCancelListener() {
+							public void onCancel(DialogInterface dialog) {
+								cancel(true);
+							}
+						});
+				progressDialog.show();
+			}
 		}
 
 		@Override
@@ -765,7 +782,12 @@ public class RetrieveVirtualBoards {
 
 		@Override
 		protected void onPostExecute(Bitmap captchaImage) {
-			progressDialog.dismiss();
+			try {
+				progressDialog.dismiss();
+			} catch (Exception e) {
+				// Workaround used just in case when this activity is destroyed
+				// before the dialog
+			}
 
 			if (captchaImage != null) {
 				getCaptchaText(captchaId, captchaImage);
@@ -801,17 +823,20 @@ public class RetrieveVirtualBoards {
 		saveCookiesToPreferences();
 		httpClient.getConnectionManager().shutdown();
 
-		// TODO: Continue with the result accordingly
+		// Process the result accordingly
 		ProcessVirtualBoards processVirtualBoards = new ProcessVirtualBoards(
 				context, htmlResult);
 
 		switch (htmlResultCode) {
-		// In case of an error with the result (no internet or no information)
+		// In case of an error with the result (caprcha needed, no internet or
+		// no information)
 		case NO_INTERNET:
 		case NO_INFORMATION:
+		case CAPTCHA_NEEDED:
 			switch (htmlRequestCode) {
 			case REFRESH:
-
+				((VirtualBoardsTime) callerInstance)
+						.startVirtualBoardsTimeFragment(null, getErrorMsg());
 				break;
 			default:
 				Spanned progressDialogMsg = getProgressDialogMsg(context
@@ -823,17 +848,25 @@ public class RetrieveVirtualBoards {
 			break;
 		// In case of single result (only one station found)
 		case SINGLE_RESULT:
+			VirtualBoardsStation vbTimeStation;
+
 			switch (htmlRequestCode) {
+			case REFRESH:
+				vbTimeStation = processVirtualBoards
+						.getVBSingleStationFromHtml();
+				((VirtualBoardsTime) callerInstance)
+						.startVirtualBoardsTimeFragment(vbTimeStation, null);
+				break;
 			case MULTIPLE_RESULTS:
 				ArrayList<Station> stationsList = new ArrayList<Station>(
 						processVirtualBoards.getMultipleStationsFromHtml()
 								.values());
 				((VirtualBoardsFragment) callerInstance)
 						.setListAdapterViaSearch(stationsList);
-
-				break;
+				// Important - no break here, because if only one station is
+				// found - directly open the VirtualBoards
 			default:
-				VirtualBoardsStation vbTimeStation = processVirtualBoards
+				vbTimeStation = processVirtualBoards
 						.getVBSingleStationFromHtml();
 				Intent vbTimeIntent = new Intent(context,
 						VirtualBoardsTime.class);
@@ -904,6 +937,70 @@ public class RetrieveVirtualBoards {
 		}
 
 		return progressDialogMsg;
+	}
+
+	/**
+	 * Form the error message
+	 * 
+	 * @param msg
+	 *            the unformatted message from strings
+	 * @return the formatted message
+	 */
+	private String getErrorMsg() {
+		String errorDialogMsg;
+
+		switch (htmlResultCode) {
+		case CAPTCHA_NEEDED:
+			errorDialogMsg = context.getString(R.string.app_captcha_error);
+			break;
+		case NO_INFORMATION:
+			switch (htmlRequestCode) {
+			case MULTIPLE_RESULTS:
+				errorDialogMsg = String.format(
+						context.getString(R.string.app_info_error),
+						station.getNumber());
+				break;
+			default:
+				errorDialogMsg = String.format(
+						context.getString(R.string.app_info_error),
+						String.format(station.getName() + " (%s)",
+								station.getNumber()));
+				break;
+			}
+
+			break;
+		default:
+			errorDialogMsg = String.format(
+					context.getString(R.string.app_internet_error),
+					String.format(station.getName() + " (%s)",
+							station.getNumber()));
+			break;
+		}
+
+		return errorDialogMsg;
+	}
+
+	/**
+	 * Create a progress dialog if needed (if the instance of this class is
+	 * created by the REFRESH - no progress dialog needed)
+	 * 
+	 * @param msg
+	 * @return
+	 */
+	private ProgressDialog createProgressDialog(Spanned msg) {
+		ProgressDialog progressDialog;
+
+		switch (htmlRequestCode) {
+		case REFRESH:
+			progressDialog = null;
+			break;
+		default:
+			progressDialog = new ProgressDialog(context);
+			progressDialog.setMessage(msg);
+			break;
+		}
+
+		return progressDialog;
 	}
 
 	/**

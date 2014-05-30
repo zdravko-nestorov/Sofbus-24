@@ -267,7 +267,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		String imageUrl;
 
 		// TODO: Find better approach
-		if (stationLat.contains(",") || stationLat.contains(".")) {
+		if (stationLat != null
+				&& (stationLat.contains(",") || stationLat.contains("."))) {
 			imageUrl = String.format(Constants.FAVOURITES_IMAGE_URL,
 					stationLat, stationLon);
 		} else {

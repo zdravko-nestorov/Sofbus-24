@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
@@ -27,6 +28,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
+import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -152,9 +154,13 @@ public class ClosestStationsListFragment extends ListFragment {
 
 		// Check if the type of the station - BTT or METRO
 		if (!stationCustomField.equals(metroCustomField)) {
-			// TODO: Retrieve information about the station
-			Toast.makeText(context, station.getName(), Toast.LENGTH_SHORT)
-					.show();
+			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
+					context, null, station, HtmlRequestCodes.SINGLE_RESULT);
+			retrieveVirtualBoards.getSumcInformation();
+			Toast.makeText(
+					context,
+					String.format(station.getName() + " (%s)",
+							station.getNumber()), Toast.LENGTH_SHORT).show();
 		} else {
 			ProgressDialog progressDialog = new ProgressDialog(context);
 			progressDialog.setMessage(Html.fromHtml(String.format(

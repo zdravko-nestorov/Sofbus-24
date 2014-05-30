@@ -173,6 +173,11 @@ public class Utils {
 		int afterTimeMilis = 0;
 		int currTimeMilis = 0;
 
+		// In cases when it is after midnight
+		if (currTime.startsWith("00:")) {
+			currTime = currTime.replaceAll("00:", "24:");
+		}
+
 		try {
 			afterTimeMilis = new BigDecimal(afterTime.split(":")[0]).intValue()
 					* 60 + new BigDecimal(afterTime.split(":")[1]).intValue();
@@ -249,25 +254,60 @@ public class Utils {
 	 */
 	public static String formatDirectionName(String directionName) {
 		if (directionName != null && !"".equals(directionName)) {
-			directionName = directionName.trim();
-			directionName = getValueBefore(directionName, "(");
-			directionName = getValueBefore(directionName, "/");
-			directionName = getValueBefore(directionName, "   ").trim();
-			directionName = directionName.replaceAll(" +", " ");
+			String[] directionNameParts = directionName.trim().split("-");
 
-			String[] directionNameParts = directionName.split("-");
 			switch (directionNameParts.length) {
 			case 1:
-				directionName = directionNameParts[0].trim();
+				directionName = directionNameParts[0];
+
 				break;
 			case 2:
-				directionName = directionNameParts[0].trim() + " - "
-						+ directionNameParts[1].trim();
+			case 4:
+				directionNameParts[0] = directionNameParts[0].trim();
+				directionNameParts[0] = directionNameParts[0].replaceAll("\\(",
+						" (");
+
+				directionNameParts[1] = directionNameParts[1].trim();
+				directionNameParts[1] = getValueBefore(directionNameParts[1],
+						"(");
+				directionNameParts[1] = getValueBefore(directionNameParts[1],
+						"/");
+
+				directionName = directionNameParts[0] + " - "
+						+ directionNameParts[1];
+				directionName = directionName.replaceAll(" +", " ");
+
+				break;
+			case 3:
+				boolean isDirectionThreeParts = true;
+				if (directionNameParts[0].equals(directionNameParts[2])) {
+					isDirectionThreeParts = false;
+				}
+
+				directionNameParts[0] = directionNameParts[0].trim();
+				directionNameParts[0] = directionNameParts[0].replaceAll("\\(",
+						" (");
+
+				directionNameParts[1] = directionNameParts[1].trim();
+
+				directionNameParts[2] = directionNameParts[2].trim();
+				directionNameParts[2] = getValueBefore(directionNameParts[2],
+						"(");
+				directionNameParts[2] = getValueBefore(directionNameParts[2],
+						"/");
+
+				if (isDirectionThreeParts) {
+					directionName = directionNameParts[0] + " - "
+							+ directionNameParts[1] + " - "
+							+ directionNameParts[2];
+				} else {
+					directionName = directionNameParts[0] + " - "
+							+ directionNameParts[1];
+				}
+				directionName = directionName.replaceAll(" +", " ");
+
 				break;
 			default:
-				directionName = directionNameParts[0].trim() + " - "
-						+ directionNameParts[1].trim() + " - "
-						+ directionNameParts[2].trim();
 				break;
 			}
 		} else {
