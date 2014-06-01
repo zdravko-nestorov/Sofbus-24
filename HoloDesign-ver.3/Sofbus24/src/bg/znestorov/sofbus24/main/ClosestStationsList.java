@@ -358,4 +358,5 @@ public class ClosestStationsList extends FragmentActivity {
 		}
 
 	}
+
 }

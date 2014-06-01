@@ -69,7 +69,7 @@ public class VirtualBoardsStation extends Station implements Serializable {
 
 	/**
 	 * Depends on the preferences (user settings) decide which time to use - the
-	 * system time or the skgt time
+	 * system time or the SKGT time
 	 * 
 	 * @param context
 	 *            the current activity context

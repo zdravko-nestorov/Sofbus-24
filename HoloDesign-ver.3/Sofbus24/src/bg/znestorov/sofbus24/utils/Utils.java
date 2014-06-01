@@ -174,8 +174,8 @@ public class Utils {
 		int currTimeMilis = 0;
 
 		// In cases when it is after midnight
-		if (currTime.startsWith("00:")) {
-			currTime = currTime.replaceAll("00:", "24:");
+		if (afterTime.startsWith("00:") && !currTime.startsWith("00:")) {
+			afterTime = afterTime.replaceAll("00:", "24:");
 		}
 
 		try {
@@ -279,6 +279,7 @@ public class Utils {
 
 				break;
 			case 3:
+			case 6:
 				boolean isDirectionThreeParts = true;
 				if (directionNameParts[0].equals(directionNameParts[2])) {
 					isDirectionThreeParts = false;

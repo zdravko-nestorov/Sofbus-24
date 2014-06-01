@@ -21,8 +21,8 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
- * Async class used for retrieving the application configuration from a URL
- * address and parse it to a Config object
+ * Asynchronous class used for retrieving the application configuration from a
+ * URL address and parse it to a configuration object
  * 
  * @author Zdravko Nestorov
  * @version 1.0
@@ -67,7 +67,7 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 			Document doc = builder.parse(new URL(Constants.CONFIGURATION_URL)
 					.openStream());
 
-			// Create a Config object from the Document
+			// Create a configuration object from the Document
 			appConfig = new Config(doc);
 		} catch (Exception e) {
 			appConfig = new Config();
@@ -116,9 +116,9 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 	 * Update the current DB if needed
 	 * 
 	 * @param currentConfig
-	 *            the current application config
+	 *            the current application configuration
 	 * @param newConfig
-	 *            the new application config
+	 *            the new application configuration
 	 */
 	private void updateDb(Config currentConfig, final Config newConfig) {
 		String stationsDatabaseUrl = null;
@@ -172,9 +172,9 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 	 * Update the application
 	 * 
 	 * @param currentConfig
-	 *            the current application config
+	 *            the current application configuration
 	 * @param newConfig
-	 *            the new application config
+	 *            the new application configuration
 	 */
 	private void updateApp(Config currentConfig, Config newConfig) {
 		// Check if new application version is available

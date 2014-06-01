@@ -61,7 +61,7 @@ public class StationsDatabaseUtils {
 	}
 
 	/**
-	 * Generates a stations dabatase from a XML file and copy it to the SD card,
+	 * Generates a stations database from a XML file and copy it to the SD card,
 	 * so be easily accessible for modifying and further actions
 	 * 
 	 * @param context

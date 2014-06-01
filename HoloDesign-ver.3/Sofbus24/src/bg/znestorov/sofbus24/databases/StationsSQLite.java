@@ -150,7 +150,7 @@ public class StationsSQLite extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * Open the stations DB in readonly mode
+	 * Open the stations DB in read-only mode
 	 * 
 	 * @return the stations DB
 	 * @throws SQLException

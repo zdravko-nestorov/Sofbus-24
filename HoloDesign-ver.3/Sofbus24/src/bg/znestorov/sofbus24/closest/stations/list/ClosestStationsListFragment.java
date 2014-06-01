@@ -32,6 +32,14 @@ import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
 import com.google.android.gms.maps.model.LatLng;
 
+/**
+ * Fragment used to show all closest stations to the current location. It shows
+ * 10 stations per page and dynamically size itself on list scroll.
+ * 
+ * @author Zdravko Nestorov
+ * @version 1.0
+ * 
+ */
 public class ClosestStationsListFragment extends ListFragment {
 
 	private Activity context;
@@ -73,7 +81,9 @@ public class ClosestStationsListFragment extends ListFragment {
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-				if (view.getLastVisiblePosition() + 1 > totalItemCount - 5
+				if (totalItemCount < 10) {
+					isListFullLoaded = true;
+				} else if (view.getLastVisiblePosition() + 1 > totalItemCount - 5
 						&& !isListFullLoaded) {
 					int pageToLoad = (totalItemCount + 10) / 10;
 					List<Station> closestStations = loadStationsList(true,
@@ -199,6 +209,8 @@ public class ClosestStationsListFragment extends ListFragment {
 				// of the activity started
 				if (!closestStationsSearchText.equals(s.toString())) {
 					closestStationsCount = 10;
+					isListFullLoaded = false;
+
 					closestStationsSearchText = searchEditText.getText()
 							.toString();
 					setListFragmentAdapter();

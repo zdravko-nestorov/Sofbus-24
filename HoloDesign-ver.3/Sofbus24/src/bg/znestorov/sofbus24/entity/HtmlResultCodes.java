@@ -1,8 +1,8 @@
 package bg.znestorov.sofbus24.entity;
 
 /**
- * Enum representing the types of codes that can occur once
- * RetrieveVirtualBoards class is called<br>
+ * Enumeration representing the types of codes that can occur once
+ * RetrieveVirtualBoards class is called
  * 
  * @author Zdravko Nestorov
  * @version 1.0

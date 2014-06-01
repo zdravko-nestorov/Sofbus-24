@@ -70,7 +70,8 @@
         android:drawableLeft="@android:drawable/ic_menu_search"
         android:drawablePadding="5sp"
         android:drawableRight="@android:drawable/ic_menu_close_clear_cancel"
-        android:hint="@string/sch_search_hint" />
+        android:hint="@string/sch_search_hint"
+        android:maxLines="1" />
 
     <ListView
         android:id="@android:id/list"

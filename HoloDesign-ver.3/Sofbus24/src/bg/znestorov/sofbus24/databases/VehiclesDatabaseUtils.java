@@ -60,7 +60,7 @@ public class VehiclesDatabaseUtils {
 	}
 
 	/**
-	 * Generates a vehicles dabatase from an XML file and copy it to the SD
+	 * Generates a vehicles database from an XML file and copy it to the SD
 	 * card, so be easily accessible for modifying and further actions
 	 * 
 	 * @param context

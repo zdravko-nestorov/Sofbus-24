@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.text.Html;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +18,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.PublicTransportStation;
 import bg.znestorov.sofbus24.entity.ScheduleEntity;
@@ -33,7 +31,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 
 	private Activity context;
 	private Bundle savedInstanceState;
-	private FavouritesDataSource favouritesDataSource;
+	private FavouritesDataSource favouritesDatasource;
 
 	private ActionBar actionBar;
 
@@ -63,7 +61,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 		// Get the current context and create a FavouritesDatasource and
 		// a SavedInstanceState objects
 		context = PublicTransportSchedule.this;
-		favouritesDataSource = new FavouritesDataSource(context);
+		favouritesDatasource = new FavouritesDataSource(context);
 		this.savedInstanceState = savedInstanceState;
 
 		initBundleInfo();
@@ -191,33 +189,12 @@ public class PublicTransportSchedule extends FragmentActivity {
 	 * Set onClickListeners over the ImageButtons
 	 */
 	private void actionsOverImageButtons() {
-		// Set onClickListner over the Favourites ImageView
+		// Set onClickListner over the Favorites ImageView
 		addToFavourites.setImageResource(getFavouriteImage(ptStation));
 		addToFavourites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Sofbus24.setFavouritesChanged(true);
-
-				favouritesDataSource.open();
-				if (favouritesDataSource.getStation(ptStation) == null) {
-					favouritesDataSource.createStation(ptStation);
-					addToFavourites.setImageResource(R.drawable.ic_fav_full);
-					Toast.makeText(
-							context,
-							Html.fromHtml(String.format(context
-									.getString(R.string.pt_item_add_toast),
-									ptStation.getName(), ptStation.getNumber())),
-							Toast.LENGTH_SHORT).show();
-				} else {
-					favouritesDataSource.deleteStation(ptStation);
-					addToFavourites.setImageResource(R.drawable.ic_fav_empty);
-					Toast.makeText(
-							context,
-							Html.fromHtml(String.format(context
-									.getString(R.string.pt_item_remove_toast),
-									ptStation.getName(), ptStation.getNumber())),
-							Toast.LENGTH_SHORT).show();
-				}
-				favouritesDataSource.close();
+				ActivityUtils.toggleFavouritesStation(context,
+						favouritesDatasource, ptStation, addToFavourites);
 			}
 		});
 
@@ -243,7 +220,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 	}
 
 	/**
-	 * Get the favourites image according to this if exists in the Favourites
+	 * Get the favorites image according to this if exists in the Favorites
 	 * Database
 	 * 
 	 * @param station
@@ -253,13 +230,13 @@ public class PublicTransportSchedule extends FragmentActivity {
 	private Integer getFavouriteImage(Station station) {
 		Integer favouriteImage;
 
-		favouritesDataSource.open();
-		if (favouritesDataSource.getStation(station) == null) {
+		favouritesDatasource.open();
+		if (favouritesDatasource.getStation(station) == null) {
 			favouriteImage = R.drawable.ic_fav_empty;
 		} else {
 			favouriteImage = R.drawable.ic_fav_full;
 		}
-		favouritesDataSource.close();
+		favouritesDatasource.close();
 
 		return favouriteImage;
 	}
@@ -562,4 +539,5 @@ public class PublicTransportSchedule extends FragmentActivity {
 
 		return currentScheduleIndex;
 	}
+
 }

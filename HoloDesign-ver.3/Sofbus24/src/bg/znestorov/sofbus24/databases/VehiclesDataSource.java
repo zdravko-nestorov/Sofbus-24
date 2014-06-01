@@ -14,6 +14,14 @@ import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 
+/**
+ * Vehicles data source class, responsible for all interactions with the
+ * vehicles database
+ * 
+ * @author Zdravko Nestorov
+ * @version 1.0
+ * 
+ */
 public class VehiclesDataSource {
 
 	// Database fields

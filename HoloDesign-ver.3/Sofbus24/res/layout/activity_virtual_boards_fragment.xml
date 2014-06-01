@@ -15,7 +15,8 @@
         android:drawablePadding="5sp"
         android:drawableRight="@android:drawable/ic_menu_close_clear_cancel"
         android:hint="@string/vb_search_hint"
-        android:imeOptions="actionSearch" />
+        android:imeOptions="actionSearch"
+        android:maxLines="1" />
 
     <ListView
         android:id="@android:id/list"

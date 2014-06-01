@@ -14,13 +14,16 @@
     <string name="app_dialog_title_error">Грешка</string>
     <string name="app_internet_error">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
     <string name="app_info_error" formatted="false"><![CDATA[В момента сайта за градска мобилност не предоставя информация за <b>%s</b>. Моля опитайте пак по-късно.]]></string>
-    <string name="app_captcha_error">Трябва да въведете символите от изображението, за да преминете теста за сигурност на СКГТ и да извлечете нужната информация</string>
+    <string name="app_captcha_error" formatted="false"><![CDATA[Трябва да въведете символите от изображението (<b>captcha код</b>), за да преминете теста за сигурност на <b>СКГТ</b> и да извлечете нужната информация.]]></string>
     <string name="app_internet_or_info_error">В момента няма намерена информация. Моля проверете вашата интернет връзка или опитайте по-късно.</string>
     <string name="app_location_error">Моля включете поне едно от устройствата (GPS или WiFi), за да бъде засечено текущото ви местоположение.</string>
     <string name="app_coordinates_error">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
     <string name="app_distance_meters">&#160;м.</string>
     <string name="app_remaining_minutes">м</string>
     <string name="app_remaining_hours">ч</string>
+    <string name="app_toast_add_favourites" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>
+    <string name="app_toast_remove_favourites" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
+    <string name="app_toast_rename_favourites" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше преименувана на <b><i>%s (%s)</b></i>.]]></string>
 
     <!-- Action Bar -->
     <!-- Sofbus24 -->
@@ -56,6 +59,7 @@
     <string name="action_cs_list_refresh">Обнови</string>
     <string name="action_cs_list_map">Карта</string>
     <!-- Virtual Boards Time -->
+    <string name="action_vb_time_favourites">Добави в Любими</string>
     <string name="action_vb_time_refresh">Обнови</string>
     <string name="action_vb_time_map">Карта</string>
     <!-- Public Transport -->
@@ -120,8 +124,6 @@
     <string name="fav_item_rename_title">Преименувай</string>
     <string name="fav_item_rename_msg" formatted="false"><![CDATA[Промени името на спирка <b><i>%s (%s)</i></b> на:]]></string>
     <string name="fav_item_rename_hint">Въведи ново име</string>
-    <string name="fav_item_rename_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше преименувана на <b><i>%s (%s)</b></i>.]]></string>
-    <string name="fav_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
     <string name="fav_item_empty_list" formatted="false"><![CDATA[Няма намерени спирки в секцията <b>Любими</b>. За да добавите спирката, която търсите, намерете я в някой от останалите табове и маркирайте звездата пред нея.]]></string>
     <string name="fav_menu_remove_all_confirmation" formatted="false"><![CDATA[Сигурни ли сте, че искате да премахнете всички спирки от <b>Любими?</b>]]></string>
     <string name="fav_menu_remove_all_toast" formatted="false"><![CDATA[Всички спирки бяха премахнати от секцията <b>Любими.</b>]]></string>
@@ -130,8 +132,6 @@
     <!-- Virtual Boards Fragment -->
     <string name="vb_search_hint">Търсене по име или номер</string>
     <string name="vb_item_station_number_text" formatted="false">Спирка номер: %s</string>
-    <string name="vb_item_add_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>
-    <string name="vb_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
     <string name="vb_item_search_list" formatted="false"><![CDATA[Моля въведете вашите критерии за търсене (осъществява се на базата на <b>номера - четирицидрен код (пр. 0013)</b> или <b>името (цифра/и или букви на кирилица или латиница)</b> на спирката). Ако търсите по име е нужно да въведете <b>поне 3 символа</b>.]]></string>
     <string name="vb_item_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
 
@@ -168,8 +168,6 @@
     <string name="pt_item_loading_schedule" formatted="false"><![CDATA[Извличане на разписанието за <b><i>%s</b></i>...]]></string>
     <string name="pt_item_station_number_text" formatted="false">Спирка номер: %s</string>
     <string name="pt_item_station_number_text_sign" formatted="false">Спирка №%s</string>
-    <string name="pt_item_add_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>
-    <string name="pt_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
     <string name="pt_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
     <string name="pt_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
 
@@ -177,11 +175,8 @@
     <string name="metro_search_hint">Търсене по име или номер</string>
     <string name="metro_search_tab_direction1">Линия 1</string>
     <string name="metro_search_tab_direction2">Линия 2</string>
-    <string name="metro_item_favourite" />
     <string name="metro_item_station_number_text" formatted="false">Спирка номер: %s</string>
     <string name="metro_item_station_number_text_sign" formatted="false">Станция №%s</string>
-    <string name="metro_item_add_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>
-    <string name="metro_item_remove_toast" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
     <string name="metro_item_empty_list" formatted="false"><![CDATA[Няма намерени метростанции за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
     <string name="metro_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
     <string name="metro_loading_schedule" formatted="false"><![CDATA[Извличане на разписанието за спирка <b><i>%s (%s)</b></i>...]]></string>

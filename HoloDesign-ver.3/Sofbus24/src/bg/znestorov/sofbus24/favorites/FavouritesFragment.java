@@ -30,7 +30,7 @@ import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
 /**
- * Favourites fragment responsible for visualizing the items from Favourites DB
+ * Favourites fragment responsible for visualizing the items from Favorites DB
  * 
  * @author Zdravko Nestorov
  * @version 1.0
@@ -61,11 +61,11 @@ public class FavouritesFragment extends ListFragment implements
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
 
-		// Load the Favourites datasource and fill the list view with the
+		// Load the Favorites datasource and fill the list view with the
 		// stations from the DB
 		favouritesStations = loadFavouritesList(null);
 
-		// Searching over the Favourites
+		// Searching over the Favorites
 		SearchEditText searchEditText = (SearchEditText) myFragmentView
 				.findViewById(R.id.favourites_search);
 		actionsOverSearchEditText(searchEditText);
@@ -106,7 +106,7 @@ public class FavouritesFragment extends ListFragment implements
 		case R.id.action_favourites_remove_all:
 			int favouritesCount = favouritesStations.size();
 
-			// Check if the Favourites database is empty or not
+			// Check if the Favorites database is empty or not
 			if (favouritesCount > 0) {
 				OnClickListener positiveOnClickListener = new OnClickListener() {
 					@Override
@@ -209,12 +209,12 @@ public class FavouritesFragment extends ListFragment implements
 	}
 
 	/**
-	 * Load all stations, marked as favourites, according to a search text (if
-	 * it is left as empty - all favourites stations are loaded)
+	 * Load all stations, marked as favorites, according to a search text (if it
+	 * is left as empty - all favorites stations are loaded)
 	 * 
 	 * @param searchText
-	 *            the search text (if null - return all favourites stations)
-	 * @return all stations, marked as favourites, according to a search text
+	 *            the search text (if null - return all favorites stations)
+	 * @return all stations, marked as favorites, according to a search text
 	 */
 	private List<Station> loadFavouritesList(String searchText) {
 		List<Station> favouritesList;

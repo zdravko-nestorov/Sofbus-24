@@ -250,7 +250,10 @@ public class VirtualBoardsFragment extends ListFragment implements
 			retrieveVirtualBoards.getSumcInformation();
 		} else {
 			vbSearchText = "";
-			vbList.clear();
+			if (vbList != null) {
+				vbList.clear();
+			}
+
 			setEmptyListAdapter();
 		}
 	}

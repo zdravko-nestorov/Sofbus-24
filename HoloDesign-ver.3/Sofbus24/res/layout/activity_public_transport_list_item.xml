@@ -21,7 +21,7 @@
             android:id="@+id/pt_item_favourite"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:contentDescription="@string/metro_item_favourite" />
+            android:contentDescription="@string/app_img_empty_content_description" />
     </LinearLayout>
 
     <TextView

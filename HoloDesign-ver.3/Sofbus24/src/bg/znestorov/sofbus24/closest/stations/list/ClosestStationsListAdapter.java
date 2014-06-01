@@ -3,7 +3,6 @@ package bg.znestorov.sofbus24.closest.stations.list;
 import java.util.List;
 
 import android.app.Activity;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,12 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.main.Sofbus24;
 import bg.znestorov.sofbus24.utils.MapUtils;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -29,7 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 
-	private final FavouritesDataSource favouritesDataSource;
+	private final FavouritesDataSource favouritesDatasource;
 	private final Activity context;
 	private final LatLng currentLocation;
 	private final List<Station> stations;
@@ -47,7 +45,7 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 		this.context = context;
 		this.currentLocation = currentLocation;
 		this.stations = stations;
-		this.favouritesDataSource = new FavouritesDataSource(context);
+		this.favouritesDatasource = new FavouritesDataSource(context);
 	}
 
 	/**
@@ -99,7 +97,7 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 	}
 
 	/**
-	 * Get the favourites image according to this if exists in the Favourites
+	 * Get the favorites image according to this if exists in the Favorites
 	 * Database
 	 * 
 	 * @param station
@@ -109,13 +107,13 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 	private Integer getFavouriteImage(Station station) {
 		Integer favouriteImage;
 
-		favouritesDataSource.open();
-		if (favouritesDataSource.getStation(station) == null) {
+		favouritesDatasource.open();
+		if (favouritesDatasource.getStation(station) == null) {
 			favouriteImage = R.drawable.ic_fav_empty;
 		} else {
 			favouriteImage = R.drawable.ic_fav_full;
 		}
-		favouritesDataSource.close();
+		favouritesDatasource.close();
 
 		return favouriteImage;
 	}
@@ -132,31 +130,9 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 			final Station station) {
 		viewHolder.addToFavourites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Sofbus24.setFavouritesChanged(true);
-
-				favouritesDataSource.open();
-				if (favouritesDataSource.getStation(station) == null) {
-					favouritesDataSource.createStation(station);
-					viewHolder.addToFavourites
-							.setImageResource(R.drawable.ic_fav_full);
-					Toast.makeText(
-							context,
-							Html.fromHtml(String.format(context
-									.getString(R.string.metro_item_add_toast),
-									station.getName(), station.getNumber())),
-							Toast.LENGTH_SHORT).show();
-				} else {
-					favouritesDataSource.deleteStation(station);
-					viewHolder.addToFavourites
-							.setImageResource(R.drawable.ic_fav_empty);
-					Toast.makeText(
-							context,
-							Html.fromHtml(String.format(
-									context.getString(R.string.metro_item_remove_toast),
-									station.getName(), station.getNumber())),
-							Toast.LENGTH_SHORT).show();
-				}
-				favouritesDataSource.close();
+				ActivityUtils.toggleFavouritesStation(context,
+						favouritesDatasource, station,
+						viewHolder.addToFavourites);
 			}
 		});
 	}

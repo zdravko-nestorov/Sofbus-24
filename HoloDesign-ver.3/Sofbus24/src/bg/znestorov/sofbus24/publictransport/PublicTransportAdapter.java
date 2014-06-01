@@ -19,10 +19,10 @@ import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.main.Sofbus24;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
 /**
@@ -37,7 +37,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 
 	private Activity context;
 	private String language;
-	private FavouritesDataSource favouritesDataSource;
+	private FavouritesDataSource favouritesDatasource;
 
 	private TextView emptyList;
 	private String directionName;
@@ -61,7 +61,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 
 		this.context = context;
 		this.language = LanguageChange.getUserLocale(context);
-		this.favouritesDataSource = new FavouritesDataSource(context);
+		this.favouritesDatasource = new FavouritesDataSource(context);
 
 		this.emptyList = emptyList;
 		this.directionName = directionName;
@@ -140,7 +140,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	}
 
 	/**
-	 * Create a custom filter, so proccess the list on searching
+	 * Create a custom filter, so process the list on searching
 	 * 
 	 * @return a custom filter
 	 */
@@ -207,7 +207,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	}
 
 	/**
-	 * Get the favourites image according to this if exists in the Favourites
+	 * Get the favorites image according to this if exists in the Favorites
 	 * Database
 	 * 
 	 * @param station
@@ -217,13 +217,13 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	private Integer getFavouriteImage(Station station) {
 		Integer favouriteImage;
 
-		favouritesDataSource.open();
-		if (favouritesDataSource.getStation(station) == null) {
+		favouritesDatasource.open();
+		if (favouritesDatasource.getStation(station) == null) {
 			favouriteImage = R.drawable.ic_fav_empty;
 		} else {
 			favouriteImage = R.drawable.ic_fav_full;
 		}
-		favouritesDataSource.close();
+		favouritesDatasource.close();
 
 		return favouriteImage;
 	}
@@ -241,31 +241,9 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 		// Add onClickListener over the addToFavourites ImageView
 		viewHolder.addToFavourites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Sofbus24.setFavouritesChanged(true);
-
-				favouritesDataSource.open();
-				if (favouritesDataSource.getStation(station) == null) {
-					favouritesDataSource.createStation(station);
-					viewHolder.addToFavourites
-							.setImageResource(R.drawable.ic_fav_full);
-					Toast.makeText(
-							context,
-							Html.fromHtml(String.format(context
-									.getString(R.string.metro_item_add_toast),
-									station.getName(), station.getNumber())),
-							Toast.LENGTH_SHORT).show();
-				} else {
-					favouritesDataSource.deleteStation(station);
-					viewHolder.addToFavourites
-							.setImageResource(R.drawable.ic_fav_empty);
-					Toast.makeText(
-							context,
-							Html.fromHtml(String.format(
-									context.getString(R.string.metro_item_remove_toast),
-									station.getName(), station.getNumber())),
-							Toast.LENGTH_SHORT).show();
-				}
-				favouritesDataSource.close();
+				ActivityUtils.toggleFavouritesStation(context,
+						favouritesDatasource, station,
+						viewHolder.addToFavourites);
 			}
 		});
 

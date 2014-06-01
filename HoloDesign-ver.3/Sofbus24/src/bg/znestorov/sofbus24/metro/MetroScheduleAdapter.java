@@ -29,8 +29,8 @@ public class MetroScheduleAdapter extends ArrayAdapter<String> {
 
 	public MetroScheduleAdapter(Activity context,
 			ScheduleEntity metroScheduleEntity) {
-		super(context, R.layout.activity_metro_schedule_list_item, metroScheduleEntity
-				.getFormattedScheduleList());
+		super(context, R.layout.activity_metro_schedule_list_item,
+				metroScheduleEntity.getFormattedScheduleList());
 		this.context = context;
 		this.metroScheduleEntity = metroScheduleEntity;
 	}
@@ -59,14 +59,16 @@ public class MetroScheduleAdapter extends ArrayAdapter<String> {
 		}
 
 		// Fill the data
-		String metroSchedule = metroScheduleEntity.getFormattedScheduleList().get(position);
+		String metroSchedule = metroScheduleEntity.getFormattedScheduleList()
+				.get(position);
 		viewHolder.scheduleMetroHour.setText(metroSchedule);
 
 		// Check if this is the current Fragment, so mark the closest vehicle
-		if (metroScheduleEntity.isActive() && position == metroScheduleEntity.getCurrentScheduleIndex()) {
+		if (metroScheduleEntity.isActive()
+				&& position == metroScheduleEntity.getCurrentScheduleIndex()) {
 			rowView.setBackgroundColor(Color.parseColor("#80CEEA"));
 		} else {
-			// Set the bacground to each row (even or odd)
+			// Set the background to each row (even or odd)
 			if (position % 2 == 1) {
 				rowView.setBackgroundColor(Color.parseColor("#F1F1F1"));
 			} else {

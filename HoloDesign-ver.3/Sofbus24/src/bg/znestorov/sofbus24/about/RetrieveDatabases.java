@@ -18,8 +18,8 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
- * Async class used for retrieving the Databases from URL addresses and replace
- * the existing ones in the memory
+ * Asynchronous class used for retrieving the Databases from URL addresses and
+ * replace the existing ones in the memory
  * 
  * @author Zdravko Nestorov
  * @version 1.0
@@ -106,7 +106,7 @@ public class RetrieveDatabases extends
 			if (databases.size() > 0) {
 				Configuration.editDbConfigurationFileds(context, newConfig);
 
-				// Showing an AlertDialog with info that the app must be
+				// Showing an AlertDialog with info that the application must be
 				// restarted
 				OnClickListener positiveOnClickListener = new OnClickListener() {
 					@Override
@@ -145,8 +145,8 @@ public class RetrieveDatabases extends
 	}
 
 	/**
-	 * Replace the existing Stations DB with the one downoladed from the URL
-	 * address
+	 * Replace the existing Stations DB with the one that was download from the
+	 * URL address
 	 * 
 	 * @param dbInputStream
 	 *            the stations DB input stream
@@ -158,8 +158,8 @@ public class RetrieveDatabases extends
 	}
 
 	/**
-	 * Replace the existing Vehicles DB with the one downoladed from the URL
-	 * address
+	 * Replace the existing Vehicles DB with the one that was download from the
+	 * URL address
 	 * 
 	 * @param dbInputStream
 	 *            the vehicles DB input stream

@@ -4,7 +4,7 @@ import android.app.Activity;
 
 /**
  * Class containing all helping functions for creating and deleting the
- * Favourites DB
+ * Favorites DB
  * 
  * @author Zdravko Nestorov
  * @version 1.0

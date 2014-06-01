@@ -18,6 +18,13 @@ import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.SimpleFloatViewManager;
 
+/**
+ * Fragment used to re-arrange the HomeScreen tabs according to user willings
+ * 
+ * @author Zdravko Nestorov
+ * @version 1.0
+ * 
+ */
 public class EditTabsFragment extends ListFragment {
 
 	private Activity context;

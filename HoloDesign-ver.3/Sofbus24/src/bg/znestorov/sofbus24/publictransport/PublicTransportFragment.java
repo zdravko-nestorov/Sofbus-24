@@ -103,6 +103,15 @@ public class PublicTransportFragment extends ListFragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+
+		if (ptAdapter != null) {
+			ptAdapter.getFilter().filter(stationSearchText);
+		}
+	}
+
+	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 

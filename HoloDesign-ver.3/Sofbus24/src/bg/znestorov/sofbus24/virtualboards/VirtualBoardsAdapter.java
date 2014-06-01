@@ -3,7 +3,6 @@ package bg.znestorov.sofbus24.virtualboards;
 import java.util.List;
 
 import android.app.Activity;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,11 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.main.Sofbus24;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * Array Adapted user for set each row a station from the Vehicles DB
@@ -26,7 +24,7 @@ import bg.znestorov.sofbus24.main.Sofbus24;
  */
 public class VirtualBoardsAdapter extends ArrayAdapter<Station> {
 
-	private final FavouritesDataSource favouritesDataSource;
+	private final FavouritesDataSource favouritesDatasource;
 	private final Activity context;
 	private final List<Station> stations;
 
@@ -41,7 +39,7 @@ public class VirtualBoardsAdapter extends ArrayAdapter<Station> {
 		super(context, R.layout.activity_virtual_boards_list_item, stations);
 		this.context = context;
 		this.stations = stations;
-		this.favouritesDataSource = new FavouritesDataSource(context);
+		this.favouritesDatasource = new FavouritesDataSource(context);
 	}
 
 	/**
@@ -101,13 +99,13 @@ public class VirtualBoardsAdapter extends ArrayAdapter<Station> {
 	private Integer getFavouriteImage(Station station) {
 		Integer favouriteImage;
 
-		favouritesDataSource.open();
-		if (favouritesDataSource.getStation(station) == null) {
+		favouritesDatasource.open();
+		if (favouritesDatasource.getStation(station) == null) {
 			favouriteImage = R.drawable.ic_fav_empty;
 		} else {
 			favouriteImage = R.drawable.ic_fav_full;
 		}
-		favouritesDataSource.close();
+		favouritesDatasource.close();
 
 		return favouriteImage;
 	}
@@ -124,31 +122,9 @@ public class VirtualBoardsAdapter extends ArrayAdapter<Station> {
 			final Station station) {
 		viewHolder.addToFavourites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Sofbus24.setFavouritesChanged(true);
-
-				favouritesDataSource.open();
-				if (favouritesDataSource.getStation(station) == null) {
-					favouritesDataSource.createStation(station);
-					viewHolder.addToFavourites
-							.setImageResource(R.drawable.ic_fav_full);
-					Toast.makeText(
-							context,
-							Html.fromHtml(String.format(context
-									.getString(R.string.metro_item_add_toast),
-									station.getName(), station.getNumber())),
-							Toast.LENGTH_SHORT).show();
-				} else {
-					favouritesDataSource.deleteStation(station);
-					viewHolder.addToFavourites
-							.setImageResource(R.drawable.ic_fav_empty);
-					Toast.makeText(
-							context,
-							Html.fromHtml(String.format(
-									context.getString(R.string.metro_item_remove_toast),
-									station.getName(), station.getNumber())),
-							Toast.LENGTH_SHORT).show();
-				}
-				favouritesDataSource.close();
+				ActivityUtils.toggleFavouritesStation(context,
+						favouritesDatasource, station,
+						viewHolder.addToFavourites);
 			}
 		});
 	}

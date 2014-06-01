@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.metro;
 
+import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
@@ -29,6 +30,7 @@ public class MetroLoadStations {
 				.getStationsViaType(VehicleType.METRO1);
 		metroDirection2 = stationsDatasource
 				.getStationsViaType(VehicleType.METRO2);
+		Collections.reverse(metroDirection2);
 		stationsDatasource.close();
 	}
 

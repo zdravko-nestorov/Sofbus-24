@@ -1,7 +1,7 @@
 package bg.znestorov.sofbus24.entity;
 
 /**
- * Enum representing the types of calls to RetrieveVirtualBoards class<br>
+ * Enumeration representing the types of calls to RetrieveVirtualBoards class
  * 
  * @author Zdravko Nestorov
  * @version 1.0

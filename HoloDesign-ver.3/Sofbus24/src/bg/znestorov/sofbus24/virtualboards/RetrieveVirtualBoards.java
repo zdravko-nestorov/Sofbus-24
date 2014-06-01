@@ -59,6 +59,14 @@ import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
+/**
+ * It is used to retrieve the information from the SKGT site and transform it in
+ * an appropriate form, according to the activity called it
+ * 
+ * @author Zdravko Nestorov
+ * @version 1.0
+ * 
+ */
 public class RetrieveVirtualBoards {
 
 	private Activity context;
@@ -187,7 +195,7 @@ public class RetrieveVirtualBoards {
 	 *            The text that the user entered according to the CAPTCHA image
 	 * @param captchaId
 	 *            The Id of the CAPTCHA image, token from the source file
-	 * @return an HTTP POST object, created with the needed params
+	 * @return an HTTP POST object, created with the needed parameters
 	 */
 	private HttpPost createSumcRequest(String vehicleTypeId,
 			String captchaText, String captchaId) {
@@ -209,8 +217,8 @@ public class RetrieveVirtualBoards {
 	}
 
 	/**
-	 * Creating a list with BasicNameValuePair params, used for preparing the
-	 * HTTP POST request
+	 * Creating a list with BasicNameValuePair parameters, used for preparing
+	 * the HTTP POST request
 	 * 
 	 * @param vehicleTypeId
 	 *            the searched vehicle type:
@@ -362,7 +370,7 @@ public class RetrieveVirtualBoards {
 	 * @param tempHtmlSourceCode
 	 *            the current HTML source code (bus, trolley or tram)
 	 * @return the combined output between the global and current HTML results
-	 *         (with replaced arrivarls section)
+	 *         (with replaced arrivals section)
 	 */
 	private String appendArrivals(String htmlSourceCode,
 			String tempHtmlSourceCode) {
@@ -453,7 +461,7 @@ public class RetrieveVirtualBoards {
 					 * request:<br/>
 					 * - in case of empty list - no info available<br/>
 					 * - in case of one station number - check the schedule for
-					 * all type of vehciles<br/>
+					 * all type of vehicles<br/>
 					 * - in case of more than one station number - show a list
 					 * with all stations<br/>
 					 */
@@ -659,14 +667,17 @@ public class RetrieveVirtualBoards {
 	 *            The Id of the CAPTCHA image, token from the source file
 	 */
 	private void processCaptchaText(String captchaId, String captchaText) {
-		// Translate the text to be always in latin
+		// Translate the text to be always in Latin
 		captchaText = TranslatorCyrillicToLatin.translate(context, captchaText);
 
-		// Making HttpRequest and showing a progress dialog
-		ProgressDialog progressDialog = createProgressDialog(Html
-				.fromHtml(String.format(
-						context.getString(R.string.vb_time_retrieve_info),
-						station.getNumber())));
+		// Create the appropriate progress dialog message (if searched by
+		// HomeScreen - show only the searched string, otherwise - the station
+		// caption)
+		Spanned progressDialogMsg = getProgressDialogMsg(context
+				.getString(R.string.vb_time_retrieve_info));
+
+		// Making HttpRequest and showing a progress dialog if needed
+		ProgressDialog progressDialog = createProgressDialog(progressDialogMsg);
 		RetrieveSumcInformation retrieveSumcInformation = new RetrieveSumcInformation(
 				progressDialog, captchaText, captchaId);
 		retrieveSumcInformation.execute();
@@ -727,7 +738,12 @@ public class RetrieveVirtualBoards {
 		AlertDialog alertDialog = dialogBuilder.create();
 		alertDialog.getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-		alertDialog.show();
+		try {
+			alertDialog.show();
+		} catch (Exception e) {
+			// Workaround used just in case when this activity is destroyed
+			// before the dialog
+		}
 	}
 
 	/**
@@ -812,7 +828,7 @@ public class RetrieveVirtualBoards {
 	}
 
 	/**
-	 * Proccessing the html result and start new activity if needed (checks for
+	 * Processing the html result and start new activity if needed (checks for
 	 * all possible errors that can occur)
 	 * 
 	 * @param htmlResult
@@ -828,7 +844,7 @@ public class RetrieveVirtualBoards {
 				context, htmlResult);
 
 		switch (htmlResultCode) {
-		// In case of an error with the result (caprcha needed, no internet or
+		// In case of an error with the result (captcha needed, no Internet or
 		// no information)
 		case NO_INTERNET:
 		case NO_INFORMATION:
@@ -839,8 +855,7 @@ public class RetrieveVirtualBoards {
 						.startVirtualBoardsTimeFragment(null, getErrorMsg());
 				break;
 			default:
-				Spanned progressDialogMsg = getProgressDialogMsg(context
-						.getString(R.string.app_info_error));
+				Spanned progressDialogMsg = Html.fromHtml(getErrorMsg());
 				ActivityUtils.showNoInfoAlertDialog(context, progressDialogMsg);
 				break;
 			}
@@ -940,7 +955,8 @@ public class RetrieveVirtualBoards {
 	}
 
 	/**
-	 * Form the error message
+	 * Form the error message. It is not Spanned type as it can't be added as
+	 * Bundle object.
 	 * 
 	 * @param msg
 	 *            the unformatted message from strings
@@ -1007,7 +1023,7 @@ public class RetrieveVirtualBoards {
 	 * Update the station in the favourites database
 	 * 
 	 * @param stationToUpdate
-	 *            the new station (fullfilled with all information)
+	 *            the new station (fulfilled with all information)
 	 */
 	private void updateFavouritesStation(Station stationToUpdate) {
 		favouriteDatasource.open();

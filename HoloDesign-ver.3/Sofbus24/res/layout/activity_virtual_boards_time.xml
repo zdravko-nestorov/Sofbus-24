@@ -22,7 +22,7 @@
 
         <ProgressBar
             android:id="@+id/vb_time_street_view_progress"
-            style="?android:attr/progressBarStyleSmall"
+            style="@android:style/Widget.ProgressBar.Small.Inverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -81,7 +81,7 @@
 
         <ProgressBar
             android:id="@+id/vb_time_loading"
-            style="?android:attr/progressBarStyleLarge"
+            style="?android:attr/progressBarStyleInverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"

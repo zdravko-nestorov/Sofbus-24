@@ -192,7 +192,7 @@ public class PublicTransport extends FragmentActivity implements
 	}
 
 	/**
-	 * Set the active fragment to be firstly visible (the choosen from the
+	 * Set the active fragment to be firstly visible (the chosen from the
 	 * AlertDialog)
 	 */
 	private void setActiveFragment() {
@@ -239,7 +239,7 @@ public class PublicTransport extends FragmentActivity implements
 	}
 
 	/**
-	 * Async class used for retrieving the Public Transport route
+	 * Asynchronous class used for retrieving the Public Transport route
 	 * 
 	 * @author Zdravko Nestorov
 	 */

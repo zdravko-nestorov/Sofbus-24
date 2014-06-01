@@ -20,6 +20,8 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
 /**
+ * Process the html result, retrieved from the SKGT site in an appropriate
+ * object according to the activity called it
  * 
  * @author Zdravko Nestorov
  * @version 1.0

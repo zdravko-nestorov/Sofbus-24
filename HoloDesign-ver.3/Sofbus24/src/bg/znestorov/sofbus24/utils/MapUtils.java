@@ -8,7 +8,7 @@ import bg.znestorov.sofbus24.entity.Station;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
- * Utils method contaning functions concerning GoogleMaps stuff
+ * Utils method containing functions concerning GoogleMaps stuff
  * 
  * @author Zdravko Nestorov
  * @version 1.0

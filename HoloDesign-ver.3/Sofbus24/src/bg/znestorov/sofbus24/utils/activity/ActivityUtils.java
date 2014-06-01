@@ -10,9 +10,14 @@ import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.text.Html;
 import android.text.Spanned;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
+import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.Sofbus24;
 
@@ -243,6 +248,135 @@ public class ActivityUtils {
 		// Close the application
 		context.finish();
 		android.os.Process.killProcess(android.os.Process.myPid());
+	}
+
+	/**
+	 * Check if the stations already exists in the favorites database and
+	 * add/remove it to/from there. If a favorites imageView is given as a
+	 * parameter, change it icon accordingly.
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @param favouritesDatasource
+	 *            the FavouritesDatasource
+	 * @param station
+	 *            the current station
+	 * @param favouritesImageView
+	 *            the imageView indicating the station status (if null - no
+	 *            action is taken for it)
+	 */
+	public static void toggleFavouritesStation(Activity context,
+			FavouritesDataSource favouritesDatasource, Station station,
+			ImageView favouritesImageView) {
+		// Check if the station is added to the favorites database
+		favouritesDatasource.open();
+		boolean isStationFavoruite = favouritesDatasource.getStation(station) != null;
+		favouritesDatasource.close();
+
+		if (!isStationFavoruite) {
+			addToFavourites(context, favouritesDatasource, station);
+
+			if (favouritesImageView != null) {
+				favouritesImageView.setImageResource(R.drawable.ic_fav_full);
+			}
+		} else {
+			removeFromFavourites(context, favouritesDatasource, station);
+
+			if (favouritesImageView != null) {
+				favouritesImageView.setImageResource(R.drawable.ic_fav_empty);
+			}
+		}
+	}
+
+	/**
+	 * Add the station to the favorites database and indicates that the home
+	 * screen favorites section is changed.
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @param favouritesDatasource
+	 *            the FavouritesDatasource
+	 * @param station
+	 *            the current station
+	 */
+	public static void addToFavourites(Activity context,
+			FavouritesDataSource favouritesDatasource, Station station) {
+		// Declare that the home screen sections are changed
+		Sofbus24.setFavouritesChanged(true);
+		Sofbus24.setVBChanged(true);
+		Sofbus24.setMetroChanged(isMetroStationChanged(station));
+
+		// Add the station to the favorites section
+		favouritesDatasource.open();
+		favouritesDatasource.createStation(station);
+		favouritesDatasource.close();
+
+		// Show a toast message to inform the user that the station is added to
+		// the favorites section
+		Toast.makeText(
+				context,
+				Html.fromHtml(String.format(
+						context.getString(R.string.app_toast_add_favourites),
+						station.getName(), station.getNumber())),
+				Toast.LENGTH_SHORT).show();
+	}
+
+	/**
+	 * Delete the station from the favorites database and indicates that the
+	 * home screen favorites section is changed.
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @param favouritesDatasource
+	 *            the FavouritesDatasource
+	 * @param station
+	 *            the current station
+	 */
+	public static void removeFromFavourites(Activity context,
+			FavouritesDataSource favouritesDatasource, Station station) {
+		// Declare that the home screen sections are changed
+		Sofbus24.setFavouritesChanged(true);
+		Sofbus24.setVBChanged(true);
+		Sofbus24.setMetroChanged(isMetroStationChanged(station));
+
+		// Delete the station from the favorites section
+		favouritesDatasource.open();
+		favouritesDatasource.deleteStation(station);
+		favouritesDatasource.close();
+
+		// Show a toast message to inform the user that the station is deleted
+		// from the favorites section
+		Toast.makeText(
+				context,
+				Html.fromHtml(String.format(
+						context.getString(R.string.app_toast_remove_favourites),
+						station.getName(), station.getNumber())),
+				Toast.LENGTH_SHORT).show();
+	}
+
+	/**
+	 * Check if the station changed is type METRO1 or METRO2
+	 * 
+	 * @param station
+	 *            the current station
+	 * @return if the station changed is metro one
+	 */
+	private static boolean isMetroStationChanged(Station station) {
+		boolean isMetroStationChanged = false;
+
+		if (station != null && station.getType() != null) {
+			switch (station.getType()) {
+			case METRO1:
+			case METRO2:
+				isMetroStationChanged = true;
+				break;
+			default:
+				isMetroStationChanged = false;
+				break;
+			}
+		}
+
+		return isMetroStationChanged;
 	}
 
 }

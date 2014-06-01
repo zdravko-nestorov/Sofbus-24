@@ -1,7 +1,7 @@
 package bg.znestorov.sofbus24.entity;
 
 /**
- * Enum representing the types of vehicles and stations:<br>
+ * Enumeration representing the types of vehicles and stations
  * 
  * @author Zdravko Nestorov
  * @version 1.0

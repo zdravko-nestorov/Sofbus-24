@@ -20,6 +20,14 @@ import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 
 import com.google.android.gms.maps.model.LatLng;
 
+/**
+ * Stations data source class, responsible for all interactions with the
+ * stations database
+ * 
+ * @author Zdravko Nestorov
+ * @version 1.0
+ * 
+ */
 public class StationsDataSource {
 
 	// Database fields
@@ -101,7 +109,7 @@ public class StationsDataSource {
 	 * @param stationCoordinate
 	 *            the coordinate of the station (latitude or longitude)
 	 * @return the coordinate (latitude or longitude), which will be inserted in
-	 *         the dabatase
+	 *         the database
 	 */
 	private String getCoordinates(String stationNumber, String stationCoordinate) {
 		String coordinate = Constants.GLOBAL_PARAM_EMPTY;

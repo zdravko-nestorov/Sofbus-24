@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -41,6 +42,8 @@ public class VirtualBoardsTime extends FragmentActivity {
 	private TextView vbTimeCurrentTime;
 
 	private VirtualBoardsStation vbTimeStation;
+	private FavouritesDataSource favouritesDatasource;
+	private boolean isFavouriteStation;
 
 	private static final String FRAGMENT_TAG_NAME = "Virtual Boards Time Fragment";
 
@@ -51,11 +54,28 @@ public class VirtualBoardsTime extends FragmentActivity {
 
 		// Get the current context and create a SavedInstanceState objects
 		context = VirtualBoardsTime.this;
+		favouritesDatasource = new FavouritesDataSource(context);
 		this.savedInstanceState = savedInstanceState;
 
 		initBundleInfo();
 		initLayoutFields();
 		startVirtualBoardsTimeFragment("");
+		isVirtualBoardsStationFavourite();
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MenuItem addToFavourites = menu
+				.findItem(R.id.action_vb_time_favourites);
+
+		if (isFavouriteStation) {
+			addToFavourites.setIcon(R.drawable.ic_menu_star_full);
+		} else {
+			addToFavourites.setIcon(R.drawable.ic_menu_star_empty);
+
+		}
+
+		return true;
 	}
 
 	@Override
@@ -73,6 +93,9 @@ public class VirtualBoardsTime extends FragmentActivity {
 		case android.R.id.home:
 			finish();
 			return true;
+		case R.id.action_vb_time_favourites:
+			toggleVirtualBoardsStation();
+			return true;
 		case R.id.action_vb_time_refresh:
 			initRefresh();
 			return true;
@@ -89,6 +112,23 @@ public class VirtualBoardsTime extends FragmentActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	/**
+	 * Add or remove the virtual boards station from the favorites and change
+	 * the menu view
+	 */
+	private void toggleVirtualBoardsStation() {
+		// Add or remove the station from Favorites
+		ActivityUtils.toggleFavouritesStation(context, favouritesDatasource,
+				vbTimeStation, null);
+
+		// Change the station status to the opposite value
+		isFavouriteStation = !isFavouriteStation;
+
+		// Declare that the options menu has changed, so should be recreated
+		// (make the system calls the method onPrepareOptionsMenu)
+		supportInvalidateOptionsMenu();
 	}
 
 	/**
@@ -238,7 +278,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 		String stationLon = vbTimeStation.getLon() != null ? vbTimeStation
 				.getLon() : Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE + "";
 
-		// Create the station street view url address
+		// Create the station street view URL address
 		String imageUrl = String.format(Constants.FAVOURITES_IMAGE_URL,
 				stationLat, stationLon);
 
@@ -266,4 +306,18 @@ public class VirtualBoardsTime extends FragmentActivity {
 					}
 				});
 	}
+
+	/**
+	 * Check if the station is added in the Favorites section or not
+	 */
+	private void isVirtualBoardsStationFavourite() {
+		favouritesDatasource.open();
+		isFavouriteStation = favouritesDatasource.getStation(vbTimeStation) != null;
+		favouritesDatasource.close();
+
+		// Declare that the options menu has changed, so should be recreated
+		// (make the system calls the method onPrepareOptionsMenu)
+		supportInvalidateOptionsMenu();
+	}
+
 }

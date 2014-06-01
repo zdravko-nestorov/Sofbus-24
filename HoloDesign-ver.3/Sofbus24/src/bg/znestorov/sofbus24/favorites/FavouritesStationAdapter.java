@@ -48,7 +48,7 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 /**
- * Array Adapted user for set each row a station from the Favourites DB
+ * Array Adapted user for set each row a station from the Favorites DB
  * 
  * @author Zdravko Nestorov
  * @version 1.0
@@ -88,7 +88,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 		displayImageOptions = ActivityUtils.displayImageOptions();
 
-		// Get the current state of the Favourites ListItems
+		// Get the current state of the Favorites ListItems
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(context);
 		expandedListItem = sharedPreferences.getBoolean(
@@ -195,7 +195,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		// Set the visibility of the progress bar
 		viewHolder.progressBar.setVisibility(View.VISIBLE);
 
-		// Set the visibility and height of the favourites item
+		// Set the visibility and height of the favorites item
 		viewHolder.favItemLayout
 				.setMinimumHeight(getExpandedStationImageHeight());
 
@@ -228,7 +228,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		// Set the visibility of the progress bar
 		viewHolder.progressBar.setVisibility(View.GONE);
 
-		// Set the visibility and height of the favourites item
+		// Set the visibility and height of the favorites item
 		viewHolder.favItemLayout
 				.setMinimumHeight(getCollapsedStationImageHeight(viewHolder.barView));
 
@@ -422,7 +422,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 	/**
 	 * Check if the text entered in the EditText field fulfill some conditions
-	 * and if yes - rename the station in the Favourites DB
+	 * and if yes - rename the station in the Favorites DB
 	 * 
 	 * 
 	 * @param input
@@ -459,8 +459,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 			// Show toast message
 			Toast.makeText(
 					context,
-					Html.fromHtml(String.format(
-							context.getString(R.string.fav_item_rename_toast),
+					Html.fromHtml(String.format(context
+							.getString(R.string.app_toast_rename_favourites),
 							oldStationName, station.getNumber(),
 							newStationName, station.getNumber())),
 					Toast.LENGTH_LONG).show();
@@ -493,8 +493,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 					Toast.makeText(
 							context,
-							Html.fromHtml(String.format(context
-									.getString(R.string.fav_item_remove_toast),
+							Html.fromHtml(String.format(
+									context.getString(R.string.app_toast_remove_favourites),
 									station.getName(), station.getNumber())),
 							Toast.LENGTH_SHORT).show();
 

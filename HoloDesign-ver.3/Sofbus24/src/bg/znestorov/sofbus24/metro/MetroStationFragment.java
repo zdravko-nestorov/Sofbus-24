@@ -45,7 +45,8 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
  * @version 1.0
  * 
  */
-public class MetroFragment extends ListFragment implements UpdateableFragment {
+public class MetroStationFragment extends ListFragment implements
+		UpdateableFragment {
 
 	private Activity context;
 
@@ -63,7 +64,7 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	private static String metro1SearchText = "";
 	private static String metro2SearchText = "";
 
-	public MetroFragment() {
+	public MetroStationFragment() {
 	}
 
 	@Override
@@ -188,7 +189,7 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	 *            mark if the selected tab is clicked or directly loaded from
 	 *            the main TabHost
 	 * @param searchEditText
-	 *            the EditText search field (if null - just refresh the adater)
+	 *            the EditText search field (if null - just refresh the adapter)
 	 * @param tabType
 	 *            the chosen station type (METRO1 or METRO2)
 	 */
@@ -266,9 +267,9 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 
 		// Check if the tab is clicked or just loaded because the fragment is
 		// selected from the TabHost
-		if (isTabClicked) {
-			showDirectionNameToast(context);
-		}
+		// if (isTabClicked) {
+		// showDirectionNameToast(context);
+		// }
 	}
 
 	/**
@@ -473,7 +474,7 @@ public class MetroFragment extends ListFragment implements UpdateableFragment {
 	}
 
 	/**
-	 * Async class used for retrieving the Metro route
+	 * Asynchronous class used for retrieving the Metro route
 	 * 
 	 * @author Zdravko Nestorov
 	 */
