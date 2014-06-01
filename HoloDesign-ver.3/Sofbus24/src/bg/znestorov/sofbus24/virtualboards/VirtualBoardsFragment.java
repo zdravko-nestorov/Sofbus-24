@@ -36,7 +36,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 	private SearchEditText searchEditText;
 
 	private String vbSearchText;
-	private ArrayList<Station> vbList;
+	private ArrayList<Station> vbList = new ArrayList<Station>();
 
 	private static final String BUNDLE_VB_SEARCH_TEXT = "VB SEARCH TEXT";
 	private static final String BUNDLE_VB_STATIONS_LIST = "VB STATION LIST";
@@ -62,8 +62,9 @@ public class VirtualBoardsFragment extends ListFragment implements
 		// Get the vbSearchText and vbList from the Bundle (savedInstanceState)
 		if (savedInstanceState != null) {
 			vbSearchText = savedInstanceState.getString(BUNDLE_VB_SEARCH_TEXT);
-			vbList = (ArrayList<Station>) savedInstanceState
-					.getSerializable(BUNDLE_VB_STATIONS_LIST);
+			vbList.clear();
+			vbList.addAll((ArrayList<Station>) savedInstanceState
+					.getSerializable(BUNDLE_VB_STATIONS_LIST));
 		} else {
 			vbSearchText = "";
 		}
@@ -78,7 +79,10 @@ public class VirtualBoardsFragment extends ListFragment implements
 		searchEditText.setText(vbSearchText);
 
 		// Set the list adapter to the Fragment
-		setListAdapterViaSearch();
+		ArrayAdapter<Station> virtualBoardsAdapter = new VirtualBoardsAdapter(
+				context, vbList);
+		setListAdapter(virtualBoardsAdapter);
+		setEmptyListText();
 
 		// Set the actions over the TextViews and SearchEditText
 		actionsOverSearchEditText();
@@ -87,7 +91,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 	}
 
 	@Override
-	public void update(Activity context, Object obj) {
+	public void update(Activity context) {
 		setListAdapterViaSearch();
 	}
 
@@ -119,7 +123,8 @@ public class VirtualBoardsFragment extends ListFragment implements
 	 *            the stationList that need to be set to the listView
 	 */
 	public void setListAdapterViaSearch(ArrayList<Station> stationsList) {
-		vbList = stationsList;
+		vbList.clear();
+		vbList.addAll(stationsList);
 		setListAdapterViaSearch();
 	}
 
@@ -128,22 +133,15 @@ public class VirtualBoardsFragment extends ListFragment implements
 	 * default fragment list (vbList)
 	 */
 	private void setListAdapterViaSearch() {
-		ArrayAdapter<Station> adapter = new VirtualBoardsAdapter(context,
-				vbList);
+		ArrayAdapter<Station> virtualBoardsAdapter = (VirtualBoardsAdapter) getListAdapter();
 
-		if (adapter.isEmpty()) {
-			setEmptyListAdapter();
-		} else {
-			setListAdapter(adapter);
+		if (virtualBoardsAdapter != null) {
+			virtualBoardsAdapter.notifyDataSetChanged();
+
+			if (virtualBoardsAdapter.isEmpty()) {
+				setEmptyListText();
+			}
 		}
-	}
-
-	/**
-	 * Set an empty list adapter and the appropriate text message to it
-	 */
-	private void setEmptyListAdapter() {
-		setListAdapter(null);
-		setEmptyListText();
 	}
 
 	/**
@@ -254,7 +252,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 				vbList.clear();
 			}
 
-			setEmptyListAdapter();
+			setListAdapterViaSearch();
 		}
 	}
 

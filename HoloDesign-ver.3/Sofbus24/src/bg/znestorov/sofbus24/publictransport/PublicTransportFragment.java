@@ -182,6 +182,8 @@ public class PublicTransportFragment extends ListFragment {
 				switch (target) {
 				case LEFT:
 					searchEditText.requestFocus();
+					searchEditText.setSelection(searchEditText.getText()
+							.length());
 					ActivityUtils.showKeyboard(context, searchEditText);
 					break;
 				case RIGHT:

@@ -32,11 +32,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.main.Sofbus24;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -56,10 +56,12 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
  */
 public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
-	private final StationsDataSource stationsDataSource;
-	private final FavouritesDataSource favouritesDatasource;
-	private final Activity context;
-	private final List<Station> stations;
+	private Activity context;
+	private GlobalEntity globalContext;
+
+	private List<Station> stations;
+	private StationsDataSource stationsDataSource;
+	private FavouritesDataSource favouritesDatasource;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
@@ -82,6 +84,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	public FavouritesStationAdapter(Activity context, List<Station> stations) {
 		super(context, R.layout.activity_favourites_list_item, stations);
 		this.context = context;
+		this.globalContext = (GlobalEntity) context.getApplicationContext();
+
 		this.stations = stations;
 		this.favouritesDatasource = new FavouritesDataSource(context);
 		this.stationsDataSource = new StationsDataSource(context);
@@ -507,9 +511,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 					if (stationType == VehicleType.METRO1
 							|| stationType == VehicleType.METRO2) {
-						Sofbus24.setMetroChanged(true);
+						globalContext.setMetroChanged(true);
 					} else {
-						Sofbus24.setVBChanged(true);
+						globalContext.setVbChanged(true);
 					}
 
 					return true;

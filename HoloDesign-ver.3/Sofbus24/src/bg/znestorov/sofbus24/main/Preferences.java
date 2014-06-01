@@ -12,12 +12,14 @@ import android.text.Html;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.preferences.PreferencesFragment;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 public class Preferences extends Activity {
 
 	private Activity context;
+	private GlobalEntity globalContext;
 	private ActionBar actionBar;
 
 	private PreferencesFragment preferencesFragment = new PreferencesFragment();
@@ -28,8 +30,9 @@ public class Preferences extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Get the current context
+		// Get the application and current activity context
 		context = Preferences.this;
+		globalContext = (GlobalEntity) getApplicationContext();
 
 		// Set up the action bar
 		actionBar = getActionBar();
@@ -94,7 +97,7 @@ public class Preferences extends Activity {
 		OnClickListener positiveOnClickListener = new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				Sofbus24.setHastToResrart(true);
+				globalContext.setHasToRestart(true);
 				finish();
 			}
 		};

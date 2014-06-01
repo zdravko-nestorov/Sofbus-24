@@ -1,8 +1,5 @@
 package bg.znestorov.sofbus24.metro;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -23,9 +20,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import bg.znestorov.sofbus24.databases.StationsDataSource;
-import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.UpdateableFragment;
@@ -49,23 +43,18 @@ public class MetroStationFragment extends ListFragment implements
 		UpdateableFragment {
 
 	private Activity context;
-
-	private TextView direction1TextView;
-	private TextView direction2TextView;
-
 	private MetroLoadStations mls;
-	private StationsDataSource stationsDatasource;
-	private VehiclesDataSource vehiclesDatasource;
-	private List<Station> metroDirection1;
-	private List<Station> metroDirection2;
 
-	private static VehicleType stationType = VehicleType.METRO1;
+	private ArrayAdapter<Station> msAdapterDirection1;
+	private ArrayAdapter<Station> msAdapterDirection2;
 
-	private static String metro1SearchText = "";
-	private static String metro2SearchText = "";
+	private int currentDirection;
+	private String searchTextDirection1;
+	private String searchTextDirection2;
 
-	public MetroStationFragment() {
-	}
+	private static final String BUNDLE_CURRENT_DRECTION = "CURRENT DIRECTION";
+	private static final String BUNDLE_SEARCH_TEXT_DIRECTION_1 = "SEARCH TEXT DIRECTION 1";
+	private static final String BUNDLE_SEARCH_TEXT_DIRECTION_2 = "SEARCH TEXT DIRECTION 1";
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -75,56 +64,54 @@ public class MetroStationFragment extends ListFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View myFragmentView = inflater.inflate(
-				R.layout.activity_metro_fragment, container, false);
+		View fragmentView = inflater.inflate(R.layout.activity_metro_fragment,
+				container, false);
 
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
 
-		// Load the Stations Datasource
-		stationsDatasource = new StationsDataSource(context);
-		vehiclesDatasource = new VehiclesDataSource(context);
-
-		// Fill the list view with the stations from DB
-		mls = MetroLoadStations.getInstance(context);
-		metroDirection1 = mls.getMetroDirection1();
-		metroDirection2 = mls.getMetroDirection2();
+		// Get the needed fragment information
+		initInformation(savedInstanceState);
 
 		// Find all of TextView and SearchEditText tabs in the layout
-		direction1TextView = (TextView) myFragmentView
-				.findViewById(R.id.metro_direction1_tab);
-		direction2TextView = (TextView) myFragmentView
-				.findViewById(R.id.metro_direction2_tab);
-		SearchEditText searchEditText = (SearchEditText) myFragmentView
-				.findViewById(R.id.metro_search);
-		TextView emptyList = (TextView) myFragmentView
-				.findViewById(R.id.metro_list_empty_text);
-
-		// Set the actions over the TextViews and SearchEditText
-		actionsOverDirectionsTextViews(searchEditText);
-		actionsOverSearchEditText(searchEditText, emptyList);
-
-		// Use an ArrayAdapter to show the elements in a ListView
-		ArrayAdapter<Station> adapter = new MetroStationAdapter(context,
-				metroDirection1);
-		setListAdapter(adapter);
-
-		// Activate the bus tab
-		processOnClickedTab(false, searchEditText, stationType);
+		initLayoutFields(fragmentView);
 
 		// Activate the option menu
 		setHasOptionsMenu(true);
 
-		return myFragmentView;
+		return fragmentView;
 	}
 
 	@Override
-	public void update(Activity context, Object obj) {
-		if (this.context == null) {
-			this.context = context;
-		}
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
 
-		processOnClickedTab(true, null, stationType);
+		savedInstanceState.putInt(BUNDLE_CURRENT_DRECTION, currentDirection);
+		savedInstanceState.putString(BUNDLE_SEARCH_TEXT_DIRECTION_1,
+				searchTextDirection1);
+		savedInstanceState.putString(BUNDLE_SEARCH_TEXT_DIRECTION_2,
+				searchTextDirection2);
+	}
+
+	@Override
+	public void update(Activity context) {
+		ArrayAdapter<Station> metroStationAdapter = (MetroStationAdapter) getListAdapter();
+
+		if (metroStationAdapter != null) {
+			SearchEditText searchEditText = (SearchEditText) context
+					.findViewById(R.id.metro_search);
+
+			switch (currentDirection) {
+			case 0:
+				searchEditText.setText(searchTextDirection1);
+				metroStationAdapter.getFilter().filter(searchTextDirection1);
+				break;
+			default:
+				searchEditText.setText(searchTextDirection2);
+				metroStationAdapter.getFilter().filter(searchTextDirection2);
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -158,118 +145,235 @@ public class MetroStationFragment extends ListFragment implements
 	}
 
 	/**
-	 * Activate the listeners over the Metro Station TextView fields
+	 * Initialize the MetroLoadStation object and all the data from the
+	 * SavedInstanceState object
 	 * 
+	 * @param savedInstanceState
+	 *            object containing the state of the saved values
+	 */
+	private void initInformation(Bundle savedInstanceState) {
+		// Get the values from the Bundle
+		if (savedInstanceState != null) {
+			currentDirection = savedInstanceState
+					.getInt(BUNDLE_CURRENT_DRECTION);
+			searchTextDirection1 = savedInstanceState
+					.getString(BUNDLE_SEARCH_TEXT_DIRECTION_1);
+			searchTextDirection2 = savedInstanceState
+					.getString(BUNDLE_SEARCH_TEXT_DIRECTION_2);
+		} else {
+			currentDirection = 0;
+			searchTextDirection1 = "";
+			searchTextDirection2 = "";
+		}
+
+		// Get the information about each direction
+		mls = MetroLoadStations.getInstance(context);
+	}
+
+	/**
+	 * Initialize the layout fields and assign the appropriate listeners over
+	 * them (directions' tabs (TextViews), SerachEditText and EmptyList
+	 * (TextView))
+	 * 
+	 * @param fragmentView
+	 *            the current view of the fragment
+	 */
+	private void initLayoutFields(View fragmentView) {
+		TextView textViewDirection1 = (TextView) fragmentView
+				.findViewById(R.id.metro_direction1_tab);
+		TextView textViewDirection2 = (TextView) fragmentView
+				.findViewById(R.id.metro_direction2_tab);
+		SearchEditText searchEditText = (SearchEditText) fragmentView
+				.findViewById(R.id.metro_search);
+		TextView emptyList = (TextView) fragmentView
+				.findViewById(R.id.metro_list_empty_text);
+
+		// Create the list adapters
+		createListAdapters(emptyList);
+
+		// Use custom ArrayAdapter to show the elements in the ListView
+		setListAdapter(emptyList);
+
+		// Set the actions over the TextViews and SearchEditText
+		actionsOverDirectionsTextViews(textViewDirection1, textViewDirection2,
+				searchEditText, emptyList);
+		actionsOverSearchEditText(searchEditText, emptyList);
+
+		// Set the initial state of the fragment
+		processOnClickedTab(textViewDirection1, textViewDirection2,
+				searchEditText, emptyList);
+	}
+
+	/**
+	 * Create both custom array adapters {@link MetroStationAdapter} for each
+	 * direction
+	 * 
+	 * @param emptyList
+	 *            the empty TextView (a text shown when the list fragment is
+	 *            empty)
+	 */
+	private void createListAdapters(TextView emptyList) {
+		if (msAdapterDirection1 == null) {
+			msAdapterDirection1 = new MetroStationAdapter(context, emptyList,
+					mls.getDirectionName(0, false, false),
+					mls.getDirectionList(0));
+		}
+
+		if (msAdapterDirection2 == null) {
+			msAdapterDirection2 = new MetroStationAdapter(context, emptyList,
+					mls.getDirectionName(1, false, false),
+					mls.getDirectionList(1));
+		}
+	}
+
+	/**
+	 * According to the current direction assign the list fragment the
+	 * appropriate adapter
+	 * 
+	 * @param emptyList
+	 *            the empty TextView (a text shown when the list fragment is
+	 *            empty)
+	 */
+	private void setListAdapter(TextView emptyList) {
+		switch (currentDirection) {
+		case 0:
+			setListAdapter(msAdapterDirection1);
+			break;
+		default:
+			setListAdapter(msAdapterDirection2);
+			break;
+		}
+	}
+
+	/**
+	 * Activate the listeners over the directions' tabs (TextViews)
+	 * 
+	 * @param textViewDirection1
+	 *            first direction tab (TextView)
+	 * @param textViewDirection2
+	 *            second direction tab (TextView)
 	 * @param searchEditText
-	 *            the text from the searched edit text
+	 *            the search edit box (EditText)
+	 * @param emptyList
+	 *            the empty TextView (a text shown when the list fragment is
+	 *            empty)
 	 */
 	private void actionsOverDirectionsTextViews(
-			final SearchEditText searchEditText) {
+			final TextView textViewDirection1,
+			final TextView textViewDirection2,
+			final SearchEditText searchEditText, final TextView emptyList) {
 		// Assign the Direction1 TextView a click listener
-		direction1TextView.setOnClickListener(new OnClickListener() {
+		textViewDirection1.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				processOnClickedTab(true, searchEditText, VehicleType.METRO1);
+				processOnClickedTab1(textViewDirection1, textViewDirection2,
+						searchEditText, emptyList);
 			}
 		});
 
 		// Assign the Direction2 TextView a click listener
-		direction2TextView.setOnClickListener(new OnClickListener() {
+		textViewDirection2.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				processOnClickedTab(true, searchEditText, VehicleType.METRO2);
+				processOnClickedTab2(textViewDirection1, textViewDirection2,
+						searchEditText, emptyList);
 			}
 		});
 	}
 
 	/**
-	 * Take needed actions according to the clicked tab
+	 * Take the needed actions once a tab is pressed (selected line 1)
 	 * 
-	 * @param isTabClicked
-	 *            mark if the selected tab is clicked or directly loaded from
-	 *            the main TabHost
+	 * @param textViewDirection1
+	 *            first direction tab (TextView)
+	 * @param textViewDirection2
+	 *            second direction tab (TextView)
 	 * @param searchEditText
-	 *            the EditText search field (if null - just refresh the adapter)
-	 * @param tabType
-	 *            the chosen station type (METRO1 or METRO2)
+	 *            the search edit box (EditText)
+	 * @param emptyList
+	 *            the empty TextView (a text shown when the list fragment is
+	 *            empty)
 	 */
-	private void processOnClickedTab(boolean isTabClicked,
-			SearchEditText searchEditText, VehicleType tabType) {
-		ArrayAdapter<Station> adapter;
+	private void processOnClickedTab1(TextView textViewDirection1,
+			TextView textViewDirection2, SearchEditText searchEditText,
+			TextView emptyList) {
+		// Change the view of the tabs (pressed and not pressed)
+		setTabActive(textViewDirection1);
+		setTabInactive(textViewDirection2);
 
-		// Check which is previous clicked tab, so save the value to the
-		// appropriate variable (in case of refresh just set an empty string)
-		if (searchEditText != null) {
-			switch (stationType) {
-			case METRO1:
-				metro1SearchText = searchEditText.getText().toString();
-				break;
-			case METRO2:
-				metro2SearchText = searchEditText.getText().toString();
-				break;
-			default:
-				metro1SearchText = searchEditText.getText().toString();
-				break;
-			}
-		} else {
-			metro1SearchText = "";
-		}
-		// Check which tab is clicked
-		switch (tabType) {
-		case METRO1:
-			stationType = VehicleType.METRO1;
+		// Change the indicator of the pressed tab
+		currentDirection = 0;
 
-			setTabActive(direction1TextView);
-			setTabInactive(direction2TextView);
+		// Retain the value of the SearchEditText to a variable, set a new one
+		// and move the cursor to the end
+		searchTextDirection2 = searchEditText.getText().toString();
+		searchEditText.setText(searchTextDirection1);
+		searchEditText.setSelection(searchEditText.getText().length());
 
-			// Set the Search tab the appropriate search text
-			if (searchEditText != null) {
-				searchEditText.setText(metro1SearchText);
-			}
+		// Use custom ArrayAdapter to show the elements in the ListView
+		setListAdapter(emptyList);
+	}
 
-			// Check if a search is already done
-			if ("".equals(metro1SearchText)) {
-				adapter = new MetroStationAdapter(context, metroDirection1);
-			} else {
-				adapter = new MetroStationAdapter(context,
-						loadStationsList(metro1SearchText));
-			}
+	/**
+	 * Take the needed actions once a tab is pressed (selected line 2)
+	 * 
+	 * @param textViewDirection1
+	 *            first direction tab (TextView)
+	 * @param textViewDirection2
+	 *            second direction tab (TextView)
+	 * @param searchEditText
+	 *            the search edit box (EditText)
+	 * @param emptyList
+	 *            the empty TextView (a text shown when the list fragment is
+	 *            empty)
+	 */
+	private void processOnClickedTab2(TextView textViewDirection1,
+			TextView textViewDirection2, SearchEditText searchEditText,
+			TextView emptyList) {
+		// Change the view of the tabs (pressed and not pressed)
+		setTabActive(textViewDirection2);
+		setTabInactive(textViewDirection1);
 
-			setListAdapter(adapter);
+		// Change the indicator of the pressed tab
+		currentDirection = 1;
+
+		// Retain the value of the SearchEditText to a variable, set a new one
+		// and move the cursor to the end
+		searchTextDirection1 = searchEditText.getText().toString();
+		searchEditText.setText(searchTextDirection2);
+		searchEditText.setSelection(searchEditText.getText().length());
+
+		// Use custom ArrayAdapter to show the elements in the ListView
+		setListAdapter(emptyList);
+	}
+
+	/**
+	 * Take the needed actions once a tab is pressed (according to the current
+	 * direction)
+	 * 
+	 * @param textViewDirection1
+	 *            first direction tab (TextView)
+	 * @param textViewDirection2
+	 *            second direction tab (TextView)
+	 * @param searchEditText
+	 *            the search edit box (EditText)
+	 * @param emptyList
+	 *            the empty TextView (a text shown when the list fragment is
+	 *            empty)
+	 */
+	private void processOnClickedTab(TextView textViewDirection1,
+			TextView textViewDirection2, SearchEditText searchEditText,
+			TextView emptyList) {
+		switch (currentDirection) {
+		case 0:
+			processOnClickedTab1(textViewDirection1, textViewDirection2,
+					searchEditText, emptyList);
 			break;
 		default:
-			stationType = VehicleType.METRO2;
-
-			setTabInactive(direction1TextView);
-			setTabActive(direction2TextView);
-
-			// Set the Search tab the appropriate search text
-			if (searchEditText != null) {
-				searchEditText.setText(metro2SearchText);
-			}
-
-			// Check if a search is already done
-			if ("".equals(metro2SearchText)) {
-				adapter = new MetroStationAdapter(context, metroDirection2);
-			} else {
-				adapter = new MetroStationAdapter(context,
-						loadStationsList(metro2SearchText));
-			}
-
-			setListAdapter(adapter);
+			processOnClickedTab2(textViewDirection1, textViewDirection2,
+					searchEditText, emptyList);
 			break;
 		}
-
-		// Set the marker at the end
-		if (searchEditText != null) {
-			searchEditText.setSelection(searchEditText.getText().length());
-		}
-
-		// Check if the tab is clicked or just loaded because the fragment is
-		// selected from the TabHost
-		// if (isTabClicked) {
-		// showDirectionNameToast(context);
-		// }
 	}
 
 	/**
@@ -277,6 +381,9 @@ public class MetroStationFragment extends ListFragment implements
 	 * 
 	 * @param searchEditText
 	 *            the search EditText
+	 * @param emptyList
+	 *            the empty TextView (a text shown when the list fragment is
+	 *            empty)
 	 */
 	private void actionsOverSearchEditText(final SearchEditText searchEditText,
 			final TextView emptyList) {
@@ -296,20 +403,18 @@ public class MetroStationFragment extends ListFragment implements
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				String searchText = searchEditText.getText().toString();
-
-				List<Station> searchStationList = loadStationsList(searchText);
-				ArrayAdapter<Station> adapter = new MetroStationAdapter(
-						context, searchStationList);
-
-				setListAdapter(adapter);
-
-				// Set a message if the list is empty
-				if (adapter.isEmpty()) {
-					emptyList.setText(Html.fromHtml(String.format(
-							getString(R.string.metro_item_empty_list),
-							searchText,
-							getDirectionName(stationType, false, false))));
+				ArrayAdapter<Station> metroStationAdapter = (MetroStationAdapter) getListAdapter();
+				switch (currentDirection) {
+				case 0:
+					searchTextDirection1 = searchEditText.getText().toString();
+					metroStationAdapter.getFilter()
+							.filter(searchTextDirection1);
+					break;
+				default:
+					searchTextDirection2 = searchEditText.getText().toString();
+					metroStationAdapter.getFilter()
+							.filter(searchTextDirection2);
+					break;
 				}
 			}
 
@@ -330,6 +435,8 @@ public class MetroStationFragment extends ListFragment implements
 				switch (target) {
 				case LEFT:
 					searchEditText.requestFocus();
+					searchEditText.setSelection(searchEditText.getText()
+							.length());
 					ActivityUtils.showKeyboard(context, searchEditText);
 					break;
 				case RIGHT:
@@ -341,113 +448,6 @@ public class MetroStationFragment extends ListFragment implements
 			}
 
 		});
-	}
-
-	/**
-	 * Get the direction name and format it if needed via the vehicle type. If
-	 * now vehicle type is entered - get the default one
-	 * 
-	 * @param vehicleType
-	 *            the vehicle type (in case of current active tab use the global
-	 *            variable - vehicleType)
-	 * @param formatted
-	 *            if the direction name should be formatted
-	 * @param truncated
-	 *            if the direction name should be truncated (the middle part to
-	 *            be removed)
-	 * @return the direction name
-	 */
-	private String getDirectionName(VehicleType vehicleType, boolean formatted,
-			boolean truncated) {
-		// If no vehicle type is passed as a parameter, set the default one
-		if (vehicleType == null) {
-			vehicleType = stationType;
-		}
-
-		// Get the name of the current direction
-		String directionName = loadVehiclesList(vehicleType, "").get(0)
-				.getDirection();
-
-		// Check if the direction name should be formatted
-		if (formatted) {
-			directionName = directionName.replaceAll("-", " - ");
-		}
-
-		// Check if the direction name should be truncated
-		if (truncated) {
-			directionName = directionName.replaceAll("-.*-", "-");
-		}
-
-		// Remove multiple spaces between words
-		directionName = directionName.trim().replaceAll(" +", " ");
-
-		return directionName;
-	}
-
-	/**
-	 * Show a Toast with the name of the metro direction
-	 * 
-	 * @param activityContext
-	 *            the current activity context
-	 */
-	public void showDirectionNameToast(Activity context) {
-		if (this.context == null) {
-			this.context = context;
-		}
-
-		Toast directionToast = Toast.makeText(context,
-				getDirectionName(stationType, true, false), Toast.LENGTH_SHORT);
-		directionToast.show();
-	}
-
-	/**
-	 * Load all stations according to a search text (if it is left as empty -
-	 * all stations of the current tab type are loaded)
-	 * 
-	 * @param searchText
-	 *            the search text (if null - return all stations of the current
-	 *            tab type)
-	 * @return all stations according to a search text
-	 */
-	private List<Station> loadStationsList(String searchText) {
-		List<Station> stationsList;
-
-		if (stationsDatasource == null) {
-			stationsDatasource = new StationsDataSource(context);
-		}
-
-		stationsDatasource.open();
-		stationsList = stationsDatasource.getStationsViaSearch(stationType,
-				searchText);
-		stationsDatasource.close();
-
-		return stationsList;
-	}
-
-	/**
-	 * Load all vehicles according to a vehicle type and a search text
-	 * 
-	 * @param vehicleType
-	 *            the type of the searched vehicles
-	 * @param searchText
-	 *            the search text (if null - return all stations of the vehicle
-	 *            type)
-	 * @return all vehicles according to a vehicle type and a search text
-	 */
-	private List<Vehicle> loadVehiclesList(VehicleType vehicleType,
-			String searchText) {
-		List<Vehicle> vehiclesList;
-
-		if (vehiclesDatasource == null) {
-			vehiclesDatasource = new VehiclesDataSource(context);
-		}
-
-		vehiclesDatasource.open();
-		vehiclesList = vehiclesDatasource.getVehiclesViaSearch(vehicleType,
-				searchText);
-		vehiclesDatasource.close();
-
-		return vehiclesList;
 	}
 
 	/**
@@ -508,35 +508,20 @@ public class MetroStationFragment extends ListFragment implements
 					StationRouteMap.class);
 
 			Vehicle metroVehicle;
-			int activeMetroDirection;
-			DirectionsEntity metroDirectionsEntity;
-
-			ArrayList<String> metroDirectionsNames = new ArrayList<String>();
-			metroDirectionsNames.add(getDirectionName(VehicleType.METRO1,
-					false, true));
-			metroDirectionsNames.add(getDirectionName(VehicleType.METRO2,
-					false, true));
-
-			ArrayList<ArrayList<Station>> metroDirectionsList = new ArrayList<ArrayList<Station>>();
-			metroDirectionsList.add((ArrayList<Station>) metroDirection1);
-			metroDirectionsList.add((ArrayList<Station>) metroDirection2);
-
-			switch (stationType) {
-			case METRO1:
+			switch (currentDirection) {
+			case 0:
 				metroVehicle = new Vehicle("1", VehicleType.METRO1,
-						getDirectionName(stationType, false, true));
-				activeMetroDirection = 0;
+						mls.getDirectionName(currentDirection, false, true));
 				break;
 			default:
 				metroVehicle = new Vehicle("1", VehicleType.METRO2,
-						getDirectionName(stationType, false, true));
-				activeMetroDirection = 1;
+						mls.getDirectionName(currentDirection, false, true));
 				break;
 			}
 
-			metroDirectionsEntity = new DirectionsEntity(metroVehicle,
-					activeMetroDirection, metroDirectionsNames,
-					metroDirectionsList);
+			DirectionsEntity metroDirectionsEntity = new DirectionsEntity(
+					metroVehicle, currentDirection,
+					mls.getMetroDirectionsNames(), mls.getMetroDirectionsList());
 			metroMapRouteIntent.putExtra(Constants.BUNDLE_STATION_ROUTE_MAP,
 					metroDirectionsEntity);
 

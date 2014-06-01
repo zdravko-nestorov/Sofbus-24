@@ -20,9 +20,7 @@ public interface UpdateableFragment {
 	 * 
 	 * @param context
 	 *            the current Activity context
-	 * @param obj
-	 *            any type of object that has to be passed to the update method
 	 */
-	public void update(Activity context, Object obj);
+	public void update(Activity context);
 
 }

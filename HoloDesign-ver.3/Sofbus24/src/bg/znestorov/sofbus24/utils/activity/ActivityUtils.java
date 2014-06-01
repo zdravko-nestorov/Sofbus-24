@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.Sofbus24;
@@ -301,10 +302,14 @@ public class ActivityUtils {
 	 */
 	public static void addToFavourites(Activity context,
 			FavouritesDataSource favouritesDatasource, Station station) {
+		// Get the application context
+		GlobalEntity globalContext = (GlobalEntity) context
+				.getApplicationContext();
+
 		// Declare that the home screen sections are changed
-		Sofbus24.setFavouritesChanged(true);
-		Sofbus24.setVBChanged(true);
-		Sofbus24.setMetroChanged(isMetroStationChanged(station));
+		globalContext.setFavouritesChanged(true);
+		globalContext.setVbChanged(!isMetroStationChanged(station));
+		globalContext.setMetroChanged(isMetroStationChanged(station));
 
 		// Add the station to the favorites section
 		favouritesDatasource.open();
@@ -334,10 +339,14 @@ public class ActivityUtils {
 	 */
 	public static void removeFromFavourites(Activity context,
 			FavouritesDataSource favouritesDatasource, Station station) {
+		// Get the application context
+		GlobalEntity globalContext = (GlobalEntity) context
+				.getApplicationContext();
+
 		// Declare that the home screen sections are changed
-		Sofbus24.setFavouritesChanged(true);
-		Sofbus24.setVBChanged(true);
-		Sofbus24.setMetroChanged(isMetroStationChanged(station));
+		globalContext.setFavouritesChanged(true);
+		globalContext.setVbChanged(!isMetroStationChanged(station));
+		globalContext.setMetroChanged(isMetroStationChanged(station));
 
 		// Delete the station from the favorites section
 		favouritesDatasource.open();

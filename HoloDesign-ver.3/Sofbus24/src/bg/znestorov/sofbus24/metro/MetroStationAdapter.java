@@ -1,18 +1,24 @@
 package bg.znestorov.sofbus24.metro;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
@@ -24,9 +30,17 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
  */
 public class MetroStationAdapter extends ArrayAdapter<Station> {
 
-	private final FavouritesDataSource favouritesDatasource;
-	private final Activity context;
-	private final List<Station> stations;
+	private Activity context;
+	private String language;
+	private FavouritesDataSource favouritesDatasource;
+
+	private TextView emptyList;
+	private String directionName;
+
+	private List<Station> originalStations;
+	private List<Station> filteredStations;
+
+	private Filter stationsFilter;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
@@ -35,11 +49,21 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 		TextView stationNumber;
 	}
 
-	public MetroStationAdapter(Activity context, List<Station> stations) {
+	public MetroStationAdapter(Activity context, TextView emptyList,
+			String directionName, List<Station> stations) {
 		super(context, R.layout.activity_metro_list_item, stations);
+
 		this.context = context;
-		this.stations = stations;
+		this.language = LanguageChange.getUserLocale(context);
 		this.favouritesDatasource = new FavouritesDataSource(context);
+
+		this.emptyList = emptyList;
+		this.directionName = directionName;
+
+		this.originalStations = stations;
+		this.filteredStations = stations;
+
+		this.stationsFilter = createFilter();
 	}
 
 	/**
@@ -69,7 +93,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 		}
 
 		// Fill the data
-		Station station = stations.get(position);
+		Station station = filteredStations.get(position);
 		viewHolder.addToFavourites.setImageResource(getFavouriteImage(station));
 		viewHolder.stationName.setText(station.getName());
 		viewHolder.stationNumber.setText(String.format(
@@ -80,6 +104,97 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 		actionsOverFavouritesImageViews(viewHolder, station);
 
 		return rowView;
+	}
+
+	@Override
+	public int getCount() {
+		return filteredStations != null ? filteredStations.size() : 0;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return filteredStations != null ? filteredStations.isEmpty() : false;
+	}
+
+	/**
+	 * Filter the ListView according some criteria (filter)
+	 * 
+	 * @return a filter constrains data with a filtering pattern
+	 */
+	@Override
+	public Filter getFilter() {
+		if (stationsFilter == null) {
+			stationsFilter = createFilter();
+		}
+
+		return stationsFilter;
+	}
+
+	/**
+	 * Create a custom filter, so process the list on searching
+	 * 
+	 * @return a custom filter
+	 */
+	private Filter createFilter() {
+		return new Filter() {
+			@Override
+			protected FilterResults performFiltering(CharSequence constraint) {
+				FilterResults results = new FilterResults();
+
+				// If there's nothing to filter on, return the original data for
+				// your list
+				if (constraint == null || constraint.length() == 0) {
+					results.values = originalStations;
+					results.count = originalStations.size();
+				} else {
+					List<Station> filterResultsData = new ArrayList<Station>();
+
+					String filterString = constraint.toString().trim()
+							.toUpperCase();
+					if ("bg".equals(language)) {
+						filterString = TranslatorLatinToCyrillic.translate(
+								context, filterString);
+					} else {
+						filterString = TranslatorCyrillicToLatin.translate(
+								context, filterString);
+					}
+
+					String filterebaleName;
+					String filterebaleNumber;
+
+					// Itterate over all stations and search which ones match
+					// the filter
+					for (Station station : originalStations) {
+						filterebaleName = station.getName().toUpperCase();
+						filterebaleNumber = station.getNumber().toUpperCase();
+
+						if (filterebaleName.contains(filterString)
+								|| filterebaleNumber.contains(filterString)) {
+							filterResultsData.add(station);
+						}
+					}
+
+					results.values = filterResultsData;
+					results.count = filterResultsData.size();
+				}
+
+				return results;
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void publishResults(CharSequence constraint,
+					FilterResults filterResults) {
+				filteredStations = (ArrayList<Station>) filterResults.values;
+				notifyDataSetChanged();
+
+				if (isEmpty()) {
+					emptyList.setText(Html.fromHtml(String.format(
+							context.getString(R.string.metro_item_empty_list),
+							constraint, directionName)));
+				}
+			}
+		};
 	}
 
 	/**

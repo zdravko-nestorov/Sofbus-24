@@ -27,8 +27,9 @@ import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
 import bg.znestorov.sofbus24.entity.Config;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HomeTab;
-import bg.znestorov.sofbus24.favorites.FavouritesFragment;
+import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.metro.MetroStationFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
@@ -42,6 +43,7 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener {
 
 	private Activity context;
+	private GlobalEntity globalContext;
 	private ActionBar actionBar;
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -49,22 +51,18 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	private SlidingMenu slidingMenu;
 
 	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
-	private FavouritesFragment favouritesFragment;
+	private FavouritesStationFragment favouritesFragment;
 	private VirtualBoardsFragment virtualBoardsFragment;
 	private ScheduleFragment scheduleFragment;
 	private MetroStationFragment metroFragment;
-
-	private static boolean hasToRestart = false;
-	private static boolean isFavouritesChanged = false;
-	private static boolean isVbChanged = false;
-	private static boolean isMetroChanged = false;
-	private static boolean isHomeScreenChanged = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sofbus24);
 
+		// Get the application and curren context;
+		globalContext = (GlobalEntity) getApplicationContext();
 		context = Sofbus24.this;
 
 		// Get the fields in the layout
@@ -99,7 +97,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 					.findItem(R.id.action_favourites_remove_all);
 			MenuItem metroMapRoute = menu.findItem(R.id.action_metro_map_route);
 
-			if (currentFragment instanceof FavouritesFragment) {
+			if (currentFragment instanceof FavouritesStationFragment) {
 				favouritesRemoveAll.setVisible(true);
 				metroMapRoute.setVisible(false);
 			} else if (currentFragment instanceof MetroStationFragment) {
@@ -298,7 +296,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	 */
 	private void createSofbus24Fragments() {
 		if (favouritesFragment == null) {
-			favouritesFragment = new FavouritesFragment();
+			favouritesFragment = new FavouritesStationFragment();
 		}
 
 		if (virtualBoardsFragment == null) {
@@ -382,7 +380,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		private int getPageIconByTagName(Fragment fragment) {
 			int pageIcon;
 
-			if (fragment instanceof FavouritesFragment) {
+			if (fragment instanceof FavouritesStationFragment) {
 				pageIcon = R.drawable.ic_tab_favorites;
 			} else if (fragment instanceof VirtualBoardsFragment) {
 				pageIcon = R.drawable.ic_tab_real_time;
@@ -394,26 +392,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 			return pageIcon;
 		}
-	}
-
-	public static void setHastToResrart(boolean hasToRestart) {
-		Sofbus24.hasToRestart = hasToRestart;
-	}
-
-	public static void setFavouritesChanged(boolean isFavouritesChanged) {
-		Sofbus24.isFavouritesChanged = isFavouritesChanged;
-	}
-
-	public static void setVBChanged(boolean isVbChanged) {
-		Sofbus24.isVbChanged = isVbChanged;
-	}
-
-	public static void setMetroChanged(boolean isMetroChanged) {
-		Sofbus24.isMetroChanged = isMetroChanged;
-	}
-
-	public static void setHomeScreenChanged(boolean isHomeScreenChanged) {
-		Sofbus24.isHomeScreenChanged = isHomeScreenChanged;
 	}
 
 	/**
@@ -610,8 +588,9 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	 *            the tabPosition that is pressed or "-1" in case of onResume
 	 */
 	private void actionsOverHomeScreen(int tabPosition) {
+		// Check if this is called from "onResume" or from "onTabSelected"
 		if (tabPosition == -1) {
-			if (hasToRestart) {
+			if (globalContext.isHasToRestart()) {
 				ActivityUtils.restartApplication(context);
 			} else {
 				if (mViewPager != null) {
@@ -619,27 +598,26 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 							.getCurrentItem());
 
 					// Check the fragment type and proceed accordingly
-					if (fragment instanceof FavouritesFragment
-							&& isFavouritesChanged) {
-						((FavouritesFragment) fragment).update(context, null);
-						isFavouritesChanged = false;
+					if (fragment instanceof FavouritesStationFragment
+							&& globalContext.isFavouritesChanged()) {
+						((FavouritesStationFragment) fragment).update(context);
+						globalContext.setFavouritesChanged(false);
 					}
 
 					if (fragment instanceof VirtualBoardsFragment
-							&& isVbChanged) {
-						((VirtualBoardsFragment) fragment)
-								.update(context, null);
-						isVbChanged = false;
+							&& globalContext.isVbChanged()) {
+						((VirtualBoardsFragment) fragment).update(context);
+						globalContext.setVbChanged(false);
 					}
 
 					if (fragment instanceof MetroStationFragment
-							&& isMetroChanged) {
-						((MetroStationFragment) fragment).update(context, null);
-						isMetroChanged = false;
+							&& globalContext.isMetroChanged()) {
+						((MetroStationFragment) fragment).update(context);
+						globalContext.setMetroChanged(false);
 					}
 
 					// Update the ordering and visibility of the tabs
-					if (isHomeScreenChanged) {
+					if (globalContext.isHomeScreenChanged()) {
 						// Rearrange the fragmentsList
 						createFragmentsList();
 
@@ -657,7 +635,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 								Toast.LENGTH_SHORT).show();
 
 						// Reset to default
-						isHomeScreenChanged = false;
+						globalContext.setHomeScreenChanged(false);
 					}
 				}
 			}
@@ -673,21 +651,21 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			// Actions over each fragment
 			Fragment fragment = fragmentsList.get(tabPosition);
 
-			if (fragment instanceof FavouritesFragment) {
+			if (fragment instanceof FavouritesStationFragment) {
 				actionBar.setSubtitle(getString(R.string.edit_tabs_favourites));
 
-				if (isFavouritesChanged) {
-					((FavouritesFragment) fragment).update(context, null);
-					isFavouritesChanged = false;
+				if (globalContext.isFavouritesChanged()) {
+					((FavouritesStationFragment) fragment).update(context);
+					globalContext.setFavouritesChanged(false);
 				}
 			}
 
 			if (fragment instanceof VirtualBoardsFragment) {
 				actionBar.setSubtitle(getString(R.string.edit_tabs_search));
 
-				if (isVbChanged) {
-					((VirtualBoardsFragment) fragment).update(context, null);
-					isVbChanged = false;
+				if (globalContext.isVbChanged()) {
+					((VirtualBoardsFragment) fragment).update(context);
+					globalContext.setVbChanged(false);
 				}
 			}
 
@@ -698,15 +676,9 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			if (fragment instanceof MetroStationFragment) {
 				actionBar.setSubtitle(getString(R.string.edit_tabs_metro));
 
-				/**
-				 * Making the application run slower - not needed
-				 * ((MetroStationFragment) fragment)
-				 * .showDirectionNameToast(context);
-				 */
-
-				if (isMetroChanged) {
-					((MetroStationFragment) fragment).update(context, null);
-					isMetroChanged = false;
+				if (globalContext.isMetroChanged()) {
+					((MetroStationFragment) fragment).update(context);
+					globalContext.setMetroChanged(false);
 				}
 			}
 		}

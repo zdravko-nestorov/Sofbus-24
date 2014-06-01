@@ -107,7 +107,7 @@ public class VehiclesDataSource {
 	 * Check if a vehicle exists in the DB
 	 * 
 	 * @param vehicle
-	 *            the vehicle that will be deleted
+	 *            the current vehicle
 	 * @return the vehicle if it is found in the DB and null otherwise
 	 */
 	public Vehicle getVehicle(Vehicle vehicle) {
@@ -135,6 +135,39 @@ public class VehiclesDataSource {
 			cursor.close();
 
 			return null;
+		}
+	}
+
+	/**
+	 * Get the vehicle direction
+	 * 
+	 * @param vehicleType
+	 *            the vehicle type
+	 * @return the vehicle direction if it is found in the DB and empty string
+	 *         otherwise
+	 */
+	public String getVehicleDirection(VehicleType vehicleType) {
+		String selection = VehiclesSQLite.COLUMN_TYPE + " = ?";
+		String[] selectionArgs = new String[] { String.valueOf(vehicleType) };
+
+		// Selecting the row that contains the vehicle data
+		Cursor cursor = database.query(VehiclesSQLite.TABLE_VEHICLES,
+				allColumns, selection, selectionArgs, null, null, null);
+
+		if (cursor.getCount() > 0) {
+			// Moving the cursor to the first column of the selected row
+			cursor.moveToFirst();
+
+			// Creating vehicle object and closing the cursor
+			Vehicle foundVehicle = cursorToVehicle(cursor);
+			String vehicleDirection = foundVehicle.getDirection();
+			cursor.close();
+
+			return vehicleDirection;
+		} else {
+			cursor.close();
+
+			return "";
 		}
 	}
 

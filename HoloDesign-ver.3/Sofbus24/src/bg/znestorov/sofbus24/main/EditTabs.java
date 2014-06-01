@@ -13,10 +13,12 @@ import android.widget.Button;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.edit.tabs.EditTabsFragment;
 import bg.znestorov.sofbus24.entity.Config;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 
 public class EditTabs extends FragmentActivity {
 
 	private Activity context;
+	private GlobalEntity globalContext;
 	private Bundle savedInstanceState;
 
 	private ActionBar actionBar;
@@ -33,8 +35,10 @@ public class EditTabs extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sofbus24_edit_tabs);
 
-		// Get the current context and create a SavedInstanceState object
+		// Get the application and current activity context and create a
+		// SavedInstanceState object
 		context = EditTabs.this;
+		globalContext = (GlobalEntity) getApplicationContext();
 		this.savedInstanceState = savedInstanceState;
 
 		initLayoutFields();
@@ -97,7 +101,7 @@ public class EditTabs extends FragmentActivity {
 						.getNewConfig();
 				Configuration.editTabConfigurationFileds(context, newConfig);
 
-				Sofbus24.setHomeScreenChanged(true);
+				globalContext.setHomeScreenChanged(true);
 				finish();
 			}
 		});

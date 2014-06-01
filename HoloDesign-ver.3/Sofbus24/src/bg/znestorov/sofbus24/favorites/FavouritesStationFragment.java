@@ -36,15 +36,15 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
  * @version 1.0
  * 
  */
-public class FavouritesFragment extends ListFragment implements
+public class FavouritesStationFragment extends ListFragment implements
 		UpdateableFragment {
 
 	private Activity context;
 
+	private List<Station> favouritesStations = new ArrayList<Station>();
 	private FavouritesDataSource favouritesDatasource;
-	private List<Station> favouritesStations;
 
-	public FavouritesFragment() {
+	public FavouritesStationFragment() {
 	}
 
 	@Override
@@ -63,7 +63,8 @@ public class FavouritesFragment extends ListFragment implements
 
 		// Load the Favorites datasource and fill the list view with the
 		// stations from the DB
-		favouritesStations = loadFavouritesList(null);
+		favouritesStations.clear();
+		favouritesStations.addAll(loadFavouritesList(null));
 
 		// Searching over the Favorites
 		SearchEditText searchEditText = (SearchEditText) myFragmentView
@@ -88,20 +89,18 @@ public class FavouritesFragment extends ListFragment implements
 	}
 
 	@Override
-	public void update(Activity context, Object obj) {
-		if (this.context == null) {
-			this.context = context;
-		}
+	public void update(Activity context) {
+		ArrayAdapter<Station> favouritesStationAdapter = (FavouritesStationAdapter) getListAdapter();
 
-		favouritesStations = loadFavouritesList(null);
-		setListAdapter(new FavouritesStationAdapter(context, favouritesStations));
+		if (favouritesStationAdapter != null) {
+			favouritesStations.clear();
+			favouritesStations.addAll(loadFavouritesList(null));
+			favouritesStationAdapter.notifyDataSetChanged();
+		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		ArrayAdapter<Station> adapter = (ArrayAdapter<Station>) getListAdapter();
-
 		switch (item.getItemId()) {
 		case R.id.action_favourites_remove_all:
 			int favouritesCount = favouritesStations.size();
@@ -111,8 +110,11 @@ public class FavouritesFragment extends ListFragment implements
 				OnClickListener positiveOnClickListener = new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						setListAdapter(new FavouritesStationAdapter(context,
-								new ArrayList<Station>()));
+						// Change the ListView content
+						favouritesStations.clear();
+						((FavouritesStationAdapter) getListAdapter())
+								.notifyDataSetChanged();
+
 						FavouritesDatabaseUtils
 								.deleteFavouriteDatabase(context);
 						Toast.makeText(
@@ -141,8 +143,6 @@ public class FavouritesFragment extends ListFragment implements
 			break;
 		}
 
-		adapter.notifyDataSetChanged();
-
 		return true;
 	}
 
@@ -170,11 +170,10 @@ public class FavouritesFragment extends ListFragment implements
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				String searchText = searchEditText.getText().toString();
-				List<Station> searchStationList = loadFavouritesList(searchText);
-				ArrayAdapter<Station> adapter = new FavouritesStationAdapter(
-						context, searchStationList);
-
-				setListAdapter(adapter);
+				favouritesStations.clear();
+				favouritesStations.addAll(loadFavouritesList(searchText));
+				((FavouritesStationAdapter) getListAdapter())
+						.notifyDataSetChanged();
 			}
 
 			@Override
