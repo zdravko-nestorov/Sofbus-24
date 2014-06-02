@@ -509,10 +509,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 							.getType() : VehicleType.BTT;
 					stationsDataSource.open();
 
-					if (stationType == VehicleType.METRO1
-							|| stationType == VehicleType.METRO2) {
-						globalContext.setMetroChanged(true);
-					} else {
+					if (stationType != VehicleType.METRO1
+							&& stationType == VehicleType.METRO2) {
 						globalContext.setVbChanged(true);
 					}
 

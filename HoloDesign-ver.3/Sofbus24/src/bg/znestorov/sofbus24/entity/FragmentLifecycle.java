@@ -11,16 +11,16 @@ import android.app.Activity;
  * @version 1.0
  * 
  */
-public interface UpdateableFragment {
+public interface FragmentLifecycle {
 
 	/**
-	 * Use to update the Fragment. It is called from an Activity,
-	 * FragmentActivity or AsyncTask and update the Adapter of the ListFragment
-	 * implementing this interface
+	 * Use to update the Fragment when it is invoked (shown to user). It is
+	 * called from an Activity, FragmentActivity or AsyncTask and update the
+	 * Adapter of the ListFragment implementing this interface
 	 * 
 	 * @param context
 	 *            the current Activity context
 	 */
-	public void update(Activity context);
+	public void onResumeFragment(Activity context);
 
 }

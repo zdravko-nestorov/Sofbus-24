@@ -16,7 +16,7 @@
         android:minWidth="40sp" >
 
         <ImageView
-            android:id="@+id/metro_item_favourite"
+            android:id="@+id/metro_item_station_icon"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:contentDescription="@string/app_img_empty_content_description" />

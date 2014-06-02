@@ -121,9 +121,11 @@ public class PublicTransportFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		ptDirectionsEntity.setActiveStation(position);
-		PublicTransportStation ptStation = (PublicTransportStation) getListAdapter()
+		PublicTransportStation ptStation = (PublicTransportStation) ((PublicTransportAdapter) getListAdapter())
 				.getItem(position);
+		int activeDirection = ptDirectionsEntity.getActiveDirection();
+		ptStation.setDirection(ptDirectionsEntity.getDirectionsNames().get(
+				activeDirection));
 
 		// Getting the PublicTransport schedule from the station URL address
 		ProgressDialog progressDialog = new ProgressDialog(context);
@@ -132,7 +134,7 @@ public class PublicTransportFragment extends ListFragment {
 				String.format(ptStation.getName() + " (%s)",
 						ptStation.getNumber()))));
 		RetrievePublicTransportStation retrievePublicTransportStation = new RetrievePublicTransportStation(
-				context, progressDialog, ptDirectionsEntity);
+				context, progressDialog, ptStation, ptDirectionsEntity);
 		retrievePublicTransportStation.execute();
 	}
 

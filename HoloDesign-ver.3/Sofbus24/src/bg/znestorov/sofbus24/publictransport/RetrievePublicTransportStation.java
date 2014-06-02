@@ -36,24 +36,21 @@ public class RetrievePublicTransportStation extends
 
 	private Activity context;
 	private ProgressDialog progressDialog;
+
+	private PublicTransportStation ptStation;
 	private DirectionsEntity ptDirectionsEntity;
 
 	private int activeDirection;
-	private int activeStation;
-	private PublicTransportStation ptStation;
 
 	public RetrievePublicTransportStation(Activity context,
-			ProgressDialog progressDialog, DirectionsEntity ptDirectionsEntity) {
+			ProgressDialog progressDialog, PublicTransportStation ptStation,
+			DirectionsEntity ptDirectionsEntity) {
 		this.context = context;
 		this.progressDialog = progressDialog;
+		this.ptStation = ptStation;
 		this.ptDirectionsEntity = ptDirectionsEntity;
 
 		activeDirection = ptDirectionsEntity.getActiveDirection();
-		activeStation = ptDirectionsEntity.getActiveStation();
-		ptStation = (PublicTransportStation) ptDirectionsEntity
-				.getDirectionsList().get(activeDirection).get(activeStation);
-		ptStation.setDirection(ptDirectionsEntity.getDirectionsNames().get(
-				activeDirection));
 	}
 
 	@Override
@@ -145,19 +142,25 @@ public class RetrievePublicTransportStation extends
 	private String createStationUrlAddress() {
 		final List<NameValuePair> result = new ArrayList<NameValuePair>();
 
-		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_STOP,
-				ptStation.getId()));
-		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_CH,
+		result.add(new BasicNameValuePair(
+				Constants.SCHECULE_URL_STATION_SCHEDULE_STOP, ptStation.getId()));
+		result.add(new BasicNameValuePair(
+				Constants.SCHECULE_URL_STATION_SCHEDULE_CH,
 				Constants.SCHECULE_URL_STATION_SCHEDULE_CH_VALUE));
-		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_VT,
-				ptDirectionsEntity.getVt().get(activeDirection)));
-		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_VT,
-				ptDirectionsEntity.getVt().get(activeDirection)));
-		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_LID,
-				ptDirectionsEntity.getLid().get(activeDirection)));
-		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_RID,
-				ptDirectionsEntity.getRid().get(activeDirection)));
-		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_STATION_SCHEDULE_H,
+		result.add(new BasicNameValuePair(
+				Constants.SCHECULE_URL_STATION_SCHEDULE_VT, ptDirectionsEntity
+						.getVt().get(activeDirection)));
+		result.add(new BasicNameValuePair(
+				Constants.SCHECULE_URL_STATION_SCHEDULE_VT, ptDirectionsEntity
+						.getVt().get(activeDirection)));
+		result.add(new BasicNameValuePair(
+				Constants.SCHECULE_URL_STATION_SCHEDULE_LID, ptDirectionsEntity
+						.getLid().get(activeDirection)));
+		result.add(new BasicNameValuePair(
+				Constants.SCHECULE_URL_STATION_SCHEDULE_RID, ptDirectionsEntity
+						.getRid().get(activeDirection)));
+		result.add(new BasicNameValuePair(
+				Constants.SCHECULE_URL_STATION_SCHEDULE_H,
 				Constants.SCHECULE_URL_STATION_SCHEDULE_H_VALUE));
 
 		String returnURL = Constants.SCHECULE_URL_STATION_SCHEDULE

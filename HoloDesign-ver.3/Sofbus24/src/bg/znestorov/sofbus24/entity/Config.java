@@ -47,13 +47,13 @@ public class Config implements Serializable {
 		this.versionName = null;
 
 		this.favouritesVisibilå = true;
-		this.favouritesPosition = 1;
+		this.favouritesPosition = 0;
 		this.searchVisibile = true;
-		this.searchPosition = 2;
+		this.searchPosition = 1;
 		this.scheduleVisibile = true;
-		this.schedulePosition = 3;
+		this.schedulePosition = 2;
 		this.metroVisibile = true;
-		this.metroPosition = 4;
+		this.metroPosition = 3;
 
 		this.stationsDbVersion = 0;
 		this.vehiclesDbVersion = 0;

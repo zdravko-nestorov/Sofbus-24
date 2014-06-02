@@ -18,7 +18,6 @@ public class GlobalEntity extends Application {
 	private boolean hasToRestart = false;
 	private boolean isFavouritesChanged = false;
 	private boolean isVbChanged = false;
-	private boolean isMetroChanged = false;
 	private boolean isHomeScreenChanged = false;
 
 	public boolean isHasToRestart() {
@@ -45,14 +44,6 @@ public class GlobalEntity extends Application {
 		this.isVbChanged = isVbChanged;
 	}
 
-	public boolean isMetroChanged() {
-		return isMetroChanged;
-	}
-
-	public void setMetroChanged(boolean isMetroChanged) {
-		this.isMetroChanged = isMetroChanged;
-	}
-
 	public boolean isHomeScreenChanged() {
 		return isHomeScreenChanged;
 	}
@@ -65,9 +56,8 @@ public class GlobalEntity extends Application {
 	public String toString() {
 		return getClass().getName() + " {\n\thasToRestart: " + hasToRestart
 				+ "\n\tisFavouritesChanged: " + isFavouritesChanged
-				+ "\n\tisVbChanged: " + isVbChanged + "\n\tisMetroChanged: "
-				+ isMetroChanged + "\n\tisHomeScreenChanged: "
-				+ isHomeScreenChanged + "\n}";
+				+ "\n\tisVbChanged: " + isVbChanged
+				+ "\n\tisHomeScreenChanged: " + isHomeScreenChanged + "\n}";
 	}
 
 }

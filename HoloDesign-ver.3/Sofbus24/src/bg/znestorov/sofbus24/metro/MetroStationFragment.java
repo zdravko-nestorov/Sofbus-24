@@ -22,7 +22,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.UpdateableFragment;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
@@ -39,8 +38,7 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
  * @version 1.0
  * 
  */
-public class MetroStationFragment extends ListFragment implements
-		UpdateableFragment {
+public class MetroStationFragment extends ListFragment {
 
 	private Activity context;
 	private MetroLoadStations mls;
@@ -94,29 +92,9 @@ public class MetroStationFragment extends ListFragment implements
 	}
 
 	@Override
-	public void update(Activity context) {
-		ArrayAdapter<Station> metroStationAdapter = (MetroStationAdapter) getListAdapter();
-
-		if (metroStationAdapter != null) {
-			SearchEditText searchEditText = (SearchEditText) context
-					.findViewById(R.id.metro_search);
-
-			switch (currentDirection) {
-			case 0:
-				searchEditText.setText(searchTextDirection1);
-				metroStationAdapter.getFilter().filter(searchTextDirection1);
-				break;
-			default:
-				searchEditText.setText(searchTextDirection2);
-				metroStationAdapter.getFilter().filter(searchTextDirection2);
-				break;
-			}
-		}
-	}
-
-	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Station station = (Station) getListAdapter().getItem(position);
+		Station station = (Station) ((MetroStationAdapter) getListAdapter())
+				.getItem(position);
 
 		// Getting the Metro schedule from the station URL address
 		ProgressDialog progressDialog = new ProgressDialog(context);

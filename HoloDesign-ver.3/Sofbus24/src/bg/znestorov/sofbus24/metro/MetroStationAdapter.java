@@ -7,19 +7,16 @@ import android.app.Activity;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
-import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * Array Adapted user for set each row a station from the Vehicles DB
@@ -32,7 +29,6 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 
 	private Activity context;
 	private String language;
-	private FavouritesDataSource favouritesDatasource;
 
 	private TextView emptyList;
 	private String directionName;
@@ -44,7 +40,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
-		ImageView addToFavourites;
+		ImageView stationIcon;
 		TextView stationName;
 		TextView stationNumber;
 	}
@@ -55,7 +51,6 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 
 		this.context = context;
 		this.language = LanguageChange.getUserLocale(context);
-		this.favouritesDatasource = new FavouritesDataSource(context);
 
 		this.emptyList = emptyList;
 		this.directionName = directionName;
@@ -81,8 +76,8 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 
 			// Configure view holder
 			viewHolder = new ViewHolder();
-			viewHolder.addToFavourites = (ImageView) rowView
-					.findViewById(R.id.metro_item_favourite);
+			viewHolder.stationIcon = (ImageView) rowView
+					.findViewById(R.id.metro_item_station_icon);
 			viewHolder.stationName = (TextView) rowView
 					.findViewById(R.id.metro_item_station_name);
 			viewHolder.stationNumber = (TextView) rowView
@@ -94,16 +89,18 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 
 		// Fill the data
 		Station station = filteredStations.get(position);
-		viewHolder.addToFavourites.setImageResource(getFavouriteImage(station));
+		viewHolder.stationIcon.setImageResource(getFavouriteImage(station));
 		viewHolder.stationName.setText(station.getName());
 		viewHolder.stationNumber.setText(String.format(
 				context.getString(R.string.metro_item_station_number_text),
 				station.getNumber()));
 
-		// Set the actions over the ImageView
-		actionsOverFavouritesImageViews(viewHolder, station);
-
 		return rowView;
+	}
+
+	@Override
+	public Station getItem(int position) {
+		return filteredStations.get(position);
 	}
 
 	@Override
@@ -198,8 +195,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 	}
 
 	/**
-	 * Get the favorites image according to this if exists in the Favorites
-	 * Database
+	 * Get the favorites image according to the station type
 	 * 
 	 * @param station
 	 *            the station on the current row
@@ -208,33 +204,15 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 	private Integer getFavouriteImage(Station station) {
 		Integer favouriteImage;
 
-		favouritesDatasource.open();
-		if (favouritesDatasource.getStation(station) == null) {
-			favouriteImage = R.drawable.ic_fav_empty;
-		} else {
-			favouriteImage = R.drawable.ic_fav_full;
+		switch (station.getType()) {
+		case METRO1:
+			favouriteImage = R.drawable.ic_metro_1;
+			break;
+		default:
+			favouriteImage = R.drawable.ic_metro_2;
+			break;
 		}
-		favouritesDatasource.close();
 
 		return favouriteImage;
-	}
-
-	/**
-	 * Click listeners over the addFavourites image
-	 * 
-	 * @param viewHolder
-	 *            holder containing all elements in the layout
-	 * @param station
-	 *            the station on the current row
-	 */
-	public void actionsOverFavouritesImageViews(final ViewHolder viewHolder,
-			final Station station) {
-		viewHolder.addToFavourites.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				ActivityUtils.toggleFavouritesStation(context,
-						favouritesDatasource, station,
-						viewHolder.addToFavourites);
-			}
-		});
 	}
 }

@@ -600,20 +600,16 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 					// Check the fragment type and proceed accordingly
 					if (fragment instanceof FavouritesStationFragment
 							&& globalContext.isFavouritesChanged()) {
-						((FavouritesStationFragment) fragment).update(context);
+						((FavouritesStationFragment) fragment)
+								.onResumeFragment(context);
 						globalContext.setFavouritesChanged(false);
 					}
 
 					if (fragment instanceof VirtualBoardsFragment
 							&& globalContext.isVbChanged()) {
-						((VirtualBoardsFragment) fragment).update(context);
+						((VirtualBoardsFragment) fragment)
+								.onResumeFragment(context);
 						globalContext.setVbChanged(false);
-					}
-
-					if (fragment instanceof MetroStationFragment
-							&& globalContext.isMetroChanged()) {
-						((MetroStationFragment) fragment).update(context);
-						globalContext.setMetroChanged(false);
 					}
 
 					// Update the ordering and visibility of the tabs
@@ -655,7 +651,8 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 				actionBar.setSubtitle(getString(R.string.edit_tabs_favourites));
 
 				if (globalContext.isFavouritesChanged()) {
-					((FavouritesStationFragment) fragment).update(context);
+					((FavouritesStationFragment) fragment)
+							.onResumeFragment(context);
 					globalContext.setFavouritesChanged(false);
 				}
 			}
@@ -664,7 +661,8 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 				actionBar.setSubtitle(getString(R.string.edit_tabs_search));
 
 				if (globalContext.isVbChanged()) {
-					((VirtualBoardsFragment) fragment).update(context);
+					((VirtualBoardsFragment) fragment)
+							.onResumeFragment(context);
 					globalContext.setVbChanged(false);
 				}
 			}
@@ -675,11 +673,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 			if (fragment instanceof MetroStationFragment) {
 				actionBar.setSubtitle(getString(R.string.edit_tabs_metro));
-
-				if (globalContext.isMetroChanged()) {
-					((MetroStationFragment) fragment).update(context);
-					globalContext.setMetroChanged(false);
-				}
 			}
 		}
 	}

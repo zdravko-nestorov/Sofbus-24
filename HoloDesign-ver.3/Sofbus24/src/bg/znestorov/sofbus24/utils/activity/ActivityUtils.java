@@ -308,8 +308,7 @@ public class ActivityUtils {
 
 		// Declare that the home screen sections are changed
 		globalContext.setFavouritesChanged(true);
-		globalContext.setVbChanged(!isMetroStationChanged(station));
-		globalContext.setMetroChanged(isMetroStationChanged(station));
+		globalContext.setVbChanged(isVBStationChanged(station));
 
 		// Add the station to the favorites section
 		favouritesDatasource.open();
@@ -345,8 +344,7 @@ public class ActivityUtils {
 
 		// Declare that the home screen sections are changed
 		globalContext.setFavouritesChanged(true);
-		globalContext.setVbChanged(!isMetroStationChanged(station));
-		globalContext.setMetroChanged(isMetroStationChanged(station));
+		globalContext.setVbChanged(isVBStationChanged(station));
 
 		// Delete the station from the favorites section
 		favouritesDatasource.open();
@@ -364,28 +362,28 @@ public class ActivityUtils {
 	}
 
 	/**
-	 * Check if the station changed is type METRO1 or METRO2
+	 * Check if the station changed is not METRO
 	 * 
 	 * @param station
 	 *            the current station
-	 * @return if the station changed is metro one
+	 * @return if the station changed is not metro one
 	 */
-	private static boolean isMetroStationChanged(Station station) {
-		boolean isMetroStationChanged = false;
+	private static boolean isVBStationChanged(Station station) {
+		boolean isVBStationChanged = false;
 
 		if (station != null && station.getType() != null) {
 			switch (station.getType()) {
 			case METRO1:
 			case METRO2:
-				isMetroStationChanged = true;
+				isVBStationChanged = false;
 				break;
 			default:
-				isMetroStationChanged = false;
+				isVBStationChanged = true;
 				break;
 			}
 		}
 
-		return isMetroStationChanged;
+		return isVBStationChanged;
 	}
 
 }

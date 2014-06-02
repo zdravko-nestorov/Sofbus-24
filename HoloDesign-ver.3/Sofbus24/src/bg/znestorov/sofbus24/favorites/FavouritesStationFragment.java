@@ -23,7 +23,7 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.FavouritesDatabaseUtils;
 import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.UpdateableFragment;
+import bg.znestorov.sofbus24.entity.FragmentLifecycle;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
@@ -37,7 +37,7 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
  * 
  */
 public class FavouritesStationFragment extends ListFragment implements
-		UpdateableFragment {
+		FragmentLifecycle {
 
 	private Activity context;
 
@@ -89,7 +89,7 @@ public class FavouritesStationFragment extends ListFragment implements
 	}
 
 	@Override
-	public void update(Activity context) {
+	public void onResumeFragment(Activity context) {
 		ArrayAdapter<Station> favouritesStationAdapter = (FavouritesStationAdapter) getListAdapter();
 
 		if (favouritesStationAdapter != null) {

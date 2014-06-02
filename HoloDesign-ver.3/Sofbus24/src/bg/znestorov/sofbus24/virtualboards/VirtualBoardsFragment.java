@@ -22,14 +22,14 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.UpdateableFragment;
+import bg.znestorov.sofbus24.entity.FragmentLifecycle;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
 public class VirtualBoardsFragment extends ListFragment implements
-		UpdateableFragment {
+		FragmentLifecycle {
 
 	private Activity context;
 	private TextView emptyList;
@@ -91,7 +91,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 	}
 
 	@Override
-	public void update(Activity context) {
+	public void onResumeFragment(Activity context) {
 		setListAdapterViaSearch();
 	}
 

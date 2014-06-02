@@ -116,6 +116,11 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	}
 
 	@Override
+	public Station getItem(int position) {
+		return filteredStations.get(position);
+	}
+
+	@Override
 	public int getCount() {
 		return filteredStations != null ? filteredStations.size() : 0;
 	}
