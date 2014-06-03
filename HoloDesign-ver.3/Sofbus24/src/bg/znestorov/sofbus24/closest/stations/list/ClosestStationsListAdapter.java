@@ -81,9 +81,8 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 		viewHolder.stationCaption.setText(String.format(station.getName()
 				+ " (%s)", station.getNumber()));
 		viewHolder.stationDistance.setText(String.format(
-				context.getString(R.string.cs_list_item_distance_text),
-				MapUtils.getMapDistance(currentLocation, station))
-				+ context.getString(R.string.app_distance_meters));
+				context.getString(R.string.app_distance),
+				MapUtils.getMapDistance(context, currentLocation, station)));
 
 		// Set the actions over the ImageView
 		actionsOverFavouritesImageViews(viewHolder, station);

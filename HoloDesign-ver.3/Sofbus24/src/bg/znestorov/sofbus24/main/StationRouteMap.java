@@ -1,11 +1,13 @@
 package bg.znestorov.sofbus24.main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -13,16 +15,20 @@ import android.view.MenuItem;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.MetroStation;
+import bg.znestorov.sofbus24.entity.PublicTransportStation;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
+import bg.znestorov.sofbus24.publictransport.RetrievePublicTransportStation;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.MapUtils;
 import bg.znestorov.sofbus24.utils.Utils;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -42,6 +48,8 @@ public class StationRouteMap extends Activity {
 	private LatLng centerStationLocation = new LatLng(
 			Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE,
 			Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE);
+
+	private boolean isCurrentLocationAnimated = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +77,7 @@ public class StationRouteMap extends Activity {
 			// Get the needed fields from the bundle object to form the action
 			// bar title and subtitle
 			Vehicle vehicle = directionsEntity.getVehicle();
-			VehicleType stationType = vehicle.getType();
+			final VehicleType stationType = vehicle.getType();
 			int ptActiveDirection = directionsEntity.getActiveDirection();
 			String directionName = directionsEntity.getDirectionsNames().get(
 					ptActiveDirection);
@@ -78,15 +86,17 @@ public class StationRouteMap extends Activity {
 			actionBar.setTitle(getLineName(vehicle));
 			actionBar.setSubtitle(directionName);
 
-			// Check the type of the bundle object
-			if (VehicleType.METRO1.equals(stationType)
-					|| VehicleType.METRO2.equals(stationType)) {
-				processListOfMetroStationObjects();
-			} else {
-				processListOfPTStationObjects();
-			}
-
-			animateMapFocus(centerStationLocation);
+			// Activate my location, set a location button that center the map
+			// over a point and start a LocationChangeListener
+			stationMap.setMyLocationEnabled(true);
+			stationMap.getUiSettings().setMyLocationButtonEnabled(true);
+			stationMap
+					.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+						@Override
+						public void onMyLocationChange(Location currentLocation) {
+							initGoogleMaps(stationType, currentLocation);
+						}
+					});
 		}
 	}
 
@@ -103,9 +113,6 @@ public class StationRouteMap extends Activity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			return true;
-		case R.id.action_sm_focus:
-			animateMapFocus(centerStationLocation);
 			return true;
 		case R.id.action_sm_map_mode_normal:
 			stationMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -125,9 +132,51 @@ public class StationRouteMap extends Activity {
 	}
 
 	/**
-	 * Process the list of MetroStation objects
+	 * Initialize the GoogleMaps and all of its objects
+	 * 
+	 * @param stationType
+	 *            the station type
+	 * @param currentLocation
+	 *            the current location
 	 */
-	private void processListOfMetroStationObjects() {
+	private void initGoogleMaps(VehicleType stationType,
+			final Location currentLocation) {
+		// Check the type of the bundle object
+		if (VehicleType.METRO1.equals(stationType)
+				|| VehicleType.METRO2.equals(stationType)) {
+			processListOfMetroStationObjects(currentLocation);
+		} else {
+			processListOfPTStationObjects(currentLocation);
+		}
+
+		// Animate the map to the station position
+		animateMapFocus(centerStationLocation);
+		stationMap
+				.setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() {
+					@Override
+					public boolean onMyLocationButtonClick() {
+						if (isCurrentLocationAnimated) {
+							animateMapFocus(centerStationLocation);
+							isCurrentLocationAnimated = false;
+						} else {
+							animateMapFocus(currentLocation);
+							isCurrentLocationAnimated = true;
+						}
+						return true;
+					}
+				});
+
+		// Remove the locationChangeListener
+		stationMap.setOnMyLocationChangeListener(null);
+	}
+
+	/**
+	 * Process the list of MetroStation objects
+	 * 
+	 * @param currentLocation
+	 *            the current location
+	 */
+	private void processListOfMetroStationObjects(Location currentLocation) {
 		// Get the active direction parameters
 		int metroActiveDirection = directionsEntity.getActiveDirection();
 		String metroDirectionName = directionsEntity.getDirectionsNames().get(
@@ -167,7 +216,11 @@ public class StationRouteMap extends Activity {
 						.position(msLocation)
 						.title(String.format(ms.getName() + " (%s)",
 								ms.getNumber()))
-						.snippet(ms.getDirection())
+						.snippet(
+								String.format(context
+										.getString(R.string.app_distance),
+										MapUtils.getMapDistance(context,
+												currentLocation, station)))
 						.icon(BitmapDescriptorFactory
 								.fromResource(getMarkerIcon(ms.getType())));
 				stationMap.addMarker(stationMarkerOptions);
@@ -214,8 +267,11 @@ public class StationRouteMap extends Activity {
 
 	/**
 	 * Process the list of Public Transport (busses, trolleys and trams) objects
+	 * 
+	 * @param currentLocation
+	 *            the current location
 	 */
-	private void processListOfPTStationObjects() {
+	private void processListOfPTStationObjects(Location currentLocation) {
 		// Get the active direction parameters
 		int ptActiveDirection = directionsEntity.getActiveDirection();
 		String ptDirectionName = directionsEntity.getDirectionsNames().get(
@@ -223,14 +279,17 @@ public class StationRouteMap extends Activity {
 		ArrayList<Station> ptDirectionStations = directionsEntity
 				.getDirectionsList().get(ptActiveDirection);
 
+		// Create a HashMap to associate each marker with a station
+		final HashMap<String, PublicTransportStation> markersAndStations = new HashMap<String, PublicTransportStation>();
+
 		// Process all stations of the public transport route
 		for (int i = 0; i < ptDirectionStations.size(); i++) {
-			Station ptStation = ptDirectionStations.get(i);
+			Station station = ptDirectionStations.get(i);
 
 			// Create the marker over the map
 			try {
-				LatLng msLocation = new LatLng(Double.parseDouble(ptStation
-						.getLat()), Double.parseDouble(ptStation.getLon()));
+				LatLng msLocation = new LatLng(Double.parseDouble(station
+						.getLat()), Double.parseDouble(station.getLon()));
 
 				// Center the map over the central station of the route
 				if (i == ptDirectionStations.size() / 2) {
@@ -240,12 +299,23 @@ public class StationRouteMap extends Activity {
 				// Create a marker on the msLocation and set some options
 				MarkerOptions stationMarkerOptions = new MarkerOptions()
 						.position(msLocation)
-						.title(String.format(ptStation.getName() + " (%s)",
-								ptStation.getNumber()))
-						.snippet(ptDirectionName)
+						.title(String.format(station.getName() + " (%s)",
+								station.getNumber()))
+						.snippet(
+								String.format(context
+										.getString(R.string.app_distance),
+										MapUtils.getMapDistance(context,
+												currentLocation, station)))
 						.icon(BitmapDescriptorFactory
-								.fromResource(getMarkerIcon(ptStation.getType())));
-				stationMap.addMarker(stationMarkerOptions);
+								.fromResource(getMarkerIcon(station.getType())));
+				Marker marker = stationMap.addMarker(stationMarkerOptions);
+
+				// Associate the marker and the station
+				PublicTransportStation ptStation = new PublicTransportStation(
+						station);
+				ptStation.setDirection(ptDirectionName);
+				markersAndStations.put(marker.getId(),
+						new PublicTransportStation(ptStation));
 			} catch (Exception e) {
 				// In case no coordinates are found for the station
 			}
@@ -256,7 +326,22 @@ public class StationRouteMap extends Activity {
 				.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 					@Override
 					public void onInfoWindowClick(Marker marker) {
-						// TODO: Get the vehicle schedule
+						// Get the station associated to this marker
+						PublicTransportStation ptStation = markersAndStations
+								.get(marker.getId());
+
+						// Getting the PublicTransport schedule from the station
+						// URL address
+						ProgressDialog progressDialog = new ProgressDialog(
+								context);
+						progressDialog.setMessage(Html.fromHtml(String.format(
+								getString(R.string.pt_item_loading_schedule),
+								String.format(ptStation.getName() + " (%s)",
+										ptStation.getNumber()))));
+						RetrievePublicTransportStation retrievePublicTransportStation = new RetrievePublicTransportStation(
+								context, progressDialog, ptStation,
+								directionsEntity);
+						retrievePublicTransportStation.execute();
 					}
 				});
 	}
@@ -307,11 +392,27 @@ public class StationRouteMap extends Activity {
 	 * camera to that position
 	 * 
 	 * @param stationLocation
-	 *            the location of the station over the map
+	 *            the location of the station over the map (using LatLng object)
 	 */
 	private void animateMapFocus(LatLng stationLocation) {
 		CameraPosition cameraPosition = new CameraPosition.Builder()
 				.target(stationLocation).zoom(11.8f).build();
+		stationMap.animateCamera(CameraUpdateFactory
+				.newCameraPosition(cameraPosition));
+	}
+
+	/**
+	 * Construct a CameraPosition focusing on Mountain View and animate the
+	 * camera to that position
+	 * 
+	 * @param stationLocation
+	 *            the location of the station over the map (using Location
+	 *            object)
+	 */
+	private void animateMapFocus(Location stationLocation) {
+		CameraPosition cameraPosition = new CameraPosition.Builder()
+				.target(new LatLng(stationLocation.getLatitude(),
+						stationLocation.getLongitude())).zoom(11.8f).build();
 		stationMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
 	}

@@ -18,7 +18,9 @@
     <string name="app_internet_or_info_error">В момента няма намерена информация. Моля проверете вашата интернет връзка или опитайте по-късно.</string>
     <string name="app_location_error">Моля включете поне едно от устройствата (GPS или WiFi), за да бъде засечено текущото ви местоположение.</string>
     <string name="app_coordinates_error">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
-    <string name="app_distance_meters">&#160;м.</string>
+    <string name="app_distance" formatted="false">Разстояние: ~%s</string>
+    <string name="app_distance_meters">м</string>
+    <string name="app_distance_kilometers">км&#160;</string>
     <string name="app_remaining_minutes">м</string>
     <string name="app_remaining_hours">ч</string>
     <string name="app_toast_add_favourites" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>
@@ -71,7 +73,6 @@
     <!-- Closest Stations List -->
     <string name="cs_list_title">Най-близки спирки</string>
     <string name="cs_list_search_hint">Търсене по име или номер</string>
-    <string name="cs_list_item_distance_text" formatted="false">Разстояние: %s</string>
     <string name="cs_list_loading_current_location" formatted="false"><![CDATA[Изчисляване на текущите координати...]]></string>
     <string name="cs_list_item_empty_list">Няма намерени спирки в радиус от 100 км. за това търсене. Моля опитайте с други критерии или се приближете до София.</string>
 

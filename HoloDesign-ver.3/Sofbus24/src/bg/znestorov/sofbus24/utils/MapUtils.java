@@ -2,8 +2,10 @@ package bg.znestorov.sofbus24.utils;
 
 import java.math.BigDecimal;
 
+import android.app.Activity;
 import android.location.Location;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.main.R;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -15,6 +17,68 @@ import com.google.android.gms.maps.model.LatLng;
  * 
  */
 public class MapUtils {
+
+	/**
+	 * Get the distance between Location and Station object
+	 * 
+	 * @param location1
+	 *            Location object
+	 * @param station
+	 *            Station object
+	 * @return distance between the input objects (in case of an error - return
+	 *         empty string)
+	 */
+	public static String getMapDistance(Location location1, Station station) {
+		try {
+			return getDistance(location1, getLocation(station)).toString();
+		} catch (Exception e) {
+			return "∞";
+		}
+	}
+
+	/**
+	 * Get the distance between Location and Station object
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param location1
+	 *            Location object
+	 * @param station
+	 *            Station object
+	 * @return distance between the input objects (in case of an error - return
+	 *         empty string)
+	 */
+	public static String getMapDistance(Activity context, Location location1,
+			Station station) {
+		try {
+			return formatDistance(context,
+					getDistance(location1, getLocation(station)));
+		} catch (Exception e) {
+			return "∞";
+		}
+	}
+
+	/**
+	 * Get the distance between LatLng and Station object
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param latLng1
+	 *            LatLng object
+	 * @param station
+	 *            Station object
+	 * @return distance between the input objects (in case of an error - return
+	 *         empty string)
+	 */
+	public static String getMapDistance(Activity context, LatLng latLng1,
+			Station station) {
+		try {
+			return formatDistance(context,
+					getDistance(getLocation(latLng1), getLocation(station)));
+		} catch (Exception e) {
+			return "∞";
+		}
+	}
 
 	/**
 	 * Get the distance between LatLng and Station object
@@ -49,6 +113,28 @@ public class MapUtils {
 		try {
 			return getDistance(getLocation(latLng1), getLocation(latLng2))
 					.toString();
+		} catch (Exception e) {
+			return "∞";
+		}
+	}
+
+	/**
+	 * Get the distance between two LatLng objects
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param latLng1
+	 *            LatLng object
+	 * @param latLng2
+	 *            LatLng object
+	 * @return distance between the input objects (in case of an error - return
+	 *         empty string)
+	 */
+	public static String getMapDistance(Activity context, LatLng latLng1,
+			LatLng latLng2) {
+		try {
+			return formatDistance(context,
+					getDistance(getLocation(latLng1), getLocation(latLng2)));
 		} catch (Exception e) {
 			return "∞";
 		}
@@ -99,6 +185,31 @@ public class MapUtils {
 		BigDecimal bd = new BigDecimal(distanceTo);
 		BigDecimal rounded = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
 		distanceTo = rounded.floatValue();
+
+		return distanceTo;
+	}
+
+	/**
+	 * Format the distance in kilometers and meters
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param meters
+	 *            the distance in meters
+	 * @return the formatted distance
+	 */
+	private static String formatDistance(Activity context, Float meters) {
+		long km = (long) (meters / 1000);
+		long m = (long) (meters - km * 1000);
+
+		String distanceTo;
+		if (km > 0) {
+			distanceTo = km
+					+ context.getString(R.string.app_distance_kilometers) + m
+					+ context.getString(R.string.app_distance_meters);
+		} else {
+			distanceTo = m + context.getString(R.string.app_distance_meters);
+		}
 
 		return distanceTo;
 	}
