@@ -1,4 +1,4 @@
-package bg.znestorov.sofbus24.schedule;
+package bg.znestorov.sofbus24.metro;
 
 import java.util.ArrayList;
 
@@ -16,21 +16,21 @@ import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager;
 
 /**
- * Schedule Fragment containing information about the public transport vehicles
+ * Metro Fragment containing information about the metro stations
  * 
  * @author Zdravko Nestorov
  * @version 1.0
  * 
  */
-public class ScheduleFragment extends Fragment {
+public class MetroFragment extends Fragment {
 
 	private ViewPager mNonSwipeableViewPager;
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 
 	private ArrayList<Fragment> fragmentsList = new ArrayList<Fragment>();
 
-	private int currentVehicle;
-	private static final String BUNDLE_CURRENT_VEHICLE = "CURRENT VEHICLE";
+	private int currentDirection;
+	private static final String BUNDLE_CURRENT_DIRECTION = "CURRENT DIRECTION";
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class ScheduleFragment extends Fragment {
 		// Activate the option menu
 		setHasOptionsMenu(true);
 
-		return inflater.inflate(R.layout.activity_schedule_fragment, container,
+		return inflater.inflate(R.layout.activity_metro_fragment, container,
 				false);
 	}
 
@@ -55,7 +55,7 @@ public class ScheduleFragment extends Fragment {
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 
-		savedInstanceState.putInt(BUNDLE_CURRENT_VEHICLE, currentVehicle);
+		savedInstanceState.putInt(BUNDLE_CURRENT_DIRECTION, currentDirection);
 	}
 
 	/**
@@ -66,96 +66,82 @@ public class ScheduleFragment extends Fragment {
 	 */
 	private void initBundleInfo(Bundle savedInstanceState) {
 		if (savedInstanceState != null) {
-			currentVehicle = savedInstanceState.getInt(BUNDLE_CURRENT_VEHICLE);
+			currentDirection = savedInstanceState
+					.getInt(BUNDLE_CURRENT_DIRECTION);
 		} else {
-			currentVehicle = 0;
+			currentDirection = 0;
 		}
 	}
 
 	/**
 	 * Initialize the layout fields and assign the appropriate listeners over
-	 * them (vehicles tabs (TextViews) and the ViewPager)
+	 * them (directions' tabs (TextViews) and the ViewPager)
 	 */
 	private void initLayoutFields() {
 		// Create the fragments list
 		createFragmentsList();
 
-		// Create the adapter that will return a fragment for each of the
-		// vehicles
+		// Create the adapter that will return a fragment for each of the metro
+		// directions
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getChildFragmentManager());
 
 		// Set up the ViewPager with the sections adapter and load all tabs at
 		// once
 		mNonSwipeableViewPager = (NonSwipeableViewPager) getView()
-				.findViewById(R.id.schedule_pager);
-		mNonSwipeableViewPager.setOffscreenPageLimit(2);
+				.findViewById(R.id.metro_pager);
 		mNonSwipeableViewPager.setAdapter(mSectionsPagerAdapter);
 
 		// Get the direction tabs and assign them onClickListeners
-		TextView textViewBus = (TextView) getView().findViewById(
-				R.id.schedule_bus_tab);
-		TextView textViewTrolley = (TextView) getView().findViewById(
-				R.id.schedule_trolley_tab);
-		TextView textViewTram = (TextView) getView().findViewById(
-				R.id.schedule_tram_tab);
-		actionsOverDirectionsTextViews(textViewBus, textViewTrolley,
-				textViewTram);
+		TextView textViewDirection1 = (TextView) getView().findViewById(
+				R.id.metro_direction1_tab);
+		TextView textViewDirection2 = (TextView) getView().findViewById(
+				R.id.metro_direction2_tab);
+		actionsOverDirectionsTextViews(textViewDirection1, textViewDirection2);
 
 		// Set the active tab
-		setActiveFragment(currentVehicle, textViewBus, textViewTrolley,
-				textViewTram);
+		setActiveFragment(currentDirection, textViewDirection1,
+				textViewDirection2);
 	}
 
 	/**
-	 * Create the FragmentsList, where each element contains a separate type of
-	 * vehicles
+	 * Create the FragmentsList, where each element contains a separate
+	 * direction
 	 */
 	private void createFragmentsList() {
-		fragmentsList.add(ScheduleVehicleFragment.newInstance(0));
-		fragmentsList.add(ScheduleVehicleFragment.newInstance(1));
-		fragmentsList.add(ScheduleVehicleFragment.newInstance(2));
+		fragmentsList.add(MetroStationFragment.newInstance(0));
+		fragmentsList.add(MetroStationFragment.newInstance(1));
 	}
 
 	/**
 	 * Activate the listeners over the directions' tabs (TextViews)
 	 * 
-	 * @param textViewBus
-	 *            bus tab (TextView)
-	 * @param textViewTrolley
-	 *            trolley tab (TextView)
-	 * @param textViewTrolley
-	 *            tram tab (TextView)
+	 * @param textViewDirection1
+	 *            first direction tab (TextView)
+	 * @param textViewDirection2
+	 *            second direction tab (TextView)
 	 */
-	private void actionsOverDirectionsTextViews(final TextView textViewBus,
-			final TextView textViewTrolley, final TextView textViewTram) {
-		// Assign the bus TextView a click listener
-		textViewBus.setOnClickListener(new OnClickListener() {
+	private void actionsOverDirectionsTextViews(
+			final TextView textViewDirection1, final TextView textViewDirection2) {
+		// Assign the Direction1 TextView a click listener
+		textViewDirection1.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setActiveFragment(0, textViewBus, textViewTrolley, textViewTram);
+				setActiveFragment(0, textViewDirection1, textViewDirection2);
 			}
 		});
 
-		// Assign the trolley TextView a click listener
-		textViewTrolley.setOnClickListener(new OnClickListener() {
+		// Assign the Direction2 TextView a click listener
+		textViewDirection2.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setActiveFragment(1, textViewBus, textViewTrolley, textViewTram);
-			}
-		});
-
-		// Assign the tram TextView a click listener
-		textViewTram.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				setActiveFragment(2, textViewBus, textViewTrolley, textViewTram);
+				setActiveFragment(1, textViewDirection1, textViewDirection2);
 			}
 		});
 	}
 
 	/**
-	 * Set a vehicle tab to be active - change the background and text colors
+	 * Set a metro tab to be active - change the background and text colors
 	 * 
 	 * @param textView
 	 *            the TextView which is selected
@@ -167,7 +153,7 @@ public class ScheduleFragment extends Fragment {
 	}
 
 	/**
-	 * Set a vehicle tab to be inactive - change the background and text colors
+	 * Set a metro tab to be inactive - change the background and text colors
 	 * 
 	 * @param textView
 	 *            the TextView that has to be deactivated
@@ -180,39 +166,29 @@ public class ScheduleFragment extends Fragment {
 	/**
 	 * Set a fragment to be visible (on top)
 	 * 
-	 * @param tabNumber
+	 * @param directionNumber
 	 *            the number of the direction
-	 * @param textViewBus
-	 *            bus tab (TextView)
-	 * @param textViewTrolley
-	 *            trolley tab (TextView)
-	 * @param textViewTrolley
-	 *            tram tab (TextView)
+	 * @param textViewDirection1
+	 *            first direction tab (TextView)
+	 * @param textViewDirection2
+	 *            second direction tab (TextView)
 	 */
-	private void setActiveFragment(int tabNumber, TextView textViewBus,
-			TextView textViewTrolley, TextView textViewTram) {
-		switch (tabNumber) {
+	private void setActiveFragment(int directionNumber,
+			TextView textViewDirection1, TextView textViewDirection2) {
+		switch (directionNumber) {
 		case 0:
-			currentVehicle = 0;
-			setTabActive(textViewBus);
-			setTabInactive(textViewTrolley);
-			setTabInactive(textViewTram);
-			break;
-		case 1:
-			currentVehicle = 1;
-			setTabActive(textViewTrolley);
-			setTabInactive(textViewBus);
-			setTabInactive(textViewTram);
+			currentDirection = 0;
+			setTabActive(textViewDirection1);
+			setTabInactive(textViewDirection2);
 			break;
 		default:
-			currentVehicle = 2;
-			setTabActive(textViewTram);
-			setTabInactive(textViewBus);
-			setTabInactive(textViewTrolley);
+			currentDirection = 1;
+			setTabActive(textViewDirection2);
+			setTabInactive(textViewDirection1);
 			break;
 		}
 
-		mNonSwipeableViewPager.setCurrentItem(currentVehicle);
+		mNonSwipeableViewPager.setCurrentItem(currentDirection);
 	}
 
 	/**

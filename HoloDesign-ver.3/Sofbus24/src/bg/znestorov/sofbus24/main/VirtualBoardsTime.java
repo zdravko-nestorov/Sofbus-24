@@ -279,8 +279,14 @@ public class VirtualBoardsTime extends FragmentActivity {
 				.getLon() : Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE + "";
 
 		// Create the station street view URL address
-		String imageUrl = String.format(Constants.FAVOURITES_IMAGE_URL,
-				stationLat, stationLon);
+		String imageUrl;
+		if (stationLat != null
+				&& (stationLat.contains(",") || stationLat.contains("."))) {
+			imageUrl = String.format(Constants.FAVOURITES_IMAGE_URL,
+					stationLat, stationLon);
+		} else {
+			imageUrl = "drawable://" + R.drawable.ic_no_image_available;
+		}
 
 		// Loading the image and process the fields over
 		imageLoader.displayImage(imageUrl, vbTimeStreetView,

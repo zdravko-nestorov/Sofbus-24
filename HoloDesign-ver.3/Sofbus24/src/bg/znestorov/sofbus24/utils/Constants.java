@@ -28,9 +28,9 @@ public class Constants {
 	// VirtualBoardsFragment --> VirtualBoardsTime
 	public static final String BUNDLE_VIRTUAL_BOARDS_TIME = "VIRTUAL BOARDS TIME";
 	public static final String BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST = "VIRTUAL BOARDS TIME EMPTY LIST";
-	// ScheduleFragment --> PublicTransport --> PublicTransportFragment
+	// ScheduleFragment --> PublicTransport --> PublicTransportFragment --> ...
 	public static final String BUNDLE_PUBLIC_TRANSPORT_SCHEDULE = "PUBLIC TRANSPORT SCHEDULE";
-	// MetroFragment --> MetroSchedule --> MetroScheduleFragment
+	// Sofbus24 --> MetroFragment --> MetroStationFragment --> ...
 	public static final String BUNDLE_METRO_SCHEDULE = "METRO SCHEDULE";
 	// MetroSchedule/PublicTransportSchedule --> StationMap
 	public static final String BUNDLE_STATION_MAP = "STATION MAP";

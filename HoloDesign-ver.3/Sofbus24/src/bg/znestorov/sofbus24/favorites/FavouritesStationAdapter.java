@@ -268,9 +268,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	private void loadStationImage(final ViewHolder viewHolder, Station station) {
 		String stationLat = station.getLat();
 		String stationLon = station.getLon();
-		String imageUrl;
 
-		// TODO: Find better approach
+		String imageUrl;
 		if (stationLat != null
 				&& (stationLat.contains(",") || stationLat.contains("."))) {
 			imageUrl = String.format(Constants.FAVOURITES_IMAGE_URL,

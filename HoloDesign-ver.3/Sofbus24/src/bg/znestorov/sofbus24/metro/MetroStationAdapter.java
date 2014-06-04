@@ -47,7 +47,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 
 	public MetroStationAdapter(Activity context, TextView emptyList,
 			String directionName, List<Station> stations) {
-		super(context, R.layout.activity_metro_list_item, stations);
+		super(context, R.layout.activity_metro_station_list_item, stations);
 
 		this.context = context;
 		this.language = LanguageChange.getUserLocale(context);
@@ -72,7 +72,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 		// Reuse views
 		if (rowView == null) {
 			LayoutInflater inflater = context.getLayoutInflater();
-			rowView = inflater.inflate(R.layout.activity_metro_list_item, null);
+			rowView = inflater.inflate(R.layout.activity_metro_station_list_item, null);
 
 			// Configure view holder
 			viewHolder = new ViewHolder();

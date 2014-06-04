@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.schedule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -65,6 +66,54 @@ public class ScheduleLoadVehicles {
 
 	public void setTrams(List<Vehicle> trams) {
 		this.trams = trams;
+	}
+
+	/**
+	 * Get a list with the vehicles for the current vehicle type (integer code)
+	 * 
+	 * @param vehicleType
+	 *            the vehicle type (integer code)
+	 * @return a list with the vehicles for the current vehicle type
+	 */
+	public ArrayList<Vehicle> getVehiclesList(int vehicleType) {
+		ArrayList<Vehicle> vehiclesList = new ArrayList<Vehicle>();
+		switch (vehicleType) {
+		case 0:
+			vehiclesList.addAll(busses);
+			break;
+		case 1:
+			vehiclesList.addAll(trolleys);
+			break;
+		default:
+			vehiclesList.addAll(trams);
+			break;
+		}
+
+		return vehiclesList;
+	}
+
+	/**
+	 * Get a list with the stations for the current vehicle type
+	 * 
+	 * @param vehicleType
+	 *            the vehicle type
+	 * @return a list with the vehicles for the current vehicle type
+	 */
+	public ArrayList<Vehicle> getDirectionList(VehicleType vehicleType) {
+		int currentDirection;
+		switch (vehicleType) {
+		case BUS:
+			currentDirection = 0;
+			break;
+		case TROLLEY:
+			currentDirection = 1;
+			break;
+		default:
+			currentDirection = 2;
+			break;
+		}
+
+		return getVehiclesList(currentDirection);
 	}
 
 	@Override

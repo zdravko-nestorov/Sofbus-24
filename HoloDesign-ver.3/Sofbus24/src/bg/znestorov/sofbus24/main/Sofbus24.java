@@ -30,8 +30,8 @@ import bg.znestorov.sofbus24.entity.Config;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HomeTab;
 import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
+import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
-import bg.znestorov.sofbus24.metro.MetroStationFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -54,7 +54,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	private FavouritesStationFragment favouritesFragment;
 	private VirtualBoardsFragment virtualBoardsFragment;
 	private ScheduleFragment scheduleFragment;
-	private MetroStationFragment metroFragment;
+	private MetroFragment metroFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +100,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			if (currentFragment instanceof FavouritesStationFragment) {
 				favouritesRemoveAll.setVisible(true);
 				metroMapRoute.setVisible(false);
-			} else if (currentFragment instanceof MetroStationFragment) {
+			} else if (currentFragment instanceof MetroFragment) {
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(true);
 			} else {
@@ -308,7 +308,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		}
 
 		if (metroFragment == null) {
-			metroFragment = new MetroStationFragment();
+			metroFragment = new MetroFragment();
 		}
 	}
 
@@ -671,7 +671,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 				actionBar.setSubtitle(getString(R.string.edit_tabs_schedule));
 			}
 
-			if (fragment instanceof MetroStationFragment) {
+			if (fragment instanceof MetroFragment) {
 				actionBar.setSubtitle(getString(R.string.edit_tabs_metro));
 			}
 		}

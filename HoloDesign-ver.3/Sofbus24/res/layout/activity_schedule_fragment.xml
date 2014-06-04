@@ -63,51 +63,10 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <bg.znestorov.sofbus24.utils.activity.SearchEditText
-        android:id="@+id/schedule_search"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@android:drawable/ic_menu_search"
-        android:drawablePadding="5sp"
-        android:drawableRight="@android:drawable/ic_menu_close_clear_cancel"
-        android:hint="@string/sch_search_hint"
-        android:maxLines="1" />
-
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@drawable/list_divider"
-        android:dividerHeight="1sp"
-        android:fastScrollEnabled="true"
-        android:focusable="true" >
-    </ListView>
-
-    <RelativeLayout
-        android:id="@android:id/empty"
+    <bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager
+        android:id="@+id/schedule_pager"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="25sp"
-        android:layout_marginRight="25sp"
-        android:layout_marginTop="-25sp"
-        android:gravity="center" >
-
-        <ImageView
-            android:id="@+id/schedule_list_empty_image"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/app_img_empty_content_description"
-            android:paddingBottom="20sp"
-            android:src="@drawable/ic_empty_schedule_list" />
-
-        <TextView
-            android:id="@+id/schedule_list_empty_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/schedule_list_empty_image"
-            android:gravity="center"
-            android:textColor="#080808"
-            android:textSize="15sp" />
-    </RelativeLayout>
+        android:focusable="true" />
 
 </LinearLayout>

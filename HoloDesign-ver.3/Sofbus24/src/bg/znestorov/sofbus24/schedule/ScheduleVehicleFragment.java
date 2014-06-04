@@ -1,12 +1,9 @@
-package bg.znestorov.sofbus24.metro;
+package bg.znestorov.sofbus24.schedule;
 
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
@@ -14,51 +11,50 @@ import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import bg.znestorov.sofbus24.entity.DirectionsEntity;
-import bg.znestorov.sofbus24.entity.Station;
+import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.Vehicle;
-import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.main.StationRouteMap;
+import bg.znestorov.sofbus24.publictransport.RetrievePublicTransportDirection;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
 /**
- * Metro Station Fragment containing information about the metro stations
+ * Schedule Vehiles Fragment containing information about the public transport
+ * vehicles
  * 
  * @author Zdravko Nestorov
  * @version 1.0
  * 
  */
-public class MetroStationFragment extends ListFragment {
+public class ScheduleVehicleFragment extends ListFragment {
 
 	private Activity context;
 
-	private int currentDirection;
-	private MetroLoadStations mls;
+	private int currentVehicle;
+	private ScheduleLoadVehicles slv;
 
-	private MetroStationAdapter metroStationAdapter;
-	private ArrayList<Station> stationsList = new ArrayList<Station>();
+	private ScheduleVehicleAdapter scheduleVehicleAdapter;
+	private ArrayList<Vehicle> stationsList = new ArrayList<Vehicle>();
 
 	private String searchText;
 	private static final String BUNDLE_SEARCH_TEXT = "SEARCH TEXT";
 
-	public static MetroStationFragment newInstance(int currentDirection) {
-		MetroStationFragment metroStationFragment = new MetroStationFragment();
+	public static ScheduleVehicleFragment newInstance(int currentVehicle) {
+		ScheduleVehicleFragment scheduleStationFragment = new ScheduleVehicleFragment();
 
 		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.BUNDLE_METRO_SCHEDULE, currentDirection);
-		metroStationFragment.setArguments(bundle);
+		bundle.putInt(Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE,
+				currentVehicle);
+		scheduleStationFragment.setArguments(bundle);
 
-		return metroStationFragment;
+		return scheduleStationFragment;
 	}
 
 	@Override
@@ -70,7 +66,7 @@ public class MetroStationFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View fragmentView = inflater.inflate(
-				R.layout.activity_metro_station_fragment, container, false);
+				R.layout.activity_schedule_vehicle_fragment, container, false);
 
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
@@ -80,9 +76,6 @@ public class MetroStationFragment extends ListFragment {
 
 		// Find all of TextView and SearchEditText tabs in the layout
 		initLayoutFields(fragmentView);
-
-		// Activate the option menu
-		setHasOptionsMenu(true);
 
 		return fragmentView;
 	}
@@ -96,37 +89,24 @@ public class MetroStationFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Station station = (Station) ((MetroStationAdapter) getListAdapter())
-				.getItem(position);
+		ScheduleVehicleAdapter scheduleStationAdapter = (ScheduleVehicleAdapter) getListAdapter();
+		Vehicle vehicle = (Vehicle) scheduleStationAdapter.getItem(position);
+		String rowCaption = scheduleStationAdapter.getVehicleCaption(context,
+				vehicle);
 
-		// Getting the Metro schedule from the station URL address
+		// Getting the PublicTransport schedule from the SKGT site
 		ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setMessage(Html.fromHtml(String.format(
-				getString(R.string.metro_loading_schedule), station.getName(),
-				station.getNumber())));
-		RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
-				context, progressDialog, station);
-		retrieveMetroSchedule.execute();
-	}
+				getString(R.string.pt_item_loading_schedule), rowCaption)));
+		RetrievePublicTransportDirection retrievePublicTransportDirection = new RetrievePublicTransportDirection(
+				context, progressDialog, vehicle);
+		retrievePublicTransportDirection.execute();
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_metro_map_route:
-			ProgressDialog progressDialog = new ProgressDialog(context);
-			progressDialog
-					.setMessage(getString(R.string.metro_menu_map_route_loading));
-			RetrieveMetroRoute retrieveMetroRoute = new RetrieveMetroRoute(
-					context, progressDialog);
-			retrieveMetroRoute.execute();
-			break;
-		}
-
-		return true;
+		Toast.makeText(getActivity(), rowCaption, Toast.LENGTH_SHORT).show();
 	}
 
 	/**
-	 * Initialize the MetroLoadStation object and all the data from the
+	 * Initialize the ScheduleLoadVehicles object and all the data from the
 	 * SavedInstanceState object
 	 * 
 	 * @param savedInstanceState
@@ -140,28 +120,27 @@ public class MetroStationFragment extends ListFragment {
 			searchText = "";
 		}
 
-		// Get the current direction from the Bundle
-		currentDirection = getArguments().getInt(
-				Constants.BUNDLE_METRO_SCHEDULE);
+		// Get the current vehicle from the Bundle
+		currentVehicle = getArguments().getInt(
+				Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE);
 
 		// Get the information about the current direction
-		mls = MetroLoadStations.getInstance(context);
-		stationsList = mls.getDirectionList(currentDirection);
+		slv = ScheduleLoadVehicles.getInstance(context);
+		stationsList = slv.getVehiclesList(currentVehicle);
 	}
 
 	/**
 	 * Initialize the layout fields and assign the appropriate listeners over
-	 * them (directions tabs (TextViews), SerachEditText and EmptyList
-	 * (TextView))
+	 * them (vehicles tabs (TextViews), SerachEditText and EmptyList (TextView))
 	 * 
 	 * @param fragmentView
 	 *            the current view of the fragment
 	 */
 	private void initLayoutFields(View fragmentView) {
 		SearchEditText searchEditText = (SearchEditText) fragmentView
-				.findViewById(R.id.metro_station_search);
+				.findViewById(R.id.schedule_vehicle_search);
 		TextView emptyList = (TextView) fragmentView
-				.findViewById(R.id.metro_station_list_empty_text);
+				.findViewById(R.id.schedule_vehicle_list_empty_text);
 
 		// Use custom ArrayAdapter to show the elements in the ListView
 		setListAdapter(emptyList);
@@ -171,7 +150,7 @@ public class MetroStationFragment extends ListFragment {
 	}
 
 	/**
-	 * According to the current direction assign the appropriate adapter to the
+	 * According to the current vehicle assign the appropriate adapter to the
 	 * list fragment
 	 * 
 	 * @param emptyList
@@ -179,10 +158,9 @@ public class MetroStationFragment extends ListFragment {
 	 *            empty)
 	 */
 	private void setListAdapter(TextView emptyList) {
-		metroStationAdapter = new MetroStationAdapter(context, emptyList,
-				mls.getDirectionName(currentDirection, false, false),
-				stationsList);
-		setListAdapter(metroStationAdapter);
+		scheduleVehicleAdapter = new ScheduleVehicleAdapter(context, emptyList,
+				getVehicleName(), stationsList);
+		setListAdapter(scheduleVehicleAdapter);
 	}
 
 	/**
@@ -214,7 +192,7 @@ public class MetroStationFragment extends ListFragment {
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				searchText = searchEditText.getText().toString();
-				metroStationAdapter.getFilter().filter(searchText);
+				scheduleVehicleAdapter.getFilter().filter(searchText);
 			}
 
 			@Override
@@ -250,83 +228,25 @@ public class MetroStationFragment extends ListFragment {
 	}
 
 	/**
-	 * Asynchronous class used for retrieving the Metro route
+	 * Get the name of the tab according to the currentVehicle
 	 * 
-	 * @author Zdravko Nestorov
+	 * @return the name of the tab
 	 */
-	public class RetrieveMetroRoute extends AsyncTask<Void, Void, Intent> {
+	private String getVehicleName() {
+		String activeTabName = "";
 
-		private Activity context;
-		private ProgressDialog progressDialog;
-
-		public RetrieveMetroRoute(Activity context,
-				ProgressDialog progressDialog) {
-			this.context = context;
-			this.progressDialog = progressDialog;
+		switch (currentVehicle) {
+		case 0:
+			activeTabName = getString(R.string.sch_search_tab_bus);
+			break;
+		case 1:
+			activeTabName = getString(R.string.sch_search_tab_trolley);
+			break;
+		default:
+			activeTabName = getString(R.string.sch_search_tab_tram);
+			break;
 		}
 
-		@Override
-		protected void onPreExecute() {
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(true);
-			progressDialog
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						public void onCancel(DialogInterface dialog) {
-							cancel(true);
-						}
-					});
-			progressDialog.show();
-		}
-
-		@Override
-		protected Intent doInBackground(Void... params) {
-			Intent metroMapRouteIntent = new Intent(context,
-					StationRouteMap.class);
-
-			Vehicle metroVehicle;
-			switch (currentDirection) {
-			case 0:
-				metroVehicle = new Vehicle("1", VehicleType.METRO1,
-						mls.getDirectionName(currentDirection, false, true));
-				break;
-			default:
-				metroVehicle = new Vehicle("1", VehicleType.METRO2,
-						mls.getDirectionName(currentDirection, false, true));
-				break;
-			}
-
-			DirectionsEntity metroDirectionsEntity = new DirectionsEntity(
-					metroVehicle, currentDirection,
-					mls.getMetroDirectionsNames(), mls.getMetroDirectionsList());
-			metroMapRouteIntent.putExtra(Constants.BUNDLE_STATION_ROUTE_MAP,
-					metroDirectionsEntity);
-
-			return metroMapRouteIntent;
-		}
-
-		@Override
-		protected void onPostExecute(Intent metroMapRouteIntent) {
-			context.startActivity(metroMapRouteIntent);
-
-			try {
-				progressDialog.dismiss();
-			} catch (Exception e) {
-				// Workaround used just in case the orientation is changed once
-				// retrieving info
-			}
-		}
-
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-
-			try {
-				progressDialog.dismiss();
-			} catch (Exception e) {
-				// Workaround used just in case when this activity is destroyed
-				// before the dialog
-			}
-		}
+		return activeTabName;
 	}
-
 }
