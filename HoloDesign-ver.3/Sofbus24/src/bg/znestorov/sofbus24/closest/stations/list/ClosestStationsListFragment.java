@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.closest.stations.list;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -51,6 +52,7 @@ public class ClosestStationsListFragment extends ListFragment {
 	private String closestStationsSearchText = "";
 
 	private boolean isListFullLoaded = false;
+	private List<Station> searchStationList = new ArrayList<Station>();
 	private ArrayAdapter<Station> closestStationsAdapter;
 
 	private static final String SAVED_STATE_STATIONS_COUNT_KEY = "Closest stations count";
@@ -90,9 +92,10 @@ public class ClosestStationsListFragment extends ListFragment {
 							pageToLoad, closestStationsSearchText);
 
 					if (closestStations.size() > 0) {
-						closestStationsAdapter.addAll(closestStations);
-						closestStationsCount = closestStationsAdapter
-								.getCount();
+						searchStationList.addAll(closestStations);
+						closestStationsCount = searchStationList.size();
+
+						closestStationsAdapter.notifyDataSetChanged();
 					} else {
 						isListFullLoaded = true;
 					}
@@ -141,6 +144,15 @@ public class ClosestStationsListFragment extends ListFragment {
 		setListFragmentAdapter();
 
 		return myFragmentView;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		if (closestStationsAdapter != null) {
+			closestStationsAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
@@ -251,12 +263,18 @@ public class ClosestStationsListFragment extends ListFragment {
 	 * Assign an ArrayList to the ListFragment
 	 */
 	private void setListFragmentAdapter() {
-		List<Station> searchStationList = loadStationsList(false,
-				closestStationsCount, closestStationsSearchText);
+		searchStationList.clear();
+		searchStationList.addAll(loadStationsList(false, closestStationsCount,
+				closestStationsSearchText));
 
-		closestStationsAdapter = new ClosestStationsListAdapter(context,
-				currentLocation, searchStationList);
-		setListAdapter(closestStationsAdapter);
+		if (closestStationsAdapter == null) {
+			closestStationsAdapter = new ClosestStationsListAdapter(context,
+					currentLocation, searchStationList);
+			setListAdapter(closestStationsAdapter);
+		} else {
+			closestStationsAdapter.notifyDataSetChanged();
+			getListView().setSelectionFromTop(0, 0);
+		}
 	}
 
 	/**

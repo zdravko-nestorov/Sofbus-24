@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -340,7 +339,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
 	 */
-	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -352,9 +351,16 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		}
 
 		/**
-		 * This way, when you call notifyDataSetChanged(), the view pager will
-		 * remove all views and reload them all. As so the reload effect is
-		 * obtained.
+		 * Purpose of this method is to check whether an item in the adapter
+		 * still exists in the dataset and where it should show. For each entry
+		 * in dataset, request its Fragment.
+		 * 
+		 * If the Fragment is found, return its (new) position. There's no need
+		 * to return POSITION_UNCHANGED; ViewPager handles it.
+		 * 
+		 * If the Fragment passed to this method is not found, remove all
+		 * references and let the ViewPager remove it from display by by
+		 * returning POSITION_NONE;
 		 */
 		@Override
 		public int getItemPosition(Object object) {

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -125,6 +126,12 @@ public class VirtualBoardsAdapter extends ArrayAdapter<Station> {
 				ActivityUtils.toggleFavouritesStation(context,
 						favouritesDatasource, station,
 						viewHolder.addToFavourites);
+
+				// No need to update this fragment again (in case return from
+				// other section)
+				GlobalEntity globalContext = (GlobalEntity) context
+						.getApplicationContext();
+				globalContext.setVbChanged(false);
 			}
 		});
 	}

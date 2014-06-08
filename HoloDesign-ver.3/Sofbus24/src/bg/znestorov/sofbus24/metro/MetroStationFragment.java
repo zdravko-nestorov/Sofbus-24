@@ -13,18 +13,25 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
+import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.StationMap;
 import bg.znestorov.sofbus24.main.StationRouteMap;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -41,6 +48,7 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 public class MetroStationFragment extends ListFragment {
 
 	private Activity context;
+	private FavouritesDataSource favouritesDatasource;
 
 	private int currentDirection;
 	private MetroLoadStations mls;
@@ -63,6 +71,7 @@ public class MetroStationFragment extends ListFragment {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
+		registerForContextMenu(getListView());
 		super.onActivityCreated(savedInstanceState);
 	}
 
@@ -72,8 +81,10 @@ public class MetroStationFragment extends ListFragment {
 		View fragmentView = inflater.inflate(
 				R.layout.activity_metro_station_fragment, container, false);
 
-		// Set the context (activity) associated with this fragment
+		// Set the context (activity) associated with this fragment and new
+		// instance of the favorites datasource
 		context = getActivity();
+		favouritesDatasource = new FavouritesDataSource(context);
 
 		// Get the needed fragment information
 		initInformation(savedInstanceState);
@@ -119,6 +130,67 @@ public class MetroStationFragment extends ListFragment {
 			RetrieveMetroRoute retrieveMetroRoute = new RetrieveMetroRoute(
 					context, progressDialog);
 			retrieveMetroRoute.execute();
+			break;
+		}
+
+		return true;
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+
+		MenuInflater inflater = context.getMenuInflater();
+		inflater.inflate(R.menu.activity_metro_station_context_menu, menu);
+
+		// Set the title of the menu
+		menu.setHeaderTitle(R.string.menu_metro_station_title);
+
+		// Find the add/remove menui items
+		MenuItem favouritesAdd = menu.findItem(R.id.menu_metro_station_add);
+		MenuItem favouritesRemove = menu
+				.findItem(R.id.menu_metro_station_remove);
+
+		// Detecting the selected station of the listView
+		Station station = (Station) getListAdapter().getItem(
+				(int) ((AdapterContextMenuInfo) menuInfo).id);
+
+		// Check which menu item to be visible
+		favouritesDatasource.open();
+		Station favouritesStation = favouritesDatasource.getStation(station);
+		if (favouritesStation != null) {
+			favouritesAdd.setVisible(false);
+			favouritesRemove.setVisible(true);
+		} else {
+			favouritesAdd.setVisible(true);
+			favouritesRemove.setVisible(false);
+		}
+		favouritesDatasource.close();
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+
+		// Detecting the selected station of the listView
+		Station station = (Station) getListAdapter().getItem((int) info.id);
+
+		switch (item.getItemId()) {
+		case R.id.menu_metro_station_add:
+			ActivityUtils.addToFavourites(context, favouritesDatasource,
+					station);
+			break;
+		case R.id.menu_metro_station_remove:
+			ActivityUtils.removeFromFavourites(context, favouritesDatasource,
+					station);
+			break;
+		case R.id.menu_metro_station_map:
+			Intent metroMapIntent = new Intent(context, StationMap.class);
+			metroMapIntent.putExtra(Constants.BUNDLE_STATION_MAP,
+					new MetroStation(station));
+			startActivity(metroMapIntent);
 			break;
 		}
 

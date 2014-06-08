@@ -20,9 +20,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.entity.FragmentLifecycle;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.FragmentLifecycle;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
@@ -38,8 +38,11 @@ public class VirtualBoardsFragment extends ListFragment implements
 	private String vbSearchText;
 	private ArrayList<Station> vbList = new ArrayList<Station>();
 
+	private String emptyListMsg;
+
 	private static final String BUNDLE_VB_SEARCH_TEXT = "VB SEARCH TEXT";
 	private static final String BUNDLE_VB_STATIONS_LIST = "VB STATION LIST";
+	private static final String BUNDLE_VB_EMPTY_LIST_MSG = "VB EMPTY LIST MESSAGE";
 
 	public VirtualBoardsFragment() {
 	}
@@ -65,8 +68,11 @@ public class VirtualBoardsFragment extends ListFragment implements
 			vbList.clear();
 			vbList.addAll((ArrayList<Station>) savedInstanceState
 					.getSerializable(BUNDLE_VB_STATIONS_LIST));
+			emptyListMsg = savedInstanceState
+					.getString(BUNDLE_VB_EMPTY_LIST_MSG);
 		} else {
 			vbSearchText = "";
+			emptyListMsg = "";
 		}
 
 		// Find all of TextView and SearchEditText tabs in the layout
@@ -101,6 +107,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 
 		savedInstanceState.putString(BUNDLE_VB_SEARCH_TEXT, vbSearchText);
 		savedInstanceState.putSerializable(BUNDLE_VB_STATIONS_LIST, vbList);
+		savedInstanceState.putString(BUNDLE_VB_EMPTY_LIST_MSG, emptyListMsg);
 	}
 
 	@Override
@@ -121,8 +128,11 @@ public class VirtualBoardsFragment extends ListFragment implements
 	 * 
 	 * @param stationsList
 	 *            the stationList that need to be set to the listView
+	 * @param emptyListMsg
+	 *            the text that will show if the list is empty
 	 */
-	public void setListAdapterViaSearch(ArrayList<Station> stationsList) {
+	public void setListAdapterViaSearch(ArrayList<Station> stationsList,
+			String emptyListMsg) {
 		vbList.clear();
 		vbList.addAll(stationsList);
 		setListAdapterViaSearch();
@@ -152,12 +162,16 @@ public class VirtualBoardsFragment extends ListFragment implements
 	 * </ul>
 	 */
 	private void setEmptyListText() {
-		if (vbSearchText == null || "".equals(vbSearchText)) {
-			emptyList.setText(Html
-					.fromHtml(getString(R.string.vb_item_search_list)));
+		if (emptyListMsg != null && !"".equals(emptyListMsg)) {
+			emptyList.setText(Html.fromHtml(emptyListMsg));
 		} else {
-			emptyList.setText(Html.fromHtml(String.format(
-					getString(R.string.vb_item_empty_list), vbSearchText)));
+			if (vbSearchText == null || "".equals(vbSearchText)) {
+				emptyList.setText(Html
+						.fromHtml(getString(R.string.vb_item_search_list)));
+			} else {
+				emptyList.setText(Html.fromHtml(String.format(
+						getString(R.string.vb_item_empty_list), vbSearchText)));
+			}
 		}
 	}
 

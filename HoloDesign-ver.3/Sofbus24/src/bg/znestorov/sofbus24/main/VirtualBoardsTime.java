@@ -285,7 +285,9 @@ public class VirtualBoardsTime extends FragmentActivity {
 			imageUrl = String.format(Constants.FAVOURITES_IMAGE_URL,
 					stationLat, stationLon);
 		} else {
-			imageUrl = "drawable://" + R.drawable.ic_no_image_available;
+			imageUrl = String.format(Constants.FAVOURITES_IMAGE_URL,
+					Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE,
+					Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE);
 		}
 
 		// Loading the image and process the fields over

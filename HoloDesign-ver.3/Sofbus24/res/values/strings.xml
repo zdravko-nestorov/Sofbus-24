@@ -70,6 +70,13 @@
     <string name="action_pt_refresh">Обнови</string>
     <string name="action_pt_map">Карта</string>
 
+    <!-- Context Menu -->
+    <!-- Metro Station -->
+    <string name="menu_metro_station_title">Изберете действие</string>
+    <string name="menu_metro_station_add">Добави в любими</string>
+    <string name="menu_metro_station_remove">Премахни от любими</string>
+    <string name="menu_metro_station_map">Виж на картата</string>
+
     <!-- Closest Stations List -->
     <string name="cs_list_title">Най-близки спирки</string>
     <string name="cs_list_search_hint">Търсене по име или номер</string>

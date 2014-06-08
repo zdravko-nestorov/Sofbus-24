@@ -262,7 +262,7 @@ public class Config implements Serializable {
 	}
 
 	public HomeTab getTabByPosition(Activity context, int position) {
-		if (position >= 0 || position < Constants.GLOBAL_PARAM_HOME_TABS_COUNT) {
+		if (position >= 0 && position < Constants.GLOBAL_PARAM_HOME_TABS_COUNT) {
 			boolean tabVisible;
 			String tabName;
 

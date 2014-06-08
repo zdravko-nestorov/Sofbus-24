@@ -855,6 +855,12 @@ public class RetrieveVirtualBoards {
 				((VirtualBoardsTime) callerInstance)
 						.startVirtualBoardsTimeFragment(null, getErrorMsg());
 				break;
+			case MULTIPLE_RESULTS:
+				((VirtualBoardsFragment) callerInstance)
+						.setListAdapterViaSearch(new ArrayList<Station>(),
+								getErrorMsg());
+				// Important - no break here, because a progress dialog should
+				// be shown, too
 			default:
 				Spanned progressDialogMsg = Html.fromHtml(getErrorMsg());
 				ActivityUtils.showNoInfoAlertDialog(context, progressDialogMsg);
@@ -878,7 +884,7 @@ public class RetrieveVirtualBoards {
 						processVirtualBoards.getMultipleStationsFromHtml()
 								.values());
 				((VirtualBoardsFragment) callerInstance)
-						.setListAdapterViaSearch(stationsList);
+						.setListAdapterViaSearch(stationsList, null);
 				// Important - no break here, because if only one station is
 				// found - directly open the VirtualBoards
 			default:
@@ -919,7 +925,7 @@ public class RetrieveVirtualBoards {
 						processVirtualBoards.getMultipleStationsFromHtml()
 								.values());
 				((VirtualBoardsFragment) callerInstance)
-						.setListAdapterViaSearch(stationsList);
+						.setListAdapterViaSearch(stationsList, null);
 
 				break;
 			}

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.entity.TabType;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager;
 
@@ -143,23 +144,52 @@ public class MetroFragment extends Fragment {
 	/**
 	 * Set a metro tab to be active - change the background and text colors
 	 * 
+	 * @param tabType
+	 *            the position of the tab
 	 * @param textView
 	 *            the TextView which is selected
 	 */
-	private void setTabActive(TextView textView) {
-		textView.setBackgroundColor(getResources().getColor(
-				R.color.inner_tab_grey));
+	private void setTabActive(TabType tabType, TextView textView) {
+		int backgroundResource;
+		switch (tabType) {
+		case LEFT:
+			backgroundResource = R.drawable.tab_left_selected;
+			break;
+		case MIDDLE:
+			backgroundResource = R.drawable.tab_middle_selected;
+			break;
+		default:
+			backgroundResource = R.drawable.tab_right_selected;
+			break;
+		}
+
+		textView.setBackgroundResource(backgroundResource);
 		textView.setTextColor(getResources().getColor(R.color.white));
 	}
 
 	/**
 	 * Set a metro tab to be inactive - change the background and text colors
 	 * 
+	 * @param tabType
+	 *            the position of the tab
 	 * @param textView
 	 *            the TextView that has to be deactivated
 	 */
-	private void setTabInactive(TextView textView) {
-		textView.setBackgroundResource(R.drawable.inner_tab_border);
+	private void setTabInactive(TabType tabType, TextView textView) {
+		int backgroundResource;
+		switch (tabType) {
+		case LEFT:
+			backgroundResource = R.drawable.tab_left_unselected;
+			break;
+		case MIDDLE:
+			backgroundResource = R.drawable.tab_middle_unselected;
+			break;
+		default:
+			backgroundResource = R.drawable.tab_right_unselected;
+			break;
+		}
+
+		textView.setBackgroundResource(backgroundResource);
 		textView.setTextColor(getResources().getColor(R.color.inner_tab_grey));
 	}
 
@@ -178,13 +208,13 @@ public class MetroFragment extends Fragment {
 		switch (directionNumber) {
 		case 0:
 			currentDirection = 0;
-			setTabActive(textViewDirection1);
-			setTabInactive(textViewDirection2);
+			setTabActive(TabType.LEFT, textViewDirection1);
+			setTabInactive(TabType.RIGHT, textViewDirection2);
 			break;
 		default:
 			currentDirection = 1;
-			setTabActive(textViewDirection2);
-			setTabInactive(textViewDirection1);
+			setTabActive(TabType.RIGHT, textViewDirection2);
+			setTabInactive(TabType.LEFT, textViewDirection1);
 			break;
 		}
 
