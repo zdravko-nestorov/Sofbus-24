@@ -254,11 +254,7 @@ public class Utils {
 	 */
 	public static String formatDirectionName(String directionName) {
 		if (directionName != null && !"".equals(directionName)) {
-			directionName = directionName.replaceAll(" - ", "@");
-			directionName = directionName.replaceAll("- ", "@");
-			directionName = directionName.replaceAll(" -", "@");
-
-			String[] directionNameParts = directionName.trim().split("@");
+			String[] directionNameParts = directionName.trim().split("-");
 
 			switch (directionNameParts.length) {
 			case 1:

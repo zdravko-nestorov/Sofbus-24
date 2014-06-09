@@ -56,6 +56,7 @@ import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.VirtualBoardsTime;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
@@ -239,12 +240,12 @@ public class RetrieveVirtualBoards {
 			String vehicleTypeId, String captchaText, String captchaId) {
 		List<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>();
 		result.addAll(Arrays.asList(
-				new BasicNameValuePair(Constants.VB_URL_STOP_CODE, station
-						.getNumber()),
-				new BasicNameValuePair(Constants.VB_URL_GO, "1"),
-				new BasicNameValuePair(Constants.VB_URL_SEC, "5"),
-				new BasicNameValuePair(Constants.VB_URL_O, station
-						.getCustomField())));
+				new BasicNameValuePair(Constants.VB_URL_STOP_CODE,
+						TranslatorLatinToCyrillic.translate(context,
+								station.getNumber())), new BasicNameValuePair(
+						Constants.VB_URL_GO, "1"), new BasicNameValuePair(
+						Constants.VB_URL_SEC, "5"), new BasicNameValuePair(
+						Constants.VB_URL_O, station.getCustomField())));
 
 		if (vehicleTypeId != null) {
 			result.add(new BasicNameValuePair(Constants.VB_URL_VEHICLE_TYPE_ID,

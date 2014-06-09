@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.favorites;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -25,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -39,6 +41,7 @@ import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
@@ -59,9 +62,13 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	private Activity context;
 	private GlobalEntity globalContext;
 
-	private List<Station> stations;
+	private List<Station> originalStations;
+	private List<Station> filteredStations;
+
 	private StationsDataSource stationsDataSource;
 	private FavouritesDataSource favouritesDatasource;
+
+	private Filter stationsFilter;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
@@ -86,7 +93,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		this.context = context;
 		this.globalContext = (GlobalEntity) context.getApplicationContext();
 
-		this.stations = stations;
+		this.originalStations = stations;
+		this.filteredStations = stations;
+
 		this.favouritesDatasource = new FavouritesDataSource(context);
 		this.stationsDataSource = new StationsDataSource(context);
 
@@ -98,6 +107,91 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		expandedListItem = sharedPreferences.getBoolean(
 				Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED,
 				Constants.PREFERENCE_DEFAULT_VALUE_FAVOURITES_EXPANDED);
+	}
+
+	@Override
+	public Station getItem(int position) {
+		return filteredStations.get(position);
+	}
+
+	@Override
+	public int getCount() {
+		return filteredStations != null ? filteredStations.size() : 0;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return filteredStations.isEmpty();
+	}
+
+	/**
+	 * Filter the ListView according some criteria (filter)
+	 * 
+	 * @return a filter constrains data with a filtering pattern
+	 */
+	@Override
+	public Filter getFilter() {
+		if (stationsFilter == null) {
+			stationsFilter = createFilter();
+		}
+
+		return stationsFilter;
+	}
+
+	/**
+	 * Create a custom filter, so process the list on searching
+	 * 
+	 * @return a custom filter
+	 */
+	private Filter createFilter() {
+		return new Filter() {
+			@Override
+			protected FilterResults performFiltering(CharSequence constraint) {
+				FilterResults results = new FilterResults();
+
+				// If there's nothing to filter on, return the original data for
+				// your list
+				if (constraint == null || constraint.length() == 0) {
+					results.values = originalStations;
+					results.count = originalStations.size();
+				} else {
+					List<Station> filterResultsData = new ArrayList<Station>();
+
+					String filterString = constraint.toString().trim()
+							.toUpperCase();
+					filterString = TranslatorLatinToCyrillic.translate(context,
+							filterString);
+
+					String filterebaleName;
+					String filterebaleNumber;
+
+					// Itterate over all stations and search which ones match
+					// the filter
+					for (Station station : originalStations) {
+						filterebaleName = station.getName().toUpperCase();
+						filterebaleNumber = station.getNumber().toUpperCase();
+
+						if (filterebaleName.contains(filterString)
+								|| filterebaleNumber.contains(filterString)) {
+							filterResultsData.add(station);
+						}
+					}
+
+					results.values = filterResultsData;
+					results.count = filterResultsData.size();
+				}
+
+				return results;
+			}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void publishResults(CharSequence constraint,
+					FilterResults filterResults) {
+				filteredStations = (ArrayList<Station>) filterResults.values;
+				notifyDataSetChanged();
+			}
+		};
 	}
 
 	/**
@@ -138,7 +232,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 			viewHolder = (ViewHolder) rowView.getTag();
 		}
 
-		Station station = stations.get(position);
+		Station station = filteredStations.get(position);
 
 		// Add the Station Name and the Station Number
 		viewHolder.stationName.setText(station.getName());
@@ -175,7 +269,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		viewHolder.expandStation.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean isExpanded = viewHolder.favItemLayout.getHeight() == getExpandedStationImageHeight();
+				boolean isExpanded = viewHolder.favItemLayout.getHeight() >= getExpandedStationImageHeight();
 
 				if (!isExpanded) {
 					expandListItem(viewHolder, station);

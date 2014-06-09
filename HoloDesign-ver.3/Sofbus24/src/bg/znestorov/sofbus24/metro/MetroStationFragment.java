@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
@@ -269,6 +270,8 @@ public class MetroStationFragment extends ListFragment {
 	private void actionsOverSearchEditText(final SearchEditText searchEditText,
 			final TextView emptyList) {
 		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+		searchEditText.setFilters(new InputFilter[] { ActivityUtils
+				.createInputFilter() });
 		searchEditText.setText(searchText);
 
 		// Add on focus listener

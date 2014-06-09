@@ -17,6 +17,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.MapUtils;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -268,19 +269,20 @@ public class StationsDataSource {
 		List<Station> stations = new ArrayList<Station>();
 		Locale currentLocale = new Locale(language);
 		searchText = searchText.toLowerCase(currentLocale);
+		searchText = TranslatorLatinToCyrillic.translate(context, searchText);
 
 		StringBuilder query = new StringBuilder();
-		query.append(" SELECT * 											");
-		query.append(" FROM " + StationsSQLite.TABLE_STATIONS + "			");
-		query.append(" WHERE ( 												");
+		query.append(" SELECT * 											\n");
+		query.append(" FROM " + StationsSQLite.TABLE_STATIONS + "			\n");
+		query.append(" WHERE ( 												\n");
 		query.append(" 		lower(CAST(" + StationsSQLite.COLUMN_NUMBER
-				+ " AS TEXT)) LIKE '%" + searchText + "%'					");
-		query.append(" OR 													");
+				+ " AS TEXT)) LIKE '%" + searchText + "%'					\n");
+		query.append(" OR 													\n");
 		query.append(" 		lower(" + StationsSQLite.COLUMN_NAME + ") LIKE '%"
-				+ searchText + "%'		 					");
-		query.append(" ) AND												");
+				+ searchText + "%'		 									\n");
+		query.append(" ) AND												\n");
 		query.append(" 		" + VehiclesSQLite.COLUMN_TYPE + " LIKE '%"
-				+ searchType + "%'											");
+				+ searchType + "%'											\n");
 
 		Cursor cursor = database.rawQuery(query.toString(), null);
 
@@ -361,35 +363,36 @@ public class StationsDataSource {
 
 		Locale currentLocale = new Locale(language);
 		searchText = searchText.toLowerCase(currentLocale);
+		searchText = TranslatorLatinToCyrillic.translate(context, searchText);
 
 		// IMPORTANT: Used for correct ordering
 		Double fudge = Math.pow(
 				Math.cos(Math.toRadians(currentPosition.latitude)), 2);
 
 		StringBuilder query = new StringBuilder();
-		query.append(" SELECT * 											");
-		query.append(" FROM stations	 									");
-		query.append(" WHERE ( 												");
+		query.append(" SELECT * 											\n");
+		query.append(" FROM stations	 									\n");
+		query.append(" WHERE ( 												\n");
 		query.append(" 		lower(CAST(" + StationsSQLite.COLUMN_NUMBER
-				+ " AS TEXT)) LIKE '%" + searchText + "%'					");
-		query.append(" OR 													");
+				+ " AS TEXT)) LIKE '%" + searchText + "%'					\n");
+		query.append(" OR 													\n");
 		query.append(" 		lower(" + StationsSQLite.COLUMN_NAME + ") LIKE '%"
-				+ searchText + "%'		 									");
-		query.append(" )													");
-		query.append(" ORDER BY												");
-		query.append(" 		( (												");
+				+ searchText + "%'		 									\n");
+		query.append(" )													\n");
+		query.append(" ORDER BY												\n");
+		query.append(" 		( (												\n");
 		query.append(StationsSQLite.COLUMN_LAT + " - "
 				+ currentPosition.latitude);
-		query.append(" 		) * (											");
+		query.append(" 		) * (											\n");
 		query.append(StationsSQLite.COLUMN_LAT + " - "
 				+ currentPosition.latitude);
-		query.append(" 		) + (											");
+		query.append(" 		) + (											\n");
 		query.append(StationsSQLite.COLUMN_LON + " - "
 				+ currentPosition.longitude);
-		query.append(" 		) * (											");
+		query.append(" 		) * (											\n");
 		query.append(StationsSQLite.COLUMN_LON + " - "
 				+ currentPosition.longitude);
-		query.append(" 		) * " + fudge + " ) ASC							");
+		query.append(" 		) * " + fudge + " ) ASC							\n");
 
 		Cursor cursor = database.rawQuery(query.toString(), null);
 
@@ -453,35 +456,36 @@ public class StationsDataSource {
 
 		Locale currentLocale = new Locale(language);
 		searchText = searchText.toLowerCase(currentLocale);
+		searchText = TranslatorLatinToCyrillic.translate(context, searchText);
 
 		// IMPORTANT: Used for correct ordering
 		Double fudge = Math.pow(
 				Math.cos(Math.toRadians(currentPosition.latitude)), 2);
 
 		StringBuilder query = new StringBuilder();
-		query.append(" SELECT * 											");
-		query.append(" FROM stations	 									");
-		query.append(" WHERE ( 												");
+		query.append(" SELECT * 											\n");
+		query.append(" FROM stations	 									\n");
+		query.append(" WHERE ( 												\n");
 		query.append(" 		lower(CAST(" + StationsSQLite.COLUMN_NUMBER
-				+ " AS TEXT)) LIKE '%" + searchText + "%'					");
-		query.append(" OR 													");
+				+ " AS TEXT)) LIKE '%" + searchText + "%'					\n");
+		query.append(" OR 													\n");
 		query.append(" 		lower(" + StationsSQLite.COLUMN_NAME + ") LIKE '%"
-				+ searchText + "%'		 									");
-		query.append(" )													");
-		query.append(" ORDER BY												");
-		query.append(" 		( (												");
+				+ searchText + "%'		 									\n");
+		query.append(" )													\n");
+		query.append(" ORDER BY												\n");
+		query.append(" 		( (												\n");
 		query.append(StationsSQLite.COLUMN_LAT + " - "
 				+ currentPosition.latitude);
-		query.append(" 		) * (											");
+		query.append(" 		) * (											\n");
 		query.append(StationsSQLite.COLUMN_LAT + " - "
 				+ currentPosition.latitude);
-		query.append(" 		) + (											");
+		query.append(" 		) + (											\n");
 		query.append(StationsSQLite.COLUMN_LON + " - "
 				+ currentPosition.longitude);
-		query.append(" 		) * (											");
+		query.append(" 		) * (											\n");
 		query.append(StationsSQLite.COLUMN_LON + " - "
 				+ currentPosition.longitude);
-		query.append(" 		) * " + fudge + " ) ASC							");
+		query.append(" 		) * " + fudge + " ) ASC							\n");
 
 		Cursor cursor = database.rawQuery(query.toString(), null);
 

@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.InputType;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -183,6 +186,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 	 */
 	private void actionsOverSearchEditText() {
 		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+		searchEditText.setFilters(new InputFilter[] { createInputFilter() });
 
 		// Add on focus listener
 		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -294,6 +298,65 @@ public class VirtualBoardsFragment extends ListFragment implements
 		}
 
 		return result;
+	}
+
+	/**
+	 * Create an input filter to limit characters in an EditText (letters,
+	 * digits, spaces and enter)
+	 * 
+	 * @return an input filter
+	 */
+	private InputFilter createInputFilter() {
+		InputFilter inputFilter = new InputFilter() {
+			@Override
+			public CharSequence filter(CharSequence source, int start, int end,
+					Spanned dest, int dstart, int dend) {
+
+				// InputFilters are a little complicated in Android versions
+				// that display dictionary suggestions. You sometimes get a
+				// SpannableStringBuilder, sometimes a plain String in the
+				// source parameter
+				if (source instanceof SpannableStringBuilder) {
+					SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder) source;
+					for (int i = end - 1; i >= start; i--) {
+						char currentChar = source.charAt(i);
+
+						// Check if the charecter has to be removed
+						if (!Character.isLetterOrDigit(currentChar)
+								&& !Character.isSpaceChar(currentChar)) {
+							sourceAsSpannableBuilder.delete(i, i + 1);
+						}
+
+						// Check if a search should be performed
+						if (currentChar == '\n') {
+							performSearch();
+						}
+					}
+
+					return source;
+				} else {
+					StringBuilder filteredStringBuilder = new StringBuilder();
+					for (int i = start; i < end; i++) {
+						char currentChar = source.charAt(i);
+
+						// Check if the charecter should be appended
+						if (Character.isLetterOrDigit(currentChar)
+								|| Character.isSpaceChar(currentChar)) {
+							filteredStringBuilder.append(currentChar);
+						}
+
+						// Check if a search should be performed
+						if (currentChar == '\n') {
+							performSearch();
+						}
+					}
+
+					return filteredStringBuilder.toString();
+				}
+			}
+		};
+
+		return inputFilter;
 	}
 
 }

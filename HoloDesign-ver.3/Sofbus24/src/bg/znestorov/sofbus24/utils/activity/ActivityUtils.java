@@ -11,6 +11,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.text.Html;
+import android.text.InputFilter;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -384,6 +386,48 @@ public class ActivityUtils {
 		}
 
 		return isVBStationChanged;
+	}
+
+	/**
+	 * Create an input filter to limit characters in an EditText
+	 * 
+	 * @return an input filter
+	 */
+	public static InputFilter createInputFilter() {
+		InputFilter inputFilter = new InputFilter() {
+			@Override
+			public CharSequence filter(CharSequence source, int start, int end,
+					Spanned dest, int dstart, int dend) {
+
+				// InputFilters are a little complicated in Android versions
+				// that display dictionary suggestions. You sometimes get a
+				// SpannableStringBuilder, sometimes a plain String in the
+				// source parameter
+				if (source instanceof SpannableStringBuilder) {
+					SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder) source;
+					for (int i = end - 1; i >= start; i--) {
+						char currentChar = source.charAt(i);
+						if (!Character.isLetterOrDigit(currentChar)
+								&& !Character.isSpaceChar(currentChar)) {
+							sourceAsSpannableBuilder.delete(i, i + 1);
+						}
+					}
+					return source;
+				} else {
+					StringBuilder filteredStringBuilder = new StringBuilder();
+					for (int i = start; i < end; i++) {
+						char currentChar = source.charAt(i);
+						if (Character.isLetterOrDigit(currentChar)
+								|| Character.isSpaceChar(currentChar)) {
+							filteredStringBuilder.append(currentChar);
+						}
+					}
+					return filteredStringBuilder.toString();
+				}
+			}
+		};
+
+		return inputFilter;
 	}
 
 }

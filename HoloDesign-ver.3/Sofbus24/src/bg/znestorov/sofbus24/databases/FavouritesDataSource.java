@@ -227,16 +227,17 @@ public class FavouritesDataSource {
 		List<Station> stations = new ArrayList<Station>();
 		Locale currentLocale = new Locale(language);
 		searchText = searchText.toLowerCase(currentLocale);
+		searchText = TranslatorLatinToCyrillic.translate(context, searchText);
 
 		StringBuilder query = new StringBuilder();
-		query.append(" SELECT * 											");
-		query.append(" FROM " + FavouritesSQLite.TABLE_FAVOURITES + "		");
-		query.append(" WHERE 												");
+		query.append(" SELECT * 											\n");
+		query.append(" FROM " + FavouritesSQLite.TABLE_FAVOURITES + "		\n");
+		query.append(" WHERE 												\n");
 		query.append(" 	lower(CAST(" + FavouritesSQLite.COLUMN_NUMBER
-				+ " AS TEXT)) LIKE '%" + searchText + "%'					");
-		query.append(" OR 													");
+				+ " AS TEXT)) LIKE '%" + searchText + "%'					\n");
+		query.append(" OR 													\n");
 		query.append(" 	lower(" + FavouritesSQLite.COLUMN_NAME + ") LIKE '%"
-				+ searchText + "%'		 									");
+				+ searchText + "%'		 									\n");
 
 		Cursor cursor = database.rawQuery(query.toString(), null);
 

@@ -14,8 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.utils.LanguageChange;
-import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 
 /**
@@ -28,7 +26,6 @@ import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 public class MetroStationAdapter extends ArrayAdapter<Station> {
 
 	private Activity context;
-	private String language;
 
 	private TextView emptyList;
 	private String directionName;
@@ -50,7 +47,6 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 		super(context, R.layout.activity_metro_station_list_item, stations);
 
 		this.context = context;
-		this.language = LanguageChange.getUserLocale(context);
 
 		this.emptyList = emptyList;
 		this.directionName = directionName;
@@ -72,7 +68,8 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 		// Reuse views
 		if (rowView == null) {
 			LayoutInflater inflater = context.getLayoutInflater();
-			rowView = inflater.inflate(R.layout.activity_metro_station_list_item, null);
+			rowView = inflater.inflate(
+					R.layout.activity_metro_station_list_item, null);
 
 			// Configure view holder
 			viewHolder = new ViewHolder();
@@ -148,13 +145,8 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 
 					String filterString = constraint.toString().trim()
 							.toUpperCase();
-					if ("bg".equals(language)) {
-						filterString = TranslatorLatinToCyrillic.translate(
-								context, filterString);
-					} else {
-						filterString = TranslatorCyrillicToLatin.translate(
-								context, filterString);
-					}
+					filterString = TranslatorLatinToCyrillic.translate(context,
+							filterString);
 
 					String filterebaleName;
 					String filterebaleNumber;

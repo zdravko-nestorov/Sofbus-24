@@ -36,6 +36,8 @@ public class Constants {
 	public static final String BUNDLE_STATION_MAP = "STATION MAP";
 	// MetroFragment/PublicTransport --> StationRouteMap
 	public static final String BUNDLE_STATION_ROUTE_MAP = "STATION ROUTE MAP";
+	// VirtualBoardsTime --> GoogleStreetView
+	public static final String BUNDLE_GOOGLE_STREET_VIEW = "GOOGLE_STREET_VIEW";
 
 	/**
 	 * Preferences

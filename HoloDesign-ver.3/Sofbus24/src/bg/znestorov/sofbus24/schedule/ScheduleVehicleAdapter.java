@@ -15,8 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.utils.LanguageChange;
-import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 
 /**
@@ -29,7 +27,6 @@ import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 
 	private final Activity context;
-	private String language;
 
 	private TextView emptyList;
 	private String vehicleName;
@@ -51,7 +48,6 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 		super(context, R.layout.activity_schedule_vehicle_list_item, vehicles);
 
 		this.context = context;
-		this.language = LanguageChange.getUserLocale(context);
 
 		this.emptyList = emptyList;
 		this.vehicleName = vehicleName;
@@ -151,22 +147,21 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 
 					String filterString = constraint.toString().trim()
 							.toUpperCase();
-					if ("bg".equals(language)) {
-						filterString = TranslatorLatinToCyrillic.translate(
-								context, filterString);
-					} else {
-						filterString = TranslatorCyrillicToLatin.translate(
-								context, filterString);
-					}
+					filterString = TranslatorLatinToCyrillic.translate(context,
+							filterString);
 
-					String filterebaleNumber;
+					String filterebleNumber;
+					String filterableDirection;
 
 					// Itterate over all stations and search which ones match
 					// the filter
 					for (Vehicle vehicle : originalVehicles) {
-						filterebaleNumber = vehicle.getNumber().toUpperCase();
+						filterebleNumber = vehicle.getNumber().toUpperCase();
+						filterableDirection = vehicle.getDirection()
+								.toUpperCase();
 
-						if (filterebaleNumber.contains(filterString)) {
+						if (filterebleNumber.contains(filterString)
+								|| filterableDirection.contains(filterString)) {
 							filterResultsData.add(vehicle);
 						}
 					}

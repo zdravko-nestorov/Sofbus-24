@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import bg.znestorov.sofbus24.closest.stations.list.ClosestStationsListFragment;
@@ -41,6 +43,7 @@ public class ClosestStationsList extends FragmentActivity {
 
 	private ImageView streetView;
 	private ProgressBar streetViewLoading;
+	private ImageButton streetViewButton;
 
 	private LatLng currentLocation;
 
@@ -96,6 +99,7 @@ public class ClosestStationsList extends FragmentActivity {
 		// Show the loading ProgressBar
 		csListFragment.setVisibility(View.GONE);
 		csListLoading.setVisibility(View.VISIBLE);
+		streetViewButton.setVisibility(View.GONE);
 
 		// Retrieve the current position
 		RetrieveCurrentPosition retrieveCurrentPosition = new RetrieveCurrentPosition(
@@ -129,6 +133,27 @@ public class ClosestStationsList extends FragmentActivity {
 		// Get StreetView ImageView and ProgressBar
 		streetView = (ImageView) findViewById(R.id.cs_list_street_view_image);
 		streetViewLoading = (ProgressBar) findViewById(R.id.cs_list_street_view_progress);
+		streetViewButton = (ImageButton) findViewById(R.id.cs_list_street_view_button);
+		actionsOverStreetViewFileds();
+	}
+
+	/**
+	 * Set the onClickListener over the GoogleStreetView button
+	 */
+	private void actionsOverStreetViewFileds() {
+		streetViewButton
+				.setOnClickListener(new android.view.View.OnClickListener() {
+					@Override
+					public void onClick(View arg0) {
+						Uri streetViewUri = Uri.parse("google.streetview:cbll="
+								+ currentLocation.latitude + ","
+								+ currentLocation.longitude
+								+ "&cbp=1,90,,0,1.0&mz=20");
+						Intent streetViewIntent = new Intent(
+								Intent.ACTION_VIEW, streetViewUri);
+						startActivity(streetViewIntent);
+					}
+				});
 	}
 
 	/**
@@ -159,6 +184,7 @@ public class ClosestStationsList extends FragmentActivity {
 
 		csListFragment.setVisibility(View.VISIBLE);
 		csListLoading.setVisibility(View.GONE);
+		streetViewButton.setVisibility(View.VISIBLE);
 	}
 
 	/**

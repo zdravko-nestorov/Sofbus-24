@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:id="@+id/cs_list_street_view"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/cs_list_image_street_view_height" >
 
@@ -27,6 +27,16 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/cs_list_street_view_button"
+            style="?android:attr/actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/cs_list_street_view_image"
+            android:layout_alignRight="@+id/cs_list_street_view_image"
+            android:contentDescription="@string/app_img_empty_content_description"
+            android:src="@android:drawable/ic_menu_view" />
     </RelativeLayout>
 
     <bg.znestorov.sofbus24.utils.activity.SearchEditText

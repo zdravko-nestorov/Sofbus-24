@@ -5,10 +5,12 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -51,6 +53,7 @@ public class ClosestStationsListFragment extends ListFragment {
 	private int closestStationsCount;
 	private String closestStationsSearchText = "";
 
+	private boolean isListLoading = false;
 	private boolean isListFullLoaded = false;
 	private List<Station> searchStationList = new ArrayList<Station>();
 	private ArrayAdapter<Station> closestStationsAdapter;
@@ -82,22 +85,49 @@ public class ClosestStationsListFragment extends ListFragment {
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				if (totalItemCount < 10) {
-					isListFullLoaded = true;
-				} else if (view.getLastVisiblePosition() + 1 > totalItemCount - 5
-						&& !isListFullLoaded) {
-					int pageToLoad = (totalItemCount + 10) / 10;
-					List<Station> closestStations = loadStationsList(true,
-							pageToLoad, closestStationsSearchText);
+					int visibleItemCount, final int totalItemCount) {
+				// Check if the list is finished loading (if not using this, it
+				// will load a lot of times in a row)
+				if (!isListLoading) {
 
-					if (closestStations.size() > 0) {
-						searchStationList.addAll(closestStations);
-						closestStationsCount = searchStationList.size();
-
-						closestStationsAdapter.notifyDataSetChanged();
-					} else {
+					// Check if all of the items are already shown on the screen
+					if (totalItemCount < 10) {
 						isListFullLoaded = true;
+					} else if (view.getLastVisiblePosition() + 1 > totalItemCount - 5
+							&& !isListFullLoaded) {
+						isListLoading = true;
+
+						// Start an AsyncTask to load the new stations from the
+						// database
+						new AsyncTask<Void, Void, List<Station>>() {
+							@Override
+							protected List<Station> doInBackground(
+									Void... params) {
+								int pageToLoad = (totalItemCount + 10) / 10;
+								List<Station> closestStations = loadStationsList(
+										true, pageToLoad,
+										closestStationsSearchText);
+
+								return closestStations;
+							}
+
+							@Override
+							protected void onPostExecute(
+									List<Station> closestStations) {
+								isListLoading = false;
+								if (closestStations.size() > 0) {
+									searchStationList.addAll(closestStations);
+									closestStationsCount = searchStationList
+											.size();
+
+									closestStationsAdapter
+											.notifyDataSetChanged();
+								} else {
+									isListFullLoaded = true;
+								}
+							};
+
+						}.execute();
 					}
 				}
 			}
@@ -202,6 +232,8 @@ public class ClosestStationsListFragment extends ListFragment {
 	 */
 	private void actionsOverSearchEditText(final SearchEditText searchEditText) {
 		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+		searchEditText.setFilters(new InputFilter[] { ActivityUtils
+				.createInputFilter() });
 
 		// Add on focus listener
 		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -273,7 +305,11 @@ public class ClosestStationsListFragment extends ListFragment {
 			setListAdapter(closestStationsAdapter);
 		} else {
 			closestStationsAdapter.notifyDataSetChanged();
-			getListView().setSelectionFromTop(0, 0);
+
+			// In case of not empty list position the scroll at the beginning
+			if (searchStationList.size() > 0) {
+				getListView().setSelectionFromTop(0, 0);
+			}
 		}
 	}
 

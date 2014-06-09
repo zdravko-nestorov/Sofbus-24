@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -22,8 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.FavouritesDatabaseUtils;
-import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.FragmentLifecycle;
+import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
@@ -154,6 +155,8 @@ public class FavouritesStationFragment extends ListFragment implements
 	 */
 	private void actionsOverSearchEditText(final SearchEditText searchEditText) {
 		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+		searchEditText.setFilters(new InputFilter[] { ActivityUtils
+				.createInputFilter() });
 
 		// Add on focus listener
 		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -170,10 +173,8 @@ public class FavouritesStationFragment extends ListFragment implements
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				String searchText = searchEditText.getText().toString();
-				favouritesStations.clear();
-				favouritesStations.addAll(loadFavouritesList(searchText));
-				((FavouritesStationAdapter) getListAdapter())
-						.notifyDataSetChanged();
+				((FavouritesStationAdapter) getListAdapter()).getFilter()
+						.filter(searchText);
 			}
 
 			@Override

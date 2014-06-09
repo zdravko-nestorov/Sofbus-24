@@ -43,7 +43,7 @@
             android:src="@drawable/ic_empty_schedule_list" />
 
         <TextView
-            android:id="@+id/schedule_list_empty_text"
+            android:id="@+id/schedule_vehicle_list_empty_text"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_marginLeft="15sp"

@@ -4,12 +4,15 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -40,6 +43,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 	private View vbTimeBar;
 	private TextView vbTimeStationCaption;
 	private TextView vbTimeCurrentTime;
+	private ImageButton vbTimeStreetViewButton;
 
 	private VirtualBoardsStation vbTimeStation;
 	private FavouritesDataSource favouritesDatasource;
@@ -177,18 +181,37 @@ public class VirtualBoardsTime extends FragmentActivity {
 		vbTimeBar = (View) findViewById(R.id.vb_time_bar);
 		vbTimeStationCaption = (TextView) findViewById(R.id.vb_time_station_caption);
 		vbTimeCurrentTime = (TextView) findViewById(R.id.vb_time_current_time);
+		vbTimeStreetViewButton = (ImageButton) findViewById(R.id.vb_time_street_view_button);
 		actionsOverStreetViewFileds();
 	}
 
 	/**
-	 * Set the station caption ([station name] ([station number])) and time of
-	 * retrieval of the information
+	 * Set the station caption ([station name] ([station number])), time of
+	 * retrieval of the information and the onClickListener over the
+	 * GoogleStreetView button
 	 */
 	private void actionsOverStreetViewFileds() {
 		vbTimeStationCaption.setText(getStationCaption());
 		vbTimeCurrentTime.setText(String.format(
 				getString(R.string.vb_time_current_time),
 				vbTimeStation.getTime(context)));
+
+		// Add a click listener over the google street view image button
+		vbTimeStreetViewButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				if (vbTimeStation.hasCoordinates()) {
+					Uri streetViewUri = Uri.parse("google.streetview:cbll="
+							+ vbTimeStation.getLat() + ","
+							+ vbTimeStation.getLon() + "&cbp=1,90,,0,1.0&mz=20");
+					Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
+							streetViewUri);
+					startActivity(streetViewIntent);
+				} else {
+					ActivityUtils.showNoCoordinatesAlertDialog(context);
+				}
+			}
+		});
 	}
 
 	/**
@@ -297,6 +320,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 					public void onLoadingStarted(String imageUri, View view) {
 						vbTimeStreetViewLoading.setVisibility(View.VISIBLE);
 						vbTimeBar.setVisibility(View.GONE);
+						vbTimeStreetViewButton.setVisibility(View.GONE);
 					}
 
 					@Override
@@ -304,6 +328,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 							FailReason failReason) {
 						vbTimeStreetViewLoading.setVisibility(View.GONE);
 						vbTimeBar.setVisibility(View.VISIBLE);
+						vbTimeStreetViewButton.setVisibility(View.VISIBLE);
 					}
 
 					@Override
@@ -311,6 +336,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 							Bitmap loadedImage) {
 						vbTimeStreetViewLoading.setVisibility(View.GONE);
 						vbTimeBar.setVisibility(View.VISIBLE);
+						vbTimeStreetViewButton.setVisibility(View.VISIBLE);
 					}
 				});
 	}
