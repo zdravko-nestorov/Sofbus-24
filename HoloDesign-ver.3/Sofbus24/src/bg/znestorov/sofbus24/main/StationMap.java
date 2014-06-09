@@ -2,7 +2,9 @@ package bg.znestorov.sofbus24.main;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +34,7 @@ public class StationMap extends Activity {
 	private GoogleMap stationMap;
 	private LatLng centerStationLocation;
 
-	private boolean isCurrentLocationAnimated = false;
+	private boolean isCurrentLocationFocused = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +103,15 @@ public class StationMap extends Activity {
 		case android.R.id.home:
 			finish();
 			return true;
+		case R.id.action_sm_google_street_view:
+			Uri streetViewUri = Uri.parse("google.streetview:cbll="
+					+ centerStationLocation.latitude + ","
+					+ centerStationLocation.longitude
+					+ "&cbp=1,90,,0,1.0&mz=20");
+			Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
+					streetViewUri);
+			startActivity(streetViewIntent);
+			return true;
 		case R.id.action_sm_map_mode_normal:
 			stationMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			return true;
@@ -147,12 +158,12 @@ public class StationMap extends Activity {
 				.setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() {
 					@Override
 					public boolean onMyLocationButtonClick() {
-						if (isCurrentLocationAnimated) {
+						if (isCurrentLocationFocused) {
 							animateMapFocus(centerStationLocation);
-							isCurrentLocationAnimated = false;
+							isCurrentLocationFocused = false;
 						} else {
 							animateMapFocus(currentLocation);
-							isCurrentLocationAnimated = true;
+							isCurrentLocationFocused = true;
 						}
 						return true;
 					}

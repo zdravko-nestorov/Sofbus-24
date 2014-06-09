@@ -99,7 +99,6 @@ public class ClosestStationsList extends FragmentActivity {
 		// Show the loading ProgressBar
 		csListFragment.setVisibility(View.GONE);
 		csListLoading.setVisibility(View.VISIBLE);
-		streetViewButton.setVisibility(View.GONE);
 
 		// Retrieve the current position
 		RetrieveCurrentPosition retrieveCurrentPosition = new RetrieveCurrentPosition(
@@ -184,7 +183,6 @@ public class ClosestStationsList extends FragmentActivity {
 
 		csListFragment.setVisibility(View.VISIBLE);
 		csListLoading.setVisibility(View.GONE);
-		streetViewButton.setVisibility(View.VISIBLE);
 	}
 
 	/**
@@ -207,18 +205,21 @@ public class ClosestStationsList extends FragmentActivity {
 					@Override
 					public void onLoadingStarted(String imageUri, View view) {
 						streetViewLoading.setVisibility(View.VISIBLE);
+						streetViewButton.setVisibility(View.GONE);
 					}
 
 					@Override
 					public void onLoadingFailed(String imageUri, View view,
 							FailReason failReason) {
 						streetViewLoading.setVisibility(View.GONE);
+						streetViewButton.setVisibility(View.VISIBLE);
 					}
 
 					@Override
 					public void onLoadingComplete(String imageUri, View view,
 							Bitmap loadedImage) {
 						streetViewLoading.setVisibility(View.GONE);
+						streetViewButton.setVisibility(View.VISIBLE);
 					}
 				});
 	}

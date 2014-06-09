@@ -6,8 +6,10 @@ import java.util.HashMap;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -24,10 +26,13 @@ import bg.znestorov.sofbus24.publictransport.RetrievePublicTransportStation;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.MapUtils;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -45,11 +50,40 @@ public class StationRouteMap extends Activity {
 	private DirectionsEntity directionsEntity;
 
 	private GoogleMap stationMap;
+	private boolean isCurrentLocationFocused = false;
 	private LatLng centerStationLocation = new LatLng(
 			Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE,
 			Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE);
 
-	private boolean isCurrentLocationAnimated = false;
+	private LatLng currentMarkerLatLng;
+
+	/**
+	 * When the user clicks outside a marker its snippet is hidden
+	 */
+	private final OnMapClickListener onMapClickListener = new OnMapClickListener() {
+		@Override
+		public void onMapClick(LatLng arg0) {
+			currentMarkerLatLng = null;
+		}
+	};
+
+	/**
+	 * Check if selecting the current marker shows or hides the snippet
+	 */
+	private final OnMarkerClickListener onMarkerClickListener = new OnMarkerClickListener() {
+		@Override
+		public boolean onMarkerClick(Marker marker) {
+			if (!marker.isInfoWindowShown()) {
+				Station station = getMarkerStation(marker);
+				currentMarkerLatLng = new LatLng(Double.parseDouble(station
+						.getLat()), Double.parseDouble(station.getLon()));
+			} else {
+				currentMarkerLatLng = null;
+			}
+
+			return false;
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +120,13 @@ public class StationRouteMap extends Activity {
 			actionBar.setTitle(getLineName(vehicle));
 			actionBar.setSubtitle(directionName);
 
+			// Set a click listener over the map (when the map is clicked the
+			// snippet becames hidden)
+			stationMap.setOnMapClickListener(onMapClickListener);
+
+			// Set a click listener over the markers
+			stationMap.setOnMarkerClickListener(onMarkerClickListener);
+
 			// Activate my location, set a location button that center the map
 			// over a point and start a LocationChangeListener
 			stationMap.setMyLocationEnabled(true);
@@ -113,6 +154,19 @@ public class StationRouteMap extends Activity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			return true;
+		case R.id.action_sm_google_street_view:
+			if (currentMarkerLatLng != null) {
+				Uri streetViewUri = Uri.parse("google.streetview:cbll="
+						+ currentMarkerLatLng.latitude + ","
+						+ currentMarkerLatLng.longitude
+						+ "&cbp=1,90,,0,1.0&mz=20");
+				Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
+						streetViewUri);
+				startActivity(streetViewIntent);
+			} else {
+				ActivityUtils.showNoStationSelectedAlertDialog(context);
+			}
 			return true;
 		case R.id.action_sm_map_mode_normal:
 			stationMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -155,12 +209,12 @@ public class StationRouteMap extends Activity {
 				.setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() {
 					@Override
 					public boolean onMyLocationButtonClick() {
-						if (isCurrentLocationAnimated) {
+						if (isCurrentLocationFocused) {
 							animateMapFocus(centerStationLocation);
-							isCurrentLocationAnimated = false;
+							isCurrentLocationFocused = false;
 						} else {
 							animateMapFocus(currentLocation);
-							isCurrentLocationAnimated = true;
+							isCurrentLocationFocused = true;
 						}
 						return true;
 					}
@@ -229,23 +283,13 @@ public class StationRouteMap extends Activity {
 			}
 		}
 
-		// Set a click listener over the markers'snippets
+		// Set a click listener over the markers' snippets
 		stationMap
 				.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 					@Override
 					public void onInfoWindowClick(Marker marker) {
-						// Get the station number
-						String markerTitle = marker.getTitle();
-						String stationNumber = Utils.getValueBeforeLast(
-								Utils.getValueAfterLast(markerTitle, "("), ")");
-
-						// Get the station from the DB
-						StationsDataSource stationDatasource = new StationsDataSource(
-								context);
-						stationDatasource.open();
-						Station station = stationDatasource
-								.getStation(stationNumber);
-						stationDatasource.close();
+						// Get the station associated with this marker
+						Station station = getMarkerStation(marker);
 
 						// Getting the Metro schedule from the station URL
 						// address
@@ -321,7 +365,7 @@ public class StationRouteMap extends Activity {
 			}
 		}
 
-		// Set a click listener over the markers'snippets
+		// Set a click listener over the markers' snippets
 		stationMap
 				.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 					@Override
@@ -447,5 +491,27 @@ public class StationRouteMap extends Activity {
 		}
 
 		return markerIcon;
+	}
+
+	/**
+	 * Get the station associated with this marker
+	 * 
+	 * @param marker
+	 *            the current marker
+	 * @return the station associated with this marker
+	 */
+	private Station getMarkerStation(Marker marker) {
+		// Get the station number
+		String markerTitle = marker.getTitle();
+		String stationNumber = Utils.getValueBeforeLast(
+				Utils.getValueAfterLast(markerTitle, "("), ")");
+
+		// Get the station from the DB
+		StationsDataSource stationDatasource = new StationsDataSource(context);
+		stationDatasource.open();
+		Station station = stationDatasource.getStation(stationNumber);
+		stationDatasource.close();
+
+		return station;
 	}
 }

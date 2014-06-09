@@ -36,7 +36,7 @@
             android:layout_alignBottom="@+id/cs_list_street_view_image"
             android:layout_alignRight="@+id/cs_list_street_view_image"
             android:contentDescription="@string/app_img_empty_content_description"
-            android:src="@android:drawable/ic_menu_view" />
+            android:src="@drawable/ic_google_street_view" />
     </RelativeLayout>
 
     <bg.znestorov.sofbus24.utils.activity.SearchEditText

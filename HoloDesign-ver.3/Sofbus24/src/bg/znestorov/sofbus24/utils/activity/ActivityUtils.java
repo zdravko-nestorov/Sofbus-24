@@ -132,6 +132,20 @@ public class ActivityUtils {
 	}
 
 	/**
+	 * Show no station coordinates alert dialog
+	 * 
+	 * @param context
+	 *            current Activity context
+	 */
+	public static void showNoStationSelectedAlertDialog(Activity context) {
+		ActivityUtils.showCustomAlertDialog(context,
+				android.R.drawable.ic_menu_report_image,
+				context.getString(R.string.app_dialog_title_error),
+				context.getString(R.string.app_no_station_selected_error),
+				context.getString(R.string.app_button_ok), null, null, null);
+	}
+
+	/**
 	 * Show no Internet alert dialog
 	 * 
 	 * @param context

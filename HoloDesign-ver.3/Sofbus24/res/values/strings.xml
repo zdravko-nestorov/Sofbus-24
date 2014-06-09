@@ -18,6 +18,7 @@
     <string name="app_internet_or_info_error">В момента няма намерена информация. Моля проверете вашата интернет връзка или опитайте по-късно.</string>
     <string name="app_location_error">Моля включете поне едно от устройствата (GPS или WiFi), за да бъде засечено текущото ви местоположение.</string>
     <string name="app_coordinates_error">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
+    <string name="app_no_station_selected_error">Моля изберете спирка от маршрута, за да бъде визуализирана чрез режима Google Street View.</string>
     <string name="app_distance" formatted="false">Разстояние: ~%s</string>
     <string name="app_distance_meters">м</string>
     <string name="app_distance_kilometers">км&#160;</string>
@@ -43,12 +44,13 @@
     <string name="action_ms_refresh">Обнови</string>
     <string name="action_ms_map">Карта</string>
     <!-- Station Map -->
-    <string name="action_sm_focus">Позиционирай</string>
+    <string name="action_sm_google_street_view">Google Street View</string>
     <string name="action_sm_map_mode">Режим на картата</string>
     <string name="action_sm_map_mode_normal">Нормален</string>
     <string name="action_sm_map_mode_terrain">Терен</string>
     <string name="action_sm_map_mode_satellite">Сателит</string>
     <string name="action_sm_map_mode_hybrid">Хибрид</string>
+
     <!-- Edit Tabs -->
     <string name="action_edit_tabs_reset">Нулиране</string>
     <!-- Preferences -->
