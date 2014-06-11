@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,8 @@ import bg.znestorov.sofbus24.entity.Config;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HomeTab;
 import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
+import bg.znestorov.sofbus24.history.History;
+import bg.znestorov.sofbus24.history.HistoryOfSearches;
 import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
@@ -154,6 +157,10 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			return true;
 		case R.id.action_closest_stations_map:
 			// TODO: Set the event on clicking the button
+			ArrayList<History> historyList = HistoryOfSearches.getInstance(
+					context).getHistoryOfSearches();
+			Log.e("TEST", historyList.toString());
+
 			return true;
 		case R.id.action_closest_stations_list:
 			ProgressDialog progressDialog = new ProgressDialog(context);

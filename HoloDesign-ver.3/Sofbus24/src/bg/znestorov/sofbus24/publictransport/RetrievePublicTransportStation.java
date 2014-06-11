@@ -21,6 +21,7 @@ import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.PublicTransportStation;
 import bg.znestorov.sofbus24.main.PublicTransportSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
@@ -98,6 +99,8 @@ public class RetrievePublicTransportStation extends
 
 		// Check if the information is correctly retrieved from SKGT site
 		if (ptStation.isScheduleSet()) {
+			Utils.addStationInHistory(context, ptStation);
+
 			Intent ptScheduleIntent = new Intent(context,
 					PublicTransportSchedule.class);
 			ptScheduleIntent.putExtra(

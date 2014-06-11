@@ -1,9 +1,15 @@
 package bg.znestorov.sofbus24.utils;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map.Entry;
 
-import android.content.Context;
+import android.app.Activity;
+import android.text.format.DateFormat;
+import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.history.HistoryOfSearches;
 import bg.znestorov.sofbus24.main.R;
 
 public class Utils {
@@ -167,7 +173,7 @@ public class Utils {
 	 *            the current time in format HH:MM
 	 * @return the difference between the times
 	 */
-	public static String getTimeDifference(Context context, String afterTime,
+	public static String getTimeDifference(Activity context, String afterTime,
 			String currTime) {
 		String diff = "";
 		int afterTimeMilis = 0;
@@ -210,7 +216,7 @@ public class Utils {
 	 *            after)
 	 * @return the difference in format ~1h,20m
 	 */
-	public static String formatTime(Context context, String difference) {
+	public static String formatTime(Activity context, String difference) {
 		String diff = "";
 		String[] differenceArr = difference.split(":");
 
@@ -316,6 +322,74 @@ public class Utils {
 		}
 
 		return directionName;
+	}
+
+	/**
+	 * Add a search to the history of searches, using the searched text
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @param historyValueArr
+	 *            the value that has to be added to the history of searches
+	 */
+	public static void addSearchInHistory(Activity context,
+			String... historyValueArr) {
+		HistoryOfSearches history = HistoryOfSearches.getInstance(context);
+
+		String historyValue = "";
+		if (historyValueArr.length == 1) {
+			historyValue = historyValueArr[0];
+		} else {
+			if (historyValueArr[1] == null || "".equals(historyValueArr[1])) {
+				historyValue = historyValueArr[0];
+			} else {
+				historyValue = String.format(historyValueArr[0] + " (%s)",
+						historyValueArr[1]);
+			}
+		}
+
+		// The first time get the nextSearchNumber as it is in the
+		// sharedPreferences file, but the second time, decrease it by 1 (the
+		// first action increased the field)
+		history.putFiledInPreferences(
+				Constants.HISTORY_PREFERENCES_SEARCH_VALUE,
+				history.getNextSearchNumber(), historyValue);
+		history.putFiledInPreferences(
+				Constants.HISTORY_PREFERENCES_SEARCH_DATE, history
+						.getNextSearchNumber() - 1,
+				DateFormat.format("yyyy.MM.dd, kk:mm", new java.util.Date())
+						.toString());
+	}
+
+	/**
+	 * Add a search to the history of searches, using the station
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @param station
+	 *            the station that has to be added to the history of searches
+	 */
+	public static void addStationInHistory(Activity context, Station station) {
+		addSearchInHistory(context, station.getName(), station.getNumber());
+	}
+
+	/**
+	 * Add a search to the history of searches, using the station
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @param stationsMap
+	 *            the map of stations that has to be added to the history of
+	 *            searches
+	 */
+	public static void addListOfStationsInHistory(Activity context,
+			HashMap<String, Station> stationsMap) {
+		Iterator<Entry<String, Station>> stationIterator = stationsMap
+				.entrySet().iterator();
+
+		while (stationIterator.hasNext()) {
+			addStationInHistory(context, stationIterator.next().getValue());
+		}
 	}
 
 }

@@ -871,12 +871,12 @@ public class RetrieveVirtualBoards {
 			break;
 		// In case of single result (only one station found)
 		case SINGLE_RESULT:
-			VirtualBoardsStation vbTimeStation;
+			VirtualBoardsStation vbTimeStation = processVirtualBoards
+					.getVBSingleStationFromHtml();
+			Utils.addStationInHistory(context, vbTimeStation);
 
 			switch (htmlRequestCode) {
 			case REFRESH:
-				vbTimeStation = processVirtualBoards
-						.getVBSingleStationFromHtml();
 				((VirtualBoardsTime) callerInstance)
 						.startVirtualBoardsTimeFragment(vbTimeStation, null);
 				break;
@@ -889,8 +889,6 @@ public class RetrieveVirtualBoards {
 				// Important - no break here, because if only one station is
 				// found - directly open the VirtualBoards
 			default:
-				vbTimeStation = processVirtualBoards
-						.getVBSingleStationFromHtml();
 				Intent vbTimeIntent = new Intent(context,
 						VirtualBoardsTime.class);
 				vbTimeIntent.putExtra(Constants.BUNDLE_VIRTUAL_BOARDS_TIME,
@@ -902,20 +900,19 @@ public class RetrieveVirtualBoards {
 			break;
 		// In case of multiple result (more than one station found)
 		default:
-			HashMap<String, Station> stationsMap;
+			HashMap<String, Station> stationsMap = processVirtualBoards
+					.getMultipleStationsFromHtml();
+			// Not implemented for now, as it is slow operation
+			// Utils.addListOfStationsInHistory(context, stationsMap);
 
 			switch (htmlRequestCode) {
 			case REFRESH:
 			case SINGLE_RESULT:
-				stationsMap = processVirtualBoards
-						.getMultipleStationsFromHtml();
 				station = stationsMap.get(station.getNumber());
 				getSumcInformation();
 
 				break;
 			case FAVOURITES:
-				stationsMap = processVirtualBoards
-						.getMultipleStationsFromHtml();
 				station = stationsMap.get(station.getNumber());
 				updateFavouritesStation(station);
 				getSumcInformation();
@@ -923,8 +920,7 @@ public class RetrieveVirtualBoards {
 				break;
 			default:
 				ArrayList<Station> stationsList = new ArrayList<Station>(
-						processVirtualBoards.getMultipleStationsFromHtml()
-								.values());
+						stationsMap.values());
 				((VirtualBoardsFragment) callerInstance)
 						.setListAdapterViaSearch(stationsList, null);
 

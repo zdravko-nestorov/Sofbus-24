@@ -151,4 +151,13 @@ public class Constants {
 	 * Metro Schedule
 	 */
 	public static final String METRO_STATION_URL = "https://sofia-stations.googlecode.com/svn/HoloDesign-ver.3/MetroSchedule/schedule/Station%s.xml";
+
+	/**
+	 * History
+	 */
+	public static final int TOTAL_HISTORY_COUNT = 50;
+	public static final String HISTORY_PREFERENCES_NAME = "search_history";
+	public static final String HISTORY_PREFERENCES_NEXT_SEARCH_NUMBER = "next_search_number";
+	public static final String HISTORY_PREFERENCES_SEARCH_VALUE = "value_";
+	public static final String HISTORY_PREFERENCES_SEARCH_DATE = "date_";
 }
