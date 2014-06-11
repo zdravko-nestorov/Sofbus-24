@@ -160,4 +160,5 @@ public class Constants {
 	public static final String HISTORY_PREFERENCES_NEXT_SEARCH_NUMBER = "next_search_number";
 	public static final String HISTORY_PREFERENCES_SEARCH_VALUE = "value_";
 	public static final String HISTORY_PREFERENCES_SEARCH_DATE = "date_";
+	public static final String HISTORY_PREFERENCES_SEARCH_TYPE = "type_";
 }

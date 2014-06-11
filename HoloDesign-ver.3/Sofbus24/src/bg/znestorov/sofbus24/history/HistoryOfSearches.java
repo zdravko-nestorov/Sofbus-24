@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
@@ -122,8 +123,8 @@ public class HistoryOfSearches {
 	 * 
 	 * @return an ArrayList with a history of searches
 	 */
-	public ArrayList<History> getHistoryOfSearches() {
-		ArrayList<History> historyList = new ArrayList<History>();
+	public ArrayList<HistoryEntity> getHistoryOfSearches() {
+		ArrayList<HistoryEntity> historyList = new ArrayList<HistoryEntity>();
 
 		int i = 1;
 		while (historyPreferences
@@ -132,15 +133,19 @@ public class HistoryOfSearches {
 					Constants.HISTORY_PREFERENCES_SEARCH_VALUE + i, null);
 			String historyDate = historyPreferences.getString(
 					Constants.HISTORY_PREFERENCES_SEARCH_DATE + i, null);
+			VehicleType historyType = VehicleType.valueOf(historyPreferences
+					.getString(Constants.HISTORY_PREFERENCES_SEARCH_TYPE + i,
+							null));
 
-			historyList.add(new History(historyName, historyDate));
+			historyList.add(new HistoryEntity(historyName, historyDate,
+					historyType));
 			i++;
 		}
 
 		// Sort the history list via the date of search
-		Collections.sort(historyList, new Comparator<History>() {
+		Collections.sort(historyList, new Comparator<HistoryEntity>() {
 			@Override
-			public int compare(History history1, History history2) {
+			public int compare(HistoryEntity history1, HistoryEntity history2) {
 				long vehicle1Number = Long.parseLong(Utils
 						.getOnlyDigits(history1.getHistoryDate()));
 				long vehicle2Number = Long.parseLong(Utils

@@ -8,5 +8,5 @@ package bg.znestorov.sofbus24.entity;
  * 
  */
 public enum VehicleType {
-	BUS, TROLLEY, TRAM, BTT, METRO1, METRO2, NOIMAGE;
+	BUS, TROLLEY, TRAM, BTT, METRO, METRO1, METRO2, NOIMAGE;
 }

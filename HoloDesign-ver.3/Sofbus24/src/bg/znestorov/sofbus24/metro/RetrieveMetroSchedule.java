@@ -16,6 +16,7 @@ import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.MetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
@@ -84,6 +85,8 @@ public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStation> {
 			// Check if the information is successfully retrieved or an Internet
 			// error occurred
 			if (ms.isScheduleSet()) {
+				Utils.addStationInHistory(context, ms);
+
 				Intent metroScheduleIntent = new Intent(context,
 						MetroSchedule.class);
 				metroScheduleIntent.putExtra(Constants.BUNDLE_METRO_SCHEDULE,

@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import android.app.Activity;
 import android.text.format.DateFormat;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.history.HistoryOfSearches;
 import bg.znestorov.sofbus24.main.R;
 
@@ -117,6 +118,28 @@ public class Utils {
 	public static String getValueAfterLast(String value, String regex) {
 		if (value.contains(regex)) {
 			return value.substring(value.lastIndexOf(regex) + regex.length());
+		} else {
+			return value;
+		}
+	}
+
+	/**
+	 * Get a value from a string BETWEEN the REGEX1 and REGEX2
+	 * 
+	 * @param value
+	 *            the string value
+	 * @param regex1
+	 *            the regex that is looked for (after)
+	 * @param regex2
+	 *            the regex that is looked for (before)
+	 * @return the substring value BETWEEN the REGEX1 and REGEX2, or the value
+	 *         in case of no REGEX found
+	 */
+	public static String getValueBetween(String value, String regex1,
+			String regex2) {
+		if (value.contains(regex1) && value.contains(regex2)) {
+			return value.substring(value.indexOf(regex1) + regex1.length(),
+					value.indexOf(regex2));
 		} else {
 			return value;
 		}
@@ -329,13 +352,17 @@ public class Utils {
 	 * 
 	 * @param context
 	 *            the current Activity context
+	 * @param historyType
+	 *            the type of the search - <b>public transport</b> or
+	 *            <b>metro</b>
 	 * @param historyValueArr
 	 *            the value that has to be added to the history of searches
 	 */
 	public static void addSearchInHistory(Activity context,
-			String... historyValueArr) {
+			VehicleType historyType, String... historyValueArr) {
 		HistoryOfSearches history = HistoryOfSearches.getInstance(context);
 
+		// Get the name of the search
 		String historyValue = "";
 		if (historyValueArr.length == 1) {
 			historyValue = historyValueArr[0];
@@ -348,9 +375,17 @@ public class Utils {
 			}
 		}
 
+		// Get the search type
+		if (historyType == VehicleType.METRO1
+				|| historyType == VehicleType.METRO2) {
+			historyType = VehicleType.METRO;
+		} else {
+			historyType = VehicleType.BTT;
+		}
+
 		// The first time get the nextSearchNumber as it is in the
-		// sharedPreferences file, but the second time, decrease it by 1 (the
-		// first action increased the field)
+		// sharedPreferences file. The second and the third time, decrease it by
+		// 1 (the first action increased the field)
 		history.putFiledInPreferences(
 				Constants.HISTORY_PREFERENCES_SEARCH_VALUE,
 				history.getNextSearchNumber(), historyValue);
@@ -359,6 +394,9 @@ public class Utils {
 						.getNextSearchNumber() - 1,
 				DateFormat.format("yyyy.MM.dd, kk:mm", new java.util.Date())
 						.toString());
+		history.putFiledInPreferences(
+				Constants.HISTORY_PREFERENCES_SEARCH_TYPE,
+				history.getNextSearchNumber() - 1, historyType.name());
 	}
 
 	/**
@@ -370,7 +408,8 @@ public class Utils {
 	 *            the station that has to be added to the history of searches
 	 */
 	public static void addStationInHistory(Activity context, Station station) {
-		addSearchInHistory(context, station.getName(), station.getNumber());
+		addSearchInHistory(context, station.getType(), station.getName(),
+				station.getNumber());
 	}
 
 	/**
