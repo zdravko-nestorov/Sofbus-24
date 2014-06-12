@@ -1,8 +1,11 @@
 package bg.znestorov.sofbus24.history;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,7 +13,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.utils.Constants;
-import bg.znestorov.sofbus24.utils.Utils;
 
 /**
  * Singleton used to make modifications to the history of searches, which are
@@ -146,13 +148,20 @@ public class HistoryOfSearches {
 		Collections.sort(historyList, new Comparator<HistoryEntity>() {
 			@Override
 			public int compare(HistoryEntity history1, HistoryEntity history2) {
-				long vehicle1Number = Long.parseLong(Utils
-						.getOnlyDigits(history1.getHistoryDate()));
-				long vehicle2Number = Long.parseLong(Utils
-						.getOnlyDigits(history2.getHistoryDate()));
+				SimpleDateFormat formatter = new SimpleDateFormat(
+						"dd.MM.yyyy, kk:mm");
 
-				return vehicle1Number > vehicle2Number ? -1
-						: vehicle1Number < vehicle2Number ? 1 : 0;
+				try {
+					Date vehicle1Date = formatter.parse(history1
+							.getHistoryDate());
+					Date vehicle2Date = formatter.parse(history2
+							.getHistoryDate());
+
+					return vehicle2Date.compareTo(vehicle1Date);
+				} catch (ParseException e) {
+					// This case never has to be reached
+					return 0;
+				}
 			}
 		});
 

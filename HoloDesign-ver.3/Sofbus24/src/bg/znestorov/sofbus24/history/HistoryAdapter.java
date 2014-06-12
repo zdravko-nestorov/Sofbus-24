@@ -3,6 +3,7 @@ package bg.znestorov.sofbus24.history;
 import java.util.List;
 
 import android.app.Activity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Filterable;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.Utils;
 
 /**
  * Array Adapted user for set each row a history object from a preference file
@@ -18,7 +20,8 @@ import bg.znestorov.sofbus24.main.R;
  * @version 1.0
  * 
  */
-public class HistoryAdapter extends ArrayAdapter<HistoryEntity> implements Filterable {
+public class HistoryAdapter extends ArrayAdapter<HistoryEntity> implements
+		Filterable {
 
 	private Activity context;
 	private List<HistoryEntity> historyList;
@@ -66,9 +69,17 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntity> implements Filte
 
 		// Fill the data
 		HistoryEntity history = historyList.get(position);
-		viewHolder.searchText.setText(history.getHistoryValue());
-		viewHolder.searchType.setText(getHistoryType(history));
-		viewHolder.searchDate.setText(history.getHistoryDate());
+
+		String historyValue = history.getHistoryValue();
+		String stationName = Utils.getValueBefore(historyValue, "(");
+		String stationNumber = Utils.getValueBetween(historyValue, "(", ")");
+
+		viewHolder.searchText.setText(stationName);
+		viewHolder.searchType.setText(context.getString(
+				R.string.history_item_station_number, stationNumber));
+		viewHolder.searchDate.setText(Html.fromHtml(context.getString(
+				R.string.history_item_search_date, history.getHistoryDate(),
+				getHistoryType(history))));
 
 		return rowView;
 	}

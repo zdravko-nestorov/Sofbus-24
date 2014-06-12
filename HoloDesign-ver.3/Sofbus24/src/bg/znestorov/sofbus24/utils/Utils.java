@@ -392,7 +392,7 @@ public class Utils {
 		history.putFiledInPreferences(
 				Constants.HISTORY_PREFERENCES_SEARCH_DATE, history
 						.getNextSearchNumber() - 1,
-				DateFormat.format("yyyy.MM.dd, kk:mm", new java.util.Date())
+				DateFormat.format("dd.MM.yyyy, kk:mm", new java.util.Date())
 						.toString());
 		history.putFiledInPreferences(
 				Constants.HISTORY_PREFERENCES_SEARCH_TYPE,

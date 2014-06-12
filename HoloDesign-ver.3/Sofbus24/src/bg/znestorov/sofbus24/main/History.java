@@ -6,9 +6,10 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import bg.znestorov.sofbus24.history.HistoryOfSearches;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
 /**
@@ -54,8 +56,6 @@ public class History extends ListActivity {
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(getString(R.string.history_title));
-		actionBar.setSubtitle(DateFormat.format("dd.MM.yyy, kk:mm",
-				new java.util.Date()));
 
 		// Get the list with the history of searches from the shared preferences
 		historyList = HistoryOfSearches.getInstance(context)
@@ -71,12 +71,6 @@ public class History extends ListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		// Set the action bar subtitle
-		if (actionBar != null) {
-			actionBar.setSubtitle(DateFormat.format("dd.MM.yyy, kk:mm",
-					new java.util.Date()));
-		}
 
 		// Refresh the history list view
 		if (historyAdapter != null) {
@@ -101,9 +95,41 @@ public class History extends ListActivity {
 			finish();
 			return true;
 		case R.id.action_history_delete_all:
-			HistoryOfSearches.getInstance(context).clearHistoryOfSearches();
-			historyList.clear();
-			historyAdapter.notifyDataSetChanged();
+			int searchesCount = historyList.size();
+
+			// Check if there are any registred searches
+			if (searchesCount > 0) {
+				OnClickListener positiveOnClickListener = new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						HistoryOfSearches.getInstance(context)
+								.clearHistoryOfSearches();
+						historyList.clear();
+						historyAdapter.notifyDataSetChanged();
+
+						Toast.makeText(
+								context,
+								Html.fromHtml(getString(R.string.history_menu_remove_all_toast)),
+								Toast.LENGTH_SHORT).show();
+					}
+				};
+
+				ActivityUtils
+						.showCustomAlertDialog(
+								context,
+								android.R.drawable.ic_menu_delete,
+								getString(R.string.app_dialog_title_important),
+								Html.fromHtml(getString(R.string.history_menu_remove_all_confirmation)),
+								getString(R.string.app_button_yes),
+								positiveOnClickListener,
+								getString(R.string.app_button_no), null);
+			} else {
+				Toast.makeText(
+						context,
+						Html.fromHtml(getString(R.string.history_menu_remove_all_empty_toast)),
+						Toast.LENGTH_SHORT).show();
+			}
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -115,9 +141,11 @@ public class History extends ListActivity {
 		HistoryEntity history = (HistoryEntity) getListAdapter().getItem(
 				position);
 
-		// Get the station number of the search
+		// Get the station number and station name of the search
 		String stationNumber = Utils.getValueBetween(history.getHistoryValue(),
 				"(", ")");
+		String stationName = Utils.getValueBefore(history.getHistoryValue(),
+				"(");
 
 		// Get the corresponding station to the station number via the stations
 		// database
@@ -125,6 +153,13 @@ public class History extends ListActivity {
 		stationDatasource.open();
 		Station station = stationDatasource.getStation(stationNumber);
 		stationDatasource.close();
+
+		// Check if the station is existing in the database
+		if (station == null) {
+			station = new Station();
+			station.setNumber(stationNumber);
+			station.setName(stationName);
+		}
 
 		// Check the type of station and retrieve the information accordingly
 		switch (history.getHistoryType()) {

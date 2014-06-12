@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:padding="5sp"
     android:paddingRight="?android:attr/scrollbarSize" >
 
@@ -9,11 +10,11 @@
         android:id="@+id/history_item_image_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="1sp"
         android:layout_marginLeft="2sp"
         android:layout_marginRight="12sp"
-        android:minHeight="35sp"
-        android:minWidth="35sp" >
+        android:minHeight="37sp"
+        android:minWidth="37sp" >
 
         <ImageView
             android:id="@+id/history_item_favourite"
@@ -25,17 +26,19 @@
 
     <TextView
         android:id="@+id/history_item_search_text"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/history_item_image_layout"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/history_item_search_type"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/history_item_search_text"
         android:layout_toRightOf="@+id/history_item_image_layout"
@@ -44,20 +47,15 @@
         android:textColor="?android:attr/textColorSecondary"
         android:textSize="12sp" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/history_item_search_date"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="12sp"
-        android:layout_marginRight="10sp" >
-
-        <TextView
-            android:id="@+id/history_item_search_date"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:contentDescription="@string/app_img_empty_content_description"
-            android:src="@drawable/ic_virtual_boards" />
-    </LinearLayout>
+        android:layout_alignLeft="@+id/history_item_image_layout"
+        android:layout_below="@+id/history_item_image_layout"
+        android:singleLine="false"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="13sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
