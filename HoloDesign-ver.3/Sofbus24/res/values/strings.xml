@@ -80,6 +80,14 @@
     <string name="menu_metro_station_remove">Премахни от любими</string>
     <string name="menu_metro_station_map">Виж на картата</string>
 
+    <!-- Sliding Menu -->
+    <string name="menu_item_home">Начало</string>
+    <string name="menu_item_history">История</string>
+    <string name="menu_item_db">Обновяване на спирките</string>
+    <string name="menu_item_app">Обновяване на приложението</string>
+    <string name="menu_item_settings">Настройки</string>
+    <string name="menu_item_exit">Изход</string>
+
     <!-- Closest Stations List -->
     <string name="cs_list_title">Най-близки спирки</string>
     <string name="cs_list_search_hint">Търсене по име или номер</string>

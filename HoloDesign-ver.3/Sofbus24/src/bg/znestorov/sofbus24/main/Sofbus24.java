@@ -25,7 +25,6 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
-import bg.znestorov.sofbus24.edit.tabs.EditTabsFragment;
 import bg.znestorov.sofbus24.entity.Config;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HomeTab;
@@ -34,6 +33,7 @@ import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
+import bg.znestorov.sofbus24.slidingmenu.SlidingMenuFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
@@ -265,11 +265,8 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		slidingMenu.setMenu(R.layout.activity_sliding_menu);
 
 		// TODO: Make the Sliding menu layout
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.menu_frame,
-						EditTabsFragment.newInstance(new Config(), false))
-				.commit();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.menu_frame, new SlidingMenuFragment()).commit();
 	}
 
 	/**

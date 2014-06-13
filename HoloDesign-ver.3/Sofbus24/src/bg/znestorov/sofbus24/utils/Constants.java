@@ -16,6 +16,7 @@ public class Constants {
 	public static final BigDecimal GLOBAL_PARAM_CLOSEST_STATION_DISTANCE = new BigDecimal(
 			100000);
 	public static final int GLOBAL_PARAM_HOME_TABS_COUNT = 4;
+	public static final int GLOBAL_PARAM_SLIDING_MENU_ITEMS = 6;
 
 	/**
 	 * Bundle keys
