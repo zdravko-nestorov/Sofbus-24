@@ -85,6 +85,12 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	}
 
 	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		// No super() is called - it is workaround, so prevent saving any state
+		// to the FragmentStatePageAdapter and the ViewPager
+	}
+
+	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (mViewPager != null) {
 			int currentTab = mViewPager.getCurrentItem();
