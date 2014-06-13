@@ -101,8 +101,8 @@ public class PublicTransport extends FragmentActivity implements
 	}
 
 	/**
-	 * Initialize the layout fields (ActionBar, ViewPager, SectionsPagerAdapter
-	 * and SlidingMenu)
+	 * Initialize the layout fields (ActionBar, ViewPager and
+	 * SectionsPagerAdapter)
 	 */
 	private void initLayoutFields() {
 		// Set up the ActionBar

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <!-- Recent History -->
+    <item
+        android:id="@+id/action_recent_history"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:showAsAction="always"
+        android:title="@string/action_recent_history"/>
+
     <!-- Closest stations -->
     <item
         android:id="@+id/action_closest_stations"

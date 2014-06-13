@@ -8,10 +8,6 @@
     <dimen name="sofbus24_image_retry_height">50sp</dimen>
     <dimen name="sofbus24_image_retry_width">50sp</dimen>
 
-    <!-- Sliding Menu -->
-    <dimen name="slidingmenu_shadow_width">5sp</dimen>
-    <dimen name="slidingmenu_offset">60sp</dimen>
-
     <!-- Tabs (ScheduleVehicle and MetroStation) -->
     <dimen name="tab_border_radius">12sp</dimen>
 

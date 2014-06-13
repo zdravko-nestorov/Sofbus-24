@@ -33,12 +33,9 @@ import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
-import bg.znestorov.sofbus24.slidingmenu.SlidingMenuFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
-
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener {
 
@@ -48,7 +45,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
-	private SlidingMenu slidingMenu;
 
 	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
 	private FavouritesStationFragment favouritesFragment;
@@ -140,23 +136,18 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 	@Override
 	public void onBackPressed() {
-		if (slidingMenu.isMenuShowing()) {
-			slidingMenu.toggle();
-		} else {
-			ActivityUtils.closeApplication(context);
-		}
+		ActivityUtils.closeApplication(context);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			this.slidingMenu.toggle();
+		case R.id.action_recent_history:
+			Intent historyIntent = new Intent(context, History.class);
+			startActivity(historyIntent);
 			return true;
 		case R.id.action_closest_stations_map:
 			// TODO: Set the event on clicking the button
-			Intent historyIntent = new Intent(context, History.class);
-			startActivity(historyIntent);
 			return true;
 		case R.id.action_closest_stations_list:
 			ProgressDialog progressDialog = new ProgressDialog(context);
@@ -187,8 +178,8 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	}
 
 	/**
-	 * Initialize the layout fields (ActionBar, ViewPager, SectionsPagerAdapter
-	 * and SlidingMenu)
+	 * Initialize the layout fields (ActionBar, ViewPager and
+	 * SectionsPagerAdapter)
 	 */
 	private void initLayoutFields() {
 		// Creates the configuration file
@@ -200,7 +191,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		// Set up the ActionBar
 		actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		// Create the fragments list
 		createFragmentsList();
@@ -230,9 +220,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		// For each of the sections in the app, add a tab to the action bar
 		initTabs();
-
-		// Create the sliding menu
-		initSlidingMenu();
 	}
 
 	/**
@@ -248,25 +235,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 					.setIcon(mSectionsPagerAdapter.getPageIcon(i))
 					.setTabListener(this));
 		}
-	}
-
-	/**
-	 * Initialize the sliding menu
-	 */
-	private void initSlidingMenu() {
-		slidingMenu = new SlidingMenu(this);
-		slidingMenu.setMode(SlidingMenu.LEFT);
-		slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-		slidingMenu.setShadowWidthRes(R.dimen.slidingmenu_shadow_width);
-		slidingMenu.setShadowDrawable(R.drawable.slide_menu_shadow);
-		slidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		slidingMenu.setFadeDegree(0.35f);
-		slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-		slidingMenu.setMenu(R.layout.activity_sliding_menu);
-
-		// TODO: Make the Sliding menu layout
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.menu_frame, new SlidingMenuFragment()).commit();
 	}
 
 	/**
