@@ -66,7 +66,8 @@ public class VirtualBoardsFragment extends ListFragment implements
 		context = getActivity();
 
 		// Get the vbSearchText and vbList from the Bundle (savedInstanceState)
-		if (savedInstanceState != null) {
+		if (savedInstanceState != null
+				&& savedInstanceState.getSerializable(BUNDLE_VB_STATIONS_LIST) != null) {
 			vbSearchText = savedInstanceState.getString(BUNDLE_VB_SEARCH_TEXT);
 			vbList.clear();
 			vbList.addAll((ArrayList<Station>) savedInstanceState

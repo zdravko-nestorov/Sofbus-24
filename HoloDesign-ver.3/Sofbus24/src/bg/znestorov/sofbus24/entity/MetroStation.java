@@ -3,6 +3,7 @@ package bg.znestorov.sofbus24.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -14,6 +15,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import bg.znestorov.sofbus24.utils.WorkingDaysCalendar;
 
 /**
  * Class representing each station of the metro (add direction and schedule)
@@ -118,8 +121,12 @@ public class MetroStation extends Station implements Serializable {
 	}
 
 	public HashMap<Integer, ArrayList<String>> getSchedule() {
-		// TODO: Find a way to check what day it is
-		return weekdaySchedule;
+		Calendar calendar = Calendar.getInstance();
+		if (WorkingDaysCalendar.isWorkingDay(calendar)) {
+			return weekdaySchedule;
+		} else {
+			return holidaySchedule;
+		}
 	}
 
 	/**

@@ -91,11 +91,12 @@ public class FavouritesStationFragment extends ListFragment implements
 
 	@Override
 	public void onResumeFragment(Activity context) {
-		ArrayAdapter<Station> favouritesStationAdapter = (FavouritesStationAdapter) getListAdapter();
+		FavouritesStationAdapter favouritesStationAdapter = (FavouritesStationAdapter) getListAdapter();
 
 		if (favouritesStationAdapter != null) {
 			favouritesStations.clear();
 			favouritesStations.addAll(loadFavouritesList(null));
+			favouritesStationAdapter.setExpandedListItemValue();
 			favouritesStationAdapter.notifyDataSetChanged();
 		}
 	}

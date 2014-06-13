@@ -100,8 +100,13 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		this.stationsDataSource = new StationsDataSource(context);
 
 		displayImageOptions = ActivityUtils.displayImageOptions();
+		setExpandedListItemValue();
+	}
 
-		// Get the current state of the Favorites ListItems
+	/**
+	 * Get the current state of the Favorites ListItems
+	 */
+	public void setExpandedListItemValue() {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(context);
 		expandedListItem = sharedPreferences.getBoolean(
