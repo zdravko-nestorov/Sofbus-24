@@ -41,6 +41,8 @@ public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStation> {
 
 	@Override
 	protected void onPreExecute() {
+		super.onPreExecute();
+
 		progressDialog.setIndeterminate(true);
 		progressDialog.setCancelable(true);
 		progressDialog
@@ -79,25 +81,26 @@ public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStation> {
 
 	@Override
 	protected void onPostExecute(MetroStation ms) {
+		super.onPostExecute(ms);
+
 		try {
 			progressDialog.dismiss();
-
-			// Check if the information is successfully retrieved or an Internet
-			// error occurred
-			if (ms.isScheduleSet()) {
-				Utils.addStationInHistory(context, ms);
-
-				Intent metroScheduleIntent = new Intent(context,
-						MetroSchedule.class);
-				metroScheduleIntent.putExtra(Constants.BUNDLE_METRO_SCHEDULE,
-						ms);
-				context.startActivity(metroScheduleIntent);
-			} else {
-				ActivityUtils.showNoInternetAlertDialog(context);
-			}
 		} catch (Exception e) {
 			// Workaround used just in case the orientation is changed once
 			// retrieving info
+		}
+
+		// Check if the information is successfully retrieved or an Internet
+		// error occurred
+		if (ms.isScheduleSet()) {
+			Utils.addStationInHistory(context, ms);
+
+			Intent metroScheduleIntent = new Intent(context,
+					MetroSchedule.class);
+			metroScheduleIntent.putExtra(Constants.BUNDLE_METRO_SCHEDULE, ms);
+			context.startActivity(metroScheduleIntent);
+		} else {
+			ActivityUtils.showNoInternetAlertDialog(context);
 		}
 	}
 

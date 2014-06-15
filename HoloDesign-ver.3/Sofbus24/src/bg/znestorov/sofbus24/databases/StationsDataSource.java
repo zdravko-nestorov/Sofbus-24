@@ -346,6 +346,96 @@ public class StationsDataSource {
 	}
 
 	/**
+	 * Get the nearest station from the DB to a location according to a radius
+	 * 
+	 * @param context
+	 *            current activity context
+	 * @param currentPosition
+	 *            the current position
+	 * @param stationsRadius
+	 *            current position radiusF
+	 * @return a list with the closest station
+	 */
+	public List<Station> getClosestStations(Activity context,
+			LatLng currentPosition, BigDecimal stationsRadius) {
+		FavouritesDataSource favouritesDatasource = new FavouritesDataSource(
+				context);
+		List<Station> stations = new ArrayList<Station>();
+
+		// IMPORTANT: Used for correct ordering
+		Double fudge = Math.pow(
+				Math.cos(Math.toRadians(currentPosition.latitude)), 2);
+
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT * 											\n");
+		query.append(" FROM stations	 									\n");
+		query.append(" ORDER BY												\n");
+		query.append(" 		( (												\n");
+		query.append(StationsSQLite.COLUMN_LAT + " - "
+				+ currentPosition.latitude);
+		query.append(" 		) * (											\n");
+		query.append(StationsSQLite.COLUMN_LAT + " - "
+				+ currentPosition.latitude);
+		query.append(" 		) + (											\n");
+		query.append(StationsSQLite.COLUMN_LON + " - "
+				+ currentPosition.longitude);
+		query.append(" 		) * (											\n");
+		query.append(StationsSQLite.COLUMN_LON + " - "
+				+ currentPosition.longitude);
+		query.append(" 		) * " + fudge + " ) ASC							\n");
+
+		Cursor cursor = database.rawQuery(query.toString(), null);
+
+		// Iterating the cursor and fill the empty List<Station>
+		cursor.moveToFirst();
+
+		// Open the Favourites DB to check if the station is already there
+		favouritesDatasource.open();
+
+		while (!cursor.isAfterLast()) {
+			Station foundStation = cursorToStation(cursor);
+
+			// Check if the station has coordinates in the database
+			if (foundStation.hasCoordinates()) {
+
+				// Get the distance to the current station
+				BigDecimal distance = new BigDecimal(MapUtils.getMapDistance(
+						currentPosition, foundStation));
+
+				// Check if the station is in the given radius
+				if (distance.compareTo(stationsRadius) != 1) {
+
+					// Check the type of the station and if it is METRO add the
+					// schedule URL to the custom field
+					if ((foundStation.getType() == VehicleType.METRO1 || foundStation
+							.getType() == VehicleType.METRO2)) {
+						foundStation.setCustomField(String.format(
+								Constants.METRO_STATION_URL,
+								foundStation.getNumber()));
+					}
+
+					// Check if the station is not in Favorites
+					if (favouritesDatasource.getStation(foundStation) == null) {
+						stations.add(foundStation);
+					}
+
+					cursor.moveToNext();
+				} else {
+					break;
+				}
+			}
+		}
+
+		// Closing the Favourites DB
+		favouritesDatasource.close();
+
+		// Closing the cursor
+		cursor.close();
+
+		return stations;
+	}
+
+	/**
 	 * Get the nearest station from the DB to a location according to the needed
 	 * page
 	 * 

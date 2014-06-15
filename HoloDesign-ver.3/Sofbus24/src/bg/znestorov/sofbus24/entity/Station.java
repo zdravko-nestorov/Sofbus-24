@@ -98,7 +98,8 @@ public class Station implements Serializable {
 	}
 
 	public boolean hasCoordinates() {
-		return lat != null && lon != null && !"".equals(lat) && !"".equals(lon);
+		return lat != null && lon != null && !"".equals(lat) && !"".equals(lon)
+				&& !"EMPTY".equals(lat) && !"EMPTY".equals(lon);
 	}
 
 	@Override

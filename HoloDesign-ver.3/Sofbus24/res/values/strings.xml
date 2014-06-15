@@ -18,7 +18,7 @@
     <string name="app_internet_or_info_error">В момента няма намерена информация. Моля проверете вашата интернет връзка или опитайте по-късно.</string>
     <string name="app_location_error">Моля включете поне едно от устройствата (GPS или WiFi), за да бъде засечено текущото ви местоположение.</string>
     <string name="app_coordinates_error">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
-    <string name="app_no_station_selected_error">Моля изберете спирка от маршрута, за да бъде визуализирана чрез режима Google Street View.</string>
+    <string name="app_no_station_selected_error">Моля изберете спирка от картата, за да бъде визуализирана чрез режима Google Street View.</string>
     <string name="app_distance" formatted="false">Разстояние: ~%s</string>
     <string name="app_distance_meters">м</string>
     <string name="app_distance_kilometers">км&#160;</string>
@@ -40,12 +40,22 @@
     <string name="action_edit_tabs">Начален екран</string>
     <string name="action_settints">Настройки</string>
     <string name="action_about">Информация</string>
+    <!-- Google Maps -->
+    <string name="action_gm_map_clear">Изчисти</string>
+    <string name="action_gm_map_route">Маршрут</string>
+    <string name="action_gm_map_gsv">Street View</string>
+    <string name="action_gm_map_traffic">Трафик</string>
+    <string name="action_gm_map_mode">Режим на картата</string>
+    <string name="action_gm_map_mode_normal">Нормален</string>
+    <string name="action_gm_map_mode_terrain">Терен</string>
+    <string name="action_gm_map_mode_satellite">Сателит</string>
+    <string name="action_gm_map_mode_hybrid">Хибрид</string>
     <!-- Metro Schedule -->
     <string name="action_ms_reset">Нулиране</string>
     <string name="action_ms_refresh">Обнови</string>
     <string name="action_ms_map">Карта</string>
     <!-- Station Map -->
-    <string name="action_sm_google_street_view">Google Street View</string>
+    <string name="action_sm_google_street_view">Street View</string>
     <string name="action_sm_map_mode">Режим на картата</string>
     <string name="action_sm_map_mode_normal">Нормален</string>
     <string name="action_sm_map_mode_terrain">Терен</string>
@@ -72,6 +82,7 @@
     <string name="action_pt_refresh">Обнови</string>
     <string name="action_pt_map">Карта</string>
     <!-- History -->
+    <string name="action_history_top">Най-отгоре</string>
     <string name="action_history_delete_all">Изтрий всички</string>
 
     <!-- Context Menu -->
@@ -86,6 +97,20 @@
     <string name="cs_list_search_hint">Търсене по име или номер</string>
     <string name="cs_list_loading_current_location" formatted="false"><![CDATA[Изчисляване на текущите координати...]]></string>
     <string name="cs_list_item_empty_list">Няма намерени спирки в радиус от 100 км. за това търсене. Моля опитайте с други критерии или се приближете до София.</string>
+
+    <!-- Closest Stations Map -->
+    <string name="cs_map_title">Google Maps</string>
+    <string name="cs_map_subtitle" formatted="false">Спирки в радиус от %s метра: %s</string>
+    <string name="cs_map_type_btt">Градски Транспорт</string>
+    <string name="cs_map_type_metro">Метро</string>
+    <string name="cs_map_closest_stations" formatted="false"><![CDATA[Визуализиране на най-близките спирки...]]></string>
+    <string name="cs_map_fetch_route" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
+    <string name="cs_map_location_error">Моля изчакайте да бъде локализирано текущото ви местоположение.</string>
+    <string name="cs_map_fetch_route_error">Възникна проблем с изчертаването на маршрута. Моля проверете вашата интернет връзка или опитайте по-късно.</string>
+    <string name="cs_map_route_error">Моля изберете спирка от картата, за да бъде изчертан маршрута до нея.</string>
+    <string name="cs_map_clear_info">Картата беше върната в начално си положение.</string>
+    <string name="cs_map_traffic_on_info">Слоят, показващ трафика върху картата Google Maps, беше активиран.</string>
+    <string name="cs_map_traffic_off_info">Слоят, показващ трафика върху картата Google Maps, беше деактивиран.</string>
 
     <!-- Preferences -->
     <string name="pref_reset">Сигурни ли сте, че искате да нулирате всички настройки и да ги върнете в началното им положение.</string>
@@ -102,8 +127,11 @@
     <string name="pref_category_stations_timeType_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация</string>
     <string name="pref_category_stations_timeSource_title">Времена на градския транспорт</string>
     <string name="pref_category_stations_timeSource_summary">Оставащо време или времена на пристигане</string>
-    <string name="pref_category_stations_closest_title">Брой най-близки спирки</string>
-    <string name="pref_category_stations_closest_summary">Колко спирки да се визуализират около текущото местоположение или избрана точка</string>
+    <string name="pref_category_map">КАРТА</string>
+    <string name="pref_category_map_radius_title">Най-близки спирки в даден радиус</string>
+    <string name="pref_category_map_radius_summary">Големина на радиуса около текущото местоположение или избрана точка, в който се визуализират спирки</string>
+    <string name="pref_category_map_position_title">Позициониране</string>
+    <string name="pref_category_map_position_summary">Позиционирай картата при промяна на текущото местоположение</string>
 
     <!-- Edit Tabs Fragment -->
     <string name="edit_tabs_title">Начален екран</string>
@@ -185,8 +213,8 @@
 
     <!-- Metro Fragment -->
     <string name="metro_search_hint">Търсене по име или номер</string>
-    <string name="metro_search_tab_direction1">Линия 1</string>
-    <string name="metro_search_tab_direction2">Линия 2</string>
+    <string name="metro_search_tab_direction1">Маршрут 1</string>
+    <string name="metro_search_tab_direction2">Маршрут 2</string>
     <string name="metro_item_station_number_text" formatted="false">Спирка номер: %s</string>
     <string name="metro_item_station_number_text_sign" formatted="false">Станция №%s</string>
     <string name="metro_item_empty_list" formatted="false"><![CDATA[Няма намерени метростанции за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>

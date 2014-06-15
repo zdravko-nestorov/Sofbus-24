@@ -342,6 +342,8 @@ public class MetroStationFragment extends ListFragment {
 
 		@Override
 		protected void onPreExecute() {
+			super.onPreExecute();
+
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(true);
 			progressDialog
@@ -381,7 +383,7 @@ public class MetroStationFragment extends ListFragment {
 
 		@Override
 		protected void onPostExecute(Intent metroMapRouteIntent) {
-			context.startActivity(metroMapRouteIntent);
+			super.onPostExecute(metroMapRouteIntent);
 
 			try {
 				progressDialog.dismiss();
@@ -389,6 +391,8 @@ public class MetroStationFragment extends ListFragment {
 				// Workaround used just in case the orientation is changed once
 				// retrieving info
 			}
+
+			context.startActivity(metroMapRouteIntent);
 		}
 
 		@Override

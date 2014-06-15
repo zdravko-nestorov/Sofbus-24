@@ -86,7 +86,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 
 		// Fill the data
 		Station station = filteredStations.get(position);
-		viewHolder.stationIcon.setImageResource(getFavouriteImage(station));
+		viewHolder.stationIcon.setImageResource(getMetroImage(station));
 		viewHolder.stationName.setText(station.getName());
 		viewHolder.stationNumber.setText(String.format(
 				context.getString(R.string.metro_item_station_number_text),
@@ -193,16 +193,14 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 	 *            the station on the current row
 	 * @return the station image id
 	 */
-	private Integer getFavouriteImage(Station station) {
+	private Integer getMetroImage(Station station) {
 		Integer favouriteImage;
+		Integer stationNumber = Integer.parseInt(station.getNumber());
 
-		switch (station.getType()) {
-		case METRO1:
-			favouriteImage = R.drawable.ic_metro_1;
-			break;
-		default:
+		if (stationNumber <= 3000) {
 			favouriteImage = R.drawable.ic_metro_2;
-			break;
+		} else {
+			favouriteImage = R.drawable.ic_metro_1;
 		}
 
 		return favouriteImage;

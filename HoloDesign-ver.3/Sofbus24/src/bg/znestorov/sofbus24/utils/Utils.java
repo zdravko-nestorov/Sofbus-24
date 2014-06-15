@@ -383,20 +383,17 @@ public class Utils {
 			historyType = VehicleType.BTT;
 		}
 
-		// The first time get the nextSearchNumber as it is in the
-		// sharedPreferences file. The second and the third time, decrease it by
-		// 1 (the first action increased the field)
+		int nextSearchNumber = history.getNextSearchNumber();
 		history.putFiledInPreferences(
-				Constants.HISTORY_PREFERENCES_SEARCH_VALUE,
-				history.getNextSearchNumber(), historyValue);
+				Constants.HISTORY_PREFERENCES_SEARCH_VALUE, nextSearchNumber,
+				historyValue);
 		history.putFiledInPreferences(
-				Constants.HISTORY_PREFERENCES_SEARCH_DATE, history
-						.getNextSearchNumber() - 1,
+				Constants.HISTORY_PREFERENCES_SEARCH_DATE, nextSearchNumber,
 				DateFormat.format("dd.MM.yyyy, kk:mm", new java.util.Date())
 						.toString());
 		history.putFiledInPreferences(
-				Constants.HISTORY_PREFERENCES_SEARCH_TYPE,
-				history.getNextSearchNumber() - 1, historyType.name());
+				Constants.HISTORY_PREFERENCES_SEARCH_TYPE, nextSearchNumber,
+				historyType.name());
 	}
 
 	/**

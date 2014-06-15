@@ -50,6 +50,8 @@ public class RetrievePublicTransportDirection extends
 
 	@Override
 	protected void onPreExecute() {
+		super.onPreExecute();
+
 		progressDialog.setIndeterminate(true);
 		progressDialog.setCancelable(true);
 		progressDialog
@@ -85,6 +87,8 @@ public class RetrievePublicTransportDirection extends
 
 	@Override
 	protected void onPostExecute(final DirectionsEntity ptDirectionsEntity) {
+		super.onPostExecute(ptDirectionsEntity);
+
 		try {
 			progressDialog.dismiss();
 		} catch (Exception e) {
@@ -155,11 +159,13 @@ public class RetrievePublicTransportDirection extends
 	private String createDirectionUrlAddress() {
 		final List<NameValuePair> result = new ArrayList<NameValuePair>();
 
-		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_DIRECTION_BUS_TYPE,
+		result.add(new BasicNameValuePair(
+				Constants.SCHECULE_URL_DIRECTION_BUS_TYPE,
 				getVehicleType(vehicle)));
-		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_DIRECTION_LINE, vehicle
-				.getNumber()));
-		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_DIRECTION_SEARCH,
+		result.add(new BasicNameValuePair(
+				Constants.SCHECULE_URL_DIRECTION_LINE, vehicle.getNumber()));
+		result.add(new BasicNameValuePair(
+				Constants.SCHECULE_URL_DIRECTION_SEARCH,
 				Constants.SCHECULE_URL_DIRECTION_SEARCH_VALUE));
 
 		String returnURL = Constants.SCHECULE_URL_DIRECTION

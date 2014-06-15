@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    
+
     <!-- Google Street View -->
     <item
         android:id="@+id/action_sm_google_street_view"
-        android:icon="@android:drawable/ic_menu_view"
+        android:icon="@drawable/ic_menu_map_street_view"
         android:showAsAction="always"
         android:title="@string/action_sm_google_street_view"/>
 
     <!-- Map mode -->
     <item
         android:id="@+id/action_sm_map_mode"
-        android:icon="@android:drawable/ic_menu_mapmode"
+        android:icon="@drawable/ic_menu_map_layers"
         android:showAsAction="always"
         android:title="@string/action_sm_map_mode">
         <menu>

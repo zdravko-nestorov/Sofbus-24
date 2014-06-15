@@ -56,6 +56,8 @@ public class RetrievePublicTransportStation extends
 
 	@Override
 	protected void onPreExecute() {
+		super.onPreExecute();
+
 		progressDialog.setIndeterminate(true);
 		progressDialog.setCancelable(true);
 		progressDialog
@@ -90,6 +92,8 @@ public class RetrievePublicTransportStation extends
 
 	@Override
 	protected void onPostExecute(final PublicTransportStation ptStation) {
+		super.onPostExecute(ptStation);
+
 		try {
 			progressDialog.dismiss();
 		} catch (Exception e) {

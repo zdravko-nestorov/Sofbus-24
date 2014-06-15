@@ -255,6 +255,8 @@ public class PublicTransport extends FragmentActivity implements
 
 		@Override
 		protected void onPreExecute() {
+			super.onPreExecute();
+
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(true);
 			progressDialog
@@ -279,7 +281,7 @@ public class PublicTransport extends FragmentActivity implements
 
 		@Override
 		protected void onPostExecute(Intent ptMapRouteIntent) {
-			context.startActivity(ptMapRouteIntent);
+			super.onPostExecute(ptMapRouteIntent);
 
 			try {
 				progressDialog.dismiss();
@@ -287,6 +289,8 @@ public class PublicTransport extends FragmentActivity implements
 				// Workaround used just in case the orientation is changed once
 				// retrieving info
 			}
+
+			context.startActivity(ptMapRouteIntent);
 		}
 
 		@Override

@@ -82,7 +82,9 @@ public class ClosestStationsList extends FragmentActivity {
 			initRefresh();
 			return true;
 		case R.id.action_cs_list_map:
-			// TODO: Set the event on clicking the button
+			Intent closestStationsMapIntent = new Intent(context,
+					ClosestStationsMap.class);
+			startActivity(closestStationsMapIntent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -256,6 +258,8 @@ public class ClosestStationsList extends FragmentActivity {
 
 		@Override
 		protected void onPreExecute() {
+			super.onPreExecute();
+
 			myLocationListener = new MyLocationListener();
 			locationManager = (LocationManager) context
 					.getSystemService(Context.LOCATION_SERVICE);
@@ -302,48 +306,48 @@ public class ClosestStationsList extends FragmentActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+
 			try {
-				if (progressDialog != null) {
-					progressDialog.dismiss();
-				}
-
-				if (isNetworkProviderOn || isGpsProviderOn) {
-					LatLng currentLocation = new LatLng(this.latitude,
-							this.longitude);
-
-					// Check what have to be done - start new activity or update
-					// fragment
-					if (progressDialog != null) {
-						Intent closestStationsListIntent = new Intent(context,
-								ClosestStationsList.class);
-						closestStationsListIntent.putExtra(
-								Constants.BUNDLE_CLOSEST_STATIONS_LIST,
-								currentLocation);
-						context.startActivity(closestStationsListIntent);
-					} else {
-						startClosestStationsListFragment();
-					}
-				} else {
-					OnClickListener positiveOnClickListener = new OnClickListener() {
-						public void onClick(DialogInterface dialog, int i) {
-							Intent intent = new Intent(
-									android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-							context.startActivity(intent);
-						}
-
-					};
-
-					ActivityUtils.showCustomAlertDialog(context,
-							android.R.drawable.ic_menu_mylocation,
-							context.getString(R.string.app_dialog_title_error),
-							context.getString(R.string.app_location_error),
-							context.getString(R.string.app_button_yes),
-							positiveOnClickListener,
-							context.getString(R.string.app_button_no), null);
-				}
+				progressDialog.dismiss();
 			} catch (Exception e) {
 				// Workaround used just in case the orientation is changed once
 				// retrieving info
+			}
+
+			if (isNetworkProviderOn || isGpsProviderOn) {
+				LatLng currentLocation = new LatLng(this.latitude,
+						this.longitude);
+
+				// Check what have to be done - start new activity or update
+				// fragment
+				if (progressDialog != null) {
+					Intent closestStationsListIntent = new Intent(context,
+							ClosestStationsList.class);
+					closestStationsListIntent.putExtra(
+							Constants.BUNDLE_CLOSEST_STATIONS_LIST,
+							currentLocation);
+					context.startActivity(closestStationsListIntent);
+				} else {
+					startClosestStationsListFragment();
+				}
+			} else {
+				OnClickListener positiveOnClickListener = new OnClickListener() {
+					public void onClick(DialogInterface dialog, int i) {
+						Intent intent = new Intent(
+								android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+						context.startActivity(intent);
+					}
+
+				};
+
+				ActivityUtils.showCustomAlertDialog(context,
+						android.R.drawable.ic_menu_mylocation,
+						context.getString(R.string.app_dialog_title_error),
+						context.getString(R.string.app_location_error),
+						context.getString(R.string.app_button_yes),
+						positiveOnClickListener,
+						context.getString(R.string.app_button_no), null);
 			}
 		}
 

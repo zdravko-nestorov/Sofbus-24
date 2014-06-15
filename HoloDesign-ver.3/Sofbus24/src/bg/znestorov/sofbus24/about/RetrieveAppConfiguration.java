@@ -43,6 +43,8 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 
 	@Override
 	protected void onPreExecute() {
+		super.onPreExecute();
+
 		progressDialog.setIndeterminate(true);
 		progressDialog.setCancelable(true);
 		progressDialog
@@ -78,25 +80,27 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 
 	@Override
 	protected void onPostExecute(Config newConfig) {
+		super.onPostExecute(newConfig);
+
 		try {
 			progressDialog.dismiss();
-
-			// Check if the information is successfully retrieved or an Internet
-			// error occurred
-			if (newConfig.isValidConfig()) {
-				Config currentConfig = new Config(context);
-
-				if (updateApp) {
-					updateApp(currentConfig, newConfig);
-				} else {
-					updateDb(currentConfig, newConfig);
-				}
-			} else {
-				ActivityUtils.showNoInternetAlertDialog(context);
-			}
 		} catch (Exception e) {
 			// Workaround used just in case the orientation is changed once
 			// retrieving info
+		}
+
+		// Check if the information is successfully retrieved or an Internet
+		// error occurred
+		if (newConfig.isValidConfig()) {
+			Config currentConfig = new Config(context);
+
+			if (updateApp) {
+				updateApp(currentConfig, newConfig);
+			} else {
+				updateDb(currentConfig, newConfig);
+			}
+		} else {
+			ActivityUtils.showNoInternetAlertDialog(context);
 		}
 	}
 

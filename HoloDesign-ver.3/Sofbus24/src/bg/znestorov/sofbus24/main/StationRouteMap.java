@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.MetroStation;
@@ -26,7 +27,6 @@ import bg.znestorov.sofbus24.publictransport.RetrievePublicTransportStation;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.MapUtils;
 import bg.znestorov.sofbus24.utils.Utils;
-import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -165,7 +165,9 @@ public class StationRouteMap extends Activity {
 						streetViewUri);
 				startActivity(streetViewIntent);
 			} else {
-				ActivityUtils.showNoStationSelectedAlertDialog(context);
+				Toast.makeText(context,
+						getString(R.string.app_no_station_selected_error),
+						Toast.LENGTH_SHORT).show();
 			}
 			return true;
 		case R.id.action_sm_map_mode_normal:
@@ -250,7 +252,7 @@ public class StationRouteMap extends Activity {
 			MetroStation ms = new MetroStation(station, metroDirectionName);
 
 			// Create the marker over the map
-			try {
+			if (ms.hasCoordinates()) {
 				LatLng msLocation = new LatLng(Double.parseDouble(ms.getLat()),
 						Double.parseDouble(ms.getLon()));
 
@@ -278,8 +280,6 @@ public class StationRouteMap extends Activity {
 						.icon(BitmapDescriptorFactory
 								.fromResource(getMarkerIcon(ms.getType())));
 				stationMap.addMarker(stationMarkerOptions);
-			} catch (Exception e) {
-				// In case no coordinates are found for the station
 			}
 		}
 
@@ -326,23 +326,30 @@ public class StationRouteMap extends Activity {
 		// Create a HashMap to associate each marker with a station
 		final HashMap<String, PublicTransportStation> markersAndStations = new HashMap<String, PublicTransportStation>();
 
+		// Create an object consisted of a set of all points of the route
+		PolylineOptions ptRouteOptions = new PolylineOptions().width(3).color(
+				Color.parseColor("#008000"));
+
 		// Process all stations of the public transport route
 		for (int i = 0; i < ptDirectionStations.size(); i++) {
 			Station station = ptDirectionStations.get(i);
 
 			// Create the marker over the map
-			try {
-				LatLng msLocation = new LatLng(Double.parseDouble(station
+			if (station.hasCoordinates()) {
+				LatLng ptLocation = new LatLng(Double.parseDouble(station
 						.getLat()), Double.parseDouble(station.getLon()));
+
+				// Add the msLocation to the appropriate route options object
+				ptRouteOptions.add(ptLocation);
 
 				// Center the map over the central station of the route
 				if (i == ptDirectionStations.size() / 2) {
-					centerStationLocation = msLocation;
+					centerStationLocation = ptLocation;
 				}
 
 				// Create a marker on the msLocation and set some options
 				MarkerOptions stationMarkerOptions = new MarkerOptions()
-						.position(msLocation)
+						.position(ptLocation)
 						.title(String.format(station.getName() + " (%s)",
 								station.getNumber()))
 						.snippet(
@@ -360,10 +367,11 @@ public class StationRouteMap extends Activity {
 				ptStation.setDirection(ptDirectionName);
 				markersAndStations.put(marker.getId(),
 						new PublicTransportStation(ptStation));
-			} catch (Exception e) {
-				// In case no coordinates are found for the station
 			}
 		}
+
+		// Draw a line between all the markers
+		stationMap.addPolyline(ptRouteOptions);
 
 		// Set a click listener over the markers' snippets
 		stationMap
@@ -420,7 +428,7 @@ public class StationRouteMap extends Activity {
 			lineName = getString(R.string.metro_search_tab_direction1);
 			break;
 		case METRO2:
-			lineName = getString(R.string.metro_search_tab_direction1);
+			lineName = getString(R.string.metro_search_tab_direction2);
 			break;
 		default:
 			lineName = String.format(getString(R.string.pt_bus),

@@ -90,13 +90,19 @@ public class History extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		int searchesCount = historyList.size();
+
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
 			return true;
-		case R.id.action_history_delete_all:
-			int searchesCount = historyList.size();
+		case R.id.action_history_top:
+			if (searchesCount > 0) {
+				getListView().setSelectionFromTop(0, 0);
+			}
 
+			return true;
+		case R.id.action_history_delete_all:
 			// Check if there are any registred searches
 			if (searchesCount > 0) {
 				OnClickListener positiveOnClickListener = new OnClickListener() {

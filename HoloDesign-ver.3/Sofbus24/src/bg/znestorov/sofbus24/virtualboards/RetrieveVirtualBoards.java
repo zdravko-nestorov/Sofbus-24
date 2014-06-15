@@ -428,6 +428,8 @@ public class RetrieveVirtualBoards {
 
 		@Override
 		protected void onPreExecute() {
+			super.onPreExecute();
+
 			if (progressDialog != null) {
 				progressDialog.setIndeterminate(true);
 				progressDialog.setCancelable(true);
@@ -535,6 +537,8 @@ public class RetrieveVirtualBoards {
 
 		@Override
 		protected void onPostExecute(String htmlResult) {
+			super.onPostExecute(htmlResult);
+
 			try {
 				progressDialog.dismiss();
 			} catch (Exception e) {
@@ -772,6 +776,8 @@ public class RetrieveVirtualBoards {
 
 		@Override
 		protected void onPreExecute() {
+			super.onPreExecute();
+
 			if (progressDialog != null) {
 				progressDialog.setIndeterminate(true);
 				progressDialog.setCancelable(true);
@@ -800,6 +806,8 @@ public class RetrieveVirtualBoards {
 
 		@Override
 		protected void onPostExecute(Bitmap captchaImage) {
+			super.onPostExecute(captchaImage);
+
 			try {
 				progressDialog.dismiss();
 			} catch (Exception e) {

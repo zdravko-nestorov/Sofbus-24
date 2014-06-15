@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.about.Configuration;
+import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
 import bg.znestorov.sofbus24.entity.Config;
@@ -44,14 +45,9 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	private GlobalEntity globalContext;
 	private ActionBar actionBar;
 
-	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
-
+	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
-	private FavouritesStationFragment favouritesFragment;
-	private VirtualBoardsFragment virtualBoardsFragment;
-	private ScheduleFragment scheduleFragment;
-	private MetroFragment metroFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +78,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	protected void onResume() {
 		super.onResume();
 		actionsOverHomeScreen(-1);
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		// No super() is called - it is workaround, so prevent saving any state
-		// to the FragmentStatePageAdapter and the ViewPager
 	}
 
 	@Override
@@ -154,7 +144,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			startActivity(historyIntent);
 			return true;
 		case R.id.action_closest_stations_map:
-			// TODO: Set the event on clicking the button
+			new RetrieveCurrentLocation(context).execute();
 			return true;
 		case R.id.action_closest_stations_list:
 			ProgressDialog progressDialog = new ProgressDialog(context);
@@ -252,10 +242,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		// Get the application cofig file
 		Config config = new Config(context);
 
-		// Create and assaign each fragment to a variable, so be used once the
-		// Tabs ordering and visibility is changed
-		createSofbus24Fragments();
-
 		// Emtpy the fragmentsList if contains any elements
 		if (!fragmentsList.isEmpty()) {
 			fragmentsList.clear();
@@ -272,28 +258,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	}
 
 	/**
-	 * Create (if not created already) and assaign each fragment to a variable,
-	 * so be used once the Tabs ordering and visibility is changed
-	 */
-	private void createSofbus24Fragments() {
-		if (favouritesFragment == null) {
-			favouritesFragment = new FavouritesStationFragment();
-		}
-
-		if (virtualBoardsFragment == null) {
-			virtualBoardsFragment = new VirtualBoardsFragment();
-		}
-
-		if (scheduleFragment == null) {
-			scheduleFragment = new ScheduleFragment();
-		}
-
-		if (metroFragment == null) {
-			metroFragment = new MetroFragment();
-		}
-	}
-
-	/**
 	 * Get the fragment according to the given HomeTab
 	 * 
 	 * @param homeTab
@@ -305,13 +269,13 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 		String homeTabName = homeTab.getTabName();
 		if (homeTabName.equals(getString(R.string.edit_tabs_favourites))) {
-			fragment = favouritesFragment;
+			fragment = new FavouritesStationFragment();
 		} else if (homeTabName.equals(getString(R.string.edit_tabs_search))) {
-			fragment = virtualBoardsFragment;
+			fragment = new VirtualBoardsFragment();
 		} else if (homeTabName.equals(getString(R.string.edit_tabs_schedule))) {
-			fragment = scheduleFragment;
+			fragment = new ScheduleFragment();
 		} else {
-			fragment = metroFragment;
+			fragment = new MetroFragment();
 		}
 
 		return fragment;
