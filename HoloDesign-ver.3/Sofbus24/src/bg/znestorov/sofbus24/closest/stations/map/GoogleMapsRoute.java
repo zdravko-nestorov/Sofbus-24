@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.main.ClosestStationsMap;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.MapUtils;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -35,12 +36,18 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 
 	private ProgressDialog progressDialog;
 	private String routeUrl;
+	private String distance;
 
 	public GoogleMapsRoute(Activity context, Object callerInstance,
 			Location currentLocation, LatLng latLng) {
 		this.context = context;
 		this.callerInstance = callerInstance;
+
 		this.routeUrl = createRouteUrl(currentLocation, latLng);
+		this.distance = String.format(context.getString(R.string.app_distance),
+				MapUtils.getMapDistance(context,
+						new LatLng(currentLocation.getLatitude(),
+								currentLocation.getLongitude()), latLng));
 	}
 
 	@Override
@@ -79,6 +86,8 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 
 		if (jsonResult != null && !"".equals(jsonResult)) {
 			((ClosestStationsMap) callerInstance).visualizeRoute(jsonResult);
+
+			Toast.makeText(context, distance, Toast.LENGTH_SHORT).show();
 		} else {
 			Toast.makeText(context,
 					context.getString(R.string.cs_map_fetch_route_error),

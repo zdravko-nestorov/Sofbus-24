@@ -90,10 +90,7 @@ public class History extends ListActivity {
 				loadingHistory.setVisibility(View.INVISIBLE);
 				emptyList.setVisibility(View.VISIBLE);
 
-				// Create the History ListAdapter
 				historyAdapter = new HistoryAdapter(context, historyList);
-
-				// Set the ListAdapter
 				setListAdapter(historyAdapter);
 			}
 

@@ -21,7 +21,6 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.Station;

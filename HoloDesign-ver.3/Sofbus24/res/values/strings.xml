@@ -125,14 +125,14 @@
     <string name="pref_category_common_language_summary">Избор на език</string>
     <string name="pref_category_visual">ВИЗУАЛНИ</string>
     <string name="pref_category_visual_fav_title">Фаворити</string>
-    <string name="pref_category_visual_fav_summary">Визуализиране на фаворитите с показана картинка от GoogleMaps StreetView</string>
+    <string name="pref_category_visual_fav_summary">Визуализиране на фаворитите с показана картина от Google Street View</string>
     <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
     <string name="pref_category_stations_timeType_title">Извлечена информация</string>
     <string name="pref_category_stations_timeType_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация</string>
     <string name="pref_category_stations_timeSource_title">Времена на градския транспорт</string>
     <string name="pref_category_stations_timeSource_summary">Оставащо време или времена на пристигане</string>
     <string name="pref_category_map">КАРТА</string>
-    <string name="pref_category_map_radius_title">Най-близки спирки в даден радиус</string>
+    <string name="pref_category_map_radius_title">Радиус около текущото местоположение</string>
     <string name="pref_category_map_radius_summary">Големина на радиуса около текущото местоположение или избрана точка, в който се визуализират спирки</string>
     <string name="pref_category_map_position_title">Позициониране</string>
     <string name="pref_category_map_position_summary">Позиционирай картата при промяна на текущото местоположение</string>
@@ -176,7 +176,7 @@
     <!-- Virtual Boards Fragment -->
     <string name="vb_search_hint">Търсене по име или номер</string>
     <string name="vb_item_station_number_text" formatted="false">Спирка номер: %s</string>
-    <string name="vb_item_search_list" formatted="false"><![CDATA[Моля въведете вашите критерии за търсене (осъществява се на базата на <b>номера - четирицидрен код (пр. 0013)</b> или <b>името (цифра/и или букви на кирилица или латиница)</b> на спирката). Ако търсите по име е нужно да въведете <b>поне 3 символа</b>.]]></string>
+    <string name="vb_item_search_list" formatted="false"><![CDATA[Моля въведете вашите критерии за търсене (осъществява се на базата на <b>номера - четирицифрен код (пр. 0013)</b> или <b>името (цифра/и или букви на кирилица или латиница)</b> на спирката). Ако търсите по име е нужно да въведете <b>поне 3 символа</b>.]]></string>
     <string name="vb_item_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
 
     <!-- Virtual Boards Time Fragment -->

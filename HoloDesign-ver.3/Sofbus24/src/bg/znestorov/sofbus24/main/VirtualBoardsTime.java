@@ -268,7 +268,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.vb_time_fragment, fragment, FRAGMENT_TAG_NAME)
-				.commit();
+				.commitAllowingStateLoss();
 
 		actionsOnFragmentStart();
 	}

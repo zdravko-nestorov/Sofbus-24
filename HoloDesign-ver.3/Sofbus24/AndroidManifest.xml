@@ -65,7 +65,9 @@
             android:name="bg.znestorov.sofbus24.main.PublicTransport"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name="bg.znestorov.sofbus24.main.PublicTransportSchedule" />
-        <activity android:name="bg.znestorov.sofbus24.main.History" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.History"
+            android:configChanges="orientation|screenSize" />
     </application>
 
 </manifest>
