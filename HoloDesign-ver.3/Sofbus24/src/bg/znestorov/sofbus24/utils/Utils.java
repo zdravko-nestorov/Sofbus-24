@@ -344,6 +344,18 @@ public class Utils {
 			directionName = "";
 		}
 
+		// Special cases
+		directionName = directionName.replaceAll(" - 1 - ", "-1 - ");
+		directionName = directionName.replaceAll(" - 1", "-1");
+		directionName = directionName.replaceAll(" - 2 - ", "-2 - ");
+		directionName = directionName.replaceAll(" - 2", "-2");
+		directionName = directionName.replaceAll(" - 3 - ", "-3 - ");
+		directionName = directionName.replaceAll(" - 3", "-3");
+		directionName = directionName.replaceAll(" - 4 - ", "-4 - ");
+		directionName = directionName.replaceAll(" - 4", "-4");
+		directionName = directionName.replaceAll("6 - ", "6-");
+		directionName = directionName.replaceAll("í - ç", "í-ç");
+
 		return directionName;
 	}
 

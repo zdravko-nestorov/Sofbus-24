@@ -133,6 +133,8 @@ public class VirtualBoardsFragment extends ListFragment implements
 	 */
 	public void setListAdapterViaSearch(ArrayList<Station> stationsList,
 			String emptyListMsg) {
+		ActivityUtils.hideKeyboard(context, searchEditText);
+
 		vbList.clear();
 		vbList.addAll(stationsList);
 

@@ -245,6 +245,10 @@ public class VirtualBoardsTime extends FragmentActivity {
 					newVBTimeStation.getVehiclesList());
 		}
 
+		vbTimeCurrentTime.setText(String.format(
+				getString(R.string.vb_time_current_time),
+				vbTimeStation.getTime(context)));
+
 		startVirtualBoardsTimeFragment(vbTimeEmptyText);
 	}
 
@@ -268,7 +272,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.vb_time_fragment, fragment, FRAGMENT_TAG_NAME)
-				.commitAllowingStateLoss();
+				.commit();
 
 		actionsOnFragmentStart();
 	}

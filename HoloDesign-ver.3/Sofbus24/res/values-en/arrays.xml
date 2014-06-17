@@ -1,0 +1,22 @@
+<resources>
+
+    <!-- Virtual Boards -->
+    <string-array name="timeType">
+        <item name="timeRemaining">Remaining time</item>
+        <item name="timeArrival">Time of arrival</item>
+    </string-array>
+    <string-array name="timeSource">
+        <item name="timeSkgt">SKGT site time</item>
+        <item name="timeSystem">System time</item>
+    </string-array>
+
+    <!-- Closest stations -->
+    <string-array name="stationsRadius">
+        <item name="400">400 meters</item>
+        <item name="600">600 meters</item>
+        <item name="1000">1000 meters</item>
+        <item name="1400">1400 meters</item>
+        <item name="2000">2000 meters</item>
+    </string-array>
+
+</resources>

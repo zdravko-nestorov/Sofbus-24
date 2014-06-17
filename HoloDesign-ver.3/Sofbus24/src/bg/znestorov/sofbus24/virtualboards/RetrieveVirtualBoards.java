@@ -869,7 +869,7 @@ public class RetrieveVirtualBoards {
 				((VirtualBoardsFragment) callerInstance)
 						.setListAdapterViaSearch(new ArrayList<Station>(),
 								getErrorMsg());
-				// Important - no break here, because a toast should be shown
+				break;
 			default:
 				Spanned progressDialogMsg = Html.fromHtml(getErrorMsg());
 				ActivityUtils.showNoInfoAlertToast(context, progressDialogMsg);

@@ -88,8 +88,8 @@
     <!-- Context Menu -->
     <!-- Metro Station -->
     <string name="menu_metro_station_title">Изберете действие</string>
-    <string name="menu_metro_station_add">Добави в любими</string>
-    <string name="menu_metro_station_remove">Премахни от любими</string>
+    <string name="menu_metro_station_add">Добави в Любими</string>
+    <string name="menu_metro_station_remove">Премахни от Любими</string>
     <string name="menu_metro_station_map">Виж на картата</string>
 
     <!-- Closest Stations List -->
@@ -117,7 +117,7 @@
     <string name="cs_map_hybrid" formatted="false"><![CDATA[Слоят <b><i>Hybrid</i></b> беше активиран.]]></string>
 
     <!-- Preferences -->
-    <string name="pref_reset">Сигурни ли сте, че искате да нулирате всички настройки и да ги върнете в началното им положение.</string>
+    <string name="pref_reset">Сигурни ли сте, че искате да нулирате всички настройки и да ги върнете в началното им положение?</string>
     <string name="pref_title">Настройки</string>
     <string name="pref_restart_app" formatted="false"><![CDATA[Ще трябва да рестартирате приложението, за да има резултат от направените промени. Искате ли да рестартирате <b>Софбус 24</b> сега?]]></string>
     <string name="pref_category_common">ОБЩИ</string>
@@ -125,7 +125,7 @@
     <string name="pref_category_common_language_summary">Избор на език</string>
     <string name="pref_category_visual">ВИЗУАЛНИ</string>
     <string name="pref_category_visual_fav_title">Фаворити</string>
-    <string name="pref_category_visual_fav_summary">Визуализиране на фаворитите с показана картина от Google Street View</string>
+    <string name="pref_category_visual_fav_summary">Визуализиране на фаворитите с показана картина от Google Street View (начален екран)</string>
     <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
     <string name="pref_category_stations_timeType_title">Извлечена информация</string>
     <string name="pref_category_stations_timeType_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация</string>
