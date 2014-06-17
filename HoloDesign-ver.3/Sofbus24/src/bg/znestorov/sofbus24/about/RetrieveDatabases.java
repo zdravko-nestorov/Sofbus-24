@@ -132,7 +132,7 @@ public class RetrieveDatabases extends
 					positiveOnClickListener, context
 							.getString(R.string.app_button_no), null);
 		} else {
-			ActivityUtils.showNoInternetAlertDialog(context);
+			ActivityUtils.showNoInternetToast(context);
 		}
 	}
 

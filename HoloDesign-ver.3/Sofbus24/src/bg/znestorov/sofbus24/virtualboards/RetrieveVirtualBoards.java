@@ -47,6 +47,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.HtmlResultCodes;
@@ -116,7 +117,7 @@ public class RetrieveVirtualBoards {
 		// Create the appropriate progress dialog message (if searched by
 		// HomeScreen - show only the searched string, otherwise - the station
 		// caption)
-		Spanned progressDialogMsg = getProgressDialogMsg(context
+		Spanned progressDialogMsg = getToastMsg(context
 				.getString(R.string.vb_time_retrieve_info));
 
 		// Making HttpRequest and showing a progress dialog if needed
@@ -679,7 +680,7 @@ public class RetrieveVirtualBoards {
 		// Create the appropriate progress dialog message (if searched by
 		// HomeScreen - show only the searched string, otherwise - the station
 		// caption)
-		Spanned progressDialogMsg = getProgressDialogMsg(context
+		Spanned progressDialogMsg = getToastMsg(context
 				.getString(R.string.vb_time_retrieve_info));
 
 		// Making HttpRequest and showing a progress dialog if needed
@@ -868,11 +869,10 @@ public class RetrieveVirtualBoards {
 				((VirtualBoardsFragment) callerInstance)
 						.setListAdapterViaSearch(new ArrayList<Station>(),
 								getErrorMsg());
-				// Important - no break here, because a progress dialog should
-				// be shown, too
+				// Important - no break here, because a toast should be shown
 			default:
 				Spanned progressDialogMsg = Html.fromHtml(getErrorMsg());
-				ActivityUtils.showNoInfoAlertDialog(context, progressDialogMsg);
+				ActivityUtils.showNoInfoAlertToast(context, progressDialogMsg);
 				break;
 			}
 
@@ -894,6 +894,14 @@ public class RetrieveVirtualBoards {
 								.values());
 				((VirtualBoardsFragment) callerInstance)
 						.setListAdapterViaSearch(stationsList, null);
+
+				// Show a toast with the selected station
+				Toast.makeText(
+						context,
+						String.format(vbTimeStation.getName() + " (%s)",
+								vbTimeStation.getNumber()), Toast.LENGTH_SHORT)
+						.show();
+
 				// Important - no break here, because if only one station is
 				// found - directly open the VirtualBoards
 			default:
@@ -941,13 +949,13 @@ public class RetrieveVirtualBoards {
 	}
 
 	/**
-	 * Get the progress dialog message according to the htmlRequestCode
+	 * Get the toast message according to the htmlRequestCode
 	 * 
 	 * @param msg
 	 *            the unformatted message from strings
 	 * @return the formatted message
 	 */
-	private Spanned getProgressDialogMsg(String msg) {
+	private Spanned getToastMsg(String msg) {
 		Spanned progressDialogMsg;
 
 		switch (htmlRequestCode) {

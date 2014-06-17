@@ -172,15 +172,27 @@ public class StationRouteMap extends Activity {
 			return true;
 		case R.id.action_sm_map_mode_normal:
 			stationMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			Toast.makeText(context,
+					Html.fromHtml(getString(R.string.cs_map_normal)),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.action_sm_map_mode_terrain:
 			stationMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+			Toast.makeText(context,
+					Html.fromHtml(getString(R.string.cs_map_terrain)),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.action_sm_map_mode_satellite:
 			stationMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+			Toast.makeText(context,
+					Html.fromHtml(getString(R.string.cs_map_satellite)),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.action_sm_map_mode_hybrid:
 			stationMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+			Toast.makeText(context,
+					Html.fromHtml(getString(R.string.cs_map_hybrid)),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -327,8 +339,8 @@ public class StationRouteMap extends Activity {
 		final HashMap<String, PublicTransportStation> markersAndStations = new HashMap<String, PublicTransportStation>();
 
 		// Create an object consisted of a set of all points of the route
-		PolylineOptions ptRouteOptions = new PolylineOptions().width(3).color(
-				Color.parseColor("#008000"));
+		PolylineOptions ptRouteOptions = new PolylineOptions().width(4).color(
+				Color.parseColor("#2B8FD9"));
 
 		// Process all stations of the public transport route
 		for (int i = 0; i < ptDirectionStations.size(); i++) {

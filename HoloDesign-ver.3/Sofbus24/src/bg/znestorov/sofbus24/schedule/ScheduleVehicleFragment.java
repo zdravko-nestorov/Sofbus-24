@@ -17,7 +17,6 @@ import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.publictransport.RetrievePublicTransportDirection;
@@ -102,8 +101,6 @@ public class ScheduleVehicleFragment extends ListFragment {
 		RetrievePublicTransportDirection retrievePublicTransportDirection = new RetrievePublicTransportDirection(
 				context, progressDialog, vehicle);
 		retrievePublicTransportDirection.execute();
-
-		Toast.makeText(getActivity(), rowCaption, Toast.LENGTH_SHORT).show();
 	}
 
 	/**

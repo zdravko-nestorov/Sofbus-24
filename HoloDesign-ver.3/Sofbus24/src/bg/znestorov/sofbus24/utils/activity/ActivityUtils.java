@@ -123,12 +123,21 @@ public class ActivityUtils {
 	 * @param context
 	 *            current Activity context
 	 */
-	public static void showNoCoordinatesAlertDialog(Activity context) {
-		ActivityUtils.showCustomAlertDialog(context,
-				android.R.drawable.ic_menu_report_image,
-				context.getString(R.string.app_dialog_title_error),
+	public static void showNoCoordinatesToast(Activity context) {
+		Toast.makeText(context,
 				context.getString(R.string.app_coordinates_error),
-				context.getString(R.string.app_button_ok), null, null, null);
+				Toast.LENGTH_LONG).show();
+
+		/*
+		 * Previously it shows an alert dialog, now replaced by a Toast message
+		 * - easiest to maintain or orietation changes
+		 * 
+		 * ActivityUtils.showCustomAlertDialog(context,
+		 * android.R.drawable.ic_menu_report_image,
+		 * context.getString(R.string.app_dialog_title_error),
+		 * context.getString(R.string.app_coordinates_error),
+		 * context.getString(R.string.app_button_ok), null, null, null);
+		 */
 	}
 
 	/**
@@ -137,13 +146,21 @@ public class ActivityUtils {
 	 * @param context
 	 *            current Activity context
 	 */
-	public static void showNoInternetAlertDialog(Activity context) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setIcon(android.R.drawable.ic_menu_info_details)
-				.setTitle(context.getString(R.string.app_dialog_title_error))
-				.setMessage(context.getString(R.string.app_internet_error))
-				.setNegativeButton(context.getString(R.string.app_button_ok),
-						null).show();
+	public static void showNoInternetToast(Activity context) {
+		Toast.makeText(context, context.getString(R.string.app_internet_error),
+				Toast.LENGTH_LONG).show();
+
+		/*
+		 * Previously it shows an alert dialog, now replaced by a Toast message
+		 * - easiest to maintain or orietation changes
+		 * 
+		 * AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		 * builder.setIcon(android.R.drawable.ic_menu_info_details)
+		 * .setTitle(context.getString(R.string.app_dialog_title_error))
+		 * .setMessage(context.getString(R.string.app_internet_error))
+		 * .setNegativeButton(context.getString(R.string.app_button_ok),
+		 * null).show();
+		 */
 	}
 
 	/**
@@ -154,13 +171,20 @@ public class ActivityUtils {
 	 * @param msg
 	 *            message to be shown on the alert dialog
 	 */
-	public static void showNoInfoAlertDialog(Activity context, Spanned msg) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setIcon(android.R.drawable.ic_menu_info_details)
-				.setTitle(context.getString(R.string.app_dialog_title_error))
-				.setMessage(msg)
-				.setNegativeButton(context.getString(R.string.app_button_ok),
-						null).show();
+	public static void showNoInfoAlertToast(Activity context, Spanned msg) {
+		Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+
+		/*
+		 * Previously it shows an alert dialog, now replaced by a Toast message
+		 * - easiest to maintain or orietation changes
+		 * 
+		 * AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		 * builder.setIcon(android.R.drawable.ic_menu_info_details)
+		 * .setTitle(context.getString(R.string.app_dialog_title_error))
+		 * .setMessage(msg)
+		 * .setNegativeButton(context.getString(R.string.app_button_ok),
+		 * null).show();
+		 */
 	}
 
 	/**
@@ -169,14 +193,22 @@ public class ActivityUtils {
 	 * @param context
 	 *            current Activity context
 	 */
-	public static void showNoInternetOrInfoAlertDialog(Activity context) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setIcon(android.R.drawable.ic_menu_info_details)
-				.setTitle(context.getString(R.string.app_dialog_title_error))
-				.setMessage(
-						context.getString(R.string.app_internet_or_info_error))
-				.setNegativeButton(context.getString(R.string.app_button_ok),
-						null).show();
+	public static void showNoInternetOrInfoToast(Activity context) {
+		Toast.makeText(context,
+				context.getString(R.string.app_internet_or_info_error),
+				Toast.LENGTH_LONG).show();
+
+		/*
+		 * Previously it shows an alert dialog, now replaced by a Toast message
+		 * - easiest to maintain or orietation changes
+		 * 
+		 * AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		 * builder.setIcon(android.R.drawable.ic_menu_info_details)
+		 * .setTitle(context.getString(R.string.app_dialog_title_error))
+		 * .setMessage(context.getString(R.string.app_internet_or_info_error))
+		 * .setNegativeButton(context.getString(R.string.app_button_ok),
+		 * null).show();
+		 */
 	}
 
 	/**
@@ -324,7 +356,7 @@ public class ActivityUtils {
 				Html.fromHtml(String.format(
 						context.getString(R.string.app_toast_add_favourites),
 						station.getName(), station.getNumber())),
-				Toast.LENGTH_SHORT).show();
+				Toast.LENGTH_LONG).show();
 	}
 
 	/**
@@ -360,7 +392,7 @@ public class ActivityUtils {
 				Html.fromHtml(String.format(
 						context.getString(R.string.app_toast_remove_favourites),
 						station.getName(), station.getNumber())),
-				Toast.LENGTH_SHORT).show();
+				Toast.LENGTH_LONG).show();
 	}
 
 	/**

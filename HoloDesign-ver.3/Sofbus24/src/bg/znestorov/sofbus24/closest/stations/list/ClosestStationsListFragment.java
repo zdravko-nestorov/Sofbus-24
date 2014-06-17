@@ -209,10 +209,6 @@ public class ClosestStationsListFragment extends ListFragment {
 			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
 					context, null, station, HtmlRequestCodes.SINGLE_RESULT);
 			retrieveVirtualBoards.getSumcInformation();
-			Toast.makeText(
-					context,
-					String.format(station.getName() + " (%s)",
-							station.getNumber()), Toast.LENGTH_SHORT).show();
 		} else {
 			ProgressDialog progressDialog = new ProgressDialog(context);
 			progressDialog.setMessage(Html.fromHtml(String.format(

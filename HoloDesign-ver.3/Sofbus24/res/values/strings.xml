@@ -111,6 +111,10 @@
     <string name="cs_map_clear_info">Картата беше върната в начално си положение.</string>
     <string name="cs_map_traffic_on_info">Слоят, показващ трафика върху картата Google Maps, беше активиран.</string>
     <string name="cs_map_traffic_off_info">Слоят, показващ трафика върху картата Google Maps, беше деактивиран.</string>
+    <string name="cs_map_normal" formatted="false"><![CDATA[Слоят <b><i>Normal</i></b> беше активиран.]]></string>
+    <string name="cs_map_terrain" formatted="false"><![CDATA[Слоят <b><i>Terrain</i></b> беше активиран.]]></string>
+    <string name="cs_map_satellite" formatted="false"><![CDATA[Слоят <b><i>Satellite</i></b> беше активиран.]]></string>
+    <string name="cs_map_hybrid" formatted="false"><![CDATA[Слоят <b><i>Hybrid</i></b> беше активиран.]]></string>
 
     <!-- Preferences -->
     <string name="pref_reset">Сигурни ли сте, че искате да нулирате всички настройки и да ги върнете в началното им положение.</string>

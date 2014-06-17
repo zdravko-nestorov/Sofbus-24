@@ -8,6 +8,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
@@ -57,15 +59,45 @@ public class History extends ListActivity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(getString(R.string.history_title));
 
-		// Get the list with the history of searches from the shared preferences
-		historyList = HistoryOfSearches.getInstance(context)
-				.getHistoryOfSearches();
+		// Get the layout fields in the view
+		final ProgressBar loadingHistory = (ProgressBar) findViewById(R.id.history_loading);
+		final View emptyList = findViewById(android.R.id.empty);
 
-		// Create the History ListAdapter
-		historyAdapter = new HistoryAdapter(context, historyList);
+		// Start an asynchrnic task to load the data from the preferences file
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
 
-		// Set the ListAdapter
-		setListAdapter(historyAdapter);
+				loadingHistory.setVisibility(View.VISIBLE);
+				emptyList.setVisibility(View.INVISIBLE);
+			}
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				// Get the list with the history of searches from the shared
+				// preferences
+				historyList.addAll(HistoryOfSearches.getInstance(context)
+						.getHistoryOfSearches());
+
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Void result) {
+				super.onPostExecute(result);
+
+				loadingHistory.setVisibility(View.INVISIBLE);
+				emptyList.setVisibility(View.VISIBLE);
+
+				// Create the History ListAdapter
+				historyAdapter = new HistoryAdapter(context, historyList);
+
+				// Set the ListAdapter
+				setListAdapter(historyAdapter);
+			}
+
+		}.execute();
 	}
 
 	@Override
@@ -173,8 +205,6 @@ public class History extends ListActivity {
 			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
 					context, null, station, HtmlRequestCodes.SINGLE_RESULT);
 			retrieveVirtualBoards.getSumcInformation();
-			Toast.makeText(context, history.getHistoryValue(),
-					Toast.LENGTH_SHORT).show();
 			break;
 		default:
 			// Set the metro station URL address

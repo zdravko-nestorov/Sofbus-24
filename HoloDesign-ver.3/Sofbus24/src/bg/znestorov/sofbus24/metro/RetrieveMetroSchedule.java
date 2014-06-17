@@ -100,7 +100,7 @@ public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStation> {
 			metroScheduleIntent.putExtra(Constants.BUNDLE_METRO_SCHEDULE, ms);
 			context.startActivity(metroScheduleIntent);
 		} else {
-			ActivityUtils.showNoInternetAlertDialog(context);
+			ActivityUtils.showNoInternetToast(context);
 		}
 	}
 

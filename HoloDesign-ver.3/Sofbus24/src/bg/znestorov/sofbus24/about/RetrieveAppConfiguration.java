@@ -100,7 +100,7 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 				updateDb(currentConfig, newConfig);
 			}
 		} else {
-			ActivityUtils.showNoInternetAlertDialog(context);
+			ActivityUtils.showNoInternetToast(context);
 		}
 	}
 

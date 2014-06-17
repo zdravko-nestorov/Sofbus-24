@@ -682,8 +682,6 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
 					context, null, station, HtmlRequestCodes.FAVOURITES);
 			retrieveVirtualBoards.getSumcInformation();
-			Toast.makeText(context, station.getName(), Toast.LENGTH_SHORT)
-					.show();
 		} else {
 			ProgressDialog progressDialog = new ProgressDialog(context);
 			progressDialog.setMessage(Html.fromHtml(String.format(

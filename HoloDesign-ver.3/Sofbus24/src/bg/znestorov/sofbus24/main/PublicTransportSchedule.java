@@ -105,7 +105,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 				ptMapIntent.putExtra(Constants.BUNDLE_STATION_MAP, ptStation);
 				startActivity(ptMapIntent);
 			} else {
-				ActivityUtils.showNoCoordinatesAlertDialog(context);
+				ActivityUtils.showNoCoordinatesToast(context);
 			}
 			return true;
 		default:
@@ -426,7 +426,9 @@ public class PublicTransportSchedule extends FragmentActivity {
 				// Just in case when there is no schedule hour matching the
 				// current hour
 			} else if (scheduleHour == currentHour + 1
-					|| scheduleHour == currentHour + 2) {
+					|| scheduleHour == currentHour + 2
+					|| scheduleHour == currentHour + 3
+					|| scheduleHour == currentHour + 4) {
 				isCurrentHourInRange = true;
 				currentScheduleHourIndex = i;
 

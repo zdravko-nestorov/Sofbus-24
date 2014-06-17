@@ -246,7 +246,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 			}
 
 			// Add a LocationUpdate listener in case of location change
-			locationManager.requestLocationUpdates(provider, 10000, 0, this);
+			locationManager.requestLocationUpdates(provider, 20000, 0, this);
 
 			// Visualize the favorites stations on the map
 			new LoadStationsFromDb(context, null, null).execute();
@@ -352,15 +352,27 @@ public class ClosestStationsMap extends FragmentActivity implements
 			return true;
 		case R.id.action_gm_map_mode_normal:
 			googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			Toast.makeText(context,
+					Html.fromHtml(getString(R.string.cs_map_normal)),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.action_gm_map_mode_terrain:
 			googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+			Toast.makeText(context,
+					Html.fromHtml(getString(R.string.cs_map_terrain)),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.action_gm_map_mode_satellite:
 			googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+			Toast.makeText(context,
+					Html.fromHtml(getString(R.string.cs_map_satellite)),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.action_gm_map_mode_hybrid:
 			googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+			Toast.makeText(context,
+					Html.fromHtml(getString(R.string.cs_map_hybrid)),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -760,10 +772,6 @@ public class ClosestStationsMap extends FragmentActivity implements
 			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
 					context, null, station, HtmlRequestCodes.SINGLE_RESULT);
 			retrieveVirtualBoards.getSumcInformation();
-			Toast.makeText(
-					context,
-					String.format(station.getName() + " (%s)",
-							station.getNumber()), Toast.LENGTH_SHORT).show();
 		} else {
 			ProgressDialog progressDialog = new ProgressDialog(context);
 			progressDialog.setMessage(Html.fromHtml(String.format(

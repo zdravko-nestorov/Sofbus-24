@@ -22,7 +22,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.FragmentLifecycle;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.Station;
@@ -121,9 +120,6 @@ public class VirtualBoardsFragment extends ListFragment implements
 		RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
 				context, this, station, HtmlRequestCodes.SINGLE_RESULT);
 		retrieveVirtualBoards.getSumcInformation();
-
-		Toast.makeText(getActivity(), station.getName(), Toast.LENGTH_SHORT)
-				.show();
 	}
 
 	/**
@@ -139,6 +135,9 @@ public class VirtualBoardsFragment extends ListFragment implements
 			String emptyListMsg) {
 		vbList.clear();
 		vbList.addAll(stationsList);
+
+		this.emptyListMsg = emptyListMsg;
+
 		setListAdapterViaSearch();
 	}
 
@@ -166,15 +165,19 @@ public class VirtualBoardsFragment extends ListFragment implements
 	 * </ul>
 	 */
 	private void setEmptyListText() {
-		if (emptyListMsg != null && !"".equals(emptyListMsg)) {
-			emptyList.setText(Html.fromHtml(emptyListMsg));
-		} else {
-			if (vbSearchText == null || "".equals(vbSearchText)) {
-				emptyList.setText(Html
-						.fromHtml(getString(R.string.vb_item_search_list)));
+		// Check if the fragment is currently added to its activity
+		if (isAdded()) {
+			if (emptyListMsg != null && !"".equals(emptyListMsg)) {
+				emptyList.setText(Html.fromHtml(emptyListMsg));
 			} else {
-				emptyList.setText(Html.fromHtml(String.format(
-						getString(R.string.vb_item_empty_list), vbSearchText)));
+				if (vbSearchText == null || "".equals(vbSearchText)) {
+					emptyList.setText(Html
+							.fromHtml(getString(R.string.vb_item_search_list)));
+				} else {
+					emptyList.setText(Html.fromHtml(String.format(
+							getString(R.string.vb_item_empty_list),
+							vbSearchText)));
+				}
 			}
 		}
 	}
@@ -243,6 +246,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 					break;
 				case RIGHT:
 					searchEditText.setText("");
+					emptyListMsg = null;
 					performSearch();
 
 					break;

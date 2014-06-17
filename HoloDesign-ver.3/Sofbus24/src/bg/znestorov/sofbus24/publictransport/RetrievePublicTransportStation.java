@@ -111,7 +111,7 @@ public class RetrievePublicTransportStation extends
 					Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE, ptStation);
 			context.startActivity(ptScheduleIntent);
 		} else {
-			ActivityUtils.showNoInternetOrInfoAlertDialog(context);
+			ActivityUtils.showNoInternetOrInfoToast(context);
 		}
 	}
 

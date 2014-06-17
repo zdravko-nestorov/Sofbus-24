@@ -121,7 +121,7 @@ public class RetrievePublicTransportDirection extends
 								}
 							}).show();
 		} else {
-			ActivityUtils.showNoInternetOrInfoAlertDialog(context);
+			ActivityUtils.showNoInternetOrInfoToast(context);
 		}
 	}
 

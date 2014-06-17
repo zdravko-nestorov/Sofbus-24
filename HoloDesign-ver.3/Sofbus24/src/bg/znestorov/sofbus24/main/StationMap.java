@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import bg.znestorov.sofbus24.entity.MetroStation;
@@ -15,6 +16,7 @@ import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.MapUtils;
+import bg.znestorov.sofbus24.utils.activity.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -114,15 +116,27 @@ public class StationMap extends Activity {
 			return true;
 		case R.id.action_sm_map_mode_normal:
 			stationMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			Toast.makeText(context,
+					Html.fromHtml(getString(R.string.cs_map_normal)),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.action_sm_map_mode_terrain:
 			stationMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+			Toast.makeText(context,
+					Html.fromHtml(getString(R.string.cs_map_terrain)),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.action_sm_map_mode_satellite:
 			stationMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+			Toast.makeText(context,
+					Html.fromHtml(getString(R.string.cs_map_satellite)),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.action_sm_map_mode_hybrid:
 			stationMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+			Toast.makeText(context,
+					Html.fromHtml(getString(R.string.cs_map_hybrid)),
+					Toast.LENGTH_SHORT).show();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

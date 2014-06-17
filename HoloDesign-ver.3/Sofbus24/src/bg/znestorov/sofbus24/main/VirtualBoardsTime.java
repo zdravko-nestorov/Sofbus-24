@@ -110,7 +110,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 						vbTimeStation);
 				startActivity(metroMapIntent);
 			} else {
-				ActivityUtils.showNoCoordinatesAlertDialog(context);
+				ActivityUtils.showNoCoordinatesToast(context);
 			}
 			return true;
 		default:
@@ -208,7 +208,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 							streetViewUri);
 					startActivity(streetViewIntent);
 				} else {
-					ActivityUtils.showNoCoordinatesAlertDialog(context);
+					ActivityUtils.showNoCoordinatesToast(context);
 				}
 			}
 		});
