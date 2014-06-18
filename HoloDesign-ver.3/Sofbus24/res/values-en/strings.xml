@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Global labels -->
-    <string name="app_name">Sofbus 24</string>
+    <string name="app_sofbus24">Sofbus 24</string>
     <string name="app_img_empty_content_description" />
     <string name="app_button_ok">OK</string>
     <string name="app_button_save">Save</string>
@@ -119,7 +119,7 @@
     <!-- Preferences -->
     <string name="pref_reset">Are you sure that you want to reset all settings and return them in their original position?</string>
     <string name="pref_title">Settings</string>
-    <string name="pref_restart_app" formatted="false"><![CDATA[You need to restart the application for the changes to take effect. Do you want to restart </b>Sofbus 24<b> now?]]></string>
+    <string name="pref_restart_app" formatted="false"><![CDATA[You need to restart the application for the changes to take effect. Do you want to restart <b>Sofbus 24</b> now?]]></string>
     <string name="pref_category_common">GENERAL</string>
     <string name="pref_category_common_language_title">Language</string>
     <string name="pref_category_common_language_summary">Select a language</string>
@@ -148,7 +148,7 @@
     <!-- About -->
     <string name="about_subtitle" formatted="false"><![CDATA[Version %s]]></string>
     <string name="about_information" formatted="false">
-<![CDATA[<b>%s версия %s<br>© 2012 by Zdravko Nestorov. All rights reserved</b><br><br>An Android application, giving an information about the public
+<![CDATA[<b>%s version %s<br>© 2012 by Zdravko Nestorov. All rights reserved</b><br><br>An Android application, giving an information about the public
 		transport in Sofia, as the time of arrival in real time, the schedule of the vehicles, the position of the stations, as well as locating the 
 		closest stations, depending on the current location.<br><br>
 		<i>The data is extracted from: <b><u><a href="http://m.sumc.bg">http://m.sumc.bg</a></u></b></i>]]>
@@ -180,66 +180,66 @@
     <string name="vb_item_empty_list" formatted="false"><![CDATA[No stations are found for <b>%s</b>. Please try with other search criteria.]]></string>
 
     <!-- Virtual Boards Time Fragment -->
-    <string name="vb_time_title">Виртуални табла</string>
-    <string name="vb_time_current_time" formatted="false">Информация към %s</string>
-    <string name="vb_time_bus" formatted="false">Автобус №%s</string>
-    <string name="vb_time_trolley" formatted="false">Тролей №%s</string>
-    <string name="vb_time_tram" formatted="false">Трамвай №%s</string>
-    <string name="vb_time_retrieve_info" formatted="false"><![CDATA[Извличане времената на пристигане за <b><i>%s</b></i>...]]></string>
-    <string name="vb_time_captcha_check" formatted="false"><![CDATA[Проверка на CAPTCHA изображението...]]></string>
-    <string name="vb_time_sumc_captcha">Тест за сигурност</string>
-    <string name="vb_time_sumc_captcha_msg">Моля въведете символите от изображението (на кирилица или латиница):</string>
-    <string name="vb_time_item_time_of_arrival" formatted="false"><![CDATA[<b><font color="#FF2727">Часове на пристигане: %s</font></b>]]></string>
-    <string name="vb_time_item_remaining_time" formatted="false"><![CDATA[<b><font color="#FF2727">Оставащо време: %s</font></b>]]></string>
+    <string name="vb_time_title">Virtual boards</string>
+    <string name="vb_time_current_time" formatted="false">Information at %s</string>
+    <string name="vb_time_bus" formatted="false">Bus №%s</string>
+    <string name="vb_time_trolley" formatted="false">Trolley №%s</string>
+    <string name="vb_time_tram" formatted="false">Tram №%s</string>
+    <string name="vb_time_retrieve_info" formatted="false"><![CDATA[Retrieving the times of arrival of <b><i>%s</b></i>...]]></string>
+    <string name="vb_time_captcha_check" formatted="false"><![CDATA[CAPTCHA image verification...]]></string>
+    <string name="vb_time_sumc_captcha">Security test</string>
+    <string name="vb_time_sumc_captcha_msg">Please enter the characters from the image (in Cyrillic or Latin):</string>
+    <string name="vb_time_item_time_of_arrival" formatted="false"><![CDATA[<b><font color="#FF2727">Times of arrival: %s</font></b>]]></string>
+    <string name="vb_time_item_remaining_time" formatted="false"><![CDATA[<b><font color="#FF2727">Remaining time: %s</font></b>]]></string>
 
     <!-- Schedule Fragment -->
-    <string name="sch_search_hint">Търсене по номер или посока</string>
-    <string name="sch_search_tab_bus">Автобуси</string>
-    <string name="sch_search_tab_trolley">Тролеи</string>
-    <string name="sch_search_tab_tram">Трамваи</string>
-    <string name="sch_item_bus" formatted="false">Автобус №%s</string>
-    <string name="sch_item_trolley" formatted="false">Тролей №%s</string>
-    <string name="sch_item_tram" formatted="false">Трамвай №%s</string>
-    <string name="sch_item_empty_list" formatted="false"><![CDATA[Няма намерени резултати за <b>%s</b> в секция <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
-    <string name="sch_item_direction_choice">Изберете направление</string>
+    <string name="sch_search_hint">Search by name or direction</string>
+    <string name="sch_search_tab_bus">Buses</string>
+    <string name="sch_search_tab_trolley">Trolleys</string>
+    <string name="sch_search_tab_tram">Trams</string>
+    <string name="sch_item_bus" formatted="false">Bus №%s</string>
+    <string name="sch_item_trolley" formatted="false">Trolley №%s</string>
+    <string name="sch_item_tram" formatted="false">Tram №%s</string>
+    <string name="sch_item_empty_list" formatted="false"><![CDATA[No results are found for <b>%s</b> in section <b>%s</b>. Please try again with another search criteria.]]></string>
+    <string name="sch_item_direction_choice">Choose a direction</string>
 
     <!-- Public Transport -->
-    <string name="pt_title">Разписание</string>
-    <string name="pt_search_hint">Търсене по име или номер</string>
-    <string name="pt_bus" formatted="false">Автобус №%s</string>
-    <string name="pt_trolley" formatted="false">Тролей №%s</string>
-    <string name="pt_tram" formatted="false">Трамвай №%s</string>
-    <string name="pt_item_loading_schedule" formatted="false"><![CDATA[Извличане на разписанието за <b><i>%s</b></i>...]]></string>
-    <string name="pt_item_station_number_text" formatted="false">Спирка номер: %s</string>
-    <string name="pt_item_station_number_text_sign" formatted="false">Спирка №%s</string>
-    <string name="pt_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
-    <string name="pt_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
+    <string name="pt_title">Schedule</string>
+    <string name="pt_search_hint">Search by name or number</string>
+    <string name="pt_bus" formatted="false">Bus №%s</string>
+    <string name="pt_trolley" formatted="false">Trolley №%s</string>
+    <string name="pt_tram" formatted="false">Tram №%s</string>
+    <string name="pt_item_loading_schedule" formatted="false"><![CDATA[Retrieving the schedule for <b><i>%s</b></i>...]]></string>
+    <string name="pt_item_station_number_text" formatted="false">Station number: %s</string>
+    <string name="pt_item_station_number_text_sign" formatted="false">Station №%s</string>
+    <string name="pt_empty_list" formatted="false"><![CDATA[No stations are found for <b>%s</b> in direction <b>%s</b>. Please try again with another search criteria.]]></string>
+    <string name="pt_menu_map_route_loading" formatted="false"><![CDATA[Drawing the route...]]></string>
 
     <!-- Metro Fragment -->
-    <string name="metro_search_hint">Търсене по име или номер</string>
-    <string name="metro_search_tab_direction1">Маршрут 1</string>
-    <string name="metro_search_tab_direction2">Маршрут 2</string>
-    <string name="metro_item_station_number_text" formatted="false">Спирка номер: %s</string>
-    <string name="metro_item_station_number_text_sign" formatted="false">Станция №%s</string>
-    <string name="metro_item_empty_list" formatted="false"><![CDATA[Няма намерени метростанции за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
-    <string name="metro_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
-    <string name="metro_loading_schedule" formatted="false"><![CDATA[Извличане на разписанието за спирка <b><i>%s (%s)</b></i>...]]></string>
-    <string name="metro_schedule_refresh" formatted="false"><![CDATA[Обновяване на оставащото време...]]></string>
+    <string name="metro_search_hint">Search by name or number</string>
+    <string name="metro_search_tab_direction1">Route 1</string>
+    <string name="metro_search_tab_direction2">Route 2</string>
+    <string name="metro_item_station_number_text" formatted="false">Station number: %s</string>
+    <string name="metro_item_station_number_text_sign" formatted="false">Station №%s</string>
+    <string name="metro_item_empty_list" formatted="false"><![CDATA[No stations are found for <b>%s</b> in direction <b>%s</b>. Please try again with another search criteria.]]></string>
+    <string name="metro_menu_map_route_loading" formatted="false"><![CDATA[Drawing the route...]]></string>
+    <string name="metro_loading_schedule" formatted="false"><![CDATA[Retrieving the schedule for station <b><i>%s (%s)</b></i>...]]></string>
+    <string name="metro_schedule_refresh" formatted="false"><![CDATA[Updating the remaining time...]]></string>
 
     <!-- Station Map Fragment -->
-    <string name="station_map_buses"><![CDATA[Автобуси: ]]></string>
-    <string name="station_map_trolleys"><![CDATA[Тролеи: ]]></string>
-    <string name="station_map_trams"><![CDATA[Трамваи: ]]></string>
+    <string name="station_map_buses"><![CDATA[Buses: ]]></string>
+    <string name="station_map_trolleys"><![CDATA[Trolleys: ]]></string>
+    <string name="station_map_trams"><![CDATA[Trams: ]]></string>
 
     <!-- History -->
-    <string name="history_title">История</string>
-    <string name="history_menu_remove_all_confirmation" formatted="false"><![CDATA[Сигурни ли сте, че искате да премахнете всички търсения от секцията <b>История</b>?]]></string>
-    <string name="history_menu_remove_all_toast" formatted="false"><![CDATA[Всички търсения бяха премахнати от секцията <b>История</b>.]]></string>
-    <string name="history_menu_remove_all_empty_toast" formatted="false"><![CDATA[Няма регистрирани търсения до момента в секцията <b>История</b>.]]></string>
-    <string name="history_list_empty_text">Няма регистрирани търсения до момента или те са били изтрити от секцията История. Появата на нови става автоматично при търсенето на информация.</string>
-    <string name="history_type_btt">Градски Транспорт</string>
-    <string name="history_type_metro">Метро</string>
-    <string name="history_item_station_number" formatted="false">Спирка номер: %s</string>
-    <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Търсене от %s (%s)</font></i>]]></string>
+    <string name="history_title">History</string>
+    <string name="history_menu_remove_all_confirmation" formatted="false"><![CDATA[Are you sure that you want to remove all searches from the <b>History</b> section?]]></string>
+    <string name="history_menu_remove_all_toast" formatted="false"><![CDATA[All searches were removed from the <b>History</b> section.]]></string>
+    <string name="history_menu_remove_all_empty_toast" formatted="false"><![CDATA[There are no searches registered in the <b>History</b> section.]]></string>
+    <string name="history_list_empty_text">There are no searches registered by now or they were already deleted from the <b>History</b> section. The new ones are added automatically when looking for some information.</string>
+    <string name="history_type_btt">Public Transport</string>
+    <string name="history_type_metro">Metro</string>
+    <string name="history_item_station_number" formatted="false">Station number: %s</string>
+    <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Search from %s (%s)</font></i>]]></string>
 
 </resources>

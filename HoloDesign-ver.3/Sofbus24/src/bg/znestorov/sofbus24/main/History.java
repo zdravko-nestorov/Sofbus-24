@@ -4,50 +4,38 @@ import java.util.ArrayList;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-import bg.znestorov.sofbus24.databases.StationsDataSource;
-import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.history.HistoryAdapter;
 import bg.znestorov.sofbus24.history.HistoryEntity;
+import bg.znestorov.sofbus24.history.HistoryFragment;
 import bg.znestorov.sofbus24.history.HistoryOfSearches;
-import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
-import bg.znestorov.sofbus24.utils.Constants;
-import bg.znestorov.sofbus24.utils.Utils;
-import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
-import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 
 /**
- * History ListActivity containing information about the searches
+ * History activity containing information about the searches
  * 
  * @author Zdravko Nestorov
  * @version 1.0
  * 
  */
-public class History extends ListActivity {
+public class History extends FragmentActivity {
 
 	private Activity context;
 	private ActionBar actionBar;
 
-	private ArrayList<HistoryEntity> historyList = new ArrayList<HistoryEntity>();
-	private ArrayAdapter<HistoryEntity> historyAdapter;
+	private Fragment historyFragment;
+	private static final String FRAGMENT_TAG_NAME = "HISTORY FRAGMENT";
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_history);
 
 		// Get the current context
@@ -61,53 +49,35 @@ public class History extends ListActivity {
 
 		// Get the layout fields in the view
 		final ProgressBar loadingHistory = (ProgressBar) findViewById(R.id.history_loading);
-		final View emptyList = findViewById(android.R.id.empty);
+		final View historyFragment = findViewById(R.id.history_fragment);
 
 		// Start an asynchrnic task to load the data from the preferences file
-		new AsyncTask<Void, Void, Void>() {
+		new AsyncTask<Void, Void, ArrayList<HistoryEntity>>() {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
 
 				loadingHistory.setVisibility(View.VISIBLE);
-				emptyList.setVisibility(View.INVISIBLE);
+				historyFragment.setVisibility(View.INVISIBLE);
 			}
 
 			@Override
-			protected Void doInBackground(Void... params) {
-				// Get the list with the history of searches from the shared
-				// preferences
-				historyList.addAll(HistoryOfSearches.getInstance(context)
-						.getHistoryOfSearches());
-
-				return null;
+			protected ArrayList<HistoryEntity> doInBackground(Void... params) {
+				return HistoryOfSearches.getInstance(context)
+						.getHistoryOfSearches(context);
 			}
 
 			@Override
-			protected void onPostExecute(Void result) {
-				super.onPostExecute(result);
+			protected void onPostExecute(ArrayList<HistoryEntity> historyList) {
+				super.onPostExecute(historyList);
 
 				loadingHistory.setVisibility(View.INVISIBLE);
-				emptyList.setVisibility(View.VISIBLE);
+				historyFragment.setVisibility(View.VISIBLE);
 
-				historyAdapter = new HistoryAdapter(context, historyList);
-				setListAdapter(historyAdapter);
+				startFragment(savedInstanceState, historyList);
 			}
 
 		}.execute();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		// Refresh the history list view
-		if (historyAdapter != null) {
-			historyList.clear();
-			historyList.addAll(HistoryOfSearches.getInstance(context)
-					.getHistoryOfSearches());
-			historyAdapter.notifyDataSetChanged();
-		}
 	}
 
 	@Override
@@ -119,104 +89,37 @@ public class History extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		int searchesCount = historyList.size();
-
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			return true;
-		case R.id.action_history_top:
-			if (searchesCount > 0) {
-				getListView().setSelectionFromTop(0, 0);
-			}
-
-			return true;
-		case R.id.action_history_delete_all:
-			// Check if there are any registred searches
-			if (searchesCount > 0) {
-				OnClickListener positiveOnClickListener = new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						HistoryOfSearches.getInstance(context)
-								.clearHistoryOfSearches();
-						historyList.clear();
-						historyAdapter.notifyDataSetChanged();
-
-						Toast.makeText(
-								context,
-								Html.fromHtml(getString(R.string.history_menu_remove_all_toast)),
-								Toast.LENGTH_SHORT).show();
-					}
-				};
-
-				ActivityUtils
-						.showCustomAlertDialog(
-								context,
-								android.R.drawable.ic_menu_delete,
-								getString(R.string.app_dialog_title_important),
-								Html.fromHtml(getString(R.string.history_menu_remove_all_confirmation)),
-								getString(R.string.app_button_yes),
-								positiveOnClickListener,
-								getString(R.string.app_button_no), null);
-			} else {
-				Toast.makeText(
-						context,
-						Html.fromHtml(getString(R.string.history_menu_remove_all_empty_toast)),
-						Toast.LENGTH_SHORT).show();
-			}
-
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		HistoryEntity history = (HistoryEntity) getListAdapter().getItem(
-				position);
-
-		// Get the station number and station name of the search
-		String stationNumber = Utils.getValueBetween(history.getHistoryValue(),
-				"(", ")");
-		String stationName = Utils.getValueBefore(history.getHistoryValue(),
-				"(");
-
-		// Get the corresponding station to the station number via the stations
-		// database
-		StationsDataSource stationDatasource = new StationsDataSource(context);
-		stationDatasource.open();
-		Station station = stationDatasource.getStation(stationNumber);
-		stationDatasource.close();
-
-		// Check if the station is existing in the database
-		if (station == null) {
-			station = new Station();
-			station.setNumber(stationNumber);
-			station.setName(stationName);
+	/**
+	 * Create and start/restart a new HistoryFragment with all searches from the
+	 * SharedPreferences file
+	 * 
+	 * @param savedInstanceState
+	 *            the state of the current activity
+	 * @param historyList
+	 *            the list with the history searches from the SharedPreferences
+	 *            file
+	 */
+	private void startFragment(Bundle savedInstanceState,
+			ArrayList<HistoryEntity> historyList) {
+		if (savedInstanceState == null) {
+			historyFragment = HistoryFragment.newInstance(historyList);
+		} else {
+			historyFragment = getSupportFragmentManager().findFragmentByTag(
+					FRAGMENT_TAG_NAME);
 		}
 
-		// Check the type of station and retrieve the information accordingly
-		switch (history.getHistoryType()) {
-		case BTT:
-			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-					context, null, station, HtmlRequestCodes.SINGLE_RESULT);
-			retrieveVirtualBoards.getSumcInformation();
-			break;
-		default:
-			// Set the metro station URL address
-			station.setCustomField(String.format(Constants.METRO_STATION_URL,
-					station.getNumber()));
-
-			// Getting the Metro schedule from the station URL address
-			ProgressDialog progressDialog = new ProgressDialog(context);
-			progressDialog.setMessage(Html.fromHtml(String.format(
-					getString(R.string.metro_loading_schedule),
-					station.getName(), station.getNumber())));
-			RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
-					context, progressDialog, station);
-			retrieveMetroSchedule.execute();
-			break;
-		}
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.history_fragment, historyFragment,
+						FRAGMENT_TAG_NAME).commit();
 	}
 }

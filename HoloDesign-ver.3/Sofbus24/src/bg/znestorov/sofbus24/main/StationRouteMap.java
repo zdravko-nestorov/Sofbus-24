@@ -25,6 +25,7 @@ import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.publictransport.RetrievePublicTransportStation;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.MapUtils;
 import bg.znestorov.sofbus24.utils.Utils;
 
@@ -88,6 +89,7 @@ public class StationRouteMap extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_map_station_route);
 
 		// Get the current context

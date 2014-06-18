@@ -12,6 +12,8 @@ import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.Utils;
 
 /**
@@ -25,18 +27,22 @@ import bg.znestorov.sofbus24.utils.Utils;
 public class ProcessPublicTransportDirection {
 
 	private Activity context;
+	private StationsDataSource stationDatasource;
+
 	private Vehicle vehicle;
 	private String htmlResult;
 
-	private StationsDataSource stationDatasource;
+	private String language;
 
 	public ProcessPublicTransportDirection(Activity context, Vehicle vehicle,
 			String htmlResult) {
 		this.context = context;
+		this.stationDatasource = new StationsDataSource(context);
+
 		this.vehicle = vehicle;
 		this.htmlResult = htmlResult;
 
-		this.stationDatasource = new StationsDataSource(context);
+		this.language = LanguageChange.getUserLocale(context);
 	}
 
 	public Activity getContext() {
@@ -92,11 +98,13 @@ public class ProcessPublicTransportDirection {
 		Pattern pattern = Pattern.compile(String.format(
 				Constants.SCHECULE_REGEX_DIRECTION_HIDDEN_VARIABLE, name));
 
-		for (int i = 0; i < htmlDirectionsParts.length; i++) {
-			Matcher matcher = pattern.matcher(htmlDirectionsParts[i]);
+		if (htmlDirectionsParts != null) {
+			for (int i = 0; i < htmlDirectionsParts.length; i++) {
+				Matcher matcher = pattern.matcher(htmlDirectionsParts[i]);
 
-			if (matcher.find()) {
-				hiddenVariableValues.add(matcher.group(1));
+				if (matcher.find()) {
+					hiddenVariableValues.add(matcher.group(1));
+				}
 			}
 		}
 
@@ -121,6 +129,11 @@ public class ProcessPublicTransportDirection {
 			if (matcher.find()) {
 				String directionName = Utils.formatDirectionName(matcher
 						.group(1));
+				if (!"bg".equals(language)) {
+					directionName = TranslatorCyrillicToLatin.translate(
+							context, directionName);
+				}
+
 				directionsNames.add(directionName);
 			}
 		}
@@ -154,6 +167,10 @@ public class ProcessPublicTransportDirection {
 					String stationId = matcher.group(1);
 					String stationName = matcher.group(2).trim();
 					stationName = Utils.getValueBeforeLast(stationName, "(");
+					if (!"bg".equals(language)) {
+						stationName = TranslatorCyrillicToLatin.translate(
+								context, stationName);
+					}
 
 					// Get the station number
 					String stationNumber = matcher.group(2).trim();

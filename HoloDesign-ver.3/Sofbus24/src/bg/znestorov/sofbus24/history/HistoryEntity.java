@@ -1,5 +1,7 @@
 package bg.znestorov.sofbus24.history;
 
+import java.io.Serializable;
+
 import bg.znestorov.sofbus24.entity.VehicleType;
 
 /**
@@ -9,7 +11,9 @@ import bg.znestorov.sofbus24.entity.VehicleType;
  * @version 1.0
  * 
  */
-public class HistoryEntity {
+public class HistoryEntity implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private String historyValue;
 	private String historyDate;

@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.preferences.PreferencesFragment;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 public class Preferences extends Activity {
@@ -24,11 +25,10 @@ public class Preferences extends Activity {
 
 	private PreferencesFragment preferencesFragment = new PreferencesFragment();
 
-	public static boolean hasToRestart = false;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
 
 		// Get the application and current activity context
 		context = Preferences.this;
@@ -56,8 +56,8 @@ public class Preferences extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			if (hasToRestart) {
-				restartApplication(true);
+			if (globalContext.isHasToRestart()) {
+				restartApplication();
 			} else {
 				finish();
 			}
@@ -77,8 +77,8 @@ public class Preferences extends Activity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && hasToRestart) {
-			restartApplication(true);
+		if (keyCode == KeyEvent.KEYCODE_BACK && globalContext.isHasToRestart()) {
+			restartApplication();
 
 			return true;
 		}
@@ -88,16 +88,11 @@ public class Preferences extends Activity {
 
 	/**
 	 * Restart the application after showing an AlertDialog
-	 * 
-	 * @param hasToFinish
-	 *            checks if the Preferences screen should be closed if NO button
-	 *            is pressed
 	 */
-	private void restartApplication(final boolean hasToFinish) {
+	private void restartApplication() {
 		OnClickListener positiveOnClickListener = new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				globalContext.setHasToRestart(true);
 				finish();
 			}
 		};
@@ -105,9 +100,8 @@ public class Preferences extends Activity {
 		OnClickListener negativeOnClickListener = new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				if (hasToFinish) {
-					finish();
-				}
+				globalContext.setHasToRestart(false);
+				finish();
 			}
 		};
 
@@ -135,7 +129,7 @@ public class Preferences extends Activity {
 				editor.commit();
 
 				// Check if the user wants to restart the application
-				restartApplication(false);
+				restartApplication();
 			}
 		};
 

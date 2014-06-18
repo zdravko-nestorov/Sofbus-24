@@ -20,6 +20,7 @@ import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsTimeFragment;
@@ -54,6 +55,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_virtual_boards_time);
 
 		// Get the current context and create a SavedInstanceState objects
@@ -241,6 +243,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 		vbTimeStation.getVehiclesList().clear();
 		if (newVBTimeStation != null) {
 			vbTimeStation.setSystemTime(newVBTimeStation.getSystemTime());
+			vbTimeStation.setSkgtTime(newVBTimeStation.getSkgtTime());
 			vbTimeStation.getVehiclesList().addAll(
 					newVBTimeStation.getVehiclesList());
 		}

@@ -17,6 +17,8 @@ import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.Utils;
 
 /**
@@ -32,11 +34,13 @@ public class ProcessVirtualBoards {
 	private Activity context;
 	private StationsDataSource stationsDatasource;
 	private String htmlResult;
+	private String language;
 
 	public ProcessVirtualBoards(Activity context, String htmlResult) {
 		this.context = context;
 		this.stationsDatasource = new StationsDataSource(context);
 		this.htmlResult = htmlResult;
+		this.language = LanguageChange.getUserLocale(context);
 	}
 
 	public Activity getContext() {
@@ -94,6 +98,10 @@ public class ProcessVirtualBoards {
 			// Get the station name
 			String stationName = matcher.group(1);
 			stationName = stationName.trim();
+			if (!"bg".equals(language)) {
+				stationName = TranslatorCyrillicToLatin.translate(context,
+						stationName);
+			}
 
 			// Get the station number
 			String stationNumber = matcher.group(2);
@@ -215,6 +223,10 @@ public class ProcessVirtualBoards {
 			// Get and format the vehicle direction
 			String vehicleDirection = matcher.group(3);
 			vehicleDirection = Utils.formatDirectionName(vehicleDirection);
+			if (!"bg".equals(language)) {
+				vehicleDirection = TranslatorCyrillicToLatin.translate(context,
+						vehicleDirection);
+			}
 
 			// Create the vehicle and add it to the list
 			Vehicle vehicle = new Vehicle(vehicleNumber, vehicleType,
@@ -315,6 +327,10 @@ public class ProcessVirtualBoards {
 			// Get the station name
 			String stationName = matcher.group(3);
 			stationName = stationName.trim();
+			if (!"bg".equals(language)) {
+				stationName = TranslatorCyrillicToLatin.translate(context,
+						stationName);
+			}
 
 			// Get lat and lon of the station
 			stationsDatasource.open();

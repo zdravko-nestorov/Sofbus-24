@@ -13,6 +13,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 
 /**
  * Singleton used to make modifications to the history of searches, which are
@@ -83,21 +86,24 @@ public class HistoryOfSearches {
 	 * modifications to the data in the preferences and put an String value
 	 * inside
 	 * 
+	 * @param context
+	 *            the current Activity context
 	 * @param preferenceKey
-	 *            The name of the preference to modify
+	 *            the name of the preference to modify
 	 * @param preferenceNumber
 	 *            the number of the item to add
 	 * @param preferenceValue
 	 *            The new value for the preference
 	 */
-	public void putFiledInPreferences(String preferenceKey,
+	public void putFiledInPreferences(Activity context, String preferenceKey,
 			int preferenceNumber, String preferenceValue) {
 		if (preferenceNumber > Constants.TOTAL_HISTORY_COUNT) {
 			preferenceNumber = preferenceNumber % Constants.TOTAL_HISTORY_COUNT;
 		}
 
 		Editor editor = historyPreferences.edit();
-		editor.putString(preferenceKey + preferenceNumber, preferenceValue);
+		editor.putString(preferenceKey + preferenceNumber,
+				TranslatorLatinToCyrillic.translate(context, preferenceValue));
 		editor.commit();
 
 		// Check if the value is not already set (it will be set if a field for
@@ -123,21 +129,35 @@ public class HistoryOfSearches {
 	/**
 	 * Get the whole history of searches and sort it by date
 	 * 
+	 * @param context
+	 *            the current Activity context
 	 * @return an ArrayList with a history of searches
 	 */
-	public ArrayList<HistoryEntity> getHistoryOfSearches() {
+	public ArrayList<HistoryEntity> getHistoryOfSearches(Activity context) {
+		String language = LanguageChange.getUserLocale(context);
 		ArrayList<HistoryEntity> historyList = new ArrayList<HistoryEntity>();
 
 		int i = 1;
 		while (historyPreferences
 				.contains(Constants.HISTORY_PREFERENCES_SEARCH_VALUE + i)) {
+			// Get the history search name
 			String historyName = historyPreferences.getString(
 					Constants.HISTORY_PREFERENCES_SEARCH_VALUE + i, null);
+			if (!"bg".equals(language)) {
+				historyName = TranslatorCyrillicToLatin.translate(context,
+						historyName);
+			}
+
+			// Get the history search date
 			String historyDate = historyPreferences.getString(
 					Constants.HISTORY_PREFERENCES_SEARCH_DATE + i, null);
-			VehicleType historyType = VehicleType.valueOf(historyPreferences
-					.getString(Constants.HISTORY_PREFERENCES_SEARCH_TYPE + i,
-							null));
+
+			// Get the history search type
+			String historyTypeString = historyPreferences.getString(
+					Constants.HISTORY_PREFERENCES_SEARCH_TYPE + i, null);
+			historyTypeString = TranslatorCyrillicToLatin.translate(context,
+					historyTypeString);
+			VehicleType historyType = VehicleType.valueOf(historyTypeString);
 
 			historyList.add(new HistoryEntity(historyName, historyDate,
 					historyType));

@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import bg.znestorov.sofbus24.closest.stations.list.ClosestStationsListFragment;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -52,6 +53,7 @@ public class ClosestStationsList extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_closest_stations_list);
 
 		// Get the current context and create a SavedInstanceState objects

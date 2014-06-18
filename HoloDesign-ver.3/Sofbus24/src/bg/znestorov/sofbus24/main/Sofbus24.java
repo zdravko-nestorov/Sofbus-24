@@ -36,6 +36,7 @@ import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
 
@@ -52,11 +53,16 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_sofbus24);
 
 		// Get the application and curren context;
 		globalContext = (GlobalEntity) getApplicationContext();
 		context = Sofbus24.this;
+
+		// Set up the ActionBar
+		actionBar = getActionBar();
+		actionBar.setTitle(getString(R.string.app_sofbus24));
 
 		// Get the fields in the layout
 		ViewPager sofbusViewPager = (ViewPager) findViewById(R.id.sofbus24_pager);
@@ -185,8 +191,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		// Initialize the UIL image loader
 		ActivityUtils.initImageLoader(context);
 
-		// Set up the ActionBar
-		actionBar = getActionBar();
+		// Set the tabs to the ActionBar
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		// Create the fragments list

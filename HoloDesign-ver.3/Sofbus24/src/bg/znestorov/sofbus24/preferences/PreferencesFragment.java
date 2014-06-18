@@ -6,10 +6,8 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
-import bg.znestorov.sofbus24.main.Preferences;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
-import bg.znestorov.sofbus24.utils.LanguageChange;
 
 public class PreferencesFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
@@ -63,8 +61,7 @@ public class PreferencesFragment extends PreferenceFragment implements
 		}
 
 		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
-			LanguageChange.selectLocale(context);
-			Preferences.hasToRestart = true;
+			globalContext.setHasToRestart(true);
 		}
 	}
 }

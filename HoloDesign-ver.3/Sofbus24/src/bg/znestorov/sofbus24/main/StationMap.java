@@ -16,6 +16,7 @@ import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.MapUtils;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,6 +42,7 @@ public class StationMap extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_map_station);
 
 		// Get the current activity context

@@ -38,6 +38,8 @@ public class Constants {
 	public static final String BUNDLE_STATION_ROUTE_MAP = "STATION ROUTE MAP";
 	// VirtualBoardsTime --> GoogleStreetView
 	public static final String BUNDLE_GOOGLE_STREET_VIEW = "GOOGLE_STREET_VIEW";
+	// History --> HistoryFragment
+	public static final String BUNDLE_HISTORY_LIST = "HISTORY LIST";
 
 	/**
 	 * Preferences

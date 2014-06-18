@@ -24,6 +24,7 @@ import bg.znestorov.sofbus24.entity.ScheduleEntity;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.publictransport.PublicTransportScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
@@ -56,6 +57,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_public_transport_schedule);
 
 		// Get the current context and create a FavouritesDatasource and

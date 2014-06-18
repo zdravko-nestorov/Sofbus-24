@@ -396,14 +396,14 @@ public class Utils {
 		}
 
 		int nextSearchNumber = history.getNextSearchNumber();
-		history.putFiledInPreferences(
+		history.putFiledInPreferences(context,
 				Constants.HISTORY_PREFERENCES_SEARCH_VALUE, nextSearchNumber,
 				historyValue);
-		history.putFiledInPreferences(
+		history.putFiledInPreferences(context,
 				Constants.HISTORY_PREFERENCES_SEARCH_DATE, nextSearchNumber,
 				DateFormat.format("dd.MM.yyyy, kk:mm", new java.util.Date())
 						.toString());
-		history.putFiledInPreferences(
+		history.putFiledInPreferences(context,
 				Constants.HISTORY_PREFERENCES_SEARCH_TYPE, nextSearchNumber,
 				historyType.name());
 	}

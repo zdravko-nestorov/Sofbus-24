@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.about.RetrieveAppConfiguration;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 
 public class About extends Activity {
 
@@ -19,6 +20,7 @@ public class About extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_about);
 
 		// Get the current context

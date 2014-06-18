@@ -3,6 +3,7 @@
 
     <!-- Global labels -->
     <string name="app_name">Софбус 24</string>
+    <string name="app_sofbus24">Софбус 24</string>
     <string name="app_img_empty_content_description" />
     <string name="app_button_ok">OK</string>
     <string name="app_button_save">Запази</string>
@@ -125,7 +126,7 @@
     <string name="pref_category_common_language_summary">Избор на език</string>
     <string name="pref_category_visual">ВИЗУАЛНИ</string>
     <string name="pref_category_visual_fav_title">Фаворити</string>
-    <string name="pref_category_visual_fav_summary">Визуализиране на фаворитите с показана картина от Google Street View (начален екран)</string>
+    <string name="pref_category_visual_fav_summary">Визуализиране на фаворитите чрез Google Street View (начален екран)</string>
     <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
     <string name="pref_category_stations_timeType_title">Извлечена информация</string>
     <string name="pref_category_stations_timeType_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация</string>
@@ -143,7 +144,7 @@
     <string name="edit_tabs_search">Виртуални табла</string>
     <string name="edit_tabs_schedule">Разписание</string>
     <string name="edit_tabs_metro">Метро</string>
-    <string name="edit_tabs_toast">Началният екран беше променен.</string>
+    <string name="edit_tabs_toast">Началният екран беше променен</string>
 
     <!-- About -->
     <string name="about_subtitle" formatted="false"><![CDATA[Версия %s]]></string>

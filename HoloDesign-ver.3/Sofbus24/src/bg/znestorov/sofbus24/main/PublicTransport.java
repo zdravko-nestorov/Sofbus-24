@@ -22,6 +22,7 @@ import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.publictransport.PublicTransportFragment;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 
 public class PublicTransport extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -39,6 +40,7 @@ public class PublicTransport extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_public_transport);
 
 		// Get the current activity context

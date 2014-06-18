@@ -125,7 +125,8 @@ public class DirectionsEntity implements Serializable {
 	 * @return if the directions' names and stations are set
 	 */
 	public boolean isDirectionSet() {
-		return directionsNames.size() > 0 && directionsList.size() > 0
+		return directionsNames != null && directionsList != null
+				&& directionsNames.size() > 0 && directionsList.size() > 0
 				&& directionsNames.size() == directionsList.size();
 	}
 

@@ -14,6 +14,7 @@ import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.edit.tabs.EditTabsFragment;
 import bg.znestorov.sofbus24.entity.Config;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 
 public class EditTabs extends FragmentActivity {
 
@@ -33,6 +34,7 @@ public class EditTabs extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_sofbus24_edit_tabs);
 
 		// Get the application and current activity context and create a

@@ -41,6 +41,8 @@ import bg.znestorov.sofbus24.entity.VehicleType;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
@@ -69,6 +71,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	private FavouritesDataSource favouritesDatasource;
 
 	private Filter stationsFilter;
+	private String language;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
@@ -92,6 +95,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		super(context, R.layout.activity_favourites_list_item, stations);
 		this.context = context;
 		this.globalContext = (GlobalEntity) context.getApplicationContext();
+		this.language = LanguageChange.getUserLocale(context);
 
 		this.originalStations = stations;
 		this.filteredStations = stations;
@@ -164,8 +168,13 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 					String filterString = constraint.toString().trim()
 							.toUpperCase();
-					filterString = TranslatorLatinToCyrillic.translate(context,
-							filterString);
+					if ("bg".equals(language)) {
+						filterString = TranslatorLatinToCyrillic.translate(
+								context, filterString);
+					} else {
+						filterString = TranslatorCyrillicToLatin.translate(
+								context, filterString);
+					}
 
 					String filterebaleName;
 					String filterebaleNumber;

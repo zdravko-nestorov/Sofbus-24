@@ -37,6 +37,7 @@ import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -141,6 +142,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_closest_stations_map);
 
 		// Get the current activity context and get an instance of the

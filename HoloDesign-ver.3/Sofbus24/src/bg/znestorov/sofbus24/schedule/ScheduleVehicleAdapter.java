@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 
 /**
@@ -35,6 +37,7 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 	private List<Vehicle> filteredVehicles;
 
 	private Filter stationsFilter;
+	private String language;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
@@ -48,6 +51,7 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 		super(context, R.layout.activity_schedule_vehicle_list_item, vehicles);
 
 		this.context = context;
+		this.language = LanguageChange.getUserLocale(context);
 
 		this.emptyList = emptyList;
 		this.vehicleName = vehicleName;
@@ -147,8 +151,13 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 
 					String filterString = constraint.toString().trim()
 							.toUpperCase();
-					filterString = TranslatorLatinToCyrillic.translate(context,
-							filterString);
+					if ("bg".equals(language)) {
+						filterString = TranslatorLatinToCyrillic.translate(
+								context, filterString);
+					} else {
+						filterString = TranslatorCyrillicToLatin.translate(
+								context, filterString);
+					}
 
 					String filterebleNumber;
 					String filterableDirection;
