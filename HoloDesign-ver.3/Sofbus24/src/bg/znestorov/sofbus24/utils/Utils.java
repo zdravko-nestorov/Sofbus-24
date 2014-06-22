@@ -353,8 +353,24 @@ public class Utils {
 		directionName = directionName.replaceAll(" - 3", "-3");
 		directionName = directionName.replaceAll(" - 4 - ", "-4 - ");
 		directionName = directionName.replaceAll(" - 4", "-4");
+		directionName = directionName.replaceAll(" - 5 - ", "-5 - ");
+		directionName = directionName.replaceAll(" - 5", "-5");
+		directionName = directionName.replaceAll(" - 8 - ", "-8 - ");
+		directionName = directionName.replaceAll(" - 8", "-8");
 		directionName = directionName.replaceAll("6 - ", "6-");
 		directionName = directionName.replaceAll("н - з", "н-з");
+		directionName = directionName.replaceAll("М - ция", "М-ция");
+		directionName = directionName.replaceAll("Ц - р", "Ц-р");
+		directionName = directionName.replaceAll("Метр.", "Метростанция ");
+		directionName = directionName.replaceAll("Метрост.", "Метростанция ");
+		directionName = directionName.replaceAll("Зап.", "Западен ");
+		directionName = directionName.replaceAll("Ц. гара", "Централна гара");
+		directionName = directionName.replaceAll("Ц.гара", "Централна гара");
+		directionName = directionName.replaceAll("Ц. Гара", "Централна гара");
+		directionName = directionName.replaceAll("Ц.Гара", "Централна гара");
+		directionName = directionName.replaceAll("Ст.Град", "Студентски Град");
+
+		directionName = directionName.trim().replaceAll(" +", " ");
 
 		return directionName;
 	}

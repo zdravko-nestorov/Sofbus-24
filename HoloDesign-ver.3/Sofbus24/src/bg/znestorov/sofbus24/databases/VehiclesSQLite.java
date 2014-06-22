@@ -33,9 +33,10 @@ public class VehiclesSQLite extends SQLiteOpenHelper {
 
 	// Database creation SQL statement
 	private static final String DATABASE_CREATE_VEHICLES = "CREATE TABLE "
-			+ TABLE_VEHICLES + "(" + COLUMN_NUMBER + " INTEGER, " + COLUMN_TYPE
-			+ " TEXT NOT NULL, " + COLUMN_DIRECTION + " TEXT NOT NULL, "
-			+ "PRIMARY KEY(" + COLUMN_NUMBER + ", " + COLUMN_TYPE + "));";
+			+ TABLE_VEHICLES + "(" + COLUMN_NUMBER + " TEXT NOT NULL, "
+			+ COLUMN_TYPE + " TEXT NOT NULL, " + COLUMN_DIRECTION
+			+ " TEXT NOT NULL, " + "PRIMARY KEY(" + COLUMN_NUMBER + ", "
+			+ COLUMN_TYPE + "));";
 
 	private SQLiteDatabase dbVehicles;
 	private final Context context;
