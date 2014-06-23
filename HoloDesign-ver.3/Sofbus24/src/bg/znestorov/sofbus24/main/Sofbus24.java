@@ -545,52 +545,46 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	 *            the tabPosition that is pressed or "-1" in case of onResume
 	 */
 	private void actionsOverHomeScreen(int tabPosition) {
-		// Check if this is called from "onResume" or from "onTabSelected"
+
+		// Check if this is called from "onResume(...)", so take the current
+		// active tab or from "onTabSelected(...)", so set the according menu
+		// items
 		if (tabPosition == -1) {
+			// Check if the activity has to be restarted
 			if (globalContext.isHasToRestart()) {
 				ActivityUtils.restartApplication(context);
-			} else {
-				if (mViewPager != null) {
-					Fragment fragment = fragmentsList.get(mViewPager
-							.getCurrentItem());
 
-					// Check the fragment type and proceed accordingly
-					if (fragment instanceof FavouritesStationFragment
-							&& globalContext.isFavouritesChanged()) {
-						((FavouritesStationFragment) fragment)
-								.onResumeFragment(context);
-						globalContext.setFavouritesChanged(false);
-					}
+				return;
+			}
 
-					if (fragment instanceof VirtualBoardsFragment
-							&& globalContext.isVbChanged()) {
-						((VirtualBoardsFragment) fragment)
-								.onResumeFragment(context);
-						globalContext.setVbChanged(false);
-					}
+			// Check if the ordering and visibility of the tabs should be
+			// changed
+			if (globalContext.isHomeScreenChanged()) {
+				// Rearrange the fragmentsList
+				createFragmentsList();
 
-					// Update the ordering and visibility of the tabs
-					if (globalContext.isHomeScreenChanged()) {
-						// Rearrange the fragmentsList
-						createFragmentsList();
+				// Notify the adapter for the changes in the
+				// fragmentsList
+				mSectionsPagerAdapter.notifyDataSetChanged();
 
-						// Notify the adapter for the changes in the
-						// fragmentsList
-						mSectionsPagerAdapter.notifyDataSetChanged();
+				// For each of the sections in the application, add a
+				// tab to the ActionBar
+				initTabs();
 
-						// For each of the sections in the application, add a
-						// tab to the ActionBar
-						initTabs();
+				// Show a message that the home screen is changed
+				Toast.makeText(context, getString(R.string.edit_tabs_toast),
+						Toast.LENGTH_SHORT).show();
 
-						// Show a message that the home screen is changed
-						Toast.makeText(context,
-								getString(R.string.edit_tabs_toast),
-								Toast.LENGTH_SHORT).show();
+				// Reset to default
+				globalContext.setHomeScreenChanged(false);
 
-						// Reset to default
-						globalContext.setHomeScreenChanged(false);
-					}
-				}
+				return;
+			}
+
+			// Check if the view pager is already created (if the application
+			// has just started)
+			if (mViewPager != null) {
+				tabPosition = mViewPager.getCurrentItem();
 			}
 		} else {
 			// Declare that the options menu has changed, so should be recreated
@@ -600,9 +594,13 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			// When the given tab is selected, switch to the corresponding page
 			// in the ViewPager.
 			mViewPager.setCurrentItem(tabPosition);
+		}
 
-			// Actions over each fragment
-			Fragment fragment = fragmentsList.get(tabPosition);
+		// Check if the FragmentManager is created and proceed with actions for
+		// each fragment (if needed)
+		if (getSupportFragmentManager().getFragments() != null) {
+			Fragment fragment = getSupportFragmentManager().getFragments().get(
+					tabPosition);
 
 			if (fragment instanceof FavouritesStationFragment) {
 				actionBar.setSubtitle(getString(R.string.edit_tabs_favourites));

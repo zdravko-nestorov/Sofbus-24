@@ -35,6 +35,7 @@
         <item name="1000">1000 метра</item>
         <item name="1400">1400 метра</item>
         <item name="2000">2000 метра</item>
+        <item name="2600">2600 метра</item>
     </string-array>
     <string-array name="stationsRadiusValues">
         <item name="400">400</item>
@@ -42,6 +43,7 @@
         <item name="1000">1000</item>
         <item name="1400">1400</item>
         <item name="2000">2000</item>
+        <item name="2600">2600</item>
     </string-array>
 
 </resources>

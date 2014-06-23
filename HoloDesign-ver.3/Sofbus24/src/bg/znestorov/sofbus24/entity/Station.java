@@ -2,6 +2,7 @@ package bg.znestorov.sofbus24.entity;
 
 import java.io.Serializable;
 
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
 /**
@@ -100,6 +101,11 @@ public class Station implements Serializable {
 	public boolean hasCoordinates() {
 		return lat != null && lon != null && !"".equals(lat) && !"".equals(lon)
 				&& !"EMPTY".equals(lat) && !"EMPTY".equals(lon);
+	}
+
+	public boolean isMetroStation() {
+		return customField.equals(String.format(Constants.METRO_STATION_URL,
+				number));
 	}
 
 	@Override

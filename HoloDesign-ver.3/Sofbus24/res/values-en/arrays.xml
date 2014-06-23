@@ -17,6 +17,7 @@
         <item name="1000">1000 meters</item>
         <item name="1400">1400 meters</item>
         <item name="2000">2000 meters</item>
+        <item name="2600">2600 meters</item>
     </string-array>
 
 </resources>
