@@ -16,6 +16,7 @@ public class SQLiteJDBC {
 		Connection c = null;
 		Statement stmt = null;
 
+		int totalVehicles = 0;
 		int insertedVehicles = 0;
 
 		try {
@@ -36,6 +37,7 @@ public class SQLiteJDBC {
 				sql = String.format(sql, vehicle.getNumber(),
 						vehicle.getType(), vehicle.getDirection());
 				try {
+					totalVehicles++;
 					stmt.executeUpdate(sql);
 					insertedVehicles++;
 				} catch (Exception e) {
@@ -50,7 +52,10 @@ public class SQLiteJDBC {
 			System.exit(0);
 		}
 
-		logger.info("Inserted vehicles = " + insertedVehicles);
+		logger.info("Total vehicles = " + totalVehicles
+				+ ", Inserted vehicles = " + insertedVehicles
+				+ ", Not found vehicles = "
+				+ (totalVehicles - insertedVehicles));
 	}
 
 	public static void createStationsDatabase(Logger logger,
@@ -58,6 +63,7 @@ public class SQLiteJDBC {
 		Connection c = null;
 		Statement stmt = null;
 
+		int totalStations = 0;
 		int insertedStations = 0;
 		int updatedStations = 0;
 
@@ -80,6 +86,7 @@ public class SQLiteJDBC {
 						station.getName(), station.getLatitude(),
 						station.getLongitude(), station.getType());
 				try {
+					totalStations++;
 					stmt.executeUpdate(sql);
 					insertedStations++;
 				} catch (Exception e1) {
@@ -105,7 +112,10 @@ public class SQLiteJDBC {
 			System.exit(0);
 		}
 
-		logger.info("Inserted stations = " + insertedStations
-				+ ", Updated stations = " + updatedStations);
+		logger.info("Total stations = " + totalStations
+				+ ", Inserted stations = " + insertedStations
+				+ ", Updated stations = " + updatedStations
+				+ ", Not found stations = "
+				+ (totalStations - insertedStations - updatedStations));
 	}
 }
