@@ -4,19 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.entity.MetroStation;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.StationMap;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * Array Adapted user for set each row a station from the Vehicles DB
@@ -28,6 +39,7 @@ import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 public class MetroStationAdapter extends ArrayAdapter<Station> {
 
 	private Activity context;
+	private FavouritesDataSource favouritesDatasource;
 
 	private TextView emptyList;
 	private String directionName;
@@ -43,6 +55,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 		ImageView stationIcon;
 		TextView stationName;
 		TextView stationNumber;
+		ImageButton stationSettings;
 	}
 
 	public MetroStationAdapter(Activity context, TextView emptyList,
@@ -50,6 +63,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 		super(context, R.layout.activity_metro_station_list_item, stations);
 
 		this.context = context;
+		this.favouritesDatasource = new FavouritesDataSource(context);
 		this.language = LanguageChange.getUserLocale(context);
 
 		this.emptyList = emptyList;
@@ -83,6 +97,8 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 					.findViewById(R.id.metro_item_station_name);
 			viewHolder.stationNumber = (TextView) rowView
 					.findViewById(R.id.metro_item_station_number);
+			viewHolder.stationSettings = (ImageButton) rowView
+					.findViewById(R.id.metro_item_settings_icon);
 			rowView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) rowView.getTag();
@@ -95,6 +111,9 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 		viewHolder.stationNumber.setText(String.format(
 				context.getString(R.string.metro_item_station_number_text),
 				station.getNumber()));
+
+		// Actions over the settings button
+		actionsOverSettingsButton(viewHolder.stationSettings, station);
 
 		return rowView;
 	}
@@ -213,5 +232,75 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 		}
 
 		return favouriteImage;
+	}
+
+	/**
+	 * Assign a "onClickListener(...)" over the ImageButton
+	 * 
+	 * @param stationSettings
+	 *            the settings image button
+	 * @param station
+	 *            the station on the current row
+	 */
+	private void actionsOverSettingsButton(ImageButton stationSettings,
+			final Station station) {
+		stationSettings.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				switch (v.getId()) {
+				case R.id.metro_item_settings_icon:
+					PopupMenu popup = new PopupMenu(context, v);
+					Menu menu = popup.getMenu();
+					popup.getMenuInflater().inflate(
+							R.menu.activity_metro_station_context_menu, menu);
+					popup.show();
+
+					// Find the add/remove menui items
+					MenuItem favouritesAdd = menu
+							.findItem(R.id.menu_metro_station_add);
+					MenuItem favouritesRemove = menu
+							.findItem(R.id.menu_metro_station_remove);
+
+					// Check which menu item to be visible
+					favouritesDatasource.open();
+					Station favouritesStation = favouritesDatasource
+							.getStation(station);
+					if (favouritesStation != null) {
+						favouritesAdd.setVisible(false);
+						favouritesRemove.setVisible(true);
+					} else {
+						favouritesAdd.setVisible(true);
+						favouritesRemove.setVisible(false);
+					}
+					favouritesDatasource.close();
+
+					popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+						@Override
+						public boolean onMenuItemClick(MenuItem item) {
+							switch (item.getItemId()) {
+							case R.id.menu_metro_station_add:
+								ActivityUtils.addToFavourites(context,
+										favouritesDatasource, station);
+								break;
+							case R.id.menu_metro_station_remove:
+								ActivityUtils.removeFromFavourites(context,
+										favouritesDatasource, station);
+								break;
+							case R.id.menu_metro_station_map:
+								Intent metroMapIntent = new Intent(context,
+										StationMap.class);
+								metroMapIntent.putExtra(
+										Constants.BUNDLE_STATION_MAP,
+										new MetroStation(station));
+								context.startActivity(metroMapIntent);
+								break;
+							}
+
+							return true;
+						}
+					});
+				}
+			}
+		});
 	}
 }
