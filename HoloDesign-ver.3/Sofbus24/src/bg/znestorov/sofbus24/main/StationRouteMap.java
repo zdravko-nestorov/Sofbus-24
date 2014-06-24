@@ -376,11 +376,9 @@ public class StationRouteMap extends Activity {
 				Marker marker = stationMap.addMarker(stationMarkerOptions);
 
 				// Associate the marker and the station
-				PublicTransportStation ptStation = new PublicTransportStation(
-						station);
+				PublicTransportStation ptStation = (PublicTransportStation) station;
 				ptStation.setDirection(ptDirectionName);
-				markersAndStations.put(marker.getId(),
-						new PublicTransportStation(ptStation));
+				markersAndStations.put(marker.getId(), ptStation);
 			}
 		}
 

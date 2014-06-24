@@ -129,6 +129,7 @@ public class Preferences extends Activity {
 				editor.commit();
 
 				// Check if the user wants to restart the application
+				globalContext.setHasToRestart(true);
 				restartApplication();
 			}
 		};

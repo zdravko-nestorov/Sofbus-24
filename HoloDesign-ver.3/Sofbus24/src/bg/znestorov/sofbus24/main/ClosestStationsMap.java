@@ -244,7 +244,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 			Location location = locationManager.getLastKnownLocation(provider);
 
 			if (location != null) {
-				onLocationChanged(location);
+				animateMapFocus(location);
 			}
 
 			// Add a LocationUpdate listener in case of location change
@@ -442,6 +442,24 @@ public class ClosestStationsMap extends FragmentActivity implements
 			googleMap.animateCamera(CameraUpdateFactory
 					.newCameraPosition(cameraPosition));
 		}
+	}
+
+	/**
+	 * Construct a CameraPosition focusing on Mountain View and animate the
+	 * camera to that position (used when the camera is focused on the
+	 * LastKnownLocation, because if a new one is found to be focused over it)
+	 * 
+	 * @param location
+	 *            the location of the station over the map (using Location
+	 *            object)
+	 */
+	private void animateMapFocus(Location location) {
+		CameraPosition cameraPosition = new CameraPosition.Builder()
+				.target(new LatLng(location.getLatitude(), location
+						.getLongitude())).zoom(16).build();
+
+		googleMap.animateCamera(CameraUpdateFactory
+				.newCameraPosition(cameraPosition));
 	}
 
 	/**

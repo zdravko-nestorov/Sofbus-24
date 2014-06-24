@@ -78,9 +78,9 @@ public class RetrievePublicTransportStation extends
 			String htmlResult = stationHttpClient.execute(stationHttpRequest,
 					new BasicResponseHandler());
 
-			ProcessPublicTransportStation processPtDirection = new ProcessPublicTransportStation(
+			ProcessPublicTransportStation processPtStation = new ProcessPublicTransportStation(
 					context, ptStation, htmlResult);
-			ptStation = processPtDirection.getStationFromHtml();
+			ptStation = processPtStation.getStationFromHtml();
 		} catch (Exception e) {
 			ptStation = new PublicTransportStation();
 		} finally {
