@@ -97,9 +97,6 @@ public class ClosestStationsList extends FragmentActivity {
 	 * Initialize the refresh by putting a 500 ms delay
 	 */
 	private void initRefresh() {
-		// This is needed, because the fragment should be restarted
-		savedInstanceState = null;
-
 		// Show the loading ProgressBar
 		csListFragment.setVisibility(View.GONE);
 		csListLoading.setVisibility(View.VISIBLE);
@@ -157,6 +154,22 @@ public class ClosestStationsList extends FragmentActivity {
 						startActivity(streetViewIntent);
 					}
 				});
+	}
+
+	/**
+	 * Used to refresh the content of the ClosestStationsListFragment according
+	 * to the newly retrieved location
+	 */
+	private void refreshClosestStationsListFragment() {
+		// Refresh the fragment
+		ClosestStationsListFragment csListFragment = ((ClosestStationsListFragment) getSupportFragmentManager()
+				.findFragmentByTag(FRAGMENT_TAG_NAME));
+		if (csListFragment != null) {
+			csListFragment.onFragmentRefresh(currentLocation, null);
+		}
+
+		// Proccess the layout fields
+		actionsOnFragmentStart();
 	}
 
 	/**
@@ -331,7 +344,7 @@ public class ClosestStationsList extends FragmentActivity {
 							currentLocation);
 					context.startActivity(closestStationsListIntent);
 				} else {
-					startClosestStationsListFragment();
+					refreshClosestStationsListFragment();
 				}
 			} else {
 				OnClickListener positiveOnClickListener = new OnClickListener() {

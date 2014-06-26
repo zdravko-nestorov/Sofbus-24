@@ -23,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
+import bg.znestorov.sofbus24.entity.RefreshableListFragment;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
@@ -42,7 +43,8 @@ import com.google.android.gms.maps.model.LatLng;
  * @version 1.0
  * 
  */
-public class ClosestStationsListFragment extends ListFragment {
+public class ClosestStationsListFragment extends ListFragment implements
+		RefreshableListFragment {
 
 	private Activity context;
 
@@ -182,6 +184,14 @@ public class ClosestStationsListFragment extends ListFragment {
 		if (closestStationsAdapter != null) {
 			closestStationsAdapter.notifyDataSetChanged();
 		}
+	}
+
+	@Override
+	public void onFragmentRefresh(Object obj, String emptyText) {
+		closestStationsCount = 10;
+		currentLocation = (LatLng) obj;
+
+		setListFragmentAdapter();
 	}
 
 	@Override

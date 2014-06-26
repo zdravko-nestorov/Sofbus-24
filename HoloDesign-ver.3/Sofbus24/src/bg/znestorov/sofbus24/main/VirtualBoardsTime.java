@@ -141,9 +141,6 @@ public class VirtualBoardsTime extends FragmentActivity {
 	 * Initialize the refresh by loading the information from SKGY site
 	 */
 	private void initRefresh() {
-		// This is needed, because the fragment should be restarted
-		savedInstanceState = null;
-
 		// Show the loading ProgressBar
 		vbTimeFragment.setVisibility(View.GONE);
 		vbTimeLoading.setVisibility(View.VISIBLE);
@@ -238,21 +235,22 @@ public class VirtualBoardsTime extends FragmentActivity {
 	 * @param vbTimeEmptyText
 	 *            the text that has to be shown if the list is empty
 	 */
-	public void startVirtualBoardsTimeFragment(
+	public void refreshVirtualBoardsTimeFragment(
 			VirtualBoardsStation newVBTimeStation, String vbTimeEmptyText) {
-		vbTimeStation.getVehiclesList().clear();
-		if (newVBTimeStation != null) {
-			vbTimeStation.setSystemTime(newVBTimeStation.getSystemTime());
-			vbTimeStation.setSkgtTime(newVBTimeStation.getSkgtTime());
-			vbTimeStation.getVehiclesList().addAll(
-					newVBTimeStation.getVehiclesList());
-		}
-
+		// Refresh the time of info retrieval
 		vbTimeCurrentTime.setText(String.format(
 				getString(R.string.vb_time_current_time),
 				vbTimeStation.getTime(context)));
 
-		startVirtualBoardsTimeFragment(vbTimeEmptyText);
+		// Refresh the fragment
+		VirtualBoardsTimeFragment vbTimeFragment = ((VirtualBoardsTimeFragment) getSupportFragmentManager()
+				.findFragmentByTag(FRAGMENT_TAG_NAME));
+		if (vbTimeFragment != null) {
+			vbTimeFragment.onFragmentRefresh(newVBTimeStation, vbTimeEmptyText);
+		}
+
+		// Proccess the layout fields
+		actionsOnFragmentStart();
 	}
 
 	/**

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.entity.RefreshableListFragment;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -20,9 +21,13 @@ import bg.znestorov.sofbus24.utils.Constants;
  * @version 1.0
  * 
  */
-public class VirtualBoardsTimeFragment extends ListFragment {
+public class VirtualBoardsTimeFragment extends ListFragment implements
+		RefreshableListFragment {
 
 	private Activity context;
+	private VirtualBoardsStation vbTimeStation;
+
+	private TextView vbListEmptyTextView;
 
 	public static VirtualBoardsTimeFragment newInstance(
 			VirtualBoardsStation vbTimeStation, String vbTimeEmptyText) {
@@ -54,35 +59,50 @@ public class VirtualBoardsTimeFragment extends ListFragment {
 		context = getActivity();
 
 		// Get the empty list TextView
-		TextView vbListEmptyTextView = (TextView) myFragmentView
+		vbListEmptyTextView = (TextView) myFragmentView
 				.findViewById(R.id.vb_list_empty_text);
 
 		// Get the VirtualBoardsStation object and the empty list text from the
 		// Bundle
 		String vbTimeEmptyText = getArguments().getString(
 				Constants.BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST);
-		VirtualBoardsStation vbTimeStation = (VirtualBoardsStation) getArguments()
-				.getSerializable(Constants.BUNDLE_VIRTUAL_BOARDS_TIME);
+		vbTimeStation = (VirtualBoardsStation) getArguments().getSerializable(
+				Constants.BUNDLE_VIRTUAL_BOARDS_TIME);
 
 		// Set the ListAdapter
-		setListAdapter(vbListEmptyTextView, vbTimeEmptyText, vbTimeStation);
+		setListAdapter(vbTimeEmptyText);
 
 		return myFragmentView;
+	}
+
+	@Override
+	public void onFragmentRefresh(Object obj, String vbTimeEmptyText) {
+		VirtualBoardsStation newVBTimeStation = (VirtualBoardsStation) obj;
+		vbTimeStation.setVirtualBoardsTimeStation(newVBTimeStation);
+
+		setListAdapter(vbTimeEmptyText);
 	}
 
 	/**
 	 * Set list adapter and the appropriate text message to it
 	 */
-	private void setListAdapter(TextView vbListEmptyTextView,
-			String vbTimeEmptyText, VirtualBoardsStation vbTimeStation) {
-		VirtualBoardsTimeAdapter vbTimeAdapter = new VirtualBoardsTimeAdapter(
-				context, vbTimeStation);
-
-		if (vbTimeAdapter.isEmpty()) {
-			setListAdapter(null);
-			vbListEmptyTextView.setText(Html.fromHtml(vbTimeEmptyText));
-		} else {
+	private void setListAdapter(String vbTimeEmptyText) {
+		VirtualBoardsTimeAdapter vbTimeAdapter = (VirtualBoardsTimeAdapter) getListAdapter();
+		if (vbTimeAdapter == null) {
+			vbTimeAdapter = new VirtualBoardsTimeAdapter(context, vbTimeStation);
 			setListAdapter(vbTimeAdapter);
+		} else {
+			vbTimeAdapter.notifyDataSetChanged();
+
+			if (vbTimeStation.getVehiclesList().size() > 0) {
+				getListView().setSelectionFromTop(0, 0);
+			}
+		}
+
+		// Check if the list adapter is empty, so show a text message with the
+		// problem
+		if (vbTimeAdapter.isEmpty()) {
+			vbListEmptyTextView.setText(Html.fromHtml(vbTimeEmptyText));
 		}
 	}
 

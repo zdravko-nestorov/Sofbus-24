@@ -863,7 +863,7 @@ public class RetrieveVirtualBoards {
 			switch (htmlRequestCode) {
 			case REFRESH:
 				((VirtualBoardsTime) callerInstance)
-						.startVirtualBoardsTimeFragment(null, getErrorMsg());
+						.refreshVirtualBoardsTimeFragment(null, getErrorMsg());
 				break;
 			case MULTIPLE_RESULTS:
 				((VirtualBoardsFragment) callerInstance)
@@ -886,7 +886,7 @@ public class RetrieveVirtualBoards {
 			switch (htmlRequestCode) {
 			case REFRESH:
 				((VirtualBoardsTime) callerInstance)
-						.startVirtualBoardsTimeFragment(vbTimeStation, null);
+						.refreshVirtualBoardsTimeFragment(vbTimeStation, null);
 				break;
 			case MULTIPLE_RESULTS:
 				ArrayList<Station> stationsList = new ArrayList<Station>(
