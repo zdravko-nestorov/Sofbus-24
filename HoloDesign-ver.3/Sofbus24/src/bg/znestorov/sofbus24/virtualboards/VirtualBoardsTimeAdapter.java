@@ -201,6 +201,10 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
 			arrivalTimes.deleteCharAt(arrivalTimes.length() - 2).trimToSize();
 		}
 
+		if (arrivalTimes.length() == 0) {
+			arrivalTimes.append("---");
+		}
+
 		return arrivalTimes.toString();
 	}
 

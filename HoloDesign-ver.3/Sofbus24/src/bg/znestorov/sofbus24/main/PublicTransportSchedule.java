@@ -131,6 +131,10 @@ public class PublicTransportSchedule extends FragmentActivity {
 		Runnable myrunnable = new Runnable() {
 			public void run() {
 				try {
+					// Reset the time shown in the action bar
+					actionBar.setSubtitle(Utils.getCurrentTime());
+
+					// Initialize the fragment content
 					initFragmentContent();
 				} catch (Exception e) {
 				}
@@ -247,16 +251,14 @@ public class PublicTransportSchedule extends FragmentActivity {
 	 * Set labels on the TextViews
 	 */
 	private void actionsOverTextViews() {
-		String stationNumber = String.format(
-				getString(R.string.pt_item_station_number_text_sign),
+		String stationNumber = getString(
+				R.string.pt_item_station_number_text_sign,
 				ptStation.getNumber());
-		String currentTime = DateFormat.format("dd.MM.yyy, kk:mm",
-				new java.util.Date()).toString();
 		String stationName = ptStation.getName();
 		String stationDirection = ptStation.getDirection();
 
 		actionBar.setTitle(stationNumber);
-		actionBar.setSubtitle(currentTime);
+		actionBar.setSubtitle(Utils.getCurrentTime());
 		ptStationName.setText(stationName);
 		ptDirection.setText(stationDirection);
 	}

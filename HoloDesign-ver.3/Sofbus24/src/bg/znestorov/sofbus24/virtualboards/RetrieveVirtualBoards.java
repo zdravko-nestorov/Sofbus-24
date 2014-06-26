@@ -850,6 +850,9 @@ public class RetrieveVirtualBoards {
 		saveCookiesToPreferences();
 		httpClient.getConnectionManager().shutdown();
 
+		// Hide the keyboard if it was shown because of the CAPTCHA
+		ActivityUtils.hideKeyboard(context);
+
 		// Process the result accordingly
 		ProcessVirtualBoards processVirtualBoards = new ProcessVirtualBoards(
 				context, htmlResult);

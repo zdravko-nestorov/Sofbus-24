@@ -74,18 +74,22 @@ public class VirtualBoardsStation extends Station implements Serializable {
 	 *            the new viertual boards station object
 	 */
 	public void setVirtualBoardsTimeStation(VirtualBoardsStation vbStation) {
-		this.setNumber(vbStation.getNumber());
-		this.setName(vbStation.getName());
-		this.setLat(vbStation.getLat());
-		this.setLon(vbStation.getLon());
-		this.setType(vbStation.getType());
-		this.setCustomField(vbStation.getCustomField());
+		if (vbStation != null) {
+			this.setNumber(vbStation.getNumber());
+			this.setName(vbStation.getName());
+			this.setLat(vbStation.getLat());
+			this.setLon(vbStation.getLon());
+			this.setType(vbStation.getType());
+			this.setCustomField(vbStation.getCustomField());
 
-		this.skgtTime = vbStation.getSkgtTime();
-		this.systemTime = vbStation.getSystemTime();
+			this.skgtTime = vbStation.getSkgtTime();
+			this.systemTime = vbStation.getSystemTime();
 
-		this.vehiclesList.clear();
-		this.vehiclesList.addAll(vbStation.getVehiclesList());
+			this.vehiclesList.clear();
+			this.vehiclesList.addAll(vbStation.getVehiclesList());
+		} else {
+			this.vehiclesList.clear();
+		}
 	}
 
 	/**

@@ -127,8 +127,7 @@ public class MetroSchedule extends FragmentActivity {
 			public void run() {
 				try {
 					// Reset the time shown in the action bar
-					actionBar.setSubtitle(DateFormat.format("dd.MM.yyy, kk:mm",
-							new java.util.Date()).toString());
+					actionBar.setSubtitle(Utils.getCurrentTime());
 
 					// Initialize the fragment content
 					initFragmentContent();
@@ -246,16 +245,13 @@ public class MetroSchedule extends FragmentActivity {
 	 * Set labels on the TextViews
 	 */
 	private void actionsOverTextViews() {
-		String stationNumber = String.format(
-				getString(R.string.metro_item_station_number_text_sign),
-				ms.getNumber());
-		String currentTime = DateFormat.format("dd.MM.yyy, kk:mm",
-				new java.util.Date()).toString();
+		String stationNumber = getString(
+				R.string.metro_item_station_number_text_sign, ms.getNumber());
 		String stationName = ms.getName();
 		String stationDirection = ms.getDirection();
 
 		actionBar.setTitle(stationNumber);
-		actionBar.setSubtitle(currentTime);
+		actionBar.setSubtitle(Utils.getCurrentTime());
 		metroStationName.setText(stationName);
 		metroDirection.setText(stationDirection);
 	}

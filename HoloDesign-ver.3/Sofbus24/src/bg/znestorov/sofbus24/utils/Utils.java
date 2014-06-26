@@ -186,6 +186,16 @@ public class Utils {
 	}
 
 	/**
+	 * Get the current time in format DD.MM.YYY, HH:MM
+	 * 
+	 * @return the current time in format DD.MM.YYY, HH:MM
+	 */
+	public static String getCurrentTime() {
+		return DateFormat.format("dd.MM.yyy, kk:mm", new java.util.Date())
+				.toString();
+	}
+
+	/**
 	 * Get the difference between two hours in format HH:MM
 	 * 
 	 * @param context

@@ -596,38 +596,54 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			mViewPager.setCurrentItem(tabPosition);
 		}
 
-		// Check if the FragmentManager is created and proceed with actions for
-		// each fragment (if needed)
-		if (getSupportFragmentManager().getFragments() != null) {
-			Fragment fragment = getSupportFragmentManager().getFragments().get(
-					tabPosition);
-
-			if (fragment instanceof FavouritesStationFragment) {
+		// Get the Fragment from the fragmentsList (used to check what type is
+		// the current fragment. It doesn't store the real fragment - it will be
+		// taken from the FragmentManager)
+		if (mViewPager != null) {
+			Fragment fakeFragment = fragmentsList.get(tabPosition);
+			if (fakeFragment instanceof FavouritesStationFragment) {
 				actionBar.setSubtitle(getString(R.string.edit_tabs_favourites));
-
-				if (globalContext.isFavouritesChanged()) {
-					((FavouritesStationFragment) fragment)
-							.onResumeFragment(context);
-					globalContext.setFavouritesChanged(false);
-				}
-			}
-
-			if (fragment instanceof VirtualBoardsFragment) {
+			} else if (fakeFragment instanceof VirtualBoardsFragment) {
 				actionBar.setSubtitle(getString(R.string.edit_tabs_search));
-
-				if (globalContext.isVbChanged()) {
-					((VirtualBoardsFragment) fragment)
-							.onResumeFragment(context);
-					globalContext.setVbChanged(false);
-				}
-			}
-
-			if (fragment instanceof ScheduleFragment) {
+			} else if (fakeFragment instanceof ScheduleFragment) {
 				actionBar.setSubtitle(getString(R.string.edit_tabs_schedule));
+			} else {
+				actionBar.setSubtitle(getString(R.string.edit_tabs_metro));
 			}
 
-			if (fragment instanceof MetroFragment) {
-				actionBar.setSubtitle(getString(R.string.edit_tabs_metro));
+			// Check if the FragmentManager is created and proceed with actions
+			// for each fragment (updates)
+			if (getSupportFragmentManager().getFragments() != null) {
+				List<Fragment> fmFragmentsList = getSupportFragmentManager()
+						.getFragments();
+
+				if (fakeFragment instanceof FavouritesStationFragment
+						&& globalContext.isFavouritesChanged()) {
+
+					// Match the fake fragment from the fragmentsList with the
+					// one from the FragmentManager
+					for (Fragment fragment : fmFragmentsList) {
+						if (fragment instanceof FavouritesStationFragment) {
+							((FavouritesStationFragment) fragment)
+									.onResumeFragment(context);
+							globalContext.setFavouritesChanged(false);
+						}
+					}
+				}
+
+				if (fakeFragment instanceof VirtualBoardsFragment
+						&& globalContext.isVbChanged()) {
+
+					// Match the fake fragment from the fragmentsList with the
+					// one from the FragmentManager
+					for (Fragment fragment : fmFragmentsList) {
+						if (fragment instanceof FavouritesStationFragment) {
+							((VirtualBoardsFragment) fragment)
+									.onResumeFragment(context);
+							globalContext.setVbChanged(false);
+						}
+					}
+				}
 			}
 		}
 	}

@@ -14,6 +14,7 @@ import android.text.Html;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -73,7 +74,27 @@ public class ActivityUtils {
 		// Hide soft keyboard
 		InputMethodManager imm = (InputMethodManager) context
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+
+		if (editText != null) {
+			imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+		}
+	}
+
+	/**
+	 * Request the focus and hide the keyboard
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 */
+	public static void hideKeyboard(Activity context) {
+		InputMethodManager inputMethodManager = (InputMethodManager) context
+				.getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+		View view = context.getCurrentFocus();
+		if (view != null) {
+			inputMethodManager
+					.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		}
 	}
 
 	/**
