@@ -630,15 +630,15 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 			ActivityUtils.hideKeyboard(context, input);
 
 			// Remove the station from the List
-			FavouritesStationAdapter.this.remove(station);
+			remove(station);
 
 			String oldStationName = station.getName();
 			String newStationName = editTextInput;
 			station.setName(newStationName);
 
 			// Add the updated station to the List
-			FavouritesStationAdapter.this.insert(station, position);
-			FavouritesStationAdapter.this.notifyDataSetChanged();
+			insert(station, position);
+			notifyDataSetChanged();
 
 			// Update the station parameters in the DB
 			favouritesDatasource.open();
@@ -676,8 +676,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 				favouritesDatasource.open();
 				favouritesDatasource.deleteStation(station);
 				favouritesDatasource.close();
-				FavouritesStationAdapter.this.remove(station);
-				FavouritesStationAdapter.this.notifyDataSetChanged();
+				remove(station);
+				notifyDataSetChanged();
 
 				Toast.makeText(
 						context,

@@ -13,10 +13,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
+import bg.znestorov.sofbus24.entity.RefreshableListFragment;
 import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
@@ -32,7 +34,8 @@ import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
  * @version 1.0
  * 
  */
-public class HistoryFragment extends ListFragment {
+public class HistoryFragment extends ListFragment implements
+		RefreshableListFragment {
 
 	private Activity context;
 
@@ -79,6 +82,21 @@ public class HistoryFragment extends ListFragment {
 		setHasOptionsMenu(true);
 
 		return fragmentView;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void onFragmentRefresh(Object newHistoryList, String emptyText) {
+		ArrayAdapter<HistoryEntity> historyAdapter = (HistoryAdapter) getListAdapter();
+
+		if (historyAdapter != null) {
+			historyList.clear();
+			if (newHistoryList != null) {
+				historyList.addAll((ArrayList<HistoryEntity>) newHistoryList);
+			}
+
+			historyAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override

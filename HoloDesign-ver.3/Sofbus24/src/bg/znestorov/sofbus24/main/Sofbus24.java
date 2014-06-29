@@ -637,7 +637,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 					// Match the fake fragment from the fragmentsList with the
 					// one from the FragmentManager
 					for (Fragment fragment : fmFragmentsList) {
-						if (fragment instanceof FavouritesStationFragment) {
+						if (fragment instanceof VirtualBoardsFragment) {
 							((VirtualBoardsFragment) fragment)
 									.onResumeFragment(context);
 							globalContext.setVbChanged(false);

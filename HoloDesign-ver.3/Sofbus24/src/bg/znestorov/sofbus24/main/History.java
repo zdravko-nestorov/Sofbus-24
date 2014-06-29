@@ -29,7 +29,6 @@ public class History extends FragmentActivity {
 	private Activity context;
 	private ActionBar actionBar;
 
-	private Fragment historyFragment;
 	private static final String FRAGMENT_TAG_NAME = "HISTORY FRAGMENT";
 
 	@Override
@@ -50,6 +49,9 @@ public class History extends FragmentActivity {
 		// Get the layout fields in the view
 		final ProgressBar loadingHistory = (ProgressBar) findViewById(R.id.history_loading);
 		final View historyFragment = findViewById(R.id.history_fragment);
+
+		// Start an empty fragment
+		startFragment(savedInstanceState, new ArrayList<HistoryEntity>());
 
 		// Start an asynchrnic task to load the data from the preferences file
 		new AsyncTask<Void, Void, ArrayList<HistoryEntity>>() {
@@ -74,7 +76,7 @@ public class History extends FragmentActivity {
 				loadingHistory.setVisibility(View.INVISIBLE);
 				historyFragment.setVisibility(View.VISIBLE);
 
-				startFragment(savedInstanceState, historyList);
+				refreshFragment(historyList);
 			}
 
 		}.execute();
@@ -110,6 +112,8 @@ public class History extends FragmentActivity {
 	 */
 	private void startFragment(Bundle savedInstanceState,
 			ArrayList<HistoryEntity> historyList) {
+		Fragment historyFragment;
+
 		if (savedInstanceState == null) {
 			historyFragment = HistoryFragment.newInstance(historyList);
 		} else {
@@ -121,5 +125,21 @@ public class History extends FragmentActivity {
 				.beginTransaction()
 				.replace(R.id.history_fragment, historyFragment,
 						FRAGMENT_TAG_NAME).commit();
+	}
+
+	/**
+	 * Refresh the existing HistoryFragment with all searches from the
+	 * SharedPreferences file
+	 * 
+	 * @param historyList
+	 *            the list with the history searches from the SharedPreferences
+	 *            file
+	 */
+	private void refreshFragment(ArrayList<HistoryEntity> historyList) {
+		HistoryFragment historyFragment = ((HistoryFragment) getSupportFragmentManager()
+				.findFragmentByTag(FRAGMENT_TAG_NAME));
+		if (historyFragment != null) {
+			historyFragment.onFragmentRefresh(historyList, null);
+		}
 	}
 }

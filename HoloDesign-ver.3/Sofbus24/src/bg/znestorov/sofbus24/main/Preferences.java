@@ -57,7 +57,7 @@ public class Preferences extends Activity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			if (globalContext.isHasToRestart()) {
-				restartApplication();
+				restartApplication(false);
 			} else {
 				finish();
 			}
@@ -78,7 +78,7 @@ public class Preferences extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && globalContext.isHasToRestart()) {
-			restartApplication();
+			restartApplication(false);
 
 			return true;
 		}
@@ -88,8 +88,14 @@ public class Preferences extends Activity {
 
 	/**
 	 * Restart the application after showing an AlertDialog
+	 * 
+	 * @param isResetted
+	 *            indicates if the method is invoked in case of settings reset.
+	 *            If so, and no restart is wanted at this point, leave at the
+	 *            current screen and keep the information about application
+	 *            restart
 	 */
-	private void restartApplication() {
+	private void restartApplication(final boolean isResetted) {
 		OnClickListener positiveOnClickListener = new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -100,8 +106,10 @@ public class Preferences extends Activity {
 		OnClickListener negativeOnClickListener = new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				globalContext.setHasToRestart(false);
-				finish();
+				if (!isResetted) {
+					globalContext.setHasToRestart(false);
+					finish();
+				}
 			}
 		};
 
@@ -130,7 +138,7 @@ public class Preferences extends Activity {
 
 				// Check if the user wants to restart the application
 				globalContext.setHasToRestart(true);
-				restartApplication();
+				restartApplication(true);
 			}
 		};
 
