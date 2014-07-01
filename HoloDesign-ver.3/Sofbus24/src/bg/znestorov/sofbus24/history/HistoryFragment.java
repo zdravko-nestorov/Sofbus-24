@@ -75,7 +75,7 @@ public class HistoryFragment extends ListFragment implements
 				.getSerializable(Constants.BUNDLE_HISTORY_LIST));
 
 		// Create and set the list adapter to the ListFragment
-		HistoryAdapter historyAdapter = new HistoryAdapter(context, historyList);
+		historyAdapter = new HistoryAdapter(context, historyList);
 		setListAdapter(historyAdapter);
 
 		// Activate the option menu

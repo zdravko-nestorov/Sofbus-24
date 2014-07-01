@@ -92,6 +92,7 @@ public class RetrieveVirtualBoards {
 		// Set the selected station
 		if (station.getCustomField() == null
 				|| "".equals(station.getCustomField())
+				|| "-1".equals(station.getCustomField())
 				|| "null".equals(station.getCustomField())) {
 			station.setCustomField("1");
 		}
