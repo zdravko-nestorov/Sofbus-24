@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,12 +17,15 @@ import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.FavouritesDatabaseUtils;
 import bg.znestorov.sofbus24.entity.FragmentLifecycle;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.favorites.FavouritesDeleteAllDialog.OnDeleteAllFavouritesListener;
+import bg.znestorov.sofbus24.favorites.FavouritesRenameDialog.OnRenameFavouritesListener;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
@@ -38,20 +39,13 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
  * 
  */
 public class FavouritesStationFragment extends ListFragment implements
-		FragmentLifecycle {
+		FragmentLifecycle, OnDeleteAllFavouritesListener,
+		OnRenameFavouritesListener {
 
 	private Activity context;
 
 	private List<Station> favouritesStations = new ArrayList<Station>();
 	private FavouritesDataSource favouritesDatasource;
-
-	public FavouritesStationFragment() {
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,7 +68,7 @@ public class FavouritesStationFragment extends ListFragment implements
 
 		// Use an ArrayAdapter to show the elements in a ListView
 		ArrayAdapter<Station> adapter = new FavouritesStationAdapter(context,
-				favouritesStations);
+				this, favouritesStations);
 		setListAdapter(adapter);
 
 		// Set the message if the list is empty
@@ -109,32 +103,10 @@ public class FavouritesStationFragment extends ListFragment implements
 
 			// Check if the Favorites database is empty or not
 			if (favouritesCount > 0) {
-				OnClickListener positiveOnClickListener = new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// Change the ListView content
-						favouritesStations.clear();
-						((FavouritesStationAdapter) getListAdapter())
-								.notifyDataSetChanged();
-
-						FavouritesDatabaseUtils
-								.deleteFavouriteDatabase(context);
-						Toast.makeText(
-								context,
-								Html.fromHtml(getString(R.string.fav_menu_remove_all_toast)),
-								Toast.LENGTH_SHORT).show();
-					}
-				};
-
-				ActivityUtils
-						.showCustomAlertDialog(
-								context,
-								android.R.drawable.ic_menu_delete,
-								getString(R.string.app_dialog_title_important),
-								Html.fromHtml(getString(R.string.fav_menu_remove_all_confirmation)),
-								getString(R.string.app_button_yes),
-								positiveOnClickListener,
-								getString(R.string.app_button_no), null);
+				DialogFragment dialogFragment = FavouritesDeleteAllDialog
+						.newInstance();
+				dialogFragment.setTargetFragment(this, 0);
+				dialogFragment.show(getFragmentManager(), "dialog");
 			} else {
 				Toast.makeText(
 						context,
@@ -148,6 +120,17 @@ public class FavouritesStationFragment extends ListFragment implements
 		return true;
 	}
 
+	@Override
+	public void onDeleteAllFavouritesClicked() {
+		favouritesStations.clear();
+		((FavouritesStationAdapter) getListAdapter()).notifyDataSetChanged();
+
+		FavouritesDatabaseUtils.deleteFavouriteDatabase(context);
+		Toast.makeText(context,
+				Html.fromHtml(getString(R.string.fav_menu_remove_all_toast)),
+				Toast.LENGTH_SHORT).show();
+	}
+
 	/**
 	 * Modify the Search EditText field and activate the listeners
 	 * 
@@ -155,7 +138,8 @@ public class FavouritesStationFragment extends ListFragment implements
 	 *            the search EditText
 	 */
 	private void actionsOverSearchEditText(final SearchEditText searchEditText) {
-		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+		// TODO: Find a way to set an alphanumeric keyboard with numeric as
+		// default
 		searchEditText.setFilters(new InputFilter[] { ActivityUtils
 				.createInputFilter() });
 
@@ -234,5 +218,40 @@ public class FavouritesStationFragment extends ListFragment implements
 		favouritesDatasource.close();
 
 		return favouritesList;
+	}
+
+	@Override
+	public void onRenameFavouritesClicked(String stationName, Station station) {
+		ListAdapter listAdapter = getListAdapter();
+
+		if (listAdapter != null) {
+			String oldStationName = station.getName();
+			String newStationName = stationName;
+
+			station.setName(newStationName);
+			updateStation(station);
+
+			favouritesStations.clear();
+			favouritesStations.addAll(loadFavouritesList(null));
+			((FavouritesStationAdapter) listAdapter).notifyDataSetChanged();
+
+			Toast.makeText(
+					context,
+					Html.fromHtml(String.format(context
+							.getString(R.string.app_toast_rename_favourites),
+							oldStationName, station.getNumber(),
+							newStationName, station.getNumber())),
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private void updateStation(Station station) {
+		if (favouritesDatasource == null) {
+			favouritesDatasource = new FavouritesDataSource(context);
+		}
+
+		favouritesDatasource.open();
+		favouritesDatasource.updateStation(station);
+		favouritesDatasource.close();
 	}
 }

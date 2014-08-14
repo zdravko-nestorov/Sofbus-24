@@ -53,7 +53,7 @@
                 android:id="@+id/favourites_item_station_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
+                android:ellipsize="end"
                 android:fadingEdge="horizontal"
                 android:padding="1dip"
                 android:singleLine="true"

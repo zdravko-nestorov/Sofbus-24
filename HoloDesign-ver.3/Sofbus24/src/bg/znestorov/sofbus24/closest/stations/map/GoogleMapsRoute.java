@@ -18,6 +18,7 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.main.ClosestStationsMap;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.MapUtils;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -53,19 +54,7 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-
-		progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage(context
-				.getString(R.string.cs_map_fetch_route));
-		progressDialog.setIndeterminate(true);
-		progressDialog.setCancelable(true);
-		progressDialog
-				.setOnCancelListener(new DialogInterface.OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
-						cancel(true);
-					}
-				});
-		progressDialog.show();
+		createLoadingView();
 	}
 
 	@Override
@@ -77,13 +66,6 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 	protected void onPostExecute(String jsonResult) {
 		super.onPostExecute(jsonResult);
 
-		try {
-			progressDialog.dismiss();
-		} catch (Exception e) {
-			// Workaround used just in case when this activity is destroyed
-			// before the dialog
-		}
-
 		if (jsonResult != null && !"".equals(jsonResult)) {
 			((ClosestStationsMap) callerInstance).visualizeRoute(jsonResult);
 
@@ -93,18 +75,14 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 					context.getString(R.string.cs_map_fetch_route_error),
 					Toast.LENGTH_LONG).show();
 		}
+
+		dismissLoadingView();
 	}
 
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
-
-		try {
-			progressDialog.dismiss();
-		} catch (Exception e) {
-			// Workaround used just in case when this activity is destroyed
-			// before the dialog
-		}
+		dismissLoadingView();
 	}
 
 	/**
@@ -161,6 +139,10 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 			String line = null;
 
 			while ((line = reader.readLine()) != null) {
+				if (isCancelled()) {
+					break;
+				}
+
 				sb.append(line + "\n");
 			}
 
@@ -171,5 +153,36 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 		}
 
 		return jsonString;
+	}
+
+	/**
+	 * Create the loading view and lock the screen
+	 */
+	private void createLoadingView() {
+		ActivityUtils.lockScreenOrientation(context);
+
+		progressDialog = new ProgressDialog(context);
+		progressDialog.setMessage(context
+				.getString(R.string.cs_map_fetch_route));
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCancelable(true);
+		progressDialog
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						cancel(true);
+					}
+				});
+		progressDialog.show();
+	}
+
+	/**
+	 * Dismiss the loading view and unlock the screen
+	 */
+	private void dismissLoadingView() {
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+		}
+
+		ActivityUtils.unlockScreenOrientation(context);
 	}
 }

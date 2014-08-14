@@ -173,7 +173,15 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
 			arrivalTimes.append(arrivalTimesList.get(i)).append(", ");
 		}
 
-		arrivalTimes.deleteCharAt(arrivalTimes.length() - 2).trimToSize();
+		// In very rare cases there are no results and the arrivalTimes array is
+		// empty (GooglePlay bug: StringIndexOutOfBoundsException)
+		if (arrivalTimes.length() > 1) {
+			arrivalTimes.deleteCharAt(arrivalTimes.length() - 2).trimToSize();
+		}
+
+		if (arrivalTimes.length() == 0) {
+			arrivalTimes.append("---");
+		}
 
 		return arrivalTimes.toString();
 	}

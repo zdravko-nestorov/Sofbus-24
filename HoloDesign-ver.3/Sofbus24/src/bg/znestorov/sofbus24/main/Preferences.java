@@ -2,22 +2,22 @@ package bg.znestorov.sofbus24.main;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.text.Html;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.preferences.PreferencesFragment;
+import bg.znestorov.sofbus24.preferences.ResetSettingsDialog;
+import bg.znestorov.sofbus24.preferences.ResetSettingsDialog.OnResetSettingsListener;
+import bg.znestorov.sofbus24.preferences.RestartApplicationDialog;
 import bg.znestorov.sofbus24.utils.LanguageChange;
-import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
-public class Preferences extends Activity {
+public class Preferences extends FragmentActivity implements
+		OnResetSettingsListener {
 
 	private Activity context;
 	private GlobalEntity globalContext;
@@ -95,59 +95,22 @@ public class Preferences extends Activity {
 	 *            current screen and keep the information about application
 	 *            restart
 	 */
-	private void restartApplication(final boolean isResetted) {
-		OnClickListener positiveOnClickListener = new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				finish();
-			}
-		};
-
-		OnClickListener negativeOnClickListener = new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				if (!isResetted) {
-					globalContext.setHasToRestart(false);
-					finish();
-				}
-			}
-		};
-
-		ActivityUtils.showCustomAlertDialog(context,
-				android.R.drawable.ic_menu_info_details,
-				context.getString(R.string.app_dialog_title_important),
-				Html.fromHtml(context.getString(R.string.pref_restart_app)),
-				context.getString(R.string.app_button_yes),
-				positiveOnClickListener,
-				context.getString(R.string.app_button_no),
-				negativeOnClickListener);
+	private void restartApplication(boolean isResetted) {
+		DialogFragment dialogFragment = RestartApplicationDialog
+				.newInstance(isResetted);
+		dialogFragment.show(getSupportFragmentManager(), "dialog");
 	}
 
 	/**
 	 * Reset the preferences to default
 	 */
 	private void resetPreferences() {
-		OnClickListener positiveOnClickListener = new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				SharedPreferences preferences = PreferenceManager
-						.getDefaultSharedPreferences(context);
-				SharedPreferences.Editor editor = preferences.edit();
-				editor.clear();
-				editor.commit();
+		DialogFragment dialogFragment = ResetSettingsDialog.newInstance();
+		dialogFragment.show(getSupportFragmentManager(), "dialog");
+	}
 
-				// Check if the user wants to restart the application
-				globalContext.setHasToRestart(true);
-				restartApplication(true);
-			}
-		};
-
-		ActivityUtils.showCustomAlertDialog(context,
-				android.R.drawable.ic_menu_info_details,
-				context.getString(R.string.app_dialog_title_important),
-				context.getString(R.string.pref_reset),
-				context.getString(R.string.app_button_yes),
-				positiveOnClickListener,
-				context.getString(R.string.app_button_no), null);
+	@Override
+	public void onResetSettingsClicked() {
+		restartApplication(true);
 	}
 }

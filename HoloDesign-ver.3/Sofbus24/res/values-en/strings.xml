@@ -20,6 +20,7 @@
     <string name="app_coordinates_error">The station could not be visualized (its coordinates are not found in the database).</string>
     <string name="app_no_station_selected_error">Please select a station from the map to be visualized using Google Street View.</string>
     <string name="app_distance" formatted="false">Distance: ~%s</string>
+    <string name="app_distance_none">Distance: ∞ (calculating&#8230;)</string>
     <string name="app_distance_meters">m</string>
     <string name="app_distance_kilometers">km&#160;</string>
     <string name="app_remaining_minutes">m</string>
@@ -128,9 +129,9 @@
     <string name="pref_category_visual_fav_summary">Visualize the favorites stations with a Google Street View image shown (home screen)</string>
     <string name="pref_category_stations">STATION INFORMATION</string>
     <string name="pref_category_stations_timeType_title">Extracted information</string>
-    <string name="pref_category_stations_timeType_summary">Determine what time to be used for display/calculate the extracted information</string>
+    <string name="pref_category_stations_timeType_summary">Remaining time or time of arrival</string>
     <string name="pref_category_stations_timeSource_title">Public trasnport</string>
-    <string name="pref_category_stations_timeSource_summary">Remaining time or time of arrival</string>
+    <string name="pref_category_stations_timeSource_summary">Determine what time to be used for display/calculate the extracted information</string>
     <string name="pref_category_map">GOOGLE MAP</string>
     <string name="pref_category_map_radius_title">Current location radius</string>
     <string name="pref_category_map_radius_summary">The size of the current location or a selected point radius in which the stations have to be displayed</string>

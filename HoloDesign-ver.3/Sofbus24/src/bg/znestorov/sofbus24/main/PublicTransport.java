@@ -23,6 +23,7 @@ import bg.znestorov.sofbus24.entity.Vehicle;
 import bg.znestorov.sofbus24.publictransport.PublicTransportFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 public class PublicTransport extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -258,16 +259,7 @@ public class PublicTransport extends FragmentActivity implements
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(true);
-			progressDialog
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						public void onCancel(DialogInterface dialog) {
-							cancel(true);
-						}
-					});
-			progressDialog.show();
+			createLoadingView();
 		}
 
 		@Override
@@ -284,27 +276,43 @@ public class PublicTransport extends FragmentActivity implements
 		@Override
 		protected void onPostExecute(Intent ptMapRouteIntent) {
 			super.onPostExecute(ptMapRouteIntent);
-
-			try {
-				progressDialog.dismiss();
-			} catch (Exception e) {
-				// Workaround used just in case the orientation is changed once
-				// retrieving info
-			}
-
 			context.startActivity(ptMapRouteIntent);
+
+			dismissLoadingView();
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
+			dismissLoadingView();
+		}
 
-			try {
+		/**
+		 * Create the loading view and lock the screen
+		 */
+		private void createLoadingView() {
+			ActivityUtils.lockScreenOrientation(context);
+
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						public void onCancel(DialogInterface dialog) {
+							cancel(true);
+						}
+					});
+			progressDialog.show();
+		}
+
+		/**
+		 * Dismiss the loading view and unlock the screen
+		 */
+		private void dismissLoadingView() {
+			if (progressDialog != null) {
 				progressDialog.dismiss();
-			} catch (Exception e) {
-				// Workaround used just in case when this activity is destroyed
-				// before the dialog
 			}
+
+			ActivityUtils.unlockScreenOrientation(context);
 		}
 	}
 }

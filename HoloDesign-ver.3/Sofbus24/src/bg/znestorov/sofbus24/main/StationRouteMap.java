@@ -129,6 +129,9 @@ public class StationRouteMap extends Activity {
 			// Set a click listener over the markers
 			stationMap.setOnMarkerClickListener(onMarkerClickListener);
 
+			// Initialize GoogleMaps without the current location
+			initGoogleMaps(stationType, null);
+
 			// Activate my location, set a location button that center the map
 			// over a point and start a LocationChangeListener
 			stationMap.setMyLocationEnabled(true);
@@ -137,7 +140,10 @@ public class StationRouteMap extends Activity {
 					.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
 						@Override
 						public void onMyLocationChange(Location currentLocation) {
-							initGoogleMaps(stationType, currentLocation);
+							if (currentLocation != null) {
+								stationMap.clear();
+								initGoogleMaps(stationType, currentLocation);
+							}
 						}
 					});
 		}
@@ -286,13 +292,21 @@ public class StationRouteMap extends Activity {
 						.position(msLocation)
 						.title(String.format(ms.getName() + " (%s)",
 								ms.getNumber()))
-						.snippet(
-								String.format(context
-										.getString(R.string.app_distance),
-										MapUtils.getMapDistance(context,
-												currentLocation, station)))
 						.icon(BitmapDescriptorFactory
 								.fromResource(getMarkerIcon(ms.getType())));
+
+				// Check if the user is already localized
+				if (currentLocation != null) {
+					stationMarkerOptions = stationMarkerOptions.snippet(String
+							.format(context.getString(R.string.app_distance),
+									MapUtils.getMapDistance(context,
+											currentLocation, station)));
+				} else {
+					stationMarkerOptions = stationMarkerOptions.snippet(String
+							.format(context
+									.getString(R.string.app_distance_none)));
+				}
+
 				stationMap.addMarker(stationMarkerOptions);
 			}
 		}
@@ -366,13 +380,21 @@ public class StationRouteMap extends Activity {
 						.position(ptLocation)
 						.title(String.format(station.getName() + " (%s)",
 								station.getNumber()))
-						.snippet(
-								String.format(context
-										.getString(R.string.app_distance),
-										MapUtils.getMapDistance(context,
-												currentLocation, station)))
 						.icon(BitmapDescriptorFactory
 								.fromResource(getMarkerIcon(station.getType())));
+
+				// Check if the user is already localized
+				if (currentLocation != null) {
+					stationMarkerOptions = stationMarkerOptions.snippet(String
+							.format(context.getString(R.string.app_distance),
+									MapUtils.getMapDistance(context,
+											currentLocation, station)));
+				} else {
+					stationMarkerOptions = stationMarkerOptions.snippet(String
+							.format(context
+									.getString(R.string.app_distance_none)));
+				}
+
 				Marker marker = stationMap.addMarker(stationMarkerOptions);
 
 				// Associate the marker and the station
@@ -459,8 +481,17 @@ public class StationRouteMap extends Activity {
 	 *            the location of the station over the map (using LatLng object)
 	 */
 	private void animateMapFocus(LatLng stationLocation) {
+		LatLng focussedLatLng;
+
+		// Check if the user is already localized
+		if (stationLocation != null) {
+			focussedLatLng = stationLocation;
+		} else {
+			focussedLatLng = centerStationLocation;
+		}
+
 		CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(stationLocation).zoom(11.8f).build();
+				.target(focussedLatLng).zoom(11.8f).build();
 		stationMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
 	}
@@ -474,9 +505,18 @@ public class StationRouteMap extends Activity {
 	 *            object)
 	 */
 	private void animateMapFocus(Location stationLocation) {
+		LatLng focussedLatLng;
+
+		// Check if the user is already localized
+		if (stationLocation != null) {
+			focussedLatLng = new LatLng(stationLocation.getLatitude(),
+					stationLocation.getLongitude());
+		} else {
+			focussedLatLng = centerStationLocation;
+		}
+
 		CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(new LatLng(stationLocation.getLatitude(),
-						stationLocation.getLongitude())).zoom(11.8f).build();
+				.target(focussedLatLng).zoom(11.8f).build();
 		stationMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
 	}

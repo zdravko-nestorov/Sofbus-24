@@ -9,7 +9,6 @@ import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,7 +98,7 @@ public class ScheduleVehicleFragment extends ListFragment {
 		progressDialog.setMessage(Html.fromHtml(String.format(
 				getString(R.string.pt_item_loading_schedule), rowCaption)));
 		RetrievePublicTransportDirection retrievePublicTransportDirection = new RetrievePublicTransportDirection(
-				context, progressDialog, vehicle);
+				context, this, progressDialog, vehicle);
 		retrievePublicTransportDirection.execute();
 	}
 
@@ -172,7 +171,8 @@ public class ScheduleVehicleFragment extends ListFragment {
 	 */
 	private void actionsOverSearchEditText(final SearchEditText searchEditText,
 			final TextView emptyList) {
-		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+		// TODO: Find a way to set an alphanumeric keyboard with numeric as
+		// default
 		searchEditText.setFilters(new InputFilter[] { ActivityUtils
 				.createInputFilter() });
 		searchEditText.setText(searchText);

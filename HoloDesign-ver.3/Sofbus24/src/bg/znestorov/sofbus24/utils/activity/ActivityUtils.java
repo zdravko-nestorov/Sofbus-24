@@ -4,11 +4,13 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.InputFilter;
@@ -29,7 +31,6 @@ import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
@@ -102,8 +103,9 @@ public class ActivityUtils {
 	 * 
 	 * @param context
 	 *            the current activity context
+	 * @return current ImageLoaderConfiguration
 	 */
-	public static void initImageLoader(Context context) {
+	public static ImageLoaderConfiguration initImageLoader(Context context) {
 		File cacheDir = StorageUtils.getCacheDirectory(context);
 
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
@@ -121,7 +123,7 @@ public class ActivityUtils {
 				.defaultDisplayImageOptions(DisplayImageOptions.createSimple())
 				.build();
 
-		ImageLoader.getInstance().init(config);
+		return config;
 	}
 
 	/**
@@ -148,17 +150,6 @@ public class ActivityUtils {
 		Toast.makeText(context,
 				context.getString(R.string.app_coordinates_error),
 				Toast.LENGTH_LONG).show();
-
-		/*
-		 * Previously it shows an alert dialog, now replaced by a Toast message
-		 * - easiest to maintain or orietation changes
-		 * 
-		 * ActivityUtils.showCustomAlertDialog(context,
-		 * android.R.drawable.ic_menu_report_image,
-		 * context.getString(R.string.app_dialog_title_error),
-		 * context.getString(R.string.app_coordinates_error),
-		 * context.getString(R.string.app_button_ok), null, null, null);
-		 */
 	}
 
 	/**
@@ -170,18 +161,6 @@ public class ActivityUtils {
 	public static void showNoInternetToast(Activity context) {
 		Toast.makeText(context, context.getString(R.string.app_internet_error),
 				Toast.LENGTH_LONG).show();
-
-		/*
-		 * Previously it shows an alert dialog, now replaced by a Toast message
-		 * - easiest to maintain or orietation changes
-		 * 
-		 * AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		 * builder.setIcon(android.R.drawable.ic_menu_info_details)
-		 * .setTitle(context.getString(R.string.app_dialog_title_error))
-		 * .setMessage(context.getString(R.string.app_internet_error))
-		 * .setNegativeButton(context.getString(R.string.app_button_ok),
-		 * null).show();
-		 */
 	}
 
 	/**
@@ -194,18 +173,6 @@ public class ActivityUtils {
 	 */
 	public static void showNoInfoAlertToast(Activity context, Spanned msg) {
 		Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-
-		/*
-		 * Previously it shows an alert dialog, now replaced by a Toast message
-		 * - easiest to maintain or orietation changes
-		 * 
-		 * AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		 * builder.setIcon(android.R.drawable.ic_menu_info_details)
-		 * .setTitle(context.getString(R.string.app_dialog_title_error))
-		 * .setMessage(msg)
-		 * .setNegativeButton(context.getString(R.string.app_button_ok),
-		 * null).show();
-		 */
 	}
 
 	/**
@@ -218,57 +185,6 @@ public class ActivityUtils {
 		Toast.makeText(context,
 				context.getString(R.string.app_internet_or_info_error),
 				Toast.LENGTH_LONG).show();
-
-		/*
-		 * Previously it shows an alert dialog, now replaced by a Toast message
-		 * - easiest to maintain or orietation changes
-		 * 
-		 * AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		 * builder.setIcon(android.R.drawable.ic_menu_info_details)
-		 * .setTitle(context.getString(R.string.app_dialog_title_error))
-		 * .setMessage(context.getString(R.string.app_internet_or_info_error))
-		 * .setNegativeButton(context.getString(R.string.app_button_ok),
-		 * null).show();
-		 */
-	}
-
-	/**
-	 * Create custom AlertDialog with custom fields
-	 * 
-	 * @param context
-	 *            the current Activity context
-	 * @param icon
-	 *            the icon of the AlertDialog
-	 * @param title
-	 *            the title of the AlertDialog
-	 * @param message
-	 *            the message content of the AlertDialog
-	 * @param positiveButton
-	 *            the positive button text of the AlertDialog
-	 * @param positiveOnClickListener
-	 *            the positive onClickListener of the AlertDialog
-	 * @param negativeButton
-	 *            the negative button text of the AlertDialog
-	 * @param negativeOnClickListener
-	 *            the negative onClickListener of the AlertDialog
-	 */
-	public static void showCustomAlertDialog(Activity context, int icon,
-			CharSequence title, CharSequence message,
-			CharSequence positiveButton,
-			OnClickListener positiveOnClickListener,
-			CharSequence negativeButton, OnClickListener negativeOnClickListener) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setIcon(icon).setTitle(title).setMessage(message);
-
-		if (positiveButton != null) {
-			builder.setPositiveButton(positiveButton, positiveOnClickListener);
-		}
-
-		if (negativeButton != null) {
-			builder.setNegativeButton(negativeButton, negativeOnClickListener);
-		}
-
-		builder.show();
 	}
 
 	/**
@@ -483,4 +399,68 @@ public class ActivityUtils {
 		return inputFilter;
 	}
 
+	/**
+	 * Lock the device in the current device orientation
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 */
+	public static void lockScreenOrientation(Activity context) {
+		int currentOrientation = context.getResources().getConfiguration().orientation;
+		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+			context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+		} else {
+			context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+		}
+	}
+
+	/**
+	 * Unlock the orientation of the device
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 */
+	public static void unlockScreenOrientation(Activity context) {
+		context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+	}
+
+	/**
+	 * Check if there is an Internet connection or not
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @return if there is an Internet connection
+	 */
+	public static boolean haveNetworkConnection(Activity context) {
+		boolean haveConnectedWifi = false;
+		boolean haveConnectedMobile = false;
+		boolean haveConnected = false;
+
+		ConnectivityManager connectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo[] allNetworkInfo = connectivityManager.getAllNetworkInfo();
+
+		for (NetworkInfo networkIngo : allNetworkInfo) {
+			if ("WIFI".equalsIgnoreCase(networkIngo.getTypeName())) {
+				if (networkIngo.isConnected()) {
+					haveConnectedWifi = true;
+				}
+			}
+
+			if ("MOBILE".equalsIgnoreCase(networkIngo.getTypeName())) {
+				if (networkIngo.isConnected()) {
+					haveConnectedMobile = true;
+				}
+			}
+		}
+
+		if (!haveConnectedWifi && !haveConnectedMobile) {
+			NetworkInfo networkInfo = connectivityManager
+					.getActiveNetworkInfo();
+			haveConnected = networkInfo != null && networkInfo.isAvailable()
+					&& networkInfo.isConnected();
+		}
+
+		return haveConnectedWifi || haveConnectedMobile || haveConnected;
+	}
 }

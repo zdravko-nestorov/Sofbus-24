@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import android.app.Activity;
 import bg.znestorov.sofbus24.entity.PublicTransportStation;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.Utils;
 
 /**
  * Used to process the information from SKGT site, using REGEX and set it to a
@@ -80,6 +81,12 @@ public class ProcessPublicTransportStation {
 							|| "0".equals(timeScheduleArray[0])) {
 						timeScheduleArray[0] = "24";
 					}
+
+					// In case the schedule is in bold format (when it is the
+					// current hours):
+					// "<span class="info"><b>XX:XX:XX</b></span>"
+					timeScheduleArray[0] = Utils
+							.getOnlyDigits(timeScheduleArray[0]);
 
 					// Get the time schedule and hour
 					String timeSchedule = timeScheduleArray[0] + ":"

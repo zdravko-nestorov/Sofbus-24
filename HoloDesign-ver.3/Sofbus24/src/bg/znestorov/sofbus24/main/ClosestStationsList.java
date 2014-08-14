@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -14,6 +13,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import bg.znestorov.sofbus24.closest.stations.list.ClosestStationsListFragment;
+import bg.znestorov.sofbus24.closest.stations.map.LocationSourceDialog;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -212,6 +214,8 @@ public class ClosestStationsList extends FragmentActivity {
 	 */
 	private void loadLocationStreetView() {
 		ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.init(ActivityUtils.initImageLoader(context));
+
 		DisplayImageOptions displayImageOptions = ActivityUtils
 				.displayImageOptions();
 
@@ -262,6 +266,7 @@ public class ClosestStationsList extends FragmentActivity {
 		private MyLocationListener myLocationListener;
 
 		// Available Location providers
+		private boolean isMyLocationAvailable = false;
 		private boolean isNetworkProviderOn = true;
 		private boolean isGpsProviderOn = true;
 
@@ -275,44 +280,48 @@ public class ClosestStationsList extends FragmentActivity {
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			myLocationListener = new MyLocationListener();
-			locationManager = (LocationManager) context
-					.getSystemService(Context.LOCATION_SERVICE);
+			String locationProviders = Settings.Secure.getString(
+					context.getContentResolver(),
+					Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
 
-			try {
-				locationManager.requestLocationUpdates(
-						LocationManager.NETWORK_PROVIDER, 0, 0,
-						myLocationListener);
-			} catch (Exception e) {
-				isNetworkProviderOn = false;
+			// TODO: Make check for "Location & Google search" acceptance
+			isMyLocationAvailable = locationProviders
+					.contains(LocationManager.NETWORK_PROVIDER)
+					|| locationProviders.contains(LocationManager.GPS_PROVIDER);
+
+			if (isMyLocationAvailable) {
+				myLocationListener = new MyLocationListener();
+				locationManager = (LocationManager) context
+						.getSystemService(Context.LOCATION_SERVICE);
+
+				try {
+					locationManager.requestLocationUpdates(
+							LocationManager.NETWORK_PROVIDER, 0, 0,
+							myLocationListener);
+				} catch (Exception e) {
+					isNetworkProviderOn = false;
+				}
+
+				try {
+					locationManager.requestLocationUpdates(
+							LocationManager.GPS_PROVIDER, 0, 0,
+							myLocationListener);
+				} catch (Exception e) {
+					isGpsProviderOn = false;
+				}
 			}
 
-			try {
-				locationManager.requestLocationUpdates(
-						LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
-			} catch (Exception e) {
-				isGpsProviderOn = false;
-			}
-
-			// Create progress dialog showing the loading message (if needed)
-			if (progressDialog != null) {
-				progressDialog.setIndeterminate(true);
-				progressDialog.setCancelable(true);
-				progressDialog
-						.setOnCancelListener(new DialogInterface.OnCancelListener() {
-							public void onCancel(DialogInterface dialog) {
-								cancel(true);
-							}
-						});
-				progressDialog.show();
-			}
+			createLoadingView();
 		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			if (isNetworkProviderOn || isGpsProviderOn) {
+			if (isMyLocationAvailable
+					&& (isNetworkProviderOn || isGpsProviderOn)) {
 				while (this.latitude == 0.0 && this.longitude == 0.0) {
-					// Repeat until the user obtain coordinates
+					if (isCancelled()) {
+						break;
+					}
 				}
 			}
 
@@ -323,14 +332,8 @@ public class ClosestStationsList extends FragmentActivity {
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 
-			try {
-				progressDialog.dismiss();
-			} catch (Exception e) {
-				// Workaround used just in case the orientation is changed once
-				// retrieving info
-			}
-
-			if (isNetworkProviderOn || isGpsProviderOn) {
+			if (isMyLocationAvailable
+					&& (isNetworkProviderOn || isGpsProviderOn)) {
 				LatLng currentLocation = new LatLng(this.latitude,
 						this.longitude);
 
@@ -347,36 +350,18 @@ public class ClosestStationsList extends FragmentActivity {
 					refreshClosestStationsListFragment();
 				}
 			} else {
-				OnClickListener positiveOnClickListener = new OnClickListener() {
-					public void onClick(DialogInterface dialog, int i) {
-						Intent intent = new Intent(
-								android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-						context.startActivity(intent);
-					}
-
-				};
-
-				ActivityUtils.showCustomAlertDialog(context,
-						android.R.drawable.ic_menu_mylocation,
-						context.getString(R.string.app_dialog_title_error),
-						context.getString(R.string.app_location_error),
-						context.getString(R.string.app_button_yes),
-						positiveOnClickListener,
-						context.getString(R.string.app_button_no), null);
+				DialogFragment dialogFragment = new LocationSourceDialog();
+				dialogFragment.show(getSupportFragmentManager(),
+						"dialogFragment");
 			}
+
+			dismissLoadingView();
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-
-			try {
-				progressDialog.dismiss();
-				locationManager.removeUpdates(myLocationListener);
-			} catch (Exception e) {
-				// Workaround used just in case when this activity is destroyed
-				// before the dialog
-			}
+			dismissLoadingView();
 		}
 
 		public class MyLocationListener implements LocationListener {
@@ -391,10 +376,24 @@ public class ClosestStationsList extends FragmentActivity {
 
 			@Override
 			public void onProviderDisabled(String provider) {
+				if (provider.equals(LocationManager.NETWORK_PROVIDER)) {
+					isNetworkProviderOn = false;
+				}
+
+				if (provider.equals(LocationManager.GPS_PROVIDER)) {
+					isGpsProviderOn = false;
+				}
 			}
 
 			@Override
 			public void onProviderEnabled(String provider) {
+				if (provider.equals(LocationManager.NETWORK_PROVIDER)) {
+					isNetworkProviderOn = true;
+				}
+
+				if (provider.equals(LocationManager.GPS_PROVIDER)) {
+					isGpsProviderOn = true;
+				}
 			}
 
 			@Override
@@ -403,6 +402,39 @@ public class ClosestStationsList extends FragmentActivity {
 			}
 		}
 
-	}
+		/**
+		 * Create the loading view and lock the screen
+		 */
+		private void createLoadingView() {
+			ActivityUtils.lockScreenOrientation(context);
 
+			// Create progress dialog showing the loading message (if needed)
+			if (progressDialog != null) {
+				progressDialog.setIndeterminate(true);
+				progressDialog.setCancelable(true);
+				progressDialog
+						.setOnCancelListener(new DialogInterface.OnCancelListener() {
+							public void onCancel(DialogInterface dialog) {
+								cancel(true);
+							}
+						});
+				progressDialog.show();
+			}
+		}
+
+		/**
+		 * Dismiss the loading view and unlock the screen
+		 */
+		private void dismissLoadingView() {
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
+
+			if (locationManager != null) {
+				locationManager.removeUpdates(myLocationListener);
+			}
+
+			ActivityUtils.unlockScreenOrientation(context);
+		}
+	}
 }

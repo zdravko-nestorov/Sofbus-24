@@ -12,7 +12,6 @@ import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -198,7 +197,8 @@ public class MetroStationFragment extends ListFragment {
 	 */
 	private void actionsOverSearchEditText(final SearchEditText searchEditText,
 			final TextView emptyList) {
-		searchEditText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+		// TODO: Find a way to set an alphanumeric keyboard with numeric as
+		// default
 		searchEditText.setFilters(new InputFilter[] { ActivityUtils
 				.createInputFilter() });
 		searchEditText.setText(searchText);
@@ -272,16 +272,7 @@ public class MetroStationFragment extends ListFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(true);
-			progressDialog
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						public void onCancel(DialogInterface dialog) {
-							cancel(true);
-						}
-					});
-			progressDialog.show();
+			createLoadingView();
 		}
 
 		@Override
@@ -314,26 +305,42 @@ public class MetroStationFragment extends ListFragment {
 		protected void onPostExecute(Intent metroMapRouteIntent) {
 			super.onPostExecute(metroMapRouteIntent);
 
-			try {
-				progressDialog.dismiss();
-			} catch (Exception e) {
-				// Workaround used just in case the orientation is changed once
-				// retrieving info
-			}
-
 			context.startActivity(metroMapRouteIntent);
+			dismissLoadingView();
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
+			dismissLoadingView();
+		}
 
-			try {
+		/**
+		 * Create the loading view and lock the screen
+		 */
+		private void createLoadingView() {
+			ActivityUtils.lockScreenOrientation(context);
+
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						public void onCancel(DialogInterface dialog) {
+							cancel(true);
+						}
+					});
+			progressDialog.show();
+		}
+
+		/**
+		 * Dismiss the loading view and unlock the screen
+		 */
+		private void dismissLoadingView() {
+			if (progressDialog != null) {
 				progressDialog.dismiss();
-			} catch (Exception e) {
-				// Workaround used just in case when this activity is destroyed
-				// before the dialog
 			}
+
+			ActivityUtils.unlockScreenOrientation(context);
 		}
 	}
 

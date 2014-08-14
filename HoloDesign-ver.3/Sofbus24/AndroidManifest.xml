@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="bg.znestorov.sofbus24.main"
-    android:versionCode="16"
-    android:versionName="2.0.1" >
+    android:versionCode="17"
+    android:versionName="2.1" >
 
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="16" />
+        android:targetSdkVersion="16"
+        tools:ignore="OldTargetApi" />
 
     <permission
         android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE"
@@ -36,7 +38,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="@string/google_maps_api_2_map_release_home" />
+            android:value="@string/google_maps_api_2_map_debug_home" />
 
         <activity
             android:name="bg.znestorov.sofbus24.main.Sofbus24"

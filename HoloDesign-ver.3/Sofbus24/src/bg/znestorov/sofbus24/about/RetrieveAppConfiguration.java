@@ -7,14 +7,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.text.Html;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import bg.znestorov.sofbus24.entity.Config;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -30,11 +27,11 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
  */
 public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 
-	private Activity context;
+	private FragmentActivity context;
 	private ProgressDialog progressDialog;
 	private boolean updateApp;
 
-	public RetrieveAppConfiguration(Activity context,
+	public RetrieveAppConfiguration(FragmentActivity context,
 			ProgressDialog progressDialog, boolean updateApp) {
 		this.context = context;
 		this.progressDialog = progressDialog;
@@ -44,16 +41,7 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-
-		progressDialog.setIndeterminate(true);
-		progressDialog.setCancelable(true);
-		progressDialog
-				.setOnCancelListener(new DialogInterface.OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
-						cancel(true);
-					}
-				});
-		progressDialog.show();
+		createLoadingView();
 	}
 
 	@Override
@@ -61,8 +49,7 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 		Config appConfig = null;
 
 		try {
-			// Get the configuration as InputSource from the station URL
-			// address
+			// Get the configuration as an InputStream from the station URL
 			DocumentBuilderFactory factory = DocumentBuilderFactory
 					.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -82,13 +69,6 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 	protected void onPostExecute(Config newConfig) {
 		super.onPostExecute(newConfig);
 
-		try {
-			progressDialog.dismiss();
-		} catch (Exception e) {
-			// Workaround used just in case the orientation is changed once
-			// retrieving info
-		}
-
 		// Check if the information is successfully retrieved or an Internet
 		// error occurred
 		if (newConfig.isValidConfig()) {
@@ -102,18 +82,14 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 		} else {
 			ActivityUtils.showNoInternetToast(context);
 		}
+
+		dismissLoadingView();
 	}
 
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
-
-		try {
-			progressDialog.dismiss();
-		} catch (Exception e) {
-			// Workaround used just in case when this activity is destroyed
-			// before the dialog
-		}
+		dismissLoadingView();
 	}
 
 	/**
@@ -139,36 +115,17 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 		}
 
 		// Check if new DB is available
+		DialogFragment dialogFragment;
 		if (stationsDatabaseUrl != null || vehiclesDatabaseUrl != null) {
-			final String finalStationsDatabaseUrl = stationsDatabaseUrl;
-			final String finalVehiclesDatabaseUrl = vehiclesDatabaseUrl;
-
-			OnClickListener positiveOnClickListener = new OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					ProgressDialog progressDialog = new ProgressDialog(context);
-					progressDialog.setMessage(Html.fromHtml(context
-							.getString(R.string.about_update_db_copy)));
-					RetrieveDatabases retrieveDatabases = new RetrieveDatabases(
-							context, progressDialog, finalStationsDatabaseUrl,
-							finalVehiclesDatabaseUrl, newConfig);
-					retrieveDatabases.execute();
-				}
-			};
-
-			ActivityUtils.showCustomAlertDialog(context,
-					android.R.drawable.ic_menu_info_details,
-					context.getString(R.string.app_dialog_title_important),
-					context.getString(R.string.about_update_db_new),
-					context.getString(R.string.app_button_yes),
-					positiveOnClickListener,
-					context.getString(R.string.app_button_no), null);
+			dialogFragment = UpdateDatabaseDialog.newInstance(
+					stationsDatabaseUrl, vehiclesDatabaseUrl, newConfig);
+			dialogFragment.show(context.getSupportFragmentManager(),
+					"dialogFragment");
 		} else {
-			ActivityUtils.showCustomAlertDialog(context,
-					android.R.drawable.ic_menu_info_details,
-					context.getString(R.string.app_dialog_title_info),
-					context.getString(R.string.about_update_db_last), null,
-					null, context.getString(R.string.app_button_ok), null);
+			dialogFragment = UpdateInformationDialog.newInstance(context
+					.getString(R.string.about_update_db_last));
+			dialogFragment.show(context.getSupportFragmentManager(),
+					"dialogFragment");
 		}
 	}
 
@@ -181,43 +138,49 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 	 *            the new application configuration
 	 */
 	private void updateApp(Config currentConfig, Config newConfig) {
+
 		// Check if new application version is available
+		DialogFragment dialogFragment;
 		if (currentConfig.getVersionCode() < newConfig.getVersionCode()) {
-			OnClickListener positiveOnClickListener = new OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					String appPackageName = context.getPackageName();
-
-					try {
-						context.startActivity(new Intent(Intent.ACTION_VIEW,
-								Uri.parse("market://details?id="
-										+ appPackageName)));
-					} catch (android.content.ActivityNotFoundException anfe) {
-						context.startActivity(new Intent(
-								Intent.ACTION_VIEW,
-								Uri.parse("http://play.google.com/store/apps/details?id="
-										+ appPackageName)));
-					}
-				}
-			};
-
-			ActivityUtils.showCustomAlertDialog(context,
-					android.R.drawable.ic_menu_info_details, context
-							.getString(R.string.app_dialog_title_important),
-					Html.fromHtml(String.format(
-							context.getString(R.string.about_update_app_new),
-							newConfig.getVersionName())), context
-							.getString(R.string.app_button_yes),
-					positiveOnClickListener, context
-							.getString(R.string.app_button_no), null);
+			dialogFragment = UpdateApplicationDialog.newInstance(String.format(
+					context.getString(R.string.about_update_app_new),
+					newConfig.getVersionName()));
+			dialogFragment.show(context.getSupportFragmentManager(),
+					"dialogFragment");
 		} else {
-			ActivityUtils.showCustomAlertDialog(context,
-					android.R.drawable.ic_menu_info_details, context
-							.getString(R.string.app_dialog_title_info), Html
-							.fromHtml(String.format(context
-									.getString(R.string.about_update_app_last),
-									currentConfig.getVersionName())), null,
-					null, context.getString(R.string.app_button_ok), null);
+			dialogFragment = UpdateInformationDialog.newInstance(String.format(
+					context.getString(R.string.about_update_app_last),
+					currentConfig.getVersionName()));
+			dialogFragment.show(context.getSupportFragmentManager(),
+					"dialogFragment");
 		}
+	}
+
+	/**
+	 * Create the loading view and lock the screen
+	 */
+	private void createLoadingView() {
+		ActivityUtils.lockScreenOrientation(context);
+
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCancelable(true);
+		progressDialog
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						cancel(true);
+					}
+				});
+		progressDialog.show();
+	}
+
+	/**
+	 * Dismiss the loading view and unlock the screen
+	 */
+	private void dismissLoadingView() {
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+		}
+
+		ActivityUtils.unlockScreenOrientation(context);
 	}
 }

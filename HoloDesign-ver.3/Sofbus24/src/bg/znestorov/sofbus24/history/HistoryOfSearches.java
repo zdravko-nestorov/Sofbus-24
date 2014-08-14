@@ -157,7 +157,16 @@ public class HistoryOfSearches {
 					Constants.HISTORY_PREFERENCES_SEARCH_TYPE + i, null);
 			historyTypeString = TranslatorCyrillicToLatin.translate(context,
 					historyTypeString);
-			VehicleType historyType = VehicleType.valueOf(historyTypeString);
+
+			// Strange case when the vehicle type written in the preferences
+			// file is empty or not a valid one (GooglePlay bug:
+			// IllegalArgumentException)
+			VehicleType historyType;
+			try {
+				historyType = VehicleType.valueOf(historyTypeString);
+			} catch (Exception e) {
+				historyType = VehicleType.BTT;
+			}
 
 			historyList.add(new HistoryEntity(historyName, historyDate,
 					historyType));

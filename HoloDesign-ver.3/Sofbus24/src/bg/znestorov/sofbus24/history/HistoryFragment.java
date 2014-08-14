@@ -4,9 +4,8 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -20,11 +19,11 @@ import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
 import bg.znestorov.sofbus24.entity.RefreshableListFragment;
 import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.history.HistoryDeleteAllDialog.OnDeleteAllHistoryListener;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
-import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
 /**
@@ -35,7 +34,7 @@ import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
  * 
  */
 public class HistoryFragment extends ListFragment implements
-		RefreshableListFragment {
+		RefreshableListFragment, OnDeleteAllHistoryListener {
 
 	private Activity context;
 
@@ -51,11 +50,6 @@ public class HistoryFragment extends ListFragment implements
 		historyFragment.setArguments(bundle);
 
 		return historyFragment;
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
 	}
 
 	@Override
@@ -113,30 +107,13 @@ public class HistoryFragment extends ListFragment implements
 		case R.id.action_history_delete_all:
 			// Check if there are any registred searches
 			if (searchesCount > 0) {
-				OnClickListener positiveOnClickListener = new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						HistoryOfSearches.getInstance(context)
-								.clearHistoryOfSearches();
-						historyList.clear();
-						historyAdapter.notifyDataSetChanged();
+				DialogFragment dialogFragment = HistoryDeleteAllDialog
+						.newInstance();
+				dialogFragment.setTargetFragment(this, 0);
 
-						Toast.makeText(
-								context,
-								Html.fromHtml(getString(R.string.history_menu_remove_all_toast)),
-								Toast.LENGTH_SHORT).show();
-					}
-				};
-
-				ActivityUtils
-						.showCustomAlertDialog(
-								context,
-								android.R.drawable.ic_menu_delete,
-								getString(R.string.app_dialog_title_important),
-								Html.fromHtml(getString(R.string.history_menu_remove_all_confirmation)),
-								getString(R.string.app_button_yes),
-								positiveOnClickListener,
-								getString(R.string.app_button_no), null);
+				// TODO: Find a way to retain the DialogFragment on orientation
+				// changes
+				dialogFragment.show(getFragmentManager(), "dialog");
 			} else {
 				Toast.makeText(
 						context,
@@ -197,5 +174,17 @@ public class HistoryFragment extends ListFragment implements
 			retrieveMetroSchedule.execute();
 			break;
 		}
+	}
+
+	@Override
+	public void onDeleteAllHistoryClicked() {
+		HistoryOfSearches.getInstance(context).clearHistoryOfSearches();
+		historyList.clear();
+		historyAdapter.notifyDataSetChanged();
+
+		Toast.makeText(
+				context,
+				Html.fromHtml(getString(R.string.history_menu_remove_all_toast)),
+				Toast.LENGTH_SHORT).show();
 	}
 }

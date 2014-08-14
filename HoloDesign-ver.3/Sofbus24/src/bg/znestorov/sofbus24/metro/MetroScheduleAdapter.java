@@ -74,15 +74,15 @@ public class MetroScheduleAdapter extends ArrayAdapter<String> {
 			} else {
 				rowView.setBackgroundColor(Color.parseColor("#FFFFFF"));
 			}
+		}
 
-			// Make the rows that the vehicle already passed inactive
-			if (metroSchedule.contains("~")) {
-				viewHolder.scheduleMetroHour.setTextColor(Color
-						.parseColor("#000000"));
-			} else {
-				viewHolder.scheduleMetroHour.setTextColor(Color
-						.parseColor("#8B8B8B"));
-			}
+		// Make the rows that the vehicle already passed inactive
+		if (metroSchedule.contains("~")) {
+			viewHolder.scheduleMetroHour.setTextColor(Color
+					.parseColor("#000000"));
+		} else {
+			viewHolder.scheduleMetroHour.setTextColor(Color
+					.parseColor("#8B8B8B"));
 		}
 
 		rowView.setOnClickListener(null);

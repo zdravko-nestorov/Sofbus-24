@@ -4,28 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.text.Editable;
 import android.text.Html;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -66,6 +57,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 	private Activity context;
 	private GlobalEntity globalContext;
+	private FavouritesStationFragment favouritesStationFragment;
 
 	private List<Station> originalStations;
 	private List<Station> filteredStations;
@@ -96,11 +88,15 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 	private boolean expandedListItem;
 
-	public FavouritesStationAdapter(Activity context, List<Station> stations) {
+	public FavouritesStationAdapter(Activity context,
+			FavouritesStationFragment favouritesStationFragment,
+			List<Station> stations) {
 		super(context, R.layout.activity_favourites_list_item, stations);
+
 		this.context = context;
 		this.globalContext = (GlobalEntity) context.getApplicationContext();
 		this.language = LanguageChange.getUserLocale(context);
+		this.favouritesStationFragment = favouritesStationFragment;
 
 		this.originalStations = stations;
 		this.filteredStations = stations;
@@ -108,7 +104,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		this.favouritesDatasource = new FavouritesDataSource(context);
 		this.stationsDataSource = new StationsDataSource(context);
 
-		displayImageOptions = ActivityUtils.displayImageOptions();
+		this.displayImageOptions = ActivityUtils.displayImageOptions();
+		this.imageLoader.init(ActivityUtils.initImageLoader(context));
+
 		setExpandedListItemValue();
 	}
 
@@ -518,146 +516,13 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 * @param position
 	 *            the position of the station in the List
 	 */
-	private void createEditDialog(final Station station, final int position) {
-		AlertDialog.Builder alert = new AlertDialog.Builder(context);
-		alert.setTitle(R.string.fav_item_rename_title);
-		alert.setIcon(android.R.drawable.ic_menu_edit);
-		alert.setMessage(Html.fromHtml(String.format(
-				context.getString(R.string.fav_item_rename_msg),
-				station.getName(), station.getNumber())));
+	private void createEditDialog(Station station, int position) {
+		FavouritesRenameDialog favouritesRenameDialog = FavouritesRenameDialog
+				.newInstance(station, position);
+		favouritesRenameDialog.setTargetFragment(favouritesStationFragment, 0);
+		favouritesRenameDialog.show(
+				favouritesStationFragment.getFragmentManager(), "dialog");
 
-		// Set an EditText view to get user input
-		final EditText input = new EditText(context);
-		input.setHint(context.getString(R.string.fav_item_rename_hint));
-		input.setMaxLines(1);
-
-		alert.setView(input);
-
-		alert.setPositiveButton(context.getString(R.string.app_button_ok),
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						renameStation(input, station, position);
-					}
-				});
-
-		alert.setNegativeButton(context.getString(R.string.app_button_cancel),
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						// Do Nothing
-					}
-				});
-
-		final AlertDialog dialog = alert.create();
-		dialog.show();
-		dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
-
-		// Add a click listener when ENTER key is pressed
-		input.setOnKeyListener(new OnKeyListener() {
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if (event.getAction() == KeyEvent.ACTION_DOWN
-						&& keyCode == KeyEvent.KEYCODE_ENTER) {
-					// Check if any value is entered and if so - rename the
-					// station and close the dialog
-					boolean isRenamed = renameStation(input, station, position);
-					if (isRenamed) {
-						dialog.cancel();
-					}
-
-					return true;
-				}
-
-				return false;
-			}
-		});
-
-		// Add on change text listener on the input field
-		input.addTextChangedListener(new TextWatcher() {
-			public void afterTextChanged(Editable s) {
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				String inputText = input.getText().toString();
-
-				if (inputText.length() == 0) {
-					dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(false);
-				} else {
-					dialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(true);
-				}
-			}
-		});
-
-		// Add Focus listener on the input field
-		input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (!hasFocus) {
-					ActivityUtils.hideKeyboard(context, input);
-				} else {
-					dialog.getWindow()
-							.setSoftInputMode(
-									WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-				}
-			}
-		});
-
-		// Request focus
-		input.requestFocus();
-	}
-
-	/**
-	 * Check if the text entered in the EditText field fulfill some conditions
-	 * and if yes - rename the station in the Favorites DB
-	 * 
-	 * 
-	 * @param input
-	 *            the EditText input field
-	 * @param station
-	 *            the station object on the current row
-	 * @param position
-	 *            the row number
-	 * @return if the station is renamed or not
-	 */
-	private boolean renameStation(EditText input, Station station, int position) {
-		String editTextInput = input.getText().toString();
-
-		if (editTextInput != null && !"".equals(editTextInput)) {
-			// Hide the keyboard
-			ActivityUtils.hideKeyboard(context, input);
-
-			// Remove the station from the List
-			remove(station);
-
-			String oldStationName = station.getName();
-			String newStationName = editTextInput;
-			station.setName(newStationName);
-
-			// Add the updated station to the List
-			insert(station, position);
-			notifyDataSetChanged();
-
-			// Update the station parameters in the DB
-			favouritesDatasource.open();
-			favouritesDatasource.updateStation(station);
-			favouritesDatasource.close();
-
-			// Show toast message
-			Toast.makeText(
-					context,
-					Html.fromHtml(String.format(context
-							.getString(R.string.app_toast_rename_favourites),
-							oldStationName, station.getNumber(),
-							newStationName, station.getNumber())),
-					Toast.LENGTH_LONG).show();
-
-			return true;
-		}
-
-		return false;
 	}
 
 	/**

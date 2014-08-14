@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.utils.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -65,6 +66,7 @@ public class SearchEditText extends EditText {
 	}
 
 	@Override
+	@SuppressLint("ClickableViewAccessibility")
 	public boolean onTouchEvent(MotionEvent event) {
 		Rect bounds;
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -180,6 +182,20 @@ public class SearchEditText extends EditText {
 
 		}
 		return super.onTouchEvent(event);
+	}
+
+	@Override
+	protected void onTextChanged(CharSequence text, int start,
+			int lengthBefore, int lengthAfter) {
+		super.onTextChanged(text, start, lengthBefore, lengthAfter);
+
+		if (this.getText().toString().length() > 0) {
+			this.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null,
+					drawableRight, null);
+		} else {
+			this.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null,
+					null, null);
+		}
 	}
 
 	@Override

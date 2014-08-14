@@ -79,6 +79,9 @@ public class StationMap extends Activity {
 				stationBundle.setType(VehicleType.NOIMAGE);
 			}
 
+			// Initialize GoogleMaps without the current location
+			initGoogleMaps(stationBundle, null);
+
 			// Activate my location, set a location button that center the map
 			// over a point and start a LocationChangeListener
 			stationMap.setMyLocationEnabled(true);
@@ -87,7 +90,10 @@ public class StationMap extends Activity {
 					.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
 						@Override
 						public void onMyLocationChange(Location currentLocation) {
-							initGoogleMaps(stationBundle, currentLocation);
+							if (currentLocation != null) {
+								stationMap.clear();
+								initGoogleMaps(stationBundle, currentLocation);
+							}
 						}
 					});
 		}
@@ -203,12 +209,20 @@ public class StationMap extends Activity {
 				.position(centerStationLocation)
 				.title(String.format(metroStation.getName() + " (%s)",
 						metroStation.getNumber()))
-				.snippet(
-						String.format(context.getString(R.string.app_distance),
-								MapUtils.getMapDistance(context,
-										currentLocation, metroStation)))
 				.icon(BitmapDescriptorFactory
 						.fromResource(getMarkerIcon(metroStation.getType())));
+
+		// Check if the user is already localized
+		if (currentLocation != null) {
+			stationMarkerOptions = stationMarkerOptions.snippet(String.format(
+					context.getString(R.string.app_distance), MapUtils
+							.getMapDistance(context, currentLocation,
+									metroStation)));
+		} else {
+			stationMarkerOptions = stationMarkerOptions.snippet(String
+					.format(context.getString(R.string.app_distance_none)));
+		}
+
 		Marker stationMarker = stationMap.addMarker(stationMarkerOptions);
 		stationMarker.showInfoWindow();
 	}
@@ -227,12 +241,21 @@ public class StationMap extends Activity {
 				.position(centerStationLocation)
 				.title(String.format(ptStation.getName() + " (%s)",
 						ptStation.getNumber()))
-				.snippet(
-						String.format(context.getString(R.string.app_distance),
-								MapUtils.getMapDistance(context,
-										currentLocation, ptStation)))
 				.icon(BitmapDescriptorFactory
 						.fromResource(getMarkerIcon(ptStation.getType())));
+
+		// Check if the user is already localized
+		if (currentLocation != null) {
+			stationMarkerOptions = stationMarkerOptions
+					.snippet(String.format(context
+							.getString(R.string.app_distance),
+							MapUtils.getMapDistance(context, currentLocation,
+									ptStation)));
+		} else {
+			stationMarkerOptions = stationMarkerOptions.snippet(String
+					.format(context.getString(R.string.app_distance_none)));
+		}
+
 		Marker stationMarker = stationMap.addMarker(stationMarkerOptions);
 		stationMarker.showInfoWindow();
 	}
@@ -251,12 +274,20 @@ public class StationMap extends Activity {
 				.position(centerStationLocation)
 				.title(String.format(vbTimeStation.getName() + " (%s)",
 						vbTimeStation.getNumber()))
-				.snippet(
-						String.format(context.getString(R.string.app_distance),
-								MapUtils.getMapDistance(context,
-										currentLocation, vbTimeStation)))
 				.icon(BitmapDescriptorFactory
 						.fromResource(getMarkerIcon(vbTimeStation.getType())));
+
+		// Check if the user is already localized
+		if (currentLocation != null) {
+			stationMarkerOptions = stationMarkerOptions.snippet(String.format(
+					context.getString(R.string.app_distance), MapUtils
+							.getMapDistance(context, currentLocation,
+									vbTimeStation)));
+		} else {
+			stationMarkerOptions = stationMarkerOptions.snippet(String
+					.format(context.getString(R.string.app_distance_none)));
+		}
+
 		Marker stationMarker = stationMap.addMarker(stationMarkerOptions);
 		stationMarker.showInfoWindow();
 	}
@@ -269,8 +300,17 @@ public class StationMap extends Activity {
 	 *            the location of the station over the map (using LatLng object)
 	 */
 	private void animateMapFocus(LatLng stationLocation) {
+		LatLng focussedLatLng;
+
+		// Check if the user is already localized
+		if (stationLocation != null) {
+			focussedLatLng = stationLocation;
+		} else {
+			focussedLatLng = centerStationLocation;
+		}
+
 		CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(stationLocation).zoom(17).build();
+				.target(focussedLatLng).zoom(17).build();
 		stationMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
 	}
@@ -284,9 +324,18 @@ public class StationMap extends Activity {
 	 *            object)
 	 */
 	private void animateMapFocus(Location stationLocation) {
+		LatLng focussedLatLng;
+
+		// Check if the user is already localized
+		if (stationLocation != null) {
+			focussedLatLng = new LatLng(stationLocation.getLatitude(),
+					stationLocation.getLongitude());
+		} else {
+			focussedLatLng = centerStationLocation;
+		}
+
 		CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(new LatLng(stationLocation.getLatitude(),
-						stationLocation.getLongitude())).zoom(17).build();
+				.target(focussedLatLng).zoom(17).build();
 		stationMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
 	}

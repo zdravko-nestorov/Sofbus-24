@@ -106,8 +106,8 @@ public class Configuration {
 	public static void editConfiguration(Activity context, Config newConfig) {
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);
-		final Editor edit = sharedPreferences.edit();
 
+		Editor edit = sharedPreferences.edit();
 		edit.clear();
 		edit.putString(Constants.CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY,
 				newConfig.isFavouritesVisibilå() + "");
@@ -144,8 +144,8 @@ public class Configuration {
 			Config newConfig) {
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);
-		final Editor edit = sharedPreferences.edit();
 
+		Editor edit = sharedPreferences.edit();
 		edit.putString(Constants.CONFIGURATION_PREF_STATIONS_KEY,
 				newConfig.getStationsDbVersion() + "");
 		edit.putString(Constants.CONFIGURATION_PREF_VEHICLES_KEY,
@@ -165,8 +165,8 @@ public class Configuration {
 			Config newConfig) {
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);
-		final Editor edit = sharedPreferences.edit();
 
+		Editor edit = sharedPreferences.edit();
 		edit.putString(Constants.CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY,
 				newConfig.isFavouritesVisibilå() + "");
 		edit.putString(Constants.CONFIGURATION_PREF_FAVOURITES_POSITION_KEY,

@@ -150,7 +150,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			startActivity(historyIntent);
 			return true;
 		case R.id.action_closest_stations_map:
-			new RetrieveCurrentLocation(context).execute();
+			new RetrieveCurrentLocation(this).execute();
 			return true;
 		case R.id.action_closest_stations_list:
 			ProgressDialog progressDialog = new ProgressDialog(context);
@@ -187,9 +187,6 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	private void initLayoutFields() {
 		// Creates the configuration file
 		Configuration.createConfiguration(context);
-
-		// Initialize the UIL image loader
-		ActivityUtils.initImageLoader(context);
 
 		// Set the tabs to the ActionBar
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

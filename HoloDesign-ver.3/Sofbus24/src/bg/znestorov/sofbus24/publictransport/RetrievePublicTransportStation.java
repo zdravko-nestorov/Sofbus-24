@@ -48,25 +48,17 @@ public class RetrievePublicTransportStation extends
 			DirectionsEntity ptDirectionsEntity) {
 		this.context = context;
 		this.progressDialog = progressDialog;
+
 		this.ptStation = ptStation;
 		this.ptDirectionsEntity = ptDirectionsEntity;
 
-		activeDirection = ptDirectionsEntity.getActiveDirection();
+		this.activeDirection = ptDirectionsEntity.getActiveDirection();
 	}
 
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-
-		progressDialog.setIndeterminate(true);
-		progressDialog.setCancelable(true);
-		progressDialog
-				.setOnCancelListener(new DialogInterface.OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
-						cancel(true);
-					}
-				});
-		progressDialog.show();
+		createLoadingView();
 	}
 
 	@Override
@@ -94,13 +86,6 @@ public class RetrievePublicTransportStation extends
 	protected void onPostExecute(final PublicTransportStation ptStation) {
 		super.onPostExecute(ptStation);
 
-		try {
-			progressDialog.dismiss();
-		} catch (Exception e) {
-			// Workaround used just in case the orientation is changed once
-			// retrieving info
-		}
-
 		// Check if the information is correctly retrieved from SKGT site
 		if (ptStation.isScheduleSet()) {
 			Utils.addStationInHistory(context, ptStation);
@@ -113,18 +98,14 @@ public class RetrievePublicTransportStation extends
 		} else {
 			ActivityUtils.showNoInternetOrInfoToast(context);
 		}
+
+		dismissLoadingView();
 	}
 
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
-
-		try {
-			progressDialog.dismiss();
-		} catch (Exception e) {
-			// Workaround used just in case when this activity is destroyed
-			// before the dialog
-		}
+		dismissLoadingView();
 	}
 
 	/**
@@ -174,5 +155,33 @@ public class RetrievePublicTransportStation extends
 				+ URLEncodedUtils.format(result, "UTF-8");
 
 		return returnURL;
+	}
+
+	/**
+	 * Create the loading view and lock the screen
+	 */
+	private void createLoadingView() {
+		ActivityUtils.lockScreenOrientation(context);
+
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCancelable(true);
+		progressDialog
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						cancel(true);
+					}
+				});
+		progressDialog.show();
+	}
+
+	/**
+	 * Dismiss the loading view and unlock the screen
+	 */
+	private void dismissLoadingView() {
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+		}
+
+		ActivityUtils.unlockScreenOrientation(context);
 	}
 }

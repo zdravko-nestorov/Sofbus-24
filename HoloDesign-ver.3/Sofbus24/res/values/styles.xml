@@ -1,14 +1,7 @@
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.    -->
-    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.        -->
-    </style>
+    <!-- Light Theme -->
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light" />
 
     <!-- Application theme -->
     <style name="AppTheme" parent="AppBaseTheme">
@@ -22,6 +15,18 @@
     <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance">
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Dark Theme -->
+    <style name="AppBaseThemeDark" parent="android:Theme.Holo" />
+
+    <!-- Application theme -->
+    <style name="AppThemeDark" parent="AppBaseTheme">
+        <item name="android:actionBarStyle">@style/MyTheme.ActionBarStyleDark</item>
+    </style>
+
+    <style name="MyTheme.ActionBarStyleDark" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
     </style>
 
 </resources>

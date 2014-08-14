@@ -1,20 +1,21 @@
 package bg.znestorov.sofbus24.main;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.about.RetrieveAppConfiguration;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
-public class About extends Activity {
+public class About extends FragmentActivity {
 
-	private Activity context;
+	private FragmentActivity context;
 	private ActionBar actionBar;
 
 	@Override
@@ -30,12 +31,12 @@ public class About extends Activity {
 		TextView aboutInformation = (TextView) findViewById(R.id.about_information);
 
 		// Set the TextViews a formatted text
-		String appVersion;
+		String appVersion = "0.0";
 		try {
 			appVersion = getPackageManager()
 					.getPackageInfo(getPackageName(), 0).versionName;
 		} catch (NameNotFoundException e) {
-			appVersion = null;
+			// This should never be reached (the package exists)
 		}
 		aboutInformation.setText(Html.fromHtml(String.format(
 				getString(R.string.about_information),
@@ -66,16 +67,24 @@ public class About extends Activity {
 			finish();
 			return true;
 		case R.id.action_about_update_db:
-			progressDialog.setMessage(getString(R.string.about_update_db));
-			retrieveAppConfiguration = new RetrieveAppConfiguration(context,
-					progressDialog, false);
-			retrieveAppConfiguration.execute();
+			if (ActivityUtils.haveNetworkConnection(context)) {
+				progressDialog.setMessage(getString(R.string.about_update_db));
+				retrieveAppConfiguration = new RetrieveAppConfiguration(
+						context, progressDialog, false);
+				retrieveAppConfiguration.execute();
+			} else {
+				ActivityUtils.showNoInternetToast(context);
+			}
 			return true;
 		case R.id.action_about_update_app:
-			progressDialog.setMessage(getString(R.string.about_update_app));
-			retrieveAppConfiguration = new RetrieveAppConfiguration(context,
-					progressDialog, true);
-			retrieveAppConfiguration.execute();
+			if (ActivityUtils.haveNetworkConnection(context)) {
+				progressDialog.setMessage(getString(R.string.about_update_app));
+				retrieveAppConfiguration = new RetrieveAppConfiguration(
+						context, progressDialog, true);
+				retrieveAppConfiguration.execute();
+			} else {
+				ActivityUtils.showNoInternetToast(context);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

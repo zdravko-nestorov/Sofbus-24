@@ -42,16 +42,7 @@ public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStation> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-
-		progressDialog.setIndeterminate(true);
-		progressDialog.setCancelable(true);
-		progressDialog
-				.setOnCancelListener(new DialogInterface.OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
-						cancel(true);
-					}
-				});
-		progressDialog.show();
+		createLoadingView();
 	}
 
 	@Override
@@ -83,13 +74,6 @@ public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStation> {
 	protected void onPostExecute(MetroStation ms) {
 		super.onPostExecute(ms);
 
-		try {
-			progressDialog.dismiss();
-		} catch (Exception e) {
-			// Workaround used just in case the orientation is changed once
-			// retrieving info
-		}
-
 		// Check if the information is successfully retrieved or an Internet
 		// error occurred
 		if (ms.isScheduleSet()) {
@@ -102,17 +86,41 @@ public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStation> {
 		} else {
 			ActivityUtils.showNoInternetToast(context);
 		}
+
+		dismissLoadingView();
 	}
 
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
+		dismissLoadingView();
+	}
 
-		try {
+	/**
+	 * Create the loading view and lock the screen
+	 */
+	private void createLoadingView() {
+		ActivityUtils.lockScreenOrientation(context);
+
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCancelable(true);
+		progressDialog
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						cancel(true);
+					}
+				});
+		progressDialog.show();
+	}
+
+	/**
+	 * Dismiss the loading view and unlock the screen
+	 */
+	private void dismissLoadingView() {
+		if (progressDialog != null) {
 			progressDialog.dismiss();
-		} catch (Exception e) {
-			// Workaround used just in case when this activity is destroyed
-			// before the dialog
 		}
+
+		ActivityUtils.unlockScreenOrientation(context);
 	}
 }

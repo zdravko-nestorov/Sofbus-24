@@ -296,6 +296,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 	 */
 	private void loadLocationStreetView() {
 		ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.init(ActivityUtils.initImageLoader(context));
 		DisplayImageOptions displayImageOptions = ActivityUtils
 				.displayImageOptions();
 

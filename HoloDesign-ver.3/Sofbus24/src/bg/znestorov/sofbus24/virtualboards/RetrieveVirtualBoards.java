@@ -431,18 +431,7 @@ public class RetrieveVirtualBoards {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-
-			if (progressDialog != null) {
-				progressDialog.setIndeterminate(true);
-				progressDialog.setCancelable(true);
-				progressDialog
-						.setOnCancelListener(new DialogInterface.OnCancelListener() {
-							public void onCancel(DialogInterface dialog) {
-								cancel(true);
-							}
-						});
-				progressDialog.show();
-			}
+			createLoadingView();
 		}
 
 		@Override
@@ -541,13 +530,6 @@ public class RetrieveVirtualBoards {
 		protected void onPostExecute(String htmlResult) {
 			super.onPostExecute(htmlResult);
 
-			try {
-				progressDialog.dismiss();
-			} catch (Exception e) {
-				// Workaround used just in case when this activity is destroyed
-				// before the dialog
-			}
-
 			switch (htmlResultCode) {
 			case CAPTCHA_NEEDED:
 				checkCaptchaText(htmlResult);
@@ -556,19 +538,44 @@ public class RetrieveVirtualBoards {
 				proccessHtmlResult(htmlResult);
 				break;
 			}
+
+			dismissLoadingView();
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
+			dismissLoadingView();
+		}
 
-			try {
-				progressDialog.dismiss();
-				httpPost.abort();
-			} catch (Exception e) {
-				// Workaround used just in case when this activity is destroyed
-				// before the dialog
+		/**
+		 * Create the loading view and lock the screen
+		 */
+		private void createLoadingView() {
+			ActivityUtils.lockScreenOrientation(context);
+
+			if (progressDialog != null) {
+				progressDialog.setIndeterminate(true);
+				progressDialog.setCancelable(true);
+				progressDialog
+						.setOnCancelListener(new DialogInterface.OnCancelListener() {
+							public void onCancel(DialogInterface dialog) {
+								cancel(true);
+							}
+						});
+				progressDialog.show();
 			}
+		}
+
+		/**
+		 * Dismiss the loading view and unlock the screen
+		 */
+		private void dismissLoadingView() {
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
+
+			ActivityUtils.unlockScreenOrientation(context);
 		}
 	}
 
@@ -701,6 +708,7 @@ public class RetrieveVirtualBoards {
 	 *            The Bitmap CAPTCHA image
 	 */
 	private void getCaptchaText(final String captchaId, Bitmap captchaImage) {
+		// TODO: Replace the AlertDialog with a DialogFragment
 		Builder dialogBuilder = new AlertDialog.Builder(context);
 		dialogBuilder.setTitle(R.string.vb_time_sumc_captcha);
 		dialogBuilder.setMessage(R.string.vb_time_sumc_captcha_msg);
@@ -779,18 +787,7 @@ public class RetrieveVirtualBoards {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-
-			if (progressDialog != null) {
-				progressDialog.setIndeterminate(true);
-				progressDialog.setCancelable(true);
-				progressDialog
-						.setOnCancelListener(new DialogInterface.OnCancelListener() {
-							public void onCancel(DialogInterface dialog) {
-								cancel(true);
-							}
-						});
-				progressDialog.show();
-			}
+			createLoadingView();
 		}
 
 		@Override
@@ -810,32 +807,50 @@ public class RetrieveVirtualBoards {
 		protected void onPostExecute(Bitmap captchaImage) {
 			super.onPostExecute(captchaImage);
 
-			try {
-				progressDialog.dismiss();
-			} catch (Exception e) {
-				// Workaround used just in case when this activity is destroyed
-				// before the dialog
-			}
-
 			if (captchaImage != null) {
 				getCaptchaText(captchaId, captchaImage);
 			} else {
 				htmlResultCode = HtmlResultCodes.NO_INTERNET;
 				proccessHtmlResult(null);
 			}
+
+			dismissLoadingView();
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
+			dismissLoadingView();
+		}
 
-			try {
-				progressDialog.dismiss();
-				httpGet.abort();
-			} catch (Exception e) {
-				// Workaround used just in case when this activity is destroyed
-				// before the dialog
+		/**
+		 * Create the loading view and lock the screen
+		 */
+		private void createLoadingView() {
+			ActivityUtils.lockScreenOrientation(context);
+
+			if (progressDialog != null) {
+				progressDialog.setIndeterminate(true);
+				progressDialog.setCancelable(true);
+				progressDialog
+						.setOnCancelListener(new DialogInterface.OnCancelListener() {
+							public void onCancel(DialogInterface dialog) {
+								cancel(true);
+							}
+						});
+				progressDialog.show();
 			}
+		}
+
+		/**
+		 * Dismiss the loading view and unlock the screen
+		 */
+		private void dismissLoadingView() {
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
+
+			ActivityUtils.unlockScreenOrientation(context);
 		}
 	}
 
@@ -849,7 +864,16 @@ public class RetrieveVirtualBoards {
 	 */
 	private void proccessHtmlResult(String htmlResult) {
 		saveCookiesToPreferences();
-		httpClient.getConnectionManager().shutdown();
+
+		// On ICS and later network operations can't be done on the UI thread
+		// (GooglePlay bug: NetworkOnMainThreadException)
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground(Void... params) {
+				httpClient.getConnectionManager().shutdown();
+				return null;
+			}
+		}.execute();
 
 		// Hide the keyboard if it was shown because of the CAPTCHA
 		ActivityUtils.hideKeyboard(context);

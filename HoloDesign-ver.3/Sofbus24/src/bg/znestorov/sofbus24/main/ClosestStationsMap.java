@@ -38,6 +38,7 @@ import bg.znestorov.sofbus24.entity.Station;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -603,6 +604,42 @@ public class ClosestStationsMap extends FragmentActivity implements
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			createLoadingView();
+		}
+
+		@Override
+		protected List<Station> doInBackground(Void... params) {
+			if (location != null) {
+				return getClosestStations(location);
+			} else {
+				return getFavouritesStations();
+			}
+		}
+
+		@Override
+		protected void onPostExecute(List<Station> stationsList) {
+			super.onPostExecute(stationsList);
+
+			if (location != null) {
+				visualizeClosestStations(location, stationsList);
+			} else {
+				visualizeFavouritesStations(stationsList);
+			}
+
+			dismissLoadingView();
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			dismissLoadingView();
+		}
+
+		/**
+		 * Create the loading view and lock the screen
+		 */
+		private void createLoadingView() {
+			ActivityUtils.lockScreenOrientation(context);
 
 			if (progressDialogMsg != null && !"".equals(progressDialogMsg)) {
 				progressDialog = new ProgressDialog(context);
@@ -619,43 +656,15 @@ public class ClosestStationsMap extends FragmentActivity implements
 			}
 		}
 
-		@Override
-		protected List<Station> doInBackground(Void... params) {
-			if (location != null) {
-				return getClosestStations(location);
-			} else {
-				return getFavouritesStations();
-			}
-		}
-
-		@Override
-		protected void onPostExecute(List<Station> stationsList) {
-			super.onPostExecute(stationsList);
-
-			try {
+		/**
+		 * Dismiss the loading view and unlock the screen
+		 */
+		private void dismissLoadingView() {
+			if (progressDialog != null) {
 				progressDialog.dismiss();
-			} catch (Exception e) {
-				// Workaround used just in case when this activity is destroyed
-				// before the dialog (or the progress dialog is null)
 			}
 
-			if (location != null) {
-				visualizeClosestStations(location, stationsList);
-			} else {
-				visualizeFavouritesStations(stationsList);
-			}
-		}
-
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-
-			try {
-				progressDialog.dismiss();
-			} catch (Exception e) {
-				// Workaround used just in case when this activity is destroyed
-				// before the dialog (or the progress dialog is null)
-			}
+			ActivityUtils.unlockScreenOrientation(context);
 		}
 	}
 
