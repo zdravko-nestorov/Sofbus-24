@@ -4,18 +4,32 @@ import java.util.ArrayList;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+import bg.znestorov.sofbus24.databases.StationsDataSource;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
+import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.history.HistoryAdapter;
+import bg.znestorov.sofbus24.history.HistoryDeleteAllDialog;
+import bg.znestorov.sofbus24.history.HistoryDeleteAllDialog.OnDeleteAllHistoryListener;
 import bg.znestorov.sofbus24.history.HistoryEntity;
-import bg.znestorov.sofbus24.history.HistoryFragment;
 import bg.znestorov.sofbus24.history.HistoryOfSearches;
+import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.ListActivity;
+import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
 /**
  * History activity containing information about the searches
@@ -24,12 +38,16 @@ import bg.znestorov.sofbus24.utils.LanguageChange;
  * @version 1.0
  * 
  */
-public class History extends FragmentActivity {
+public class History extends ListActivity implements OnDeleteAllHistoryListener {
 
 	private Activity context;
 	private ActionBar actionBar;
 
-	private static final String FRAGMENT_TAG_NAME = "HISTORY FRAGMENT";
+	private ProgressBar loadingHistory;
+	private View historyContent;
+
+	private HistoryAdapter historyAdapter;
+	private ArrayList<HistoryEntity> historyList = new ArrayList<HistoryEntity>();
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -40,27 +58,20 @@ public class History extends FragmentActivity {
 		// Get the current context
 		context = History.this;
 
-		// Set the action bar
-		actionBar = getActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(getString(R.string.history_title));
-
-		// Get the layout fields in the view
-		final ProgressBar loadingHistory = (ProgressBar) findViewById(R.id.history_loading);
-		final View historyFragment = findViewById(R.id.history_fragment);
-
-		// Start an empty fragment
-		startFragment(savedInstanceState, new ArrayList<HistoryEntity>());
+		// Initialize the ActionBar and the Layout fields
+		initActionBar();
+		initLayoutFields();
+		setListAdapter();
 
 		// Start an asynchrnic task to load the data from the preferences file
 		new AsyncTask<Void, Void, ArrayList<HistoryEntity>>() {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
+				ActivityUtils.lockScreenOrientation(context);
 
 				loadingHistory.setVisibility(View.VISIBLE);
-				historyFragment.setVisibility(View.INVISIBLE);
+				historyContent.setVisibility(View.INVISIBLE);
 			}
 
 			@Override
@@ -70,13 +81,24 @@ public class History extends FragmentActivity {
 			}
 
 			@Override
-			protected void onPostExecute(ArrayList<HistoryEntity> historyList) {
-				super.onPostExecute(historyList);
+			protected void onPostExecute(
+					ArrayList<HistoryEntity> retrievedHistory) {
+				super.onPostExecute(retrievedHistory);
 
 				loadingHistory.setVisibility(View.INVISIBLE);
-				historyFragment.setVisibility(View.VISIBLE);
+				historyContent.setVisibility(View.VISIBLE);
 
-				refreshFragment(historyList);
+				historyList.clear();
+				historyList.addAll(retrievedHistory);
+				historyAdapter.notifyDataSetChanged();
+
+				ActivityUtils.unlockScreenOrientation(context);
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+				ActivityUtils.unlockScreenOrientation(context);
 			}
 
 		}.execute();
@@ -91,55 +113,121 @@ public class History extends FragmentActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		int searchesCount = historyList.size();
+
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+			return true;
+		case R.id.action_history_top:
+			if (searchesCount > 0) {
+				getListView().setSelectionFromTop(0, 0);
+			}
+
+			return true;
+		case R.id.action_history_delete_all:
+			if (searchesCount > 0) {
+				DialogFragment dialogFragment = HistoryDeleteAllDialog
+						.newInstance();
+				dialogFragment.show(getSupportFragmentManager(), "dialog");
+			} else {
+				Toast.makeText(
+						context,
+						Html.fromHtml(getString(R.string.history_menu_remove_all_empty_toast)),
+						Toast.LENGTH_SHORT).show();
+			}
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	/**
-	 * Create and start/restart a new HistoryFragment with all searches from the
-	 * SharedPreferences file
-	 * 
-	 * @param savedInstanceState
-	 *            the state of the current activity
-	 * @param historyList
-	 *            the list with the history searches from the SharedPreferences
-	 *            file
-	 */
-	private void startFragment(Bundle savedInstanceState,
-			ArrayList<HistoryEntity> historyList) {
-		Fragment historyFragment;
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		HistoryEntity history = (HistoryEntity) getListAdapter().getItem(
+				position);
 
-		if (savedInstanceState == null) {
-			historyFragment = HistoryFragment.newInstance(historyList);
-		} else {
-			historyFragment = getSupportFragmentManager().findFragmentByTag(
-					FRAGMENT_TAG_NAME);
+		// Get the station number and station name of the search
+		String stationNumber = Utils.getValueBetween(history.getHistoryValue(),
+				"(", ")");
+		String stationName = Utils.getValueBefore(history.getHistoryValue(),
+				"(");
+
+		// Get the corresponding station to the station number via the stations
+		// database
+		StationsDataSource stationDatasource = new StationsDataSource(context);
+		stationDatasource.open();
+		StationEntity station = stationDatasource.getStation(stationNumber);
+		stationDatasource.close();
+
+		// Check if the station is existing in the database
+		if (station == null) {
+			station = new StationEntity();
+			station.setNumber(stationNumber);
+			station.setName(stationName);
 		}
 
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.history_fragment, historyFragment,
-						FRAGMENT_TAG_NAME).commit();
+		// Check the type of station and retrieve the information accordingly
+		switch (history.getHistoryType()) {
+		case BTT:
+			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
+					context, null, station, HtmlRequestCodesEnum.SINGLE_RESULT);
+			retrieveVirtualBoards.getSumcInformation();
+			break;
+		default:
+			// Set the metro station URL address
+			station.setCustomField(String.format(Constants.METRO_STATION_URL,
+					station.getNumber()));
+
+			// Getting the Metro schedule from the station URL address
+			ProgressDialog progressDialog = new ProgressDialog(context);
+			progressDialog.setMessage(Html.fromHtml(String.format(
+					getString(R.string.metro_loading_schedule),
+					station.getName(), station.getNumber())));
+			RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
+					context, progressDialog, station);
+			retrieveMetroSchedule.execute();
+			break;
+		}
 	}
 
 	/**
-	 * Refresh the existing HistoryFragment with all searches from the
-	 * SharedPreferences file
-	 * 
-	 * @param historyList
-	 *            the list with the history searches from the SharedPreferences
-	 *            file
+	 * Initialize the ActionBar
 	 */
-	private void refreshFragment(ArrayList<HistoryEntity> historyList) {
-		HistoryFragment historyFragment = ((HistoryFragment) getSupportFragmentManager()
-				.findFragmentByTag(FRAGMENT_TAG_NAME));
-		if (historyFragment != null) {
-			historyFragment.onFragmentRefresh(historyList, null);
-		}
+	private void initActionBar() {
+		actionBar = getActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(getString(R.string.history_title));
 	}
+
+	/**
+	 * Initialize the Layout fields
+	 */
+	private void initLayoutFields() {
+		loadingHistory = (ProgressBar) findViewById(R.id.history_loading);
+		historyContent = findViewById(R.id.history_content);
+	}
+
+	/**
+	 * Set the list adapter
+	 */
+	private void setListAdapter() {
+		historyAdapter = new HistoryAdapter(context, historyList);
+		setListAdapter(historyAdapter);
+	}
+
+	@Override
+	public void onDeleteAllHistoryClicked() {
+		HistoryOfSearches.getInstance(context).clearHistoryOfSearches();
+		historyList.clear();
+		historyAdapter.notifyDataSetChanged();
+
+		Toast.makeText(
+				context,
+				Html.fromHtml(getString(R.string.history_menu_remove_all_toast)),
+				Toast.LENGTH_SHORT).show();
+	}
+
 }

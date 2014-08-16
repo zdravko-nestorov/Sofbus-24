@@ -171,4 +171,10 @@ public class Constants {
 	 */
 	public static final String FAVORUITES_ORDER_PREFERENCES_NAME = "favourites_order";
 	public static final String FAVOURITES_ORDER_PREFERENCES_TYPE = "type";
+
+	/**
+	 * Check For Updates
+	 */
+	public static final String CHECK_FOR_UPDATES_PREFERENCES_NAME = "application_update";
+	public static final String CHECK_FOR_UPDATES_PREFERENCES_LAST_CHECK = "last_check";
 }

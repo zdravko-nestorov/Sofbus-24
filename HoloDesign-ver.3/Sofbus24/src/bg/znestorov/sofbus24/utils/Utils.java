@@ -7,11 +7,15 @@ import java.util.Locale;
 import java.util.Map.Entry;
 
 import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.history.HistoryOfSearches;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.updates.check.CheckForUpdatesAsync;
+import bg.znestorov.sofbus24.updates.check.CheckForUpdatesPreferences;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 public class Utils {
 
@@ -193,6 +197,32 @@ public class Utils {
 	public static String getCurrentTime() {
 		return DateFormat.format("dd.MM.yyy, kk:mm", new java.util.Date())
 				.toString();
+	}
+
+	/**
+	 * Get the current date in format DD.MM.YYY
+	 * 
+	 * @return the current date in format DD.MM.YYY
+	 */
+	public static String getCurrentDate() {
+		return DateFormat.format("dd.MM.yyy", new java.util.Date()).toString();
+	}
+
+	/**
+	 * Get the current day
+	 * 
+	 * @return the current day
+	 */
+	public static int getCurrentDay() {
+		int day;
+		try {
+			day = Integer.parseInt(DateFormat
+					.format("dd", new java.util.Date()).toString());
+		} catch (Exception e) {
+			day = 0;
+		}
+
+		return day;
 	}
 
 	/**
@@ -442,7 +472,8 @@ public class Utils {
 	 * @param station
 	 *            the station that has to be added to the history of searches
 	 */
-	public static void addStationInHistory(Activity context, StationEntity station) {
+	public static void addStationInHistory(Activity context,
+			StationEntity station) {
 		addSearchInHistory(context, station.getType(), station.getName(),
 				station.getNumber());
 	}
@@ -463,6 +494,27 @@ public class Utils {
 
 		while (stationIterator.hasNext()) {
 			addStationInHistory(context, stationIterator.next().getValue());
+		}
+	}
+
+	/**
+	 * Check if an application update is deployed in the GooglePlay market (only
+	 * on the first of each month)
+	 * 
+	 * @param context
+	 *            current Activity context
+	 */
+	public static void checkForUpdate(FragmentActivity context) {
+		boolean isDayForUpdate = getCurrentDay() == 1;
+		boolean isUpdateAlreadyChecked = CheckForUpdatesPreferences
+				.isUpdateAlreadyChecked(context, getCurrentDate());
+		boolean haveInternetConnection = ActivityUtils
+				.haveNetworkConnection(context);
+
+		if (isDayForUpdate && !isUpdateAlreadyChecked && haveInternetConnection) {
+			CheckForUpdatesPreferences.setLastCheckDate(context,
+					getCurrentDate());
+			new CheckForUpdatesAsync(context).execute();
 		}
 	}
 

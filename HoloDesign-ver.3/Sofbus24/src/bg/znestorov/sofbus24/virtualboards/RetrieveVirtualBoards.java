@@ -895,8 +895,8 @@ public class RetrieveVirtualBoards {
 				break;
 			case MULTIPLE_RESULTS:
 				((VirtualBoardsFragment) callerInstance)
-						.setListAdapterViaSearch(new ArrayList<StationEntity>(),
-								getErrorMsg());
+						.setListAdapterViaSearch(
+								new ArrayList<StationEntity>(), getErrorMsg());
 				break;
 			default:
 				Spanned progressDialogMsg = Html.fromHtml(getErrorMsg());

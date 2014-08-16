@@ -25,8 +25,21 @@ public class HistoryDeleteAllDialog extends DialogFragment {
 	private String positiveBtn;
 	private OnClickListener positiveOnClickListener;
 
+	private OnDeleteAllHistoryListener onDeleteAllHistoryListener;
+
 	public static HistoryDeleteAllDialog newInstance() {
 		return new HistoryDeleteAllDialog();
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			onDeleteAllHistoryListener = (OnDeleteAllHistoryListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnDeleteAllHistoryListener interface...");
+		}
 	}
 
 	@Override
@@ -42,7 +55,7 @@ public class HistoryDeleteAllDialog extends DialogFragment {
 		positiveOnClickListener = new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				((OnDeleteAllHistoryListener) getTargetFragment())
+				((OnDeleteAllHistoryListener) onDeleteAllHistoryListener)
 						.onDeleteAllHistoryClicked();
 			}
 		};

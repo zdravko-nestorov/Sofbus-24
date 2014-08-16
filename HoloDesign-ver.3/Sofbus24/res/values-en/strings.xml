@@ -195,6 +195,12 @@
     <string name="fav_menu_sort_order_down">Down</string>
     <string name="fav_menu_sort_order_last">Bottom</string>
     <string name="fav_menu_sort_success" formatted="false"><![CDATA[<b>Favorites</b> stations were successfully sorted.]]></string>
+    <string name="fav_info_real_name">Real name</string>
+    <string name="fav_info_favourites_name">Favourite\'s name</string>
+    <string name="fav_info_date_added">Added date</string>
+    <string name="fav_info_date_last_access">Date of last use</string>
+    <string name="fav_info_usage_count">Frequency of use</string>
+    <string name="fav_info_position">Position in Favourites</string>
 
     <!-- Virtual Boards Fragment -->
     <string name="vb_search_hint">Search by name or number</string>

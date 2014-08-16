@@ -37,12 +37,13 @@ import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
 
 public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener {
 
-	private Activity context;
+	private FragmentActivity context;
 	private GlobalEntity globalContext;
 	private ActionBar actionBar;
 
@@ -70,6 +71,10 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		ImageButton sofbusRetry = (ImageButton) findViewById(R.id.sofbus24_retry);
 
 		if (savedInstanceState == null) {
+			// Check for updates (only when the application is started for the
+			// first time)
+			Utils.checkForUpdate(context);
+
 			// Retrieve the information from the DB and set up the layout fields
 			CreateDatabases createDatabases = new CreateDatabases(context,
 					sofbusViewPager, sofbusLoading, sofbusRetry);

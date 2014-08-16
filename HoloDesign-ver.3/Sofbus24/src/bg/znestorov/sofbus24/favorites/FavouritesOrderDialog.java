@@ -11,7 +11,7 @@ import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 
 /**
- * Dialog used to show
+ * Dialog used to show how the favourites will be sorted
  * 
  * @author Zdravko Nestorov
  * @version 1.0
@@ -72,8 +72,8 @@ public class FavouritesOrderDialog extends DialogFragment {
 			break;
 		case LAST:
 			items = new CharSequence[] {
-					getString(R.string.fav_menu_sort_order_first),
-					getString(R.string.fav_menu_sort_order_up) };
+					getString(R.string.fav_menu_sort_order_up),
+					getString(R.string.fav_menu_sort_order_first) };
 			break;
 		default:
 			items = new CharSequence[] {

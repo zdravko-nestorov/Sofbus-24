@@ -94,9 +94,21 @@ public class FavouritesDataSource {
 			// Creating the information fields for each favorite (new Favorites
 			// version)
 			String currentDate = Utils.getCurrentTime();
-			values.put(FavouritesSQLite.COLUMN_DATE_ADDED, currentDate);
-			values.put(FavouritesSQLite.COLUMN_DATE_LAST_ACCESS, currentDate);
-			values.put(FavouritesSQLite.COLUMN_USAGE_COUNT, 0);
+
+			String dateAdded = station.getDateAdded();
+			if (dateAdded == null || "".equals(dateAdded)) {
+				dateAdded = currentDate;
+			}
+			values.put(FavouritesSQLite.COLUMN_DATE_ADDED, dateAdded);
+
+			String dateLastAcces = station.getDateLastAccess();
+			if (dateLastAcces == null || "".equals(dateLastAcces)) {
+				dateLastAcces = currentDate;
+			}
+			values.put(FavouritesSQLite.COLUMN_DATE_LAST_ACCESS, dateLastAcces);
+
+			values.put(FavouritesSQLite.COLUMN_USAGE_COUNT,
+					station.getUsageCount());
 			values.put(FavouritesSQLite.COLUMN_POSITION, getNextPosition());
 
 			// Insert the ContentValues data into the database

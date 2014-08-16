@@ -198,6 +198,12 @@
     <string name="fav_menu_sort_order_down">Надолу</string>
     <string name="fav_menu_sort_order_last">Най-отдолу</string>
     <string name="fav_menu_sort_success" formatted="false"><![CDATA[Секцията <b>Любими</b> беше успешно сортирана.]]></string>
+    <string name="fav_info_real_name">Оригинално име</string>
+    <string name="fav_info_favourites_name">Име във Фаворити</string>
+    <string name="fav_info_date_added">Дата на добавяне</string>
+    <string name="fav_info_date_last_access">Последно използване</string>
+    <string name="fav_info_usage_count">Брой използвания</string>
+    <string name="fav_info_position">Позиция във Фаворити</string>
 
     <!-- Virtual Boards Fragment -->
     <string name="vb_search_hint">Търсене по име или номер</string>

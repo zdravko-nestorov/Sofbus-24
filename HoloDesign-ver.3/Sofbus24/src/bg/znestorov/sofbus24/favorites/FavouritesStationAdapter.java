@@ -544,6 +544,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		// Update the station info in the Favourites DB
 		ActivityUtils.updateFavouritesStationInfo(context, station);
 
+		// Request an update of the Favorites Fragment
+		globalContext.setFavouritesChanged(true);
+
 		// Check if the type of the station - BTT or METRO
 		if (!stationCustomField.equals(metroCustomField)) {
 			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
@@ -618,7 +621,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 								seeStationOnGoogleStreetView(station);
 								break;
 							case R.id.menu_favourites_information:
-								// TODO: Add a new DialogFragment for this
+								getStationInfo(station);
 								break;
 							}
 
@@ -720,5 +723,19 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		} else {
 			ActivityUtils.showNoCoordinatesToast(context);
 		}
+	}
+
+	/**
+	 * Actions over the INFO button
+	 * 
+	 * @param station
+	 *            the station on the rowView
+	 */
+	private void getStationInfo(StationEntity station) {
+		FavouritesInfoDialog favouritesInfoDialog = FavouritesInfoDialog
+				.newInstance(station);
+		favouritesInfoDialog.setTargetFragment(favouritesInfoDialog, 0);
+		favouritesInfoDialog.show(
+				favouritesStationFragment.getFragmentManager(), "dialog");
 	}
 }
