@@ -10,11 +10,11 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-import bg.znestorov.sofbus24.entity.MetroStation;
-import bg.znestorov.sofbus24.entity.PublicTransportStation;
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.VehicleType;
-import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
+import bg.znestorov.sofbus24.entity.MetroStationEntity;
+import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
+import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
+import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.MapUtils;
@@ -60,7 +60,7 @@ public class StationMap extends Activity {
 		if (stationMap != null) {
 			// Get the MetroStation object from the Bundle
 			Bundle extras = getIntent().getExtras();
-			final Station stationBundle = (Station) extras
+			final StationEntity stationBundle = (StationEntity) extras
 					.get(Constants.BUNDLE_STATION_MAP);
 
 			// Set ActionBar title and subtitle
@@ -76,7 +76,7 @@ public class StationMap extends Activity {
 				centerStationLocation = new LatLng(
 						Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE,
 						Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE);
-				stationBundle.setType(VehicleType.NOIMAGE);
+				stationBundle.setType(VehicleTypeEnum.NOIMAGE);
 			}
 
 			// Initialize GoogleMaps without the current location
@@ -160,17 +160,17 @@ public class StationMap extends Activity {
 	 * @param currentLocation
 	 *            the current location
 	 */
-	private void initGoogleMaps(Station stationBundle,
+	private void initGoogleMaps(StationEntity stationBundle,
 			final Location currentLocation) {
 		// Check the type of the bundle object
-		if (stationBundle instanceof MetroStation) {
-			MetroStation metroStation = (MetroStation) stationBundle;
+		if (stationBundle instanceof MetroStationEntity) {
+			MetroStationEntity metroStation = (MetroStationEntity) stationBundle;
 			processMetroStationObject(currentLocation, metroStation);
-		} else if (stationBundle instanceof PublicTransportStation) {
-			PublicTransportStation ptStation = (PublicTransportStation) stationBundle;
+		} else if (stationBundle instanceof PublicTransportStationEntity) {
+			PublicTransportStationEntity ptStation = (PublicTransportStationEntity) stationBundle;
 			processPTStationObject(currentLocation, ptStation);
 		} else {
-			VirtualBoardsStation vbTimeStation = (VirtualBoardsStation) stationBundle;
+			VirtualBoardsStationEntity vbTimeStation = (VirtualBoardsStationEntity) stationBundle;
 			processVBTimeStationObject(currentLocation, vbTimeStation);
 		}
 
@@ -204,7 +204,7 @@ public class StationMap extends Activity {
 	 *            the chosen metro station
 	 */
 	private void processMetroStationObject(Location currentLocation,
-			MetroStation metroStation) {
+			MetroStationEntity metroStation) {
 		MarkerOptions stationMarkerOptions = new MarkerOptions()
 				.position(centerStationLocation)
 				.title(String.format(metroStation.getName() + " (%s)",
@@ -236,7 +236,7 @@ public class StationMap extends Activity {
 	 *            the chosen public transport station
 	 */
 	private void processPTStationObject(Location currentLocation,
-			PublicTransportStation ptStation) {
+			PublicTransportStationEntity ptStation) {
 		MarkerOptions stationMarkerOptions = new MarkerOptions()
 				.position(centerStationLocation)
 				.title(String.format(ptStation.getName() + " (%s)",
@@ -269,7 +269,7 @@ public class StationMap extends Activity {
 	 *            the chosen virtual boards station
 	 */
 	private void processVBTimeStationObject(Location currentLocation,
-			VirtualBoardsStation vbTimeStation) {
+			VirtualBoardsStationEntity vbTimeStation) {
 		MarkerOptions stationMarkerOptions = new MarkerOptions()
 				.position(centerStationLocation)
 				.title(String.format(vbTimeStation.getName() + " (%s)",
@@ -348,7 +348,7 @@ public class StationMap extends Activity {
 	 *            the chosen station
 	 * @return the action bar title
 	 */
-	private String getActionBarTitle(Station station) {
+	private String getActionBarTitle(StationEntity station) {
 		String stationText;
 
 		switch (station.getType()) {
@@ -373,7 +373,7 @@ public class StationMap extends Activity {
 	 *            the type of the station
 	 * @return the marker icon from the resources
 	 */
-	private int getMarkerIcon(VehicleType stationType) {
+	private int getMarkerIcon(VehicleTypeEnum stationType) {
 		int markerIcon;
 
 		switch (stationType) {

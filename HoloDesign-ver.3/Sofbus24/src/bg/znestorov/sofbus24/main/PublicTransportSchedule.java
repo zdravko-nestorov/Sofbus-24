@@ -19,9 +19,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
-import bg.znestorov.sofbus24.entity.PublicTransportStation;
+import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
 import bg.znestorov.sofbus24.entity.ScheduleEntity;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.publictransport.PublicTransportScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -47,7 +47,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 	private View ptScheduleFragment;
 	private ProgressBar ptScheduleLoading;
 
-	private PublicTransportStation ptStation;
+	private PublicTransportStationEntity ptStation;
 	private ArrayList<ArrayList<String>> scheduleHourList;
 	private int currentScheduleHourIndex = 0;
 
@@ -150,7 +150,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 	private void initBundleInfo() {
 		// Get the PublicTransportStation object from Bundle
 		Bundle extras = getIntent().getExtras();
-		ptStation = (PublicTransportStation) extras
+		ptStation = (PublicTransportStationEntity) extras
 				.get(Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE);
 
 		// Get an ArrayList of ArrayList with all active schedules
@@ -233,7 +233,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 	 *            the station on the current row
 	 * @return the station image id
 	 */
-	private Integer getFavouriteImage(Station station) {
+	private Integer getFavouriteImage(StationEntity station) {
 		Integer favouriteImage;
 
 		favouritesDatasource.open();
@@ -376,7 +376,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 	 * @return a list with the schedule hours
 	 */
 	private ArrayList<ArrayList<String>> getScheduleHourList(
-			PublicTransportStation ptStation) {
+			PublicTransportStationEntity ptStation) {
 		ArrayList<ArrayList<String>> scheduleHourList = new ArrayList<ArrayList<String>>();
 
 		for (int i = 4; i <= 24; i++) {

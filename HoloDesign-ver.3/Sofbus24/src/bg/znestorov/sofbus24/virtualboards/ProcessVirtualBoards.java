@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 import android.app.Activity;
 import android.text.format.DateFormat;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.Vehicle;
-import bg.znestorov.sofbus24.entity.VehicleType;
-import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
+import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
+import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
@@ -74,8 +74,8 @@ public class ProcessVirtualBoards {
 	 * @return a VirtualBoardsStation object, containing all information about
 	 *         the station
 	 */
-	public VirtualBoardsStation getVBSingleStationFromHtml() {
-		VirtualBoardsStation vbStation = new VirtualBoardsStation(
+	public VirtualBoardsStationEntity getVBSingleStationFromHtml() {
+		VirtualBoardsStationEntity vbStation = new VirtualBoardsStationEntity(
 				getStationFromHtml(), getSkgtTimeFromHtml(),
 				getVehiclesListFromHtml());
 
@@ -88,8 +88,8 @@ public class ProcessVirtualBoards {
 	 * 
 	 * @return the station with all information from the skgt site
 	 */
-	private Station getStationFromHtml() {
-		Station station = new Station();
+	private StationEntity getStationFromHtml() {
+		StationEntity station = new StationEntity();
 
 		Pattern pattern = Pattern.compile(Constants.VB_REGEX_STATION_INFO);
 		Matcher matcher = pattern.matcher(htmlResult);
@@ -109,7 +109,7 @@ public class ProcessVirtualBoards {
 
 			// Get lat and lon of the station
 			stationsDatasource.open();
-			Station dbStation = stationsDatasource.getStation(stationNumber);
+			StationEntity dbStation = stationsDatasource.getStation(stationNumber);
 			String stationLat = "";
 			String stationLon = "";
 
@@ -120,8 +120,8 @@ public class ProcessVirtualBoards {
 			stationsDatasource.close();
 
 			// Set the station all fields
-			station = new Station(stationNumber, stationName, stationLat,
-					stationLon, VehicleType.BTT, "1");
+			station = new StationEntity(stationNumber, stationName, stationLat,
+					stationLon, VehicleTypeEnum.BTT, "1");
 		}
 
 		return station;
@@ -154,14 +154,14 @@ public class ProcessVirtualBoards {
 	 * 
 	 * @return a list with all vehicles through this station
 	 */
-	private ArrayList<Vehicle> getVehiclesListFromHtml() {
-		ArrayList<Vehicle> vehiclesList = new ArrayList<Vehicle>();
+	private ArrayList<VehicleEntity> getVehiclesListFromHtml() {
+		ArrayList<VehicleEntity> vehiclesList = new ArrayList<VehicleEntity>();
 
 		String[] vehiclesPartsHtml = htmlResult
 				.split(Constants.VB_REGEX_VEHICLE_PARTS);
 
 		for (int i = 0; i < vehiclesPartsHtml.length; i++) {
-			VehicleType vehicleType = getVehicleType(vehiclesPartsHtml[i]);
+			VehicleTypeEnum vehicleType = getVehicleType(vehiclesPartsHtml[i]);
 
 			// Used to order the vehicles (BUS, TROLLEY, TRAM)
 			switch (vehicleType) {
@@ -202,9 +202,9 @@ public class ProcessVirtualBoards {
 	 * @return a list with all information about the passing vehicles through
 	 *         this station
 	 */
-	private LinkedList<Vehicle> getVehiclesByTypeFromHtml(
-			VehicleType vehicleType, String vehiclesPartHtml) {
-		LinkedList<Vehicle> vehiclesList = new LinkedList<Vehicle>();
+	private LinkedList<VehicleEntity> getVehiclesByTypeFromHtml(
+			VehicleTypeEnum vehicleType, String vehiclesPartHtml) {
+		LinkedList<VehicleEntity> vehiclesList = new LinkedList<VehicleEntity>();
 
 		Pattern pattern = Pattern.compile(Constants.VB_REGEX_VEHICLE_INFO);
 		Matcher matcher = pattern.matcher(vehiclesPartHtml);
@@ -229,15 +229,15 @@ public class ProcessVirtualBoards {
 			}
 
 			// Create the vehicle and add it to the list
-			Vehicle vehicle = new Vehicle(vehicleNumber, vehicleType,
+			VehicleEntity vehicle = new VehicleEntity(vehicleNumber, vehicleType,
 					vehicleDirection, arrivalTimes);
 			vehiclesList.add(vehicle);
 		}
 
 		// Sort the list via vehicle number
-		Collections.sort(vehiclesList, new Comparator<Vehicle>() {
+		Collections.sort(vehiclesList, new Comparator<VehicleEntity>() {
 			@Override
-			public int compare(Vehicle vehicle1, Vehicle vehicle2) {
+			public int compare(VehicleEntity vehicle1, VehicleEntity vehicle2) {
 				int vehicle1Number = Integer.parseInt(Utils
 						.getOnlyDigits(vehicle1.getNumber()));
 				int vehicle2Number = Integer.parseInt(Utils
@@ -283,8 +283,8 @@ public class ProcessVirtualBoards {
 	 *            the part of the html code (representing one vehicle type)
 	 * @return the vehicle type
 	 */
-	private VehicleType getVehicleType(String vehiclesPartHtml) {
-		VehicleType vehicleType;
+	private VehicleTypeEnum getVehicleType(String vehiclesPartHtml) {
+		VehicleTypeEnum vehicleType;
 		String vehicleName = "";
 
 		Pattern pattern = Pattern.compile(Constants.VB_REGEX_VEHICLE_TYPE);
@@ -297,11 +297,11 @@ public class ProcessVirtualBoards {
 		}
 
 		if (vehicleName.contains(Constants.VB_VEHICLE_TYPE_BUS)) {
-			vehicleType = VehicleType.BUS;
+			vehicleType = VehicleTypeEnum.BUS;
 		} else if (vehicleName.contains(Constants.VB_VEHICLE_TYPE_TROLLEY)) {
-			vehicleType = VehicleType.TROLLEY;
+			vehicleType = VehicleTypeEnum.TROLLEY;
 		} else {
-			vehicleType = VehicleType.TRAM;
+			vehicleType = VehicleTypeEnum.TRAM;
 		}
 
 		return vehicleType;
@@ -312,8 +312,8 @@ public class ProcessVirtualBoards {
 	 * 
 	 * @return a list with all stations from the skgt site
 	 */
-	public HashMap<String, Station> getMultipleStationsFromHtml() {
-		HashMap<String, Station> stationsMap = new LinkedHashMap<String, Station>();
+	public HashMap<String, StationEntity> getMultipleStationsFromHtml() {
+		HashMap<String, StationEntity> stationsMap = new LinkedHashMap<String, StationEntity>();
 
 		Pattern pattern = Pattern
 				.compile(Constants.VB_REGEX_MULTIPLE_STATION_INFO);
@@ -334,7 +334,7 @@ public class ProcessVirtualBoards {
 
 			// Get lat and lon of the station
 			stationsDatasource.open();
-			Station dbStation = stationsDatasource.getStation(stationNumber);
+			StationEntity dbStation = stationsDatasource.getStation(stationNumber);
 			String stationLat = "";
 			String stationLon = "";
 
@@ -349,8 +349,8 @@ public class ProcessVirtualBoards {
 			stationCustomField = Utils.getOnlyDigits(stationCustomField);
 
 			// Create the station and add it to the list
-			Station station = new Station(stationNumber, stationName,
-					stationLat, stationLon, VehicleType.BTT, stationCustomField);
+			StationEntity station = new StationEntity(stationNumber, stationName,
+					stationLat, stationLon, VehicleTypeEnum.BTT, stationCustomField);
 			stationsMap.put(stationNumber, station);
 		}
 

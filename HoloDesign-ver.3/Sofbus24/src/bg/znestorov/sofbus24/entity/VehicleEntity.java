@@ -11,26 +11,26 @@ import java.util.ArrayList;
  * @version 1.0
  * 
  */
-public class Vehicle implements Serializable {
+public class VehicleEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private String number;
-	private VehicleType type;
+	private VehicleTypeEnum type;
 	private String direction;
 	private ArrayList<String> arrivalTimes;
 
-	public Vehicle() {
+	public VehicleEntity() {
 	}
 
-	public Vehicle(String number, VehicleType type, String direction) {
+	public VehicleEntity(String number, VehicleTypeEnum type, String direction) {
 		this.number = number;
 		this.type = type;
 		this.direction = direction;
 		this.arrivalTimes = new ArrayList<String>();
 	}
 
-	public Vehicle(String number, VehicleType type, String direction,
+	public VehicleEntity(String number, VehicleTypeEnum type, String direction,
 			ArrayList<String> arrivalTimes) {
 		this.number = number;
 		this.type = type;
@@ -46,11 +46,11 @@ public class Vehicle implements Serializable {
 		this.number = number;
 	}
 
-	public VehicleType getType() {
+	public VehicleTypeEnum getType() {
 		return type;
 	}
 
-	public void setType(VehicleType type) {
+	public void setType(VehicleTypeEnum type) {
 		this.type = type;
 	}
 

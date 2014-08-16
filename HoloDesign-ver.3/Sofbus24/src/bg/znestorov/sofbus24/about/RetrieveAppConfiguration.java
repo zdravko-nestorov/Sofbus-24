@@ -12,7 +12,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import bg.znestorov.sofbus24.entity.Config;
+import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -25,7 +25,7 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
  * @version 1.0
  * 
  */
-public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
+public class RetrieveAppConfiguration extends AsyncTask<Void, Void, ConfigEntity> {
 
 	private FragmentActivity context;
 	private ProgressDialog progressDialog;
@@ -45,8 +45,8 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 	}
 
 	@Override
-	protected Config doInBackground(Void... params) {
-		Config appConfig = null;
+	protected ConfigEntity doInBackground(Void... params) {
+		ConfigEntity appConfig = null;
 
 		try {
 			// Get the configuration as an InputStream from the station URL
@@ -57,22 +57,22 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 					.openStream());
 
 			// Create a configuration object from the Document
-			appConfig = new Config(doc);
+			appConfig = new ConfigEntity(doc);
 		} catch (Exception e) {
-			appConfig = new Config();
+			appConfig = new ConfigEntity();
 		}
 
 		return appConfig;
 	}
 
 	@Override
-	protected void onPostExecute(Config newConfig) {
+	protected void onPostExecute(ConfigEntity newConfig) {
 		super.onPostExecute(newConfig);
 
 		// Check if the information is successfully retrieved or an Internet
 		// error occurred
 		if (newConfig.isValidConfig()) {
-			Config currentConfig = new Config(context);
+			ConfigEntity currentConfig = new ConfigEntity(context);
 
 			if (updateApp) {
 				updateApp(currentConfig, newConfig);
@@ -100,7 +100,7 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 	 * @param newConfig
 	 *            the new application configuration
 	 */
-	private void updateDb(Config currentConfig, final Config newConfig) {
+	private void updateDb(ConfigEntity currentConfig, final ConfigEntity newConfig) {
 		String stationsDatabaseUrl = null;
 		String vehiclesDatabaseUrl = null;
 
@@ -137,7 +137,7 @@ public class RetrieveAppConfiguration extends AsyncTask<Void, Void, Config> {
 	 * @param newConfig
 	 *            the new application configuration
 	 */
-	private void updateApp(Config currentConfig, Config newConfig) {
+	private void updateApp(ConfigEntity currentConfig, ConfigEntity newConfig) {
 
 		// Check if new application version is available
 		DialogFragment dialogFragment;

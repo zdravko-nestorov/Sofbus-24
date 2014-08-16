@@ -16,9 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
-import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.RefreshableListFragment;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.history.HistoryDeleteAllDialog.OnDeleteAllHistoryListener;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
@@ -142,12 +142,12 @@ public class HistoryFragment extends ListFragment implements
 		// database
 		StationsDataSource stationDatasource = new StationsDataSource(context);
 		stationDatasource.open();
-		Station station = stationDatasource.getStation(stationNumber);
+		StationEntity station = stationDatasource.getStation(stationNumber);
 		stationDatasource.close();
 
 		// Check if the station is existing in the database
 		if (station == null) {
-			station = new Station();
+			station = new StationEntity();
 			station.setNumber(stationNumber);
 			station.setName(stationName);
 		}
@@ -156,7 +156,7 @@ public class HistoryFragment extends ListFragment implements
 		switch (history.getHistoryType()) {
 		case BTT:
 			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-					context, null, station, HtmlRequestCodes.SINGLE_RESULT);
+					context, null, station, HtmlRequestCodesEnum.SINGLE_RESULT);
 			retrieveVirtualBoards.getSumcInformation();
 			break;
 		default:

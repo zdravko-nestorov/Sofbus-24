@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
-import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
-import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
+import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -46,7 +46,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 	private TextView vbTimeCurrentTime;
 	private ImageButton vbTimeStreetViewButton;
 
-	private VirtualBoardsStation vbTimeStation;
+	private VirtualBoardsStationEntity vbTimeStation;
 	private FavouritesDataSource favouritesDatasource;
 	private boolean isFavouriteStation;
 
@@ -147,7 +147,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 
 		// Retrieve the refreshed information from SKGT site
 		RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-				context, this, vbTimeStation, HtmlRequestCodes.REFRESH);
+				context, this, vbTimeStation, HtmlRequestCodesEnum.REFRESH);
 		retrieveVirtualBoards.getSumcInformation();
 	}
 
@@ -156,7 +156,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 	 */
 	private void initBundleInfo() {
 		Bundle extras = getIntent().getExtras();
-		vbTimeStation = (VirtualBoardsStation) extras
+		vbTimeStation = (VirtualBoardsStationEntity) extras
 				.get(Constants.BUNDLE_VIRTUAL_BOARDS_TIME);
 	}
 
@@ -236,7 +236,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 	 *            the text that has to be shown if the list is empty
 	 */
 	public void refreshVirtualBoardsTimeFragment(
-			VirtualBoardsStation newVBTimeStation, String vbTimeEmptyText) {
+			VirtualBoardsStationEntity newVBTimeStation, String vbTimeEmptyText) {
 		// Refresh the time of info retrieval
 		vbTimeCurrentTime.setText(String.format(
 				getString(R.string.vb_time_current_time),

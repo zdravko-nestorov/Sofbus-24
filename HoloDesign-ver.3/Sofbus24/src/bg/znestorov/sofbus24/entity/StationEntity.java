@@ -13,7 +13,7 @@ import bg.znestorov.sofbus24.utils.Utils;
  * @version 1.0
  * 
  */
-public class Station implements Serializable {
+public class StationEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -21,7 +21,7 @@ public class Station implements Serializable {
 	private String name;
 	private String lat;
 	private String lon;
-	private VehicleType type;
+	private VehicleTypeEnum type;
 
 	/**
 	 * It is used in two cases with different meanings:
@@ -33,11 +33,21 @@ public class Station implements Serializable {
 	 */
 	private String customField;
 
-	public Station() {
+	/**
+	 * Information fields concerning the Favorites section (when the favorite is
+	 * added, last access, how many times is accessed and the user defined order
+	 * position)
+	 */
+	private String dateAdded;
+	private String dateLastAccess;
+	private int usageCount;
+	private int position;
+
+	public StationEntity() {
 	}
 
-	public Station(String number, String name, String lat, String lon,
-			VehicleType type, String customField) {
+	public StationEntity(String number, String name, String lat, String lon,
+			VehicleTypeEnum type, String customField) {
 		this.number = Utils.formatNumberOfDigits(number, 4);
 		this.name = name;
 		this.lat = lat;
@@ -82,11 +92,11 @@ public class Station implements Serializable {
 		this.lon = lon;
 	}
 
-	public VehicleType getType() {
+	public VehicleTypeEnum getType() {
 		return type;
 	}
 
-	public void setType(VehicleType type) {
+	public void setType(VehicleTypeEnum type) {
 		this.type = type;
 	}
 
@@ -96,6 +106,38 @@ public class Station implements Serializable {
 
 	public void setCustomField(String customField) {
 		this.customField = customField;
+	}
+
+	public String getDateAdded() {
+		return dateAdded;
+	}
+
+	public void setDateAdded(String dateAdded) {
+		this.dateAdded = dateAdded;
+	}
+
+	public String getDateLastAccess() {
+		return dateLastAccess;
+	}
+
+	public void setDateLastAccess(String dateLastAccess) {
+		this.dateLastAccess = dateLastAccess;
+	}
+
+	public int getUsageCount() {
+		return usageCount;
+	}
+
+	public void setUsageCount(int usageCount) {
+		this.usageCount = usageCount;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
 	}
 
 	public boolean hasCoordinates() {
@@ -112,6 +154,10 @@ public class Station implements Serializable {
 	public String toString() {
 		return getClass().getName() + " {\n\tnumber: " + number + "\n\tname: "
 				+ name + "\n\tlat: " + lat + "\n\tlon: " + lon + "\n\ttype: "
-				+ type + "\n\tcustomField: " + customField + "\n}";
+				+ type + "\n\tcustomField: " + customField + "\n\tdateAdded: "
+				+ dateAdded + "\n\tdateLastAccess: " + dateLastAccess
+				+ "\n\tusageCount: " + usageCount + "\n\tposition: " + position
+				+ "\n}";
 	}
+
 }

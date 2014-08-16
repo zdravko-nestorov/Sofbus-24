@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
@@ -23,11 +23,11 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
  * @version 1.0
  * 
  */
-public class VirtualBoardsAdapter extends ArrayAdapter<Station> {
+public class VirtualBoardsAdapter extends ArrayAdapter<StationEntity> {
 
 	private final FavouritesDataSource favouritesDatasource;
 	private final Activity context;
-	private final List<Station> stations;
+	private final List<StationEntity> stations;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
@@ -36,7 +36,7 @@ public class VirtualBoardsAdapter extends ArrayAdapter<Station> {
 		TextView stationNumber;
 	}
 
-	public VirtualBoardsAdapter(Activity context, List<Station> stations) {
+	public VirtualBoardsAdapter(Activity context, List<StationEntity> stations) {
 		super(context, R.layout.activity_virtual_boards_list_item, stations);
 		this.context = context;
 		this.stations = stations;
@@ -71,7 +71,7 @@ public class VirtualBoardsAdapter extends ArrayAdapter<Station> {
 		}
 
 		// Fill the data
-		Station station = stations.get(position);
+		StationEntity station = stations.get(position);
 		viewHolder.addToFavourites.setImageResource(getFavouriteImage(station));
 		viewHolder.stationName.setText(station.getName());
 		viewHolder.stationNumber.setText(String.format(
@@ -97,7 +97,7 @@ public class VirtualBoardsAdapter extends ArrayAdapter<Station> {
 	 *            the station on the current row
 	 * @return the station image id
 	 */
-	private Integer getFavouriteImage(Station station) {
+	private Integer getFavouriteImage(StationEntity station) {
 		Integer favouriteImage;
 
 		favouritesDatasource.open();
@@ -120,7 +120,7 @@ public class VirtualBoardsAdapter extends ArrayAdapter<Station> {
 	 *            the station on the current row
 	 */
 	public void actionsOverFavouritesImageViews(final ViewHolder viewHolder,
-			final Station station) {
+			final StationEntity station) {
 		viewHolder.addToFavourites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ActivityUtils.toggleFavouritesStation(context,

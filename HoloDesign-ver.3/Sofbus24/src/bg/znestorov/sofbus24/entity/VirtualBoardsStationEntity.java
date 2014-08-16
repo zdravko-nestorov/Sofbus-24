@@ -15,33 +15,33 @@ import bg.znestorov.sofbus24.utils.Constants;
  * @version 1.0
  * 
  */
-public class VirtualBoardsStation extends Station implements Serializable {
+public class VirtualBoardsStationEntity extends StationEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private String skgtTime;
 	private String systemTime;
-	private ArrayList<Vehicle> vehiclesList;
+	private ArrayList<VehicleEntity> vehiclesList;
 
-	public VirtualBoardsStation() {
+	public VirtualBoardsStationEntity() {
 		super();
 
 		this.systemTime = android.text.format.DateFormat.format(
 				"dd.MM.yyy, kk:mm", new java.util.Date()).toString();
-		this.vehiclesList = new ArrayList<Vehicle>();
+		this.vehiclesList = new ArrayList<VehicleEntity>();
 	}
 
-	public VirtualBoardsStation(Station station) {
+	public VirtualBoardsStationEntity(StationEntity station) {
 		super(station.getNumber(), station.getName(), station.getLat(), station
 				.getLon(), station.getType(), station.getCustomField());
 
 		this.systemTime = android.text.format.DateFormat.format(
 				"dd.MM.yyy, kk:mm", new java.util.Date()).toString();
-		this.vehiclesList = new ArrayList<Vehicle>();
+		this.vehiclesList = new ArrayList<VehicleEntity>();
 	}
 
-	public VirtualBoardsStation(Station station, String skgtTime,
-			ArrayList<Vehicle> vehiclesList) {
+	public VirtualBoardsStationEntity(StationEntity station, String skgtTime,
+			ArrayList<VehicleEntity> vehiclesList) {
 		super(station.getNumber(), station.getName(), station.getLat(), station
 				.getLon(), station.getType(), station.getCustomField());
 
@@ -73,7 +73,7 @@ public class VirtualBoardsStation extends Station implements Serializable {
 	 * @param vbStation
 	 *            the new viertual boards station object
 	 */
-	public void setVirtualBoardsTimeStation(VirtualBoardsStation vbStation) {
+	public void setVirtualBoardsTimeStation(VirtualBoardsStationEntity vbStation) {
 		if (vbStation != null) {
 			this.setNumber(vbStation.getNumber());
 			this.setName(vbStation.getName());
@@ -115,11 +115,11 @@ public class VirtualBoardsStation extends Station implements Serializable {
 		}
 	}
 
-	public ArrayList<Vehicle> getVehiclesList() {
+	public ArrayList<VehicleEntity> getVehiclesList() {
 		return vehiclesList;
 	}
 
-	public void setVehiclesList(ArrayList<Vehicle> vehiclesList) {
+	public void setVehiclesList(ArrayList<VehicleEntity> vehiclesList) {
 		this.vehiclesList = vehiclesList;
 	}
 

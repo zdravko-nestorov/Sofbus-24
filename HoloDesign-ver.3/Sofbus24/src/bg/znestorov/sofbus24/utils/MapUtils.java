@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import android.app.Activity;
 import android.location.Location;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -28,7 +28,7 @@ public class MapUtils {
 	 * @return distance between the input objects (in case of an error - return
 	 *         empty string)
 	 */
-	public static String getMapDistance(Location location1, Station station) {
+	public static String getMapDistance(Location location1, StationEntity station) {
 		try {
 			return getDistance(location1, getLocation(station)).toString();
 		} catch (Exception e) {
@@ -49,7 +49,7 @@ public class MapUtils {
 	 *         empty string)
 	 */
 	public static String getMapDistance(Activity context, Location location1,
-			Station station) {
+			StationEntity station) {
 		try {
 			return formatDistance(context,
 					getDistance(location1, getLocation(station)));
@@ -71,7 +71,7 @@ public class MapUtils {
 	 *         empty string)
 	 */
 	public static String getMapDistance(Activity context, LatLng latLng1,
-			Station station) {
+			StationEntity station) {
 		try {
 			return formatDistance(context,
 					getDistance(getLocation(latLng1), getLocation(station)));
@@ -90,7 +90,7 @@ public class MapUtils {
 	 * @return distance between the input objects (in case of an error - return
 	 *         empty string)
 	 */
-	public static String getMapDistance(LatLng latLng1, Station station) {
+	public static String getMapDistance(LatLng latLng1, StationEntity station) {
 		try {
 			return getDistance(getLocation(latLng1), getLocation(station))
 					.toString();
@@ -162,7 +162,7 @@ public class MapUtils {
 	 *            the input Station object
 	 * @return a location object base on the input Station one
 	 */
-	public static Location getLocation(Station station) {
+	public static Location getLocation(StationEntity station) {
 		Location location = new Location("");
 		location.setLatitude(Double.parseDouble(station.getLat()));
 		location.setLongitude(Double.parseDouble(station.getLon()));

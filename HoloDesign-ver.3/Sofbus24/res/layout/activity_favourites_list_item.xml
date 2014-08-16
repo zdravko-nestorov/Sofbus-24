@@ -76,24 +76,25 @@
         </RelativeLayout>
 
         <ImageButton
-            android:id="@+id/favourites_item_rename"
+            android:id="@+id/favourites_item_reorder"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:background="?android:selectableItemBackground"
             android:contentDescription="@string/app_img_empty_content_description"
             android:paddingLeft="6dip"
             android:paddingRight="3dip"
-            android:src="@android:drawable/ic_menu_edit" />
+            android:src="@drawable/ic_order"
+            android:visibility="gone" />
 
         <ImageButton
-            android:id="@+id/favourites_item_remove"
+            android:id="@+id/favourites_item_settings"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:background="?android:selectableItemBackground"
             android:contentDescription="@string/app_img_empty_content_description"
             android:paddingLeft="3dip"
             android:paddingRight="6dip"
-            android:src="@android:drawable/ic_menu_delete" />
+            android:src="@drawable/ic_fav_context_menu" />
     </LinearLayout>
 
 </FrameLayout>

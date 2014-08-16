@@ -27,9 +27,9 @@ import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
-import bg.znestorov.sofbus24.entity.Config;
+import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
-import bg.znestorov.sofbus24.entity.HomeTab;
+import bg.znestorov.sofbus24.entity.HomeTabEntity;
 import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
 import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
@@ -92,17 +92,22 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			int currentTab = mViewPager.getCurrentItem();
 			Fragment currentFragment = fragmentsList.get(currentTab);
 
+			MenuItem favouritesSort = menu
+					.findItem(R.id.action_favourites_sort);
 			MenuItem favouritesRemoveAll = menu
 					.findItem(R.id.action_favourites_remove_all);
 			MenuItem metroMapRoute = menu.findItem(R.id.action_metro_map_route);
 
 			if (currentFragment instanceof FavouritesStationFragment) {
+				favouritesSort.setVisible(true);
 				favouritesRemoveAll.setVisible(true);
 				metroMapRoute.setVisible(false);
 			} else if (currentFragment instanceof MetroFragment) {
+				favouritesSort.setVisible(false);
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(true);
 			} else {
+				favouritesSort.setVisible(false);
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(false);
 			}
@@ -242,7 +247,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	 */
 	private void createFragmentsList() {
 		// Get the application cofig file
-		Config config = new Config(context);
+		ConfigEntity config = new ConfigEntity(context);
 
 		// Emtpy the fragmentsList if contains any elements
 		if (!fragmentsList.isEmpty()) {
@@ -252,7 +257,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		// Create a new ordered list with fragments (according to the
 		// configuration file)
 		for (int i = 0; i < Constants.GLOBAL_PARAM_HOME_TABS_COUNT; i++) {
-			HomeTab homeTab = config.getTabByPosition(context, i);
+			HomeTabEntity homeTab = config.getTabByPosition(context, i);
 			if (homeTab.isTabVisible()) {
 				fragmentsList.add(getFragmentByTagName(homeTab));
 			}
@@ -266,7 +271,7 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	 *            HomeTab object pointing which fragment to be choosen
 	 * @return the fragment associated to the given HomeTab
 	 */
-	private Fragment getFragmentByTagName(HomeTab homeTab) {
+	private Fragment getFragmentByTagName(HomeTabEntity homeTab) {
 		Fragment fragment;
 
 		String homeTabName = homeTab.getTabName();

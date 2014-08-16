@@ -7,8 +7,8 @@ import java.util.List;
 import android.app.Activity;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 
 /**
  * Singleton used for loading the metro stations on the first creation and used
@@ -23,16 +23,16 @@ public class MetroLoadStations {
 	private static MetroLoadStations instance = null;
 
 	private ArrayList<String> metroDirectionsNames;
-	private ArrayList<ArrayList<Station>> metroDirectionsList;
+	private ArrayList<ArrayList<StationEntity>> metroDirectionsList;
 
 	protected MetroLoadStations(Activity context) {
 		// Get the directions' names
 		VehiclesDataSource vehiclesDatasource = new VehiclesDataSource(context);
 		vehiclesDatasource.open();
 		String directionName1 = vehiclesDatasource
-				.getVehicleDirection(VehicleType.METRO1);
+				.getVehicleDirection(VehicleTypeEnum.METRO1);
 		String directionName2 = vehiclesDatasource
-				.getVehicleDirection(VehicleType.METRO2);
+				.getVehicleDirection(VehicleTypeEnum.METRO2);
 		vehiclesDatasource.close();
 
 		// Adding the directions names to the ArrayList
@@ -44,16 +44,16 @@ public class MetroLoadStations {
 		StationsDataSource stationsDatasource = new StationsDataSource(context);
 
 		stationsDatasource.open();
-		List<Station> metroDirection1 = stationsDatasource
-				.getStationsViaType(VehicleType.METRO1);
-		List<Station> metroDirection2 = stationsDatasource
-				.getStationsViaType(VehicleType.METRO2);
+		List<StationEntity> metroDirection1 = stationsDatasource
+				.getStationsViaType(VehicleTypeEnum.METRO1);
+		List<StationEntity> metroDirection2 = stationsDatasource
+				.getStationsViaType(VehicleTypeEnum.METRO2);
 		Collections.reverse(metroDirection2);
 		stationsDatasource.close();
 
-		metroDirectionsList = new ArrayList<ArrayList<Station>>();
-		metroDirectionsList.add((ArrayList<Station>) metroDirection1);
-		metroDirectionsList.add((ArrayList<Station>) metroDirection2);
+		metroDirectionsList = new ArrayList<ArrayList<StationEntity>>();
+		metroDirectionsList.add((ArrayList<StationEntity>) metroDirection1);
+		metroDirectionsList.add((ArrayList<StationEntity>) metroDirection2);
 	}
 
 	public static MetroLoadStations getInstance(Activity context) {
@@ -72,12 +72,12 @@ public class MetroLoadStations {
 		this.metroDirectionsNames = metroDirectionsNames;
 	}
 
-	public ArrayList<ArrayList<Station>> getMetroDirectionsList() {
+	public ArrayList<ArrayList<StationEntity>> getMetroDirectionsList() {
 		return metroDirectionsList;
 	}
 
 	public void setMetroDirectionsList(
-			ArrayList<ArrayList<Station>> metroDirectionsList) {
+			ArrayList<ArrayList<StationEntity>> metroDirectionsList) {
 		this.metroDirectionsList = metroDirectionsList;
 	}
 
@@ -95,13 +95,13 @@ public class MetroLoadStations {
 	 */
 	public String getDirectionName(int currentDirection, boolean formatted,
 			boolean truncated) {
-		VehicleType vehicleType;
+		VehicleTypeEnum vehicleType;
 		switch (currentDirection) {
 		case 0:
-			vehicleType = VehicleType.METRO1;
+			vehicleType = VehicleTypeEnum.METRO1;
 			break;
 		default:
-			vehicleType = VehicleType.METRO2;
+			vehicleType = VehicleTypeEnum.METRO2;
 			break;
 		}
 
@@ -120,7 +120,7 @@ public class MetroLoadStations {
 	 *            be removed)
 	 * @return the direction name
 	 */
-	public String getDirectionName(VehicleType vehicleType, boolean formatted,
+	public String getDirectionName(VehicleTypeEnum vehicleType, boolean formatted,
 			boolean truncated) {
 		// Get the metro direction according to the vehicle type
 		String metroDirectionName;
@@ -156,7 +156,7 @@ public class MetroLoadStations {
 	 *            the chosen direction (0 - METRO1, otherwise - METRO2)
 	 * @return a list with the stations for the current direction
 	 */
-	public ArrayList<Station> getDirectionList(int currentDirection) {
+	public ArrayList<StationEntity> getDirectionList(int currentDirection) {
 		switch (currentDirection) {
 		case 0:
 			currentDirection = 0;
@@ -176,7 +176,7 @@ public class MetroLoadStations {
 	 *            the vehicle type
 	 * @return a list with the stations for the current vehicle type
 	 */
-	public ArrayList<Station> getDirectionList(VehicleType vehicleType) {
+	public ArrayList<StationEntity> getDirectionList(VehicleTypeEnum vehicleType) {
 		int currentDirection;
 		switch (vehicleType) {
 		case METRO1:

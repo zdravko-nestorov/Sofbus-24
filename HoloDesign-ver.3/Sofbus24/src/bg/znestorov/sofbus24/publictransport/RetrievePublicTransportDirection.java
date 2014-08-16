@@ -18,7 +18,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
-import bg.znestorov.sofbus24.entity.Vehicle;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.schedule.ScheduleVehicleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -37,11 +37,11 @@ public class RetrievePublicTransportDirection extends
 	private Activity context;
 	private ScheduleVehicleFragment scheduleVehicleFragment;
 	private ProgressDialog progressDialog;
-	private Vehicle vehicle;
+	private VehicleEntity vehicle;
 
 	public RetrievePublicTransportDirection(Activity context,
 			ScheduleVehicleFragment scheduleVehicleFragment,
-			ProgressDialog progressDialog, Vehicle vehicle) {
+			ProgressDialog progressDialog, VehicleEntity vehicle) {
 		this.context = context;
 		this.scheduleVehicleFragment = scheduleVehicleFragment;
 		this.progressDialog = progressDialog;
@@ -149,7 +149,7 @@ public class RetrievePublicTransportDirection extends
 	 *            the selected vehicle
 	 * @return the corresponding vehicle type code
 	 */
-	private String getVehicleType(Vehicle vehicle) {
+	private String getVehicleType(VehicleEntity vehicle) {
 		String vehicleType;
 
 		switch (vehicle.getType()) {

@@ -36,6 +36,7 @@
     <string name="action_closest_stations_map">Google Maps</string>
     <string name="action_closest_stations_list">Closest stations</string>
     <string name="action_more">More</string>
+    <string name="action_favourites_sort">Sort</string>
     <string name="action_favourites_remove_all">Delete all</string>
     <string name="action_metro_map_route">Route</string>
     <string name="action_edit_tabs">Home screen</string>
@@ -87,6 +88,12 @@
     <string name="action_history_delete_all">Delete all</string>
 
     <!-- Context Menu -->
+    <!-- Favourites -->
+    <string name="menu_fav_rename">Rename</string>
+    <string name="menu_fav_remove">Remove</string>
+    <string name="menu_fav_google_maps">Google Maps</string>
+    <string name="menu_fav_google_street_view">Street View</string>
+    <string name="menu_fav_information">Information</string>
     <!-- Metro Station -->
     <string name="menu_metro_station_title">Choose an action</string>
     <string name="menu_metro_station_add">Add to Favorites</string>
@@ -173,6 +180,21 @@
     <string name="fav_menu_remove_all_confirmation" formatted="false"><![CDATA[Are you sure that you want to remove all <b>Favorites</b> stations?]]></string>
     <string name="fav_menu_remove_all_toast" formatted="false"><![CDATA[All <b>Favorites</b> stations were removed.]]></string>
     <string name="fav_menu_remove_all_empty_toast" formatted="false"><![CDATA[There are no <b>Favorites</b> stations added.]]></string>
+    <string name="fav_menu_sort_title">Sorting</string>
+    <string name="fav_menu_sort_name">Alphabetical</string>
+    <string name="fav_menu_sort_date_added">Date added</string>
+    <string name="fav_menu_sort_date_last_access">Date of last use</string>
+    <string name="fav_menu_sort_usage_count">Frequency of use</string>
+    <string name="fav_menu_sort_custom">Custom</string>
+    <string name="fav_menu_sort_type_title">Sorting</string>
+    <string name="fav_menu_sort_type_asc">Ascending</string>
+    <string name="fav_menu_sort_type_desc">Descending</string>
+    <string name="fav_menu_sort_order_title">Move</string>
+    <string name="fav_menu_sort_order_first">Top</string>
+    <string name="fav_menu_sort_order_up">Up</string>
+    <string name="fav_menu_sort_order_down">Down</string>
+    <string name="fav_menu_sort_order_last">Bottom</string>
+    <string name="fav_menu_sort_success" formatted="false"><![CDATA[<b>Favorites</b> stations were successfully sorted.]]></string>
 
     <!-- Virtual Boards Fragment -->
     <string name="vb_search_hint">Search by name or number</string>

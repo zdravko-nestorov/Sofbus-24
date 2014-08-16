@@ -9,8 +9,8 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import bg.znestorov.sofbus24.entity.Config;
-import bg.znestorov.sofbus24.entity.HomeTab;
+import bg.znestorov.sofbus24.entity.ConfigEntity;
+import bg.znestorov.sofbus24.entity.HomeTabEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 
@@ -28,7 +28,7 @@ import com.mobeta.android.dslv.SimpleFloatViewManager;
 public class EditTabsFragment extends ListFragment {
 
 	private Activity context;
-	private Config config;
+	private ConfigEntity config;
 	private boolean isReset;
 
 	private EditTabsAdapter editTabsAdapter;
@@ -46,7 +46,7 @@ public class EditTabsFragment extends ListFragment {
 		}
 	};
 
-	public static EditTabsFragment newInstance(Config config, boolean isReset) {
+	public static EditTabsFragment newInstance(ConfigEntity config, boolean isReset) {
 		EditTabsFragment editTabsFragment = new EditTabsFragment();
 
 		Bundle bundle = new Bundle();
@@ -85,12 +85,12 @@ public class EditTabsFragment extends ListFragment {
 		// Get the configuration object and if the Fragment is started or
 		// reset from the Bundle or SavedInstanceState
 		if (savedInstanceState == null) {
-			config = (Config) getArguments().getSerializable(
+			config = (ConfigEntity) getArguments().getSerializable(
 					Constants.BUNDLE_EDIT_TABS);
 			isReset = getArguments().getBoolean(
 					Constants.BUNDLE_EDIT_TABS_RESET);
 		} else {
-			config = (Config) savedInstanceState
+			config = (ConfigEntity) savedInstanceState
 					.getSerializable(Constants.BUNDLE_EDIT_TABS);
 			isReset = savedInstanceState
 					.getBoolean(Constants.BUNDLE_EDIT_TABS_RESET);
@@ -118,7 +118,7 @@ public class EditTabsFragment extends ListFragment {
 	 * Create the list adapter and set it to the Fragment ListView
 	 */
 	private void setListAdapter() {
-		ArrayList<HomeTab> homeTabs;
+		ArrayList<HomeTabEntity> homeTabs;
 
 		// Check if the fragment is reset or not
 		if (isReset) {
@@ -138,11 +138,11 @@ public class EditTabsFragment extends ListFragment {
 	 * @return an ArrayList<HomeTabs> with the home tabs, according to the
 	 *         configuration file
 	 */
-	private ArrayList<HomeTab> createConfigList() {
+	private ArrayList<HomeTabEntity> createConfigList() {
 		// Create empty ArrayList<HomeTab>, which contains only null objects
 		// (this is workaround as the ArrayList should be ordered at the time of
 		// creation)
-		ArrayList<HomeTab> homeTabs = new ArrayList<HomeTab>(
+		ArrayList<HomeTabEntity> homeTabs = new ArrayList<HomeTabEntity>(
 				Constants.GLOBAL_PARAM_HOME_TABS_COUNT);
 
 		for (int i = 0; i < Constants.GLOBAL_PARAM_HOME_TABS_COUNT; i++) {
@@ -150,16 +150,16 @@ public class EditTabsFragment extends ListFragment {
 		}
 
 		// Create each home tab according to the configuration
-		HomeTab homeTabFavourites = new HomeTab(config.isFavouritesVisibilå(),
+		HomeTabEntity homeTabFavourites = new HomeTabEntity(config.isFavouritesVisibilå(),
 				getString(R.string.edit_tabs_favourites),
 				config.getFavouritesPosition());
-		HomeTab homeTabSearch = new HomeTab(config.isSearchVisibile(),
+		HomeTabEntity homeTabSearch = new HomeTabEntity(config.isSearchVisibile(),
 				getString(R.string.edit_tabs_search),
 				config.getSearchPosition());
-		HomeTab homeTabSchedule = new HomeTab(config.isScheduleVisibile(),
+		HomeTabEntity homeTabSchedule = new HomeTabEntity(config.isScheduleVisibile(),
 				getString(R.string.edit_tabs_schedule),
 				config.getSchedulePosition());
-		HomeTab homeTabMetro = new HomeTab(config.isMetroVisibile(),
+		HomeTabEntity homeTabMetro = new HomeTabEntity(config.isMetroVisibile(),
 				getString(R.string.edit_tabs_metro), config.getMetroPosition());
 
 		// Build the List with the home tabs in the correct ordering
@@ -176,19 +176,19 @@ public class EditTabsFragment extends ListFragment {
 	 * 
 	 * @return a default ArrayList<HomeTabs> with the home tabs
 	 */
-	private ArrayList<HomeTab> createDefaultList() {
+	private ArrayList<HomeTabEntity> createDefaultList() {
 		// Create the home tabs (with their default state)
-		HomeTab homeTabFavourites = new HomeTab(true,
+		HomeTabEntity homeTabFavourites = new HomeTabEntity(true,
 				getString(R.string.edit_tabs_favourites), 0);
-		HomeTab homeTabSearch = new HomeTab(true,
+		HomeTabEntity homeTabSearch = new HomeTabEntity(true,
 				getString(R.string.edit_tabs_search), 1);
-		HomeTab homeTabSchedule = new HomeTab(true,
+		HomeTabEntity homeTabSchedule = new HomeTabEntity(true,
 				getString(R.string.edit_tabs_schedule), 2);
-		HomeTab homeTabMetro = new HomeTab(true,
+		HomeTabEntity homeTabMetro = new HomeTabEntity(true,
 				getString(R.string.edit_tabs_metro), 3);
 
 		// Build the List with the home tabs in the default ordering
-		ArrayList<HomeTab> homeTabs = new ArrayList<HomeTab>();
+		ArrayList<HomeTabEntity> homeTabs = new ArrayList<HomeTabEntity>();
 		homeTabs.add(homeTabFavourites);
 		homeTabs.add(homeTabSearch);
 		homeTabs.add(homeTabSchedule);
@@ -221,11 +221,11 @@ public class EditTabsFragment extends ListFragment {
 	 * 
 	 * @return the current configuration
 	 */
-	public Config getNewConfig() {
-		Config currentConfig = new Config(context);
+	public ConfigEntity getNewConfig() {
+		ConfigEntity currentConfig = new ConfigEntity(context);
 
 		for (int i = 0; i < Constants.GLOBAL_PARAM_HOME_TABS_COUNT; i++) {
-			HomeTab adapterItem = editTabsAdapter.getItem(i);
+			HomeTabEntity adapterItem = editTabsAdapter.getItem(i);
 			String tabName = adapterItem.getTabName();
 			int tabPosition = adapterItem.getTabPosition();
 			boolean isTabVisible = adapterItem.isTabVisible();

@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 
 import android.app.Activity;
 import android.text.format.DateFormat;
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.history.HistoryOfSearches;
 import bg.znestorov.sofbus24.main.R;
 
@@ -397,7 +397,7 @@ public class Utils {
 	 *            the value that has to be added to the history of searches
 	 */
 	public static void addSearchInHistory(Activity context,
-			VehicleType historyType, String... historyValueArr) {
+			VehicleTypeEnum historyType, String... historyValueArr) {
 		HistoryOfSearches history = HistoryOfSearches.getInstance(context);
 
 		// Get the name of the search
@@ -414,11 +414,11 @@ public class Utils {
 		}
 
 		// Get the search type
-		if (historyType == VehicleType.METRO1
-				|| historyType == VehicleType.METRO2) {
-			historyType = VehicleType.METRO;
+		if (historyType == VehicleTypeEnum.METRO1
+				|| historyType == VehicleTypeEnum.METRO2) {
+			historyType = VehicleTypeEnum.METRO;
 		} else {
-			historyType = VehicleType.BTT;
+			historyType = VehicleTypeEnum.BTT;
 		}
 
 		int nextSearchNumber = history.getNextSearchNumber();
@@ -442,7 +442,7 @@ public class Utils {
 	 * @param station
 	 *            the station that has to be added to the history of searches
 	 */
-	public static void addStationInHistory(Activity context, Station station) {
+	public static void addStationInHistory(Activity context, StationEntity station) {
 		addSearchInHistory(context, station.getType(), station.getName(),
 				station.getNumber());
 	}
@@ -457,8 +457,8 @@ public class Utils {
 	 *            searches
 	 */
 	public static void addListOfStationsInHistory(Activity context,
-			HashMap<String, Station> stationsMap) {
-		Iterator<Entry<String, Station>> stationIterator = stationsMap
+			HashMap<String, StationEntity> stationsMap) {
+		Iterator<Entry<String, StationEntity>> stationIterator = stationsMap
 				.entrySet().iterator();
 
 		while (stationIterator.hasNext()) {

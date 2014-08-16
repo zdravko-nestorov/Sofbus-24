@@ -8,6 +8,6 @@ package bg.znestorov.sofbus24.entity;
  * @version 1.0
  * 
  */
-public enum TabType {
+public enum TabTypeEnum {
 	LEFT, MIDDLE, RIGHT;
 }

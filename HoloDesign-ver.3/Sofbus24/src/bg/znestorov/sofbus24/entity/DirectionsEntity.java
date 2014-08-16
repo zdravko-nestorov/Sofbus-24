@@ -15,7 +15,7 @@ public class DirectionsEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private Vehicle vehicle;
+	private VehicleEntity vehicle;
 	private int activeDirection;
 	private int activeStation;
 
@@ -24,14 +24,14 @@ public class DirectionsEntity implements Serializable {
 	private ArrayList<String> rid;
 
 	private ArrayList<String> directionsNames;
-	private ArrayList<ArrayList<Station>> directionsList;
+	private ArrayList<ArrayList<StationEntity>> directionsList;
 
 	public DirectionsEntity() {
 		this.vt = new ArrayList<String>();
 		this.lid = new ArrayList<String>();
 		this.rid = new ArrayList<String>();
 		this.directionsNames = new ArrayList<String>();
-		this.directionsList = new ArrayList<ArrayList<Station>>();
+		this.directionsList = new ArrayList<ArrayList<StationEntity>>();
 	}
 
 	public DirectionsEntity(DirectionsEntity directionsEntity,
@@ -46,20 +46,20 @@ public class DirectionsEntity implements Serializable {
 		this.directionsList = directionsEntity.getDirectionsList();
 	}
 
-	public DirectionsEntity(Vehicle vehicle, int activeDirection,
+	public DirectionsEntity(VehicleEntity vehicle, int activeDirection,
 			ArrayList<String> directionsNames,
-			ArrayList<ArrayList<Station>> directionsList) {
+			ArrayList<ArrayList<StationEntity>> directionsList) {
 		this.vehicle = vehicle;
 		this.activeDirection = activeDirection;
 		this.directionsNames = directionsNames;
 		this.directionsList = directionsList;
 	}
 
-	public Vehicle getVehicle() {
+	public VehicleEntity getVehicle() {
 		return vehicle;
 	}
 
-	public void setVehicle(Vehicle vehicle) {
+	public void setVehicle(VehicleEntity vehicle) {
 		this.vehicle = vehicle;
 	}
 
@@ -87,11 +87,11 @@ public class DirectionsEntity implements Serializable {
 		this.directionsNames = directionsNames;
 	}
 
-	public ArrayList<ArrayList<Station>> getDirectionsList() {
+	public ArrayList<ArrayList<StationEntity>> getDirectionsList() {
 		return directionsList;
 	}
 
-	public void setDirectionsList(ArrayList<ArrayList<Station>> directionsList) {
+	public void setDirectionsList(ArrayList<ArrayList<StationEntity>> directionsList) {
 		this.directionsList = directionsList;
 	}
 

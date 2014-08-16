@@ -18,7 +18,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
-import bg.znestorov.sofbus24.entity.PublicTransportStation;
+import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
 import bg.znestorov.sofbus24.main.PublicTransportSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
@@ -33,18 +33,18 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
  * 
  */
 public class RetrievePublicTransportStation extends
-		AsyncTask<Void, Void, PublicTransportStation> {
+		AsyncTask<Void, Void, PublicTransportStationEntity> {
 
 	private Activity context;
 	private ProgressDialog progressDialog;
 
-	private PublicTransportStation ptStation;
+	private PublicTransportStationEntity ptStation;
 	private DirectionsEntity ptDirectionsEntity;
 
 	private int activeDirection;
 
 	public RetrievePublicTransportStation(Activity context,
-			ProgressDialog progressDialog, PublicTransportStation ptStation,
+			ProgressDialog progressDialog, PublicTransportStationEntity ptStation,
 			DirectionsEntity ptDirectionsEntity) {
 		this.context = context;
 		this.progressDialog = progressDialog;
@@ -62,7 +62,7 @@ public class RetrievePublicTransportStation extends
 	}
 
 	@Override
-	protected PublicTransportStation doInBackground(Void... params) {
+	protected PublicTransportStationEntity doInBackground(Void... params) {
 		DefaultHttpClient stationHttpClient = new DefaultHttpClient();
 
 		try {
@@ -74,7 +74,7 @@ public class RetrievePublicTransportStation extends
 					context, ptStation, htmlResult);
 			ptStation = processPtStation.getStationFromHtml();
 		} catch (Exception e) {
-			ptStation = new PublicTransportStation();
+			ptStation = new PublicTransportStationEntity();
 		} finally {
 			stationHttpClient.getConnectionManager().shutdown();
 		}
@@ -83,7 +83,7 @@ public class RetrievePublicTransportStation extends
 	}
 
 	@Override
-	protected void onPostExecute(final PublicTransportStation ptStation) {
+	protected void onPostExecute(final PublicTransportStationEntity ptStation) {
 		super.onPostExecute(ptStation);
 
 		// Check if the information is correctly retrieved from SKGT site

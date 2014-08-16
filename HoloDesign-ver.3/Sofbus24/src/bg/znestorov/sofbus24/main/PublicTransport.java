@@ -19,7 +19,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
-import bg.znestorov.sofbus24.entity.Vehicle;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.publictransport.PublicTransportFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -153,7 +153,7 @@ public class PublicTransport extends FragmentActivity implements
 	 * @return the actionBar subtitle in format - [VehicleType] ¹[VehicleNumber]
 	 */
 	private String getSubtitle() {
-		Vehicle vehicle = ptDirectionsEntity.getVehicle();
+		VehicleEntity vehicle = ptDirectionsEntity.getVehicle();
 		String subtitle;
 
 		switch (vehicle.getType()) {

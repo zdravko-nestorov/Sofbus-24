@@ -10,7 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import bg.znestorov.sofbus24.entity.Config;
+import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 
 /**
@@ -103,7 +103,7 @@ public class Configuration {
 	 * @param newConfig
 	 *            the new Configuration object
 	 */
-	public static void editConfiguration(Activity context, Config newConfig) {
+	public static void editConfiguration(Activity context, ConfigEntity newConfig) {
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);
 
@@ -141,7 +141,7 @@ public class Configuration {
 	 *            the new Configuration object
 	 */
 	public static void editDbConfigurationFileds(Activity context,
-			Config newConfig) {
+			ConfigEntity newConfig) {
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);
 
@@ -162,7 +162,7 @@ public class Configuration {
 	 *            the new Configuration object
 	 */
 	public static void editTabConfigurationFileds(Activity context,
-			Config newConfig) {
+			ConfigEntity newConfig) {
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);
 

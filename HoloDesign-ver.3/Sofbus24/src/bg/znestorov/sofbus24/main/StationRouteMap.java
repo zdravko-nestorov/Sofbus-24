@@ -17,11 +17,11 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
-import bg.znestorov.sofbus24.entity.MetroStation;
-import bg.znestorov.sofbus24.entity.PublicTransportStation;
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.Vehicle;
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.MetroStationEntity;
+import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
+import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.publictransport.RetrievePublicTransportStation;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -75,7 +75,7 @@ public class StationRouteMap extends Activity {
 		@Override
 		public boolean onMarkerClick(Marker marker) {
 			if (!marker.isInfoWindowShown()) {
-				Station station = getMarkerStation(marker);
+				StationEntity station = getMarkerStation(marker);
 				currentMarkerLatLng = new LatLng(Double.parseDouble(station
 						.getLat()), Double.parseDouble(station.getLon()));
 			} else {
@@ -112,8 +112,8 @@ public class StationRouteMap extends Activity {
 
 			// Get the needed fields from the bundle object to form the action
 			// bar title and subtitle
-			Vehicle vehicle = directionsEntity.getVehicle();
-			final VehicleType stationType = vehicle.getType();
+			VehicleEntity vehicle = directionsEntity.getVehicle();
+			final VehicleTypeEnum stationType = vehicle.getType();
 			int ptActiveDirection = directionsEntity.getActiveDirection();
 			String directionName = directionsEntity.getDirectionsNames().get(
 					ptActiveDirection);
@@ -215,11 +215,11 @@ public class StationRouteMap extends Activity {
 	 * @param currentLocation
 	 *            the current location
 	 */
-	private void initGoogleMaps(VehicleType stationType,
+	private void initGoogleMaps(VehicleTypeEnum stationType,
 			final Location currentLocation) {
 		// Check the type of the bundle object
-		if (VehicleType.METRO1.equals(stationType)
-				|| VehicleType.METRO2.equals(stationType)) {
+		if (VehicleTypeEnum.METRO1.equals(stationType)
+				|| VehicleTypeEnum.METRO2.equals(stationType)) {
 			processListOfMetroStationObjects(currentLocation);
 		} else {
 			processListOfPTStationObjects(currentLocation);
@@ -257,7 +257,7 @@ public class StationRouteMap extends Activity {
 		int metroActiveDirection = directionsEntity.getActiveDirection();
 		String metroDirectionName = directionsEntity.getDirectionsNames().get(
 				metroActiveDirection);
-		ArrayList<Station> metroDirectionStations = directionsEntity
+		ArrayList<StationEntity> metroDirectionStations = directionsEntity
 				.getDirectionsList().get(metroActiveDirection);
 
 		// Create an object consisted of a set of all points of the route
@@ -268,8 +268,8 @@ public class StationRouteMap extends Activity {
 
 		// Process all stations of the metro route
 		for (int i = 0; i < metroDirectionStations.size(); i++) {
-			Station station = metroDirectionStations.get(i);
-			MetroStation ms = new MetroStation(station, metroDirectionName);
+			StationEntity station = metroDirectionStations.get(i);
+			MetroStationEntity ms = new MetroStationEntity(station, metroDirectionName);
 
 			// Create the marker over the map
 			if (ms.hasCoordinates()) {
@@ -317,7 +317,7 @@ public class StationRouteMap extends Activity {
 					@Override
 					public void onInfoWindowClick(Marker marker) {
 						// Get the station associated with this marker
-						Station station = getMarkerStation(marker);
+						StationEntity station = getMarkerStation(marker);
 
 						// Getting the Metro schedule from the station URL
 						// address
@@ -348,11 +348,11 @@ public class StationRouteMap extends Activity {
 		int ptActiveDirection = directionsEntity.getActiveDirection();
 		String ptDirectionName = directionsEntity.getDirectionsNames().get(
 				ptActiveDirection);
-		ArrayList<Station> ptDirectionStations = directionsEntity
+		ArrayList<StationEntity> ptDirectionStations = directionsEntity
 				.getDirectionsList().get(ptActiveDirection);
 
 		// Create a HashMap to associate each marker with a station
-		final HashMap<String, PublicTransportStation> markersAndStations = new HashMap<String, PublicTransportStation>();
+		final HashMap<String, PublicTransportStationEntity> markersAndStations = new HashMap<String, PublicTransportStationEntity>();
 
 		// Create an object consisted of a set of all points of the route
 		PolylineOptions ptRouteOptions = new PolylineOptions().width(4).color(
@@ -360,7 +360,7 @@ public class StationRouteMap extends Activity {
 
 		// Process all stations of the public transport route
 		for (int i = 0; i < ptDirectionStations.size(); i++) {
-			Station station = ptDirectionStations.get(i);
+			StationEntity station = ptDirectionStations.get(i);
 
 			// Create the marker over the map
 			if (station.hasCoordinates()) {
@@ -398,7 +398,7 @@ public class StationRouteMap extends Activity {
 				Marker marker = stationMap.addMarker(stationMarkerOptions);
 
 				// Associate the marker and the station
-				PublicTransportStation ptStation = (PublicTransportStation) station;
+				PublicTransportStationEntity ptStation = (PublicTransportStationEntity) station;
 				ptStation.setDirection(ptDirectionName);
 				markersAndStations.put(marker.getId(), ptStation);
 			}
@@ -413,7 +413,7 @@ public class StationRouteMap extends Activity {
 					@Override
 					public void onInfoWindowClick(Marker marker) {
 						// Get the station associated to this marker
-						PublicTransportStation ptStation = markersAndStations
+						PublicTransportStationEntity ptStation = markersAndStations
 								.get(marker.getId());
 
 						// Getting the PublicTransport schedule from the station
@@ -442,7 +442,7 @@ public class StationRouteMap extends Activity {
 	 *         for PT (public transport) - [line name] ¹[line number], and for
 	 *         METRO - [line number]
 	 */
-	private String getLineName(Vehicle vehicle) {
+	private String getLineName(VehicleEntity vehicle) {
 		String lineName;
 
 		switch (vehicle.getType()) {
@@ -528,7 +528,7 @@ public class StationRouteMap extends Activity {
 	 *            the type of the station
 	 * @return the marker icon from the resources
 	 */
-	private int getMarkerIcon(VehicleType stationType) {
+	private int getMarkerIcon(VehicleTypeEnum stationType) {
 		int markerIcon;
 
 		switch (stationType) {
@@ -560,7 +560,7 @@ public class StationRouteMap extends Activity {
 	 *            the current marker
 	 * @return the station associated with this marker
 	 */
-	private Station getMarkerStation(Marker marker) {
+	private StationEntity getMarkerStation(Marker marker) {
 		// Get the station number
 		String markerTitle = marker.getTitle();
 		String stationNumber = Utils.getValueBeforeLast(
@@ -569,7 +569,7 @@ public class StationRouteMap extends Activity {
 		// Get the station from the DB
 		StationsDataSource stationDatasource = new StationsDataSource(context);
 		stationDatasource.open();
-		Station station = stationDatasource.getStation(stationNumber);
+		StationEntity station = stationDatasource.getStation(stationNumber);
 		stationDatasource.close();
 
 		return station;

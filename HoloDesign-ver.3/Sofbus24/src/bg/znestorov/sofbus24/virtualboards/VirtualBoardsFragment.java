@@ -22,8 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import bg.znestorov.sofbus24.entity.FragmentLifecycle;
-import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
@@ -37,7 +37,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 	private SearchEditText searchEditText;
 
 	private String vbSearchText;
-	private ArrayList<Station> vbList = new ArrayList<Station>();
+	private ArrayList<StationEntity> vbList = new ArrayList<StationEntity>();
 
 	private String emptyListMsg;
 
@@ -68,7 +68,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 				&& savedInstanceState.getSerializable(BUNDLE_VB_STATIONS_LIST) != null) {
 			vbSearchText = savedInstanceState.getString(BUNDLE_VB_SEARCH_TEXT);
 			vbList.clear();
-			vbList.addAll((ArrayList<Station>) savedInstanceState
+			vbList.addAll((ArrayList<StationEntity>) savedInstanceState
 					.getSerializable(BUNDLE_VB_STATIONS_LIST));
 			emptyListMsg = savedInstanceState
 					.getString(BUNDLE_VB_EMPTY_LIST_MSG);
@@ -87,7 +87,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 		searchEditText.setText(vbSearchText);
 
 		// Set the list adapter to the Fragment
-		ArrayAdapter<Station> virtualBoardsAdapter = new VirtualBoardsAdapter(
+		ArrayAdapter<StationEntity> virtualBoardsAdapter = new VirtualBoardsAdapter(
 				context, vbList);
 		setListAdapter(virtualBoardsAdapter);
 		setEmptyListText();
@@ -114,10 +114,10 @@ public class VirtualBoardsFragment extends ListFragment implements
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Station station = (Station) getListAdapter().getItem(position);
+		StationEntity station = (StationEntity) getListAdapter().getItem(position);
 
 		RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-				context, this, station, HtmlRequestCodes.SINGLE_RESULT);
+				context, this, station, HtmlRequestCodesEnum.SINGLE_RESULT);
 		retrieveVirtualBoards.getSumcInformation();
 	}
 
@@ -130,7 +130,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 	 * @param emptyListMsg
 	 *            the text that will show if the list is empty
 	 */
-	public void setListAdapterViaSearch(ArrayList<Station> stationsList,
+	public void setListAdapterViaSearch(ArrayList<StationEntity> stationsList,
 			String emptyListMsg) {
 		ActivityUtils.hideKeyboard(context, searchEditText);
 
@@ -147,7 +147,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 	 * default fragment list (vbList)
 	 */
 	private void setListAdapterViaSearch() {
-		ArrayAdapter<Station> virtualBoardsAdapter = (VirtualBoardsAdapter) getListAdapter();
+		ArrayAdapter<StationEntity> virtualBoardsAdapter = (VirtualBoardsAdapter) getListAdapter();
 
 		if (virtualBoardsAdapter != null) {
 			virtualBoardsAdapter.notifyDataSetChanged();
@@ -265,11 +265,11 @@ public class VirtualBoardsFragment extends ListFragment implements
 	 */
 	private void performSearch() {
 		if (checkSearchText(vbSearchText)) {
-			Station station = new Station();
+			StationEntity station = new StationEntity();
 			station.setNumberUnformatted(vbSearchText);
 
 			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-					context, this, station, HtmlRequestCodes.MULTIPLE_RESULTS);
+					context, this, station, HtmlRequestCodesEnum.MULTIPLE_RESULTS);
 			retrieveVirtualBoards.getSumcInformation();
 		} else {
 			vbSearchText = "";

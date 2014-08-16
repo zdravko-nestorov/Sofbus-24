@@ -15,27 +15,26 @@ import android.view.View.OnKeyListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 
 public class FavouritesRenameDialog extends DialogFragment {
 
 	public interface OnRenameFavouritesListener {
 		public void onRenameFavouritesClicked(String stationName,
-				Station station);
+				StationEntity station);
 	}
 
 	private Activity context;
 
-	private Station station;
+	private StationEntity station;
 	private EditText input;
 	private String inputText;
 
 	private static final String BUNDLE_STATION = "STATION";
 	private static final String BUNDLE_INPUT_TEXT = "INPUT TEXT";
 
-	public static FavouritesRenameDialog newInstance(Station station,
-			int position) {
+	public static FavouritesRenameDialog newInstance(StationEntity station) {
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(BUNDLE_STATION, station);
 
@@ -48,7 +47,8 @@ public class FavouritesRenameDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		context = getActivity();
-		station = (Station) getArguments().getSerializable(BUNDLE_STATION);
+		station = (StationEntity) getArguments()
+				.getSerializable(BUNDLE_STATION);
 
 		if (savedInstanceState != null) {
 			inputText = savedInstanceState.getString(BUNDLE_INPUT_TEXT);

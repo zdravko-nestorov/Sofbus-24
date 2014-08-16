@@ -16,7 +16,7 @@ import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import bg.znestorov.sofbus24.entity.Vehicle;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.publictransport.RetrievePublicTransportDirection;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -40,7 +40,7 @@ public class ScheduleVehicleFragment extends ListFragment {
 	private ScheduleLoadVehicles slv;
 
 	private ScheduleVehicleAdapter scheduleVehicleAdapter;
-	private ArrayList<Vehicle> stationsList = new ArrayList<Vehicle>();
+	private ArrayList<VehicleEntity> stationsList = new ArrayList<VehicleEntity>();
 
 	private String searchText;
 	private static final String BUNDLE_SEARCH_TEXT = "SEARCH TEXT";
@@ -89,7 +89,7 @@ public class ScheduleVehicleFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		ScheduleVehicleAdapter scheduleStationAdapter = (ScheduleVehicleAdapter) getListAdapter();
-		Vehicle vehicle = (Vehicle) scheduleStationAdapter.getItem(position);
+		VehicleEntity vehicle = (VehicleEntity) scheduleStationAdapter.getItem(position);
 		String rowCaption = scheduleStationAdapter.getVehicleCaption(context,
 				vehicle);
 

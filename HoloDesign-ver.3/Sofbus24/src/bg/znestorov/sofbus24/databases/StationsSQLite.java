@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Stations SQLite helper class, responsible for DB life-cycle
@@ -62,9 +61,6 @@ public class StationsSQLite extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w(FavouritesSQLite.class.getName(),
-				"Upgrading database from version " + oldVersion + " to "
-						+ newVersion + ", which will destroy all old data.");
 		context.deleteDatabase(DB_NAME);
 		createDataBase(null);
 	}

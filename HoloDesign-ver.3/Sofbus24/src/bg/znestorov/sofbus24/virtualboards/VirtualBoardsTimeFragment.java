@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.RefreshableListFragment;
-import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
+import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 
@@ -25,12 +25,12 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 		RefreshableListFragment {
 
 	private Activity context;
-	private VirtualBoardsStation vbTimeStation;
+	private VirtualBoardsStationEntity vbTimeStation;
 
 	private TextView vbListEmptyTextView;
 
 	public static VirtualBoardsTimeFragment newInstance(
-			VirtualBoardsStation vbTimeStation, String vbTimeEmptyText) {
+			VirtualBoardsStationEntity vbTimeStation, String vbTimeEmptyText) {
 		VirtualBoardsTimeFragment vbTimeFragment = new VirtualBoardsTimeFragment();
 
 		Bundle bundle = new Bundle();
@@ -66,7 +66,7 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 		// Bundle
 		String vbTimeEmptyText = getArguments().getString(
 				Constants.BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST);
-		vbTimeStation = (VirtualBoardsStation) getArguments().getSerializable(
+		vbTimeStation = (VirtualBoardsStationEntity) getArguments().getSerializable(
 				Constants.BUNDLE_VIRTUAL_BOARDS_TIME);
 
 		// Set the ListAdapter
@@ -77,7 +77,7 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 
 	@Override
 	public void onFragmentRefresh(Object obj, String vbTimeEmptyText) {
-		VirtualBoardsStation newVBTimeStation = (VirtualBoardsStation) obj;
+		VirtualBoardsStationEntity newVBTimeStation = (VirtualBoardsStationEntity) obj;
 		vbTimeStation.setVirtualBoardsTimeStation(newVBTimeStation);
 
 		setListAdapter(vbTimeEmptyText);

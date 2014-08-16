@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.MapUtils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -25,12 +25,12 @@ import com.google.android.gms.maps.model.LatLng;
  * @version 1.0
  * 
  */
-public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
+public class ClosestStationsListAdapter extends ArrayAdapter<StationEntity> {
 
 	private final FavouritesDataSource favouritesDatasource;
 	private final Activity context;
 	private final LatLng currentLocation;
-	private final List<Station> stations;
+	private final List<StationEntity> stations;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
@@ -40,7 +40,7 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 	}
 
 	public ClosestStationsListAdapter(Activity context, LatLng currentLocation,
-			List<Station> stations) {
+			List<StationEntity> stations) {
 		super(context, R.layout.activity_closest_stations_list_item, stations);
 		this.context = context;
 		this.currentLocation = currentLocation;
@@ -76,7 +76,7 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 		}
 
 		// Fill the data
-		Station station = stations.get(position);
+		StationEntity station = stations.get(position);
 		viewHolder.addToFavourites.setImageResource(getFavouriteImage(station));
 		viewHolder.stationCaption.setText(String.format(station.getName()
 				+ " (%s)", station.getNumber()));
@@ -103,7 +103,7 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 	 *            the station on the current row
 	 * @return the station image id
 	 */
-	private Integer getFavouriteImage(Station station) {
+	private Integer getFavouriteImage(StationEntity station) {
 		Integer favouriteImage;
 
 		favouritesDatasource.open();
@@ -126,7 +126,7 @@ public class ClosestStationsListAdapter extends ArrayAdapter<Station> {
 	 *            the station on the current row
 	 */
 	public void actionsOverFavouritesImageViews(final ViewHolder viewHolder,
-			final Station station) {
+			final StationEntity station) {
 		viewHolder.addToFavourites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				ActivityUtils.toggleFavouritesStation(context,

@@ -19,8 +19,8 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
-import bg.znestorov.sofbus24.entity.MetroStation;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.MetroStationEntity;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.StationMap;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -36,7 +36,7 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
  * @version 1.0
  * 
  */
-public class MetroStationAdapter extends ArrayAdapter<Station> {
+public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 
 	private Activity context;
 	private FavouritesDataSource favouritesDatasource;
@@ -44,8 +44,8 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 	private TextView emptyList;
 	private String directionName;
 
-	private List<Station> originalStations;
-	private List<Station> filteredStations;
+	private List<StationEntity> originalStations;
+	private List<StationEntity> filteredStations;
 
 	private Filter stationsFilter;
 	private String language;
@@ -59,7 +59,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 	}
 
 	public MetroStationAdapter(Activity context, TextView emptyList,
-			String directionName, List<Station> stations) {
+			String directionName, List<StationEntity> stations) {
 		super(context, R.layout.activity_metro_station_list_item, stations);
 
 		this.context = context;
@@ -105,7 +105,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 		}
 
 		// Fill the data
-		Station station = filteredStations.get(position);
+		StationEntity station = filteredStations.get(position);
 		viewHolder.stationIcon.setImageResource(getMetroImage(station));
 		viewHolder.stationName.setText(station.getName());
 		viewHolder.stationNumber.setText(String.format(
@@ -119,7 +119,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 	}
 
 	@Override
-	public Station getItem(int position) {
+	public StationEntity getItem(int position) {
 		return filteredStations.get(position);
 	}
 
@@ -164,7 +164,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 					results.values = originalStations;
 					results.count = originalStations.size();
 				} else {
-					List<Station> filterResultsData = new ArrayList<Station>();
+					List<StationEntity> filterResultsData = new ArrayList<StationEntity>();
 
 					String filterString = constraint.toString().trim()
 							.toUpperCase();
@@ -181,7 +181,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 
 					// Itterate over all stations and search which ones match
 					// the filter
-					for (Station station : originalStations) {
+					for (StationEntity station : originalStations) {
 						filterebaleName = station.getName().toUpperCase();
 						filterebaleNumber = station.getNumber().toUpperCase();
 
@@ -202,7 +202,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 			@Override
 			protected void publishResults(CharSequence constraint,
 					FilterResults filterResults) {
-				filteredStations = (ArrayList<Station>) filterResults.values;
+				filteredStations = (ArrayList<StationEntity>) filterResults.values;
 				notifyDataSetChanged();
 
 				if (isEmpty()) {
@@ -221,7 +221,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 	 *            the station on the current row
 	 * @return the station image id
 	 */
-	private Integer getMetroImage(Station station) {
+	private Integer getMetroImage(StationEntity station) {
 		Integer favouriteImage;
 		Integer stationNumber = Integer.parseInt(station.getNumber());
 
@@ -243,7 +243,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 	 *            the station on the current row
 	 */
 	private void actionsOverSettingsButton(ImageButton stationSettings,
-			final Station station) {
+			final StationEntity station) {
 		stationSettings.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -255,7 +255,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 							R.menu.activity_metro_station_context_menu, menu);
 					popup.show();
 
-					// Find the add/remove menui items
+					// Find the add/remove menu items
 					MenuItem favouritesAdd = menu
 							.findItem(R.id.menu_metro_station_add);
 					MenuItem favouritesRemove = menu
@@ -263,7 +263,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 
 					// Check which menu item to be visible
 					favouritesDatasource.open();
-					Station favouritesStation = favouritesDatasource
+					StationEntity favouritesStation = favouritesDatasource
 							.getStation(station);
 					if (favouritesStation != null) {
 						favouritesAdd.setVisible(false);
@@ -291,7 +291,7 @@ public class MetroStationAdapter extends ArrayAdapter<Station> {
 										StationMap.class);
 								metroMapIntent.putExtra(
 										Constants.BUNDLE_STATION_MAP,
-										new MetroStation(station));
+										new MetroStationEntity(station));
 								context.startActivity(metroMapIntent);
 								break;
 							}

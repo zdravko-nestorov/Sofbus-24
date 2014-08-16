@@ -7,10 +7,10 @@ import java.util.regex.Pattern;
 import android.app.Activity;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
-import bg.znestorov.sofbus24.entity.PublicTransportStation;
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.Vehicle;
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
+import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
@@ -29,12 +29,12 @@ public class ProcessPublicTransportDirection {
 	private Activity context;
 	private StationsDataSource stationDatasource;
 
-	private Vehicle vehicle;
+	private VehicleEntity vehicle;
 	private String htmlResult;
 
 	private String language;
 
-	public ProcessPublicTransportDirection(Activity context, Vehicle vehicle,
+	public ProcessPublicTransportDirection(Activity context, VehicleEntity vehicle,
 			String htmlResult) {
 		this.context = context;
 		this.stationDatasource = new StationsDataSource(context);
@@ -149,16 +149,16 @@ public class ProcessPublicTransportDirection {
 	 * @return and ArrayList for each direction fulfilled with an ArrayList
 	 *         containing all stations
 	 */
-	private ArrayList<ArrayList<Station>> getDirectionsList(
+	private ArrayList<ArrayList<StationEntity>> getDirectionsList(
 			String... htmlDirectionsParts) {
-		ArrayList<ArrayList<Station>> ptDirectionsList = new ArrayList<ArrayList<Station>>();
+		ArrayList<ArrayList<StationEntity>> ptDirectionsList = new ArrayList<ArrayList<StationEntity>>();
 		Pattern pattern = Pattern
 				.compile(Constants.SCHECULE_REGEX_DIRECTION_STATION);
 
 		stationDatasource.open();
 		for (int i = 0; i < htmlDirectionsParts.length; i++) {
 			Matcher matcher = pattern.matcher(htmlDirectionsParts[i]);
-			ArrayList<Station> ptStationsList = new ArrayList<Station>();
+			ArrayList<StationEntity> ptStationsList = new ArrayList<StationEntity>();
 
 			while (matcher.find()) {
 				try {
@@ -179,7 +179,7 @@ public class ProcessPublicTransportDirection {
 					stationNumber = Utils.getOnlyDigits(stationNumber);
 
 					// Get the station coordinates from the DB (if exists)
-					Station dbStation = stationDatasource
+					StationEntity dbStation = stationDatasource
 							.getStation(stationNumber);
 					String stationLat = null;
 					String stationLon = null;
@@ -190,11 +190,11 @@ public class ProcessPublicTransportDirection {
 					}
 
 					// Get the station type
-					VehicleType stationType = vehicle.getType();
+					VehicleTypeEnum stationType = vehicle.getType();
 
 					// Create the PublicTransport station and add it to the list
-					PublicTransportStation ptStation = new PublicTransportStation(
-							new Station(stationNumber, stationName, stationLat,
+					PublicTransportStationEntity ptStation = new PublicTransportStationEntity(
+							new StationEntity(stationNumber, stationName, stationLat,
 									stationLon, stationType, null), stationId);
 					ptStationsList.add(ptStation);
 				} catch (Exception e) {

@@ -5,8 +5,8 @@ import java.util.List;
 
 import android.content.Context;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
-import bg.znestorov.sofbus24.entity.Vehicle;
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 
 /**
  * Singleton used for loading the vehicles on the first creation and used them
@@ -20,18 +20,18 @@ public class ScheduleLoadVehicles {
 
 	private static ScheduleLoadVehicles instance = null;
 
-	private List<Vehicle> busses;
-	private List<Vehicle> trolleys;
-	private List<Vehicle> trams;
+	private List<VehicleEntity> busses;
+	private List<VehicleEntity> trolleys;
+	private List<VehicleEntity> trams;
 
 	protected ScheduleLoadVehicles(Context context) {
 		VehiclesDataSource vehiclesDatasource = new VehiclesDataSource(context);
 		vehiclesDatasource.open();
 
-		busses = vehiclesDatasource.getVehiclesViaSearch(VehicleType.BUS, "");
-		trolleys = vehiclesDatasource.getVehiclesViaSearch(VehicleType.TROLLEY,
+		busses = vehiclesDatasource.getVehiclesViaSearch(VehicleTypeEnum.BUS, "");
+		trolleys = vehiclesDatasource.getVehiclesViaSearch(VehicleTypeEnum.TROLLEY,
 				"");
-		trams = vehiclesDatasource.getVehiclesViaSearch(VehicleType.TRAM, "");
+		trams = vehiclesDatasource.getVehiclesViaSearch(VehicleTypeEnum.TRAM, "");
 
 		vehiclesDatasource.close();
 	}
@@ -44,27 +44,27 @@ public class ScheduleLoadVehicles {
 		return instance;
 	}
 
-	public List<Vehicle> getBusses() {
+	public List<VehicleEntity> getBusses() {
 		return busses;
 	}
 
-	public void setBusses(List<Vehicle> busses) {
+	public void setBusses(List<VehicleEntity> busses) {
 		this.busses = busses;
 	}
 
-	public List<Vehicle> getTrolleys() {
+	public List<VehicleEntity> getTrolleys() {
 		return trolleys;
 	}
 
-	public void setTrolleys(List<Vehicle> trolleys) {
+	public void setTrolleys(List<VehicleEntity> trolleys) {
 		this.trolleys = trolleys;
 	}
 
-	public List<Vehicle> getTrams() {
+	public List<VehicleEntity> getTrams() {
 		return trams;
 	}
 
-	public void setTrams(List<Vehicle> trams) {
+	public void setTrams(List<VehicleEntity> trams) {
 		this.trams = trams;
 	}
 
@@ -75,8 +75,8 @@ public class ScheduleLoadVehicles {
 	 *            the vehicle type (integer code)
 	 * @return a list with the vehicles for the current vehicle type
 	 */
-	public ArrayList<Vehicle> getVehiclesList(int vehicleType) {
-		ArrayList<Vehicle> vehiclesList = new ArrayList<Vehicle>();
+	public ArrayList<VehicleEntity> getVehiclesList(int vehicleType) {
+		ArrayList<VehicleEntity> vehiclesList = new ArrayList<VehicleEntity>();
 		switch (vehicleType) {
 		case 0:
 			vehiclesList.addAll(busses);
@@ -99,7 +99,7 @@ public class ScheduleLoadVehicles {
 	 *            the vehicle type
 	 * @return a list with the vehicles for the current vehicle type
 	 */
-	public ArrayList<Vehicle> getDirectionList(VehicleType vehicleType) {
+	public ArrayList<VehicleEntity> getDirectionList(VehicleTypeEnum vehicleType) {
 		int currentDirection;
 		switch (vehicleType) {
 		case BUS:

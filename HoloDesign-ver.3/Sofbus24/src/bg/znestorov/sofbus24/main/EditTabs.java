@@ -12,7 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.edit.tabs.EditTabsFragment;
-import bg.znestorov.sofbus24.entity.Config;
+import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 
@@ -99,7 +99,7 @@ public class EditTabs extends FragmentActivity {
 		// Set onClickListner over the Cancel Button
 		saveChanges.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Config newConfig = ((EditTabsFragment) editTabsFragment)
+				ConfigEntity newConfig = ((EditTabsFragment) editTabsFragment)
 						.getNewConfig();
 				Configuration.editTabConfigurationFileds(context, newConfig);
 
@@ -119,7 +119,7 @@ public class EditTabs extends FragmentActivity {
 	private void startFragment(boolean isReset) {
 		if (savedInstanceState == null || isReset) {
 			editTabsFragment = EditTabsFragment.newInstance(
-					new Config(context), isReset);
+					new ConfigEntity(context), isReset);
 		} else {
 			editTabsFragment = getSupportFragmentManager().findFragmentByTag(
 					FRAGMENT_TAG_NAME);

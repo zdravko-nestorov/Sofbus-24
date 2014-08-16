@@ -33,8 +33,9 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.closest.stations.map.GoogleMapsRoute;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
-import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
+import bg.znestorov.sofbus24.entity.SortTypeEnum;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -88,7 +89,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 	/**
 	 * Connect each point over the map with the appropriate station
 	 */
-	private HashMap<String, Station> markersAndStations = new HashMap<String, Station>();
+	private HashMap<String, StationEntity> markersAndStations = new HashMap<String, StationEntity>();
 
 	/**
 	 * Listener used to check when the map is pressed
@@ -117,7 +118,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 		@Override
 		public boolean onMarkerClick(Marker marker) {
 			if (!marker.isInfoWindowShown()) {
-				Station station = markersAndStations.get(marker.getId());
+				StationEntity station = markersAndStations.get(marker.getId());
 				selectedMarkerLatLng = new LatLng(Double.parseDouble(station
 						.getLat()), Double.parseDouble(station.getLon()));
 			} else {
@@ -135,7 +136,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 		@Override
 		public void onInfoWindowClick(Marker marker) {
 			// Get the station associated to this marker
-			Station station = markersAndStations.get(marker.getId());
+			StationEntity station = markersAndStations.get(marker.getId());
 			proccessWithStationResult(station);
 		}
 	};
@@ -472,8 +473,8 @@ public class ClosestStationsMap extends FragmentActivity implements
 	 *            object)
 	 * @return an ArrayList containing all stations in the stations radius
 	 */
-	private ArrayList<Station> getClosestStations(Location location) {
-		ArrayList<Station> closestStations = new ArrayList<Station>();
+	private ArrayList<StationEntity> getClosestStations(Location location) {
+		ArrayList<StationEntity> closestStations = new ArrayList<StationEntity>();
 
 		stationsDatasource.open();
 		closestStations.addAll(stationsDatasource.getClosestStations(context,
@@ -489,11 +490,12 @@ public class ClosestStationsMap extends FragmentActivity implements
 	 * 
 	 * @return an ArrayList containing all favorites stations
 	 */
-	private ArrayList<Station> getFavouritesStations() {
-		ArrayList<Station> favouritesStations = new ArrayList<Station>();
+	private ArrayList<StationEntity> getFavouritesStations() {
+		ArrayList<StationEntity> favouritesStations = new ArrayList<StationEntity>();
 
 		favouritesDatasource.open();
-		favouritesStations.addAll(favouritesDatasource.getAllStations());
+		favouritesStations.addAll(favouritesDatasource
+				.getAllStationsSorted(SortTypeEnum.CUSTOM));
 		favouritesDatasource.close();
 
 		return favouritesStations;
@@ -509,10 +511,10 @@ public class ClosestStationsMap extends FragmentActivity implements
 	 *            the closest stations to map location
 	 */
 	private void visualizeClosestStations(Location location,
-			List<Station> closestStations) {
+			List<StationEntity> closestStations) {
 		// Process all stations of the public transport route
 		for (int i = 0; i < closestStations.size(); i++) {
-			Station station = closestStations.get(i);
+			StationEntity station = closestStations.get(i);
 
 			// Create the marker over the map only if the station has
 			// coordinates in the database
@@ -547,10 +549,11 @@ public class ClosestStationsMap extends FragmentActivity implements
 	 * @param favouritesStations
 	 *            the favourites stations
 	 */
-	private void visualizeFavouritesStations(List<Station> favouritesStations) {
+	private void visualizeFavouritesStations(
+			List<StationEntity> favouritesStations) {
 		// Process all stations of the public transport route
 		for (int i = 0; i < favouritesStations.size(); i++) {
-			Station station = favouritesStations.get(i);
+			StationEntity station = favouritesStations.get(i);
 
 			// Create the marker over the map only if the station has
 			// coordinates in the database
@@ -586,7 +589,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 	 * 
 	 */
 	public class LoadStationsFromDb extends
-			AsyncTask<Void, Void, List<Station>> {
+			AsyncTask<Void, Void, List<StationEntity>> {
 
 		private Activity context;
 		private Location location;
@@ -608,7 +611,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 		}
 
 		@Override
-		protected List<Station> doInBackground(Void... params) {
+		protected List<StationEntity> doInBackground(Void... params) {
 			if (location != null) {
 				return getClosestStations(location);
 			} else {
@@ -617,7 +620,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 		}
 
 		@Override
-		protected void onPostExecute(List<Station> stationsList) {
+		protected void onPostExecute(List<StationEntity> stationsList) {
 			super.onPostExecute(stationsList);
 
 			if (location != null) {
@@ -768,7 +771,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 	 *            the station associated with the selected marker
 	 * @return the type of the station
 	 */
-	private String getStationTypeText(Station station) {
+	private String getStationTypeText(StationEntity station) {
 		String historyType;
 
 		switch (station.getType()) {
@@ -790,7 +793,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 	 * @param station
 	 *            the station associated with the selected marker
 	 */
-	private void proccessWithStationResult(Station station) {
+	private void proccessWithStationResult(StationEntity station) {
 		// Getting the time of arrival of the vehicles
 		String stationCustomField = station.getCustomField();
 		String metroCustomField = String.format(Constants.METRO_STATION_URL,
@@ -799,7 +802,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 		// Check if the type of the station - BTT or METRO
 		if (!stationCustomField.equals(metroCustomField)) {
 			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-					context, null, station, HtmlRequestCodes.SINGLE_RESULT);
+					context, null, station, HtmlRequestCodesEnum.SINGLE_RESULT);
 			retrieveVirtualBoards.getSumcInformation();
 		} else {
 			ProgressDialog progressDialog = new ProgressDialog(context);

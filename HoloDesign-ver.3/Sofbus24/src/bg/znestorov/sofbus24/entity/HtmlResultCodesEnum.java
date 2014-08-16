@@ -8,6 +8,6 @@ package bg.znestorov.sofbus24.entity;
  * @version 1.0
  * 
  */
-public enum HtmlResultCodes {
+public enum HtmlResultCodesEnum {
 	NO_INTERNET, NO_INFORMATION, CAPTCHA_NEEDED, SINGLE_RESULT, MULTIPLE_RESULTS;
 }

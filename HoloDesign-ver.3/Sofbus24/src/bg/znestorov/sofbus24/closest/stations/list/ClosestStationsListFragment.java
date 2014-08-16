@@ -21,9 +21,9 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
-import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.RefreshableListFragment;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -55,8 +55,8 @@ public class ClosestStationsListFragment extends ListFragment implements
 
 	private boolean isListLoading = false;
 	private boolean isListFullLoaded = false;
-	private List<Station> searchStationList = new ArrayList<Station>();
-	private ArrayAdapter<Station> closestStationsAdapter;
+	private List<StationEntity> searchStationList = new ArrayList<StationEntity>();
+	private ArrayAdapter<StationEntity> closestStationsAdapter;
 
 	private static final String SAVED_STATE_STATIONS_COUNT_KEY = "Closest stations count";
 	private static final String SAVED_STATE_SEARCH_TEXT_KEY = "Closest Stations Search Text";
@@ -99,12 +99,12 @@ public class ClosestStationsListFragment extends ListFragment implements
 
 						// Start an AsyncTask to load the new stations from the
 						// database
-						new AsyncTask<Void, Void, List<Station>>() {
+						new AsyncTask<Void, Void, List<StationEntity>>() {
 							@Override
-							protected List<Station> doInBackground(
+							protected List<StationEntity> doInBackground(
 									Void... params) {
 								int pageToLoad = (totalItemCount + 10) / 10;
-								List<Station> closestStations = loadStationsList(
+								List<StationEntity> closestStations = loadStationsList(
 										true, pageToLoad,
 										closestStationsSearchText);
 
@@ -113,7 +113,7 @@ public class ClosestStationsListFragment extends ListFragment implements
 
 							@Override
 							protected void onPostExecute(
-									List<Station> closestStations) {
+									List<StationEntity> closestStations) {
 								isListLoading = false;
 								if (closestStations.size() > 0) {
 									searchStationList.addAll(closestStations);
@@ -205,7 +205,7 @@ public class ClosestStationsListFragment extends ListFragment implements
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Station station = (Station) getListAdapter().getItem(position);
+		StationEntity station = (StationEntity) getListAdapter().getItem(position);
 
 		// Getting the time of arrival of the vehicles
 		String stationCustomField = station.getCustomField();
@@ -215,7 +215,7 @@ public class ClosestStationsListFragment extends ListFragment implements
 		// Check if the type of the station - BTT or METRO
 		if (!stationCustomField.equals(metroCustomField)) {
 			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-					context, null, station, HtmlRequestCodes.SINGLE_RESULT);
+					context, null, station, HtmlRequestCodesEnum.SINGLE_RESULT);
 			retrieveVirtualBoards.getSumcInformation();
 		} else {
 			ProgressDialog progressDialog = new ProgressDialog(context);
@@ -335,9 +335,9 @@ public class ClosestStationsListFragment extends ListFragment implements
 	 * @return all stations according to a search text ordered by their position
 	 *         to the current location
 	 */
-	private List<Station> loadStationsList(boolean loadByPage,
+	private List<StationEntity> loadStationsList(boolean loadByPage,
 			int stationPageOrCount, String searchText) {
-		List<Station> stationsList;
+		List<StationEntity> stationsList;
 
 		if (stationsDatasource == null) {
 			stationsDatasource = new StationsDataSource(context);

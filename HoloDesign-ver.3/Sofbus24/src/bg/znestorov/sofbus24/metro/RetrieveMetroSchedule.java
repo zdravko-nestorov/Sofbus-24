@@ -12,8 +12,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import bg.znestorov.sofbus24.entity.MetroStation;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.MetroStationEntity;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.MetroSchedule;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
@@ -26,14 +26,14 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
  * @author Zdravko Nestorov
  * 
  */
-public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStation> {
+public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStationEntity> {
 
 	private Activity context;
 	private ProgressDialog progressDialog;
-	private Station station;
+	private StationEntity station;
 
 	public RetrieveMetroSchedule(Activity context,
-			ProgressDialog progressDialog, Station station) {
+			ProgressDialog progressDialog, StationEntity station) {
 		this.context = context;
 		this.progressDialog = progressDialog;
 		this.station = station;
@@ -46,8 +46,8 @@ public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStation> {
 	}
 
 	@Override
-	protected MetroStation doInBackground(Void... params) {
-		MetroStation ms = null;
+	protected MetroStationEntity doInBackground(Void... params) {
+		MetroStationEntity ms = null;
 
 		try {
 			// Get the time schedule as InputSource from the station URL
@@ -59,19 +59,19 @@ public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStation> {
 					.openStream());
 
 			// Set Direction and time schedule to the station
-			ms = new MetroStation(station);
+			ms = new MetroStationEntity(station);
 			ms.setDirection(doc);
 			ms.setWeekdaySchedule(doc);
 			ms.setHolidaySchedule(doc);
 		} catch (Exception e) {
-			ms = new MetroStation();
+			ms = new MetroStationEntity();
 		}
 
 		return ms;
 	}
 
 	@Override
-	protected void onPostExecute(MetroStation ms) {
+	protected void onPostExecute(MetroStationEntity ms) {
 		super.onPostExecute(ms);
 
 		// Check if the information is successfully retrieved or an Internet

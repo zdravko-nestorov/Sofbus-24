@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import bg.znestorov.sofbus24.entity.Vehicle;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
@@ -26,15 +26,15 @@ import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
  * @version 1.0
  * 
  */
-public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
+public class ScheduleVehicleAdapter extends ArrayAdapter<VehicleEntity> {
 
 	private final Activity context;
 
 	private TextView emptyList;
 	private String vehicleName;
 
-	private final List<Vehicle> originalVehicles;
-	private List<Vehicle> filteredVehicles;
+	private final List<VehicleEntity> originalVehicles;
+	private List<VehicleEntity> filteredVehicles;
 
 	private Filter stationsFilter;
 	private String language;
@@ -47,7 +47,7 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 	}
 
 	public ScheduleVehicleAdapter(Activity context, TextView emptyList,
-			String vehicleName, List<Vehicle> vehicles) {
+			String vehicleName, List<VehicleEntity> vehicles) {
 		super(context, R.layout.activity_schedule_vehicle_list_item, vehicles);
 
 		this.context = context;
@@ -89,7 +89,7 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 			viewHolder = (ViewHolder) rowView.getTag();
 		}
 
-		Vehicle vehicle = filteredVehicles.get(position);
+		VehicleEntity vehicle = filteredVehicles.get(position);
 		int vehicleImage = getVehicleImage(context, vehicle);
 		String vehicleCaptionText = getVehicleCaption(context, vehicle);
 		String vehicleDirectionText = vehicle.getDirection();
@@ -102,7 +102,7 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 	}
 
 	@Override
-	public Vehicle getItem(int position) {
+	public VehicleEntity getItem(int position) {
 		return filteredVehicles.get(position);
 	}
 
@@ -147,7 +147,7 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 					results.values = originalVehicles;
 					results.count = originalVehicles.size();
 				} else {
-					List<Vehicle> filterResultsData = new ArrayList<Vehicle>();
+					List<VehicleEntity> filterResultsData = new ArrayList<VehicleEntity>();
 
 					String filterString = constraint.toString().trim()
 							.toUpperCase();
@@ -164,7 +164,7 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 
 					// Itterate over all stations and search which ones match
 					// the filter
-					for (Vehicle vehicle : originalVehicles) {
+					for (VehicleEntity vehicle : originalVehicles) {
 						filterebleNumber = vehicle.getNumber().toUpperCase();
 						filterableDirection = vehicle.getDirection()
 								.toUpperCase();
@@ -186,7 +186,7 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 			@Override
 			protected void publishResults(CharSequence constraint,
 					FilterResults filterResults) {
-				filteredVehicles = (ArrayList<Vehicle>) filterResults.values;
+				filteredVehicles = (ArrayList<VehicleEntity>) filterResults.values;
 				notifyDataSetChanged();
 
 				if (isEmpty()) {
@@ -207,7 +207,7 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 	 *            the vehicle on the current row
 	 * @return the vehicle image id
 	 */
-	private Integer getVehicleImage(Context context, Vehicle vehicle) {
+	private Integer getVehicleImage(Context context, VehicleEntity vehicle) {
 		Integer vehicleImage;
 
 		switch (vehicle.getType()) {
@@ -237,7 +237,7 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<Vehicle> {
 	 *            the vehicle on the current row
 	 * @return the vehicle caption in format: <b>Bus ¹xxx</b>
 	 */
-	public String getVehicleCaption(Context context, Vehicle vehicle) {
+	public String getVehicleCaption(Context context, VehicleEntity vehicle) {
 		String vehicleCaption;
 
 		switch (vehicle.getType()) {

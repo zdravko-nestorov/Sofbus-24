@@ -11,7 +11,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import bg.znestorov.sofbus24.databases.StationsSQLite;
 import bg.znestorov.sofbus24.databases.VehiclesSQLite;
-import bg.znestorov.sofbus24.entity.Config;
+import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
@@ -30,11 +30,11 @@ public class RetrieveDatabases extends
 	private ProgressDialog progressDialog;
 	private String stationsDatabaseUrl;
 	private String vehiclesDatabaseUrl;
-	private Config newConfig;
+	private ConfigEntity newConfig;
 
 	public RetrieveDatabases(FragmentActivity context,
 			ProgressDialog progressDialog, String stationsDatabaseUrl,
-			String vehiclesDatabaseUrl, Config newConfig) {
+			String vehiclesDatabaseUrl, ConfigEntity newConfig) {
 		this.context = context;
 		this.progressDialog = progressDialog;
 		this.stationsDatabaseUrl = stationsDatabaseUrl;

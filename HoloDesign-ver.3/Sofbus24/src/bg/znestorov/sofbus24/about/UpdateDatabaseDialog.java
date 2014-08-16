@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
-import bg.znestorov.sofbus24.entity.Config;
+import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.main.R;
 
 public class UpdateDatabaseDialog extends DialogFragment {
@@ -24,14 +24,14 @@ public class UpdateDatabaseDialog extends DialogFragment {
 
 	private String stationsDatabaseUrl;
 	private String vehiclesDatabaseUrl;
-	private Config newConfig;
+	private ConfigEntity newConfig;
 
 	public static final String BUNDLE_STATIONS_DB_URL = "STATIONS DB URL";
 	public static final String BUNDLE_VEHICLES_DB_URL = "VEHICLES DB URL";
 	public static final String BUNDLE_NEW_APPLICATION_CONFIG = "NEW APPLICATION CONFIG";
 
 	public static UpdateDatabaseDialog newInstance(String stationsDatabaseUrl,
-			String vehiclesDatabaseUrl, Config newConfig) {
+			String vehiclesDatabaseUrl, ConfigEntity newConfig) {
 		Bundle bundle = new Bundle();
 		bundle.putString(BUNDLE_STATIONS_DB_URL, stationsDatabaseUrl);
 		bundle.putString(BUNDLE_VEHICLES_DB_URL, vehiclesDatabaseUrl);
@@ -55,7 +55,7 @@ public class UpdateDatabaseDialog extends DialogFragment {
 		Bundle bundle = getArguments();
 		stationsDatabaseUrl = bundle.getString(BUNDLE_STATIONS_DB_URL);
 		vehiclesDatabaseUrl = bundle.getString(BUNDLE_VEHICLES_DB_URL);
-		newConfig = (Config) bundle
+		newConfig = (ConfigEntity) bundle
 				.getSerializable(BUNDLE_NEW_APPLICATION_CONFIG);
 
 		positiveOnClickListener = new OnClickListener() {

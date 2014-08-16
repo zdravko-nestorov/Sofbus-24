@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import bg.znestorov.sofbus24.entity.TabType;
+import bg.znestorov.sofbus24.entity.TabTypeEnum;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager;
 
@@ -187,7 +187,7 @@ public class ScheduleFragment extends Fragment {
 	 * @param textView
 	 *            the TextView which is selected
 	 */
-	private void setTabActive(TabType tabType, TextView textView) {
+	private void setTabActive(TabTypeEnum tabType, TextView textView) {
 		int backgroundResource;
 		switch (tabType) {
 		case LEFT:
@@ -213,7 +213,7 @@ public class ScheduleFragment extends Fragment {
 	 * @param textView
 	 *            the TextView that has to be deactivated
 	 */
-	private void setTabInactive(TabType tabType, TextView textView) {
+	private void setTabInactive(TabTypeEnum tabType, TextView textView) {
 		int backgroundResource;
 		switch (tabType) {
 		case LEFT:
@@ -248,21 +248,21 @@ public class ScheduleFragment extends Fragment {
 		switch (tabNumber) {
 		case 0:
 			currentVehicle = 0;
-			setTabActive(TabType.LEFT, textViewBus);
-			setTabInactive(TabType.MIDDLE, textViewTrolley);
-			setTabInactive(TabType.RIGHT, textViewTram);
+			setTabActive(TabTypeEnum.LEFT, textViewBus);
+			setTabInactive(TabTypeEnum.MIDDLE, textViewTrolley);
+			setTabInactive(TabTypeEnum.RIGHT, textViewTram);
 			break;
 		case 1:
 			currentVehicle = 1;
-			setTabActive(TabType.MIDDLE, textViewTrolley);
-			setTabInactive(TabType.LEFT, textViewBus);
-			setTabInactive(TabType.RIGHT, textViewTram);
+			setTabActive(TabTypeEnum.MIDDLE, textViewTrolley);
+			setTabInactive(TabTypeEnum.LEFT, textViewBus);
+			setTabInactive(TabTypeEnum.RIGHT, textViewTram);
 			break;
 		default:
 			currentVehicle = 2;
-			setTabActive(TabType.RIGHT, textViewTram);
-			setTabInactive(TabType.LEFT, textViewBus);
-			setTabInactive(TabType.MIDDLE, textViewTrolley);
+			setTabActive(TabTypeEnum.RIGHT, textViewTram);
+			setTabInactive(TabTypeEnum.LEFT, textViewBus);
+			setTabInactive(TabTypeEnum.MIDDLE, textViewTrolley);
 			break;
 		}
 

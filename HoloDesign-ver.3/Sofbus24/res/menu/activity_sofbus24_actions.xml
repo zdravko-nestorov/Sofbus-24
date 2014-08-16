@@ -36,6 +36,11 @@
         android:title="@string/action_more">
         <menu>
             <item
+                android:id="@+id/action_favourites_sort"
+                android:icon="@android:drawable/ic_menu_sort_alphabetically"
+                android:showAsAction="never"
+                android:title="@string/action_favourites_sort"/>
+            <item
                 android:id="@+id/action_favourites_remove_all"
                 android:icon="@drawable/ic_menu_clear_list"
                 android:showAsAction="never"

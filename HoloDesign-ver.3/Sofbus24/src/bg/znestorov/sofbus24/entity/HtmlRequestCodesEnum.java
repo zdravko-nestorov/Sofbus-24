@@ -7,6 +7,6 @@ package bg.znestorov.sofbus24.entity;
  * @version 1.0
  * 
  */
-public enum HtmlRequestCodes {
+public enum HtmlRequestCodesEnum {
 	REFRESH, FAVOURITES, SINGLE_RESULT, MULTIPLE_RESULTS;
 }

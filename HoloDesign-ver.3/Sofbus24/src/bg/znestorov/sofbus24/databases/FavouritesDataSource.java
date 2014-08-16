@@ -9,18 +9,22 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.OrderTypeEnum;
+import bg.znestorov.sofbus24.entity.PositionTypeEnum;
+import bg.znestorov.sofbus24.entity.SortTypeEnum;
+import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
+import bg.znestorov.sofbus24.utils.Utils;
 
 /**
  * Favorites data source used for DB interactions
  * 
  * @author Zdravko Nestorov
- * @version 1.0
+ * @version 2.0
  */
 public class FavouritesDataSource {
 
@@ -29,15 +33,25 @@ public class FavouritesDataSource {
 	private FavouritesSQLite dbHelper;
 	private String[] allColumns = { FavouritesSQLite.COLUMN_NUMBER,
 			FavouritesSQLite.COLUMN_NAME, FavouritesSQLite.COLUMN_LAT,
-			FavouritesSQLite.COLUMN_LON, FavouritesSQLite.COLUMN_CUSTOM_FIELD };
+			FavouritesSQLite.COLUMN_LON, FavouritesSQLite.COLUMN_CUSTOM_FIELD,
+			FavouritesSQLite.COLUMN_DATE_ADDED,
+			FavouritesSQLite.COLUMN_DATE_LAST_ACCESS,
+			FavouritesSQLite.COLUMN_USAGE_COUNT,
+			FavouritesSQLite.COLUMN_POSITION };
 
 	private Activity context;
 	private String language;
 
 	public FavouritesDataSource(Activity context) {
 		this.context = context;
-		dbHelper = new FavouritesSQLite(context);
-		language = LanguageChange.getUserLocale(context);
+		this.dbHelper = new FavouritesSQLite(context);
+		this.language = LanguageChange.getUserLocale(context);
+	}
+
+	public FavouritesDataSource(Activity context, SQLiteDatabase database) {
+		this.context = context;
+		this.database = database;
+		this.language = LanguageChange.getUserLocale(context);
 	}
 
 	public void open() throws SQLException {
@@ -56,7 +70,7 @@ public class FavouritesDataSource {
 	 * @return the station if it is added successfully and null if already
 	 *         exists
 	 */
-	public Station createStation(Station station) {
+	public StationEntity createStation(StationEntity station) {
 		if (getStation(station) == null) {
 
 			// Check if have to translate the station name
@@ -74,9 +88,16 @@ public class FavouritesDataSource {
 					getCoordinates(station.getNumber(), station.getLat()));
 			values.put(FavouritesSQLite.COLUMN_LON,
 					getCoordinates(station.getNumber(), station.getLon()));
-
 			values.put(FavouritesSQLite.COLUMN_CUSTOM_FIELD,
 					getCustomField(station));
+
+			// Creating the information fields for each favorite (new Favorites
+			// version)
+			String currentDate = Utils.getCurrentTime();
+			values.put(FavouritesSQLite.COLUMN_DATE_ADDED, currentDate);
+			values.put(FavouritesSQLite.COLUMN_DATE_LAST_ACCESS, currentDate);
+			values.put(FavouritesSQLite.COLUMN_USAGE_COUNT, 0);
+			values.put(FavouritesSQLite.COLUMN_POSITION, getNextPosition());
 
 			// Insert the ContentValues data into the database
 			database.insert(FavouritesSQLite.TABLE_FAVOURITES, null, values);
@@ -90,12 +111,26 @@ public class FavouritesDataSource {
 			cursor.moveToFirst();
 
 			// Creating newStation and closing the cursor
-			Station insertedStation = cursorToStation(cursor);
+			StationEntity insertedStation = cursorToStation(cursor);
 			cursor.close();
 
 			return insertedStation;
 		} else {
 			return null;
+		}
+	}
+
+	/**
+	 * Adding a list of stations to the database
+	 * 
+	 * @param stationsList
+	 *            the lits of stations
+	 */
+	public void createStations(List<StationEntity> stationsList) {
+		if (stationsList != null && stationsList.size() > 0) {
+			for (int i = 0; i < stationsList.size(); i++) {
+				createStation(stationsList.get(i));
+			}
 		}
 	}
 
@@ -134,7 +169,7 @@ public class FavouritesDataSource {
 	 *            the inputStation
 	 * @return what to be inserted in the custom field in the DB
 	 */
-	private String getCustomField(Station station) {
+	private String getCustomField(StationEntity station) {
 		String stationCustomField;
 
 		switch (station.getType()) {
@@ -152,16 +187,55 @@ public class FavouritesDataSource {
 	}
 
 	/**
+	 * Get the position of the last added favorite in the table
+	 * 
+	 * @return the last added favorite position
+	 */
+	public int getLastPoistion() {
+		int nextPosition = 1;
+		Cursor cursor = database
+				.query(FavouritesSQLite.TABLE_FAVOURITES, new String[] { "MAX("
+						+ FavouritesSQLite.COLUMN_POSITION + ")" }, null, null,
+						null, null, null);
+
+		if (cursor.getCount() > 0) {
+			// Moving the cursor to the first result
+			cursor.moveToFirst();
+
+			// Getting the last position of the records and adding 1 to get the
+			// next free position
+			nextPosition = cursor.getInt(0);
+		}
+
+		return nextPosition;
+	}
+
+	/**
+	 * Get the next free position to add a favorite in the table
+	 * 
+	 * @return the next free position
+	 */
+	private int getNextPosition() {
+		return getLastPoistion() + 1;
+	}
+
+	/**
 	 * Delete station from the database
 	 * 
 	 * @param station
 	 *            the input station
 	 */
-	public void deleteStation(Station station) {
+	public void deleteStation(StationEntity station) {
 		String where = FavouritesSQLite.COLUMN_NUMBER + " = ?";
 		String[] whereArgs = new String[] { String.valueOf(station.getNumber()) };
 
+		// Remove the station
 		database.delete(FavouritesSQLite.TABLE_FAVOURITES, where, whereArgs);
+
+		// Reorder the DB with stations
+		List<StationEntity> stations = getAllStationsSorted(SortTypeEnum.CUSTOM);
+		deleteAllStations();
+		createStations(stations);
 	}
 
 	/**
@@ -171,13 +245,21 @@ public class FavouritesDataSource {
 	 * @param station
 	 *            the new station parameters
 	 */
-	public void updateStation(Station station) {
+	public void updateStation(StationEntity station) {
 		ContentValues dataToInsert = new ContentValues();
 		dataToInsert.put(FavouritesSQLite.COLUMN_NAME, station.getName());
 		dataToInsert.put(FavouritesSQLite.COLUMN_LAT, station.getLat());
 		dataToInsert.put(FavouritesSQLite.COLUMN_LON, station.getLon());
 		dataToInsert.put(FavouritesSQLite.COLUMN_CUSTOM_FIELD,
 				station.getCustomField());
+		dataToInsert.put(FavouritesSQLite.COLUMN_DATE_ADDED,
+				station.getDateAdded());
+		dataToInsert.put(FavouritesSQLite.COLUMN_DATE_LAST_ACCESS,
+				station.getDateLastAccess());
+		dataToInsert.put(FavouritesSQLite.COLUMN_USAGE_COUNT,
+				station.getUsageCount());
+		dataToInsert.put(FavouritesSQLite.COLUMN_POSITION,
+				station.getPosition());
 
 		String where = FavouritesSQLite.COLUMN_NUMBER + " = ?";
 		String[] whereArgs = new String[] { String.valueOf(station.getNumber()) };
@@ -187,13 +269,28 @@ public class FavouritesDataSource {
 	}
 
 	/**
+	 * Update the station information (set the last access date and the usega
+	 * count)
+	 * 
+	 * @param station
+	 *            the new station parameters
+	 */
+	public void updateStationInfo(StationEntity station) {
+		station = getStation(station);
+		station.setDateLastAccess(Utils.getCurrentTime());
+		station.setUsageCount(station.getUsageCount() + 1);
+
+		updateStation(station);
+	}
+
+	/**
 	 * Check if a station exists in the DB
 	 * 
 	 * @param station
 	 *            the input station
 	 * @return the station if it is found in the DB and null otherwise
 	 */
-	public Station getStation(Station station) {
+	public StationEntity getStation(StationEntity station) {
 		// Selecting the row that contains the station data
 		Cursor cursor = database.query(FavouritesSQLite.TABLE_FAVOURITES,
 				allColumns,
@@ -205,7 +302,37 @@ public class FavouritesDataSource {
 			cursor.moveToFirst();
 
 			// Creating station object and closing the cursor
-			Station foundStation = cursorToStation(cursor);
+			StationEntity foundStation = cursorToStation(cursor);
+			cursor.close();
+
+			return foundStation;
+		} else {
+			cursor.close();
+
+			return null;
+		}
+	}
+
+	/**
+	 * Check if a station exists in the DB (according to its position)
+	 * 
+	 * @param station
+	 *            the input station
+	 * @return the station if it is found in the DB and null otherwise
+	 */
+	public StationEntity getStation(int position) {
+		// Selecting the row that contains the station data
+		Cursor cursor = database.query(FavouritesSQLite.TABLE_FAVOURITES,
+				allColumns,
+				FavouritesSQLite.COLUMN_POSITION + " = " + position, null,
+				null, null, null);
+
+		if (cursor.getCount() > 0) {
+			// Moving the cursor to the first column of the selected row
+			cursor.moveToFirst();
+
+			// Creating station object and closing the cursor
+			StationEntity foundStation = cursorToStation(cursor);
 			cursor.close();
 
 			return foundStation;
@@ -223,8 +350,8 @@ public class FavouritesDataSource {
 	 *            the user search text
 	 * @return a list with all stations matching the input conditions
 	 */
-	public List<Station> getStationsViaSearch(String searchText) {
-		List<Station> stations = new ArrayList<Station>();
+	public List<StationEntity> getStationsViaSearch(String searchText) {
+		List<StationEntity> stations = new ArrayList<StationEntity>();
 		Locale currentLocale = new Locale(language);
 		searchText = searchText.toLowerCase(currentLocale);
 		searchText = TranslatorLatinToCyrillic.translate(context, searchText);
@@ -244,7 +371,7 @@ public class FavouritesDataSource {
 		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Station station = cursorToStation(cursor);
+			StationEntity station = cursorToStation(cursor);
 			stations.add(station);
 			cursor.moveToNext();
 		}
@@ -256,21 +383,25 @@ public class FavouritesDataSource {
 	}
 
 	/**
-	 * Get all stations from the database
+	 * Get all stations from the database (used only to updgrade the db version)
 	 * 
 	 * @return a list with all stations from the DB
 	 */
-	public List<Station> getAllStations() {
-		List<Station> stations = new ArrayList<Station>();
+	public List<StationEntity> getAllStations() {
+		List<StationEntity> stations = new ArrayList<StationEntity>();
 
 		// Selecting all fields of the TABLE_FAVOURITES
+		String[] allColumns = { FavouritesSQLite.COLUMN_NUMBER,
+				FavouritesSQLite.COLUMN_NAME, FavouritesSQLite.COLUMN_LAT,
+				FavouritesSQLite.COLUMN_LON,
+				FavouritesSQLite.COLUMN_CUSTOM_FIELD };
 		Cursor cursor = database.query(FavouritesSQLite.TABLE_FAVOURITES,
 				allColumns, null, null, null, null, null);
 
 		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Station station = cursorToStation(cursor);
+			StationEntity station = cursorToStation(cursor);
 			stations.add(station);
 			cursor.moveToNext();
 		}
@@ -279,6 +410,88 @@ public class FavouritesDataSource {
 		cursor.close();
 
 		return stations;
+	}
+
+	/**
+	 * Get all stations from the database in some order
+	 * 
+	 * @param sortType
+	 *            the sort type of the extracted stations from the DB
+	 * 
+	 * @return a list with all stations from the DB
+	 */
+	public ArrayList<StationEntity> getAllStationsSorted(SortTypeEnum sortType) {
+		ArrayList<StationEntity> stations = new ArrayList<StationEntity>();
+
+		// Selecting all fields of the TABLE_FAVOURITES
+		String orderBy = getOrderBy(sortType);
+		Cursor cursor = database.query(FavouritesSQLite.TABLE_FAVOURITES,
+				allColumns, null, null, null, null, orderBy);
+
+		// Iterating the cursor and fill the empty List<Station>
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			StationEntity station = cursorToStation(cursor);
+			stations.add(station);
+			cursor.moveToNext();
+		}
+
+		// Closing the cursor
+		cursor.close();
+
+		return stations;
+	}
+
+	/**
+	 * Create a string represantion to use it in the query of the sort type
+	 * 
+	 * @param sortType
+	 *            the current sort type
+	 * @return the order by query part
+	 */
+	private String getOrderBy(SortTypeEnum sortType) {
+		String orderBy = "%s Collate NOCASE %s";
+
+		switch (sortType) {
+		case ALPHABETICAL_ASC:
+			orderBy = String.format(orderBy, FavouritesSQLite.COLUMN_NAME,
+					"ASC");
+			break;
+		case ALPHABETICAL_DESC:
+			orderBy = String.format(orderBy, FavouritesSQLite.COLUMN_NAME,
+					"DESC");
+			break;
+		case DATE_ADDED_ASC:
+			orderBy = String.format(orderBy,
+					FavouritesSQLite.COLUMN_DATE_ADDED, "ASC");
+			break;
+		case DATE_ADDED_DESC:
+			orderBy = String.format(orderBy,
+					FavouritesSQLite.COLUMN_DATE_ADDED, "DESC");
+			break;
+		case DATE_LAST_ACCESS_ASC:
+			orderBy = String.format(orderBy,
+					FavouritesSQLite.COLUMN_DATE_LAST_ACCESS, "ASC");
+			break;
+		case DATE_LAST_ACCESS_DESC:
+			orderBy = String.format(orderBy,
+					FavouritesSQLite.COLUMN_DATE_LAST_ACCESS, "DESC");
+			break;
+		case USAGE_COUNT_ASC:
+			orderBy = String.format(orderBy,
+					FavouritesSQLite.COLUMN_USAGE_COUNT, "ASC");
+			break;
+		case USAGE_COUNT_DESC:
+			orderBy = String.format(orderBy,
+					FavouritesSQLite.COLUMN_USAGE_COUNT, "DESC");
+			break;
+		default:
+			orderBy = String.format(orderBy, FavouritesSQLite.COLUMN_POSITION,
+					"ASC");
+			break;
+		}
+
+		return orderBy;
 	}
 
 	/**
@@ -289,6 +502,73 @@ public class FavouritesDataSource {
 	}
 
 	/**
+	 * Change the position of the station if possible
+	 * 
+	 * @param station
+	 *            the current station
+	 * @param orderType
+	 *            the desired new order (UP or DOWN)
+	 */
+	public void swapStations(StationEntity station, OrderTypeEnum orderType) {
+		StationEntity oldStation = getStation(station);
+
+		int oldPosition = oldStation.getPosition();
+		int maxPosition = getLastPoistion();
+		int newPosition;
+
+		switch (orderType) {
+		case FIRST:
+			newPosition = 1;
+			break;
+		case LAST:
+			newPosition = maxPosition;
+			break;
+		default:
+			newPosition = orderType == OrderTypeEnum.DOWN ? oldPosition + 1
+					: oldPosition - 1;
+			break;
+		}
+
+		if (newPosition >= 1 && newPosition <= maxPosition) {
+			// Get the station on the desired position
+			StationEntity newStation = getStation(newPosition);
+
+			// Change the order of both stations
+			oldStation.setPosition(newPosition);
+			newStation.setPosition(oldPosition);
+
+			// Update the DB with the new stations
+			updateStation(oldStation);
+			updateStation(newStation);
+		}
+	}
+
+	/**
+	 * Indicates if the station is first, medium or last
+	 * 
+	 * @param station
+	 *            the choosen station
+	 * 
+	 * @return if the station is first, medium or last
+	 */
+	public PositionTypeEnum getStationPosition(StationEntity station) {
+		station = getStation(station);
+
+		int position = station.getPosition();
+		int maxPosition = getLastPoistion();
+
+		if (position == 1 && position == maxPosition) {
+			return PositionTypeEnum.FIRST_AND_LAST;
+		} else if (position == 1) {
+			return PositionTypeEnum.FIRST;
+		} else if (position == maxPosition) {
+			return PositionTypeEnum.LAST;
+		} else {
+			return PositionTypeEnum.MEDIUM;
+		}
+	}
+
+	/**
 	 * Creating new Station object with the data of the current row of the
 	 * database
 	 * 
@@ -296,8 +576,8 @@ public class FavouritesDataSource {
 	 *            the input cursor for interacting with the DB
 	 * @return the station object on the current row
 	 */
-	private Station cursorToStation(Cursor cursor) {
-		Station station = new Station();
+	private StationEntity cursorToStation(Cursor cursor) {
+		StationEntity station = new StationEntity();
 
 		// Get station number
 		String stationNumber = cursor.getString(0);
@@ -312,9 +592,9 @@ public class FavouritesDataSource {
 		// Get the station type
 		StationsDataSource stationDatasource = new StationsDataSource(context);
 		stationDatasource.open();
-		Station dbStation = stationDatasource.getStation(stationNumber);
-		VehicleType stationType = dbStation != null ? dbStation.getType()
-				: VehicleType.BTT;
+		StationEntity dbStation = stationDatasource.getStation(stationNumber);
+		VehicleTypeEnum stationType = dbStation != null ? dbStation.getType()
+				: VehicleTypeEnum.BTT;
 		stationDatasource.close();
 
 		// Getting all columns of the row and setting them to a Station object
@@ -324,6 +604,17 @@ public class FavouritesDataSource {
 		station.setLon(cursor.getString(3));
 		station.setType(stationType);
 		station.setCustomField(cursor.getString(4));
+
+		// Get the station information fields
+		try {
+			station.setDateAdded(cursor.getString(5));
+			station.setDateLastAccess(cursor.getString(6));
+			station.setUsageCount(cursor.getInt(7));
+			station.setPosition(cursor.getInt(8));
+		} catch (Exception e) {
+			// Using try/catch because they are newly implemented and the code
+			// will crash the first time without this)
+		}
 
 		return station;
 	}

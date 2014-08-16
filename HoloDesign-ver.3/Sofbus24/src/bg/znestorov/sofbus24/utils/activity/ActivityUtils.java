@@ -23,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.Sofbus24;
 
@@ -238,7 +238,7 @@ public class ActivityUtils {
 	 *            action is taken for it)
 	 */
 	public static void toggleFavouritesStation(Activity context,
-			FavouritesDataSource favouritesDatasource, Station station,
+			FavouritesDataSource favouritesDatasource, StationEntity station,
 			ImageView favouritesImageView) {
 		// Check if the station is added to the favorites database
 		favouritesDatasource.open();
@@ -272,7 +272,7 @@ public class ActivityUtils {
 	 *            the current station
 	 */
 	public static void addToFavourites(Activity context,
-			FavouritesDataSource favouritesDatasource, Station station) {
+			FavouritesDataSource favouritesDatasource, StationEntity station) {
 		// Get the application context
 		GlobalEntity globalContext = (GlobalEntity) context
 				.getApplicationContext();
@@ -308,7 +308,7 @@ public class ActivityUtils {
 	 *            the current station
 	 */
 	public static void removeFromFavourites(Activity context,
-			FavouritesDataSource favouritesDatasource, Station station) {
+			FavouritesDataSource favouritesDatasource, StationEntity station) {
 		// Get the application context
 		GlobalEntity globalContext = (GlobalEntity) context
 				.getApplicationContext();
@@ -333,13 +333,30 @@ public class ActivityUtils {
 	}
 
 	/**
+	 * Update the station info in the favourites DB
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @param station
+	 *            the current station
+	 */
+	public static void updateFavouritesStationInfo(Activity context,
+			StationEntity station) {
+		FavouritesDataSource favouritesDatasource = new FavouritesDataSource(
+				context);
+		favouritesDatasource.open();
+		favouritesDatasource.updateStationInfo(station);
+		favouritesDatasource.close();
+	}
+
+	/**
 	 * Check if the station changed is not METRO
 	 * 
 	 * @param station
 	 *            the current station
 	 * @return if the station changed is not metro one
 	 */
-	private static boolean isVBStationChanged(Station station) {
+	private static boolean isVBStationChanged(StationEntity station) {
 		boolean isVBStationChanged = false;
 
 		if (station != null && station.getType() != null) {

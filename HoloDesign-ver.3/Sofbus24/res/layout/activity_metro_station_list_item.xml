@@ -63,7 +63,7 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/app_img_empty_content_description"
             android:scaleType="fitXY"
-            android:src="@drawable/context_menu" />
+            android:src="@drawable/context_menu_metro" />
     </LinearLayout>
 
 </RelativeLayout>

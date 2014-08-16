@@ -16,8 +16,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
-import bg.znestorov.sofbus24.entity.Vehicle;
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 
 /**
  * Class containing all helping functions for creating the Vehicles DB from an
@@ -99,11 +99,11 @@ public class VehiclesDatabaseUtils {
 			NodeList nodes = (NodeList) xpath.evaluate(expression, inputSrc,
 					XPathConstants.NODESET);
 
-			Vehicle vehicle = new Vehicle();
+			VehicleEntity vehicle = new VehicleEntity();
 
 			for (int i = 0; i < nodes.getLength(); i = i + 3) {
 				vehicle.setNumber(nodes.item(i + 1).getTextContent());
-				vehicle.setType(VehicleType.valueOf(nodes.item(i)
+				vehicle.setType(VehicleTypeEnum.valueOf(nodes.item(i)
 						.getTextContent()));
 				vehicle.setDirection(nodes.item(i + 2).getTextContent());
 

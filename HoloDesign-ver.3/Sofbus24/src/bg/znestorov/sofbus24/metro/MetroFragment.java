@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import bg.znestorov.sofbus24.entity.TabType;
+import bg.znestorov.sofbus24.entity.TabTypeEnum;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager;
 
@@ -173,7 +173,7 @@ public class MetroFragment extends Fragment {
 	 * @param textView
 	 *            the TextView which is selected
 	 */
-	private void setTabActive(TabType tabType, TextView textView) {
+	private void setTabActive(TabTypeEnum tabType, TextView textView) {
 		int backgroundResource;
 		switch (tabType) {
 		case LEFT:
@@ -199,7 +199,7 @@ public class MetroFragment extends Fragment {
 	 * @param textView
 	 *            the TextView that has to be deactivated
 	 */
-	private void setTabInactive(TabType tabType, TextView textView) {
+	private void setTabInactive(TabTypeEnum tabType, TextView textView) {
 		int backgroundResource;
 		switch (tabType) {
 		case LEFT:
@@ -232,13 +232,13 @@ public class MetroFragment extends Fragment {
 		switch (directionNumber) {
 		case 0:
 			currentDirection = 0;
-			setTabActive(TabType.LEFT, textViewDirection1);
-			setTabInactive(TabType.RIGHT, textViewDirection2);
+			setTabActive(TabTypeEnum.LEFT, textViewDirection1);
+			setTabInactive(TabTypeEnum.RIGHT, textViewDirection2);
 			break;
 		default:
 			currentDirection = 1;
-			setTabActive(TabType.RIGHT, textViewDirection2);
-			setTabInactive(TabType.LEFT, textViewDirection1);
+			setTabActive(TabTypeEnum.RIGHT, textViewDirection2);
+			setTabInactive(TabTypeEnum.LEFT, textViewDirection1);
 			break;
 		}
 

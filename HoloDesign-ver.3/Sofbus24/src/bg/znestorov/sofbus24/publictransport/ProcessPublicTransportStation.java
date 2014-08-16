@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
-import bg.znestorov.sofbus24.entity.PublicTransportStation;
+import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
@@ -19,11 +19,11 @@ import bg.znestorov.sofbus24.utils.Utils;
 public class ProcessPublicTransportStation {
 
 	private Activity context;
-	private PublicTransportStation ptStation;
+	private PublicTransportStationEntity ptStation;
 	private String htmlResult;
 
 	public ProcessPublicTransportStation(Activity context,
-			PublicTransportStation ptStation, String htmlResult) {
+			PublicTransportStationEntity ptStation, String htmlResult) {
 		this.context = context;
 		this.ptStation = ptStation;
 		this.htmlResult = htmlResult;
@@ -37,11 +37,11 @@ public class ProcessPublicTransportStation {
 		this.context = context;
 	}
 
-	public PublicTransportStation getPtStation() {
+	public PublicTransportStationEntity getPtStation() {
 		return ptStation;
 	}
 
-	public void setPtStation(PublicTransportStation ptStation) {
+	public void setPtStation(PublicTransportStationEntity ptStation) {
 		this.ptStation = ptStation;
 	}
 
@@ -59,7 +59,7 @@ public class ProcessPublicTransportStation {
 	 * 
 	 * @return PublicTransportStation object with schedule set
 	 */
-	public PublicTransportStation getStationFromHtml() {
+	public PublicTransportStationEntity getStationFromHtml() {
 		// Reset the schedule, because the station is passed by reference, not
 		// by value
 		ptStation.resetSchedule();

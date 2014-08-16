@@ -1,5 +1,7 @@
 package bg.znestorov.sofbus24.favorites;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -20,17 +24,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
-import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
-import bg.znestorov.sofbus24.entity.MetroStation;
-import bg.znestorov.sofbus24.entity.PublicTransportStation;
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
+import bg.znestorov.sofbus24.entity.MetroStationEntity;
+import bg.znestorov.sofbus24.entity.PositionTypeEnum;
+import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
+import bg.znestorov.sofbus24.entity.SortTypeEnum;
+import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.StationMap;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
@@ -53,20 +60,22 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
  * @version 1.0
  * 
  */
-public class FavouritesStationAdapter extends ArrayAdapter<Station> {
+public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 
 	private Activity context;
 	private GlobalEntity globalContext;
 	private FavouritesStationFragment favouritesStationFragment;
 
-	private List<Station> originalStations;
-	private List<Station> filteredStations;
+	private List<StationEntity> originalStations;
+	private List<StationEntity> filteredStations;
 
 	private StationsDataSource stationsDataSource;
 	private FavouritesDataSource favouritesDatasource;
 
 	private Filter stationsFilter;
 	private String language;
+
+	private boolean isReorderVisible;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
@@ -77,10 +86,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		ImageButton stationStreetView;
 		View barView;
 		ImageButton expandStation;
-		ImageButton googleMaps;
-		ImageButton googleStreetView;
-		ImageButton editStation;
-		ImageButton removeStation;
+		ImageButton reorderStation;
+		ImageButton settingsStation;
 	}
 
 	private ImageLoader imageLoader = ImageLoader.getInstance();
@@ -90,7 +97,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 	public FavouritesStationAdapter(Activity context,
 			FavouritesStationFragment favouritesStationFragment,
-			List<Station> stations) {
+			List<StationEntity> stations) {
 		super(context, R.layout.activity_favourites_list_item, stations);
 
 		this.context = context;
@@ -107,7 +114,30 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 		this.displayImageOptions = ActivityUtils.displayImageOptions();
 		this.imageLoader.init(ActivityUtils.initImageLoader(context));
 
+		this.isReorderVisible = isReorderVisible();
+
 		setExpandedListItemValue();
+	}
+
+	/**
+	 * Check if the reorder button should be visible (if the list is containing
+	 * more than one element - return true)
+	 * 
+	 * @return if the reorder button should be visible
+	 */
+	private boolean isReorderVisible() {
+		int originalStationsSize = originalStations.size();
+		int filteredStationsSize = filteredStations.size();
+
+		if (originalStationsSize != filteredStationsSize) {
+			return isReorderVisible;
+		} else {
+			if (filteredStationsSize > 1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 
 	/**
@@ -122,7 +152,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	}
 
 	@Override
-	public Station getItem(int position) {
+	public StationEntity getItem(int position) {
 		return filteredStations.get(position);
 	}
 
@@ -164,10 +194,14 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 				// If there's nothing to filter on, return the original data for
 				// your list
 				if (constraint == null || constraint.length() == 0) {
+					isReorderVisible = true;
+
 					results.values = originalStations;
 					results.count = originalStations.size();
 				} else {
-					List<Station> filterResultsData = new ArrayList<Station>();
+					isReorderVisible = false;
+
+					List<StationEntity> filterResultsData = new ArrayList<StationEntity>();
 
 					String filterString = constraint.toString().trim()
 							.toUpperCase();
@@ -184,7 +218,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 
 					// Itterate over all stations and search which ones match
 					// the filter
-					for (Station station : originalStations) {
+					for (StationEntity station : originalStations) {
 						filterebaleName = station.getName().toUpperCase();
 						filterebaleNumber = station.getNumber().toUpperCase();
 
@@ -205,7 +239,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 			@Override
 			protected void publishResults(CharSequence constraint,
 					FilterResults filterResults) {
-				filteredStations = (ArrayList<Station>) filterResults.values;
+				filteredStations = (ArrayList<StationEntity>) filterResults.values;
 				notifyDataSetChanged();
 			}
 		};
@@ -240,20 +274,16 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 			viewHolder.barView = rowView.findViewById(R.id.favourites_item_bar);
 			viewHolder.expandStation = (ImageButton) rowView
 					.findViewById(R.id.favourites_item_expand);
-			viewHolder.googleMaps = (ImageButton) rowView
-					.findViewById(R.id.favourites_item_google_maps);
-			viewHolder.googleStreetView = (ImageButton) rowView
-					.findViewById(R.id.favourites_item_google_street_view);
-			viewHolder.editStation = (ImageButton) rowView
-					.findViewById(R.id.favourites_item_rename);
-			viewHolder.removeStation = (ImageButton) rowView
-					.findViewById(R.id.favourites_item_remove);
+			viewHolder.reorderStation = (ImageButton) rowView
+					.findViewById(R.id.favourites_item_reorder);
+			viewHolder.settingsStation = (ImageButton) rowView
+					.findViewById(R.id.favourites_item_settings);
 			rowView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) rowView.getTag();
 		}
 
-		Station station = filteredStations.get(position);
+		StationEntity station = filteredStations.get(position);
 
 		// Add the Station Name and the Station Number
 		viewHolder.stationName.setText(station.getName());
@@ -268,13 +298,20 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 			collapseListItem(viewHolder);
 		}
 
+		// Show the order button only if the custom ordering is choosen
+		isReorderVisible = isReorderVisible();
+		if (FavouritesPreferences.getFavouritesSortType(context) == SortTypeEnum.CUSTOM
+				&& isReorderVisible) {
+			viewHolder.reorderStation.setVisibility(View.VISIBLE);
+		} else {
+			viewHolder.reorderStation.setVisibility(View.GONE);
+		}
+
 		// Attach click listeners to the EXPAND, EDIT and REMOVE buttons
 		expandStation(viewHolder, station);
-		seeStationOnGoogleMaps(viewHolder.googleMaps, station);
-		seeStationOnGoogleStreetView(viewHolder.googleStreetView, station);
-		editStation(viewHolder.editStation, station, position);
-		removeStation(viewHolder.removeStation, station);
+		reorderStation(viewHolder.reorderStation, station, position);
 		chooseStation(viewHolder.stationStreetView, viewHolder.barView, station);
+		actionsOverSettingsButton(viewHolder.settingsStation, station);
 
 		return rowView;
 	}
@@ -288,7 +325,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 *            the station on the current row
 	 */
 	private void expandStation(final ViewHolder viewHolder,
-			final Station station) {
+			final StationEntity station) {
 		viewHolder.expandStation.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -312,7 +349,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 *            the station on the current row
 	 */
 	private void expandListItem(final ViewHolder viewHolder,
-			final Station station) {
+			final StationEntity station) {
 		// Set the visibility of the progress bar
 		viewHolder.progressBar.setVisibility(View.VISIBLE);
 
@@ -382,7 +419,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 * @param station
 	 *            the station on the current row
 	 */
-	private void loadStationImage(final ViewHolder viewHolder, Station station) {
+	private void loadStationImage(final ViewHolder viewHolder,
+			StationEntity station) {
 		String stationLat = station.getLat();
 		String stationLon = station.getLon();
 
@@ -416,152 +454,32 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 				});
 	}
 
-	/**
-	 * Attach a click listener to the GoogleMaps button (only for landscape
-	 * mode)
-	 * 
-	 * @param googleMaps
-	 *            the GoogleMaps ImageButton
-	 * @param station
-	 *            the station on the rowView
-	 */
-	private void seeStationOnGoogleMaps(ImageButton googleMaps,
-			final Station station) {
-		// In case of Landscape mode
-		if (googleMaps != null) {
-			googleMaps.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View arg0) {
-					if (station.hasCoordinates()) {
-						Intent stationMapIntent = new Intent(context,
-								StationMap.class);
-
-						// Check the type of the station
-						if (station.isMetroStation()) {
-							stationMapIntent.putExtra(
-									Constants.BUNDLE_STATION_MAP,
-									new MetroStation(station));
-						} else {
-							station.setType(VehicleType.BUS);
-							stationMapIntent.putExtra(
-									Constants.BUNDLE_STATION_MAP,
-									new PublicTransportStation(station));
-						}
-
-						context.startActivity(stationMapIntent);
-					} else {
-						ActivityUtils.showNoCoordinatesToast(context);
-					}
-				}
-			});
-		}
-	}
-
-	/**
-	 * Attach a click listener to the GoogleStreetView button (only for
-	 * landscape mode)
-	 * 
-	 * @param googleStreetView
-	 *            the GoogleStreetView ImageButton
-	 * @param station
-	 *            the station on the rowView
-	 */
-	private void seeStationOnGoogleStreetView(ImageButton googleStreetView,
-			final Station station) {
-		// In case of Landscape mode
-		if (googleStreetView != null) {
-			googleStreetView.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View arg0) {
-					if (station.hasCoordinates()) {
-						Uri streetViewUri = Uri.parse("google.streetview:cbll="
-								+ station.getLat() + "," + station.getLon()
-								+ "&cbp=1,90,,0,1.0&mz=20");
-						Intent streetViewIntent = new Intent(
-								Intent.ACTION_VIEW, streetViewUri);
-						context.startActivity(streetViewIntent);
-					} else {
-						ActivityUtils.showNoCoordinatesToast(context);
-					}
-				}
-			});
-		}
-	}
-
-	/**
-	 * Attach a click listener to the EDIT button
-	 * 
-	 * @param editStation
-	 *            the edit ImageButton
-	 * @param station
-	 *            the station on the rowView
-	 * @param position
-	 *            the position of the station in the List
-	 */
-	private void editStation(ImageButton editStation, final Station station,
-			final int position) {
-		editStation.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				createEditDialog(station, position);
-			}
-		});
-	}
-
-	/**
-	 * Create an Alert Dialog for editing the name of the station
-	 * 
-	 * @param station
-	 *            the station on the current row
-	 * @param position
-	 *            the position of the station in the List
-	 */
-	private void createEditDialog(Station station, int position) {
-		FavouritesRenameDialog favouritesRenameDialog = FavouritesRenameDialog
-				.newInstance(station, position);
-		favouritesRenameDialog.setTargetFragment(favouritesStationFragment, 0);
-		favouritesRenameDialog.show(
-				favouritesStationFragment.getFragmentManager(), "dialog");
-
-	}
-
-	/**
-	 * Attach a click listener to the REMOVE button
-	 * 
-	 * @param removeStation
-	 *            the remove ImageButton
-	 * @param station
-	 *            the station on the rowView
-	 */
-	private void removeStation(final ImageButton removeStation,
-			final Station station) {
-		removeStation.setOnClickListener(new OnClickListener() {
+	private void reorderStation(ImageButton reorderStation,
+			final StationEntity station, final int position) {
+		reorderStation.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				favouritesDatasource.open();
-				favouritesDatasource.deleteStation(station);
-				favouritesDatasource.close();
-				remove(station);
-				notifyDataSetChanged();
 
-				Toast.makeText(
-						context,
-						Html.fromHtml(String.format(
-								context.getString(R.string.app_toast_remove_favourites),
-								station.getName(), station.getNumber())),
-						Toast.LENGTH_SHORT).show();
-
-				// Check which type of station is changed (METRO or OTHER)
-				stationsDataSource.open();
-				Station dbStation = stationsDataSource.getStation(station);
-				VehicleType stationType = dbStation != null ? dbStation
-						.getType() : VehicleType.BTT;
-				stationsDataSource.open();
-
-				if (stationType != VehicleType.METRO1
-						&& stationType != VehicleType.METRO2) {
-					globalContext.setVbChanged(true);
+				PositionTypeEnum positionType = favouritesDatasource
+						.getStationPosition(station);
+				switch (positionType) {
+				case FIRST:
+				case LAST:
+				case MEDIUM:
+					FavouritesOrderDialog favouritesOrderDialog = FavouritesOrderDialog
+							.newInstance(station, positionType);
+					favouritesOrderDialog.setTargetFragment(
+							favouritesStationFragment, 0);
+					favouritesOrderDialog.show(
+							favouritesStationFragment.getFragmentManager(),
+							"dialog");
+					break;
+				default:
+					break;
 				}
+
+				favouritesDatasource.close();
 			}
 		});
 	}
@@ -577,7 +495,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 *            the station on the current row
 	 */
 	private void chooseStation(final ImageButton stationStreetView,
-			View barView, final Station station) {
+			View barView, final StationEntity station) {
 		stationStreetView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -618,15 +536,18 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 	 * @param station
 	 *            the station on the current row
 	 */
-	private void onChooseStation(Station station) {
+	private void onChooseStation(StationEntity station) {
 		String stationCustomField = station.getCustomField();
 		String metroCustomField = String.format(Constants.METRO_STATION_URL,
 				station.getNumber());
 
+		// Update the station info in the Favourites DB
+		ActivityUtils.updateFavouritesStationInfo(context, station);
+
 		// Check if the type of the station - BTT or METRO
 		if (!stationCustomField.equals(metroCustomField)) {
 			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-					context, null, station, HtmlRequestCodes.FAVOURITES);
+					context, null, station, HtmlRequestCodesEnum.FAVOURITES);
 			retrieveVirtualBoards.getSumcInformation();
 		} else {
 			ProgressDialog progressDialog = new ProgressDialog(context);
@@ -636,6 +557,168 @@ public class FavouritesStationAdapter extends ArrayAdapter<Station> {
 			RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
 					context, progressDialog, station);
 			retrieveMetroSchedule.execute();
+		}
+	}
+
+	/**
+	 * Assign a "onClickListener(...)" over the ImageButton
+	 * 
+	 * @param stationSettings
+	 *            the settings image button
+	 * @param station
+	 *            the station on the current row
+	 */
+	private void actionsOverSettingsButton(ImageButton stationSettings,
+			final StationEntity station) {
+		stationSettings.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				switch (v.getId()) {
+				case R.id.favourites_item_settings:
+					PopupMenu popup = new PopupMenu(context, v);
+					Menu menu = popup.getMenu();
+					popup.getMenuInflater().inflate(
+							R.menu.activity_favourites_context_menu, menu);
+
+					// Force the context menu to show icons
+					try {
+						Field[] fields = popup.getClass().getDeclaredFields();
+						for (Field field : fields) {
+							if ("mPopup".equals(field.getName())) {
+								field.setAccessible(true);
+								Object menuPopupHelper = field.get(popup);
+								Class<?> classPopupHelper = Class
+										.forName(menuPopupHelper.getClass()
+												.getName());
+								Method setForceIcons = classPopupHelper
+										.getMethod("setForceShowIcon",
+												boolean.class);
+								setForceIcons.invoke(menuPopupHelper, true);
+								break;
+							}
+						}
+					} catch (Exception e) {
+					}
+					popup.show();
+
+					popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+						@Override
+						public boolean onMenuItemClick(MenuItem item) {
+							switch (item.getItemId()) {
+							case R.id.menu_favourites_rename:
+								editStation(station);
+								break;
+							case R.id.menu_favourites_remove:
+								removeStation(station);
+								break;
+							case R.id.menu_favourites_google_maps:
+								seeStationOnGoogleMaps(station);
+								break;
+							case R.id.menu_favourites_google_street_view:
+								seeStationOnGoogleStreetView(station);
+								break;
+							case R.id.menu_favourites_information:
+								// TODO: Add a new DialogFragment for this
+								break;
+							}
+
+							return true;
+						}
+					});
+				}
+			}
+		});
+	}
+
+	/**
+	 * Actions over the EDIT button
+	 * 
+	 * @param station
+	 *            the station on the rowView
+	 */
+	private void editStation(StationEntity station) {
+		FavouritesRenameDialog favouritesRenameDialog = FavouritesRenameDialog
+				.newInstance(station);
+		favouritesRenameDialog.setTargetFragment(favouritesStationFragment, 0);
+		favouritesRenameDialog.show(
+				favouritesStationFragment.getFragmentManager(), "dialog");
+	}
+
+	/**
+	 * Actions over the REMOVE button
+	 * 
+	 * @param station
+	 *            the station on the rowView
+	 */
+	private void removeStation(StationEntity station) {
+		favouritesDatasource.open();
+		favouritesDatasource.deleteStation(station);
+		favouritesDatasource.close();
+		remove(station);
+		notifyDataSetChanged();
+
+		Toast.makeText(
+				context,
+				Html.fromHtml(String.format(
+						context.getString(R.string.app_toast_remove_favourites),
+						station.getName(), station.getNumber())),
+				Toast.LENGTH_SHORT).show();
+
+		// Check which type of station is changed (METRO or OTHER)
+		stationsDataSource.open();
+		StationEntity dbStation = stationsDataSource.getStation(station);
+		VehicleTypeEnum stationType = dbStation != null ? dbStation.getType()
+				: VehicleTypeEnum.BTT;
+		stationsDataSource.open();
+
+		if (stationType != VehicleTypeEnum.METRO1
+				&& stationType != VehicleTypeEnum.METRO2) {
+			globalContext.setVbChanged(true);
+		}
+	}
+
+	/**
+	 * Actions over GoogleMaps button
+	 * 
+	 * @param station
+	 *            the station on the rowView
+	 */
+	private void seeStationOnGoogleMaps(StationEntity station) {
+		if (station.hasCoordinates()) {
+			Intent stationMapIntent = new Intent(context, StationMap.class);
+
+			// Check the type of the station
+			if (station.isMetroStation()) {
+				stationMapIntent.putExtra(Constants.BUNDLE_STATION_MAP,
+						new MetroStationEntity(station));
+			} else {
+				station.setType(VehicleTypeEnum.BUS);
+				stationMapIntent.putExtra(Constants.BUNDLE_STATION_MAP,
+						new PublicTransportStationEntity(station));
+			}
+
+			context.startActivity(stationMapIntent);
+		} else {
+			ActivityUtils.showNoCoordinatesToast(context);
+		}
+	}
+
+	/**
+	 * Actions over GoogleMaps StreetView button
+	 * 
+	 * @param station
+	 *            the station on the rowView
+	 */
+	private void seeStationOnGoogleStreetView(StationEntity station) {
+		if (station.hasCoordinates()) {
+			Uri streetViewUri = Uri.parse("google.streetview:cbll="
+					+ station.getLat() + "," + station.getLon()
+					+ "&cbp=1,90,,0,1.0&mz=20");
+			Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
+					streetViewUri);
+			context.startActivity(streetViewIntent);
+		} else {
+			ActivityUtils.showNoCoordinatesToast(context);
 		}
 	}
 }

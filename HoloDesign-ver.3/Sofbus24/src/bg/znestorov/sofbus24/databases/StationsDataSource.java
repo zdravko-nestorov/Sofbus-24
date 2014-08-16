@@ -11,8 +11,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.MapUtils;
@@ -66,7 +66,7 @@ public class StationsDataSource {
 	 * @return the station if it is added successfully and null if already
 	 *         exists
 	 */
-	public Station createStation(Station station) {
+	public StationEntity createStation(StationEntity station) {
 		if (getStation(station) == null) {
 			// Creating ContentValues object and insert the station data in it
 			ContentValues values = new ContentValues();
@@ -91,7 +91,7 @@ public class StationsDataSource {
 			cursor.moveToFirst();
 
 			// Creating newStation and closing the cursor
-			Station insertedStation = cursorToStation(cursor);
+			StationEntity insertedStation = cursorToStation(cursor);
 			cursor.close();
 
 			return insertedStation;
@@ -130,7 +130,7 @@ public class StationsDataSource {
 	 * @param station
 	 *            the input station
 	 */
-	public void deleteStation(Station station) {
+	public void deleteStation(StationEntity station) {
 		String where = StationsSQLite.COLUMN_NUMBER + " = ?";
 		String[] whereArgs = new String[] { String.valueOf(station.getNumber()) };
 
@@ -144,7 +144,7 @@ public class StationsDataSource {
 	 *            the input station
 	 * @return the station if it is found in the DB and null otherwise
 	 */
-	public Station getStation(Station station) {
+	public StationEntity getStation(StationEntity station) {
 		// Selecting the row that contains the station data
 		Cursor cursor = database.query(StationsSQLite.TABLE_STATIONS,
 				allColumns,
@@ -156,9 +156,9 @@ public class StationsDataSource {
 			cursor.moveToFirst();
 
 			// Creating station object and closing the cursor
-			Station foundStation = cursorToStation(cursor);
-			if (station.getType() == VehicleType.METRO1
-					|| station.getType() == VehicleType.METRO2) {
+			StationEntity foundStation = cursorToStation(cursor);
+			if (station.getType() == VehicleTypeEnum.METRO1
+					|| station.getType() == VehicleTypeEnum.METRO2) {
 				foundStation.setCustomField(String.format(
 						Constants.METRO_STATION_URL, foundStation.getNumber()));
 			}
@@ -180,7 +180,7 @@ public class StationsDataSource {
 	 *            the input station number
 	 * @return the station if it is found in the DB and null otherwise
 	 */
-	public Station getStation(String stationNumber) {
+	public StationEntity getStation(String stationNumber) {
 		// Selecting the row that contains the station data
 		Cursor cursor = database.query(StationsSQLite.TABLE_STATIONS,
 				allColumns, StationsSQLite.COLUMN_NUMBER + " = "
@@ -191,9 +191,9 @@ public class StationsDataSource {
 			cursor.moveToFirst();
 
 			// Creating station object and closing the cursor
-			Station foundStation = cursorToStation(cursor);
-			if (foundStation.getType() == VehicleType.METRO1
-					|| foundStation.getType() == VehicleType.METRO2) {
+			StationEntity foundStation = cursorToStation(cursor);
+			if (foundStation.getType() == VehicleTypeEnum.METRO1
+					|| foundStation.getType() == VehicleTypeEnum.METRO2) {
 				foundStation.setCustomField(String.format(
 						Constants.METRO_STATION_URL, foundStation.getNumber()));
 			}
@@ -215,8 +215,8 @@ public class StationsDataSource {
 	 *            type of the station
 	 * @return a list with all stations matching the input type from the DB
 	 */
-	public List<Station> getStationsViaType(VehicleType vehicleType) {
-		List<Station> stations = new ArrayList<Station>();
+	public List<StationEntity> getStationsViaType(VehicleTypeEnum vehicleType) {
+		List<StationEntity> stations = new ArrayList<StationEntity>();
 
 		String selection = StationsSQLite.COLUMN_TYPE + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(vehicleType) };
@@ -231,9 +231,9 @@ public class StationsDataSource {
 		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Station foundStation = cursorToStation(cursor);
-			if (vehicleType == VehicleType.METRO1
-					|| vehicleType == VehicleType.METRO2) {
+			StationEntity foundStation = cursorToStation(cursor);
+			if (vehicleType == VehicleTypeEnum.METRO1
+					|| vehicleType == VehicleTypeEnum.METRO2) {
 				foundStation.setCustomField(String.format(
 						Constants.METRO_STATION_URL, foundStation.getNumber()));
 			}
@@ -257,7 +257,7 @@ public class StationsDataSource {
 	 *            the user search text
 	 * @return a list with all stations matching the input conditions
 	 */
-	public List<Station> getStationsViaSearch(VehicleType vehicleType,
+	public List<StationEntity> getStationsViaSearch(VehicleTypeEnum vehicleType,
 			String searchText) {
 		String searchType;
 		if (vehicleType == null) {
@@ -266,7 +266,7 @@ public class StationsDataSource {
 			searchType = vehicleType.toString();
 		}
 
-		List<Station> stations = new ArrayList<Station>();
+		List<StationEntity> stations = new ArrayList<StationEntity>();
 		Locale currentLocale = new Locale(language);
 		searchText = searchText.toLowerCase(currentLocale);
 		searchText = TranslatorLatinToCyrillic.translate(context, searchText);
@@ -289,9 +289,9 @@ public class StationsDataSource {
 		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Station foundStation = cursorToStation(cursor);
-			if (vehicleType == VehicleType.METRO1
-					|| vehicleType == VehicleType.METRO2) {
+			StationEntity foundStation = cursorToStation(cursor);
+			if (vehicleType == VehicleTypeEnum.METRO1
+					|| vehicleType == VehicleTypeEnum.METRO2) {
 				foundStation.setCustomField(String.format(
 						Constants.METRO_STATION_URL, foundStation.getNumber()));
 			}
@@ -311,8 +311,8 @@ public class StationsDataSource {
 	 * 
 	 * @return a list with all stations from the DB
 	 */
-	public List<Station> getAllStations() {
-		List<Station> stations = new ArrayList<Station>();
+	public List<StationEntity> getAllStations() {
+		List<StationEntity> stations = new ArrayList<StationEntity>();
 
 		// Selecting all fields of the TABLE_STATIONS
 		Cursor cursor = database.query(StationsSQLite.TABLE_STATIONS,
@@ -321,9 +321,9 @@ public class StationsDataSource {
 		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Station foundStation = cursorToStation(cursor);
-			if (foundStation.getType() == VehicleType.METRO1
-					|| foundStation.getType() == VehicleType.METRO2) {
+			StationEntity foundStation = cursorToStation(cursor);
+			if (foundStation.getType() == VehicleTypeEnum.METRO1
+					|| foundStation.getType() == VehicleTypeEnum.METRO2) {
 				foundStation.setCustomField(String.format(
 						Constants.METRO_STATION_URL, foundStation.getNumber()));
 			}
@@ -356,11 +356,11 @@ public class StationsDataSource {
 	 *            current position radiusF
 	 * @return a list with the closest station
 	 */
-	public List<Station> getClosestStations(Activity context,
+	public List<StationEntity> getClosestStations(Activity context,
 			LatLng currentPosition, BigDecimal stationsRadius) {
 		FavouritesDataSource favouritesDatasource = new FavouritesDataSource(
 				context);
-		List<Station> stations = new ArrayList<Station>();
+		List<StationEntity> stations = new ArrayList<StationEntity>();
 
 		// IMPORTANT: Used for correct ordering
 		Double fudge = Math.pow(
@@ -393,7 +393,7 @@ public class StationsDataSource {
 		favouritesDatasource.open();
 
 		while (!cursor.isAfterLast()) {
-			Station foundStation = cursorToStation(cursor);
+			StationEntity foundStation = cursorToStation(cursor);
 
 			// Check if the station has coordinates in the database
 			if (foundStation.hasCoordinates()) {
@@ -407,8 +407,8 @@ public class StationsDataSource {
 
 					// Check the type of the station and if it is METRO add the
 					// schedule URL to the custom field
-					if ((foundStation.getType() == VehicleType.METRO1 || foundStation
-							.getType() == VehicleType.METRO2)) {
+					if ((foundStation.getType() == VehicleTypeEnum.METRO1 || foundStation
+							.getType() == VehicleTypeEnum.METRO2)) {
 						foundStation.setCustomField(String.format(
 								Constants.METRO_STATION_URL,
 								foundStation.getNumber()));
@@ -447,9 +447,9 @@ public class StationsDataSource {
 	 *            if there is any criteria for searching
 	 * @return a list with the closest station
 	 */
-	public List<Station> getClosestStations(LatLng currentPosition,
+	public List<StationEntity> getClosestStations(LatLng currentPosition,
 			int stationsToLoad, String searchText) {
-		List<Station> stations = new ArrayList<Station>();
+		List<StationEntity> stations = new ArrayList<StationEntity>();
 
 		Locale currentLocale = new Locale(language);
 		searchText = searchText.toLowerCase(currentLocale);
@@ -491,7 +491,7 @@ public class StationsDataSource {
 
 		int stationsCount = 1;
 		while (!cursor.isAfterLast() && stationsCount <= stationsToLoad) {
-			Station foundStation = cursorToStation(cursor);
+			StationEntity foundStation = cursorToStation(cursor);
 			boolean isStationInRange = true;
 			try {
 				BigDecimal distance = new BigDecimal(MapUtils.getMapDistance(
@@ -506,8 +506,8 @@ public class StationsDataSource {
 
 			// Check if the station is in range
 			if (isStationInRange) {
-				if ((foundStation.getType() == VehicleType.METRO1 || foundStation
-						.getType() == VehicleType.METRO2)) {
+				if ((foundStation.getType() == VehicleTypeEnum.METRO1 || foundStation
+						.getType() == VehicleTypeEnum.METRO2)) {
 					foundStation.setCustomField(String.format(
 							Constants.METRO_STATION_URL,
 							foundStation.getNumber()));
@@ -540,9 +540,9 @@ public class StationsDataSource {
 	 *            if there is any criteria for searching
 	 * @return a list with the closest station
 	 */
-	public List<Station> getClosestStationsByPage(LatLng currentPosition,
+	public List<StationEntity> getClosestStationsByPage(LatLng currentPosition,
 			int stationPage, String searchText) {
-		List<Station> stations = new ArrayList<Station>();
+		List<StationEntity> stations = new ArrayList<StationEntity>();
 
 		Locale currentLocale = new Locale(language);
 		searchText = searchText.toLowerCase(currentLocale);
@@ -584,7 +584,7 @@ public class StationsDataSource {
 
 		int stationsCount = 1;
 		while (!cursor.isAfterLast() && stationsCount <= stationPage * 10) {
-			Station foundStation = cursorToStation(cursor);
+			StationEntity foundStation = cursorToStation(cursor);
 			boolean isStationInRange = true;
 			try {
 				BigDecimal distance = new BigDecimal(MapUtils.getMapDistance(
@@ -600,8 +600,8 @@ public class StationsDataSource {
 			// Check if the station is in range
 			if (isStationInRange) {
 				if (stationsCount > ((stationPage - 1) * 10)) {
-					if (foundStation.getType() == VehicleType.METRO1
-							|| foundStation.getType() == VehicleType.METRO2) {
+					if (foundStation.getType() == VehicleTypeEnum.METRO1
+							|| foundStation.getType() == VehicleTypeEnum.METRO2) {
 						foundStation.setCustomField(String.format(
 								Constants.METRO_STATION_URL,
 								foundStation.getNumber()));
@@ -631,8 +631,8 @@ public class StationsDataSource {
 	 *            the input cursor for interacting with the DB
 	 * @return the station object on the current row
 	 */
-	private Station cursorToStation(Cursor cursor) {
-		Station station = new Station();
+	private StationEntity cursorToStation(Cursor cursor) {
+		StationEntity station = new StationEntity();
 
 		// Check if have to translate the station name
 		String stationName = cursor.getString(1);
@@ -646,7 +646,7 @@ public class StationsDataSource {
 		station.setName(stationName);
 		station.setLat(cursor.getString(2));
 		station.setLon(cursor.getString(3));
-		station.setType(VehicleType.valueOf(cursor.getString(4)));
+		station.setType(VehicleTypeEnum.valueOf(cursor.getString(4)));
 		station.setCustomField(getCustomField(station));
 
 		return station;
@@ -659,7 +659,7 @@ public class StationsDataSource {
 	 *            the inputStation
 	 * @return what to be inserted in the custom field in the DB
 	 */
-	private String getCustomField(Station station) {
+	private String getCustomField(StationEntity station) {
 		String stationCustomField;
 
 		switch (station.getType()) {

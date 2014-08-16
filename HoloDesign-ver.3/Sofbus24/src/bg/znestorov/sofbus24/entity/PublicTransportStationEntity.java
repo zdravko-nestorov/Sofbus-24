@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
  * @author Zdravko Nestorov
  * 
  */
-public class PublicTransportStation extends Station implements Serializable {
+public class PublicTransportStationEntity extends StationEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,12 +20,12 @@ public class PublicTransportStation extends Station implements Serializable {
 	private String direction;
 	private HashMap<Integer, ArrayList<String>> schedule;
 
-	public PublicTransportStation() {
+	public PublicTransportStationEntity() {
 		super();
 		this.setScheduleMap();
 	}
 
-	public PublicTransportStation(Station station) {
+	public PublicTransportStationEntity(StationEntity station) {
 		super(station.getNumber(), station.getName(), station.getLat(), station
 				.getLon(), station.getType(), station.getCustomField());
 
@@ -36,7 +36,7 @@ public class PublicTransportStation extends Station implements Serializable {
 		}
 	}
 
-	public PublicTransportStation(Station station, String id) {
+	public PublicTransportStationEntity(StationEntity station, String id) {
 		super(station.getNumber(), station.getName(), station.getLat(), station
 				.getLon(), station.getType(), station.getCustomField());
 

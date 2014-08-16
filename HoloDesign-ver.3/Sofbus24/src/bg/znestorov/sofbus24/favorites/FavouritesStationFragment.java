@@ -23,9 +23,14 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.FavouritesDatabaseUtils;
 import bg.znestorov.sofbus24.entity.FragmentLifecycle;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.OrderTypeEnum;
+import bg.znestorov.sofbus24.entity.SortTypeEnum;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.favorites.FavouritesDeleteAllDialog.OnDeleteAllFavouritesListener;
+import bg.znestorov.sofbus24.favorites.FavouritesOrderDialog.OnOrderChoiceListener;
 import bg.znestorov.sofbus24.favorites.FavouritesRenameDialog.OnRenameFavouritesListener;
+import bg.znestorov.sofbus24.favorites.FavouritesSortDialog.OnSortChoiceListener;
+import bg.znestorov.sofbus24.favorites.FavouritesSortTypeDialog.OnSortTypeChoiceListener;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
@@ -40,11 +45,12 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
  */
 public class FavouritesStationFragment extends ListFragment implements
 		FragmentLifecycle, OnDeleteAllFavouritesListener,
-		OnRenameFavouritesListener {
+		OnRenameFavouritesListener, OnOrderChoiceListener,
+		OnSortChoiceListener, OnSortTypeChoiceListener {
 
 	private Activity context;
 
-	private List<Station> favouritesStations = new ArrayList<Station>();
+	private List<StationEntity> favouritesStations = new ArrayList<StationEntity>();
 	private FavouritesDataSource favouritesDatasource;
 
 	@Override
@@ -67,8 +73,8 @@ public class FavouritesStationFragment extends ListFragment implements
 		actionsOverSearchEditText(searchEditText);
 
 		// Use an ArrayAdapter to show the elements in a ListView
-		ArrayAdapter<Station> adapter = new FavouritesStationAdapter(context,
-				this, favouritesStations);
+		ArrayAdapter<StationEntity> adapter = new FavouritesStationAdapter(
+				context, this, favouritesStations);
 		setListAdapter(adapter);
 
 		// Set the message if the list is empty
@@ -97,13 +103,26 @@ public class FavouritesStationFragment extends ListFragment implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		int favouritesCount = favouritesStations.size();
+
 		switch (item.getItemId()) {
 		case R.id.action_favourites_remove_all:
-			int favouritesCount = favouritesStations.size();
-
-			// Check if the Favorites database is empty or not
 			if (favouritesCount > 0) {
 				DialogFragment dialogFragment = FavouritesDeleteAllDialog
+						.newInstance();
+				dialogFragment.setTargetFragment(this, 0);
+				dialogFragment.show(getFragmentManager(), "dialog");
+			} else {
+				Toast.makeText(
+						context,
+						Html.fromHtml(getString(R.string.fav_menu_remove_all_empty_toast)),
+						Toast.LENGTH_SHORT).show();
+			}
+
+			break;
+		case R.id.action_favourites_sort:
+			if (favouritesCount > 0) {
+				DialogFragment dialogFragment = FavouritesSortDialog
 						.newInstance();
 				dialogFragment.setTargetFragment(this, 0);
 				dialogFragment.show(getFragmentManager(), "dialog");
@@ -128,6 +147,60 @@ public class FavouritesStationFragment extends ListFragment implements
 		FavouritesDatabaseUtils.deleteFavouriteDatabase(context);
 		Toast.makeText(context,
 				Html.fromHtml(getString(R.string.fav_menu_remove_all_toast)),
+				Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onOrderChoosed(StationEntity station, OrderTypeEnum orderType) {
+		if (favouritesDatasource == null) {
+			favouritesDatasource = new FavouritesDataSource(context);
+		}
+
+		favouritesDatasource.open();
+		favouritesDatasource.swapStations(station, orderType);
+		favouritesDatasource.close();
+
+		favouritesStations.clear();
+		favouritesStations.addAll(loadFavouritesList(null));
+
+		((FavouritesStationAdapter) getListAdapter()).notifyDataSetChanged();
+	}
+
+	@Override
+	public void onSortChoosed(SortTypeEnum sortType) {
+		switch (sortType) {
+		case CUSTOM:
+			onSortTypeChoosed(sortType);
+			break;
+		default:
+			DialogFragment dialogFragment = FavouritesSortTypeDialog
+					.newInstance(sortType);
+			dialogFragment.setTargetFragment(this, 0);
+			dialogFragment.show(getFragmentManager(), "dialog");
+			break;
+		}
+	}
+
+	@Override
+	public void onSortTypeChoosed(SortTypeEnum sortType) {
+		// Set the user choosen sort type in a preference file
+		FavouritesPreferences.setFavouritesSortType(context, sortType);
+
+		// Reorder the favourites stations
+		if (favouritesDatasource == null) {
+			favouritesDatasource = new FavouritesDataSource(context);
+		}
+
+		favouritesDatasource.open();
+		favouritesStations.clear();
+		favouritesStations.addAll(favouritesDatasource
+				.getAllStationsSorted(sortType));
+		favouritesDatasource.close();
+
+		((FavouritesStationAdapter) getListAdapter()).notifyDataSetChanged();
+
+		Toast.makeText(context,
+				Html.fromHtml(getString(R.string.fav_menu_sort_success)),
 				Toast.LENGTH_SHORT).show();
 	}
 
@@ -201,8 +274,8 @@ public class FavouritesStationFragment extends ListFragment implements
 	 *            the search text (if null - return all favorites stations)
 	 * @return all stations, marked as favorites, according to a search text
 	 */
-	private List<Station> loadFavouritesList(String searchText) {
-		List<Station> favouritesList;
+	private List<StationEntity> loadFavouritesList(String searchText) {
+		List<StationEntity> favouritesList;
 
 		if (favouritesDatasource == null) {
 			favouritesDatasource = new FavouritesDataSource(context);
@@ -210,7 +283,9 @@ public class FavouritesStationFragment extends ListFragment implements
 
 		favouritesDatasource.open();
 		if (searchText == null) {
-			favouritesList = favouritesDatasource.getAllStations();
+			favouritesList = favouritesDatasource
+					.getAllStationsSorted(FavouritesPreferences
+							.getFavouritesSortType(context));
 		} else {
 			favouritesList = favouritesDatasource
 					.getStationsViaSearch(searchText);
@@ -221,7 +296,8 @@ public class FavouritesStationFragment extends ListFragment implements
 	}
 
 	@Override
-	public void onRenameFavouritesClicked(String stationName, Station station) {
+	public void onRenameFavouritesClicked(String stationName,
+			StationEntity station) {
 		ListAdapter listAdapter = getListAdapter();
 
 		if (listAdapter != null) {
@@ -245,7 +321,7 @@ public class FavouritesStationFragment extends ListFragment implements
 		}
 	}
 
-	private void updateStation(Station station) {
+	private void updateStation(StationEntity station) {
 		if (favouritesDatasource == null) {
 			favouritesDatasource = new FavouritesDataSource(context);
 		}

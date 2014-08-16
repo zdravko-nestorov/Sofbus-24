@@ -14,8 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import bg.znestorov.sofbus24.entity.Vehicle;
-import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
@@ -28,11 +28,11 @@ import bg.znestorov.sofbus24.utils.Utils;
  * @version 1.0
  * 
  */
-public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
+public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity> implements
 		Filterable {
 
 	private Activity context;
-	private VirtualBoardsStation vbTimeStation;
+	private VirtualBoardsStationEntity vbTimeStation;
 	private String timeType;
 
 	// Used for optimize performance of the ListView
@@ -44,7 +44,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
 	}
 
 	public VirtualBoardsTimeAdapter(Activity context,
-			VirtualBoardsStation vbTimeStation) {
+			VirtualBoardsStationEntity vbTimeStation) {
 		super(context, R.layout.activity_virtual_boards_time_list_item,
 				vbTimeStation.getVehiclesList());
 
@@ -88,7 +88,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
 		}
 
 		// Fill the data
-		Vehicle stationVehicle = vbTimeStation.getVehiclesList().get(position);
+		VehicleEntity stationVehicle = vbTimeStation.getVehiclesList().get(position);
 
 		viewHolder.vehicleImage
 				.setImageResource(getVehicleImage(stationVehicle));
@@ -111,7 +111,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
 	 *            the station vehicle
 	 * @return the corresponding image to the vehicle
 	 */
-	private int getVehicleImage(Vehicle stationVehicle) {
+	private int getVehicleImage(VehicleEntity stationVehicle) {
 		int vehicleImage;
 
 		switch (stationVehicle.getType()) {
@@ -136,7 +136,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
 	 *            the station vehicle
 	 * @return the vehicle caption
 	 */
-	private String getVehicleCaption(Vehicle stationVehicle) {
+	private String getVehicleCaption(VehicleEntity stationVehicle) {
 		String vehicleCaption;
 		String vehicleTypeText;
 
@@ -165,7 +165,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
 	 *            the station vehicle
 	 * @return a separated string with the arrival times
 	 */
-	private String getArrivalTimes(Vehicle stationVehicle) {
+	private String getArrivalTimes(VehicleEntity stationVehicle) {
 		ArrayList<String> arrivalTimesList = stationVehicle.getArrivalTimes();
 		StringBuilder arrivalTimes = new StringBuilder("");
 
@@ -193,7 +193,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
 	 *            the station vehicle
 	 * @return a separated string with the remaining times
 	 */
-	private String getRemainingTimes(Vehicle stationVehicle) {
+	private String getRemainingTimes(VehicleEntity stationVehicle) {
 		ArrayList<String> arrivalTimesList = stationVehicle.getArrivalTimes();
 		String currentTime = Utils.getValueAfterLast(
 				vbTimeStation.getTime(context), ",").trim();
@@ -225,7 +225,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<Vehicle> implements
 	 * @return the last TextView text of each row (containing the times of
 	 *         arrival or remaining times)
 	 */
-	private Spanned getRowTimeCaption(Vehicle stationVehicle) {
+	private Spanned getRowTimeCaption(VehicleEntity stationVehicle) {
 		Spanned rowTimeCaption;
 
 		if (timeType.equals(Constants.PREFERENCE_DEFAULT_VALUE_TIME_TYPE)) {

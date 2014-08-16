@@ -15,8 +15,8 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
-import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
@@ -31,7 +31,7 @@ import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
  * @version 1.0
  * 
  */
-public class PublicTransportAdapter extends ArrayAdapter<Station> implements
+public class PublicTransportAdapter extends ArrayAdapter<StationEntity> implements
 		Filterable {
 
 	private Activity context;
@@ -40,8 +40,8 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	private TextView emptyList;
 	private String directionName;
 
-	private List<Station> originalStations;
-	private List<Station> filteredStations;
+	private List<StationEntity> originalStations;
+	private List<StationEntity> filteredStations;
 
 	private Filter stationsFilter;
 	private String language;
@@ -55,7 +55,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	}
 
 	public PublicTransportAdapter(Activity context, TextView emptyList,
-			String directionName, List<Station> stations) {
+			String directionName, List<StationEntity> stations) {
 		super(context, R.layout.activity_public_transport_list_item, stations);
 
 		this.context = context;
@@ -101,7 +101,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 		}
 
 		// Fill the data
-		Station station = filteredStations.get(position);
+		StationEntity station = filteredStations.get(position);
 		viewHolder.addToFavourites.setImageResource(getFavouriteImage(station));
 		viewHolder.stationName.setText(station.getName());
 		viewHolder.stationNumber.setText(String.format(
@@ -115,7 +115,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	}
 
 	@Override
-	public Station getItem(int position) {
+	public StationEntity getItem(int position) {
 		return filteredStations.get(position);
 	}
 
@@ -160,7 +160,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 					results.values = originalStations;
 					results.count = originalStations.size();
 				} else {
-					List<Station> filterResultsData = new ArrayList<Station>();
+					List<StationEntity> filterResultsData = new ArrayList<StationEntity>();
 
 					String filterString = constraint.toString().trim()
 							.toUpperCase();
@@ -177,7 +177,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 
 					// Itterate over all stations and search which ones match
 					// the filter
-					for (Station station : originalStations) {
+					for (StationEntity station : originalStations) {
 						filterebaleName = station.getName().toUpperCase();
 						filterebaleNumber = station.getNumber().toUpperCase();
 
@@ -198,7 +198,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 			@Override
 			protected void publishResults(CharSequence constraint,
 					FilterResults filterResults) {
-				filteredStations = (ArrayList<Station>) filterResults.values;
+				filteredStations = (ArrayList<StationEntity>) filterResults.values;
 				notifyDataSetChanged();
 
 				if (isEmpty()) {
@@ -218,7 +218,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	 *            the station on the current row
 	 * @return the station image id
 	 */
-	private Integer getFavouriteImage(Station station) {
+	private Integer getFavouriteImage(StationEntity station) {
 		Integer favouriteImage;
 
 		favouritesDatasource.open();
@@ -241,7 +241,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 	 *            the station on the current row
 	 */
 	public void actionsOverFavouritesImageViews(final ViewHolder viewHolder,
-			final Station station) {
+			final StationEntity station) {
 		// Add onClickListener over the addToFavourites ImageView
 		viewHolder.addToFavourites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -255,7 +255,7 @@ public class PublicTransportAdapter extends ArrayAdapter<Station> implements
 		viewHolder.stationVBTime.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-						context, null, station, HtmlRequestCodes.SINGLE_RESULT);
+						context, null, station, HtmlRequestCodesEnum.SINGLE_RESULT);
 				retrieveVirtualBoards.getSumcInformation();
 			}
 		});

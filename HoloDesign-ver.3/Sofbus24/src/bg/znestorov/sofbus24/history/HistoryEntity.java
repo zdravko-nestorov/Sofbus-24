@@ -2,7 +2,7 @@ package bg.znestorov.sofbus24.history;
 
 import java.io.Serializable;
 
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 
 /**
  * History class representing each station search
@@ -17,13 +17,13 @@ public class HistoryEntity implements Serializable {
 
 	private String historyValue;
 	private String historyDate;
-	private VehicleType historyType;
+	private VehicleTypeEnum historyType;
 
 	public HistoryEntity() {
 	}
 
 	public HistoryEntity(String historyValue, String historyDate,
-			VehicleType historyType) {
+			VehicleTypeEnum historyType) {
 		this.historyValue = historyValue;
 		this.historyDate = historyDate;
 		this.historyType = historyType;
@@ -45,11 +45,11 @@ public class HistoryEntity implements Serializable {
 		this.historyDate = historyDate;
 	}
 
-	public VehicleType getHistoryType() {
+	public VehicleTypeEnum getHistoryType() {
 		return historyType;
 	}
 
-	public void setHistoryType(VehicleType historyType) {
+	public void setHistoryType(VehicleTypeEnum historyType) {
 		this.historyType = historyType;
 	}
 

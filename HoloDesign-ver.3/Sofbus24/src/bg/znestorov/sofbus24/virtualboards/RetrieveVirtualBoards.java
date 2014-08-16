@@ -49,10 +49,10 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
-import bg.znestorov.sofbus24.entity.HtmlRequestCodes;
-import bg.znestorov.sofbus24.entity.HtmlResultCodes;
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.VirtualBoardsStation;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
+import bg.znestorov.sofbus24.entity.HtmlResultCodesEnum;
+import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.VirtualBoardsTime;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -74,16 +74,16 @@ public class RetrieveVirtualBoards {
 	private Activity context;
 	private Object callerInstance;
 
-	private Station station;
+	private StationEntity station;
 
-	private HtmlRequestCodes htmlRequestCode;
-	private HtmlResultCodes htmlResultCode;
+	private HtmlRequestCodesEnum htmlRequestCode;
+	private HtmlResultCodesEnum htmlResultCode;
 
 	private DefaultHttpClient httpClient;
 	private FavouritesDataSource favouriteDatasource;
 
 	public RetrieveVirtualBoards(Activity context, Object callerInstance,
-			Station station, HtmlRequestCodes htmlRequestCode) {
+			StationEntity station, HtmlRequestCodesEnum htmlRequestCode) {
 		// Set the current activity context and the object that created an
 		// instance of this class
 		this.context = context;
@@ -446,7 +446,7 @@ public class RetrieveVirtualBoards {
 
 				// Check if a capture is needed
 				if (htmlResult.contains(Constants.VB_CAPTCHA_REQUIRED)) {
-					htmlResultCode = HtmlResultCodes.CAPTCHA_NEEDED;
+					htmlResultCode = HtmlResultCodesEnum.CAPTCHA_NEEDED;
 				} else {
 					// Check how many unique station numbers are returned
 					LinkedHashSet<String> stationNumbers = getStationNumbers(htmlResult);
@@ -461,7 +461,7 @@ public class RetrieveVirtualBoards {
 					 * with all stations<br/>
 					 */
 					if (stationNumbers.isEmpty()) {
-						htmlResultCode = HtmlResultCodes.NO_INFORMATION;
+						htmlResultCode = HtmlResultCodesEnum.NO_INFORMATION;
 					} else if (stationNumbers.size() == 1) {
 						ArrayList<String> stationVehicleTypes = getStationVehicleTypes(htmlResult);
 						int vehicleTypesCount = stationVehicleTypes.size();
@@ -511,16 +511,16 @@ public class RetrieveVirtualBoards {
 							throw new Exception();
 						} else if (htmlResult
 								.contains(Constants.VB_CAPTCHA_REQUIRED)) {
-							htmlResultCode = HtmlResultCodes.CAPTCHA_NEEDED;
+							htmlResultCode = HtmlResultCodesEnum.CAPTCHA_NEEDED;
 						} else {
-							htmlResultCode = HtmlResultCodes.SINGLE_RESULT;
+							htmlResultCode = HtmlResultCodesEnum.SINGLE_RESULT;
 						}
 					} else {
-						htmlResultCode = HtmlResultCodes.MULTIPLE_RESULTS;
+						htmlResultCode = HtmlResultCodesEnum.MULTIPLE_RESULTS;
 					}
 				}
 			} catch (Exception e) {
-				htmlResultCode = HtmlResultCodes.NO_INTERNET;
+				htmlResultCode = HtmlResultCodesEnum.NO_INTERNET;
 			}
 
 			return htmlResult;
@@ -810,7 +810,7 @@ public class RetrieveVirtualBoards {
 			if (captchaImage != null) {
 				getCaptchaText(captchaId, captchaImage);
 			} else {
-				htmlResultCode = HtmlResultCodes.NO_INTERNET;
+				htmlResultCode = HtmlResultCodesEnum.NO_INTERNET;
 				proccessHtmlResult(null);
 			}
 
@@ -895,7 +895,7 @@ public class RetrieveVirtualBoards {
 				break;
 			case MULTIPLE_RESULTS:
 				((VirtualBoardsFragment) callerInstance)
-						.setListAdapterViaSearch(new ArrayList<Station>(),
+						.setListAdapterViaSearch(new ArrayList<StationEntity>(),
 								getErrorMsg());
 				break;
 			default:
@@ -907,7 +907,7 @@ public class RetrieveVirtualBoards {
 			break;
 		// In case of single result (only one station found)
 		case SINGLE_RESULT:
-			VirtualBoardsStation vbTimeStation = processVirtualBoards
+			VirtualBoardsStationEntity vbTimeStation = processVirtualBoards
 					.getVBSingleStationFromHtml();
 			Utils.addStationInHistory(context, vbTimeStation);
 
@@ -917,7 +917,7 @@ public class RetrieveVirtualBoards {
 						.refreshVirtualBoardsTimeFragment(vbTimeStation, null);
 				break;
 			case MULTIPLE_RESULTS:
-				ArrayList<Station> stationsList = new ArrayList<Station>(
+				ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>(
 						processVirtualBoards.getMultipleStationsFromHtml()
 								.values());
 				((VirtualBoardsFragment) callerInstance)
@@ -944,7 +944,7 @@ public class RetrieveVirtualBoards {
 			break;
 		// In case of multiple result (more than one station found)
 		default:
-			HashMap<String, Station> stationsMap = processVirtualBoards
+			HashMap<String, StationEntity> stationsMap = processVirtualBoards
 					.getMultipleStationsFromHtml();
 			// Not implemented for now, as it is slow operation
 			// Utils.addListOfStationsInHistory(context, stationsMap);
@@ -963,7 +963,7 @@ public class RetrieveVirtualBoards {
 
 				break;
 			default:
-				ArrayList<Station> stationsList = new ArrayList<Station>(
+				ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>(
 						stationsMap.values());
 				((VirtualBoardsFragment) callerInstance)
 						.setListAdapterViaSearch(stationsList, null);
@@ -1073,7 +1073,7 @@ public class RetrieveVirtualBoards {
 	 * @param stationToUpdate
 	 *            the new station (fulfilled with all information)
 	 */
-	private void updateFavouritesStation(Station stationToUpdate) {
+	private void updateFavouritesStation(StationEntity stationToUpdate) {
 		favouriteDatasource.open();
 		favouriteDatasource.updateStation(stationToUpdate);
 		favouriteDatasource.close();

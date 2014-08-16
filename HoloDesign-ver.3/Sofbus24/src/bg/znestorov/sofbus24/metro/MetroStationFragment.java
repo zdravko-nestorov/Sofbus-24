@@ -21,9 +21,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
-import bg.znestorov.sofbus24.entity.Station;
-import bg.znestorov.sofbus24.entity.Vehicle;
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.StationRouteMap;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -46,7 +46,7 @@ public class MetroStationFragment extends ListFragment {
 	private MetroLoadStations mls;
 
 	private MetroStationAdapter metroStationAdapter;
-	private ArrayList<Station> stationsList = new ArrayList<Station>();
+	private ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>();
 
 	private String searchText;
 	private static final String BUNDLE_SEARCH_TEXT = "SEARCH TEXT";
@@ -97,7 +97,7 @@ public class MetroStationFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Station station = (Station) ((MetroStationAdapter) getListAdapter())
+		StationEntity station = (StationEntity) ((MetroStationAdapter) getListAdapter())
 				.getItem(position);
 
 		// Getting the Metro schedule from the station URL address
@@ -280,14 +280,14 @@ public class MetroStationFragment extends ListFragment {
 			Intent metroMapRouteIntent = new Intent(context,
 					StationRouteMap.class);
 
-			Vehicle metroVehicle;
+			VehicleEntity metroVehicle;
 			switch (currentDirection) {
 			case 0:
-				metroVehicle = new Vehicle("1", VehicleType.METRO1,
+				metroVehicle = new VehicleEntity("1", VehicleTypeEnum.METRO1,
 						mls.getDirectionName(currentDirection, false, true));
 				break;
 			default:
-				metroVehicle = new Vehicle("1", VehicleType.METRO2,
+				metroVehicle = new VehicleEntity("1", VehicleTypeEnum.METRO2,
 						mls.getDirectionName(currentDirection, false, true));
 				break;
 			}

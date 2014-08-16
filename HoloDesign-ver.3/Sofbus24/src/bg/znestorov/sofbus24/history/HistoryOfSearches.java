@@ -11,7 +11,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
@@ -161,11 +161,11 @@ public class HistoryOfSearches {
 			// Strange case when the vehicle type written in the preferences
 			// file is empty or not a valid one (GooglePlay bug:
 			// IllegalArgumentException)
-			VehicleType historyType;
+			VehicleTypeEnum historyType;
 			try {
-				historyType = VehicleType.valueOf(historyTypeString);
+				historyType = VehicleTypeEnum.valueOf(historyTypeString);
 			} catch (Exception e) {
-				historyType = VehicleType.BTT;
+				historyType = VehicleTypeEnum.BTT;
 			}
 
 			historyList.add(new HistoryEntity(historyName, historyDate,

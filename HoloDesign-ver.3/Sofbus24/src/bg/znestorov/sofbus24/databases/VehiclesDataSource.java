@@ -9,8 +9,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import bg.znestorov.sofbus24.entity.Vehicle;
-import bg.znestorov.sofbus24.entity.VehicleType;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 
@@ -55,7 +55,7 @@ public class VehiclesDataSource {
 	 * @return the vehicle if it is added successfully and null if already
 	 *         exists
 	 */
-	public Vehicle createVehicle(Vehicle vehicle) {
+	public VehicleEntity createVehicle(VehicleEntity vehicle) {
 		if (getVehicle(vehicle) == null) {
 			// Creating ContentValues object and insert the vehicle data in it
 			ContentValues values = new ContentValues();
@@ -76,7 +76,7 @@ public class VehiclesDataSource {
 			cursor.moveToFirst();
 
 			// Creating new Vehicle and closing the cursor
-			Vehicle insertedVehicle = cursorToVehicle(cursor);
+			VehicleEntity insertedVehicle = cursorToVehicle(cursor);
 			insertedVehicle.setType(vehicle.getType());
 
 			cursor.close();
@@ -93,7 +93,7 @@ public class VehiclesDataSource {
 	 * @param vehicle
 	 *            the vehicle that will be deleted
 	 */
-	public void deleteVehicle(Vehicle vehicle) {
+	public void deleteVehicle(VehicleEntity vehicle) {
 		String where = VehiclesSQLite.COLUMN_NUMBER + " = ? AND "
 				+ VehiclesSQLite.COLUMN_TYPE + " = ?";
 		String[] whereArgs = new String[] {
@@ -110,7 +110,7 @@ public class VehiclesDataSource {
 	 *            the current vehicle
 	 * @return the vehicle if it is found in the DB and null otherwise
 	 */
-	public Vehicle getVehicle(Vehicle vehicle) {
+	public VehicleEntity getVehicle(VehicleEntity vehicle) {
 		String selection = VehiclesSQLite.COLUMN_NUMBER + " = ? AND "
 				+ VehiclesSQLite.COLUMN_TYPE + " = ?";
 		String[] selectionArgs = new String[] {
@@ -126,7 +126,7 @@ public class VehiclesDataSource {
 			cursor.moveToFirst();
 
 			// Creating vehicle object and closing the cursor
-			Vehicle foundVehicle = cursorToVehicle(cursor);
+			VehicleEntity foundVehicle = cursorToVehicle(cursor);
 			foundVehicle.setType(vehicle.getType());
 			cursor.close();
 
@@ -146,7 +146,7 @@ public class VehiclesDataSource {
 	 * @return the vehicle direction if it is found in the DB and empty string
 	 *         otherwise
 	 */
-	public String getVehicleDirection(VehicleType vehicleType) {
+	public String getVehicleDirection(VehicleTypeEnum vehicleType) {
 		String selection = VehiclesSQLite.COLUMN_TYPE + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(vehicleType) };
 
@@ -159,7 +159,7 @@ public class VehiclesDataSource {
 			cursor.moveToFirst();
 
 			// Creating vehicle object and closing the cursor
-			Vehicle foundVehicle = cursorToVehicle(cursor);
+			VehicleEntity foundVehicle = cursorToVehicle(cursor);
 			String vehicleDirection = foundVehicle.getDirection();
 			cursor.close();
 
@@ -180,9 +180,9 @@ public class VehiclesDataSource {
 	 *            the user search text
 	 * @return a list with all vehicles matching the input conditions
 	 */
-	public List<Vehicle> getVehiclesViaSearch(VehicleType type,
+	public List<VehicleEntity> getVehiclesViaSearch(VehicleTypeEnum type,
 			String searchText) {
-		List<Vehicle> vehicles = new ArrayList<Vehicle>();
+		List<VehicleEntity> vehicles = new ArrayList<VehicleEntity>();
 		Locale currentLocale = new Locale(language);
 		searchText = searchText.toLowerCase(currentLocale);
 
@@ -204,7 +204,7 @@ public class VehiclesDataSource {
 		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Vehicle vehicle = cursorToVehicle(cursor);
+			VehicleEntity vehicle = cursorToVehicle(cursor);
 			vehicles.add(vehicle);
 			cursor.moveToNext();
 		}
@@ -230,8 +230,8 @@ public class VehiclesDataSource {
 	 *            the input cursor for interacting with the DB
 	 * @return the vehicle object on the current row
 	 */
-	private Vehicle cursorToVehicle(Cursor cursor) {
-		Vehicle vehicle = new Vehicle();
+	private VehicleEntity cursorToVehicle(Cursor cursor) {
+		VehicleEntity vehicle = new VehicleEntity();
 
 		// Check if have to translate the vehicle direction
 		String vehicleDirection = cursor.getString(2);
@@ -242,7 +242,7 @@ public class VehiclesDataSource {
 
 		// Getting all columns of the row and setting them to a Vehicle object
 		vehicle.setNumber(cursor.getString(0));
-		vehicle.setType(VehicleType.valueOf(cursor.getString(1)));
+		vehicle.setType(VehicleTypeEnum.valueOf(cursor.getString(1)));
 		vehicle.setDirection(vehicleDirection);
 
 		return vehicle;

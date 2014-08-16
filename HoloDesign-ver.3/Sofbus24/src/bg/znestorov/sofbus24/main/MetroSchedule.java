@@ -19,9 +19,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
-import bg.znestorov.sofbus24.entity.MetroStation;
+import bg.znestorov.sofbus24.entity.MetroStationEntity;
 import bg.znestorov.sofbus24.entity.ScheduleEntity;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.metro.MetroScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -47,7 +47,7 @@ public class MetroSchedule extends FragmentActivity {
 	private View metroScheduleFragment;
 	private ProgressBar metroScheduleLoading;
 
-	private MetroStation ms;
+	private MetroStationEntity ms;
 	private ArrayList<ArrayList<String>> scheduleHourList;
 	private int currentScheduleHourIndex = 0;
 
@@ -145,7 +145,7 @@ public class MetroSchedule extends FragmentActivity {
 	private void initBundleInfo() {
 		// Get the MetroStation object from Bundle
 		Bundle extras = getIntent().getExtras();
-		ms = (MetroStation) extras.get(Constants.BUNDLE_METRO_SCHEDULE);
+		ms = (MetroStationEntity) extras.get(Constants.BUNDLE_METRO_SCHEDULE);
 
 		// Get an ArrayList of ArrayList with all active schedules
 		scheduleHourList = getScheduleHourList(ms);
@@ -227,7 +227,7 @@ public class MetroSchedule extends FragmentActivity {
 	 *            the station on the current row
 	 * @return the station image id
 	 */
-	private Integer getFavouriteImage(Station station) {
+	private Integer getFavouriteImage(StationEntity station) {
 		Integer favouriteImage;
 
 		favouritesDatasource.open();
@@ -367,7 +367,7 @@ public class MetroSchedule extends FragmentActivity {
 	 *            the MetroStation object retrieved from the Bundle
 	 * @return a list with the schedule hours
 	 */
-	private ArrayList<ArrayList<String>> getScheduleHourList(MetroStation ms) {
+	private ArrayList<ArrayList<String>> getScheduleHourList(MetroStationEntity ms) {
 		ArrayList<ArrayList<String>> scheduleHourList = new ArrayList<ArrayList<String>>();
 
 		for (int i = 4; i <= 24; i++) {

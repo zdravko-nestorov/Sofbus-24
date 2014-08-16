@@ -24,7 +24,7 @@ import bg.znestorov.sofbus24.utils.WorkingDaysCalendar;
  * @author Zdravko Nestorov
  * 
  */
-public class MetroStation extends Station implements Serializable {
+public class MetroStationEntity extends StationEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,7 +32,7 @@ public class MetroStation extends Station implements Serializable {
 	private HashMap<Integer, ArrayList<String>> holidaySchedule;
 	private HashMap<Integer, ArrayList<String>> weekdaySchedule;
 
-	public MetroStation() {
+	public MetroStationEntity() {
 		super();
 
 		this.holidaySchedule = new LinkedHashMap<Integer, ArrayList<String>>();
@@ -44,7 +44,7 @@ public class MetroStation extends Station implements Serializable {
 		}
 	}
 
-	public MetroStation(Station station) {
+	public MetroStationEntity(StationEntity station) {
 		super(station.getNumber(), station.getName(), station.getLat(), station
 				.getLon(), station.getType(), station.getCustomField());
 
@@ -57,7 +57,7 @@ public class MetroStation extends Station implements Serializable {
 		}
 	}
 
-	public MetroStation(Station station, String direction) {
+	public MetroStationEntity(StationEntity station, String direction) {
 		super(station.getNumber(), station.getName(), station.getLat(), station
 				.getLon(), station.getType(), station.getCustomField());
 

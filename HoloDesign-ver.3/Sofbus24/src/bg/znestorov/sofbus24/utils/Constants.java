@@ -165,4 +165,10 @@ public class Constants {
 	public static final String HISTORY_PREFERENCES_SEARCH_VALUE = "value_";
 	public static final String HISTORY_PREFERENCES_SEARCH_DATE = "date_";
 	public static final String HISTORY_PREFERENCES_SEARCH_TYPE = "type_";
+
+	/**
+	 * Favorites Order
+	 */
+	public static final String FAVORUITES_ORDER_PREFERENCES_NAME = "favourites_order";
+	public static final String FAVOURITES_ORDER_PREFERENCES_TYPE = "type";
 }

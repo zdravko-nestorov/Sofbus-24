@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
-import bg.znestorov.sofbus24.entity.PublicTransportStation;
-import bg.znestorov.sofbus24.entity.Station;
+import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -91,7 +91,7 @@ public class PublicTransportFragment extends ListFragment {
 		int activeDirection = ptDirectionsEntity.getActiveDirection();
 		String directionName = ptDirectionsEntity.getDirectionsNames().get(
 				activeDirection);
-		ArrayList<Station> directionList = ptDirectionsEntity
+		ArrayList<StationEntity> directionList = ptDirectionsEntity
 				.getDirectionsList().get(activeDirection);
 		ptAdapter = new PublicTransportAdapter(context, emptyList,
 				directionName, directionList);
@@ -121,7 +121,7 @@ public class PublicTransportFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		PublicTransportStation ptStation = (PublicTransportStation) ((PublicTransportAdapter) getListAdapter())
+		PublicTransportStationEntity ptStation = (PublicTransportStationEntity) ((PublicTransportAdapter) getListAdapter())
 				.getItem(position);
 		int activeDirection = ptDirectionsEntity.getActiveDirection();
 		ptStation.setDirection(ptDirectionsEntity.getDirectionsNames().get(

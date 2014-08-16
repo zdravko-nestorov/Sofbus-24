@@ -39,6 +39,7 @@
     <string name="action_closest_stations_map">Карта</string>
     <string name="action_closest_stations_list">Списък</string>
     <string name="action_more">Повече</string>
+    <string name="action_favourites_sort">Сортирай</string>
     <string name="action_favourites_remove_all">Изтрий всички</string>
     <string name="action_metro_map_route">Маршрут</string>
     <string name="action_edit_tabs">Начален екран</string>
@@ -90,6 +91,12 @@
     <string name="action_history_delete_all">Изтрий всички</string>
 
     <!-- Context Menu -->
+    <!-- Favourites -->
+    <string name="menu_fav_rename">Преименувай</string>
+    <string name="menu_fav_remove">Премахни</string>
+    <string name="menu_fav_google_maps">Google Maps</string>
+    <string name="menu_fav_google_street_view">Street View</string>
+    <string name="menu_fav_information">Информация</string>
     <!-- Metro Station -->
     <string name="menu_metro_station_title">Изберете действие</string>
     <string name="menu_metro_station_add">Добави в Любими</string>
@@ -176,6 +183,21 @@
     <string name="fav_menu_remove_all_confirmation" formatted="false"><![CDATA[Сигурни ли сте, че искате да премахнете всички спирки от <b>Любими?</b>]]></string>
     <string name="fav_menu_remove_all_toast" formatted="false"><![CDATA[Всички спирки бяха премахнати от секцията <b>Любими.</b>]]></string>
     <string name="fav_menu_remove_all_empty_toast" formatted="false"><![CDATA[Няма добавени спирки в секцията <b>Любими.</b>]]></string>
+    <string name="fav_menu_sort_title">Сортиране</string>
+    <string name="fav_menu_sort_name">Азбучно</string>
+    <string name="fav_menu_sort_date_added">Дата на добавяне</string>
+    <string name="fav_menu_sort_date_last_access">Последно използване</string>
+    <string name="fav_menu_sort_usage_count">Честота на използване</string>
+    <string name="fav_menu_sort_custom">По избор</string>
+    <string name="fav_menu_sort_type_title">Сортиране</string>
+    <string name="fav_menu_sort_type_asc">Възходящо</string>
+    <string name="fav_menu_sort_type_desc">Низходящо</string>
+    <string name="fav_menu_sort_order_title">Преместване</string>
+    <string name="fav_menu_sort_order_first">Най-отгоре</string>
+    <string name="fav_menu_sort_order_up">Нагоре</string>
+    <string name="fav_menu_sort_order_down">Надолу</string>
+    <string name="fav_menu_sort_order_last">Най-отдолу</string>
+    <string name="fav_menu_sort_success" formatted="false"><![CDATA[Секцията <b>Любими</b> беше успешно сортирана.]]></string>
 
     <!-- Virtual Boards Fragment -->
     <string name="vb_search_hint">Търсене по име или номер</string>

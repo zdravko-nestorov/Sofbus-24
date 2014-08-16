@@ -23,7 +23,7 @@ import bg.znestorov.sofbus24.utils.Constants;
  * @version 1.0
  * 
  */
-public class Config implements Serializable {
+public class ConfigEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -42,7 +42,7 @@ public class Config implements Serializable {
 	private int stationsDbVersion;
 	private int vehiclesDbVersion;
 
-	public Config() {
+	public ConfigEntity() {
 		this.versionCode = 0;
 		this.versionName = null;
 
@@ -59,7 +59,7 @@ public class Config implements Serializable {
 		this.vehiclesDbVersion = 0;
 	}
 
-	public Config(Activity context) {
+	public ConfigEntity(Activity context) {
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);
 
@@ -105,7 +105,7 @@ public class Config implements Serializable {
 				Constants.CONFIGURATION_PREF_VEHICLES_KEY, null));
 	}
 
-	public Config(Document doc) {
+	public ConfigEntity(Document doc) {
 		int versionCode = 0;
 		String versionName = null;
 		int stationsDbVersion = 0;
@@ -144,7 +144,7 @@ public class Config implements Serializable {
 		this.vehiclesDbVersion = vehiclesDbVersion;
 	}
 
-	public Config(int versionCode, String versionName, int stationsDbVersion,
+	public ConfigEntity(int versionCode, String versionName, int stationsDbVersion,
 			boolean favouritesVisibilå, int favouritesPosition,
 			boolean searchVisibile, int searchPosition,
 			boolean scheduleVisibile, int schedulePosition,
@@ -261,7 +261,7 @@ public class Config implements Serializable {
 		this.vehiclesDbVersion = vehiclesDbVersion;
 	}
 
-	public HomeTab getTabByPosition(Activity context, int position) {
+	public HomeTabEntity getTabByPosition(Activity context, int position) {
 		if (position >= 0 && position < Constants.GLOBAL_PARAM_HOME_TABS_COUNT) {
 			boolean tabVisible;
 			String tabName;
@@ -280,9 +280,9 @@ public class Config implements Serializable {
 				tabName = context.getString(R.string.edit_tabs_metro);
 			}
 
-			return new HomeTab(tabVisible, tabName, position);
+			return new HomeTabEntity(tabVisible, tabName, position);
 		} else {
-			return new HomeTab();
+			return new HomeTabEntity();
 		}
 	}
 
