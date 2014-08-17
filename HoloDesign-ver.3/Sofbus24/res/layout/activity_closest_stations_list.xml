@@ -7,13 +7,13 @@
 
     <RelativeLayout
         android:id="@+id/cs_list_street_view"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/cs_list_image_street_view_height" >
 
         <ImageView
             android:id="@+id/cs_list_street_view_image"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_img_empty_content_description"
             android:cropToPadding="true"
@@ -41,7 +41,7 @@
 
     <bg.znestorov.sofbus24.utils.activity.SearchEditText
         android:id="@+id/cs_list_search"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/cs_list_street_view"
         android:layout_marginTop="2sp"
@@ -52,14 +52,14 @@
         android:maxLines="1" />
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/cs_list_search" >
 
         <FrameLayout
             android:id="@+id/cs_list_fragment"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="invisible" />
 
         <ProgressBar

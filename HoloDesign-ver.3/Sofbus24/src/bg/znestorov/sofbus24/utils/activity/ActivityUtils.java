@@ -16,7 +16,12 @@ import android.text.Html;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -479,5 +484,59 @@ public class ActivityUtils {
 		}
 
 		return haveConnectedWifi || haveConnectedMobile || haveConnected;
+	}
+
+	/**
+	 * Convert dp to pixels
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param dp
+	 *            the dip size
+	 * @return the pixel size
+	 */
+	public static int spToPx(Activity context, int dp) {
+		float density = context.getResources().getDisplayMetrics().density;
+		return Math.round((float) dp * density);
+	}
+
+	/**
+	 * Show activity as a Dialog window (to show activity as dialog and dim the
+	 * background, you need to declare <b>android:theme="@style/PopupTheme"</b>
+	 * on for the chosen activity on the manifest)
+	 * 
+	 * @param activity
+	 *            the activity
+	 */
+	public static void showAsPopup(Activity activity) {
+		activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
+		activity.getWindow().setFlags(
+				WindowManager.LayoutParams.FLAG_DIM_BEHIND,
+				WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+
+		Display display = activity.getWindowManager().getDefaultDisplay();
+		DisplayMetrics metrics = new DisplayMetrics();
+		display.getMetrics(metrics);
+
+		int pixelsHeight = metrics.heightPixels;
+		int pixelsWidth = metrics.widthPixels;
+		if (pixelsHeight > pixelsWidth) {
+			// Portrait orientation
+			pixelsWidth = (int) (pixelsHeight * 0.6);
+			pixelsHeight = (int) (pixelsHeight * 0.7);
+		} else {
+			// Landscape orientation
+			pixelsWidth = (int) (pixelsWidth * 0.6);
+			pixelsHeight = (int) (pixelsHeight * 0.7);
+		}
+
+		LayoutParams params = activity.getWindow().getAttributes();
+		params.height = pixelsHeight;
+		params.width = pixelsWidth;
+		params.alpha = 1.0f;
+		params.dimAmount = 0.5f;
+
+		activity.getWindow().setAttributes(
+				(android.view.WindowManager.LayoutParams) params);
 	}
 }

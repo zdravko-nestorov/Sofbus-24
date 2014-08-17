@@ -133,7 +133,7 @@
     <string name="pref_category_common_language_summary">Select a language</string>
     <string name="pref_category_visual">VISUAL</string>
     <string name="pref_category_visual_fav_title">Favorites</string>
-    <string name="pref_category_visual_fav_summary">Visualize the favorites stations with a Google Street View image shown (home screen)</string>
+    <string name="pref_category_visual_fav_summary">Visualize the favorites stations with a Google Street View image shown (smartphone only)</string>
     <string name="pref_category_stations">STATION INFORMATION</string>
     <string name="pref_category_stations_timeType_title">Extracted information</string>
     <string name="pref_category_stations_timeType_summary">Remaining time or time of arrival</string>

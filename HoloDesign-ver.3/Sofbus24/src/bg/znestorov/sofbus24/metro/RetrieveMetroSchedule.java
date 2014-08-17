@@ -12,9 +12,11 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.MetroStationEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.MetroSchedule;
+import bg.znestorov.sofbus24.main.MetroScheduleDialog;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -26,15 +28,19 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
  * @author Zdravko Nestorov
  * 
  */
-public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStationEntity> {
+public class RetrieveMetroSchedule extends
+		AsyncTask<Void, Void, MetroStationEntity> {
 
 	private Activity context;
+	private GlobalEntity globalContext;
 	private ProgressDialog progressDialog;
+
 	private StationEntity station;
 
 	public RetrieveMetroSchedule(Activity context,
 			ProgressDialog progressDialog, StationEntity station) {
 		this.context = context;
+		this.globalContext = (GlobalEntity) context.getApplicationContext();
 		this.progressDialog = progressDialog;
 		this.station = station;
 	}
@@ -79,8 +85,13 @@ public class RetrieveMetroSchedule extends AsyncTask<Void, Void, MetroStationEnt
 		if (ms.isScheduleSet()) {
 			Utils.addStationInHistory(context, ms);
 
-			Intent metroScheduleIntent = new Intent(context,
-					MetroSchedule.class);
+			Intent metroScheduleIntent;
+			if (globalContext.isPhoneDevice()) {
+				metroScheduleIntent = new Intent(context, MetroSchedule.class);
+			} else {
+				metroScheduleIntent = new Intent(context,
+						MetroScheduleDialog.class);
+			}
 			metroScheduleIntent.putExtra(Constants.BUNDLE_METRO_SCHEDULE, ms);
 			context.startActivity(metroScheduleIntent);
 		} else {

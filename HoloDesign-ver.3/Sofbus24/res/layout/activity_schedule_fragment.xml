@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/schedule_layout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="3sp"
         android:layout_marginLeft="15sp"
@@ -19,7 +19,7 @@
 
         <TextView
             android:id="@+id/schedule_bus_tab"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -33,7 +33,7 @@
 
         <TextView
             android:id="@+id/schedule_trolley_tab"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="-1sp"
@@ -49,7 +49,7 @@
 
         <TextView
             android:id="@+id/schedule_tram_tab"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -64,8 +64,8 @@
 
     <bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager
         android:id="@+id/schedule_pager"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:focusable="true" />
 
 </LinearLayout>

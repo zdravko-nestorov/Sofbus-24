@@ -1,6 +1,7 @@
 package bg.znestorov.sofbus24.entity;
 
 import android.app.Application;
+import bg.znestorov.sofbus24.main.R;
 
 /**
  * Global class that extends Application and save state across several
@@ -15,10 +16,26 @@ import android.app.Application;
  */
 public class GlobalEntity extends Application {
 
+	private boolean isPhoneDevice;
+
 	private boolean hasToRestart = false;
 	private boolean isFavouritesChanged = false;
 	private boolean isVbChanged = false;
 	private boolean isHomeScreenChanged = false;
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		initialize();
+	}
+
+	public boolean isPhoneDevice() {
+		return isPhoneDevice;
+	}
+
+	public void setPhoneDevice(boolean isPhoneDevice) {
+		this.isPhoneDevice = isPhoneDevice;
+	}
 
 	public boolean isHasToRestart() {
 		return hasToRestart;
@@ -50,6 +67,10 @@ public class GlobalEntity extends Application {
 
 	public void setHomeScreenChanged(boolean isHomeScreenChanged) {
 		this.isHomeScreenChanged = isHomeScreenChanged;
+	}
+
+	private void initialize() {
+		isPhoneDevice = getResources().getBoolean(R.bool.isPhone);
 	}
 
 	@Override

@@ -9,13 +9,17 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.ArrayAdapter;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.main.PublicTransport;
+import bg.znestorov.sofbus24.main.PublicTransportDialog;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 
 public class ChooseDirectionDialog extends DialogFragment {
 
 	private Activity context;
+	private GlobalEntity globalContext;
+
 	private String title;
 	private DialogInterface.OnClickListener onListItemClickListener;
 	private DirectionsEntity ptDirectionsEntity;
@@ -36,6 +40,8 @@ public class ChooseDirectionDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		context = getActivity();
+		globalContext = (GlobalEntity) context.getApplicationContext();
+
 		title = getString(R.string.sch_item_direction_choice);
 		ptDirectionsEntity = (DirectionsEntity) getArguments().getSerializable(
 				BUNDLE_PT_DIRECTION_ENTITY);
@@ -47,8 +53,13 @@ public class ChooseDirectionDialog extends DialogFragment {
 		onListItemClickListener = new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialoginterface, int i) {
 				ptDirectionsEntity.setActiveDirection(i);
-				Intent publicTransport = new Intent(context,
-						PublicTransport.class);
+				Intent publicTransport;
+				if (globalContext.isPhoneDevice()) {
+					publicTransport = new Intent(context, PublicTransport.class);
+				} else {
+					publicTransport = new Intent(context,
+							PublicTransportDialog.class);
+				}
 				publicTransport.putExtra(
 						Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE,
 						ptDirectionsEntity);

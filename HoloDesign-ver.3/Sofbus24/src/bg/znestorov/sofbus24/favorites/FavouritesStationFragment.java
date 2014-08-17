@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +52,11 @@ public class FavouritesStationFragment extends ListFragment implements
 
 	private Activity context;
 
+	private GridView gridViewFavourites;
+	private SearchEditText searchEditText;
+	private View emptyView;
+	private TextView emptyTextView;
+
 	private List<StationEntity> favouritesStations = new ArrayList<StationEntity>();
 	private FavouritesDataSource favouritesDatasource;
 
@@ -67,21 +74,11 @@ public class FavouritesStationFragment extends ListFragment implements
 		favouritesStations.clear();
 		favouritesStations.addAll(loadFavouritesList(null));
 
-		// Searching over the Favorites
-		SearchEditText searchEditText = (SearchEditText) myFragmentView
-				.findViewById(R.id.favourites_search);
-		actionsOverSearchEditText(searchEditText);
-
-		// Use an ArrayAdapter to show the elements in a ListView
-		ArrayAdapter<StationEntity> adapter = new FavouritesStationAdapter(
-				context, this, favouritesStations);
-		setListAdapter(adapter);
-
-		// Set the message if the list is empty
-		TextView emptyList = (TextView) myFragmentView
-				.findViewById(R.id.favourites_list_empty_text);
-		emptyList.setText(Html
-				.fromHtml(getString(R.string.fav_item_empty_list)));
+		// Actions over layout fields
+		initLayoutFields(myFragmentView);
+		actionsOverSearchEditText();
+		setAdapter();
+		setEmptyListView();
 
 		// Activate the option menu
 		setHasOptionsMenu(true);
@@ -91,13 +88,14 @@ public class FavouritesStationFragment extends ListFragment implements
 
 	@Override
 	public void onResumeFragment(Activity context) {
-		FavouritesStationAdapter favouritesStationAdapter = (FavouritesStationAdapter) getListAdapter();
-
+		FavouritesStationAdapter favouritesStationAdapter = getFavouritesStationAdapter();
 		if (favouritesStationAdapter != null) {
 			favouritesStations.clear();
 			favouritesStations.addAll(loadFavouritesList(null));
 			favouritesStationAdapter.setExpandedListItemValue();
 			favouritesStationAdapter.notifyDataSetChanged();
+
+			setEmptyListView();
 		}
 	}
 
@@ -142,7 +140,7 @@ public class FavouritesStationFragment extends ListFragment implements
 	@Override
 	public void onDeleteAllFavouritesClicked() {
 		favouritesStations.clear();
-		((FavouritesStationAdapter) getListAdapter()).notifyDataSetChanged();
+		getFavouritesStationAdapter().notifyDataSetChanged();
 
 		FavouritesDatabaseUtils.deleteFavouriteDatabase(context);
 		Toast.makeText(context,
@@ -157,13 +155,13 @@ public class FavouritesStationFragment extends ListFragment implements
 		}
 
 		favouritesDatasource.open();
-		favouritesDatasource.swapStations(station, orderType);
+		favouritesDatasource.reorderStations(station, orderType);
 		favouritesDatasource.close();
 
 		favouritesStations.clear();
 		favouritesStations.addAll(loadFavouritesList(null));
 
-		((FavouritesStationAdapter) getListAdapter()).notifyDataSetChanged();
+		getFavouritesStationAdapter().notifyDataSetChanged();
 	}
 
 	@Override
@@ -197,20 +195,140 @@ public class FavouritesStationFragment extends ListFragment implements
 				.getAllStationsSorted(sortType));
 		favouritesDatasource.close();
 
-		((FavouritesStationAdapter) getListAdapter()).notifyDataSetChanged();
+		getFavouritesStationAdapter().notifyDataSetChanged();
 
 		Toast.makeText(context,
 				Html.fromHtml(getString(R.string.fav_menu_sort_success)),
 				Toast.LENGTH_SHORT).show();
 	}
 
+	@Override
+	public void onRenameFavouritesClicked(String stationName,
+			StationEntity station) {
+		ListAdapter listAdapter = getFavouritesListAdapter();
+
+		if (listAdapter != null) {
+			String oldStationName = station.getName();
+			String newStationName = stationName;
+
+			station.setName(newStationName);
+			updateStation(station);
+
+			favouritesStations.clear();
+			favouritesStations.addAll(loadFavouritesList(null));
+			getFavouritesStationAdapter().notifyDataSetChanged();
+
+			Toast.makeText(
+					context,
+					Html.fromHtml(String.format(context
+							.getString(R.string.app_toast_rename_favourites),
+							oldStationName, station.getNumber(),
+							newStationName, station.getNumber())),
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	/**
+	 * Get the favourites list adapter by checking if there is a GridView or a
+	 * ListView
+	 * 
+	 * @return the Favourites ListAdapter
+	 */
+	private ListAdapter getFavouritesListAdapter() {
+		ListAdapter listAdapter;
+		if (gridViewFavourites == null) {
+			listAdapter = getListAdapter();
+		} else {
+			listAdapter = gridViewFavourites.getAdapter();
+		}
+
+		return listAdapter;
+	}
+
+	/**
+	 * Get the favourites station adapter by checking if there is a GridView or
+	 * a ListView
+	 * 
+	 * @return the FavouritesStationAdapter
+	 */
+	private FavouritesStationAdapter getFavouritesStationAdapter() {
+		FavouritesStationAdapter favouritesStationAdapter;
+		if (gridViewFavourites == null) {
+			favouritesStationAdapter = (FavouritesStationAdapter) getListAdapter();
+		} else {
+			favouritesStationAdapter = (FavouritesStationAdapter) gridViewFavourites
+					.getAdapter();
+		}
+
+		return favouritesStationAdapter;
+	}
+
+	/**
+	 * Update the station in the DB
+	 * 
+	 * @param station
+	 *            the station with the new params
+	 */
+	private void updateStation(StationEntity station) {
+		if (favouritesDatasource == null) {
+			favouritesDatasource = new FavouritesDataSource(context);
+		}
+
+		favouritesDatasource.open();
+		favouritesDatasource.updateStation(station);
+		favouritesDatasource.close();
+	}
+
+	/**
+	 * Load all stations, marked as favorites, according to a search text (if it
+	 * is left as empty - all favorites stations are loaded)
+	 * 
+	 * @param searchText
+	 *            the search text (if null - return all favorites stations)
+	 * @return all stations, marked as favorites, according to a search text
+	 */
+	private List<StationEntity> loadFavouritesList(String searchText) {
+		List<StationEntity> favouritesList;
+
+		if (favouritesDatasource == null) {
+			favouritesDatasource = new FavouritesDataSource(context);
+		}
+
+		favouritesDatasource.open();
+		if (searchText == null) {
+			favouritesList = favouritesDatasource
+					.getAllStationsSorted(FavouritesPreferences
+							.getFavouritesSortType(context));
+		} else {
+			favouritesList = favouritesDatasource
+					.getStationsViaSearch(searchText);
+		}
+		favouritesDatasource.close();
+
+		return favouritesList;
+	}
+
+	/**
+	 * Initialize the Layout fields
+	 * 
+	 * @param myFragmentView
+	 *            the layout view
+	 */
+	private void initLayoutFields(View myFragmentView) {
+		gridViewFavourites = (GridView) myFragmentView
+				.findViewById(R.id.favourites_list_grid_view);
+		searchEditText = (SearchEditText) myFragmentView
+				.findViewById(R.id.favourites_search);
+		emptyView = myFragmentView
+				.findViewById(R.id.favourites_list_empty_view);
+		emptyTextView = (TextView) myFragmentView
+				.findViewById(R.id.favourites_list_empty_text);
+	}
+
 	/**
 	 * Modify the Search EditText field and activate the listeners
-	 * 
-	 * @param searchEditText
-	 *            the search EditText
 	 */
-	private void actionsOverSearchEditText(final SearchEditText searchEditText) {
+	private void actionsOverSearchEditText() {
 		// TODO: Find a way to set an alphanumeric keyboard with numeric as
 		// default
 		searchEditText.setFilters(new InputFilter[] { ActivityUtils
@@ -231,8 +349,7 @@ public class FavouritesStationFragment extends ListFragment implements
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				String searchText = searchEditText.getText().toString();
-				((FavouritesStationAdapter) getListAdapter()).getFilter()
-						.filter(searchText);
+				getFavouritesStationAdapter().getFilter().filter(searchText);
 			}
 
 			@Override
@@ -267,67 +384,35 @@ public class FavouritesStationFragment extends ListFragment implements
 	}
 
 	/**
-	 * Load all stations, marked as favorites, according to a search text (if it
-	 * is left as empty - all favorites stations are loaded)
-	 * 
-	 * @param searchText
-	 *            the search text (if null - return all favorites stations)
-	 * @return all stations, marked as favorites, according to a search text
+	 * Set the adapter with the favourites stations (on the GridView or the
+	 * ListView)
 	 */
-	private List<StationEntity> loadFavouritesList(String searchText) {
-		List<StationEntity> favouritesList;
-
-		if (favouritesDatasource == null) {
-			favouritesDatasource = new FavouritesDataSource(context);
-		}
-
-		favouritesDatasource.open();
-		if (searchText == null) {
-			favouritesList = favouritesDatasource
-					.getAllStationsSorted(FavouritesPreferences
-							.getFavouritesSortType(context));
+	private void setAdapter() {
+		ArrayAdapter<StationEntity> adapter = new FavouritesStationAdapter(
+				context, emptyView, this, favouritesStations);
+		if (gridViewFavourites == null) {
+			setListAdapter(adapter);
 		} else {
-			favouritesList = favouritesDatasource
-					.getStationsViaSearch(searchText);
-		}
-		favouritesDatasource.close();
-
-		return favouritesList;
-	}
-
-	@Override
-	public void onRenameFavouritesClicked(String stationName,
-			StationEntity station) {
-		ListAdapter listAdapter = getListAdapter();
-
-		if (listAdapter != null) {
-			String oldStationName = station.getName();
-			String newStationName = stationName;
-
-			station.setName(newStationName);
-			updateStation(station);
-
-			favouritesStations.clear();
-			favouritesStations.addAll(loadFavouritesList(null));
-			((FavouritesStationAdapter) listAdapter).notifyDataSetChanged();
-
-			Toast.makeText(
-					context,
-					Html.fromHtml(String.format(context
-							.getString(R.string.app_toast_rename_favourites),
-							oldStationName, station.getNumber(),
-							newStationName, station.getNumber())),
-					Toast.LENGTH_LONG).show();
+			gridViewFavourites.setAdapter(adapter);
 		}
 	}
 
-	private void updateStation(StationEntity station) {
-		if (favouritesDatasource == null) {
-			favouritesDatasource = new FavouritesDataSource(context);
-		}
+	/**
+	 * Set empty message over the GridView or the ListView
+	 */
+	private void setEmptyListView() {
+		if (gridViewFavourites == null
+				|| ((BaseAdapter) gridViewFavourites.getAdapter()).isEmpty()) {
 
-		favouritesDatasource.open();
-		favouritesDatasource.updateStation(station);
-		favouritesDatasource.close();
+			// In case of GridView (in ListView this is automatically)
+			if (emptyView != null) {
+				emptyView.setVisibility(View.VISIBLE);
+			}
+
+			emptyTextView.setText(Html
+					.fromHtml(getString(R.string.fav_item_empty_list)));
+		} else {
+			emptyView.setVisibility(View.GONE);
+		}
 	}
 }

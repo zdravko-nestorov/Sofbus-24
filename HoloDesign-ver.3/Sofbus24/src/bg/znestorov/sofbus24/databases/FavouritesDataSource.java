@@ -245,9 +245,7 @@ public class FavouritesDataSource {
 		database.delete(FavouritesSQLite.TABLE_FAVOURITES, where, whereArgs);
 
 		// Reorder the DB with stations
-		List<StationEntity> stations = getAllStationsSorted(SortTypeEnum.CUSTOM);
-		deleteAllStations();
-		createStations(stations);
+		updateStations(getAllStationsSorted(SortTypeEnum.CUSTOM));
 	}
 
 	/**
@@ -278,6 +276,21 @@ public class FavouritesDataSource {
 
 		database.update(FavouritesSQLite.TABLE_FAVOURITES, dataToInsert, where,
 				whereArgs);
+	}
+
+	/**
+	 * Update a list with stations from the database. The search is done by the
+	 * station code and the custom field is updated.
+	 * 
+	 * @param stations
+	 *            the new list with stations
+	 */
+	public void updateStations(List<StationEntity> stations) {
+		for (int i = 0; i < stations.size(); i++) {
+			StationEntity station = stations.get(i);
+			station.setPosition(i + 1);
+			updateStation(station);
+		}
 	}
 
 	/**
@@ -455,6 +468,42 @@ public class FavouritesDataSource {
 	}
 
 	/**
+	 * Get all stations from the database in some order
+	 * 
+	 * @param sortType
+	 *            the sort type of the extracted stations from the DB
+	 * @param stationToExclude
+	 *            the station that has to be excluded
+	 * 
+	 * @return a list with all stations from the DB
+	 */
+	public ArrayList<StationEntity> getAllStationsSortedWithExcludes(
+			SortTypeEnum sortType, StationEntity stationToExclude) {
+		ArrayList<StationEntity> stations = new ArrayList<StationEntity>();
+
+		// Selecting all fields of the TABLE_FAVOURITES
+		String orderBy = getOrderBy(sortType);
+		Cursor cursor = database.query(FavouritesSQLite.TABLE_FAVOURITES,
+				allColumns, null, null, null, null, orderBy);
+
+		// Iterating the cursor and fill the empty List<Station>
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			StationEntity station = cursorToStation(cursor);
+			if (!station.getNumber().equals(stationToExclude.getNumber())) {
+				stations.add(station);
+			}
+
+			cursor.moveToNext();
+		}
+
+		// Closing the cursor
+		cursor.close();
+
+		return stations;
+	}
+
+	/**
 	 * Create a string represantion to use it in the query of the sort type
 	 * 
 	 * @param sortType
@@ -521,37 +570,41 @@ public class FavouritesDataSource {
 	 * @param orderType
 	 *            the desired new order (UP or DOWN)
 	 */
-	public void swapStations(StationEntity station, OrderTypeEnum orderType) {
+	public void reorderStations(StationEntity station, OrderTypeEnum orderType) {
 		StationEntity oldStation = getStation(station);
 
 		int oldPosition = oldStation.getPosition();
 		int maxPosition = getLastPoistion();
-		int newPosition;
+
+		ArrayList<StationEntity> stations = getAllStationsSortedWithExcludes(
+				SortTypeEnum.CUSTOM, station);
 
 		switch (orderType) {
 		case FIRST:
-			newPosition = 1;
+			stations.add(0, station);
+			updateStations(stations);
 			break;
 		case LAST:
-			newPosition = maxPosition;
+			stations.add(station);
+			updateStations(stations);
 			break;
 		default:
-			newPosition = orderType == OrderTypeEnum.DOWN ? oldPosition + 1
+			int newPosition = orderType == OrderTypeEnum.DOWN ? oldPosition + 1
 					: oldPosition - 1;
+			if (newPosition >= 1 && newPosition <= maxPosition) {
+				// Get the station on the desired position
+				StationEntity newStation = getStation(newPosition);
+
+				// Change the order of both stations
+				oldStation.setPosition(newPosition);
+				newStation.setPosition(oldPosition);
+
+				// Update the DB with the new stations
+				updateStation(oldStation);
+				updateStation(newStation);
+			}
+
 			break;
-		}
-
-		if (newPosition >= 1 && newPosition <= maxPosition) {
-			// Get the station on the desired position
-			StationEntity newStation = getStation(newPosition);
-
-			// Change the order of both stations
-			oldStation.setPosition(newPosition);
-			newStation.setPosition(oldPosition);
-
-			// Update the DB with the new stations
-			updateStation(oldStation);
-			updateStation(newStation);
 		}
 	}
 

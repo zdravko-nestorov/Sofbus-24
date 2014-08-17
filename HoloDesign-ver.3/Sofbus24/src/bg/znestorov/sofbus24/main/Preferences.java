@@ -67,7 +67,12 @@ public class Preferences extends FragmentActivity implements
 			resetPreferences();
 			return true;
 		case R.id.action_pref_info_details:
-			Intent aboutIntent = new Intent(context, About.class);
+			Intent aboutIntent;
+			if (globalContext.isPhoneDevice()) {
+				aboutIntent = new Intent(context, About.class);
+			} else {
+				aboutIntent = new Intent(context, AboutDialog.class);
+			}
 			startActivity(aboutIntent);
 			return true;
 		default:

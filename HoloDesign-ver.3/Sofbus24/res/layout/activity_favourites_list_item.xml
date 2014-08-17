@@ -25,7 +25,7 @@
 
     <LinearLayout
         android:id="@+id/favourites_item_bar"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="10sp"
@@ -34,11 +34,12 @@
         <ImageButton
             android:id="@+id/favourites_item_expand"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:background="?android:selectableItemBackground"
             android:contentDescription="@string/app_img_empty_content_description"
             android:paddingLeft="5dip"
             android:paddingRight="5dip"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_collapse" />
 
         <RelativeLayout
@@ -78,7 +79,7 @@
         <ImageButton
             android:id="@+id/favourites_item_reorder"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:background="?android:selectableItemBackground"
             android:contentDescription="@string/app_img_empty_content_description"
             android:paddingLeft="6dip"
@@ -89,7 +90,7 @@
         <ImageButton
             android:id="@+id/favourites_item_settings"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:background="?android:selectableItemBackground"
             android:contentDescription="@string/app_img_empty_content_description"
             android:paddingLeft="3dip"

@@ -18,8 +18,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
 import bg.znestorov.sofbus24.main.PublicTransportSchedule;
+import bg.znestorov.sofbus24.main.PublicTransportScheduleDialog;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -36,6 +38,7 @@ public class RetrievePublicTransportStation extends
 		AsyncTask<Void, Void, PublicTransportStationEntity> {
 
 	private Activity context;
+	private GlobalEntity globalContext;
 	private ProgressDialog progressDialog;
 
 	private PublicTransportStationEntity ptStation;
@@ -44,9 +47,11 @@ public class RetrievePublicTransportStation extends
 	private int activeDirection;
 
 	public RetrievePublicTransportStation(Activity context,
-			ProgressDialog progressDialog, PublicTransportStationEntity ptStation,
+			ProgressDialog progressDialog,
+			PublicTransportStationEntity ptStation,
 			DirectionsEntity ptDirectionsEntity) {
 		this.context = context;
+		this.globalContext = (GlobalEntity) context.getApplicationContext();
 		this.progressDialog = progressDialog;
 
 		this.ptStation = ptStation;
@@ -90,8 +95,14 @@ public class RetrievePublicTransportStation extends
 		if (ptStation.isScheduleSet()) {
 			Utils.addStationInHistory(context, ptStation);
 
-			Intent ptScheduleIntent = new Intent(context,
-					PublicTransportSchedule.class);
+			Intent ptScheduleIntent;
+			if (globalContext.isPhoneDevice()) {
+				ptScheduleIntent = new Intent(context,
+						PublicTransportSchedule.class);
+			} else {
+				ptScheduleIntent = new Intent(context,
+						PublicTransportScheduleDialog.class);
+			}
 			ptScheduleIntent.putExtra(
 					Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE, ptStation);
 			context.startActivity(ptScheduleIntent);

@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import bg.znestorov.sofbus24.closest.stations.list.ClosestStationsListFragment;
 import bg.znestorov.sofbus24.closest.stations.map.LocationSourceDialog;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -38,6 +39,7 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 public class ClosestStationsList extends FragmentActivity {
 
 	private Activity context;
+	private GlobalEntity globalContext;
 	private Bundle savedInstanceState;
 
 	private ActionBar actionBar;
@@ -60,6 +62,7 @@ public class ClosestStationsList extends FragmentActivity {
 
 		// Get the current context and create a SavedInstanceState objects
 		context = ClosestStationsList.this;
+		globalContext = (GlobalEntity) getApplicationContext();
 		this.savedInstanceState = savedInstanceState;
 
 		initBundleInfo();
@@ -340,8 +343,14 @@ public class ClosestStationsList extends FragmentActivity {
 				// Check what have to be done - start new activity or update
 				// fragment
 				if (progressDialog != null) {
-					Intent closestStationsListIntent = new Intent(context,
-							ClosestStationsList.class);
+					Intent closestStationsListIntent;
+					if (globalContext.isPhoneDevice()) {
+						closestStationsListIntent = new Intent(context,
+								ClosestStationsList.class);
+					} else {
+						closestStationsListIntent = new Intent(context,
+								ClosestStationsListDialog.class);
+					}
 					closestStationsListIntent.putExtra(
 							Constants.BUNDLE_CLOSEST_STATIONS_LIST,
 							currentLocation);

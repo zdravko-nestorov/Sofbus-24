@@ -136,7 +136,7 @@
     <string name="pref_category_common_language_summary">Избор на език</string>
     <string name="pref_category_visual">ВИЗУАЛНИ</string>
     <string name="pref_category_visual_fav_title">Фаворити</string>
-    <string name="pref_category_visual_fav_summary">Визуализиране на фаворитите чрез Google Street View (начален екран)</string>
+    <string name="pref_category_visual_fav_summary">Визуализиране на фаворитите чрез Google Street View (само за смартфони)</string>
     <string name="pref_category_stations">ИНФОРМАЦИЯ ЗА СПИРКИ</string>
     <string name="pref_category_stations_timeType_title">Извлечена информация</string>
     <string name="pref_category_stations_timeType_summary">Оставащо време или времена на пристигане</string>

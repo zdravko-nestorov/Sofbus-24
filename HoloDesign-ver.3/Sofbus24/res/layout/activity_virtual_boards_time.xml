@@ -7,13 +7,13 @@
 
     <RelativeLayout
         android:id="@+id/vb_time_street_view"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/vb_time_image_street_view_height" >
 
         <ImageView
             android:id="@+id/vb_time_street_view_image"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_img_empty_content_description"
             android:cropToPadding="true"
@@ -30,7 +30,7 @@
 
         <LinearLayout
             android:id="@+id/vb_time_bar"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/vb_time_street_view_image"
             android:layout_marginBottom="12sp"
@@ -79,14 +79,14 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/vb_time_street_view" >
 
         <FrameLayout
             android:id="@+id/vb_time_fragment"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="invisible" />
 
         <ProgressBar

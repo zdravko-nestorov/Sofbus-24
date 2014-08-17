@@ -156,7 +156,12 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_recent_history:
-			Intent historyIntent = new Intent(context, History.class);
+			Intent historyIntent;
+			if (globalContext.isPhoneDevice()) {
+				historyIntent = new Intent(context, History.class);
+			} else {
+				historyIntent = new Intent(context, HistoryDialog.class);
+			}
 			startActivity(historyIntent);
 			return true;
 		case R.id.action_closest_stations_map:
@@ -174,15 +179,30 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			retrieveCurrentPosition.execute();
 			return true;
 		case R.id.action_settings:
-			Intent preferencesIntent = new Intent(context, Preferences.class);
+			Intent preferencesIntent;
+			if (globalContext.isPhoneDevice()) {
+				preferencesIntent = new Intent(context, Preferences.class);
+			} else {
+				preferencesIntent = new Intent(context, PreferencesDialog.class);
+			}
 			startActivity(preferencesIntent);
 			return true;
 		case R.id.action_edit_tabs:
-			Intent editTabsIntent = new Intent(context, EditTabs.class);
+			Intent editTabsIntent;
+			if (globalContext.isPhoneDevice()) {
+				editTabsIntent = new Intent(context, EditTabs.class);
+			} else {
+				editTabsIntent = new Intent(context, EditTabsDialog.class);
+			}
 			startActivity(editTabsIntent);
 			return true;
 		case R.id.action_about:
-			Intent aboutIntent = new Intent(context, About.class);
+			Intent aboutIntent;
+			if (globalContext.isPhoneDevice()) {
+				aboutIntent = new Intent(context, About.class);
+			} else {
+				aboutIntent = new Intent(context, AboutDialog.class);
+			}
 			startActivity(aboutIntent);
 			return true;
 		default:

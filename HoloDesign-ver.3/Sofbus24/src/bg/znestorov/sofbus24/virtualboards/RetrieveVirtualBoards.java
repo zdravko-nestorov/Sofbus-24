@@ -49,12 +49,14 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.HtmlResultCodesEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.VirtualBoardsTime;
+import bg.znestorov.sofbus24.main.VirtualBoardsTimeDialog;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
@@ -72,6 +74,7 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 public class RetrieveVirtualBoards {
 
 	private Activity context;
+	private GlobalEntity globalContext;
 	private Object callerInstance;
 
 	private StationEntity station;
@@ -87,6 +90,7 @@ public class RetrieveVirtualBoards {
 		// Set the current activity context and the object that created an
 		// instance of this class
 		this.context = context;
+		this.globalContext = (GlobalEntity) context.getApplicationContext();
 		this.callerInstance = callerInstance;
 
 		// Set the selected station
@@ -933,8 +937,13 @@ public class RetrieveVirtualBoards {
 				// Important - no break here, because if only one station is
 				// found - directly open the VirtualBoards
 			default:
-				Intent vbTimeIntent = new Intent(context,
-						VirtualBoardsTime.class);
+				Intent vbTimeIntent;
+				if (globalContext.isPhoneDevice()) {
+					vbTimeIntent = new Intent(context, VirtualBoardsTime.class);
+				} else {
+					vbTimeIntent = new Intent(context,
+							VirtualBoardsTimeDialog.class);
+				}
 				vbTimeIntent.putExtra(Constants.BUNDLE_VIRTUAL_BOARDS_TIME,
 						vbTimeStation);
 				context.startActivity(vbTimeIntent);

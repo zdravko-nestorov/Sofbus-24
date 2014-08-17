@@ -1,9 +1,8 @@
 <resources>
 
-    <!-- Light Theme -->
+    <!-- ANDROID LIGHT THEME -->
     <style name="AppBaseTheme" parent="android:Theme.Holo.Light" />
 
-    <!-- Application theme -->
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:actionBarStyle">@style/MyTheme.ActionBarStyle</item>
     </style>
@@ -17,16 +16,24 @@
         <item name="android:textSize">16sp</item>
     </style>
 
-    <!-- Dark Theme -->
+    <!-- ANDROID DARK THEME -->
     <style name="AppBaseThemeDark" parent="android:Theme.Holo" />
 
-    <!-- Application theme -->
     <style name="AppThemeDark" parent="AppBaseTheme">
         <item name="android:actionBarStyle">@style/MyTheme.ActionBarStyleDark</item>
     </style>
 
     <style name="MyTheme.ActionBarStyleDark" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
+    </style>
+
+    <!-- ANDROID DIALOG THEME -->
+    <style name="PopupTheme" parent="android:Theme.Holo.Light.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowSoftInputMode">stateAlwaysHidden</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
 </resources>

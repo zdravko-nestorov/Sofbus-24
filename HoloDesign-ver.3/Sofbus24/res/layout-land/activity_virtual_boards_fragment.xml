@@ -8,7 +8,7 @@
 
     <bg.znestorov.sofbus24.utils.activity.SearchEditText
         android:id="@+id/vb_search"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2sp"
         android:drawableLeft="@android:drawable/ic_menu_search"
@@ -30,8 +30,8 @@
 
     <RelativeLayout
         android:id="@android:id/empty"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginLeft="35sp"
         android:layout_marginRight="35sp"
         android:gravity="center" >
@@ -39,14 +39,14 @@
         <ImageView
             android:id="@+id/vb_list_empty_image"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:contentDescription="@string/app_img_empty_content_description"
             android:src="@drawable/ic_empty_virtual_boards_list" />
 
         <TextView
             android:id="@+id/vb_list_empty_text"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:layout_marginLeft="15sp"
             android:layout_marginRight="15sp"
             android:layout_toRightOf="@+id/vb_list_empty_image"

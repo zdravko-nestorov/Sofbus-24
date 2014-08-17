@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -60,10 +61,13 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
  * @version 1.0
  * 
  */
+@SuppressLint({ "DefaultLocale", "InflateParams" })
 public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 
 	private Activity context;
 	private GlobalEntity globalContext;
+
+	private View emptyView;
 	private FavouritesStationFragment favouritesStationFragment;
 
 	private List<StationEntity> originalStations;
@@ -73,6 +77,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	private FavouritesDataSource favouritesDatasource;
 
 	private Filter stationsFilter;
+	private boolean isPhoneDevice;
 	private String language;
 
 	private boolean isReorderVisible;
@@ -95,13 +100,14 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 
 	private boolean expandedListItem;
 
-	public FavouritesStationAdapter(Activity context,
+	public FavouritesStationAdapter(Activity context, View emptyView,
 			FavouritesStationFragment favouritesStationFragment,
 			List<StationEntity> stations) {
 		super(context, R.layout.activity_favourites_list_item, stations);
 
 		this.context = context;
 		this.globalContext = (GlobalEntity) context.getApplicationContext();
+		this.isPhoneDevice = globalContext.isPhoneDevice();
 		this.language = LanguageChange.getUserLocale(context);
 		this.favouritesStationFragment = favouritesStationFragment;
 
@@ -144,11 +150,15 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	 * Get the current state of the Favorites ListItems
 	 */
 	public void setExpandedListItemValue() {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(context);
-		expandedListItem = sharedPreferences.getBoolean(
-				Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED,
-				Constants.PREFERENCE_DEFAULT_VALUE_FAVOURITES_EXPANDED);
+		if (!isPhoneDevice) {
+			expandedListItem = true;
+		} else {
+			SharedPreferences sharedPreferences = PreferenceManager
+					.getDefaultSharedPreferences(context);
+			expandedListItem = sharedPreferences.getBoolean(
+					Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED,
+					Constants.PREFERENCE_DEFAULT_VALUE_FAVOURITES_EXPANDED);
+		}
 	}
 
 	@Override
@@ -241,6 +251,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 					FilterResults filterResults) {
 				filteredStations = (ArrayList<StationEntity>) filterResults.values;
 				notifyDataSetChanged();
+
+				// TODO: Not showing empty view
+				setEmptyListView();
 			}
 		};
 	}
@@ -308,7 +321,12 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		}
 
 		// Attach click listeners to the EXPAND, EDIT and REMOVE buttons
-		expandStation(viewHolder, station);
+		if (isPhoneDevice) {
+			expandStation(viewHolder, station);
+		} else {
+			changeExpandStationIcon(viewHolder.expandStation);
+		}
+
 		reorderStation(viewHolder.reorderStation, station, position);
 		chooseStation(viewHolder.stationStreetView, viewHolder.barView, station);
 		actionsOverSettingsButton(viewHolder.settingsStation, station);
@@ -338,6 +356,17 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Used in case of Tablet (change the expand icon to a an info icon)
+	 * 
+	 * @param expandStation
+	 *            the expand station image button
+	 */
+	private void changeExpandStationIcon(ImageButton expandStation) {
+		expandStation.setImageResource(R.drawable.ic_menu_star);
+		expandStation.setEnabled(false);
 	}
 
 	/**
@@ -737,5 +766,20 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		favouritesInfoDialog.setTargetFragment(favouritesInfoDialog, 0);
 		favouritesInfoDialog.show(
 				favouritesStationFragment.getFragmentManager(), "dialog");
+	}
+
+	/**
+	 * Show or hide the empty view in case of GridView
+	 */
+	private void setEmptyListView() {
+		if (filteredStations == null || filteredStations.size() == 0) {
+			if (emptyView != null) {
+				emptyView.setVisibility(View.VISIBLE);
+			}
+		} else {
+			if (emptyView != null) {
+				emptyView.setVisibility(View.GONE);
+			}
+		}
 	}
 }

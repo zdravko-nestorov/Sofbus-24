@@ -40,6 +40,7 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_api_2_map_debug_home" />
 
+        <!-- Sofbus 24 -->
         <activity
             android:name="bg.znestorov.sofbus24.main.Sofbus24"
             android:label="@string/app_name"
@@ -50,24 +51,77 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- History -->
+        <activity android:name="bg.znestorov.sofbus24.main.History" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.HistoryDialog"
+            android:theme="@style/PopupTheme" />
+
+        <!-- Closest Stations List -->
         <activity
             android:name="bg.znestorov.sofbus24.main.ClosestStationsList"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
+            android:name="bg.znestorov.sofbus24.main.ClosestStationsListDialog"
+            android:theme="@style/PopupTheme"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <!-- Closest Stations Map -->
+        <activity
             android:name="bg.znestorov.sofbus24.main.ClosestStationsMap"
             android:uiOptions="splitActionBarWhenNarrow" />
-        <activity android:name="bg.znestorov.sofbus24.main.EditTabs" />
-        <activity android:name="bg.znestorov.sofbus24.main.About" />
+
+        <!-- Preferences -->
         <activity android:name="bg.znestorov.sofbus24.main.Preferences" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.PreferencesDialog"
+            android:theme="@style/PopupTheme" />
+
+        <!-- Edit Tabs -->
+        <activity android:name="bg.znestorov.sofbus24.main.EditTabs" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.EditTabsDialog"
+            android:theme="@style/PopupTheme" />
+
+        <!-- About -->
+        <activity android:name="bg.znestorov.sofbus24.main.About" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.AboutDialog"
+            android:theme="@style/PopupTheme" />
+
+        <!-- Station Route Map -->
         <activity android:name="bg.znestorov.sofbus24.main.StationRouteMap" />
-        <activity android:name="bg.znestorov.sofbus24.main.MetroSchedule" />
-        <activity android:name="bg.znestorov.sofbus24.main.StationMap" />
+
+        <!-- Virtual Boards Time -->
         <activity android:name="bg.znestorov.sofbus24.main.VirtualBoardsTime" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.VirtualBoardsTimeDialog"
+            android:theme="@style/PopupTheme" />
+
+        <!-- Public Transport -->
         <activity
             android:name="bg.znestorov.sofbus24.main.PublicTransport"
             android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.PublicTransportDialog"
+            android:theme="@style/PopupTheme"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <!-- Public Transport Schedule -->
         <activity android:name="bg.znestorov.sofbus24.main.PublicTransportSchedule" />
-        <activity android:name="bg.znestorov.sofbus24.main.History" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.PublicTransportScheduleDialog"
+            android:theme="@style/PopupTheme" />
+
+        <!-- Station Map -->
+        <activity android:name="bg.znestorov.sofbus24.main.StationMap" />
+
+        <!-- Metro Schedule -->
+        <activity android:name="bg.znestorov.sofbus24.main.MetroSchedule" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.MetroScheduleDialog"
+            android:theme="@style/PopupTheme" />
     </application>
 
 </manifest>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal"
@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/pt_item_favourite"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="@string/app_img_empty_content_description" />
     </LinearLayout>
 
@@ -60,8 +60,8 @@
 
         <ImageView
             android:id="@+id/pt_item_virtual_boards"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="@string/app_img_empty_content_description"
             android:src="@drawable/ic_virtual_boards" />
     </LinearLayout>
