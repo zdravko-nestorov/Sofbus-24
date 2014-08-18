@@ -459,12 +459,14 @@ public class RetrieveVirtualBoards {
 				// Check how many unique station numbers are returned
 				LinkedHashSet<String> stationNumbers = getStationNumbers(htmlResult);
 
-				// In case of requesting multiple results and the search is done
-				// for a number that is not formatted (i.e. entered "2"), add
-				// "0002" to the unique station numbers and make a new request
-				// to the sumc site to retrieve the info for the new number
+				// In case of no captcha needed, requesting multiple results
+				// and the search is done for a number that is not formatted
+				// (i.e. entered "2"), add "0002" to the unique station numbers
+				// and make a new request to the sumc site to retrieve the info
+				// for the new number
 				String stationNumber = station.getFormattedNumber();
-				if (htmlRequestCode == HtmlRequestCodesEnum.MULTIPLE_RESULTS
+				if (!htmlResult.contains(Constants.VB_CAPTCHA_REQUIRED)
+						&& htmlRequestCode == HtmlRequestCodesEnum.MULTIPLE_RESULTS
 						&& Utils.isNumeric(stationNumber)
 						&& stationNumbers.add(stationNumber)) {
 					httpPost = createSumcRequest(new StationEntity(station),
@@ -477,6 +479,10 @@ public class RetrieveVirtualBoards {
 				if (htmlResult.contains(Constants.VB_CAPTCHA_REQUIRED)) {
 					htmlResultCode = HtmlResultCodesEnum.CAPTCHA_NEEDED;
 				} else {
+					// It is needed because we have to check if there is some
+					// information retrieved
+					stationNumbers = getStationNumbers(htmlResult);
+
 					/**
 					 * Proceed according to the unique station numbers in the
 					 * request:<br/>
