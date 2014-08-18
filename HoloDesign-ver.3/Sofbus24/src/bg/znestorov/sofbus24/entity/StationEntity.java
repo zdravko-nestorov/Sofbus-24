@@ -46,6 +46,15 @@ public class StationEntity implements Serializable {
 	public StationEntity() {
 	}
 
+	public StationEntity(StationEntity station) {
+		this.number = Utils.formatNumberOfDigits(station.getNumber(), 4);
+		this.name = station.getName();
+		this.lat = station.getLat();
+		this.lon = station.getLon();
+		this.type = station.getType();
+		this.customField = station.getCustomField();
+	}
+
 	public StationEntity(String number, String name, String lat, String lon,
 			VehicleTypeEnum type, String customField) {
 		this.number = Utils.formatNumberOfDigits(number, 4);
@@ -58,6 +67,10 @@ public class StationEntity implements Serializable {
 
 	public String getNumber() {
 		return number;
+	}
+
+	public String getFormattedNumber() {
+		return Utils.formatNumberOfDigits(number, 4);
 	}
 
 	public void setNumber(String number) {

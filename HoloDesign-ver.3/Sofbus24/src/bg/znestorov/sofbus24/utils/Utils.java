@@ -20,6 +20,23 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 public class Utils {
 
 	/**
+	 * Check if the input is a number
+	 * 
+	 * @param input
+	 *            the input string
+	 * @return if the input is a number
+	 */
+	public static boolean isNumeric(String input) {
+		try {
+			Double.parseDouble(input);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Function that extracts only digits from a given String. In case of an
 	 * empty string - return "".
 	 * 
@@ -505,7 +522,7 @@ public class Utils {
 	 *            current Activity context
 	 */
 	public static void checkForUpdate(FragmentActivity context) {
-		boolean isDayForUpdate = getCurrentDay() == 1;
+		boolean isDayForUpdate = getCurrentDay() == 1 || getCurrentDay() == 15;
 		boolean isUpdateAlreadyChecked = CheckForUpdatesPreferences
 				.isUpdateAlreadyChecked(context, getCurrentDate());
 		boolean haveInternetConnection = ActivityUtils

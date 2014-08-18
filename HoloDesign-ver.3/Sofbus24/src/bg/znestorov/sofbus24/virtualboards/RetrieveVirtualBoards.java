@@ -26,6 +26,7 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -71,6 +72,7 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
  * @version 1.0
  * 
  */
+@SuppressLint("DefaultLocale")
 public class RetrieveVirtualBoards {
 
 	private Activity context;
@@ -192,6 +194,8 @@ public class RetrieveVirtualBoards {
 	/**
 	 * Adding the User-Agent, the Referrer and the parameters to the HttpPost
 	 * 
+	 * @param station
+	 *            station used to create the request
 	 * @param vehicleTypeId
 	 *            the searched vehicle type:
 	 *            <ul>
@@ -205,16 +209,16 @@ public class RetrieveVirtualBoards {
 	 *            The Id of the CAPTCHA image, token from the source file
 	 * @return an HTTP POST object, created with the needed parameters
 	 */
-	private HttpPost createSumcRequest(String vehicleTypeId,
-			String captchaText, String captchaId) {
+	private HttpPost createSumcRequest(StationEntity station,
+			String vehicleTypeId, String captchaText, String captchaId) {
 		final HttpPost result = new HttpPost(Constants.VB_URL);
 		result.addHeader("User-Agent", Constants.VB_URL_USER_AGENT);
 		result.addHeader("Referer", Constants.VB_URL_REFERER);
 
 		try {
 			final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(
-					assignHttpPostParameters(vehicleTypeId, captchaText,
-							captchaId), "UTF-8");
+					assignHttpPostParameters(station, vehicleTypeId,
+							captchaText, captchaId), "UTF-8");
 			result.setEntity(entity);
 		} catch (UnsupportedEncodingException e) {
 			throw new IllegalStateException("Not supported default encoding?",
@@ -228,6 +232,8 @@ public class RetrieveVirtualBoards {
 	 * Creating a list with BasicNameValuePair parameters, used for preparing
 	 * the HTTP POST request
 	 * 
+	 * @param station
+	 *            station used to create the request
 	 * @param vehicleTypeId
 	 *            the searched vehicle type:
 	 *            <ul>
@@ -243,7 +249,8 @@ public class RetrieveVirtualBoards {
 	 *         request
 	 */
 	private List<BasicNameValuePair> assignHttpPostParameters(
-			String vehicleTypeId, String captchaText, String captchaId) {
+			StationEntity station, String vehicleTypeId, String captchaText,
+			String captchaId) {
 		List<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>();
 		result.addAll(Arrays.asList(
 				new BasicNameValuePair(Constants.VB_URL_STOP_CODE,
@@ -444,17 +451,32 @@ public class RetrieveVirtualBoards {
 
 			try {
 				// Create a standard HTML request (without vehicleTypeId param)
-				httpPost = createSumcRequest(null, captchaText, captchaId);
+				httpPost = createSumcRequest(station, null, captchaText,
+						captchaId);
 				htmlResult = httpClient.execute(httpPost,
 						new BasicResponseHandler());
+
+				// Check how many unique station numbers are returned
+				LinkedHashSet<String> stationNumbers = getStationNumbers(htmlResult);
+
+				// In case of requesting multiple results and the search is done
+				// for a number that is not formatted (i.e. entered "2"), add
+				// "0002" to the unique station numbers and make a new request
+				// to the sumc site to retrieve the info for the new number
+				String stationNumber = station.getFormattedNumber();
+				if (htmlRequestCode == HtmlRequestCodesEnum.MULTIPLE_RESULTS
+						&& Utils.isNumeric(stationNumber)
+						&& stationNumbers.add(stationNumber)) {
+					httpPost = createSumcRequest(new StationEntity(station),
+							null, captchaText, captchaId);
+					htmlResult = httpClient.execute(httpPost,
+							new BasicResponseHandler()) + "\n" + htmlResult;
+				}
 
 				// Check if a capture is needed
 				if (htmlResult.contains(Constants.VB_CAPTCHA_REQUIRED)) {
 					htmlResultCode = HtmlResultCodesEnum.CAPTCHA_NEEDED;
 				} else {
-					// Check how many unique station numbers are returned
-					LinkedHashSet<String> stationNumbers = getStationNumbers(htmlResult);
-
 					/**
 					 * Proceed according to the unique station numbers in the
 					 * request:<br/>
@@ -481,7 +503,7 @@ public class RetrieveVirtualBoards {
 						 */
 						String tempHtmlSourceCode;
 						if (vehicleTypesCount == 2) {
-							httpPost = createSumcRequest(
+							httpPost = createSumcRequest(station,
 									stationVehicleTypes.get(1), captchaText,
 									captchaId);
 							tempHtmlSourceCode = httpClient.execute(httpPost,
@@ -490,7 +512,7 @@ public class RetrieveVirtualBoards {
 									tempHtmlSourceCode);
 						} else if (vehicleTypesCount == 3) {
 							for (int i = 1; i < 3; i++) {
-								httpPost = createSumcRequest(
+								httpPost = createSumcRequest(station,
 										stationVehicleTypes.get(i),
 										captchaText, captchaId);
 								tempHtmlSourceCode = httpClient.execute(
@@ -898,9 +920,8 @@ public class RetrieveVirtualBoards {
 						.refreshVirtualBoardsTimeFragment(null, getErrorMsg());
 				break;
 			case MULTIPLE_RESULTS:
-				((VirtualBoardsFragment) callerInstance)
-						.setAdapterViaSearch(
-								new ArrayList<StationEntity>(), getErrorMsg());
+				((VirtualBoardsFragment) callerInstance).setAdapterViaSearch(
+						new ArrayList<StationEntity>(), getErrorMsg());
 				break;
 			default:
 				Spanned progressDialogMsg = Html.fromHtml(getErrorMsg());
@@ -924,8 +945,8 @@ public class RetrieveVirtualBoards {
 				ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>(
 						processVirtualBoards.getMultipleStationsFromHtml()
 								.values());
-				((VirtualBoardsFragment) callerInstance)
-						.setAdapterViaSearch(stationsList, null);
+				((VirtualBoardsFragment) callerInstance).setAdapterViaSearch(
+						stationsList, null);
 
 				// Show a toast with the selected station
 				Toast.makeText(
@@ -961,12 +982,12 @@ public class RetrieveVirtualBoards {
 			switch (htmlRequestCode) {
 			case REFRESH:
 			case SINGLE_RESULT:
-				station = stationsMap.get(station.getNumber());
+				station = stationsMap.get(station.getFormattedNumber());
 				getSumcInformation();
 
 				break;
 			case FAVOURITES:
-				station = stationsMap.get(station.getNumber());
+				station = stationsMap.get(station.getFormattedNumber());
 				updateFavouritesStation(station);
 				getSumcInformation();
 
@@ -974,8 +995,8 @@ public class RetrieveVirtualBoards {
 			default:
 				ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>(
 						stationsMap.values());
-				((VirtualBoardsFragment) callerInstance)
-						.setAdapterViaSearch(stationsList, null);
+				((VirtualBoardsFragment) callerInstance).setAdapterViaSearch(
+						stationsList, null);
 
 				break;
 			}

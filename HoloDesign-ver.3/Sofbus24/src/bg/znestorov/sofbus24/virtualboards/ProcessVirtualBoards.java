@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.text.format.DateFormat;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
@@ -29,6 +30,7 @@ import bg.znestorov.sofbus24.utils.Utils;
  * @version 1.0
  * 
  */
+@SuppressLint("DefaultLocale")
 public class ProcessVirtualBoards {
 
 	private Activity context;
@@ -109,7 +111,8 @@ public class ProcessVirtualBoards {
 
 			// Get lat and lon of the station
 			stationsDatasource.open();
-			StationEntity dbStation = stationsDatasource.getStation(stationNumber);
+			StationEntity dbStation = stationsDatasource
+					.getStation(stationNumber);
 			String stationLat = "";
 			String stationLon = "";
 
@@ -229,8 +232,8 @@ public class ProcessVirtualBoards {
 			}
 
 			// Create the vehicle and add it to the list
-			VehicleEntity vehicle = new VehicleEntity(vehicleNumber, vehicleType,
-					vehicleDirection, arrivalTimes);
+			VehicleEntity vehicle = new VehicleEntity(vehicleNumber,
+					vehicleType, vehicleDirection, arrivalTimes);
 			vehiclesList.add(vehicle);
 		}
 
@@ -334,7 +337,8 @@ public class ProcessVirtualBoards {
 
 			// Get lat and lon of the station
 			stationsDatasource.open();
-			StationEntity dbStation = stationsDatasource.getStation(stationNumber);
+			StationEntity dbStation = stationsDatasource
+					.getStation(stationNumber);
 			String stationLat = "";
 			String stationLon = "";
 
@@ -349,9 +353,11 @@ public class ProcessVirtualBoards {
 			stationCustomField = Utils.getOnlyDigits(stationCustomField);
 
 			// Create the station and add it to the list
-			StationEntity station = new StationEntity(stationNumber, stationName,
-					stationLat, stationLon, VehicleTypeEnum.BTT, stationCustomField);
-			stationsMap.put(stationNumber, station);
+			StationEntity station = new StationEntity(stationNumber,
+					stationName, stationLat, stationLon, VehicleTypeEnum.BTT,
+					stationCustomField);
+			stationsMap.put(Utils.formatNumberOfDigits(stationNumber, 4),
+					station);
 		}
 
 		return stationsMap;
