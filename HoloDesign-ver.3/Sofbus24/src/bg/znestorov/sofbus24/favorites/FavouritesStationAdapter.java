@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.FrameLayout;
@@ -67,6 +68,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	private Activity context;
 	private GlobalEntity globalContext;
 
+	private TextView emptyTextView;
 	private View emptyView;
 	private FavouritesStationFragment favouritesStationFragment;
 
@@ -100,7 +102,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 
 	private boolean expandedListItem;
 
-	public FavouritesStationAdapter(Activity context, View emptyView,
+	public FavouritesStationAdapter(Activity context, TextView emptyTextView,
+			View emptyView,
 			FavouritesStationFragment favouritesStationFragment,
 			List<StationEntity> stations) {
 		super(context, R.layout.activity_favourites_list_item, stations);
@@ -109,6 +112,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		this.globalContext = (GlobalEntity) context.getApplicationContext();
 		this.isPhoneDevice = globalContext.isPhoneDevice();
 		this.language = LanguageChange.getUserLocale(context);
+
+		this.emptyTextView = emptyTextView;
+		this.emptyView = emptyView;
 		this.favouritesStationFragment = favouritesStationFragment;
 
 		this.originalStations = stations;
@@ -213,6 +219,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 
 					List<StationEntity> filterResultsData = new ArrayList<StationEntity>();
 
+					String filterStringOrig = constraint.toString().trim()
+							.toUpperCase();
 					String filterString = constraint.toString().trim()
 							.toUpperCase();
 					if ("bg".equals(language)) {
@@ -233,7 +241,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 						filterebaleNumber = station.getNumber().toUpperCase();
 
 						if (filterebaleName.contains(filterString)
-								|| filterebaleNumber.contains(filterString)) {
+								|| filterebaleNumber.contains(filterString)
+								|| filterebaleName.contains(filterStringOrig)
+								|| filterebaleNumber.contains(filterStringOrig)) {
 							filterResultsData.add(station);
 						}
 					}
@@ -252,7 +262,6 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 				filteredStations = (ArrayList<StationEntity>) filterResults.values;
 				notifyDataSetChanged();
 
-				// TODO: Not showing empty view
 				setEmptyListView();
 			}
 		};
@@ -382,14 +391,13 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		// Set the visibility of the progress bar
 		viewHolder.progressBar.setVisibility(View.VISIBLE);
 
-		// Set the visibility and height of the favorites item
-		viewHolder.favItemLayout
-				.setMinimumHeight(getExpandedStationImageHeight());
-
 		// Change the expand image
 		viewHolder.expandStation.setImageResource(R.drawable.ic_collapse);
 
 		// Add the image of the station from the street view asynchronously
+		LayoutParams params = viewHolder.stationStreetView.getLayoutParams();
+		params.height = getExpandedStationImageHeight();
+		viewHolder.stationStreetView.setLayoutParams(params);
 		loadStationImage(viewHolder, station);
 	}
 
@@ -415,29 +423,15 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		// Set the visibility of the progress bar
 		viewHolder.progressBar.setVisibility(View.GONE);
 
-		// Set the visibility and height of the favorites item
-		viewHolder.favItemLayout
-				.setMinimumHeight(getCollapsedStationImageHeight(viewHolder.barView));
-
 		// Change the expand image
 		viewHolder.expandStation.setImageResource(R.drawable.ic_expand);
 
 		// Remove the image
-		viewHolder.stationStreetView
-				.setMinimumHeight(getCollapsedStationImageHeight(viewHolder.barView));
+		LayoutParams params = viewHolder.stationStreetView.getLayoutParams();
+		params.height = LayoutParams.MATCH_PARENT;
+		viewHolder.stationStreetView.setLayoutParams(params);
 		viewHolder.stationStreetView
 				.setImageResource(android.R.color.transparent);
-	}
-
-	/**
-	 * Get the height of the Collapsed StationImage in pixels
-	 * 
-	 * @return the height of the StationImage in pixels
-	 */
-	private int getCollapsedStationImageHeight(View barView) {
-		int pixels = (int) barView.getHeight();
-
-		return pixels;
 	}
 
 	/**
@@ -776,6 +770,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 			if (emptyView != null) {
 				emptyView.setVisibility(View.VISIBLE);
 			}
+
+			emptyTextView.setText(Html.fromHtml(context
+					.getString(R.string.fav_item_empty_list)));
 		} else {
 			if (emptyView != null) {
 				emptyView.setVisibility(View.GONE);

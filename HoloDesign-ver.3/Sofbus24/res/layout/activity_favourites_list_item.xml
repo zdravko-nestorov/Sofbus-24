@@ -2,8 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/favourites_item_frame_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="@dimen/favourites_item_height" >
+    android:layout_height="wrap_content" >
 
     <ProgressBar
         android:id="@+id/favourites_item_progress_bar"
@@ -17,7 +16,7 @@
         android:id="@+id/favourites_item_bg_image"
         style="?android:attr/actionButtonStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/favourites_item_height"
         android:contentDescription="@string/app_img_empty_content_description"
         android:cropToPadding="true"
         android:padding="10sp"

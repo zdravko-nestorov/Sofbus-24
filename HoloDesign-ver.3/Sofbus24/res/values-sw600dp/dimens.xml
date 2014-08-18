@@ -1,0 +1,12 @@
+<resources>
+
+    <!-- Favourites -->
+    <dimen name="favourites_item_height">185sp</dimen>
+
+    <!-- Closest Stations List -->
+    <dimen name="cs_list_image_street_view_height">135sp</dimen>
+
+    <!-- Virtual Boards Time -->
+    <dimen name="vb_time_image_street_view_height">135sp</dimen>
+
+</resources>

@@ -522,12 +522,12 @@ public class ActivityUtils {
 		int pixelsWidth = metrics.widthPixels;
 		if (pixelsHeight > pixelsWidth) {
 			// Portrait orientation
-			pixelsWidth = (int) (pixelsHeight * 0.6);
-			pixelsHeight = (int) (pixelsHeight * 0.7);
+			pixelsWidth = (int) (pixelsHeight * 0.58);
+			pixelsHeight = (int) (pixelsHeight * 0.82);
 		} else {
 			// Landscape orientation
-			pixelsWidth = (int) (pixelsWidth * 0.6);
-			pixelsHeight = (int) (pixelsHeight * 0.7);
+			pixelsWidth = (int) (pixelsWidth * 0.58);
+			pixelsHeight = (int) (pixelsHeight * 0.82);
 		}
 
 		LayoutParams params = activity.getWindow().getAttributes();

@@ -389,7 +389,7 @@ public class FavouritesStationFragment extends ListFragment implements
 	 */
 	private void setAdapter() {
 		ArrayAdapter<StationEntity> adapter = new FavouritesStationAdapter(
-				context, emptyView, this, favouritesStations);
+				context, emptyTextView, emptyView, this, favouritesStations);
 		if (gridViewFavourites == null) {
 			setListAdapter(adapter);
 		} else {
