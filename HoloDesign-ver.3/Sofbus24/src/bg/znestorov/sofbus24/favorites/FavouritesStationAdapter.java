@@ -68,7 +68,6 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	private Activity context;
 	private GlobalEntity globalContext;
 
-	private TextView emptyTextView;
 	private View emptyView;
 	private FavouritesStationFragment favouritesStationFragment;
 
@@ -102,8 +101,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 
 	private boolean expandedListItem;
 
-	public FavouritesStationAdapter(Activity context, TextView emptyTextView,
-			View emptyView,
+	public FavouritesStationAdapter(Activity context, View emptyView,
 			FavouritesStationFragment favouritesStationFragment,
 			List<StationEntity> stations) {
 		super(context, R.layout.activity_favourites_list_item, stations);
@@ -113,7 +111,6 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		this.isPhoneDevice = globalContext.isPhoneDevice();
 		this.language = LanguageChange.getUserLocale(context);
 
-		this.emptyTextView = emptyTextView;
 		this.emptyView = emptyView;
 		this.favouritesStationFragment = favouritesStationFragment;
 
@@ -770,9 +767,6 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 			if (emptyView != null) {
 				emptyView.setVisibility(View.VISIBLE);
 			}
-
-			emptyTextView.setText(Html.fromHtml(context
-					.getString(R.string.fav_item_empty_list)));
 		} else {
 			if (emptyView != null) {
 				emptyView.setVisibility(View.GONE);

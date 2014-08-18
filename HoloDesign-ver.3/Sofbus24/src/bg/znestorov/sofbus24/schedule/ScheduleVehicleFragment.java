@@ -14,6 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
@@ -32,9 +35,15 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
  * @version 1.0
  * 
  */
-public class ScheduleVehicleFragment extends ListFragment {
+public class ScheduleVehicleFragment extends ListFragment implements
+		OnItemClickListener {
 
 	private Activity context;
+
+	private SearchEditText searchEditText;
+	private GridView gridViewScheduleVehicles;
+	private View emptyView;
+	private TextView emptyTextView;
 
 	private int currentVehicle;
 	private ScheduleLoadVehicles slv;
@@ -54,11 +63,6 @@ public class ScheduleVehicleFragment extends ListFragment {
 		scheduleStationFragment.setArguments(bundle);
 
 		return scheduleStationFragment;
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
 	}
 
 	@Override
@@ -89,7 +93,28 @@ public class ScheduleVehicleFragment extends ListFragment {
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		ScheduleVehicleAdapter scheduleStationAdapter = (ScheduleVehicleAdapter) getListAdapter();
-		VehicleEntity vehicle = (VehicleEntity) scheduleStationAdapter.getItem(position);
+		onListItemClick(scheduleStationAdapter, position);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+		ScheduleVehicleAdapter scheduleStationAdapter = (ScheduleVehicleAdapter) gridViewScheduleVehicles
+				.getAdapter();
+		onListItemClick(scheduleStationAdapter, position);
+	}
+
+	/**
+	 * Retieve an information about the selected vehicle
+	 * 
+	 * @param scheduleStationAdapter
+	 *            the ScheduleVehicleAdapter
+	 * @param position
+	 *            the position of the selected vehicle
+	 */
+	private void onListItemClick(ScheduleVehicleAdapter scheduleStationAdapter,
+			int position) {
+		VehicleEntity vehicle = (VehicleEntity) scheduleStationAdapter
+				.getItem(position);
 		String rowCaption = scheduleStationAdapter.getVehicleCaption(context,
 				vehicle);
 
@@ -134,43 +159,48 @@ public class ScheduleVehicleFragment extends ListFragment {
 	 *            the current view of the fragment
 	 */
 	private void initLayoutFields(View fragmentView) {
-		SearchEditText searchEditText = (SearchEditText) fragmentView
+		searchEditText = (SearchEditText) fragmentView
 				.findViewById(R.id.schedule_vehicle_search);
-		TextView emptyList = (TextView) fragmentView
+		emptyView = fragmentView
+				.findViewById(R.id.schedule_vehicle_list_empty_view);
+		emptyTextView = (TextView) fragmentView
 				.findViewById(R.id.schedule_vehicle_list_empty_text);
 
+		// Set on click listener over the grid view and hide the empty view in
+		// the bgining (if the ListFragment uses a GridView)
+		gridViewScheduleVehicles = (GridView) fragmentView
+				.findViewById(R.id.schedule_vehicle_list_grid_view);
+		if (gridViewScheduleVehicles != null) {
+			gridViewScheduleVehicles.setOnItemClickListener(this);
+			emptyView.setVisibility(View.GONE);
+		}
+
 		// Use custom ArrayAdapter to show the elements in the ListView
-		setListAdapter(emptyList);
+		setAdapter();
 
 		// Set the actions over the SearchEditText
-		actionsOverSearchEditText(searchEditText, emptyList);
+		actionsOverSearchEditText();
 	}
 
 	/**
 	 * According to the current vehicle assign the appropriate adapter to the
 	 * list fragment
-	 * 
-	 * @param emptyList
-	 *            the empty TextView (a text shown when the list fragment is
-	 *            empty)
 	 */
-	private void setListAdapter(TextView emptyList) {
-		scheduleVehicleAdapter = new ScheduleVehicleAdapter(context, emptyList,
-				getVehicleName(), stationsList);
-		setListAdapter(scheduleVehicleAdapter);
+	private void setAdapter() {
+		scheduleVehicleAdapter = new ScheduleVehicleAdapter(context, emptyView,
+				emptyTextView, getVehicleName(), stationsList);
+
+		if (gridViewScheduleVehicles == null) {
+			setListAdapter(scheduleVehicleAdapter);
+		} else {
+			gridViewScheduleVehicles.setAdapter(scheduleVehicleAdapter);
+		}
 	}
 
 	/**
 	 * Modify the Search EditText field and activate the listeners
-	 * 
-	 * @param searchEditText
-	 *            the search EditText
-	 * @param emptyList
-	 *            the empty TextView (a text shown when the list fragment is
-	 *            empty)
 	 */
-	private void actionsOverSearchEditText(final SearchEditText searchEditText,
-			final TextView emptyList) {
+	private void actionsOverSearchEditText() {
 		// TODO: Find a way to set an alphanumeric keyboard with numeric as
 		// default
 		searchEditText.setFilters(new InputFilter[] { ActivityUtils

@@ -899,7 +899,7 @@ public class RetrieveVirtualBoards {
 				break;
 			case MULTIPLE_RESULTS:
 				((VirtualBoardsFragment) callerInstance)
-						.setListAdapterViaSearch(
+						.setAdapterViaSearch(
 								new ArrayList<StationEntity>(), getErrorMsg());
 				break;
 			default:
@@ -925,7 +925,7 @@ public class RetrieveVirtualBoards {
 						processVirtualBoards.getMultipleStationsFromHtml()
 								.values());
 				((VirtualBoardsFragment) callerInstance)
-						.setListAdapterViaSearch(stationsList, null);
+						.setAdapterViaSearch(stationsList, null);
 
 				// Show a toast with the selected station
 				Toast.makeText(
@@ -975,7 +975,7 @@ public class RetrieveVirtualBoards {
 				ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>(
 						stationsMap.values());
 				((VirtualBoardsFragment) callerInstance)
-						.setListAdapterViaSearch(stationsList, null);
+						.setAdapterViaSearch(stationsList, null);
 
 				break;
 			}

@@ -315,10 +315,10 @@ public class FavouritesStationFragment extends ListFragment implements
 	 *            the layout view
 	 */
 	private void initLayoutFields(View myFragmentView) {
-		gridViewFavourites = (GridView) myFragmentView
-				.findViewById(R.id.favourites_list_grid_view);
 		searchEditText = (SearchEditText) myFragmentView
 				.findViewById(R.id.favourites_search);
+		gridViewFavourites = (GridView) myFragmentView
+				.findViewById(R.id.favourites_list_grid_view);
 		emptyView = myFragmentView
 				.findViewById(R.id.favourites_list_empty_view);
 		emptyTextView = (TextView) myFragmentView
@@ -389,7 +389,7 @@ public class FavouritesStationFragment extends ListFragment implements
 	 */
 	private void setAdapter() {
 		ArrayAdapter<StationEntity> adapter = new FavouritesStationAdapter(
-				context, emptyTextView, emptyView, this, favouritesStations);
+				context, emptyView, this, favouritesStations);
 		if (gridViewFavourites == null) {
 			setListAdapter(adapter);
 		} else {
@@ -408,11 +408,11 @@ public class FavouritesStationFragment extends ListFragment implements
 			if (emptyView != null) {
 				emptyView.setVisibility(View.VISIBLE);
 			}
-
-			emptyTextView.setText(Html
-					.fromHtml(getString(R.string.fav_item_empty_list)));
 		} else {
 			emptyView.setVisibility(View.GONE);
 		}
+
+		emptyTextView.setText(Html
+				.fromHtml(getString(R.string.fav_item_empty_list)));
 	}
 }

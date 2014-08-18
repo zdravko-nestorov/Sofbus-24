@@ -30,7 +30,8 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<VehicleEntity> {
 
 	private final Activity context;
 
-	private TextView emptyList;
+	private View emptyView;
+	private TextView emptyTextView;
 	private String vehicleName;
 
 	private final List<VehicleEntity> originalVehicles;
@@ -46,14 +47,15 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<VehicleEntity> {
 		TextView vehicleDirection;
 	}
 
-	public ScheduleVehicleAdapter(Activity context, TextView emptyList,
-			String vehicleName, List<VehicleEntity> vehicles) {
+	public ScheduleVehicleAdapter(Activity context, View emptyView,
+			TextView emptyTextView, String vehicleName, List<VehicleEntity> vehicles) {
 		super(context, R.layout.activity_schedule_vehicle_list_item, vehicles);
 
 		this.context = context;
 		this.language = LanguageChange.getUserLocale(context);
 
-		this.emptyList = emptyList;
+		this.emptyView = emptyView;
+		this.emptyTextView = emptyTextView;
 		this.vehicleName = vehicleName;
 
 		this.originalVehicles = vehicles;
@@ -187,13 +189,9 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<VehicleEntity> {
 			protected void publishResults(CharSequence constraint,
 					FilterResults filterResults) {
 				filteredVehicles = (ArrayList<VehicleEntity>) filterResults.values;
-				notifyDataSetChanged();
 
-				if (isEmpty()) {
-					emptyList.setText(Html.fromHtml(String.format(
-							context.getString(R.string.sch_item_empty_list),
-							constraint, vehicleName)));
-				}
+				notifyDataSetChanged();
+				setEmptyListView(constraint);
 			}
 		};
 	}
@@ -264,5 +262,27 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<VehicleEntity> {
 		}
 
 		return vehicleCaption;
+	}
+
+	/**
+	 * Set the empty list text
+	 * 
+	 * @param constraint
+	 *            the constraint entered by the user
+	 */
+	private void setEmptyListView(CharSequence constraint) {
+		if (isEmpty()) {
+			if (emptyView != null) {
+				emptyView.setVisibility(View.VISIBLE);
+			}
+
+			emptyTextView.setText(Html.fromHtml(String.format(
+					context.getString(R.string.sch_item_empty_list),
+					constraint, vehicleName)));
+		} else {
+			if (emptyView != null) {
+				emptyView.setVisibility(View.GONE);
+			}
+		}
 	}
 }

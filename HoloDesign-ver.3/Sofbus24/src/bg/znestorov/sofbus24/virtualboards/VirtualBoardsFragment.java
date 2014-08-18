@@ -17,7 +17,10 @@ import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -30,10 +33,13 @@ import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
 public class VirtualBoardsFragment extends ListFragment implements
-		FragmentLifecycle {
+		FragmentLifecycle, OnItemClickListener {
 
 	private Activity context;
-	private TextView emptyList;
+
+	private GridView gridViewVirtualBoards;
+	private View emptyView;
+	private TextView emptyTextView;
 	private SearchEditText searchEditText;
 
 	private String vbSearchText;
@@ -45,16 +51,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 	private static final String BUNDLE_VB_STATIONS_LIST = "VB STATION LIST";
 	private static final String BUNDLE_VB_EMPTY_LIST_MSG = "VB EMPTY LIST MESSAGE";
 
-	public VirtualBoardsFragment() {
-	}
-
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View myFragmentView = inflater.inflate(
@@ -63,44 +60,19 @@ public class VirtualBoardsFragment extends ListFragment implements
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
 
-		// Get the vbSearchText and vbList from the Bundle (savedInstanceState)
-		if (savedInstanceState != null
-				&& savedInstanceState.getSerializable(BUNDLE_VB_STATIONS_LIST) != null) {
-			vbSearchText = savedInstanceState.getString(BUNDLE_VB_SEARCH_TEXT);
-			vbList.clear();
-			vbList.addAll((ArrayList<StationEntity>) savedInstanceState
-					.getSerializable(BUNDLE_VB_STATIONS_LIST));
-			emptyListMsg = savedInstanceState
-					.getString(BUNDLE_VB_EMPTY_LIST_MSG);
-		} else {
-			vbSearchText = "";
-			emptyListMsg = "";
-		}
-
-		// Find all of TextView and SearchEditText tabs in the layout
-		emptyList = (TextView) myFragmentView
-				.findViewById(R.id.vb_list_empty_text);
-		searchEditText = (SearchEditText) myFragmentView
-				.findViewById(R.id.vb_search);
-
-		// In case of screen rotation (recreate screen)
-		searchEditText.setText(vbSearchText);
-
-		// Set the list adapter to the Fragment
-		ArrayAdapter<StationEntity> virtualBoardsAdapter = new VirtualBoardsAdapter(
-				context, vbList);
-		setListAdapter(virtualBoardsAdapter);
-		setEmptyListText();
-
-		// Set the actions over the TextViews and SearchEditText
+		// Actions over the layout fields
+		initBundleInfo(savedInstanceState);
+		initLayoutFields(myFragmentView);
 		actionsOverSearchEditText();
+		setAdapter();
+		setEmptyListView();
 
 		return myFragmentView;
 	}
 
 	@Override
 	public void onResumeFragment(Activity context) {
-		setListAdapterViaSearch();
+		setAdapterViaSearch();
 	}
 
 	@Override
@@ -114,73 +86,74 @@ public class VirtualBoardsFragment extends ListFragment implements
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		StationEntity station = (StationEntity) getListAdapter().getItem(position);
+		StationEntity station = (StationEntity) getListAdapter().getItem(
+				position);
+		onListItemClick(station);
+	}
 
+	@Override
+	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+		StationEntity station = (StationEntity) gridViewVirtualBoards
+				.getAdapter().getItem(position);
+		onListItemClick(station);
+	}
+
+	/**
+	 * Retieve an information about the selected station
+	 * 
+	 * @param station
+	 *            selected station
+	 */
+	private void onListItemClick(StationEntity station) {
 		RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
 				context, this, station, HtmlRequestCodesEnum.SINGLE_RESULT);
 		retrieveVirtualBoards.getSumcInformation();
 	}
 
 	/**
-	 * Set list adapter and the appropriate text message to it (using a list as
-	 * a parameter)
+	 * Retrieved the bundle saved information
 	 * 
-	 * @param stationsList
-	 *            the stationList that need to be set to the listView
-	 * @param emptyListMsg
-	 *            the text that will show if the list is empty
+	 * @param savedInstanceState
+	 *            the fragment bundle
 	 */
-	public void setListAdapterViaSearch(ArrayList<StationEntity> stationsList,
-			String emptyListMsg) {
-		ActivityUtils.hideKeyboard(context, searchEditText);
-
-		vbList.clear();
-		vbList.addAll(stationsList);
-
-		this.emptyListMsg = emptyListMsg;
-
-		setListAdapterViaSearch();
-	}
-
-	/**
-	 * Set list adapter and the appropriate text message to it, using the
-	 * default fragment list (vbList)
-	 */
-	private void setListAdapterViaSearch() {
-		ArrayAdapter<StationEntity> virtualBoardsAdapter = (VirtualBoardsAdapter) getListAdapter();
-
-		if (virtualBoardsAdapter != null) {
-			virtualBoardsAdapter.notifyDataSetChanged();
-
-			if (virtualBoardsAdapter.isEmpty()) {
-				setEmptyListText();
-			}
+	@SuppressWarnings("unchecked")
+	private void initBundleInfo(Bundle savedInstanceState) {
+		if (savedInstanceState != null
+				&& savedInstanceState.getSerializable(BUNDLE_VB_STATIONS_LIST) != null) {
+			vbSearchText = savedInstanceState.getString(BUNDLE_VB_SEARCH_TEXT);
+			vbList.clear();
+			vbList.addAll((ArrayList<StationEntity>) savedInstanceState
+					.getSerializable(BUNDLE_VB_STATIONS_LIST));
+			emptyListMsg = savedInstanceState
+					.getString(BUNDLE_VB_EMPTY_LIST_MSG);
+		} else {
+			vbSearchText = "";
+			emptyListMsg = "";
 		}
 	}
 
 	/**
-	 * Set a message to the empty list according to the search text view:
-	 * <ul>
-	 * <li>If contains <b>no</b> text - set the default search message</li>
-	 * <li>If contains <b>some</b> text - set that there are no results</li>
-	 * </ul>
+	 * Initialize the layout fields
+	 * 
+	 * @param myFragmentView
+	 *            the layout view of the current fragment
 	 */
-	private void setEmptyListText() {
-		// Check if the fragment is currently added to its activity
-		if (isAdded()) {
-			if (emptyListMsg != null && !"".equals(emptyListMsg)) {
-				emptyList.setText(Html.fromHtml(emptyListMsg));
-			} else {
-				if (vbSearchText == null || "".equals(vbSearchText)) {
-					emptyList.setText(Html
-							.fromHtml(getString(R.string.vb_item_search_list)));
-				} else {
-					emptyList.setText(Html.fromHtml(String.format(
-							getString(R.string.vb_item_empty_list),
-							vbSearchText)));
-				}
-			}
+	private void initLayoutFields(View myFragmentView) {
+		searchEditText = (SearchEditText) myFragmentView
+				.findViewById(R.id.vb_search);
+		emptyView = myFragmentView.findViewById(R.id.vb_list_empty_view);
+		emptyTextView = (TextView) myFragmentView
+				.findViewById(R.id.vb_list_empty_text);
+
+		// Set on click listener over the grid view (if exists)
+		gridViewVirtualBoards = (GridView) myFragmentView
+				.findViewById(R.id.vb_list_grid_view);
+		if (gridViewVirtualBoards != null) {
+			gridViewVirtualBoards.setOnItemClickListener(this);
 		}
+
+		// In case of screen rotation (recreate screen)
+		searchEditText.setText(vbSearchText);
 	}
 
 	/**
@@ -261,6 +234,85 @@ public class VirtualBoardsFragment extends ListFragment implements
 	}
 
 	/**
+	 * Set the adapter with the found stations (on the GridView or the ListView)
+	 */
+	private void setAdapter() {
+		ArrayAdapter<StationEntity> virtualBoardsAdapter = new VirtualBoardsAdapter(
+				context, vbList);
+		if (gridViewVirtualBoards == null) {
+			setListAdapter(virtualBoardsAdapter);
+		} else {
+			gridViewVirtualBoards.setAdapter(virtualBoardsAdapter);
+		}
+	}
+
+	/**
+	 * Set list adapter and the appropriate text message to it (using a list as
+	 * a parameter)
+	 * 
+	 * @param stationsList
+	 *            the stationList that need to be set to the listView
+	 * @param emptyListMsg
+	 *            the text that will show if the list is empty
+	 */
+	public void setAdapterViaSearch(ArrayList<StationEntity> stationsList,
+			String emptyListMsg) {
+		ActivityUtils.hideKeyboard(context, searchEditText);
+
+		vbList.clear();
+		vbList.addAll(stationsList);
+
+		this.emptyListMsg = emptyListMsg;
+
+		setAdapterViaSearch();
+	}
+
+	/**
+	 * Set list adapter and the appropriate text message to it, using the
+	 * default fragment list (vbList)
+	 */
+	private void setAdapterViaSearch() {
+		ArrayAdapter<StationEntity> virtualBoardsAdapter = getAdapter();
+		if (virtualBoardsAdapter != null) {
+			virtualBoardsAdapter.notifyDataSetChanged();
+			setEmptyListView();
+		}
+	}
+
+	/**
+	 * Set a message to the empty list according to the search text view:
+	 * <ul>
+	 * <li>If contains <b>no</b> text - set the default search message</li>
+	 * <li>If contains <b>some</b> text - set that there are no results</li>
+	 * </ul>
+	 */
+	private void setEmptyListView() {
+		// Check if the fragment is currently added to its activity
+		if (isAdded() && (getAdapter() == null || getAdapter().isEmpty())) {
+			if (emptyView != null) {
+				emptyView.setVisibility(View.VISIBLE);
+			}
+
+			if (emptyListMsg != null && !"".equals(emptyListMsg)) {
+				emptyTextView.setText(Html.fromHtml(emptyListMsg));
+			} else {
+				if (vbSearchText == null || "".equals(vbSearchText)) {
+					emptyTextView.setText(Html
+							.fromHtml(getString(R.string.vb_item_search_list)));
+				} else {
+					emptyTextView.setText(Html.fromHtml(String.format(
+							getString(R.string.vb_item_empty_list),
+							vbSearchText)));
+				}
+			}
+		} else {
+			if (emptyView != null) {
+				emptyView.setVisibility(View.GONE);
+			}
+		}
+	}
+
+	/**
 	 * Perform a search via the search text from the SearchEditText
 	 */
 	private void performSearch() {
@@ -269,7 +321,8 @@ public class VirtualBoardsFragment extends ListFragment implements
 			station.setNumberUnformatted(vbSearchText);
 
 			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-					context, this, station, HtmlRequestCodesEnum.MULTIPLE_RESULTS);
+					context, this, station,
+					HtmlRequestCodesEnum.MULTIPLE_RESULTS);
 			retrieveVirtualBoards.getSumcInformation();
 		} else {
 			vbSearchText = "";
@@ -277,7 +330,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 				vbList.clear();
 			}
 
-			setListAdapterViaSearch();
+			setAdapterViaSearch();
 		}
 	}
 
@@ -305,6 +358,23 @@ public class VirtualBoardsFragment extends ListFragment implements
 		}
 
 		return result;
+	}
+
+	/**
+	 * Get the adapter of the list fragment
+	 * 
+	 * @return the VirtualBoardsAdapter
+	 */
+	private ArrayAdapter<StationEntity> getAdapter() {
+		ArrayAdapter<StationEntity> virtualBoardsAdapter;
+		if (gridViewVirtualBoards == null) {
+			virtualBoardsAdapter = (VirtualBoardsAdapter) getListAdapter();
+		} else {
+			virtualBoardsAdapter = (VirtualBoardsAdapter) gridViewVirtualBoards
+					.getAdapter();
+		}
+
+		return virtualBoardsAdapter;
 	}
 
 	/**

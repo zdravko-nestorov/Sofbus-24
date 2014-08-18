@@ -41,7 +41,8 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 	private Activity context;
 	private FavouritesDataSource favouritesDatasource;
 
-	private TextView emptyList;
+	private View emptyView;
+	private TextView emptyTextView;
 	private String directionName;
 
 	private List<StationEntity> originalStations;
@@ -58,15 +59,17 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 		ImageButton stationSettings;
 	}
 
-	public MetroStationAdapter(Activity context, TextView emptyList,
-			String directionName, List<StationEntity> stations) {
+	public MetroStationAdapter(Activity context, View emptyView,
+			TextView emptyTextView, String directionName,
+			List<StationEntity> stations) {
 		super(context, R.layout.activity_metro_station_list_item, stations);
 
 		this.context = context;
 		this.favouritesDatasource = new FavouritesDataSource(context);
 		this.language = LanguageChange.getUserLocale(context);
 
-		this.emptyList = emptyList;
+		this.emptyView = emptyView;
+		this.emptyTextView = emptyTextView;
 		this.directionName = directionName;
 
 		this.originalStations = stations;
@@ -203,13 +206,9 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 			protected void publishResults(CharSequence constraint,
 					FilterResults filterResults) {
 				filteredStations = (ArrayList<StationEntity>) filterResults.values;
-				notifyDataSetChanged();
 
-				if (isEmpty()) {
-					emptyList.setText(Html.fromHtml(String.format(
-							context.getString(R.string.metro_item_empty_list),
-							constraint, directionName)));
-				}
+				notifyDataSetChanged();
+				setEmptyListView(constraint);
 			}
 		};
 	}
@@ -302,5 +301,27 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Set the empty list text
+	 * 
+	 * @param constraint
+	 *            the constraint entered by the user
+	 */
+	private void setEmptyListView(CharSequence constraint) {
+		if (isEmpty()) {
+			if (emptyView != null) {
+				emptyView.setVisibility(View.VISIBLE);
+			}
+
+			emptyTextView.setText(Html.fromHtml(String.format(
+					context.getString(R.string.metro_item_empty_list),
+					constraint, directionName)));
+		} else {
+			if (emptyView != null) {
+				emptyView.setVisibility(View.GONE);
+			}
+		}
 	}
 }

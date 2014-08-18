@@ -18,6 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
@@ -38,9 +41,15 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
  * @version 1.0
  * 
  */
-public class MetroStationFragment extends ListFragment {
+public class MetroStationFragment extends ListFragment implements
+		OnItemClickListener {
 
 	private Activity context;
+
+	private SearchEditText searchEditText;
+	private GridView gridViewMetroStation;
+	private View emptyView;
+	private TextView emptyTextView;
 
 	private int currentDirection;
 	private MetroLoadStations mls;
@@ -59,12 +68,6 @@ public class MetroStationFragment extends ListFragment {
 		metroStationFragment.setArguments(bundle);
 
 		return metroStationFragment;
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		registerForContextMenu(getListView());
-		super.onActivityCreated(savedInstanceState);
 	}
 
 	@Override
@@ -99,8 +102,23 @@ public class MetroStationFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		StationEntity station = (StationEntity) ((MetroStationAdapter) getListAdapter())
 				.getItem(position);
+		onListItemClick(station);
+	}
 
-		// Getting the Metro schedule from the station URL address
+	@Override
+	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+		StationEntity station = (StationEntity) ((MetroStationAdapter) gridViewMetroStation
+				.getAdapter()).getItem(position);
+		onListItemClick(station);
+	}
+
+	/**
+	 * Retieve an information about the selected metro station
+	 * 
+	 * @param station
+	 *            the selected station
+	 */
+	private void onListItemClick(StationEntity station) {
 		ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setMessage(Html.fromHtml(String.format(
 				getString(R.string.metro_loading_schedule), station.getName(),
@@ -159,44 +177,49 @@ public class MetroStationFragment extends ListFragment {
 	 *            the current view of the fragment
 	 */
 	private void initLayoutFields(View fragmentView) {
-		SearchEditText searchEditText = (SearchEditText) fragmentView
+		searchEditText = (SearchEditText) fragmentView
 				.findViewById(R.id.metro_station_search);
-		TextView emptyList = (TextView) fragmentView
+		emptyView = fragmentView
+				.findViewById(R.id.metro_station_list_empty_view);
+		emptyTextView = (TextView) fragmentView
 				.findViewById(R.id.metro_station_list_empty_text);
 
+		// Set on click listener over the grid view and hide the empty view in
+		// the bgining (if the ListFragment uses a GridView)
+		gridViewMetroStation = (GridView) fragmentView
+				.findViewById(R.id.metro_station_list_grid_view);
+		if (gridViewMetroStation != null) {
+			gridViewMetroStation.setOnItemClickListener(this);
+			emptyView.setVisibility(View.GONE);
+		}
+
 		// Use custom ArrayAdapter to show the elements in the ListView
-		setListAdapter(emptyList);
+		setAdapter();
 
 		// Set the actions over the SearchEditText
-		actionsOverSearchEditText(searchEditText, emptyList);
+		actionsOverSearchEditText();
 	}
 
 	/**
 	 * According to the current direction assign the appropriate adapter to the
 	 * list fragment
-	 * 
-	 * @param emptyList
-	 *            the empty TextView (a text shown when the list fragment is
-	 *            empty)
 	 */
-	private void setListAdapter(TextView emptyList) {
-		metroStationAdapter = new MetroStationAdapter(context, emptyList,
-				mls.getDirectionName(currentDirection, false, false),
-				stationsList);
-		setListAdapter(metroStationAdapter);
+	private void setAdapter() {
+		metroStationAdapter = new MetroStationAdapter(context, emptyView,
+				emptyTextView, mls.getDirectionName(currentDirection, false,
+						false), stationsList);
+
+		if (gridViewMetroStation == null) {
+			setListAdapter(metroStationAdapter);
+		} else {
+			gridViewMetroStation.setAdapter(metroStationAdapter);
+		}
 	}
 
 	/**
 	 * Modify the Search EditText field and activate the listeners
-	 * 
-	 * @param searchEditText
-	 *            the search EditText
-	 * @param emptyList
-	 *            the empty TextView (a text shown when the list fragment is
-	 *            empty)
 	 */
-	private void actionsOverSearchEditText(final SearchEditText searchEditText,
-			final TextView emptyList) {
+	private void actionsOverSearchEditText() {
 		// TODO: Find a way to set an alphanumeric keyboard with numeric as
 		// default
 		searchEditText.setFilters(new InputFilter[] { ActivityUtils
