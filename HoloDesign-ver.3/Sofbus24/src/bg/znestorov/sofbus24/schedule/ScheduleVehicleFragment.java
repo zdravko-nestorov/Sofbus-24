@@ -156,7 +156,7 @@ public class ScheduleVehicleFragment extends ListFragment implements
 		ArrayList<String> rid = new ArrayList<String>();
 
 		ArrayList<String> directionsNames = new ArrayList<String>();
-		ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>();
+		ArrayList<StationEntity> stationsList;
 		ArrayList<ArrayList<StationEntity>> directionsList = new ArrayList<ArrayList<StationEntity>>();
 
 		// Direction 1
@@ -164,6 +164,7 @@ public class ScheduleVehicleFragment extends ListFragment implements
 		lid.add("145");
 		rid.add("1981");
 		directionsNames.add(translateString("Ул. Филип Кутев - Хотел Хилтън"));
+		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation("6359",
 				translateString("Ул. Филип Кутев"), "29000"));
 		stationsList.add(createPublicTransportStation("2654",
@@ -180,13 +181,12 @@ public class ScheduleVehicleFragment extends ListFragment implements
 				translateString("Хотел Хилтън"), "18115"));
 		directionsList.add(stationsList);
 
-		stationsList.clear();
-
 		// Direction 2
 		vt.add("1");
 		lid.add("145");
 		rid.add("1982");
 		directionsNames.add(translateString("Хотел Хилтън - Ул. Филип Кутев"));
+		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation("0397",
 				translateString("Хотел Хилтън"), "18115"));
 		stationsList.add(createPublicTransportStation("1322",
@@ -220,7 +220,7 @@ public class ScheduleVehicleFragment extends ListFragment implements
 		ArrayList<String> rid = new ArrayList<String>();
 
 		ArrayList<String> directionsNames = new ArrayList<String>();
-		ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>();
+		ArrayList<StationEntity> stationsList;
 		ArrayList<ArrayList<StationEntity>> directionsList = new ArrayList<ArrayList<StationEntity>>();
 
 		// Direction 1
@@ -229,6 +229,7 @@ public class ScheduleVehicleFragment extends ListFragment implements
 		rid.add("1874");
 		directionsNames
 				.add(translateString("Автостанция Банкя - Кв. Градоман"));
+		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation("0050",
 				translateString("Автостанция Банкя"), "22111"));
 		stationsList.add(createPublicTransportStation("0503",
@@ -255,14 +256,13 @@ public class ScheduleVehicleFragment extends ListFragment implements
 				translateString("Кв. Градоман"), "23665"));
 		directionsList.add(stationsList);
 
-		stationsList.clear();
-
 		// Direction 2
 		vt.add("1");
 		lid.add("145");
 		rid.add("1982");
 		directionsNames
 				.add(translateString("Кв. Градоман - Автостанция Банкя"));
+		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation("0832",
 				translateString("Кв. Градоман"), "23665"));
 		stationsList.add(createPublicTransportStation("6351",
