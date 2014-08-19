@@ -55,6 +55,20 @@ public class DirectionsEntity implements Serializable {
 		this.directionsList = directionsList;
 	}
 
+	public DirectionsEntity(VehicleEntity vehicle, int activeDirection,
+			int activeStation, ArrayList<String> vt, ArrayList<String> lid,
+			ArrayList<String> rid, ArrayList<String> directionsNames,
+			ArrayList<ArrayList<StationEntity>> directionsList) {
+		this.vehicle = vehicle;
+		this.activeDirection = activeDirection;
+		this.activeStation = activeStation;
+		this.vt = vt;
+		this.lid = lid;
+		this.rid = rid;
+		this.directionsNames = directionsNames;
+		this.directionsList = directionsList;
+	}
+
 	public VehicleEntity getVehicle() {
 		return vehicle;
 	}
@@ -91,7 +105,8 @@ public class DirectionsEntity implements Serializable {
 		return directionsList;
 	}
 
-	public void setDirectionsList(ArrayList<ArrayList<StationEntity>> directionsList) {
+	public void setDirectionsList(
+			ArrayList<ArrayList<StationEntity>> directionsList) {
 		this.directionsList = directionsList;
 	}
 

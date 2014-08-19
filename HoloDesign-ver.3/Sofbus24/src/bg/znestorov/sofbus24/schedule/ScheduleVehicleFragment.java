@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
@@ -19,10 +20,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.databases.StationsDataSource;
+import bg.znestorov.sofbus24.entity.DirectionsEntity;
+import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.publictransport.ChooseDirectionDialog;
 import bg.znestorov.sofbus24.publictransport.RetrievePublicTransportDirection;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
@@ -39,6 +47,8 @@ public class ScheduleVehicleFragment extends ListFragment implements
 		OnItemClickListener {
 
 	private Activity context;
+	private StationsDataSource stationsDatasource;
+	private String language;
 
 	private SearchEditText searchEditText;
 	private GridView gridViewScheduleVehicles;
@@ -73,6 +83,8 @@ public class ScheduleVehicleFragment extends ListFragment implements
 
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
+		stationsDatasource = new StationsDataSource(context);
+		language = LanguageChange.getUserLocale(context);
 
 		// Get the needed fragment information
 		initInformation(savedInstanceState);
@@ -118,13 +130,243 @@ public class ScheduleVehicleFragment extends ListFragment implements
 		String rowCaption = scheduleStationAdapter.getVehicleCaption(context,
 				vehicle);
 
-		// Getting the PublicTransport schedule from the SKGT site
+		String vehicleNumber = vehicle.getNumber();
+		if ("10-ТМ".equals(vehicleNumber)) {
+			proceedSpecialCase(createDirectionEntity10TM(vehicle));
+		} else if ("44-Б".equals(vehicleNumber)) {
+			proceedSpecialCase(createDirectionEntity44B(vehicle));
+		} else if ("21-22".equals(vehicleNumber)) {
+			vehicle.setNumber("22");
+			proceedStandardCase(vehicle, rowCaption);
+		} else {
+			proceedStandardCase(vehicle, rowCaption);
+		}
+	}
+
+	/**
+	 * Create a direction entity in case the vehicle is a bus with number 10-TM
+	 * 
+	 * @param vehicle
+	 *            the selected vehicle with number 10-TM
+	 * @return a direction entity for this bus
+	 */
+	private DirectionsEntity createDirectionEntity10TM(VehicleEntity vehicle) {
+		ArrayList<String> vt = new ArrayList<String>();
+		ArrayList<String> lid = new ArrayList<String>();
+		ArrayList<String> rid = new ArrayList<String>();
+
+		ArrayList<String> directionsNames = new ArrayList<String>();
+		ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>();
+		ArrayList<ArrayList<StationEntity>> directionsList = new ArrayList<ArrayList<StationEntity>>();
+
+		// Direction 1
+		vt.add("1");
+		lid.add("145");
+		rid.add("1981");
+		directionsNames.add(translateString("Ул. Филип Кутев - Хотел Хилтън"));
+		stationsList.add(createPublicTransportStation("6359",
+				translateString("Ул. Филип Кутев"), "29000"));
+		stationsList.add(createPublicTransportStation("2654",
+				translateString("Кв.Хладилника"), "17308"));
+		stationsList.add(createPublicTransportStation("0342",
+				translateString("Бул.Никола Вапцаров"), "17294"));
+		stationsList.add(createPublicTransportStation("2039",
+				translateString("Ул.Люботрън"), "25748"));
+		stationsList.add(createPublicTransportStation("0923",
+				translateString("Кемпински хотел Зографски"), "26999"));
+		stationsList.add(createPublicTransportStation("2330",
+				translateString("Хотел Хемус"), "18120"));
+		stationsList.add(createPublicTransportStation("0397",
+				translateString("Хотел Хилтън"), "18115"));
+		directionsList.add(stationsList);
+
+		stationsList.clear();
+
+		// Direction 2
+		vt.add("1");
+		lid.add("145");
+		rid.add("1982");
+		directionsNames.add(translateString("Хотел Хилтън - Ул. Филип Кутев"));
+		stationsList.add(createPublicTransportStation("0397",
+				translateString("Хотел Хилтън"), "18115"));
+		stationsList.add(createPublicTransportStation("1322",
+				translateString("Хотел Хемус"), "25739"));
+		stationsList.add(createPublicTransportStation("0922",
+				translateString("Кемпински хотел Зографски"), "25756"));
+		stationsList.add(createPublicTransportStation("2038",
+				translateString("Ул.Люботрън"), "25747"));
+		stationsList.add(createPublicTransportStation("0343",
+				translateString("Бул.Никола Вапцаров"), "25751"));
+		stationsList.add(createPublicTransportStation("2655",
+				translateString("Кв.Хладилника"), "17311"));
+		stationsList.add(createPublicTransportStation("6359",
+				translateString("Ул. Филип Кутев"), "29000"));
+		directionsList.add(stationsList);
+
+		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
+				directionsNames, directionsList);
+	}
+
+	/**
+	 * Create a direction entity in case the vehicle is a bus with number 44-B
+	 * 
+	 * @param vehicle
+	 *            the selected vehicle with number 44-B
+	 * @return a direction entity for this bus
+	 */
+	private DirectionsEntity createDirectionEntity44B(VehicleEntity vehicle) {
+		ArrayList<String> vt = new ArrayList<String>();
+		ArrayList<String> lid = new ArrayList<String>();
+		ArrayList<String> rid = new ArrayList<String>();
+
+		ArrayList<String> directionsNames = new ArrayList<String>();
+		ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>();
+		ArrayList<ArrayList<StationEntity>> directionsList = new ArrayList<ArrayList<StationEntity>>();
+
+		// Direction 1
+		vt.add("1");
+		lid.add("204");
+		rid.add("1874");
+		directionsNames
+				.add(translateString("Автостанция Банкя - Кв. Градоман"));
+		stationsList.add(createPublicTransportStation("0050",
+				translateString("Автостанция Банкя"), "22111"));
+		stationsList.add(createPublicTransportStation("0503",
+				translateString("Центъра Банкя"), "21906"));
+		stationsList.add(createPublicTransportStation("0965",
+				translateString("Ул. Странджа"), "22054"));
+		stationsList.add(createPublicTransportStation("1433",
+				translateString("Ул. Родина"), "22045"));
+		stationsList.add(createPublicTransportStation("1425",
+				translateString("Начало кв. Михайлово"), "22039"));
+		stationsList.add(createPublicTransportStation("1674",
+				translateString("Стопанство Михайлово"), "22033"));
+		stationsList.add(createPublicTransportStation("0446",
+				translateString("Ул. Алеко Константинов"), "22027"));
+		stationsList.add(createPublicTransportStation("1921",
+				translateString("Ул. Даме Груев"), "22019"));
+		stationsList.add(createPublicTransportStation("0870",
+				translateString("Ул. Топлика"), "22015"));
+		stationsList.add(createPublicTransportStation("1992",
+				translateString("Ул. Китката"), "22007"));
+		stationsList.add(createPublicTransportStation("0982",
+				translateString("Края на с. Михайлово"), "22006"));
+		stationsList.add(createPublicTransportStation("0832",
+				translateString("Кв. Градоман"), "23665"));
+		directionsList.add(stationsList);
+
+		stationsList.clear();
+
+		// Direction 2
+		vt.add("1");
+		lid.add("145");
+		rid.add("1982");
+		directionsNames
+				.add(translateString("Кв. Градоман - Автостанция Банкя"));
+		stationsList.add(createPublicTransportStation("0832",
+				translateString("Кв. Градоман"), "23665"));
+		stationsList.add(createPublicTransportStation("6351",
+				translateString("Края на с. Михайлово"), "22013"));
+		stationsList.add(createPublicTransportStation("1991",
+				translateString("Ул.Китката"), "22008"));
+		stationsList.add(createPublicTransportStation("0869",
+				translateString("Ул.Топлика"), "22016"));
+		stationsList.add(createPublicTransportStation("1920",
+				translateString("Ул.Даме Груев"), "22020"));
+		stationsList.add(createPublicTransportStation("0445",
+				translateString("Ул.Алеко Константинов"), "22028"));
+		stationsList.add(createPublicTransportStation("1673",
+				translateString("Стопанство Михайлово"), "22034"));
+		stationsList.add(createPublicTransportStation("1424",
+				translateString("Начало кв.Михайлово"), "22040"));
+		stationsList.add(createPublicTransportStation("1432",
+				translateString("Ул.Родина"), "22046"));
+		stationsList.add(createPublicTransportStation("0964",
+				translateString("Ул.Странджа"), "22055"));
+		stationsList.add(createPublicTransportStation("0502",
+				translateString("Центъра Банкя"), "21907"));
+		stationsList.add(createPublicTransportStation("0051",
+				translateString("Автостанция Банкя"), "22109"));
+		directionsList.add(stationsList);
+
+		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
+				directionsNames, directionsList);
+	}
+
+	/**
+	 * Translate the string if needed
+	 * 
+	 * @param input
+	 *            the input string
+	 * @return the translated string (if needed)
+	 */
+	private String translateString(String input) {
+		String output;
+		if (!"bg".equals(language)) {
+			output = TranslatorCyrillicToLatin.translate(context, input);
+		} else {
+			output = input;
+		}
+
+		return output;
+	}
+
+	/**
+	 * Create a PublicTransportStationEntity using the given number, name and id
+	 * 
+	 * @param number
+	 *            the station number
+	 * @param name
+	 *            the station name
+	 * @param id
+	 *            the station id
+	 * @return the PublicTransportStation entity
+	 */
+	private PublicTransportStationEntity createPublicTransportStation(
+			String number, String name, String id) {
+		stationsDatasource.open();
+
+		StationEntity station = stationsDatasource.getStation("6359");
+		if (station == null) {
+			station = new StationEntity();
+		}
+		station.setNumber(number);
+		station.setName(name);
+
+		stationsDatasource.close();
+
+		return new PublicTransportStationEntity(station, id);
+
+	}
+
+	/**
+	 * Retrieve information about the selected vehicle in the special cases
+	 * 
+	 * @param ptDirectionsEntity
+	 *            the DirectionEntity in the special case
+	 */
+	private void proceedSpecialCase(DirectionsEntity ptDirectionsEntity) {
+		DialogFragment dialogFragment = ChooseDirectionDialog
+				.newInstance(ptDirectionsEntity);
+		dialogFragment.show(getChildFragmentManager(), "dialog");
+	}
+
+	/**
+	 * Retrieve information about the selected vehicle in the standard cases
+	 * 
+	 * @param vehicle
+	 *            the selected vehicle
+	 * @param rowCaption
+	 *            the selectedrow caption
+	 */
+	private void proceedStandardCase(VehicleEntity vehicle, String rowCaption) {
 		ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setMessage(Html.fromHtml(String.format(
 				getString(R.string.pt_item_loading_schedule), rowCaption)));
 		RetrievePublicTransportDirection retrievePublicTransportDirection = new RetrievePublicTransportDirection(
 				context, this, progressDialog, vehicle);
 		retrievePublicTransportDirection.execute();
+
 	}
 
 	/**
