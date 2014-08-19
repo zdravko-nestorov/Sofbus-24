@@ -56,17 +56,13 @@ public class Utils {
 			case 2:
 			case 4:
 				directionNameParts[0] = directionNameParts[0].trim();
-				directionNameParts[0] = directionNameParts[0].replaceAll("\\(",
-						" (");
+				directionNameParts[0] = directionNameParts[0].replaceAll("\\(", " (");
 
 				directionNameParts[1] = directionNameParts[1].trim();
-				directionNameParts[1] = getValueBeforeLast(
-						directionNameParts[1], "(");
-				directionNameParts[1] = getValueBefore(directionNameParts[1],
-						"/");
+				directionNameParts[1] = getValueBeforeLast(directionNameParts[1], "(");
+				directionNameParts[1] = getValueBefore(directionNameParts[1], "/");
 
-				directionName = directionNameParts[0] + " - "
-						+ directionNameParts[1];
+				directionName = directionNameParts[0] + " - " + directionNameParts[1];
 				directionName = directionName.replaceAll(" +", " ");
 
 				break;
@@ -78,24 +74,18 @@ public class Utils {
 				}
 
 				directionNameParts[0] = directionNameParts[0].trim();
-				directionNameParts[0] = directionNameParts[0].replaceAll("\\(",
-						" (");
+				directionNameParts[0] = directionNameParts[0].replaceAll("\\(", " (");
 
 				directionNameParts[1] = directionNameParts[1].trim();
 
 				directionNameParts[2] = directionNameParts[2].trim();
-				directionNameParts[2] = getValueBeforeLast(
-						directionNameParts[2], "(");
-				directionNameParts[2] = getValueBefore(directionNameParts[2],
-						"/");
+				directionNameParts[2] = getValueBeforeLast(directionNameParts[2], "(");
+				directionNameParts[2] = getValueBefore(directionNameParts[2], "/");
 
 				if (isDirectionThreeParts) {
-					directionName = directionNameParts[0] + " - "
-							+ directionNameParts[1] + " - "
-							+ directionNameParts[2];
+					directionName = directionNameParts[0] + " - " + directionNameParts[1] + " - " + directionNameParts[2];
 				} else {
-					directionName = directionNameParts[0] + " - "
-							+ directionNameParts[1];
+					directionName = directionNameParts[0] + " - " + directionNameParts[1];
 				}
 				directionName = directionName.replaceAll(" +", " ");
 
@@ -121,17 +111,18 @@ public class Utils {
 		directionName = directionName.replaceAll(" - 8 - ", "-8 - ");
 		directionName = directionName.replaceAll(" - 8", "-8");
 		directionName = directionName.replaceAll("6 - ", "6-");
+		directionName = directionName.replaceAll(" - Г", "-Г");
 		directionName = directionName.replaceAll("н - з", "н-з");
 		directionName = directionName.replaceAll("М - ция", "М-ция");
 		directionName = directionName.replaceAll("Ц - р", "Ц-р");
-		directionName = directionName.replaceAll("Метр.", "Метростанция ");
-		directionName = directionName.replaceAll("Метрост.", "Метростанция ");
-		directionName = directionName.replaceAll("Зап.", "Западен ");
-		directionName = directionName.replaceAll("Ц. гара", "Централна гара");
-		directionName = directionName.replaceAll("Ц.гара", "Централна гара");
-		directionName = directionName.replaceAll("Ц. Гара", "Централна гара");
-		directionName = directionName.replaceAll("Ц.Гара", "Централна гара");
-		directionName = directionName.replaceAll("Ст.Град", "Студентски Град");
+		directionName = directionName.replaceAll("Метр\\.", "Метростанция ");
+		directionName = directionName.replaceAll("Метрост\\.", "Метростанция ");
+		directionName = directionName.replaceAll("Зап\\.", "Западен ");
+		directionName = directionName.replaceAll("Ц\\. гара", "Централна гара");
+		directionName = directionName.replaceAll("Ц\\.гара", "Централна гара");
+		directionName = directionName.replaceAll("Ц\\. Гара", "Централна гара");
+		directionName = directionName.replaceAll("Ц\\.Гара", "Централна гара");
+		directionName = directionName.replaceAll("Ст\\.Град", "Студентски Град");
 
 		directionName = directionName.trim().replaceAll(" +", " ");
 
