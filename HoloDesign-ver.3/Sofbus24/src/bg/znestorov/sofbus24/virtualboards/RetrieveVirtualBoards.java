@@ -459,30 +459,53 @@ public class RetrieveVirtualBoards {
 				// Check how many unique station numbers are returned
 				LinkedHashSet<String> stationNumbers = getStationNumbers(htmlResult);
 
-				// In case of no captcha needed, requesting multiple results
-				// and the search is done for a number that is not formatted
-				// (i.e. entered "2"), add "0002" to the unique station numbers
-				// and make a new request to the sumc site to retrieve the info
-				// for the new number
-				String stationNumber = station.getFormattedNumber();
+				/**
+				 * In case of no captcha needed, requesting multiple results and
+				 * the search is done for a number that is not formatted (i.e.
+				 * entered "2"), add "0002" to the unique station numbers and
+				 * make a new request to the sumc site to retrieve the info for
+				 * the new number
+				 */
+				String stationNumberFormatted = station.getFormattedNumber();
 				if (!htmlResult.contains(Constants.VB_CAPTCHA_REQUIRED)
 						&& htmlRequestCode == HtmlRequestCodesEnum.MULTIPLE_RESULTS
-						&& Utils.isNumeric(stationNumber)
-						&& stationNumbers.add(stationNumber)) {
+						&& Utils.isNumeric(stationNumberFormatted)
+						&& stationNumbers.add(stationNumberFormatted)) {
 					httpPost = createSumcRequest(new StationEntity(station),
 							null, captchaText, captchaId);
-					htmlResult = httpClient.execute(httpPost,
-							new BasicResponseHandler()) + "\n" + htmlResult;
+
+					/**
+					 * Forming the combined html result as a combination of the
+					 * new one and the old one
+					 */
+					String htmlResultNew = httpClient.execute(httpPost,
+							new BasicResponseHandler());
+					String htmlResultCombined = htmlResultNew + "\n"
+							+ htmlResult;
+
+					/**
+					 * Checking the combined result about the unique station
+					 * numbers<br/>
+					 * - in case of 1 station number found - it means that the
+					 * final result is built only by the original request or the
+					 * new request<br/>
+					 * - otherwise - we need the combined result
+					 */
+					stationNumbers = getStationNumbers(htmlResultCombined);
+					if (stationNumbers.size() == 1) {
+						if (stationNumbers.contains(stationNumberFormatted)) {
+							htmlResult = htmlResultNew;
+							station.setNumber(stationNumberFormatted);
+						}
+					} else {
+						htmlResult = htmlResultCombined;
+					}
 				}
 
 				// Check if a capture is needed
 				if (htmlResult.contains(Constants.VB_CAPTCHA_REQUIRED)) {
 					htmlResultCode = HtmlResultCodesEnum.CAPTCHA_NEEDED;
 				} else {
-					// It is needed because we have to check if there is some
-					// information retrieved
-					stationNumbers = getStationNumbers(htmlResult);
-
 					/**
 					 * Proceed according to the unique station numbers in the
 					 * request:<br/>
