@@ -10,7 +10,9 @@
             android:summary="@string/pref_category_common_language_summary"
             android:title="@string/pref_category_common_language_title" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_category_visual" >
+    <PreferenceCategory
+        android:key="favouritesExpandedCategory"
+        android:title="@string/pref_category_visual" >
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="favouritesExpanded"

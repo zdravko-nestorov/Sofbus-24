@@ -46,6 +46,7 @@ public class Constants {
 	 */
 	public static final String PREFERENCE_KEY_APP_LANGUAGE = "appLanguage";
 	public static final String PREFERENCE_DEFAULT_VALUE_APP_LANGUAGE = "bg";
+	public static final String PREFERENCE_KEY_FAVOURITES_EXPANDED_CATEGORY = "favouritesExpandedCategory";
 	public static final String PREFERENCE_KEY_FAVOURITES_EXPANDED = "favouritesExpanded";
 	public static final boolean PREFERENCE_DEFAULT_VALUE_FAVOURITES_EXPANDED = false;
 	public static final String PREFERENCE_KEY_TIME_TYPE = "timeType";

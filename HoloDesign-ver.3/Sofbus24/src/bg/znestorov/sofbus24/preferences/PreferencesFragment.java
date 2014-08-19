@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -14,14 +16,6 @@ public class PreferencesFragment extends PreferenceFragment implements
 
 	private Activity context;
 	private GlobalEntity globalContext;
-
-	public PreferencesFragment() {
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +27,13 @@ public class PreferencesFragment extends PreferenceFragment implements
 		// Get the application and current activity context
 		context = getActivity();
 		globalContext = (GlobalEntity) context.getApplicationContext();
+
+		// Remove the preferences category in case of tablets
+		if (!globalContext.isPhoneDevice()) {
+			PreferenceCategory preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED_CATEGORY);
+			PreferenceScreen preferencesScreen = getPreferenceScreen();
+			preferencesScreen.removePreference(preferencesCategory);
+		}
 
 		// Registers a callback to be invoked when a change happens to a
 		// preference
