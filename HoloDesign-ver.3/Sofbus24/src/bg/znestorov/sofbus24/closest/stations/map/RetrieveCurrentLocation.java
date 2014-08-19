@@ -115,6 +115,13 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
+
+		if (progressDialog.isShowing()) {
+			Intent closestStationsMapIntent = new Intent(context,
+					ClosestStationsMap.class);
+			context.startActivity(closestStationsMapIntent);
+		}
+
 		dismissLoadingView();
 	}
 

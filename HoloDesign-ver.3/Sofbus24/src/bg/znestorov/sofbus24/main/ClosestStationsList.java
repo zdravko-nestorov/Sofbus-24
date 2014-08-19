@@ -39,7 +39,6 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 public class ClosestStationsList extends FragmentActivity {
 
 	private Activity context;
-	private GlobalEntity globalContext;
 	private Bundle savedInstanceState;
 
 	private ActionBar actionBar;
@@ -62,7 +61,6 @@ public class ClosestStationsList extends FragmentActivity {
 
 		// Get the current context and create a SavedInstanceState objects
 		context = ClosestStationsList.this;
-		globalContext = (GlobalEntity) getApplicationContext();
 		this.savedInstanceState = savedInstanceState;
 
 		initBundleInfo();
@@ -258,6 +256,7 @@ public class ClosestStationsList extends FragmentActivity {
 	public class RetrieveCurrentPosition extends AsyncTask<Void, Void, Void> {
 
 		private Activity context;
+		private GlobalEntity globalContext;
 		private ProgressDialog progressDialog;
 
 		// Default latitude and longitude
@@ -276,6 +275,7 @@ public class ClosestStationsList extends FragmentActivity {
 		public RetrieveCurrentPosition(Activity context,
 				ProgressDialog progressDialog) {
 			this.context = context;
+			this.globalContext = (GlobalEntity) context.getApplicationContext();
 			this.progressDialog = progressDialog;
 		}
 

@@ -25,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
+import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
 import bg.znestorov.sofbus24.databases.StationsDatabaseUtils;
 import bg.znestorov.sofbus24.databases.VehiclesDatabaseUtils;
 import bg.znestorov.sofbus24.entity.ConfigEntity;
@@ -165,7 +166,12 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			startActivity(historyIntent);
 			return true;
 		case R.id.action_closest_stations_map:
-			new RetrieveCurrentLocation(this).execute();
+			RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
+					this);
+			retrieveCurrentLocation.execute();
+			RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
+					retrieveCurrentLocation);
+			(new Thread(retrieveCurrentLocationTimeout)).start();
 			return true;
 		case R.id.action_closest_stations_list:
 			ProgressDialog progressDialog = new ProgressDialog(context);

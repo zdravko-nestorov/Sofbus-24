@@ -326,7 +326,7 @@ public class ScheduleVehicleFragment extends ListFragment implements
 			String number, String name, String id) {
 		stationsDatasource.open();
 
-		StationEntity station = stationsDatasource.getStation("6359");
+		StationEntity station = stationsDatasource.getStation(number);
 		if (station == null) {
 			station = new StationEntity();
 		}
