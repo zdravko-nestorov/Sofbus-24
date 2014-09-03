@@ -7,7 +7,7 @@ public class PublicTransportScheduleDialog extends PublicTransportSchedule {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		ActivityUtils.showAsPopup(this);
+		ActivityUtils.showAsPopup(this, false);
 		super.onCreate(savedInstanceState);
 
 		// TODO: Find a way to set the tabs always below the action bar (not to

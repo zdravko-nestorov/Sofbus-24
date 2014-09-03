@@ -81,28 +81,39 @@ public class ConfigEntity implements Serializable {
 		this.favouritesVisibilå = Boolean.parseBoolean(sharedPreferences
 				.getString(
 						Constants.CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY,
-						null));
+						favouritesVisibilå + ""));
 		this.favouritesPosition = Integer.parseInt(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_FAVOURITES_POSITION_KEY, null));
+				Constants.CONFIGURATION_PREF_FAVOURITES_POSITION_KEY,
+				favouritesPosition + ""));
+
 		this.searchVisibile = Boolean.parseBoolean(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY, null));
+				Constants.CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY,
+				searchVisibile + ""));
 		this.searchPosition = Integer.parseInt(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_SEARCH_POSITION_KEY, null));
+				Constants.CONFIGURATION_PREF_SEARCH_POSITION_KEY,
+				searchPosition + ""));
+
 		this.scheduleVisibile = Boolean.parseBoolean(sharedPreferences
 				.getString(
 						Constants.CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY,
-						null));
+						scheduleVisibile + ""));
 		this.schedulePosition = Integer.parseInt(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_SCHEDULE_POSITION_KEY, null));
+				Constants.CONFIGURATION_PREF_SCHEDULE_POSITION_KEY,
+				schedulePosition + ""));
+
 		this.metroVisibile = Boolean.parseBoolean(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_METRO_VISIBILITY_KEY, null));
+				Constants.CONFIGURATION_PREF_METRO_VISIBILITY_KEY,
+				metroVisibile + ""));
 		this.metroPosition = Integer.parseInt(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_METRO_POSITION_KEY, null));
+				Constants.CONFIGURATION_PREF_METRO_POSITION_KEY, metroPosition
+						+ ""));
 
 		this.stationsDbVersion = Integer.parseInt(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_STATIONS_KEY, null));
+				Constants.CONFIGURATION_PREF_STATIONS_KEY, stationsDbVersion
+						+ ""));
 		this.vehiclesDbVersion = Integer.parseInt(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_VEHICLES_KEY, null));
+				Constants.CONFIGURATION_PREF_VEHICLES_KEY, vehiclesDbVersion
+						+ ""));
 	}
 
 	public ConfigEntity(Document doc) {
@@ -144,9 +155,9 @@ public class ConfigEntity implements Serializable {
 		this.vehiclesDbVersion = vehiclesDbVersion;
 	}
 
-	public ConfigEntity(int versionCode, String versionName, int stationsDbVersion,
-			boolean favouritesVisibilå, int favouritesPosition,
-			boolean searchVisibile, int searchPosition,
+	public ConfigEntity(int versionCode, String versionName,
+			int stationsDbVersion, boolean favouritesVisibilå,
+			int favouritesPosition, boolean searchVisibile, int searchPosition,
 			boolean scheduleVisibile, int schedulePosition,
 			boolean metroVisibile, int metroPosition, int vehiclesDbVersion) {
 		this.versionCode = versionCode;

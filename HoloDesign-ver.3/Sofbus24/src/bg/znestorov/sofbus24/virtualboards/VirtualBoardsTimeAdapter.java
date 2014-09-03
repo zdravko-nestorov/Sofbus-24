@@ -3,12 +3,17 @@ package bg.znestorov.sofbus24.virtualboards;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filterable;
@@ -17,6 +22,8 @@ import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.notifications.NotificationsDialog;
+import bg.znestorov.sofbus24.notifications.NotificationsReceiver;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
@@ -28,8 +35,8 @@ import bg.znestorov.sofbus24.utils.Utils;
  * @version 1.0
  * 
  */
-public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity> implements
-		Filterable {
+public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
+		implements Filterable {
 
 	private Activity context;
 	private VirtualBoardsStationEntity vbTimeStation;
@@ -41,6 +48,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity> implem
 		TextView stationCaption;
 		TextView stationDirection;
 		TextView stationTime;
+		ImageView stationAlarm;
 	}
 
 	public VirtualBoardsTimeAdapter(Activity context,
@@ -82,19 +90,23 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity> implem
 					.findViewById(R.id.vb_time_item_vehicle_direction);
 			viewHolder.stationTime = (TextView) rowView
 					.findViewById(R.id.cs_list_item_vehicle_time);
+			viewHolder.stationAlarm = (ImageView) rowView
+					.findViewById(R.id.vb_time_item_image_alarm);
 			rowView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) rowView.getTag();
 		}
 
 		// Fill the data
-		VehicleEntity stationVehicle = vbTimeStation.getVehiclesList().get(position);
+		VehicleEntity stationVehicle = vbTimeStation.getVehiclesList().get(
+				position);
 
 		viewHolder.vehicleImage
 				.setImageResource(getVehicleImage(stationVehicle));
 		viewHolder.stationCaption.setText(getVehicleCaption(stationVehicle));
 		viewHolder.stationDirection.setText(stationVehicle.getDirection());
 		viewHolder.stationTime.setText(getRowTimeCaption(stationVehicle));
+		setStationAlarm(viewHolder.stationAlarm, stationVehicle);
 
 		rowView.setOnClickListener(null);
 		rowView.setOnLongClickListener(null);
@@ -239,5 +251,43 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity> implem
 		}
 
 		return rowTimeCaption;
+	}
+
+	/**
+	 * Set on click listener ove the selected vehicle
+	 * 
+	 * @param stationAlarm
+	 *            station alarm image view
+	 * @param stationVehicle
+	 *            the station vehicle
+	 */
+	private void setStationAlarm(ImageView stationAlarm,
+			final VehicleEntity stationVehicle) {
+
+		stationAlarm.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				String[] vehicleInfo = new String[] {
+						String.format(vbTimeStation.getName() + " (%s)",
+								vbTimeStation.getNumber()),
+						getVehicleImage(stationVehicle) + "",
+						getVehicleCaption(stationVehicle),
+						stationVehicle.getDirection(), "3" };
+
+				AlarmManager alarmManager = (AlarmManager) context
+						.getSystemService(Context.ALARM_SERVICE);
+
+				Intent intent = new Intent(context, NotificationsReceiver.class);
+				intent.putExtra(NotificationsDialog.BUNDLE_VEHICLE_INFO,
+						vehicleInfo);
+
+				PendingIntent pendingIntent = PendingIntent.getBroadcast(
+						context, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+
+				// TODO: Set the real time of the alarm
+				alarmManager.set(AlarmManager.RTC_WAKEUP,
+						System.currentTimeMillis() + 3000, pendingIntent);
+			}
+		});
 	}
 }

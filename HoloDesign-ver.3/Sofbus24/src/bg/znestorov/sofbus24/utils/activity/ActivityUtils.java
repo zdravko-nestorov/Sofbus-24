@@ -507,8 +507,10 @@ public class ActivityUtils {
 	 * 
 	 * @param activity
 	 *            the activity
+	 * @param isInvisible
+	 *            mark if the activity will be invisible or not
 	 */
-	public static void showAsPopup(Activity activity) {
+	public static void showAsPopup(Activity activity, boolean isInvisible) {
 		activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
 		activity.getWindow().setFlags(
 				WindowManager.LayoutParams.FLAG_DIM_BEHIND,
@@ -520,14 +522,19 @@ public class ActivityUtils {
 
 		int pixelsHeight = metrics.heightPixels;
 		int pixelsWidth = metrics.widthPixels;
-		if (pixelsHeight > pixelsWidth) {
-			// Portrait orientation
-			pixelsWidth = (int) (pixelsHeight * 0.58);
-			pixelsHeight = (int) (pixelsHeight * 0.82);
+		if (!isInvisible) {
+			if (pixelsHeight > pixelsWidth) {
+				// Portrait orientation
+				pixelsWidth = (int) (pixelsHeight * 0.58);
+				pixelsHeight = (int) (pixelsHeight * 0.82);
+			} else {
+				// Landscape orientation
+				pixelsWidth = (int) (pixelsWidth * 0.58);
+				pixelsHeight = (int) (pixelsHeight * 0.82);
+			}
 		} else {
-			// Landscape orientation
-			pixelsWidth = (int) (pixelsWidth * 0.58);
-			pixelsHeight = (int) (pixelsHeight * 0.82);
+			pixelsWidth = 0;
+			pixelsHeight = 0;
 		}
 
 		LayoutParams params = activity.getWindow().getAttributes();

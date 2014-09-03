@@ -274,4 +274,8 @@
     <string name="history_item_station_number" formatted="false">Спирка номер: %s</string>
     <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Търсене от %s (%s)</font></i>]]></string>
 
+    <!-- Notifications -->
+    <string name="notifications_title">Напомняне</string>
+    <string name="notifications_message">ЩЕ ПРИСТИГНЕ СЛЕД %s МИНУТИ</string>
+
 </resources>

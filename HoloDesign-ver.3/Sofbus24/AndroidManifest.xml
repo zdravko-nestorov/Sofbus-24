@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="bg.znestorov.sofbus24.main"
-    android:versionCode="17"
-    android:versionName="2.1" >
+    android:versionCode="18"
+    android:versionName="2.2" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -26,6 +26,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name="bg.znestorov.sofbus24.entity.GlobalEntity"
@@ -122,6 +123,16 @@
         <activity
             android:name="bg.znestorov.sofbus24.main.MetroScheduleDialog"
             android:theme="@style/PopupTheme" />
+
+        <!-- Notifications -->
+        <activity
+            android:name="bg.znestorov.sofbus24.main.Notifications"
+            android:theme="@style/PopupTheme" />
+
+        <receiver
+            android:name="bg.znestorov.sofbus24.notifications.NotificationsReceiver"
+            android:enabled="true"
+            android:process=":remote" />
     </application>
 
 </manifest>

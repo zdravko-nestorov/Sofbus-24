@@ -1,7 +1,6 @@
 package bg.znestorov.sofbus24.main;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -38,7 +37,7 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 public class ClosestStationsList extends FragmentActivity {
 
-	private Activity context;
+	private FragmentActivity context;
 	private Bundle savedInstanceState;
 
 	private ActionBar actionBar;
@@ -255,7 +254,7 @@ public class ClosestStationsList extends FragmentActivity {
 	 */
 	public class RetrieveCurrentPosition extends AsyncTask<Void, Void, Void> {
 
-		private Activity context;
+		private FragmentActivity context;
 		private GlobalEntity globalContext;
 		private ProgressDialog progressDialog;
 
@@ -272,7 +271,7 @@ public class ClosestStationsList extends FragmentActivity {
 		private boolean isNetworkProviderOn = true;
 		private boolean isGpsProviderOn = true;
 
-		public RetrieveCurrentPosition(Activity context,
+		public RetrieveCurrentPosition(FragmentActivity context,
 				ProgressDialog progressDialog) {
 			this.context = context;
 			this.globalContext = (GlobalEntity) context.getApplicationContext();
@@ -360,7 +359,7 @@ public class ClosestStationsList extends FragmentActivity {
 				}
 			} else {
 				DialogFragment dialogFragment = new LocationSourceDialog();
-				dialogFragment.show(getSupportFragmentManager(),
+				dialogFragment.show(context.getSupportFragmentManager(),
 						"dialogFragment");
 			}
 

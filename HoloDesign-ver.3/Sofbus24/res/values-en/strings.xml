@@ -271,4 +271,8 @@
     <string name="history_item_station_number" formatted="false">Station number: %s</string>
     <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Search from %s (%s)</font></i>]]></string>
 
+    <!-- Notifications -->
+    <string name="notifications_title">Reminder</string>
+    <string name="notifications_message">WILL ARRIVE AFTER %s MINUTES</string>
+
 </resources>

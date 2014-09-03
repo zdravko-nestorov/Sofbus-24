@@ -7,7 +7,7 @@ public class HistoryDialog extends History {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		ActivityUtils.showAsPopup(this);
+		ActivityUtils.showAsPopup(this, false);
 		super.onCreate(savedInstanceState);
 	}
 
