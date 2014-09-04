@@ -27,6 +27,8 @@
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name="bg.znestorov.sofbus24.entity.GlobalEntity"
@@ -132,7 +134,13 @@
         <receiver
             android:name="bg.znestorov.sofbus24.notifications.NotificationsReceiver"
             android:enabled="true"
-            android:process=":remote" />
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="bg.znestorov.sofbus24.notifications.NotificationsService" />
     </application>
 
 </manifest>

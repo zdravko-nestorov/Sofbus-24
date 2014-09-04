@@ -268,11 +268,12 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 			@Override
 			public void onClick(View arg0) {
 				String[] vehicleInfo = new String[] {
-						String.format(vbTimeStation.getName() + " (%s)",
+						vbTimeStation.getName(),
+						context.getString(R.string.history_item_station_number,
 								vbTimeStation.getNumber()),
 						getVehicleImage(stationVehicle) + "",
 						getVehicleCaption(stationVehicle),
-						stationVehicle.getDirection(), "3" };
+						stationVehicle.getDirection(), "~3ì" };
 
 				AlarmManager alarmManager = (AlarmManager) context
 						.getSystemService(Context.ALARM_SERVICE);
@@ -286,7 +287,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 
 				// TODO: Set the real time of the alarm
 				alarmManager.set(AlarmManager.RTC_WAKEUP,
-						System.currentTimeMillis() + 3000, pendingIntent);
+						System.currentTimeMillis() + 1000, pendingIntent);
 			}
 		});
 	}

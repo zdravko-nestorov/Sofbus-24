@@ -4,16 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import bg.znestorov.sofbus24.main.Notifications;
 
 /**
- * Fragment Activity used to start a new fragment dialog with the notification
- * (it is called when the elapsed time is passed)
+ * Fragment Activity used to start a new service, responsible for showing the
+ * dialog notification
  * 
  * @author Zdravko Nestorov
  * @version 1.0
  */
 public class NotificationsReceiver extends BroadcastReceiver {
+
+	public static final String BUNDLE_RECEIVER_KEY = "NotificationsReceiver";
+	public static final String BUNDLE_SERVICE_VALUE = "NotificationsService";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -21,11 +23,10 @@ public class NotificationsReceiver extends BroadcastReceiver {
 		String[] vehicleInfo = (String[]) bundle
 				.getSerializable(NotificationsDialog.BUNDLE_VEHICLE_INFO);
 
-		Intent newIntent = new Intent(context, Notifications.class);
-		newIntent.putExtra(NotificationsDialog.BUNDLE_VEHICLE_INFO,
+		Intent serviceIntent = new Intent(context, NotificationsService.class);
+		serviceIntent.putExtra(BUNDLE_RECEIVER_KEY, BUNDLE_SERVICE_VALUE);
+		serviceIntent.putExtra(NotificationsDialog.BUNDLE_VEHICLE_INFO,
 				vehicleInfo);
-		newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		context.startActivity(newIntent);
+		context.startService(serviceIntent);
 	}
-
 }

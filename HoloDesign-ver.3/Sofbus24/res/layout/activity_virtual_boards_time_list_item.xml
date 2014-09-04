@@ -67,7 +67,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/vb_time_item_vehicle_caption"
         android:layout_marginLeft="12sp"
-        android:layout_marginRight="7sp"
+        android:layout_marginRight="3sp"
         android:minHeight="@dimen/vb_time_image_vehicle_height"
         android:minWidth="@dimen/vb_time_image_vehicle_width" >
 

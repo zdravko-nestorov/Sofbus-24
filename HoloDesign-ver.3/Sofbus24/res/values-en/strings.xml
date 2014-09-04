@@ -273,6 +273,6 @@
 
     <!-- Notifications -->
     <string name="notifications_title">Reminder</string>
-    <string name="notifications_message">WILL ARRIVE AFTER %s MINUTES</string>
+    <string name="notifications_message">REMAINING TIME: %s</string>
 
 </resources>

@@ -276,6 +276,6 @@
 
     <!-- Notifications -->
     <string name="notifications_title">Напомняне</string>
-    <string name="notifications_message">ЩЕ ПРИСТИГНЕ СЛЕД %s МИНУТИ</string>
+    <string name="notifications_message">ОСТАВАЩО ВРЕМЕ: %s</string>
 
 </resources>

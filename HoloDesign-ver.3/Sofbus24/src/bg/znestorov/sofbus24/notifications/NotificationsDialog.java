@@ -14,7 +14,6 @@ import android.os.Vibrator;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.main.R;
@@ -50,13 +49,6 @@ public class NotificationsDialog extends DialogFragment {
 		context = getActivity();
 		vehicleInfo = (String[]) getArguments().getSerializable(
 				BUNDLE_VEHICLE_INFO);
-
-		// Wake up the device and turn the screen on
-		context.getWindow().addFlags(
-				LayoutParams.FLAG_DISMISS_KEYGUARD
-						| LayoutParams.FLAG_SHOW_WHEN_LOCKED
-						| LayoutParams.FLAG_TURN_SCREEN_ON
-						| LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		// Set up the alarm
 		Uri notification = RingtoneManager
@@ -114,8 +106,10 @@ public class NotificationsDialog extends DialogFragment {
 	}
 
 	private void initLayoutFields(View view) {
-		TextView stationCaption = (TextView) view
-				.findViewById(R.id.notifications_dialog_station_caption);
+		TextView stationName = (TextView) view
+				.findViewById(R.id.notifications_dialog_station_name);
+		TextView stationNumber = (TextView) view
+				.findViewById(R.id.notifications_dialog_station_number);
 		ImageView vehicleImage = (ImageView) view
 				.findViewById(R.id.notifications_dialog_image_vehicle);
 		TextView vehicleCaption = (TextView) view
@@ -125,12 +119,15 @@ public class NotificationsDialog extends DialogFragment {
 		TextView vehicleTime = (TextView) view
 				.findViewById(R.id.notifications_dialog_vehicle_time);
 
-		stationCaption.setText(vehicleInfo[0]);
-		vehicleImage.setImageResource(Integer.parseInt(vehicleInfo[1]));
-		vehicleCaption.setText(vehicleInfo[2]);
-		vehicleDirection.setText(vehicleInfo[3]);
+		vehicleDirection.setSelected(true);
+
+		stationName.setText(vehicleInfo[0]);
+		stationNumber.setText(vehicleInfo[1]);
+		vehicleImage.setImageResource(Integer.parseInt(vehicleInfo[2]));
+		vehicleCaption.setText(vehicleInfo[3]);
+		vehicleDirection.setText(vehicleInfo[4]);
 		vehicleTime.setText(getString(R.string.notifications_message,
-				vehicleInfo[4]));
+				vehicleInfo[5]));
 	}
 
 	/**
