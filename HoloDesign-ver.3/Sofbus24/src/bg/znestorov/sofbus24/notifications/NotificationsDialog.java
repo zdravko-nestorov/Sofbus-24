@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * DialogFragment used to show a messaged when the elapsed time is passed
@@ -141,6 +142,8 @@ public class NotificationsDialog extends DialogFragment {
 		if (ringer != null) {
 			ringer.stop();
 		}
+
+		ActivityUtils.enableScreenLock(context);
 	}
 
 }

@@ -552,7 +552,7 @@ public class ActivityUtils {
 
 	/**
 	 * Used to ulock the screen (this is the only thing that seems to work in
-	 * case of <code><item name="android:windowIsFloating">true</item></code>
+	 * case of <code><item name="android:windowIsFloating">true</item></code>)
 	 * 
 	 * @param context
 	 *            the current activity context
@@ -560,7 +560,21 @@ public class ActivityUtils {
 	public static void unlockScreen(Activity context) {
 		KeyguardManager myKeyGuard = (KeyguardManager) context
 				.getSystemService(Context.KEYGUARD_SERVICE);
-		KeyguardLock keyguardLock = myKeyGuard.newKeyguardLock("tagName");
+		KeyguardLock keyguardLock = myKeyGuard.newKeyguardLock("sofbus24");
 		keyguardLock.disableKeyguard();
+	}
+
+	/**
+	 * Used to enable the screen lock/screen guard (it is needed because the
+	 * unlockScreen(...) method disable the keyguard from showing)
+	 * 
+	 * @param context
+	 *            the current activity context
+	 */
+	public static void enableScreenLock(Activity context) {
+		KeyguardManager myKeyGuard = (KeyguardManager) context
+				.getSystemService(Context.KEYGUARD_SERVICE);
+		KeyguardLock keyguardLock = myKeyGuard.newKeyguardLock("sofbus24");
+		keyguardLock.reenableKeyguard();
 	}
 }
