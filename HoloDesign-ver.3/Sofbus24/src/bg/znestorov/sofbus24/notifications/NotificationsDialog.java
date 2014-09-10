@@ -17,7 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.Utils;
 
 /**
  * DialogFragment used to show a messaged when the elapsed time is passed
@@ -119,6 +119,8 @@ public class NotificationsDialog extends DialogFragment {
 				.findViewById(R.id.notifications_dialog_vehicle_direction);
 		TextView vehicleTime = (TextView) view
 				.findViewById(R.id.notifications_dialog_vehicle_time);
+		TextView currentTime = (TextView) view
+				.findViewById(R.id.notifications_dialog_current_time);
 
 		vehicleDirection.setSelected(true);
 
@@ -129,6 +131,8 @@ public class NotificationsDialog extends DialogFragment {
 		vehicleDirection.setText(vehicleInfo[4]);
 		vehicleTime.setText(getString(R.string.notifications_message,
 				vehicleInfo[5]));
+		currentTime.setText(getString(R.string.vb_time_current_time,
+				Utils.getCurrentDateTime()));
 	}
 
 	/**
@@ -142,8 +146,6 @@ public class NotificationsDialog extends DialogFragment {
 		if (ringer != null) {
 			ringer.stop();
 		}
-
-		ActivityUtils.enableScreenLock(context);
 	}
 
 }

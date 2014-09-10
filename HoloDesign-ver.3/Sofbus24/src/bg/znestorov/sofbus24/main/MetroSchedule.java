@@ -127,7 +127,7 @@ public class MetroSchedule extends FragmentActivity {
 			public void run() {
 				try {
 					// Reset the time shown in the action bar
-					actionBar.setSubtitle(Utils.getCurrentTime());
+					actionBar.setSubtitle(Utils.getCurrentDateTime());
 
 					// Initialize the fragment content
 					initFragmentContent();
@@ -251,7 +251,7 @@ public class MetroSchedule extends FragmentActivity {
 		String stationDirection = ms.getDirection();
 
 		actionBar.setTitle(stationNumber);
-		actionBar.setSubtitle(Utils.getCurrentTime());
+		actionBar.setSubtitle(Utils.getCurrentDateTime());
 		metroStationName.setText(stationName);
 		metroDirection.setText(stationDirection);
 	}

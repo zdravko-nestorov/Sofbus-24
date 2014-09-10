@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager.LayoutParams;
 import bg.znestorov.sofbus24.notifications.NotificationsDialog;
 import bg.znestorov.sofbus24.utils.LanguageChange;
-import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * Fragment Activity used to start a new fragment dialog with the notification
@@ -19,11 +18,7 @@ public class Notifications extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		ActivityUtils.showAsPopup(this, true);
 		super.onCreate(savedInstanceState);
-
-		// Unlock the screen
-		ActivityUtils.unlockScreen(this);
 
 		// Wake up the device and turn the screen on
 		getWindow().addFlags(

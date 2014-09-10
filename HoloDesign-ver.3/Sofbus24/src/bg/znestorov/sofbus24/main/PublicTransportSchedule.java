@@ -132,7 +132,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 			public void run() {
 				try {
 					// Reset the time shown in the action bar
-					actionBar.setSubtitle(Utils.getCurrentTime());
+					actionBar.setSubtitle(Utils.getCurrentDateTime());
 
 					// Initialize the fragment content
 					initFragmentContent();
@@ -258,7 +258,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 		String stationDirection = ptStation.getDirection();
 
 		actionBar.setTitle(stationNumber);
-		actionBar.setSubtitle(Utils.getCurrentTime());
+		actionBar.setSubtitle(Utils.getCurrentDateTime());
 		ptStationName.setText(stationName);
 		ptDirection.setText(stationDirection);
 	}

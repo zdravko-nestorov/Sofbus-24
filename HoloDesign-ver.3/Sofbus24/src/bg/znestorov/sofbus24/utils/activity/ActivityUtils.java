@@ -4,8 +4,6 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.KeyguardManager;
-import android.app.KeyguardManager.KeyguardLock;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -50,7 +48,6 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
  * @version 1.0
  * 
  */
-@SuppressWarnings("deprecation")
 public class ActivityUtils {
 
 	/**
@@ -548,33 +545,5 @@ public class ActivityUtils {
 
 		activity.getWindow().setAttributes(
 				(android.view.WindowManager.LayoutParams) params);
-	}
-
-	/**
-	 * Used to ulock the screen (this is the only thing that seems to work in
-	 * case of <code><item name="android:windowIsFloating">true</item></code>)
-	 * 
-	 * @param context
-	 *            the current activity context
-	 */
-	public static void unlockScreen(Activity context) {
-		KeyguardManager myKeyGuard = (KeyguardManager) context
-				.getSystemService(Context.KEYGUARD_SERVICE);
-		KeyguardLock keyguardLock = myKeyGuard.newKeyguardLock("sofbus24");
-		keyguardLock.disableKeyguard();
-	}
-
-	/**
-	 * Used to enable the screen lock/screen guard (it is needed because the
-	 * unlockScreen(...) method disable the keyguard from showing)
-	 * 
-	 * @param context
-	 *            the current activity context
-	 */
-	public static void enableScreenLock(Activity context) {
-		KeyguardManager myKeyGuard = (KeyguardManager) context
-				.getSystemService(Context.KEYGUARD_SERVICE);
-		KeyguardLock keyguardLock = myKeyGuard.newKeyguardLock("sofbus24");
-		keyguardLock.reenableKeyguard();
 	}
 }

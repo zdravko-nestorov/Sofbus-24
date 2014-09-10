@@ -7,6 +7,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.RefreshableListFragment;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
@@ -66,8 +67,8 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 		// Bundle
 		String vbTimeEmptyText = getArguments().getString(
 				Constants.BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST);
-		vbTimeStation = (VirtualBoardsStationEntity) getArguments().getSerializable(
-				Constants.BUNDLE_VIRTUAL_BOARDS_TIME);
+		vbTimeStation = (VirtualBoardsStationEntity) getArguments()
+				.getSerializable(Constants.BUNDLE_VIRTUAL_BOARDS_TIME);
 
 		// Set the ListAdapter
 		setListAdapter(vbTimeEmptyText);
@@ -83,13 +84,20 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 		setListAdapter(vbTimeEmptyText);
 	}
 
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		VirtualBoardsTimeAdapter virtualBoardsTimeAdapter = (VirtualBoardsTimeAdapter) getListAdapter();
+		virtualBoardsTimeAdapter.setStationAlarm(position);
+	}
+
 	/**
 	 * Set list adapter and the appropriate text message to it
 	 */
 	private void setListAdapter(String vbTimeEmptyText) {
 		VirtualBoardsTimeAdapter vbTimeAdapter = (VirtualBoardsTimeAdapter) getListAdapter();
 		if (vbTimeAdapter == null) {
-			vbTimeAdapter = new VirtualBoardsTimeAdapter(context, vbTimeStation);
+			vbTimeAdapter = new VirtualBoardsTimeAdapter(context, this,
+					vbTimeStation);
 			setListAdapter(vbTimeAdapter);
 		} else {
 			vbTimeAdapter.notifyDataSetChanged();
@@ -105,5 +113,4 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 			vbListEmptyTextView.setText(Html.fromHtml(vbTimeEmptyText));
 		}
 	}
-
 }

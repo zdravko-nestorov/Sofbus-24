@@ -93,7 +93,7 @@ public class FavouritesDataSource {
 
 			// Creating the information fields for each favorite (new Favorites
 			// version)
-			String currentDate = Utils.getCurrentTime();
+			String currentDate = Utils.getCurrentDateTime();
 
 			String dateAdded = station.getDateAdded();
 			if (dateAdded == null || "".equals(dateAdded)) {
@@ -302,7 +302,7 @@ public class FavouritesDataSource {
 	 */
 	public void updateStationInfo(StationEntity station) {
 		station = getStation(station);
-		station.setDateLastAccess(Utils.getCurrentTime());
+		station.setDateLastAccess(Utils.getCurrentDateTime());
 		station.setUsageCount(station.getUsageCount() + 1);
 
 		updateStation(station);

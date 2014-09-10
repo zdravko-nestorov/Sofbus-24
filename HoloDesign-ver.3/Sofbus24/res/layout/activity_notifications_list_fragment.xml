@@ -8,14 +8,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="8sp"
-        android:paddingLeft="8sp"
-        android:paddingRight="10sp"
-        android:paddingTop="12sp" >
+        android:layout_margin="9sp" >
 
         <LinearLayout
-            android:id="@+id/notifications_dialog_image_vehicle_layout"
+            android:id="@+id/notifications_image_vehicle_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12sp"
@@ -25,17 +21,17 @@
             android:minWidth="@dimen/vb_time_image_vehicle_width" >
 
             <ImageView
-                android:id="@+id/notifications_dialog_image_vehicle"
+                android:id="@+id/notifications_image_vehicle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/app_img_empty_content_description" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/notifications_dialog_vehicle_caption"
+            android:id="@+id/notifications_vehicle_caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/notifications_dialog_image_vehicle_layout"
+            android:layout_toRightOf="@+id/notifications_image_vehicle_layout"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
             android:singleLine="true"
@@ -44,11 +40,11 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/notifications_dialog_vehicle_direction"
+            android:id="@+id/notifications_vehicle_direction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/notifications_dialog_vehicle_caption"
-            android:layout_toRightOf="@+id/notifications_dialog_image_vehicle_layout"
+            android:layout_below="@+id/notifications_vehicle_caption"
+            android:layout_toRightOf="@+id/notifications_image_vehicle_layout"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
@@ -58,17 +54,17 @@
             android:textSize="12sp" />
 
         <LinearLayout
-            android:id="@+id/notifications_dialog_image_station_layout"
+            android:id="@+id/notifications_image_station_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/notifications_dialog_image_vehicle_layout"
+            android:layout_below="@+id/notifications_image_vehicle_layout"
             android:layout_marginLeft="3sp"
             android:layout_marginRight="12sp"
             android:minHeight="@dimen/vb_time_image_vehicle_height"
             android:minWidth="@dimen/vb_time_image_vehicle_width" >
 
             <ImageView
-                android:id="@+id/notifications_dialog_image_station"
+                android:id="@+id/notifications_image_station"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/app_img_empty_content_description"
@@ -76,11 +72,11 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/notifications_dialog_station_name"
+            android:id="@+id/notifications_station_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/notifications_dialog_image_vehicle_layout"
-            android:layout_toRightOf="@+id/notifications_dialog_image_station_layout"
+            android:layout_below="@+id/notifications_image_vehicle_layout"
+            android:layout_toRightOf="@+id/notifications_image_station_layout"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
             android:singleLine="true"
@@ -89,25 +85,26 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/notifications_dialog_station_number"
+            android:id="@+id/notifications_station_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/notifications_dialog_station_name"
-            android:layout_toRightOf="@+id/notifications_dialog_image_station_layout"
+            android:layout_below="@+id/notifications_station_name"
+            android:layout_toRightOf="@+id/notifications_image_station_layout"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/notifications_dialog_current_time"
+            android:id="@+id/notifications_current_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/notifications_dialog_image_station_layout"
-            android:layout_below="@+id/notifications_dialog_image_station_layout"
+            android:layout_alignLeft="@+id/notifications_image_station_layout"
+            android:layout_below="@+id/notifications_image_station_layout"
             android:layout_marginTop="5sp"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#FF2727"
             android:textSize="13sp"
             android:textStyle="bold|italic" />
     </RelativeLayout>
@@ -118,15 +115,12 @@
         android:background="@drawable/divider"
         tools:ignore="SmallSp" />
 
-    <TextView
-        android:id="@+id/notifications_dialog_vehicle_time"
+    <ExpandableListView
+        android:id="@+id/notifications_exp_list_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10sp"
-        android:singleLine="false"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#FF2727"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:drawSelectorOnTop="true"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true" />
 
 </LinearLayout>

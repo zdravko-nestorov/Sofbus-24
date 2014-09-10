@@ -3,12 +3,9 @@ package bg.znestorov.sofbus24.virtualboards;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -19,11 +16,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.notifications.NotificationsDialog;
-import bg.znestorov.sofbus24.notifications.NotificationsReceiver;
+import bg.znestorov.sofbus24.notifications.NotificationsChooserDialog;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
@@ -39,6 +36,8 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 		implements Filterable {
 
 	private Activity context;
+	private VirtualBoardsTimeFragment virtualBoardsTimeFragment;
+
 	private VirtualBoardsStationEntity vbTimeStation;
 	private String timeType;
 
@@ -52,11 +51,14 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 	}
 
 	public VirtualBoardsTimeAdapter(Activity context,
+			VirtualBoardsTimeFragment virtualBoardsTimeFragment,
 			VirtualBoardsStationEntity vbTimeStation) {
 		super(context, R.layout.activity_virtual_boards_time_list_item,
 				vbTimeStation.getVehiclesList());
 
 		this.context = context;
+		this.virtualBoardsTimeFragment = virtualBoardsTimeFragment;
+
 		this.vbTimeStation = vbTimeStation;
 
 		SharedPreferences sharedPreferences = PreferenceManager
@@ -107,10 +109,6 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 		viewHolder.stationDirection.setText(stationVehicle.getDirection());
 		viewHolder.stationTime.setText(getRowTimeCaption(stationVehicle));
 		setStationAlarm(viewHolder.stationAlarm, stationVehicle);
-
-		rowView.setOnClickListener(null);
-		rowView.setOnLongClickListener(null);
-		rowView.setLongClickable(false);
 
 		return rowView;
 	}
@@ -199,6 +197,41 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 	}
 
 	/**
+	 * Create a separated string, using the elements from the list (removing the
+	 * empty ones)
+	 * 
+	 * @param stationVehicle
+	 *            the station vehicle
+	 * @return a separated string with the arrival times
+	 */
+	private String getArrivalTimesWithoutEmpty(VehicleEntity stationVehicle) {
+		ArrayList<String> arrivalTimesList = stationVehicle.getArrivalTimes();
+		String currentTime = Utils.getCurrentTime();
+		StringBuilder arrivalTimes = new StringBuilder("");
+
+		for (int i = 0; i < arrivalTimesList.size(); i++) {
+			String timeToUse = Utils.getTimeDifference(context,
+					arrivalTimesList.get(i), currentTime);
+			if (timeToUse != null && !"".equals(timeToUse)
+					&& !"---".equals(timeToUse)) {
+				int remainingMinutes = Utils.getRemainingMinutes(timeToUse);
+
+				if (remainingMinutes > 1) {
+					arrivalTimes.append(arrivalTimesList.get(i)).append(", ");
+				}
+			}
+		}
+
+		// In very rare cases there are no results and the arrivalTimes array is
+		// empty (GooglePlay bug: StringIndexOutOfBoundsException)
+		if (arrivalTimes.length() > 1) {
+			arrivalTimes.deleteCharAt(arrivalTimes.length() - 2).trimToSize();
+		}
+
+		return arrivalTimes.toString();
+	}
+
+	/**
 	 * Create a separated string, using the elements from the list
 	 * 
 	 * @param stationVehicle
@@ -223,6 +256,39 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 
 		if (arrivalTimes.length() == 0) {
 			arrivalTimes.append("---");
+		}
+
+		return arrivalTimes.toString();
+	}
+
+	/**
+	 * Create a separated string, using the elements from the list (removing the
+	 * empty ones)
+	 * 
+	 * @param stationVehicle
+	 *            the station vehicle
+	 * @return a separated string with the remaining times
+	 */
+	private String getRemainingTimesWithoutEmpty(VehicleEntity stationVehicle) {
+		ArrayList<String> arrivalTimesList = stationVehicle.getArrivalTimes();
+		String currentTime = Utils.getCurrentTime();
+		StringBuilder arrivalTimes = new StringBuilder("");
+
+		for (int i = 0; i < arrivalTimesList.size(); i++) {
+			String timeToUse = Utils.getTimeDifference(context,
+					arrivalTimesList.get(i), currentTime);
+			if (timeToUse != null && !"".equals(timeToUse)
+					&& !"---".equals(timeToUse)) {
+				int remainingMinutes = Utils.getRemainingMinutes(timeToUse);
+
+				if (remainingMinutes > 1) {
+					arrivalTimes.append(timeToUse).append(", ");
+				}
+			}
+		}
+
+		if (arrivalTimes.length() > 1) {
+			arrivalTimes.deleteCharAt(arrivalTimes.length() - 2).trimToSize();
 		}
 
 		return arrivalTimes.toString();
@@ -254,7 +320,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 	}
 
 	/**
-	 * Set on click listener ove the selected vehicle
+	 * Set on click listener over the selected vehicle
 	 * 
 	 * @param stationAlarm
 	 *            station alarm image view
@@ -267,28 +333,61 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 		stationAlarm.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				setStationAlarm(stationVehicle);
+			}
+		});
+	}
+
+	/**
+	 * Set the alarm over the current selected row
+	 * 
+	 * @param stationVehicle
+	 *            the station vehicle
+	 */
+	private void setStationAlarm(VehicleEntity stationVehicle) {
+		String arrivalTimes = getArrivalTimesWithoutEmpty(stationVehicle);
+		String remainingTime = getRemainingTimesWithoutEmpty(stationVehicle);
+
+		// Check if there is some remaining time
+		if (remainingTime != null && !"".equals(remainingTime)) {
+
+			// Check if the user is on this screen for a long time
+			if (stationVehicle.getArrivalTimes().size() < remainingTime
+					.split(",").length + 2) {
 				String[] vehicleInfo = new String[] {
 						vbTimeStation.getName(),
 						context.getString(R.string.history_item_station_number,
 								vbTimeStation.getNumber()),
 						getVehicleImage(stationVehicle) + "",
 						getVehicleCaption(stationVehicle),
-						stationVehicle.getDirection(), "~3ì" };
+						stationVehicle.getDirection(), remainingTime,
+						arrivalTimes };
 
-				AlarmManager alarmManager = (AlarmManager) context
-						.getSystemService(Context.ALARM_SERVICE);
-
-				Intent intent = new Intent(context, NotificationsReceiver.class);
-				intent.putExtra(NotificationsDialog.BUNDLE_VEHICLE_INFO,
-						vehicleInfo);
-
-				PendingIntent pendingIntent = PendingIntent.getBroadcast(
-						context, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
-
-				// TODO: Set the real time of the alarm
-				alarmManager.set(AlarmManager.RTC_WAKEUP,
-						System.currentTimeMillis() + 1000, pendingIntent);
+				DialogFragment notificationsVBTimeDialog = NotificationsChooserDialog
+						.newInstance(vehicleInfo);
+				notificationsVBTimeDialog.show(
+						virtualBoardsTimeFragment.getChildFragmentManager(),
+						"NotificationsVBTimeDialog");
+			} else {
+				Toast.makeText(
+						context,
+						context.getString(R.string.notifications_chooser_error_message),
+						Toast.LENGTH_LONG).show();
 			}
-		});
+		} else {
+			Toast.makeText(context,
+					context.getString(R.string.notifications_error_message),
+					Toast.LENGTH_LONG).show();
+		}
+	}
+
+	/**
+	 * Set the alarm over the current selected row
+	 * 
+	 * @param position
+	 *            the position of the station vehicle
+	 */
+	public void setStationAlarm(int position) {
+		setStationAlarm(vbTimeStation.getVehiclesList().get(position));
 	}
 }

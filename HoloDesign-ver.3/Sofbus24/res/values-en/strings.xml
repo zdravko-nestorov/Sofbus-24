@@ -6,6 +6,7 @@
     <string name="app_img_empty_content_description" />
     <string name="app_button_ok">OK</string>
     <string name="app_button_save">Save</string>
+    <string name="app_button_confirm">Confirm</string>
     <string name="app_button_cancel">Cancel</string>
     <string name="app_button_yes">Yes</string>
     <string name="app_button_no">No</string>
@@ -273,6 +274,14 @@
 
     <!-- Notifications -->
     <string name="notifications_title">Reminder</string>
-    <string name="notifications_message">REMAINING TIME: %s</string>
+    <string name="notifications_chooser_title">Reminder settings</string>
+    <string name="notifications_chooser_selection">Select а line and how long before its arrival to receive a notification:</string>
+    <string name="notifications_chooser_message">Time (in minutes) before the arrival of the vehicle when you will receive a notification:</string>
+    <string name="notifications_chooser_error_message">There are no actions registred on this screen for some time. Please update the information and try again.</string>
+    <string name="notifications_chooser_message_selected">The alarm was shchedule for %s from now.</string>
+    <string name="notifications_chooser_cancel">The scheduled alarm was cancelled.</string>
+    <string name="notifications_error_message">There is no vehicle that passes through the station after the current time (or there is a minute remaining or less)</string>
+    <string name="notifications_message">ARRIVAL TIME: %s</string>
+    <string name="notifications_minutes">MINUTES</string>
 
 </resources>

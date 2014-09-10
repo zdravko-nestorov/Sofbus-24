@@ -129,7 +129,7 @@
         <!-- Notifications -->
         <activity
             android:name="bg.znestorov.sofbus24.main.Notifications"
-            android:theme="@style/PopupTheme" />
+            android:theme="@style/TransperantTheme" />
 
         <receiver
             android:name="bg.znestorov.sofbus24.notifications.NotificationsReceiver"

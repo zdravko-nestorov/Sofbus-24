@@ -207,13 +207,22 @@ public class Utils {
 	}
 
 	/**
+	 * Get the current date time in format DD.MM.YYY, HH:MM
+	 * 
+	 * @return the current time in format DD.MM.YYY, HH:MM
+	 */
+	public static String getCurrentDateTime() {
+		return DateFormat.format("dd.MM.yyy, kk:mm", new java.util.Date())
+				.toString();
+	}
+
+	/**
 	 * Get the current time in format DD.MM.YYY, HH:MM
 	 * 
 	 * @return the current time in format DD.MM.YYY, HH:MM
 	 */
 	public static String getCurrentTime() {
-		return DateFormat.format("dd.MM.yyy, kk:mm", new java.util.Date())
-				.toString();
+		return DateFormat.format("kk:mm", new java.util.Date()).toString();
 	}
 
 	/**
@@ -331,6 +340,59 @@ public class Utils {
 	}
 
 	/**
+	 * Transform the remaining time in minutes
+	 * 
+	 * @param remainingTime
+	 *            the remaining time in string format
+	 * @return the rmaining time in minutes
+	 */
+	public static int getRemainingMinutes(String remainingTime) {
+		int remainingMinutes;
+
+		String[] remainingTimeArray = remainingTime.split(" ");
+		if (remainingTimeArray.length == 1) {
+			remainingMinutes = Integer.parseInt(Utils
+					.getOnlyDigits(remainingTimeArray[0]));
+		} else {
+			remainingMinutes = 60
+					* Integer.parseInt(Utils
+							.getOnlyDigits(remainingTimeArray[0]))
+					+ Integer.parseInt(Utils
+							.getOnlyDigits(remainingTimeArray[1]));
+		}
+
+		return remainingMinutes;
+	}
+
+	/**
+	 * Convert the millis in remaining time format (~Хч. Хм.)
+	 * 
+	 * @param context
+	 *            Context of the current activity
+	 * @param millis
+	 *            remaining time in millis
+	 * @return the remaining time in format ~Хч. Хм.
+	 */
+	public static String formatMillisInTime(Activity context, Long millis) {
+		String remainingTime;
+
+		long minutes = (millis / (1000 * 60)) % 60;
+		long hour = (millis / (1000 * 60 * 60)) % 24;
+
+		if (hour > 0) {
+			remainingTime = "~" + hour
+					+ context.getString(R.string.app_remaining_minutes) + " "
+					+ minutes
+					+ context.getString(R.string.app_remaining_minutes);
+		} else {
+			remainingTime = "~" + minutes
+					+ context.getString(R.string.app_remaining_minutes);
+		}
+
+		return remainingTime;
+	}
+
+	/**
 	 * Function that format the direction name of the station or vehicle to be
 	 * in correct format. In case of an empty string - return "".
 	 * 
@@ -426,7 +488,8 @@ public class Utils {
 		directionName = directionName.replaceAll("Ц\\.гара", "Централна гара");
 		directionName = directionName.replaceAll("Ц\\. Гара", "Централна гара");
 		directionName = directionName.replaceAll("Ц\\.Гара", "Централна гара");
-		directionName = directionName.replaceAll("Ст\\.Град", "Студентски Град");
+		directionName = directionName
+				.replaceAll("Ст\\.Град", "Студентски Град");
 
 		directionName = directionName.trim().replaceAll(" +", " ");
 

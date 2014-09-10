@@ -7,6 +7,7 @@
     <string name="app_img_empty_content_description" />
     <string name="app_button_ok">OK</string>
     <string name="app_button_save">Запази</string>
+    <string name="app_button_confirm">Потвърди</string>
     <string name="app_button_cancel">Отказ</string>
     <string name="app_button_yes">Да</string>
     <string name="app_button_no">Не</string>
@@ -276,6 +277,14 @@
 
     <!-- Notifications -->
     <string name="notifications_title">Напомняне</string>
-    <string name="notifications_message">ОСТАВАЩО ВРЕМЕ: %s</string>
+    <string name="notifications_chooser_title">Настройки за напомняне</string>
+    <string name="notifications_chooser_selection">Изберете линия и колко време преди пристигането на превозното средство да получите известие:</string>
+    <string name="notifications_chooser_message">Време (в минути) преди пристигането на превозното средство, когато ще получите известие:</string>
+    <string name="notifications_chooser_error_message">Не са регистрирани действия от известно време на този екран. Моля обновете информацията и опитайте отново.</string>
+    <string name="notifications_chooser_message_selected">Алармата е насрочена за след %s.</string>
+    <string name="notifications_chooser_cancel">Насрочената аларма беше отменена.</string>
+    <string name="notifications_error_message">Няма линия на градския транспорт, която да преминава след текущия момент (или има оставаща минута или по-малко)</string>
+    <string name="notifications_message">ВРЕМЕ НА ПРИСТИГАНЕ: %s</string>
+    <string name="notifications_minutes">МИНУТИ</string>
 
 </resources>
