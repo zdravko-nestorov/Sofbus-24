@@ -55,6 +55,7 @@ public class NotificationsDialog extends DialogFragment {
 		Uri notification = RingtoneManager
 				.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		ringer = RingtoneManager.getRingtone(context, notification);
+		// TODO Remove the comment
 		// ringer.play();
 
 		// Set up the vibration

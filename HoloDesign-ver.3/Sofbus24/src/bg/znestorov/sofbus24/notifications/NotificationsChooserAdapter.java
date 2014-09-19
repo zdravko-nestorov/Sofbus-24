@@ -18,7 +18,10 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.databases.NotificationsDataSource;
+import bg.znestorov.sofbus24.entity.NotificationEntity;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.notifications.NotificationsChooserDialog.OnNotificationSetListener;
 import bg.znestorov.sofbus24.utils.Utils;
 
 /**
@@ -31,6 +34,7 @@ import bg.znestorov.sofbus24.utils.Utils;
 public class NotificationsChooserAdapter extends BaseExpandableListAdapter {
 
 	private Activity context;
+	private NotificationsDataSource notificationsDatasource;
 	private NotificationsChooserDialog notificationsChooserDialog;
 
 	private List<String> listDataHeader;
@@ -46,7 +50,6 @@ public class NotificationsChooserAdapter extends BaseExpandableListAdapter {
 
 	static class ChildViewHolder {
 		NumberPicker minutesPicker;
-		Button cancelButton;
 		Button confirmButton;
 	}
 
@@ -54,7 +57,9 @@ public class NotificationsChooserAdapter extends BaseExpandableListAdapter {
 			NotificationsChooserDialog notificationsChooserDialog,
 			List<String> listDataHeader,
 			HashMap<String, List<String[]>> listChildData) {
+
 		this.context = context;
+		this.notificationsDatasource = new NotificationsDataSource(context);
 		this.notificationsChooserDialog = notificationsChooserDialog;
 
 		this.listDataHeader = listDataHeader;
@@ -97,8 +102,6 @@ public class NotificationsChooserAdapter extends BaseExpandableListAdapter {
 			viewHolder = new ChildViewHolder();
 			viewHolder.minutesPicker = (NumberPicker) convertView
 					.findViewById(R.id.notifications_item_minutes);
-			viewHolder.cancelButton = (Button) convertView
-					.findViewById(R.id.notifications_item_minutes_cancel);
 			viewHolder.confirmButton = (Button) convertView
 					.findViewById(R.id.notifications_item_minutes_confirm);
 			convertView.setTag(viewHolder);
@@ -138,31 +141,6 @@ public class NotificationsChooserAdapter extends BaseExpandableListAdapter {
 					}
 				});
 
-		// Init the cancel button (in case an alart is alraedy set)
-		final AlarmManager alarmManager = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		final Intent intent = new Intent(context, NotificationsReceiver.class);
-		final PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-				0, intent, PendingIntent.FLAG_NO_CREATE);
-		if (pendingIntent != null) {
-			viewHolder.cancelButton.setEnabled(true);
-			viewHolder.cancelButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					alarmManager.cancel(pendingIntent);
-					pendingIntent.cancel();
-					viewHolder.cancelButton.setEnabled(false);
-
-					Toast.makeText(
-							context,
-							context.getString(R.string.notifications_chooser_cancel),
-							Toast.LENGTH_LONG).show();
-				}
-			});
-		} else {
-			viewHolder.cancelButton.setEnabled(false);
-		}
-
 		// Init the confirm button
 		viewHolder.confirmButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -184,10 +162,15 @@ public class NotificationsChooserAdapter extends BaseExpandableListAdapter {
 
 					// Creating an intent and set it to a pending intent (to be
 					// started when needed)
+					AlarmManager alarmManager = (AlarmManager) context
+							.getSystemService(Context.ALARM_SERVICE);
+					Intent intent = new Intent(context,
+							NotificationsReceiver.class);
 					intent.putExtra(NotificationsDialog.BUNDLE_VEHICLE_INFO,
 							vehicleInfo);
 					PendingIntent pendingIntent = PendingIntent.getBroadcast(
-							context, 0, intent, Intent.FLAG_ACTIVITY_NEW_TASK);
+							context, setNotification(vehicleInfo), intent,
+							Intent.FLAG_ACTIVITY_NEW_TASK);
 
 					// Start the push notification manager
 					alarmManager.set(AlarmManager.RTC_WAKEUP,
@@ -202,6 +185,10 @@ public class NotificationsChooserAdapter extends BaseExpandableListAdapter {
 											millisAfterCurrentTime).replace(
 											"~", "")), Toast.LENGTH_LONG)
 							.show();
+
+					// Refresh the VirtualBoardsTimeFragment
+					((OnNotificationSetListener) notificationsChooserDialog
+							.getParentFragment()).onNotificationsSet();
 				} else {
 					Toast.makeText(
 							context,
@@ -271,5 +258,19 @@ public class NotificationsChooserAdapter extends BaseExpandableListAdapter {
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
+	}
+
+	private int setNotification(String[] vehicleInfo) {
+		int notificationId = -1;
+
+		notificationsDatasource.open();
+		NotificationEntity notification = notificationsDatasource
+				.createNotification(vehicleInfo);
+		if (notification != null) {
+			notificationId = notification.getId();
+		}
+		notificationsDatasource.close();
+
+		return notificationId;
 	}
 }

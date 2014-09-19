@@ -159,9 +159,10 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 		case R.id.action_recent_history:
 			Intent historyIntent;
 			if (globalContext.isPhoneDevice()) {
-				historyIntent = new Intent(context, History.class);
+				historyIntent = new Intent(context, NotificationsAll.class);
 			} else {
-				historyIntent = new Intent(context, HistoryDialog.class);
+				historyIntent = new Intent(context,
+						NotificationsAllDialog.class);
 			}
 			startActivity(historyIntent);
 			return true;

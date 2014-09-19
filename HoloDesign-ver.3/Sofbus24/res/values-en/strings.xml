@@ -283,5 +283,10 @@
     <string name="notifications_error_message">There is no vehicle that passes through the station after the current time (or there is a minute remaining or less)</string>
     <string name="notifications_message">ARRIVAL TIME: %s</string>
     <string name="notifications_minutes">MINUTES</string>
+    <string name="notifications_all_title">Alarms</string>
+    <string name="notifications_menu_remove_all_confirmation">Are you sure that you want to remove all scheduled alarms?</string>
+    <string name="notifications_menu_remove_all_toast">All scheduled alarms were removed.</string>
+    <string name="notifications_menu_remove_all_empty_toast">Currently there are no alarms scheduled.</string>
+    <string name="notifications_list_empty_text">Currently there are no alarms scheduled.</string>
 
 </resources>

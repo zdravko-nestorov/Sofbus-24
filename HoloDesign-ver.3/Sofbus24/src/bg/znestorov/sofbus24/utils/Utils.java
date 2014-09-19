@@ -365,13 +365,13 @@ public class Utils {
 	}
 
 	/**
-	 * Convert the millis in remaining time format (~Õ÷. Õì.)
+	 * Convert the millis in remaining time format (~Õ÷ Õì)
 	 * 
 	 * @param context
 	 *            Context of the current activity
 	 * @param millis
 	 *            remaining time in millis
-	 * @return the remaining time in format ~Õ÷. Õì.
+	 * @return the remaining time in format ~Õ÷ Õì
 	 */
 	public static String formatMillisInTime(Activity context, Long millis) {
 		String remainingTime;

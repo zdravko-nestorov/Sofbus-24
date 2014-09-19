@@ -286,5 +286,10 @@
     <string name="notifications_error_message">Няма линия на градския транспорт, която да преминава след текущия момент (или има оставаща минута или по-малко)</string>
     <string name="notifications_message">ВРЕМЕ НА ПРИСТИГАНЕ: %s</string>
     <string name="notifications_minutes">МИНУТИ</string>
+    <string name="notifications_all_title">Аларми</string>
+    <string name="notifications_menu_remove_all_confirmation">Сигурни ли сте, че искате да премахнете всички настроени аларми?</string>
+    <string name="notifications_menu_remove_all_toast">Всички настроени аларми бяха премахнати.</string>
+    <string name="notifications_menu_remove_all_empty_toast">В момента няма настроени аларми.</string>
+    <string name="notifications_list_empty_text">В момента няма настроени аларми.</string>
 
 </resources>

@@ -141,6 +141,12 @@
         </receiver>
 
         <service android:name="bg.znestorov.sofbus24.notifications.NotificationsService" />
+
+        <!-- Notifications All -->
+        <activity android:name="bg.znestorov.sofbus24.main.NotificationsAll" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.NotificationsAllDialog"
+            android:theme="@style/PopupTheme" />
     </application>
 
 </manifest>

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager.LayoutParams;
+import bg.znestorov.sofbus24.databases.NotificationsDataSource;
 import bg.znestorov.sofbus24.notifications.NotificationsDialog;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 
@@ -36,11 +37,23 @@ public class Notifications extends FragmentActivity {
 			String[] vehicleInfo = (String[]) getIntent().getExtras()
 					.getSerializable(NotificationsDialog.BUNDLE_VEHICLE_INFO);
 
+			// Remove the notification from the db
+			removeNotification(vehicleInfo);
+
+			// Start a notification dialog fragment
 			DialogFragment notificationsVBTimeDialog = NotificationsDialog
 					.newInstance(vehicleInfo);
 			notificationsVBTimeDialog.show(getSupportFragmentManager(),
 					"NotificationsVBTimeDialog");
 		}
+	}
+
+	private void removeNotification(String[] vehicleInfo) {
+		NotificationsDataSource notificationsDatasource = new NotificationsDataSource(
+				this);
+		notificationsDatasource.open();
+		notificationsDatasource.deleteNotification(vehicleInfo[7]);
+		notificationsDatasource.close();
 	}
 
 }

@@ -103,7 +103,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 			toggleVirtualBoardsStation();
 			return true;
 		case R.id.action_vb_time_refresh:
-			initRefresh();
+			initRefreshFragmentInformation();
 			return true;
 		case R.id.action_vb_time_map:
 			if (vbTimeStation.hasCoordinates()) {
@@ -138,9 +138,9 @@ public class VirtualBoardsTime extends FragmentActivity {
 	}
 
 	/**
-	 * Initialize the refresh by loading the information from SKGY site
+	 * Initialize the refresh by loading the information from SKGT site
 	 */
-	private void initRefresh() {
+	private void initRefreshFragmentInformation() {
 		// Show the loading ProgressBar
 		vbTimeFragment.setVisibility(View.GONE);
 		vbTimeLoading.setVisibility(View.VISIBLE);

@@ -37,6 +37,10 @@ public class NotificationsChooserDialog extends DialogFragment {
 	private List<String> listDataHeader;
 	private HashMap<String, List<String[]>> listDataChild;
 
+	public interface OnNotificationSetListener {
+		public void onNotificationsSet();
+	}
+
 	public static NotificationsChooserDialog newInstance(String[] vehicleInfo) {
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(NotificationsDialog.BUNDLE_VEHICLE_INFO,

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.RefreshableListFragment;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.notifications.NotificationsChooserDialog.OnNotificationSetListener;
 import bg.znestorov.sofbus24.utils.Constants;
 
 /**
@@ -23,7 +24,7 @@ import bg.znestorov.sofbus24.utils.Constants;
  * 
  */
 public class VirtualBoardsTimeFragment extends ListFragment implements
-		RefreshableListFragment {
+		RefreshableListFragment, OnNotificationSetListener {
 
 	private Activity context;
 	private VirtualBoardsStationEntity vbTimeStation;
@@ -42,11 +43,6 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 		vbTimeFragment.setArguments(bundle);
 
 		return vbTimeFragment;
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
 	}
 
 	@Override
@@ -112,5 +108,10 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 		if (vbTimeAdapter.isEmpty()) {
 			vbListEmptyTextView.setText(Html.fromHtml(vbTimeEmptyText));
 		}
+	}
+
+	@Override
+	public void onNotificationsSet() {
+		((VirtualBoardsTimeAdapter) getListAdapter()).notifyDataSetChanged();
 	}
 }

@@ -3,6 +3,10 @@ package bg.znestorov.sofbus24.virtualboards;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -17,10 +21,13 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.databases.NotificationsDataSource;
+import bg.znestorov.sofbus24.entity.NotificationEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.notifications.NotificationsChooserDialog;
+import bg.znestorov.sofbus24.notifications.NotificationsReceiver;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 
@@ -36,6 +43,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 		implements Filterable {
 
 	private Activity context;
+	private NotificationsDataSource notificationsDatasource;
 	private VirtualBoardsTimeFragment virtualBoardsTimeFragment;
 
 	private VirtualBoardsStationEntity vbTimeStation;
@@ -57,6 +65,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 				vbTimeStation.getVehiclesList());
 
 		this.context = context;
+		this.notificationsDatasource = new NotificationsDataSource(context);
 		this.virtualBoardsTimeFragment = virtualBoardsTimeFragment;
 
 		this.vbTimeStation = vbTimeStation;
@@ -330,12 +339,38 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 	private void setStationAlarm(ImageView stationAlarm,
 			final VehicleEntity stationVehicle) {
 
+		setStationImage(stationAlarm, stationVehicle);
+
 		stationAlarm.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				setStationAlarm(stationVehicle);
 			}
 		});
+	}
+
+	/**
+	 * Set an image on the current row
+	 * 
+	 * @param stationAlarm
+	 *            station alarm image view
+	 * @param stationVehicle
+	 *            the station vehicle
+	 */
+	private void setStationImage(ImageView stationAlarm,
+			VehicleEntity stationVehicle) {
+		notificationsDatasource.open();
+
+		NotificationEntity notification = notificationsDatasource
+				.getNotification(vbTimeStation.getNumber() + "~"
+						+ stationVehicle.getNumber());
+		if (notification == null) {
+			stationAlarm.setImageResource(R.drawable.ic_alarm_off);
+		} else {
+			stationAlarm.setImageResource(R.drawable.ic_alarm_on);
+		}
+
+		notificationsDatasource.close();
 	}
 
 	/**
@@ -360,11 +395,16 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 								vbTimeStation.getNumber()),
 						getVehicleImage(stationVehicle) + "",
 						getVehicleCaption(stationVehicle),
-						stationVehicle.getDirection(), remainingTime,
-						arrivalTimes };
+						stationVehicle.getDirection(),
+						remainingTime,
+						arrivalTimes,
+						vbTimeStation.getNumber() + "~"
+								+ stationVehicle.getNumber() };
 
 				DialogFragment notificationsVBTimeDialog = NotificationsChooserDialog
 						.newInstance(vehicleInfo);
+				notificationsVBTimeDialog.setTargetFragment(
+						virtualBoardsTimeFragment, 0);
 				notificationsVBTimeDialog.show(
 						virtualBoardsTimeFragment.getChildFragmentManager(),
 						"NotificationsVBTimeDialog");
@@ -379,6 +419,8 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 					context.getString(R.string.notifications_error_message),
 					Toast.LENGTH_LONG).show();
 		}
+
+		cancelNotification(stationVehicle);
 	}
 
 	/**
@@ -389,5 +431,46 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 	 */
 	public void setStationAlarm(int position) {
 		setStationAlarm(vbTimeStation.getVehiclesList().get(position));
+	}
+
+	/**
+	 * Cancel the notification for the selected vehicle
+	 * 
+	 * @param stationVehicle
+	 *            the station vehicle
+	 */
+	private void cancelNotification(VehicleEntity stationVehicle) {
+		notificationsDatasource.open();
+
+		// Check if a notification is already set in the DB
+		NotificationEntity notification = notificationsDatasource
+				.getNotification(vbTimeStation.getNumber() + "~"
+						+ stationVehicle.getNumber());
+		if (notification != null) {
+			AlarmManager alarmManager = (AlarmManager) context
+					.getSystemService(Context.ALARM_SERVICE);
+			Intent intent = new Intent(context, NotificationsReceiver.class);
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+					notification.getId(), intent, PendingIntent.FLAG_NO_CREATE);
+
+			// Delete the notification from the database
+			notificationsDatasource.deleteNotification(notification);
+
+			// Check if a notification was already set
+			if (pendingIntent != null) {
+				alarmManager.cancel(pendingIntent);
+				pendingIntent.cancel();
+
+				Toast.makeText(
+						context,
+						context.getString(R.string.notifications_chooser_cancel),
+						Toast.LENGTH_LONG).show();
+			}
+		}
+
+		notificationsDatasource.close();
+
+		// Refresh the list
+		notifyDataSetChanged();
 	}
 }
