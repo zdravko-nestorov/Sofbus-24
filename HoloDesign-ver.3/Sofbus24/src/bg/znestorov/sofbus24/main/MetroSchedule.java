@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.MetroStationEntity;
 import bg.znestorov.sofbus24.entity.ScheduleEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -27,10 +28,12 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 
 public class MetroSchedule extends FragmentActivity {
 
 	private Activity context;
+	private GlobalEntity globalContext;
 	private Bundle savedInstanceState;
 	private FavouritesDataSource favouritesDatasource;
 
@@ -63,6 +66,7 @@ public class MetroSchedule extends FragmentActivity {
 		// Get the current context and create a FavouritesDatasource and
 		// a SavedInstanceState objects
 		context = MetroSchedule.this;
+		globalContext = (GlobalEntity) getApplicationContext();
 		favouritesDatasource = new FavouritesDataSource(context);
 		this.savedInstanceState = savedInstanceState;
 
@@ -101,9 +105,15 @@ public class MetroSchedule extends FragmentActivity {
 			initRefresh();
 			return true;
 		case R.id.action_ms_map:
-			Intent metroMapIntent = new Intent(context, StationMap.class);
-			metroMapIntent.putExtra(Constants.BUNDLE_STATION_MAP, ms);
-			startActivity(metroMapIntent);
+			if (!globalContext.areServicesAvailable()) {
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
+						"GooglePlayServicesErrorDialog");
+			} else {
+				Intent metroMapIntent = new Intent(context, StationMap.class);
+				metroMapIntent.putExtra(Constants.BUNDLE_STATION_MAP, ms);
+				startActivity(metroMapIntent);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -367,7 +377,8 @@ public class MetroSchedule extends FragmentActivity {
 	 *            the MetroStation object retrieved from the Bundle
 	 * @return a list with the schedule hours
 	 */
-	private ArrayList<ArrayList<String>> getScheduleHourList(MetroStationEntity ms) {
+	private ArrayList<ArrayList<String>> getScheduleHourList(
+			MetroStationEntity ms) {
 		ArrayList<ArrayList<String>> scheduleHourList = new ArrayList<ArrayList<String>>();
 
 		for (int i = 4; i <= 24; i++) {

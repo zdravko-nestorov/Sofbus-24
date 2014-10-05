@@ -48,6 +48,7 @@ import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -707,22 +708,29 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	 *            the station on the rowView
 	 */
 	private void seeStationOnGoogleMaps(StationEntity station) {
-		if (station.hasCoordinates()) {
-			Intent stationMapIntent = new Intent(context, StationMap.class);
-
-			// Check the type of the station
-			if (station.isMetroStation()) {
-				stationMapIntent.putExtra(Constants.BUNDLE_STATION_MAP,
-						new MetroStationEntity(station));
-			} else {
-				station.setType(VehicleTypeEnum.BUS);
-				stationMapIntent.putExtra(Constants.BUNDLE_STATION_MAP,
-						new PublicTransportStationEntity(station));
-			}
-
-			context.startActivity(stationMapIntent);
+		if (!globalContext.areServicesAvailable()) {
+			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+			googlePlayServicesErrorDialog.show(
+					favouritesStationFragment.getFragmentManager(),
+					"GooglePlayServicesErrorDialog");
 		} else {
-			ActivityUtils.showNoCoordinatesToast(context);
+			if (station.hasCoordinates()) {
+				Intent stationMapIntent = new Intent(context, StationMap.class);
+
+				// Check the type of the station
+				if (station.isMetroStation()) {
+					stationMapIntent.putExtra(Constants.BUNDLE_STATION_MAP,
+							new MetroStationEntity(station));
+				} else {
+					station.setType(VehicleTypeEnum.BUS);
+					stationMapIntent.putExtra(Constants.BUNDLE_STATION_MAP,
+							new PublicTransportStationEntity(station));
+				}
+
+				context.startActivity(stationMapIntent);
+			} else {
+				ActivityUtils.showNoCoordinatesToast(context);
+			}
 		}
 	}
 
@@ -733,15 +741,22 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	 *            the station on the rowView
 	 */
 	private void seeStationOnGoogleStreetView(StationEntity station) {
-		if (station.hasCoordinates()) {
-			Uri streetViewUri = Uri.parse("google.streetview:cbll="
-					+ station.getLat() + "," + station.getLon()
-					+ "&cbp=1,90,,0,1.0&mz=20");
-			Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
-					streetViewUri);
-			context.startActivity(streetViewIntent);
+		if (!globalContext.areServicesAvailable()) {
+			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+			googlePlayServicesErrorDialog.show(
+					favouritesStationFragment.getFragmentManager(),
+					"GooglePlayServicesErrorDialog");
 		} else {
-			ActivityUtils.showNoCoordinatesToast(context);
+			if (station.hasCoordinates()) {
+				Uri streetViewUri = Uri.parse("google.streetview:cbll="
+						+ station.getLat() + "," + station.getLon()
+						+ "&cbp=1,90,,0,1.0&mz=20");
+				Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
+						streetViewUri);
+				context.startActivity(streetViewIntent);
+			} else {
+				ActivityUtils.showNoCoordinatesToast(context);
+			}
 		}
 	}
 

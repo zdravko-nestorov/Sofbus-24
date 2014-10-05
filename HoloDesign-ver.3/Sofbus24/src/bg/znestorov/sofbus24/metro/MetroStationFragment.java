@@ -24,6 +24,7 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
@@ -32,6 +33,7 @@ import bg.znestorov.sofbus24.main.StationRouteMap;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
+import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
 /**
@@ -205,7 +207,7 @@ public class MetroStationFragment extends ListFragment implements
 	 * list fragment
 	 */
 	private void setAdapter() {
-		metroStationAdapter = new MetroStationAdapter(context, emptyView,
+		metroStationAdapter = new MetroStationAdapter(context, this, emptyView,
 				emptyTextView, mls.getDirectionName(currentDirection, false,
 						false), stationsList);
 
@@ -284,11 +286,13 @@ public class MetroStationFragment extends ListFragment implements
 	public class RetrieveMetroRoute extends AsyncTask<Void, Void, Intent> {
 
 		private Activity context;
+		private GlobalEntity globalContext;
 		private ProgressDialog progressDialog;
 
 		public RetrieveMetroRoute(Activity context,
 				ProgressDialog progressDialog) {
 			this.context = context;
+			this.globalContext = (GlobalEntity) context.getApplicationContext();
 			this.progressDialog = progressDialog;
 		}
 
@@ -328,7 +332,14 @@ public class MetroStationFragment extends ListFragment implements
 		protected void onPostExecute(Intent metroMapRouteIntent) {
 			super.onPostExecute(metroMapRouteIntent);
 
-			context.startActivity(metroMapRouteIntent);
+			if (!globalContext.areServicesAvailable()) {
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				googlePlayServicesErrorDialog.show(getFragmentManager(),
+						"GooglePlayServicesErrorDialog");
+			} else {
+				context.startActivity(metroMapRouteIntent);
+			}
+
 			dismissLoadingView();
 		}
 

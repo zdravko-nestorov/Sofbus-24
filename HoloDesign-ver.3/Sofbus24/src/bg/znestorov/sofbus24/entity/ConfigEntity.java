@@ -20,7 +20,7 @@ import bg.znestorov.sofbus24.utils.Constants;
  * Configuration object containing some information about the application
  * 
  * @author Zdravko Nestorov
- * @version 1.0
+ * @version 2.0
  * 
  */
 public class ConfigEntity implements Serializable {
@@ -30,13 +30,13 @@ public class ConfigEntity implements Serializable {
 	private int versionCode;
 	private String versionName;
 
-	private boolean favouritesVisibilå;
+	private boolean favouritesVisiblå;
 	private int favouritesPosition;
-	private boolean searchVisibile;
+	private boolean searchVisible;
 	private int searchPosition;
-	private boolean scheduleVisibile;
+	private boolean scheduleVisible;
 	private int schedulePosition;
-	private boolean metroVisibile;
+	private boolean metroVisible;
 	private int metroPosition;
 
 	private int stationsDbVersion;
@@ -46,13 +46,13 @@ public class ConfigEntity implements Serializable {
 		this.versionCode = 0;
 		this.versionName = null;
 
-		this.favouritesVisibilå = true;
+		this.favouritesVisiblå = true;
 		this.favouritesPosition = 0;
-		this.searchVisibile = true;
+		this.searchVisible = true;
 		this.searchPosition = 1;
-		this.scheduleVisibile = true;
+		this.scheduleVisible = true;
 		this.schedulePosition = 2;
-		this.metroVisibile = true;
+		this.metroVisible = true;
 		this.metroPosition = 3;
 
 		this.stationsDbVersion = 0;
@@ -78,42 +78,74 @@ public class ConfigEntity implements Serializable {
 		this.versionCode = versionCode;
 		this.versionName = versionName;
 
-		this.favouritesVisibilå = Boolean.parseBoolean(sharedPreferences
-				.getString(
-						Constants.CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY,
-						favouritesVisibilå + ""));
-		this.favouritesPosition = Integer.parseInt(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_FAVOURITES_POSITION_KEY,
-				favouritesPosition + ""));
+		try {
+			this.favouritesVisiblå = Boolean
+					.parseBoolean(sharedPreferences
+							.getString(
+									Constants.CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY,
+									favouritesVisiblå + ""));
+			this.favouritesPosition = Integer
+					.parseInt(sharedPreferences
+							.getString(
+									Constants.CONFIGURATION_PREF_FAVOURITES_POSITION_KEY,
+									favouritesPosition + ""));
+		} catch (Exception e) {
+			this.favouritesVisiblå = true;
+			this.favouritesPosition = 0;
+		}
 
-		this.searchVisibile = Boolean.parseBoolean(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY,
-				searchVisibile + ""));
-		this.searchPosition = Integer.parseInt(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_SEARCH_POSITION_KEY,
-				searchPosition + ""));
+		try {
+			this.searchVisible = Boolean.parseBoolean(sharedPreferences
+					.getString(
+							Constants.CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY,
+							searchVisible + ""));
+			this.searchPosition = Integer.parseInt(sharedPreferences.getString(
+					Constants.CONFIGURATION_PREF_SEARCH_POSITION_KEY,
+					searchPosition + ""));
+		} catch (Exception e) {
+			this.searchVisible = true;
+			this.searchPosition = 1;
+		}
 
-		this.scheduleVisibile = Boolean.parseBoolean(sharedPreferences
-				.getString(
-						Constants.CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY,
-						scheduleVisibile + ""));
-		this.schedulePosition = Integer.parseInt(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_SCHEDULE_POSITION_KEY,
-				schedulePosition + ""));
+		try {
+			this.scheduleVisible = Boolean
+					.parseBoolean(sharedPreferences
+							.getString(
+									Constants.CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY,
+									scheduleVisible + ""));
+			this.schedulePosition = Integer.parseInt(sharedPreferences
+					.getString(
+							Constants.CONFIGURATION_PREF_SCHEDULE_POSITION_KEY,
+							schedulePosition + ""));
+		} catch (Exception e) {
+			this.scheduleVisible = true;
+			this.schedulePosition = 2;
+		}
 
-		this.metroVisibile = Boolean.parseBoolean(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_METRO_VISIBILITY_KEY,
-				metroVisibile + ""));
-		this.metroPosition = Integer.parseInt(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_METRO_POSITION_KEY, metroPosition
-						+ ""));
+		try {
+			this.metroVisible = Boolean.parseBoolean(sharedPreferences
+					.getString(
+							Constants.CONFIGURATION_PREF_METRO_VISIBILITY_KEY,
+							metroVisible + ""));
+			this.metroPosition = Integer.parseInt(sharedPreferences.getString(
+					Constants.CONFIGURATION_PREF_METRO_POSITION_KEY,
+					metroPosition + ""));
+		} catch (Exception e) {
+			this.metroVisible = true;
+			this.metroPosition = 3;
+		}
 
-		this.stationsDbVersion = Integer.parseInt(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_STATIONS_KEY, stationsDbVersion
-						+ ""));
-		this.vehiclesDbVersion = Integer.parseInt(sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_VEHICLES_KEY, vehiclesDbVersion
-						+ ""));
+		try {
+			this.stationsDbVersion = Integer.parseInt(sharedPreferences
+					.getString(Constants.CONFIGURATION_PREF_STATIONS_KEY,
+							stationsDbVersion + ""));
+			this.vehiclesDbVersion = Integer.parseInt(sharedPreferences
+					.getString(Constants.CONFIGURATION_PREF_VEHICLES_KEY,
+							vehiclesDbVersion + ""));
+		} catch (Exception e) {
+			this.stationsDbVersion = 0;
+			this.vehiclesDbVersion = 0;
+		}
 	}
 
 	public ConfigEntity(Document doc) {
@@ -163,13 +195,13 @@ public class ConfigEntity implements Serializable {
 		this.versionCode = versionCode;
 		this.versionName = versionName;
 
-		this.favouritesVisibilå = favouritesVisibilå;
+		this.favouritesVisiblå = favouritesVisibilå;
 		this.favouritesPosition = favouritesPosition;
-		this.searchVisibile = searchVisibile;
+		this.searchVisible = searchVisibile;
 		this.searchPosition = searchPosition;
-		this.scheduleVisibile = scheduleVisibile;
+		this.scheduleVisible = scheduleVisibile;
 		this.schedulePosition = schedulePosition;
-		this.metroVisibile = metroVisibile;
+		this.metroVisible = metroVisibile;
 		this.metroPosition = metroPosition;
 
 		this.stationsDbVersion = stationsDbVersion;
@@ -193,11 +225,11 @@ public class ConfigEntity implements Serializable {
 	}
 
 	public boolean isFavouritesVisibilå() {
-		return favouritesVisibilå;
+		return favouritesVisiblå;
 	}
 
 	public void setFavouritesVisibilå(boolean favouritesVisibilå) {
-		this.favouritesVisibilå = favouritesVisibilå;
+		this.favouritesVisiblå = favouritesVisibilå;
 	}
 
 	public int getFavouritesPosition() {
@@ -209,11 +241,11 @@ public class ConfigEntity implements Serializable {
 	}
 
 	public boolean isSearchVisibile() {
-		return searchVisibile;
+		return searchVisible;
 	}
 
 	public void setSearchVisibile(boolean searchVisibile) {
-		this.searchVisibile = searchVisibile;
+		this.searchVisible = searchVisibile;
 	}
 
 	public int getSearchPosition() {
@@ -225,11 +257,11 @@ public class ConfigEntity implements Serializable {
 	}
 
 	public boolean isScheduleVisibile() {
-		return scheduleVisibile;
+		return scheduleVisible;
 	}
 
 	public void setScheduleVisibile(boolean scheduleVisibile) {
-		this.scheduleVisibile = scheduleVisibile;
+		this.scheduleVisible = scheduleVisibile;
 	}
 
 	public int getSchedulePosition() {
@@ -241,11 +273,11 @@ public class ConfigEntity implements Serializable {
 	}
 
 	public boolean isMetroVisibile() {
-		return metroVisibile;
+		return metroVisible;
 	}
 
 	public void setMetroVisibile(boolean metroVisibile) {
-		this.metroVisibile = metroVisibile;
+		this.metroVisible = metroVisibile;
 	}
 
 	public int getMetroPosition() {
@@ -278,16 +310,16 @@ public class ConfigEntity implements Serializable {
 			String tabName;
 
 			if (favouritesPosition == position) {
-				tabVisible = favouritesVisibilå;
+				tabVisible = favouritesVisiblå;
 				tabName = context.getString(R.string.edit_tabs_favourites);
 			} else if (searchPosition == position) {
-				tabVisible = searchVisibile;
+				tabVisible = searchVisible;
 				tabName = context.getString(R.string.edit_tabs_search);
 			} else if (schedulePosition == position) {
-				tabVisible = scheduleVisibile;
+				tabVisible = scheduleVisible;
 				tabName = context.getString(R.string.edit_tabs_schedule);
 			} else {
-				tabVisible = metroVisibile;
+				tabVisible = metroVisible;
 				tabName = context.getString(R.string.edit_tabs_metro);
 			}
 
@@ -317,13 +349,13 @@ public class ConfigEntity implements Serializable {
 	public String toString() {
 		return getClass().getName() + " {\n\tversionCode: " + versionCode
 				+ "\n\tversionName: " + versionName
-				+ "\n\tfavouritesVisibilå: " + favouritesVisibilå
+				+ "\n\tfavouritesVisibilå: " + favouritesVisiblå
 				+ "\n\tfavouritesPosition: " + favouritesPosition
-				+ "\n\tsearchVisibile: " + searchVisibile
+				+ "\n\tsearchVisibile: " + searchVisible
 				+ "\n\tsearchPosition: " + searchPosition
-				+ "\n\tscheduleVisibile: " + scheduleVisibile
+				+ "\n\tscheduleVisibile: " + scheduleVisible
 				+ "\n\tschedulePosition: " + schedulePosition
-				+ "\n\tmetroVisibile: " + metroVisibile + "\n\tmetroPosition: "
+				+ "\n\tmetroVisibile: " + metroVisible + "\n\tmetroPosition: "
 				+ metroPosition + "\n\tstationsDbVersion: " + stationsDbVersion
 				+ "\n\tvehiclesDbVersion: " + vehiclesDbVersion + "\n}";
 	}

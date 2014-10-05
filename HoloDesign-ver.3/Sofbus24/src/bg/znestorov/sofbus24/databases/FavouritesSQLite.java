@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.databases;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -59,7 +60,21 @@ public class FavouritesSQLite extends SQLiteOpenHelper {
 			int newVersion) {
 		FavouritesDataSource favoritesDatasorce = new FavouritesDataSource(
 				context, database);
-		List<StationEntity> favoritesList = favoritesDatasorce.getAllStations();
+
+		List<StationEntity> favoritesList;
+		try {
+			favoritesList = favoritesDatasorce.getAllStations();
+		} catch (Exception e) {
+			/**
+			 * Strange exception in the GooglePlay - when updating the DB, and
+			 * saving the old favorites, it mess up the queries
+			 * 
+			 * android.database.sqlite.SQLiteException: no such column: codeo
+			 * (code 1): , while compiling: SELECT id, name, latitude,
+			 * longitude, codeo FROM favourites
+			 */
+			favoritesList = new ArrayList<StationEntity>();
+		}
 
 		database.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVOURITES);
 		database.execSQL(DATABASE_CREATE_FAVOURITES);

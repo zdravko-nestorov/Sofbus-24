@@ -2,6 +2,7 @@ package bg.znestorov.sofbus24.virtualboards;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -80,6 +81,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 	/**
 	 * Creating the elements of the ListView
 	 */
+	@SuppressLint("InflateParams")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
@@ -117,7 +119,17 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 		viewHolder.stationCaption.setText(getVehicleCaption(stationVehicle));
 		viewHolder.stationDirection.setText(stationVehicle.getDirection());
 		viewHolder.stationTime.setText(getRowTimeCaption(stationVehicle));
-		setStationAlarm(viewHolder.stationAlarm, stationVehicle);
+
+		rowView.setOnClickListener(null);
+		rowView.setOnLongClickListener(null);
+		rowView.setLongClickable(false);
+
+		/**
+		 * TODO: Need to be fixed for the next version (it is not needed for now
+		 * as on a device restart the application throws an exception)
+		 * 
+		 * setStationAlarm(viewHolder.stationAlarm, stationVehicle);
+		 */
 
 		return rowView;
 	}
@@ -336,6 +348,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 	 * @param stationVehicle
 	 *            the station vehicle
 	 */
+	@SuppressWarnings("unused")
 	private void setStationAlarm(ImageView stationAlarm,
 			final VehicleEntity stationVehicle) {
 

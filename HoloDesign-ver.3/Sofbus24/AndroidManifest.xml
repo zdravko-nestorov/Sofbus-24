@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="bg.znestorov.sofbus24.main"
-    android:versionCode="18"
-    android:versionName="2.2" >
+    android:versionCode="19"
+    android:versionName="2.1.2" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -73,7 +73,8 @@
         <!-- Closest Stations Map -->
         <activity
             android:name="bg.znestorov.sofbus24.main.ClosestStationsMap"
-            android:uiOptions="splitActionBarWhenNarrow" />
+            android:uiOptions="splitActionBarWhenNarrow"
+            tools:ignore="UnusedAttribute" />
 
         <!-- Preferences -->
         <activity android:name="bg.znestorov.sofbus24.main.Preferences" />

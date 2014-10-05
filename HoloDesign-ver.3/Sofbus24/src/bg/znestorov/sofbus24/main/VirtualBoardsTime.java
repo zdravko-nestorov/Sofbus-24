@@ -17,11 +17,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsTimeFragment;
 
@@ -33,6 +35,7 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 public class VirtualBoardsTime extends FragmentActivity {
 
 	private Activity context;
+	private GlobalEntity globalContext;
 	private Bundle savedInstanceState;
 
 	private ActionBar actionBar;
@@ -60,6 +63,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 
 		// Get the current context and create a SavedInstanceState objects
 		context = VirtualBoardsTime.this;
+		globalContext = (GlobalEntity) getApplicationContext();
 		favouritesDatasource = new FavouritesDataSource(context);
 		this.savedInstanceState = savedInstanceState;
 
@@ -106,13 +110,20 @@ public class VirtualBoardsTime extends FragmentActivity {
 			initRefreshFragmentInformation();
 			return true;
 		case R.id.action_vb_time_map:
-			if (vbTimeStation.hasCoordinates()) {
-				Intent metroMapIntent = new Intent(context, StationMap.class);
-				metroMapIntent.putExtra(Constants.BUNDLE_STATION_MAP,
-						vbTimeStation);
-				startActivity(metroMapIntent);
+			if (!globalContext.areServicesAvailable()) {
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
+						"GooglePlayServicesErrorDialog");
 			} else {
-				ActivityUtils.showNoCoordinatesToast(context);
+				if (vbTimeStation.hasCoordinates()) {
+					Intent metroMapIntent = new Intent(context,
+							StationMap.class);
+					metroMapIntent.putExtra(Constants.BUNDLE_STATION_MAP,
+							vbTimeStation);
+					startActivity(metroMapIntent);
+				} else {
+					ActivityUtils.showNoCoordinatesToast(context);
+				}
 			}
 			return true;
 		default:
@@ -199,15 +210,23 @@ public class VirtualBoardsTime extends FragmentActivity {
 		vbTimeStreetViewButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				if (vbTimeStation.hasCoordinates()) {
-					Uri streetViewUri = Uri.parse("google.streetview:cbll="
-							+ vbTimeStation.getLat() + ","
-							+ vbTimeStation.getLon() + "&cbp=1,90,,0,1.0&mz=20");
-					Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
-							streetViewUri);
-					startActivity(streetViewIntent);
+				if (!globalContext.areServicesAvailable()) {
+					GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+					googlePlayServicesErrorDialog.show(
+							getSupportFragmentManager(),
+							"GooglePlayServicesErrorDialog");
 				} else {
-					ActivityUtils.showNoCoordinatesToast(context);
+					if (vbTimeStation.hasCoordinates()) {
+						Uri streetViewUri = Uri.parse("google.streetview:cbll="
+								+ vbTimeStation.getLat() + ","
+								+ vbTimeStation.getLon()
+								+ "&cbp=1,90,,0,1.0&mz=20");
+						Intent streetViewIntent = new Intent(
+								Intent.ACTION_VIEW, streetViewUri);
+						startActivity(streetViewIntent);
+					} else {
+						ActivityUtils.showNoCoordinatesToast(context);
+					}
 				}
 			}
 		});

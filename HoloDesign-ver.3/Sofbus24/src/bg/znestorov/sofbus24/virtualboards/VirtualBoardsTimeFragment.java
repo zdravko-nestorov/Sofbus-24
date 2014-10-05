@@ -7,7 +7,6 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.RefreshableListFragment;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
@@ -80,11 +79,18 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 		setListAdapter(vbTimeEmptyText);
 	}
 
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		VirtualBoardsTimeAdapter virtualBoardsTimeAdapter = (VirtualBoardsTimeAdapter) getListAdapter();
-		virtualBoardsTimeAdapter.setStationAlarm(position);
-	}
+	/**
+	 * TODO: Need to be fixed for the next version (it is not needed for now
+	 * as on a device restart the application throws an exception)
+	 * 
+	 * <code>
+		@Override
+		public void onListItemClick(ListView l, View v, int position, long id) {
+			VirtualBoardsTimeAdapter virtualBoardsTimeAdapter = (VirtualBoardsTimeAdapter) getListAdapter();
+			virtualBoardsTimeAdapter.setStationAlarm(position);
+		}
+	* </code>
+	*/
 
 	/**
 	 * Set list adapter and the appropriate text message to it

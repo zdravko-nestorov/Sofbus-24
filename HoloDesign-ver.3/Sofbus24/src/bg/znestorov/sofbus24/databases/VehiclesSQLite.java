@@ -83,7 +83,7 @@ public class VehiclesSQLite extends SQLiteOpenHelper {
 			try {
 				copyDataBase(is);
 			} catch (IOException e) {
-				throw new Error("Error copying database");
+				throw new Error(e.getMessage());
 			}
 		}
 	}

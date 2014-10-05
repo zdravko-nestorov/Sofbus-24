@@ -40,6 +40,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
 
 public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener {
@@ -166,12 +167,18 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			startActivity(historyIntent);
 			return true;
 		case R.id.action_closest_stations_map:
-			RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-					this);
-			retrieveCurrentLocation.execute();
-			RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
-					retrieveCurrentLocation);
-			(new Thread(retrieveCurrentLocationTimeout)).start();
+			if (!globalContext.areServicesAvailable()) {
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
+						"GooglePlayServicesErrorDialog");
+			} else {
+				RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
+						this);
+				retrieveCurrentLocation.execute();
+				RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
+						retrieveCurrentLocation);
+				(new Thread(retrieveCurrentLocationTimeout)).start();
+			}
 			return true;
 		case R.id.action_closest_stations_list:
 			ProgressDialog progressDialog = new ProgressDialog(context);

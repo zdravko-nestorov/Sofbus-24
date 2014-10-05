@@ -19,11 +19,13 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.publictransport.PublicTransportFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 
 public class PublicTransport extends FragmentActivity implements
 		ActionBar.TabListener {
@@ -249,10 +251,12 @@ public class PublicTransport extends FragmentActivity implements
 	public class RetrievePTRoute extends AsyncTask<Void, Void, Intent> {
 
 		private Activity context;
+		private GlobalEntity globalContext;
 		private ProgressDialog progressDialog;
 
 		public RetrievePTRoute(Activity context, ProgressDialog progressDialog) {
 			this.context = context;
+			this.globalContext = (GlobalEntity) context.getApplicationContext();
 			this.progressDialog = progressDialog;
 		}
 
@@ -276,7 +280,14 @@ public class PublicTransport extends FragmentActivity implements
 		@Override
 		protected void onPostExecute(Intent ptMapRouteIntent) {
 			super.onPostExecute(ptMapRouteIntent);
-			context.startActivity(ptMapRouteIntent);
+
+			if (!globalContext.areServicesAvailable()) {
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
+						"GooglePlayServicesErrorDialog");
+			} else {
+				context.startActivity(ptMapRouteIntent);
+			}
 
 			dismissLoadingView();
 		}

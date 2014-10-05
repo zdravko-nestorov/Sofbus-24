@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
 import bg.znestorov.sofbus24.entity.ScheduleEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -27,10 +28,12 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 
 public class PublicTransportSchedule extends FragmentActivity {
 
 	private Activity context;
+	private GlobalEntity globalContext;
 	private Bundle savedInstanceState;
 	private FavouritesDataSource favouritesDatasource;
 
@@ -63,6 +66,7 @@ public class PublicTransportSchedule extends FragmentActivity {
 		// Get the current context and create a FavouritesDatasource and
 		// a SavedInstanceState objects
 		context = PublicTransportSchedule.this;
+		globalContext = (GlobalEntity) getApplicationContext();
 		favouritesDatasource = new FavouritesDataSource(context);
 		this.savedInstanceState = savedInstanceState;
 
@@ -102,12 +106,19 @@ public class PublicTransportSchedule extends FragmentActivity {
 			initRefresh();
 			return true;
 		case R.id.action_pt_map:
-			if (ptStation.hasCoordinates()) {
-				Intent ptMapIntent = new Intent(context, StationMap.class);
-				ptMapIntent.putExtra(Constants.BUNDLE_STATION_MAP, ptStation);
-				startActivity(ptMapIntent);
+			if (!globalContext.areServicesAvailable()) {
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
+						"GooglePlayServicesErrorDialog");
 			} else {
-				ActivityUtils.showNoCoordinatesToast(context);
+				if (ptStation.hasCoordinates()) {
+					Intent ptMapIntent = new Intent(context, StationMap.class);
+					ptMapIntent.putExtra(Constants.BUNDLE_STATION_MAP,
+							ptStation);
+					startActivity(ptMapIntent);
+				} else {
+					ActivityUtils.showNoCoordinatesToast(context);
+				}
 			}
 			return true;
 		default:

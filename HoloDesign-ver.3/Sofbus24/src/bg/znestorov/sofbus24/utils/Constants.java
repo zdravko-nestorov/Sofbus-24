@@ -108,6 +108,8 @@ public class Constants {
 	public static final String VB_URL_CAPTCHA_TEXT = "sc";
 	public static final String VB_URL_CAPTCHA_ID = "poleicngi";
 	public static final String VB_URL_GO = "go";
+	public static final String VB_URL_SUBMIT = "submit";
+	public static final String VB_URL_I = "i";
 
 	public static final String VB_CAPTCHA_URL = "http://m.sofiatraffic.bg/captcha/%s";
 	public static final String VB_CAPTCHA_REQUIRED = "Въведете символите от изображението";
@@ -123,7 +125,7 @@ public class Constants {
 	public static final String VB_REGEX_VEHICLE_TYPE = "<b>\\n(.*?)<\\/b>";
 	public static final String VB_REGEX_VEHICLE_INFO = "<div class=\"arr_info_.*?\">[^^]*?<a href=\".*?\"><b>(.*?)<\\/b><\\/a>&nbsp;-&nbsp;([^^]*?)<br \\/>([^^]*?)<\\/div>";
 
-	public static final String VB_REGEX_VEHICLE_TYPES = "<a\\s*?href=\"#\"\\s*?onClick=\"closethisasap\\('form[0-9]*?'\\)\">([^~]*?&nbsp;[^~]*?&nbsp;){2}([^~]*?)</a>";
+	public static final String VB_REGEX_VEHICLE_TYPES = "<a\\s*?href=\"#\"\\s*?onClick=\"closethisasap\\('submit[0-9]*?'\\)\">([^~]*?&nbsp;[^~]*?&nbsp;){2}([^~]*?)</a>";
 	public static final String VB_VEHICLE_TYPE_BUS = "АВТОБУС";
 	public static final String VB_VEHICLE_TYPE_TROLLEY = "ТРОЛЕ";
 	public static final String VB_VEHICLE_TYPE_TRAM = "ТРАМ";

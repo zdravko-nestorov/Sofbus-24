@@ -28,6 +28,7 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -38,6 +39,7 @@ import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 public class ClosestStationsList extends FragmentActivity {
 
 	private FragmentActivity context;
+	private GlobalEntity globalContext;
 	private Bundle savedInstanceState;
 
 	private ActionBar actionBar;
@@ -60,6 +62,7 @@ public class ClosestStationsList extends FragmentActivity {
 
 		// Get the current context and create a SavedInstanceState objects
 		context = ClosestStationsList.this;
+		globalContext = (GlobalEntity) getApplicationContext();
 		this.savedInstanceState = savedInstanceState;
 
 		initBundleInfo();
@@ -147,13 +150,21 @@ public class ClosestStationsList extends FragmentActivity {
 				.setOnClickListener(new android.view.View.OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
-						Uri streetViewUri = Uri.parse("google.streetview:cbll="
-								+ currentLocation.latitude + ","
-								+ currentLocation.longitude
-								+ "&cbp=1,90,,0,1.0&mz=20");
-						Intent streetViewIntent = new Intent(
-								Intent.ACTION_VIEW, streetViewUri);
-						startActivity(streetViewIntent);
+						if (!globalContext.areServicesAvailable()) {
+							GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+							googlePlayServicesErrorDialog.show(
+									getSupportFragmentManager(),
+									"GooglePlayServicesErrorDialog");
+						} else {
+							Uri streetViewUri = Uri
+									.parse("google.streetview:cbll="
+											+ currentLocation.latitude + ","
+											+ currentLocation.longitude
+											+ "&cbp=1,90,,0,1.0&mz=20");
+							Intent streetViewIntent = new Intent(
+									Intent.ACTION_VIEW, streetViewUri);
+							startActivity(streetViewIntent);
+						}
 					}
 				});
 	}
@@ -358,9 +369,20 @@ public class ClosestStationsList extends FragmentActivity {
 					refreshClosestStationsListFragment();
 				}
 			} else {
-				DialogFragment dialogFragment = new LocationSourceDialog();
-				dialogFragment.show(context.getSupportFragmentManager(),
-						"dialogFragment");
+				try {
+					DialogFragment dialogFragment = new LocationSourceDialog();
+					dialogFragment.show(context.getSupportFragmentManager(),
+							"dialogFragment");
+				} catch (Exception e) {
+					/**
+					 * Fixing a strange error that is happening sometimes when
+					 * the dialog is created. I guess sometimes the activity
+					 * gets destroyed before the dialog successfully be shown.
+					 * 
+					 * java.lang.IllegalStateException: Activity has been
+					 * destroyed
+					 */
+				}
 			}
 
 			dismissLoadingView();

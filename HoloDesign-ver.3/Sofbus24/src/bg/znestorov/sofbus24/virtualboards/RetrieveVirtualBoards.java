@@ -258,7 +258,8 @@ public class RetrieveVirtualBoards {
 								station.getNumber())), new BasicNameValuePair(
 						Constants.VB_URL_GO, "1"), new BasicNameValuePair(
 						Constants.VB_URL_SEC, "5"), new BasicNameValuePair(
-						Constants.VB_URL_O, station.getCustomField())));
+						Constants.VB_URL_O, station.getCustomField()),
+				new BasicNameValuePair(Constants.VB_URL_SUBMIT, "Провери")));
 
 		if (vehicleTypeId != null) {
 			result.add(new BasicNameValuePair(Constants.VB_URL_VEHICLE_TYPE_ID,

@@ -3,6 +3,7 @@ package bg.znestorov.sofbus24.metro;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.Html;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.MetroStationEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
@@ -28,6 +30,7 @@ import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 
 /**
  * Array Adapted user for set each row a station from the Vehicles DB
@@ -39,6 +42,9 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 
 	private Activity context;
+	private GlobalEntity globalContext;
+
+	private MetroStationFragment metroStationFragment;
 	private FavouritesDataSource favouritesDatasource;
 
 	private View emptyView;
@@ -59,12 +65,16 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 		ImageButton stationSettings;
 	}
 
-	public MetroStationAdapter(Activity context, View emptyView,
+	public MetroStationAdapter(Activity context,
+			MetroStationFragment metroStationFragment, View emptyView,
 			TextView emptyTextView, String directionName,
 			List<StationEntity> stations) {
 		super(context, R.layout.activity_metro_station_list_item, stations);
 
 		this.context = context;
+		this.globalContext = (GlobalEntity) context.getApplicationContext();
+
+		this.metroStationFragment = metroStationFragment;
 		this.favouritesDatasource = new FavouritesDataSource(context);
 		this.language = LanguageChange.getUserLocale(context);
 
@@ -81,6 +91,7 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 	/**
 	 * Creating the elements of the ListView
 	 */
+	@SuppressLint("InflateParams")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
@@ -155,6 +166,7 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 	 * 
 	 * @return a custom filter
 	 */
+	@SuppressLint("DefaultLocale")
 	private Filter createFilter() {
 		return new Filter() {
 			@Override
@@ -286,13 +298,21 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 										favouritesDatasource, station);
 								break;
 							case R.id.menu_metro_station_map:
-								Intent metroMapIntent = new Intent(context,
-										StationMap.class);
-								metroMapIntent.putExtra(
-										Constants.BUNDLE_STATION_MAP,
-										new MetroStationEntity(station));
-								context.startActivity(metroMapIntent);
-								break;
+								if (!globalContext.areServicesAvailable()) {
+									GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+									googlePlayServicesErrorDialog.show(
+											metroStationFragment
+													.getFragmentManager(),
+											"GooglePlayServicesErrorDialog");
+								} else {
+									Intent metroMapIntent = new Intent(context,
+											StationMap.class);
+									metroMapIntent.putExtra(
+											Constants.BUNDLE_STATION_MAP,
+											new MetroStationEntity(station));
+									context.startActivity(metroMapIntent);
+									break;
+								}
 							}
 
 							return true;

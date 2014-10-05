@@ -269,7 +269,8 @@ public class StationRouteMap extends Activity {
 		// Process all stations of the metro route
 		for (int i = 0; i < metroDirectionStations.size(); i++) {
 			StationEntity station = metroDirectionStations.get(i);
-			MetroStationEntity ms = new MetroStationEntity(station, metroDirectionName);
+			MetroStationEntity ms = new MetroStationEntity(station,
+					metroDirectionName);
 
 			// Create the marker over the map
 			if (ms.hasCoordinates()) {
