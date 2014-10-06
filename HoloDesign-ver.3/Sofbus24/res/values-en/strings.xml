@@ -253,6 +253,10 @@
     <string name="pt_empty_list" formatted="false"><![CDATA[No stations are found for <b>%s</b> in direction <b>%s</b>. Please try again with another search criteria.]]></string>
     <string name="pt_menu_map_route_loading" formatted="false"><![CDATA[Drawing the route...]]></string>
 
+    <!-- Public Transport Schedule -->
+    <string name="pt_schedule_first">First car:</string>
+    <string name="pt_schedule_last">Last car:</string>
+
     <!-- Metro Fragment -->
     <string name="metro_search_hint">Search by name or number</string>
     <string name="metro_search_tab_direction1">Route 1</string>
@@ -264,10 +268,18 @@
     <string name="metro_loading_schedule" formatted="false"><![CDATA[Retrieving the schedule for station <b><i>%s (%s)</b></i>...]]></string>
     <string name="metro_schedule_refresh" formatted="false"><![CDATA[Updating the remaining time...]]></string>
 
+    <!-- Metro Schedule -->
+    <string name="metro_schedule_first">First train:</string>
+    <string name="metro_schedule_last">Last train:</string>
+
     <!-- Station Map Fragment -->
     <string name="station_map_buses"><![CDATA[Buses: ]]></string>
     <string name="station_map_trolleys"><![CDATA[Trolleys: ]]></string>
     <string name="station_map_trams"><![CDATA[Trams: ]]></string>
+
+    <!-- Station Route Map Fragment -->
+    <string name="metro_search_tab_line1">Line 1</string>
+    <string name="metro_search_tab_line2">Line 2</string>
 
     <!-- History -->
     <string name="history_title">History</string>
