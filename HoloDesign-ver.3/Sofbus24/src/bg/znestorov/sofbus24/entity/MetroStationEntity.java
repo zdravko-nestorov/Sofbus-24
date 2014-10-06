@@ -193,6 +193,49 @@ public class MetroStationEntity extends StationEntity implements Serializable {
 		return result;
 	}
 
+	/**
+	 * Get the first schedule time
+	 * 
+	 * @return the first schedule time
+	 */
+	public String getFirstSchedule() {
+		String firstScheduleTime = "";
+		HashMap<Integer, ArrayList<String>> currentSchedule = getSchedule();
+
+		for (int i = 4; i <= 24; i++) {
+			ArrayList<String> firstSchedule = currentSchedule.get(i);
+			if (!firstSchedule.isEmpty()) {
+				firstScheduleTime = firstSchedule.get(0);
+				if (firstScheduleTime.length() == 4) {
+					firstScheduleTime = "0" + firstScheduleTime;
+				}
+
+				break;
+			}
+		}
+
+		return firstScheduleTime;
+	}
+
+	/**
+	 * Get the last schedule time
+	 * 
+	 * @return the last schedule time
+	 */
+	public String getLastSchedule() {
+		String lastScheduleTime = "";
+		HashMap<Integer, ArrayList<String>> currentSchedule = getSchedule();
+
+		for (int i = 4; i <= 24; i++) {
+			ArrayList<String> lastSchedule = currentSchedule.get(i);
+			if (!lastSchedule.isEmpty()) {
+				lastScheduleTime = lastSchedule.get(lastSchedule.size() - 1);
+			}
+		}
+
+		return lastScheduleTime;
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tdirection: " + direction

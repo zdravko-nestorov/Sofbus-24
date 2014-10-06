@@ -745,7 +745,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 			ActivityUtils
 					.showGooglePlayServicesErrorDialog(favouritesStationFragment);
 		} else {
-			if (!globalContext.isGoogleStreetViewAvailable()) {
+			if (globalContext.isGoogleStreetViewAvailable()) {
 				if (station.hasCoordinates()) {
 					Uri streetViewUri = Uri.parse("google.streetview:cbll="
 							+ station.getLat() + "," + station.getLon()

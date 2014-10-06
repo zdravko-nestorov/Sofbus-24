@@ -80,9 +80,15 @@ public class ClosestStationsList extends FragmentActivity {
 			initRefresh();
 			return true;
 		case R.id.action_cs_list_map:
-			Intent closestStationsMapIntent = new Intent(context,
-					ClosestStationsMap.class);
-			startActivity(closestStationsMapIntent);
+			if (!globalContext.areServicesAvailable()) {
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
+						"GooglePlayServicesErrorDialog");
+			} else {
+				Intent closestStationsMapIntent = new Intent(context,
+						ClosestStationsMap.class);
+				startActivity(closestStationsMapIntent);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -147,7 +153,7 @@ public class ClosestStationsList extends FragmentActivity {
 									getSupportFragmentManager(),
 									"GooglePlayServicesErrorDialog");
 						} else {
-							if (!globalContext.isGoogleStreetViewAvailable()) {
+							if (globalContext.isGoogleStreetViewAvailable()) {
 								Uri streetViewUri = Uri
 										.parse("google.streetview:cbll="
 												+ currentLocation.latitude

@@ -329,7 +329,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 
 			return true;
 		case R.id.action_gm_map_gsv:
-			if (!globalContext.isGoogleStreetViewAvailable()) {
+			if (globalContext.isGoogleStreetViewAvailable()) {
 				if (selectedMarkerLatLng != null) {
 					Uri streetViewUri = Uri.parse("google.streetview:cbll="
 							+ selectedMarkerLatLng.latitude + ","

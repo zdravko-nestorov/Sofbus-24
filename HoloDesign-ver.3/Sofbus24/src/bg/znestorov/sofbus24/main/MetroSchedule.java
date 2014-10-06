@@ -47,6 +47,9 @@ public class MetroSchedule extends FragmentActivity {
 	private TextView metroStationName;
 	private TextView metroDirection;
 
+	private TextView metroScheduleFirst;
+	private TextView metroScheduleLast;
+
 	private View metroScheduleFragment;
 	private ProgressBar metroScheduleLoading;
 
@@ -193,6 +196,11 @@ public class MetroSchedule extends FragmentActivity {
 		// Get the Fragment and the loading ProgressBar
 		metroScheduleFragment = findViewById(R.id.metro_schedule_fragment);
 		metroScheduleLoading = (ProgressBar) findViewById(R.id.metro_schedule_loading);
+
+		// Get the first and last traing TextViews and set them lables
+		metroScheduleFirst = (TextView) findViewById(R.id.metro_schedule_first);
+		metroScheduleLast = (TextView) findViewById(R.id.metro_schedule_last);
+		actionsOverScheduleTextViews();
 	}
 
 	/**
@@ -264,6 +272,16 @@ public class MetroSchedule extends FragmentActivity {
 		actionBar.setSubtitle(Utils.getCurrentDateTime());
 		metroStationName.setText(stationName);
 		metroDirection.setText(stationDirection);
+	}
+
+	/**
+	 * Set labels on the schedule TextViews
+	 */
+	private void actionsOverScheduleTextViews() {
+		if (metroScheduleFirst != null && metroScheduleLast != null) {
+			metroScheduleFirst.setText(ms.getFirstSchedule());
+			metroScheduleLast.setText(ms.getLastSchedule());
+		}
 	}
 
 	/**
@@ -358,7 +376,9 @@ public class MetroSchedule extends FragmentActivity {
 		// Show needed arrows
 		if (currentScheduleHourIndex == 0) {
 			leftArrow.setVisibility(View.GONE);
+			rightArrow.setVisibility(View.VISIBLE);
 		} else if (currentScheduleHourIndex == scheduleHourList.size() - 1) {
+			leftArrow.setVisibility(View.VISIBLE);
 			rightArrow.setVisibility(View.GONE);
 		} else {
 			leftArrow.setVisibility(View.VISIBLE);

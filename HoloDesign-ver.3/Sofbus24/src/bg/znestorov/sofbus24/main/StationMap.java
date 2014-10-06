@@ -119,7 +119,7 @@ public class StationMap extends FragmentActivity {
 			finish();
 			return true;
 		case R.id.action_sm_google_street_view:
-			if (!globalContext.isGoogleStreetViewAvailable()) {
+			if (globalContext.isGoogleStreetViewAvailable()) {
 				Uri streetViewUri = Uri.parse("google.streetview:cbll="
 						+ centerStationLocation.latitude + ","
 						+ centerStationLocation.longitude

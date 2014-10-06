@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
@@ -55,6 +56,8 @@ public class StationRouteMap extends FragmentActivity {
 	private DirectionsEntity directionsEntity;
 
 	private GoogleMap stationMap;
+	private View stationRouteLines;
+
 	private boolean isCurrentLocationFocused = false;
 	private LatLng centerStationLocation = new LatLng(
 			Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE,
@@ -104,9 +107,10 @@ public class StationRouteMap extends FragmentActivity {
 		actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
-		// Get the station map fragment
+		// Get the station map fragment and the lines view
 		stationMap = ((MapFragment) getFragmentManager().findFragmentById(
 				R.id.station_route_map)).getMap();
+		stationRouteLines = findViewById(R.id.station_route_lines);
 
 		// Check if the station map is found
 		if (stationMap != null) {
@@ -169,7 +173,7 @@ public class StationRouteMap extends FragmentActivity {
 			finish();
 			return true;
 		case R.id.action_sm_google_street_view:
-			if (!globalContext.isGoogleStreetViewAvailable()) {
+			if (globalContext.isGoogleStreetViewAvailable()) {
 				if (currentMarkerLatLng != null) {
 					Uri streetViewUri = Uri.parse("google.streetview:cbll="
 							+ currentMarkerLatLng.latitude + ","
@@ -263,6 +267,11 @@ public class StationRouteMap extends FragmentActivity {
 	 *            the current location
 	 */
 	private void processListOfMetroStationObjects(Location currentLocation) {
+		// Show the metro lines
+		if (stationRouteLines != null) {
+			stationRouteLines.setVisibility(View.VISIBLE);
+		}
+
 		// Get the active direction parameters
 		int metroActiveDirection = directionsEntity.getActiveDirection();
 		String metroDirectionName = directionsEntity.getDirectionsNames().get(
@@ -355,6 +364,11 @@ public class StationRouteMap extends FragmentActivity {
 	 *            the current location
 	 */
 	private void processListOfPTStationObjects(Location currentLocation) {
+		// Hide the metro lines
+		if (stationRouteLines != null) {
+			stationRouteLines.setVisibility(View.GONE);
+		}
+
 		// Get the active direction parameters
 		int ptActiveDirection = directionsEntity.getActiveDirection();
 		String ptDirectionName = directionsEntity.getDirectionsNames().get(
@@ -501,8 +515,15 @@ public class StationRouteMap extends FragmentActivity {
 			focussedLatLng = centerStationLocation;
 		}
 
+		float zoom;
+		if (globalContext.isPhoneDevice()) {
+			zoom = 11.8f;
+		} else {
+			zoom = 12.2f;
+		}
+
 		CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(focussedLatLng).zoom(11.8f).build();
+				.target(focussedLatLng).zoom(zoom).build();
 		stationMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
 	}
@@ -526,8 +547,15 @@ public class StationRouteMap extends FragmentActivity {
 			focussedLatLng = centerStationLocation;
 		}
 
+		float zoom;
+		if (globalContext.isPhoneDevice()) {
+			zoom = 11.8f;
+		} else {
+			zoom = 12.2f;
+		}
+
 		CameraPosition cameraPosition = new CameraPosition.Builder()
-				.target(focussedLatLng).zoom(11.8f).build();
+				.target(focussedLatLng).zoom(zoom).build();
 		stationMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
 	}

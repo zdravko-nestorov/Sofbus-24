@@ -216,7 +216,7 @@ public class VirtualBoardsTime extends FragmentActivity {
 							getSupportFragmentManager(),
 							"GooglePlayServicesErrorDialog");
 				} else {
-					if (!globalContext.isGoogleStreetViewAvailable()) {
+					if (globalContext.isGoogleStreetViewAvailable()) {
 						if (vbTimeStation.hasCoordinates()) {
 							Uri streetViewUri = Uri
 									.parse("google.streetview:cbll="

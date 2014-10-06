@@ -1,7 +1,9 @@
 package bg.znestorov.sofbus24.utils.activity;
 
 import java.io.File;
+import java.lang.reflect.Method;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -528,11 +530,11 @@ public class ActivityUtils {
 			if (pixelsHeight > pixelsWidth) {
 				// Portrait orientation
 				pixelsWidth = (int) (pixelsHeight * 0.58);
-				pixelsHeight = (int) (pixelsHeight * 0.82);
+				pixelsHeight = (int) (pixelsHeight * 0.86);
 			} else {
 				// Landscape orientation
 				pixelsWidth = (int) (pixelsWidth * 0.58);
-				pixelsHeight = (int) (pixelsHeight * 0.82);
+				pixelsHeight = (int) (pixelsHeight * 0.86);
 			}
 		} else {
 			pixelsWidth = 0;
@@ -547,6 +549,24 @@ public class ActivityUtils {
 
 		activity.getWindow().setAttributes(
 				(android.view.WindowManager.LayoutParams) params);
+	}
+
+	/**
+	 * Force the tabs not to be embaded in the ActionBar
+	 * 
+	 * @param context
+	 *            the current activity context
+	 */
+	public static void forceTabs(Activity context) {
+		try {
+			final ActionBar actionBar = context.getActionBar();
+			final Method setHasEmbeddedTabsMethod = actionBar.getClass()
+					.getDeclaredMethod("setHasEmbeddedTabs", boolean.class);
+			setHasEmbeddedTabsMethod.setAccessible(true);
+			setHasEmbeddedTabsMethod.invoke(actionBar, false);
+		} catch (final Exception e) {
+			// This error is safe to ignore, standard tabs will appear.
+		}
 	}
 
 	/**

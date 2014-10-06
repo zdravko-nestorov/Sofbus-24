@@ -12,7 +12,8 @@ import java.util.LinkedHashMap;
  * @author Zdravko Nestorov
  * 
  */
-public class PublicTransportStationEntity extends StationEntity implements Serializable {
+public class PublicTransportStationEntity extends StationEntity implements
+		Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -122,6 +123,47 @@ public class PublicTransportStationEntity extends StationEntity implements Seria
 		}
 
 		return result;
+	}
+
+	/**
+	 * Get the first schedule time
+	 * 
+	 * @return the first schedule time
+	 */
+	public String getFirstSchedule() {
+		String firstScheduleTime = "";
+
+		for (int i = 4; i <= 24; i++) {
+			ArrayList<String> firstSchedule = this.schedule.get(i);
+			if (!firstSchedule.isEmpty()) {
+				firstScheduleTime = firstSchedule.get(0);
+				if (firstScheduleTime.length() == 4) {
+					firstScheduleTime = "0" + firstScheduleTime;
+				}
+
+				break;
+			}
+		}
+
+		return firstScheduleTime;
+	}
+
+	/**
+	 * Get the last schedule time
+	 * 
+	 * @return the last schedule time
+	 */
+	public String getLastSchedule() {
+		String lastScheduleTime = "";
+
+		for (int i = 4; i <= 24; i++) {
+			ArrayList<String> lastSchedule = this.schedule.get(i);
+			if (!lastSchedule.isEmpty()) {
+				lastScheduleTime = lastSchedule.get(lastSchedule.size() - 1);
+			}
+		}
+
+		return lastScheduleTime;
 	}
 
 	@Override

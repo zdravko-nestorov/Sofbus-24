@@ -9,6 +9,8 @@ public class PublicTransportDialog extends PublicTransport {
 	protected void onCreate(Bundle savedInstanceState) {
 		ActivityUtils.showAsPopup(this, false);
 		super.onCreate(savedInstanceState);
+
+		ActivityUtils.forceTabs(PublicTransportDialog.this);
 	}
 
 }

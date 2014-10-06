@@ -47,6 +47,9 @@ public class PublicTransportSchedule extends FragmentActivity {
 	private TextView ptStationName;
 	private TextView ptDirection;
 
+	private TextView ptScheduleFirst;
+	private TextView ptScheduleLast;
+
 	private View ptScheduleFragment;
 	private ProgressBar ptScheduleLoading;
 
@@ -200,6 +203,11 @@ public class PublicTransportSchedule extends FragmentActivity {
 		// Get the Fragment and the loading ProgressBar
 		ptScheduleFragment = findViewById(R.id.pt_schedule_fragment);
 		ptScheduleLoading = (ProgressBar) findViewById(R.id.pt_schedule_loading);
+
+		// Get the first and last traing TextViews and set them lables
+		ptScheduleFirst = (TextView) findViewById(R.id.pt_schedule_first);
+		ptScheduleLast = (TextView) findViewById(R.id.pt_schedule_last);
+		actionsOverScheduleTextViews();
 	}
 
 	/**
@@ -272,6 +280,16 @@ public class PublicTransportSchedule extends FragmentActivity {
 		actionBar.setSubtitle(Utils.getCurrentDateTime());
 		ptStationName.setText(stationName);
 		ptDirection.setText(stationDirection);
+	}
+
+	/**
+	 * Set labels on the schedule TextViews
+	 */
+	private void actionsOverScheduleTextViews() {
+		if (ptScheduleFirst != null && ptScheduleLast != null) {
+			ptScheduleFirst.setText(ptStation.getFirstSchedule());
+			ptScheduleLast.setText(ptStation.getLastSchedule());
+		}
 	}
 
 	/**
@@ -367,7 +385,9 @@ public class PublicTransportSchedule extends FragmentActivity {
 		// Show needed arrows
 		if (currentScheduleHourIndex == 0) {
 			leftArrow.setVisibility(View.GONE);
+			rightArrow.setVisibility(View.VISIBLE);
 		} else if (currentScheduleHourIndex == scheduleHourList.size() - 1) {
+			leftArrow.setVisibility(View.VISIBLE);
 			rightArrow.setVisibility(View.GONE);
 		} else {
 			leftArrow.setVisibility(View.VISIBLE);
