@@ -254,6 +254,10 @@
     <string name="pt_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
     <string name="pt_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
 
+    <!-- Public Transport Schedule -->
+    <string name="pt_schedule_first">Първа кола:</string>
+    <string name="pt_schedule_last">Последна кола:</string>
+
     <!-- Metro Fragment -->
     <string name="metro_search_hint">Търсене по име или номер</string>
     <string name="metro_search_tab_direction1">Маршрут 1</string>
@@ -265,10 +269,18 @@
     <string name="metro_loading_schedule" formatted="false"><![CDATA[Извличане на разписанието за спирка <b><i>%s (%s)</b></i>...]]></string>
     <string name="metro_schedule_refresh" formatted="false"><![CDATA[Обновяване на оставащото време...]]></string>
 
+    <!-- Metro Schedule -->
+    <string name="metro_schedule_first">Първи влак:</string>
+    <string name="metro_schedule_last">Последен влак:</string>
+
     <!-- Station Map Fragment -->
     <string name="station_map_buses"><![CDATA[Автобуси: ]]></string>
     <string name="station_map_trolleys"><![CDATA[Тролеи: ]]></string>
     <string name="station_map_trams"><![CDATA[Трамваи: ]]></string>
+
+    <!-- Station Route Map Fragment -->
+    <string name="metro_search_tab_line1">Линия 1</string>
+    <string name="metro_search_tab_line2">Линия 2</string>
 
     <!-- History -->
     <string name="history_title">История</string>
