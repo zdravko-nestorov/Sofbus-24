@@ -156,6 +156,8 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		ProgressDialog progressDialog = new ProgressDialog(context);
+
 		switch (item.getItemId()) {
 		case R.id.action_recent_history:
 			Intent historyIntent;
@@ -172,8 +174,11 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 				googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
 						"GooglePlayServicesErrorDialog");
 			} else {
+				progressDialog.setMessage(context
+						.getString(R.string.cs_list_loading_current_location));
+
 				RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-						this);
+						context, false, progressDialog);
 				retrieveCurrentLocation.execute();
 				RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
 						retrieveCurrentLocation);
@@ -181,15 +186,16 @@ public class Sofbus24 extends FragmentActivity implements ActionBar.TabListener 
 			}
 			return true;
 		case R.id.action_closest_stations_list:
-			ProgressDialog progressDialog = new ProgressDialog(context);
 			progressDialog
 					.setMessage(String
 							.format(getString(R.string.cs_list_loading_current_location)));
 
-			ClosestStationsList closestStationsList = new ClosestStationsList();
-			ClosestStationsList.RetrieveCurrentPosition retrieveCurrentPosition = closestStationsList.new RetrieveCurrentPosition(
-					context, progressDialog);
-			retrieveCurrentPosition.execute();
+			RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
+					context, true, progressDialog);
+			retrieveCurrentLocation.execute();
+			RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
+					retrieveCurrentLocation);
+			(new Thread(retrieveCurrentLocationTimeout)).start();
 			return true;
 		case R.id.action_settings:
 			Intent preferencesIntent;

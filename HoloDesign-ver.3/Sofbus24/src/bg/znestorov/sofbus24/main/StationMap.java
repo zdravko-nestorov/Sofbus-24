@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.MetroStationEntity;
 import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -18,6 +20,7 @@ import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.MapUtils;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,9 +32,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class StationMap extends Activity {
+public class StationMap extends FragmentActivity {
 
 	private Activity context;
+	private GlobalEntity globalContext;
 	private ActionBar actionBar;
 
 	private GoogleMap stationMap;
@@ -47,6 +51,7 @@ public class StationMap extends Activity {
 
 		// Get the current activity context
 		context = StationMap.this;
+		globalContext = (GlobalEntity) getApplicationContext();
 
 		// Set up the action bar
 		actionBar = getActionBar();
@@ -114,13 +119,17 @@ public class StationMap extends Activity {
 			finish();
 			return true;
 		case R.id.action_sm_google_street_view:
-			Uri streetViewUri = Uri.parse("google.streetview:cbll="
-					+ centerStationLocation.latitude + ","
-					+ centerStationLocation.longitude
-					+ "&cbp=1,90,,0,1.0&mz=20");
-			Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
-					streetViewUri);
-			startActivity(streetViewIntent);
+			if (!globalContext.isGoogleStreetViewAvailable()) {
+				Uri streetViewUri = Uri.parse("google.streetview:cbll="
+						+ centerStationLocation.latitude + ","
+						+ centerStationLocation.longitude
+						+ "&cbp=1,90,,0,1.0&mz=20");
+				Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
+						streetViewUri);
+				startActivity(streetViewIntent);
+			} else {
+				ActivityUtils.showGoogleStreetViewErrorDialog(StationMap.this);
+			}
 			return true;
 		case R.id.action_sm_map_mode_normal:
 			stationMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);

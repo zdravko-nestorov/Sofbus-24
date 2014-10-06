@@ -33,6 +33,7 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.closest.stations.map.GoogleMapsRoute;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.SortTypeEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -63,6 +64,8 @@ public class ClosestStationsMap extends FragmentActivity implements
 		LocationListener {
 
 	private Activity context;
+	private GlobalEntity globalContext;
+
 	private StationsDataSource stationsDatasource;
 	private FavouritesDataSource favouritesDatasource;
 
@@ -150,6 +153,7 @@ public class ClosestStationsMap extends FragmentActivity implements
 		// Get the current activity context and get an instance of the
 		// StationsDatasource
 		context = ClosestStationsMap.this;
+		globalContext = (GlobalEntity) getApplicationContext();
 		stationsDatasource = new StationsDataSource(context);
 		favouritesDatasource = new FavouritesDataSource(context);
 
@@ -325,18 +329,23 @@ public class ClosestStationsMap extends FragmentActivity implements
 
 			return true;
 		case R.id.action_gm_map_gsv:
-			if (selectedMarkerLatLng != null) {
-				Uri streetViewUri = Uri.parse("google.streetview:cbll="
-						+ selectedMarkerLatLng.latitude + ","
-						+ selectedMarkerLatLng.longitude
-						+ "&cbp=1,90,,0,1.0&mz=20");
-				Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
-						streetViewUri);
-				startActivity(streetViewIntent);
+			if (!globalContext.isGoogleStreetViewAvailable()) {
+				if (selectedMarkerLatLng != null) {
+					Uri streetViewUri = Uri.parse("google.streetview:cbll="
+							+ selectedMarkerLatLng.latitude + ","
+							+ selectedMarkerLatLng.longitude
+							+ "&cbp=1,90,,0,1.0&mz=20");
+					Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
+							streetViewUri);
+					startActivity(streetViewIntent);
+				} else {
+					Toast.makeText(context,
+							getString(R.string.app_no_station_selected_error),
+							Toast.LENGTH_SHORT).show();
+				}
 			} else {
-				Toast.makeText(context,
-						getString(R.string.app_no_station_selected_error),
-						Toast.LENGTH_SHORT).show();
+				ActivityUtils
+						.showGoogleStreetViewErrorDialog(ClosestStationsMap.this);
 			}
 
 			return true;

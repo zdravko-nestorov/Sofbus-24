@@ -1,5 +1,7 @@
 package bg.znestorov.sofbus24.notifications;
 
+import java.io.Serializable;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,13 +22,18 @@ public class NotificationsReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Bundle bundle = intent.getExtras();
-		String[] vehicleInfo = (String[]) bundle
+		Serializable bundleInfo = bundle
 				.getSerializable(NotificationsDialog.BUNDLE_VEHICLE_INFO);
 
-		Intent serviceIntent = new Intent(context, NotificationsService.class);
-		serviceIntent.putExtra(BUNDLE_RECEIVER_KEY, BUNDLE_SERVICE_VALUE);
-		serviceIntent.putExtra(NotificationsDialog.BUNDLE_VEHICLE_INFO,
-				vehicleInfo);
-		context.startService(serviceIntent);
+		if (bundleInfo != null) {
+			String[] vehicleInfo = (String[]) bundleInfo;
+
+			Intent serviceIntent = new Intent(context,
+					NotificationsService.class);
+			serviceIntent.putExtra(BUNDLE_RECEIVER_KEY, BUNDLE_SERVICE_VALUE);
+			serviceIntent.putExtra(NotificationsDialog.BUNDLE_VEHICLE_INFO,
+					vehicleInfo);
+			context.startService(serviceIntent);
+		}
 	}
 }

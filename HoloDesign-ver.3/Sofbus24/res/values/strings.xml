@@ -21,7 +21,8 @@
     <string name="app_info_error" formatted="false"><![CDATA[В момента сайта за градска мобилност не предоставя информация за <b>%s</b>. Моля опитайте пак по-късно.]]></string>
     <string name="app_captcha_error" formatted="false"><![CDATA[Трябва да въведете символите от изображението (<b>captcha код</b>), за да преминете теста за сигурност на <b>СКГТ</b> и да извлечете нужната информация.]]></string>
     <string name="app_internet_or_info_error">В момента няма намерена информация. Моля проверете вашата интернет връзка или опитайте по-късно.</string>
-    <string name="app_location_error">Моля включете поне едно от устройствата (GPS или WiFi), за да бъде засечено текущото ви местоположение.</string>
+    <string name="app_location_error">Моля включете поне едно от устройствата (Network, WiFi или GPS), за да бъде засечено текущото ви местоположение.</string>
+    <string name="app_location_timeout">Намирането на текущото местоположение продължи твърде дълго или всички локализиращи модули са изключени (Network, WiFi или GPS). Моля опитайте отново или включете някой от тях.</string>
     <string name="app_coordinates_error">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
     <string name="app_no_station_selected_error">Моля изберете спирка от картата, за да бъде визуализирана чрез режима Google Street View.</string>
     <string name="app_distance" formatted="false">Разстояние: ~%s</string>
@@ -35,6 +36,8 @@
     <string name="app_toast_rename_favourites" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше преименувана на <b><i>%s (%s)</b></i>.]]></string>
     <string name="app_google_play_title">Услуги за Google Play</string>
     <string name="app_google_play_msg">Услугите за Google Play, на които разчита Софбус 24 за показване на картата на Google Maps, не се поддържат от устройството Ви. Моля, инсталирайте ги, за да продължите.</string>
+    <string name="app_google_street_view_title">Google Street View</string>
+    <string name="app_google_street_view_msg">Услугите за Google Play, на които разчита Софбус 24 за показване на Google Street View, не се поддържат от устройството Ви. Моля, инсталирайте ги, за да продължите.</string>
 
     <!-- Action Bar -->
     <!-- Sofbus24 -->
@@ -155,7 +158,7 @@
     <!-- Edit Tabs Fragment -->
     <string name="edit_tabs_title">Начален екран</string>
     <string name="edit_tabs_favourites">Фаворити</string>
-    <string name="edit_tabs_search">Виртуални табла</string>
+    <string name="edit_tabs_search">Търсене</string>
     <string name="edit_tabs_schedule">Разписание</string>
     <string name="edit_tabs_metro">Метро</string>
     <string name="edit_tabs_toast">Началният екран беше променен</string>

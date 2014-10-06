@@ -11,12 +11,14 @@ import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.MetroStationEntity;
 import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -28,6 +30,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.MapUtils;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,9 +46,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-public class StationRouteMap extends Activity {
+public class StationRouteMap extends FragmentActivity {
 
 	private Activity context;
+	private GlobalEntity globalContext;
 	private ActionBar actionBar;
 
 	private DirectionsEntity directionsEntity;
@@ -94,6 +98,7 @@ public class StationRouteMap extends Activity {
 
 		// Get the current context
 		context = StationRouteMap.this;
+		globalContext = (GlobalEntity) getApplicationContext();
 
 		// Set up the action bar
 		actionBar = getActionBar();
@@ -164,18 +169,23 @@ public class StationRouteMap extends Activity {
 			finish();
 			return true;
 		case R.id.action_sm_google_street_view:
-			if (currentMarkerLatLng != null) {
-				Uri streetViewUri = Uri.parse("google.streetview:cbll="
-						+ currentMarkerLatLng.latitude + ","
-						+ currentMarkerLatLng.longitude
-						+ "&cbp=1,90,,0,1.0&mz=20");
-				Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
-						streetViewUri);
-				startActivity(streetViewIntent);
+			if (!globalContext.isGoogleStreetViewAvailable()) {
+				if (currentMarkerLatLng != null) {
+					Uri streetViewUri = Uri.parse("google.streetview:cbll="
+							+ currentMarkerLatLng.latitude + ","
+							+ currentMarkerLatLng.longitude
+							+ "&cbp=1,90,,0,1.0&mz=20");
+					Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
+							streetViewUri);
+					startActivity(streetViewIntent);
+				} else {
+					Toast.makeText(context,
+							getString(R.string.app_no_station_selected_error),
+							Toast.LENGTH_SHORT).show();
+				}
 			} else {
-				Toast.makeText(context,
-						getString(R.string.app_no_station_selected_error),
-						Toast.LENGTH_SHORT).show();
+				ActivityUtils
+						.showGoogleStreetViewErrorDialog(StationRouteMap.this);
 			}
 			return true;
 		case R.id.action_sm_map_mode_normal:

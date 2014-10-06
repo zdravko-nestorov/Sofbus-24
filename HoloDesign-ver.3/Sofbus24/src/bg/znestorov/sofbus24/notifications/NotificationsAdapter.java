@@ -94,7 +94,6 @@ public class NotificationsAdapter extends ArrayAdapter<NotificationEntity>
 				.parseInt(notificationInformation[2]));
 		viewHolder.vehicleCaption.setText(notificationInformation[3]);
 		viewHolder.vehicleDirection.setText(notificationInformation[4]);
-		// TODO Set correct time
 		viewHolder.currentTime.setText(context.getString(
 				R.string.vb_time_current_time, Utils.getCurrentDateTime()));
 

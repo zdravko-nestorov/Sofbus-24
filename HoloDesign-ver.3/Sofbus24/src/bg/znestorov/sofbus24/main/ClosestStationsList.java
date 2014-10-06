@@ -1,19 +1,10 @@
 package bg.znestorov.sofbus24.main;
 
 import android.app.ActionBar;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -23,7 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import bg.znestorov.sofbus24.closest.stations.list.ClosestStationsListFragment;
-import bg.znestorov.sofbus24.closest.stations.map.LocationSourceDialog;
+import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -107,9 +98,9 @@ public class ClosestStationsList extends FragmentActivity {
 		csListLoading.setVisibility(View.VISIBLE);
 
 		// Retrieve the current position
-		RetrieveCurrentPosition retrieveCurrentPosition = new RetrieveCurrentPosition(
-				context, null);
-		retrieveCurrentPosition.execute();
+		RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
+				context, true, null);
+		retrieveCurrentLocation.execute();
 	}
 
 	/**
@@ -156,14 +147,20 @@ public class ClosestStationsList extends FragmentActivity {
 									getSupportFragmentManager(),
 									"GooglePlayServicesErrorDialog");
 						} else {
-							Uri streetViewUri = Uri
-									.parse("google.streetview:cbll="
-											+ currentLocation.latitude + ","
-											+ currentLocation.longitude
-											+ "&cbp=1,90,,0,1.0&mz=20");
-							Intent streetViewIntent = new Intent(
-									Intent.ACTION_VIEW, streetViewUri);
-							startActivity(streetViewIntent);
+							if (!globalContext.isGoogleStreetViewAvailable()) {
+								Uri streetViewUri = Uri
+										.parse("google.streetview:cbll="
+												+ currentLocation.latitude
+												+ ","
+												+ currentLocation.longitude
+												+ "&cbp=1,90,,0,1.0&mz=20");
+								Intent streetViewIntent = new Intent(
+										Intent.ACTION_VIEW, streetViewUri);
+								startActivity(streetViewIntent);
+							} else {
+								ActivityUtils
+										.showGoogleStreetViewErrorDialog(ClosestStationsList.this);
+							}
 						}
 					}
 				});
@@ -173,7 +170,7 @@ public class ClosestStationsList extends FragmentActivity {
 	 * Used to refresh the content of the ClosestStationsListFragment according
 	 * to the newly retrieved location
 	 */
-	private void refreshClosestStationsListFragment() {
+	public void refreshClosestStationsListFragment() {
 		// Refresh the fragment
 		ClosestStationsListFragment csListFragment = ((ClosestStationsListFragment) getSupportFragmentManager()
 				.findFragmentByTag(FRAGMENT_TAG_NAME));
@@ -182,6 +179,10 @@ public class ClosestStationsList extends FragmentActivity {
 		}
 
 		// Proccess the layout fields
+		actionsOnFragmentStart();
+	}
+
+	public void refreshClosestStationsListFragmentFailed() {
 		actionsOnFragmentStart();
 	}
 
@@ -254,217 +255,5 @@ public class ClosestStationsList extends FragmentActivity {
 						streetViewButton.setVisibility(View.VISIBLE);
 					}
 				});
-	}
-
-	/**
-	 * Class responsible for AsyncLoad of the current location
-	 * 
-	 * @author Zdravko Nestorov
-	 * @version 1.0
-	 * 
-	 */
-	public class RetrieveCurrentPosition extends AsyncTask<Void, Void, Void> {
-
-		private FragmentActivity context;
-		private GlobalEntity globalContext;
-		private ProgressDialog progressDialog;
-
-		// Default latitude and longitude
-		private double latitude = 0.0;
-		private double longitude = 0.0;
-
-		// Location Managers responsible for the current location
-		private LocationManager locationManager;
-		private MyLocationListener myLocationListener;
-
-		// Available Location providers
-		private boolean isMyLocationAvailable = false;
-		private boolean isNetworkProviderOn = true;
-		private boolean isGpsProviderOn = true;
-
-		public RetrieveCurrentPosition(FragmentActivity context,
-				ProgressDialog progressDialog) {
-			this.context = context;
-			this.globalContext = (GlobalEntity) context.getApplicationContext();
-			this.progressDialog = progressDialog;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-
-			String locationProviders = Settings.Secure.getString(
-					context.getContentResolver(),
-					Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-
-			// TODO: Make check for "Location & Google search" acceptance
-			isMyLocationAvailable = locationProviders
-					.contains(LocationManager.NETWORK_PROVIDER)
-					|| locationProviders.contains(LocationManager.GPS_PROVIDER);
-
-			if (isMyLocationAvailable) {
-				myLocationListener = new MyLocationListener();
-				locationManager = (LocationManager) context
-						.getSystemService(Context.LOCATION_SERVICE);
-
-				try {
-					locationManager.requestLocationUpdates(
-							LocationManager.NETWORK_PROVIDER, 0, 0,
-							myLocationListener);
-				} catch (Exception e) {
-					isNetworkProviderOn = false;
-				}
-
-				try {
-					locationManager.requestLocationUpdates(
-							LocationManager.GPS_PROVIDER, 0, 0,
-							myLocationListener);
-				} catch (Exception e) {
-					isGpsProviderOn = false;
-				}
-			}
-
-			createLoadingView();
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			if (isMyLocationAvailable
-					&& (isNetworkProviderOn || isGpsProviderOn)) {
-				while (this.latitude == 0.0 && this.longitude == 0.0) {
-					if (isCancelled()) {
-						break;
-					}
-				}
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-
-			if (isMyLocationAvailable
-					&& (isNetworkProviderOn || isGpsProviderOn)) {
-				LatLng currentLocation = new LatLng(this.latitude,
-						this.longitude);
-
-				// Check what have to be done - start new activity or update
-				// fragment
-				if (progressDialog != null) {
-					Intent closestStationsListIntent;
-					if (globalContext.isPhoneDevice()) {
-						closestStationsListIntent = new Intent(context,
-								ClosestStationsList.class);
-					} else {
-						closestStationsListIntent = new Intent(context,
-								ClosestStationsListDialog.class);
-					}
-					closestStationsListIntent.putExtra(
-							Constants.BUNDLE_CLOSEST_STATIONS_LIST,
-							currentLocation);
-					context.startActivity(closestStationsListIntent);
-				} else {
-					refreshClosestStationsListFragment();
-				}
-			} else {
-				try {
-					DialogFragment dialogFragment = new LocationSourceDialog();
-					dialogFragment.show(context.getSupportFragmentManager(),
-							"dialogFragment");
-				} catch (Exception e) {
-					/**
-					 * Fixing a strange error that is happening sometimes when
-					 * the dialog is created. I guess sometimes the activity
-					 * gets destroyed before the dialog successfully be shown.
-					 * 
-					 * java.lang.IllegalStateException: Activity has been
-					 * destroyed
-					 */
-				}
-			}
-
-			dismissLoadingView();
-		}
-
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-			dismissLoadingView();
-		}
-
-		public class MyLocationListener implements LocationListener {
-			@Override
-			public void onLocationChanged(Location location) {
-				try {
-					latitude = location.getLatitude();
-					longitude = location.getLongitude();
-				} catch (Exception e) {
-				}
-			}
-
-			@Override
-			public void onProviderDisabled(String provider) {
-				if (provider.equals(LocationManager.NETWORK_PROVIDER)) {
-					isNetworkProviderOn = false;
-				}
-
-				if (provider.equals(LocationManager.GPS_PROVIDER)) {
-					isGpsProviderOn = false;
-				}
-			}
-
-			@Override
-			public void onProviderEnabled(String provider) {
-				if (provider.equals(LocationManager.NETWORK_PROVIDER)) {
-					isNetworkProviderOn = true;
-				}
-
-				if (provider.equals(LocationManager.GPS_PROVIDER)) {
-					isGpsProviderOn = true;
-				}
-			}
-
-			@Override
-			public void onStatusChanged(String provider, int status,
-					Bundle extras) {
-			}
-		}
-
-		/**
-		 * Create the loading view and lock the screen
-		 */
-		private void createLoadingView() {
-			ActivityUtils.lockScreenOrientation(context);
-
-			// Create progress dialog showing the loading message (if needed)
-			if (progressDialog != null) {
-				progressDialog.setIndeterminate(true);
-				progressDialog.setCancelable(true);
-				progressDialog
-						.setOnCancelListener(new DialogInterface.OnCancelListener() {
-							public void onCancel(DialogInterface dialog) {
-								cancel(true);
-							}
-						});
-				progressDialog.show();
-			}
-		}
-
-		/**
-		 * Dismiss the loading view and unlock the screen
-		 */
-		private void dismissLoadingView() {
-			if (progressDialog != null) {
-				progressDialog.dismiss();
-			}
-
-			if (locationManager != null) {
-				locationManager.removeUpdates(myLocationListener);
-			}
-
-			ActivityUtils.unlockScreenOrientation(context);
-		}
 	}
 }

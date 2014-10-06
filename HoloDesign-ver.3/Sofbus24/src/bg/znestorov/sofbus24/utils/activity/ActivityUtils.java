@@ -12,6 +12,8 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
@@ -545,5 +547,57 @@ public class ActivityUtils {
 
 		activity.getWindow().setAttributes(
 				(android.view.WindowManager.LayoutParams) params);
+	}
+
+	/**
+	 * Show a GooglePlayErrorDialog
+	 * 
+	 * @param fragment
+	 *            the current fragment
+	 */
+	public static void showGooglePlayServicesErrorDialog(Fragment fragment) {
+		GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+		googlePlayServicesErrorDialog.show(fragment.getFragmentManager(),
+				"GooglePlayServicesErrorDialog");
+	}
+
+	/**
+	 * Show a GooglePlayErrorDialog
+	 * 
+	 * @param fragmentActivity
+	 *            the current activity
+	 */
+	public static void showGooglePlayServicesErrorDialog(
+			FragmentActivity fragmentActivity) {
+		GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+		googlePlayServicesErrorDialog.show(
+				fragmentActivity.getSupportFragmentManager(),
+				"GooglePlayServicesErrorDialog");
+	}
+
+	/**
+	 * Show a GoogleStreetViewErrorDialog
+	 * 
+	 * @param fragment
+	 *            the current fragment
+	 */
+	public static void showGoogleStreetViewErrorDialog(Fragment fragment) {
+		GoogleStreetViewErrorDialog googleStreetViewErrorDialog = new GoogleStreetViewErrorDialog();
+		googleStreetViewErrorDialog.show(fragment.getFragmentManager(),
+				"GoogleStreetViewErrorDialog");
+	}
+
+	/**
+	 * Show a GoogleStreetViewErrorDialog
+	 * 
+	 * @param fragmentActivity
+	 *            the current activity
+	 */
+	public static void showGoogleStreetViewErrorDialog(
+			FragmentActivity fragmentActivity) {
+		GoogleStreetViewErrorDialog googleStreetViewErrorDialog = new GoogleStreetViewErrorDialog();
+		googleStreetViewErrorDialog.show(
+				fragmentActivity.getSupportFragmentManager(),
+				"GooglePlayServicesErrorDialog");
 	}
 }

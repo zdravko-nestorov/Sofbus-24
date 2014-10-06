@@ -19,6 +19,7 @@ public class GlobalEntity extends Application {
 
 	private boolean isPhoneDevice;
 	private boolean areServicesAvailable;
+	private boolean isGoogleStreetViewAvailable;
 
 	private boolean hasToRestart = false;
 	private boolean isFavouritesChanged = false;
@@ -79,6 +80,14 @@ public class GlobalEntity extends Application {
 		this.areServicesAvailable = areServicesAvailable;
 	}
 
+	public boolean isGoogleStreetViewAvailable() {
+		return isGoogleStreetViewAvailable;
+	}
+
+	public void setGoogleStreetViewAvailable(boolean isGoogleStreetViewAvailable) {
+		this.isGoogleStreetViewAvailable = isGoogleStreetViewAvailable;
+	}
+
 	private void initialize() {
 		isPhoneDevice = getResources().getBoolean(R.bool.isPhone);
 
@@ -88,15 +97,24 @@ public class GlobalEntity extends Application {
 		} catch (PackageManager.NameNotFoundException e) {
 			areServicesAvailable = false;
 		}
+
+		try {
+			getPackageManager().getApplicationInfo("com.google.android.street",
+					0);
+			isGoogleStreetViewAvailable = true;
+		} catch (PackageManager.NameNotFoundException e) {
+			isGoogleStreetViewAvailable = false;
+		}
 	}
 
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tisPhoneDevice: " + isPhoneDevice
 				+ "\n\tareServicesAvailable: " + areServicesAvailable
-				+ "\n\thasToRestart: " + hasToRestart
-				+ "\n\tisFavouritesChanged: " + isFavouritesChanged
-				+ "\n\tisVbChanged: " + isVbChanged
+				+ "\n\tisGoogleStreetViewAvailable: "
+				+ isGoogleStreetViewAvailable + "\n\thasToRestart: "
+				+ hasToRestart + "\n\tisFavouritesChanged: "
+				+ isFavouritesChanged + "\n\tisVbChanged: " + isVbChanged
 				+ "\n\tisHomeScreenChanged: " + isHomeScreenChanged + "\n}";
 	}
 

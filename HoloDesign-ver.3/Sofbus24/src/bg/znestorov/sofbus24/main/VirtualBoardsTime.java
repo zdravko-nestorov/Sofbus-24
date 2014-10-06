@@ -216,16 +216,22 @@ public class VirtualBoardsTime extends FragmentActivity {
 							getSupportFragmentManager(),
 							"GooglePlayServicesErrorDialog");
 				} else {
-					if (vbTimeStation.hasCoordinates()) {
-						Uri streetViewUri = Uri.parse("google.streetview:cbll="
-								+ vbTimeStation.getLat() + ","
-								+ vbTimeStation.getLon()
-								+ "&cbp=1,90,,0,1.0&mz=20");
-						Intent streetViewIntent = new Intent(
-								Intent.ACTION_VIEW, streetViewUri);
-						startActivity(streetViewIntent);
+					if (!globalContext.isGoogleStreetViewAvailable()) {
+						if (vbTimeStation.hasCoordinates()) {
+							Uri streetViewUri = Uri
+									.parse("google.streetview:cbll="
+											+ vbTimeStation.getLat() + ","
+											+ vbTimeStation.getLon()
+											+ "&cbp=1,90,,0,1.0&mz=20");
+							Intent streetViewIntent = new Intent(
+									Intent.ACTION_VIEW, streetViewUri);
+							startActivity(streetViewIntent);
+						} else {
+							ActivityUtils.showNoCoordinatesToast(context);
+						}
 					} else {
-						ActivityUtils.showNoCoordinatesToast(context);
+						ActivityUtils
+								.showGoogleStreetViewErrorDialog(VirtualBoardsTime.this);
 					}
 				}
 			}

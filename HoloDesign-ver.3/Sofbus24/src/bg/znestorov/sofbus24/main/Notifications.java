@@ -37,23 +37,38 @@ public class Notifications extends FragmentActivity {
 			String[] vehicleInfo = (String[]) getIntent().getExtras()
 					.getSerializable(NotificationsDialog.BUNDLE_VEHICLE_INFO);
 
-			// Remove the notification from the db
-			removeNotification(vehicleInfo);
-
-			// Start a notification dialog fragment
-			DialogFragment notificationsVBTimeDialog = NotificationsDialog
-					.newInstance(vehicleInfo);
-			notificationsVBTimeDialog.show(getSupportFragmentManager(),
-					"NotificationsVBTimeDialog");
+			// Remove the notification from the db and check the result. If
+			// successful - start a notification dialog fragment
+			if (removeNotification(vehicleInfo)) {
+				DialogFragment notificationsVBTimeDialog = NotificationsDialog
+						.newInstance(vehicleInfo);
+				notificationsVBTimeDialog.show(getSupportFragmentManager(),
+						"NotificationsVBTimeDialog");
+			}
 		}
 	}
 
-	private void removeNotification(String[] vehicleInfo) {
+	private boolean removeNotification(String[] vehicleInfo) {
+		boolean isNotificationRemoved;
+
 		NotificationsDataSource notificationsDatasource = new NotificationsDataSource(
 				this);
+
+		// Open the DB
 		notificationsDatasource.open();
-		notificationsDatasource.deleteNotification(vehicleInfo[7]);
+
+		// Check if the notification is already in the DB
+		if (notificationsDatasource.getNotification(vehicleInfo[7]) != null) {
+			notificationsDatasource.deleteNotification(vehicleInfo[7]);
+			isNotificationRemoved = true;
+		} else {
+			isNotificationRemoved = false;
+		}
+
+		// Close the DB
 		notificationsDatasource.close();
+
+		return isNotificationRemoved;
 	}
 
 }

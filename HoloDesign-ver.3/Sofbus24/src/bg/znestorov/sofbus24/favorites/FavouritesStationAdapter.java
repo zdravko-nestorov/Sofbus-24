@@ -742,20 +742,23 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	 */
 	private void seeStationOnGoogleStreetView(StationEntity station) {
 		if (!globalContext.areServicesAvailable()) {
-			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
-			googlePlayServicesErrorDialog.show(
-					favouritesStationFragment.getFragmentManager(),
-					"GooglePlayServicesErrorDialog");
+			ActivityUtils
+					.showGooglePlayServicesErrorDialog(favouritesStationFragment);
 		} else {
-			if (station.hasCoordinates()) {
-				Uri streetViewUri = Uri.parse("google.streetview:cbll="
-						+ station.getLat() + "," + station.getLon()
-						+ "&cbp=1,90,,0,1.0&mz=20");
-				Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
-						streetViewUri);
-				context.startActivity(streetViewIntent);
+			if (!globalContext.isGoogleStreetViewAvailable()) {
+				if (station.hasCoordinates()) {
+					Uri streetViewUri = Uri.parse("google.streetview:cbll="
+							+ station.getLat() + "," + station.getLon()
+							+ "&cbp=1,90,,0,1.0&mz=20");
+					Intent streetViewIntent = new Intent(Intent.ACTION_VIEW,
+							streetViewUri);
+					context.startActivity(streetViewIntent);
+				} else {
+					ActivityUtils.showNoCoordinatesToast(context);
+				}
 			} else {
-				ActivityUtils.showNoCoordinatesToast(context);
+				ActivityUtils
+						.showGoogleStreetViewErrorDialog(favouritesStationFragment);
 			}
 		}
 	}
