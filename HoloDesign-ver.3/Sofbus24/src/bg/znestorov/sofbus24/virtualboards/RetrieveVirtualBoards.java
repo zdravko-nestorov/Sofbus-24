@@ -192,6 +192,69 @@ public class RetrieveVirtualBoards {
 	}
 
 	/**
+	 * Getting the key and the value for the hidden variables and put them in a
+	 * SharedPreferences file - containing the information in key=value format.
+	 * It is saved on the internal memory of the device.
+	 * 
+	 * @param htmlSourceCode
+	 *            the html source code
+	 */
+	private ArrayList<BasicNameValuePair> saveHiddenVariablesToPreferences(
+			String htmlSourceCode) {
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				Constants.VB_PREFERENCES_NAME_SUMC_HIDDEN_VARIABLES,
+				Context.MODE_PRIVATE);
+		ArrayList<BasicNameValuePair> hiddenVariablesList = new ArrayList<BasicNameValuePair>();
+
+		if (htmlSourceCode != null) {
+			Pattern pattern = Pattern
+					.compile(Constants.VB_REGEX_HIDDEN_VARIABLE);
+			Matcher matcher = pattern.matcher(htmlSourceCode);
+
+			if (matcher.find()) {
+				String key = matcher.group(1);
+				String value = matcher.group(2);
+
+				Editor edit = sharedPreferences.edit();
+				edit.clear();
+				edit.putString(Constants.VB_PREFERENCES_SUMC_HIDDEN_KEY, key);
+				edit.putString(Constants.VB_PREFERENCES_SUMC_HIDDEN_VALUE,
+						value);
+				edit.commit();
+
+				hiddenVariablesList.add(new BasicNameValuePair(key, value));
+
+				return hiddenVariablesList;
+			}
+		}
+
+		return hiddenVariablesList;
+	}
+
+	/**
+	 * Getting the value for the hidden variables from a SharedPreferences file
+	 * that contains the information in key=value format. It is saved on the
+	 * internal memory of the device.
+	 */
+	private ArrayList<BasicNameValuePair> loadHiddenVariableFromPreferences() {
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				Constants.VB_PREFERENCES_NAME_SUMC_HIDDEN_VARIABLES,
+				Context.MODE_PRIVATE);
+		ArrayList<BasicNameValuePair> hiddenVariablesList = new ArrayList<BasicNameValuePair>();
+
+		String key = sharedPreferences.getString(
+				Constants.VB_PREFERENCES_SUMC_HIDDEN_KEY, null);
+		String value = sharedPreferences.getString(
+				Constants.VB_PREFERENCES_SUMC_HIDDEN_VALUE, null);
+
+		if (key != null && value != null) {
+			hiddenVariablesList.add(new BasicNameValuePair(key, value));
+		}
+
+		return hiddenVariablesList;
+	}
+
+	/**
 	 * Adding the User-Agent, the Referrer and the parameters to the HttpPost
 	 * 
 	 * @param station
@@ -207,10 +270,14 @@ public class RetrieveVirtualBoards {
 	 *            The text that the user entered according to the CAPTCHA image
 	 * @param captchaId
 	 *            The Id of the CAPTCHA image, token from the source file
+	 * @param hiddenVariablesList
+	 *            a list with BasicValuePairs containing the hidden variables
+	 * 
 	 * @return an HTTP POST object, created with the needed parameters
 	 */
 	private HttpPost createSumcRequest(StationEntity station,
-			String vehicleTypeId, String captchaText, String captchaId) {
+			String vehicleTypeId, String captchaText, String captchaId,
+			ArrayList<BasicNameValuePair> hiddenVariablesList) {
 		final HttpPost result = new HttpPost(Constants.VB_URL);
 		result.addHeader("User-Agent", Constants.VB_URL_USER_AGENT);
 		result.addHeader("Referer", Constants.VB_URL_REFERER);
@@ -218,7 +285,8 @@ public class RetrieveVirtualBoards {
 		try {
 			final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(
 					assignHttpPostParameters(station, vehicleTypeId,
-							captchaText, captchaId), "UTF-8");
+							captchaText, captchaId, hiddenVariablesList),
+					"UTF-8");
 			result.setEntity(entity);
 		} catch (UnsupportedEncodingException e) {
 			throw new IllegalStateException("Not supported default encoding?",
@@ -245,12 +313,15 @@ public class RetrieveVirtualBoards {
 	 *            The text that the user entered according to the CAPTCHA image
 	 * @param captchaId
 	 *            The Id of the CAPTCHA image, token from the source file
+	 * @param hiddenVariablesList
+	 *            a list with BasicValuePairs containing the hidden variables
+	 * 
 	 * @return a list with BasicNameValuePair parameters for the HTTP POST
 	 *         request
 	 */
 	private List<BasicNameValuePair> assignHttpPostParameters(
 			StationEntity station, String vehicleTypeId, String captchaText,
-			String captchaId) {
+			String captchaId, ArrayList<BasicNameValuePair> hiddenVariablesList) {
 		List<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>();
 		result.addAll(Arrays.asList(
 				new BasicNameValuePair(Constants.VB_URL_STOP_CODE,
@@ -271,6 +342,10 @@ public class RetrieveVirtualBoards {
 					captchaId));
 			result.add(new BasicNameValuePair(Constants.VB_URL_CAPTCHA_TEXT,
 					captchaText));
+		}
+
+		if (hiddenVariablesList != null && !hiddenVariablesList.isEmpty()) {
+			result.addAll(hiddenVariablesList);
 		}
 
 		return result;
@@ -429,6 +504,7 @@ public class RetrieveVirtualBoards {
 		private ProgressDialog progressDialog;
 		private String captchaText;
 		private String captchaId;
+		private ArrayList<BasicNameValuePair> hiddenVariablesList;
 
 		// Http Post parameter used to create/abort the HTTP connection
 		private HttpPost httpPost;
@@ -438,6 +514,7 @@ public class RetrieveVirtualBoards {
 			this.progressDialog = progressDialog;
 			this.captchaText = captchaText;
 			this.captchaId = captchaId;
+			this.hiddenVariablesList = loadHiddenVariableFromPreferences();
 		}
 
 		@Override
@@ -453,9 +530,12 @@ public class RetrieveVirtualBoards {
 			try {
 				// Create a standard HTML request (without vehicleTypeId param)
 				httpPost = createSumcRequest(station, null, captchaText,
-						captchaId);
+						captchaId, hiddenVariablesList);
 				htmlResult = httpClient.execute(httpPost,
 						new BasicResponseHandler());
+
+				// Change the hidden variables list value
+				hiddenVariablesList = saveHiddenVariablesToPreferences(htmlResult);
 
 				// Check how many unique station numbers are returned
 				LinkedHashSet<String> stationNumbers = getStationNumbers(htmlResult);
@@ -473,14 +553,17 @@ public class RetrieveVirtualBoards {
 						&& Utils.isNumeric(stationNumberFormatted)
 						&& stationNumbers.add(stationNumberFormatted)) {
 					httpPost = createSumcRequest(new StationEntity(station),
-							null, captchaText, captchaId);
+							null, captchaText, captchaId, hiddenVariablesList);
+					String htmlResultNew = httpClient.execute(httpPost,
+							new BasicResponseHandler());
+
+					// Change the hidden variables list value
+					hiddenVariablesList = saveHiddenVariablesToPreferences(htmlResult);
 
 					/**
 					 * Forming the combined html result as a combination of the
 					 * new one and the old one
 					 */
-					String htmlResultNew = httpClient.execute(httpPost,
-							new BasicResponseHandler());
 					String htmlResultCombined = htmlResultNew + "\n"
 							+ htmlResult;
 
@@ -535,18 +618,27 @@ public class RetrieveVirtualBoards {
 						if (vehicleTypesCount == 2) {
 							httpPost = createSumcRequest(station,
 									stationVehicleTypes.get(1), captchaText,
-									captchaId);
+									captchaId, hiddenVariablesList);
 							tempHtmlSourceCode = httpClient.execute(httpPost,
 									new BasicResponseHandler());
+
+							// Change the hidden variables list value
+							hiddenVariablesList = saveHiddenVariablesToPreferences(tempHtmlSourceCode);
+
 							htmlResult = createHtmlSourceOutput(htmlResult,
 									tempHtmlSourceCode);
 						} else if (vehicleTypesCount == 3) {
 							for (int i = 1; i < 3; i++) {
 								httpPost = createSumcRequest(station,
 										stationVehicleTypes.get(i),
-										captchaText, captchaId);
+										captchaText, captchaId,
+										hiddenVariablesList);
 								tempHtmlSourceCode = httpClient.execute(
 										httpPost, new BasicResponseHandler());
+
+								// Change the hidden variables list value
+								hiddenVariablesList = saveHiddenVariablesToPreferences(tempHtmlSourceCode);
+
 								htmlResult = createHtmlSourceOutput(htmlResult,
 										tempHtmlSourceCode);
 							}
@@ -588,6 +680,7 @@ public class RetrieveVirtualBoards {
 
 			switch (htmlResultCode) {
 			case CAPTCHA_NEEDED:
+				saveHiddenVariablesToPreferences(htmlResult);
 				checkCaptchaText(htmlResult);
 				break;
 			default:
@@ -747,6 +840,8 @@ public class RetrieveVirtualBoards {
 	 * 
 	 * @param captchaId
 	 *            The Id of the CAPTCHA image, token from the source file
+	 * @param captchaText
+	 *            the text of the captcha image
 	 */
 	private void processCaptchaText(String captchaId, String captchaText) {
 		// Translate the text to be always in Latin
@@ -931,6 +1026,7 @@ public class RetrieveVirtualBoards {
 	 */
 	private void proccessHtmlResult(String htmlResult) {
 		saveCookiesToPreferences();
+		saveHiddenVariablesToPreferences(htmlResult);
 
 		// On ICS and later network operations can't be done on the UI thread
 		// (GooglePlay bug: NetworkOnMainThreadException)

@@ -98,6 +98,10 @@ public class Constants {
 	public static final String VB_PREFERENCES_COOKIE_PATH = "path";
 	public static final String VB_PREFERENCES_COOKIE_VALUE = "value";
 
+	public static final String VB_PREFERENCES_NAME_SUMC_HIDDEN_VARIABLES = "sumc_hidden_variables";
+	public static final String VB_PREFERENCES_SUMC_HIDDEN_KEY = "hidden_key";
+	public static final String VB_PREFERENCES_SUMC_HIDDEN_VALUE = "hidden_value";
+
 	public static final String VB_URL_USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1017.2 Safari/535.19";
 	public static final String VB_URL_REFERER = "http://m.sofiatraffic.bg/vt/";
 	public static final String VB_URL = "http://m.sofiatraffic.bg/vt";
@@ -110,6 +114,7 @@ public class Constants {
 	public static final String VB_URL_GO = "go";
 	public static final String VB_URL_SUBMIT = "submit";
 	public static final String VB_URL_I = "i";
+	public static final String VB_REGEX_HIDDEN_VARIABLE = "<input type=\"hidden\" name=\"sec\"[^^]*?<input type=\"hidden\" name=\"([a-zA-Z0-9]+)\" value=\"([a-zA-Z0-9]+)\"";
 
 	public static final String VB_CAPTCHA_URL = "http://m.sofiatraffic.bg/captcha/%s";
 	public static final String VB_CAPTCHA_REQUIRED = "Въведете символите от изображението";
