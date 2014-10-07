@@ -107,7 +107,10 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:background="@drawable/schedule_round_corner"
-            android:padding="9sp" >
+            android:paddingBottom="5sp"
+            android:paddingLeft="9sp"
+            android:paddingRight="9sp"
+            android:paddingTop="5sp" >
 
             <TableRow
                 android:layout_width="wrap_content"
@@ -117,13 +120,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="@string/pt_schedule_first" />
+                    android:text="@string/pt_schedule_first"
+                    android:textColor="#003366" />
 
                 <TextView
                     android:id="@+id/pt_schedule_first"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
+                    android:layout_gravity="center_vertical"
+                    android:textColor="#FF6600"
+                    android:textStyle="bold" />
             </TableRow>
 
             <TableRow
@@ -135,13 +141,16 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingRight="8sp"
-                    android:text="@string/pt_schedule_last" />
+                    android:text="@string/pt_schedule_last"
+                    android:textColor="#003366" />
 
                 <TextView
                     android:id="@+id/pt_schedule_last"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
+                    android:layout_gravity="center_vertical"
+                    android:textColor="#FF6600"
+                    android:textStyle="bold" />
             </TableRow>
         </TableLayout>
     </RelativeLayout>
