@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="12sp"
+    android:paddingRight="12sp" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/notifications_item_minutes"
+        android:layout_alignTop="@+id/notifications_item_minutes"
+        android:layout_marginRight="15sp"
+        android:layout_toLeftOf="@+id/notifications_item_minutes" >
+
+        <TextView
+            android:id="@+id/notifications_item_minutes_text"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="10sp"
+            android:layout_marginTop="10sp"
+            android:text="@string/notifications_chooser_message"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+
+        <Button
+            android:id="@+id/notifications_item_minutes_confirm"
+            android:layout_width="135sp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="7sp"
+            android:text="@string/app_button_confirm"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <NumberPicker
+        android:id="@+id/notifications_item_minutes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="12sp"
+        android:paddingTop="12sp" />
+
+</RelativeLayout>
