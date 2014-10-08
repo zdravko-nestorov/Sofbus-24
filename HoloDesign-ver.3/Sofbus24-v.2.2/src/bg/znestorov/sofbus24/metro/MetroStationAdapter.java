@@ -255,6 +255,7 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 	 * @param station
 	 *            the station on the current row
 	 */
+	@SuppressLint("NewApi")
 	private void actionsOverSettingsButton(ImageButton stationSettings,
 			final StationEntity station) {
 		stationSettings.setOnClickListener(new OnClickListener() {

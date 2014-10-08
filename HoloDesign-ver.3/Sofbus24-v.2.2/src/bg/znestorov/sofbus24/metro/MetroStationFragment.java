@@ -35,6 +35,8 @@ import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 /**
@@ -129,6 +131,11 @@ public class MetroStationFragment extends SherlockListFragment implements
 		RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
 				context, progressDialog, station);
 		retrieveMetroSchedule.execute();
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.activity_sofbus24_actions, menu);
 	}
 
 	@Override

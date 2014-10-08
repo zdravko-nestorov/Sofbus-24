@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -646,5 +647,31 @@ public class ActivityUtils {
 		googleStreetViewErrorDialog.show(
 				fragmentActivity.getSupportFragmentManager(),
 				"GooglePlayServicesErrorDialog");
+	}
+
+	/**
+	 * In case of API level 8-14, there is a problem with the background of the
+	 * AlertDialogs. If we want a LIGHT, we should inverse the current one. The
+	 * {@value isInverseBackgroundForced} is used to determine which theme
+	 * should be used:
+	 * <ul>
+	 * <li>TRUE - light background</li>
+	 * <li>FALSE - dark background</li>
+	 * </ul>
+	 * 
+	 * @param context
+	 *            the current activirty context
+	 * @param dialogBuilder
+	 *            the dialog builder
+	 */
+	public static void setInverseBackgroundForced(Activity context,
+			AlertDialog.Builder dialogBuilder) {
+		int sdkVersion = Build.VERSION.SDK_INT;
+		boolean isInverseBackgroundForced = true;
+
+		if (sdkVersion >= Build.VERSION_CODES.ECLAIR_MR1
+				&& sdkVersion < Build.VERSION_CODES.HONEYCOMB) {
+			dialogBuilder.setInverseBackgroundForced(isInverseBackgroundForced);
+		}
 	}
 }

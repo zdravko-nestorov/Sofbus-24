@@ -13,6 +13,7 @@ import android.widget.ListView;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * Dialog used to show information about the favourite item
@@ -86,6 +87,7 @@ public class FavouritesInfoDialog extends DialogFragment {
 
 		// Create the dialog builder
 		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+		ActivityUtils.setInverseBackgroundForced(context, dialogBuilder);
 		dialogBuilder.setView(view);
 		dialogBuilder.setTitle(context
 				.getString(R.string.app_dialog_title_info));
