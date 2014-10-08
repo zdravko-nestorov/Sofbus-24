@@ -12,12 +12,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,10 +45,14 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
+import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
+import bg.znestorov.sofbus24.utils.activity.PopupMenu;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -426,7 +428,11 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 
 		// Remove the image
 		LayoutParams params = viewHolder.stationStreetView.getLayoutParams();
-		params.height = LayoutParams.MATCH_PARENT;
+		params.height = ActivityUtils
+				.spToPx(context,
+						Integer.parseInt(Utils.getOnlyDigits(Utils.getValueBefore(
+								context.getString(R.dimen.sofbus24_default_button_height),
+								"."))));
 		viewHolder.stationStreetView.setLayoutParams(params);
 		viewHolder.stationStreetView
 				.setImageResource(android.R.color.transparent);
@@ -599,60 +605,114 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 			public void onClick(View v) {
 				switch (v.getId()) {
 				case R.id.favourites_item_settings:
-					// TODO: Find a way to implement in 2.2 (API 8)
-					PopupMenu popup = new PopupMenu(context, v);
-					Menu menu = popup.getMenu();
-					popup.getMenuInflater().inflate(
-							R.menu.activity_favourites_context_menu, menu);
+					// Implement different types of Popup menu, because the
+					// implementation is different for HONEYCOMB and others
+					// higher than it
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						android.widget.PopupMenu popup = new android.widget.PopupMenu(
+								context, v);
+						android.view.Menu menu = popup.getMenu();
+						popup.getMenuInflater().inflate(
+								R.menu.activity_favourites_context_menu, menu);
 
-					// Force the context menu to show icons
-					try {
-						Field[] fields = popup.getClass().getDeclaredFields();
-						for (Field field : fields) {
-							if ("mPopup".equals(field.getName())) {
-								field.setAccessible(true);
-								Object menuPopupHelper = field.get(popup);
-								Class<?> classPopupHelper = Class
-										.forName(menuPopupHelper.getClass()
-												.getName());
-								Method setForceIcons = classPopupHelper
-										.getMethod("setForceShowIcon",
-												boolean.class);
-								setForceIcons.invoke(menuPopupHelper, true);
-								break;
+						// Force the context menu to show icons
+						try {
+							Field[] fields = popup.getClass()
+									.getDeclaredFields();
+							for (Field field : fields) {
+								if ("mPopup".equals(field.getName())) {
+									field.setAccessible(true);
+									Object menuPopupHelper = field.get(popup);
+									Class<?> classPopupHelper = Class
+											.forName(menuPopupHelper.getClass()
+													.getName());
+									Method setForceIcons = classPopupHelper
+											.getMethod("setForceShowIcon",
+													boolean.class);
+									setForceIcons.invoke(menuPopupHelper, true);
+									break;
+								}
 							}
+						} catch (Exception e) {
 						}
-					} catch (Exception e) {
+						popup.show();
+
+						popup.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
+							@Override
+							public boolean onMenuItemClick(
+									android.view.MenuItem item) {
+								return menuItemClicks(item.getItemId(), station);
+							}
+						});
+					} else {
+						PopupMenu popup = new PopupMenu(context, v);
+						Menu menu = popup.getMenu();
+						popup.getMenuInflater().inflate(
+								R.menu.activity_favourites_context_menu, menu);
+
+						// Force the context menu to show icons
+						try {
+							Field[] fields = popup.getClass()
+									.getDeclaredFields();
+							for (Field field : fields) {
+								if ("mPopup".equals(field.getName())) {
+									field.setAccessible(true);
+									Object menuPopupHelper = field.get(popup);
+									Class<?> classPopupHelper = Class
+											.forName(menuPopupHelper.getClass()
+													.getName());
+									Method setForceIcons = classPopupHelper
+											.getMethod("setForceShowIcon",
+													boolean.class);
+									setForceIcons.invoke(menuPopupHelper, true);
+									break;
+								}
+							}
+						} catch (Exception e) {
+						}
+						popup.show();
+
+						popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+							@Override
+							public boolean onMenuItemClick(MenuItem item) {
+								return menuItemClicks(item.getItemId(), station);
+							}
+						});
 					}
-					popup.show();
-
-					popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-						@Override
-						public boolean onMenuItemClick(MenuItem item) {
-							switch (item.getItemId()) {
-							case R.id.menu_favourites_rename:
-								editStation(station);
-								break;
-							case R.id.menu_favourites_remove:
-								removeStation(station);
-								break;
-							case R.id.menu_favourites_google_maps:
-								seeStationOnGoogleMaps(station);
-								break;
-							case R.id.menu_favourites_google_street_view:
-								seeStationOnGoogleStreetView(station);
-								break;
-							case R.id.menu_favourites_information:
-								getStationInfo(station);
-								break;
-							}
-
-							return true;
-						}
-					});
 				}
 			}
 		});
+	}
+
+	/**
+	 * Assing different actions over each item in the menu
+	 * 
+	 * @param id
+	 *            the menu id
+	 * @param station
+	 *            the selected station
+	 * @return true
+	 */
+	private boolean menuItemClicks(int id, StationEntity station) {
+		switch (id) {
+		case R.id.menu_favourites_rename:
+			editStation(station);
+			break;
+		case R.id.menu_favourites_remove:
+			removeStation(station);
+			break;
+		case R.id.menu_favourites_google_maps:
+			seeStationOnGoogleMaps(station);
+			break;
+		case R.id.menu_favourites_google_street_view:
+			seeStationOnGoogleStreetView(station);
+			break;
+		case R.id.menu_favourites_information:
+			getStationInfo(station);
+			break;
+		}
+
+		return true;
 	}
 
 	/**

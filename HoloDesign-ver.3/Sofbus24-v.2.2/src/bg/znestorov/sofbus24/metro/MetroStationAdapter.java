@@ -6,10 +6,9 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
@@ -31,6 +29,10 @@ import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
+import bg.znestorov.sofbus24.utils.activity.PopupMenu;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 /**
  * Array Adapted user for set each row a station from the Vehicles DB
@@ -260,68 +262,118 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 			public void onClick(View v) {
 				switch (v.getId()) {
 				case R.id.metro_item_settings_icon:
-					// TODO: Find a way to implement in 2.2 (API8)
-					PopupMenu popup = new PopupMenu(context, v);
-					Menu menu = popup.getMenu();
-					popup.getMenuInflater().inflate(
-							R.menu.activity_metro_station_context_menu, menu);
-					popup.show();
+					// Implement different types of Popup menu, because the
+					// implementation is different for HONEYCOMB and others
+					// higher than it
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+						android.widget.PopupMenu popup = new android.widget.PopupMenu(
+								context, v);
+						android.view.Menu menu = popup.getMenu();
+						popup.getMenuInflater().inflate(
+								R.menu.activity_metro_station_context_menu,
+								menu);
+						popup.show();
 
-					// Find the add/remove menu items
-					MenuItem favouritesAdd = menu
-							.findItem(R.id.menu_metro_station_add);
-					MenuItem favouritesRemove = menu
-							.findItem(R.id.menu_metro_station_remove);
+						// Find the add/remove menu items
+						android.view.MenuItem favouritesAdd = menu
+								.findItem(R.id.menu_metro_station_add);
+						android.view.MenuItem favouritesRemove = menu
+								.findItem(R.id.menu_metro_station_remove);
 
-					// Check which menu item to be visible
-					favouritesDatasource.open();
-					StationEntity favouritesStation = favouritesDatasource
-							.getStation(station);
-					if (favouritesStation != null) {
-						favouritesAdd.setVisible(false);
-						favouritesRemove.setVisible(true);
-					} else {
-						favouritesAdd.setVisible(true);
-						favouritesRemove.setVisible(false);
-					}
-					favouritesDatasource.close();
-
-					popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-						@Override
-						public boolean onMenuItemClick(MenuItem item) {
-							switch (item.getItemId()) {
-							case R.id.menu_metro_station_add:
-								ActivityUtils.addToFavourites(context,
-										favouritesDatasource, station);
-								break;
-							case R.id.menu_metro_station_remove:
-								ActivityUtils.removeFromFavourites(context,
-										favouritesDatasource, station);
-								break;
-							case R.id.menu_metro_station_map:
-								if (!globalContext.areServicesAvailable()) {
-									GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
-									googlePlayServicesErrorDialog.show(
-											metroStationFragment
-													.getFragmentManager(),
-											"GooglePlayServicesErrorDialog");
-								} else {
-									Intent metroMapIntent = new Intent(context,
-											StationMap.class);
-									metroMapIntent.putExtra(
-											Constants.BUNDLE_STATION_MAP,
-											new MetroStationEntity(station));
-									context.startActivity(metroMapIntent);
-									break;
-								}
-							}
-
-							return true;
+						// Check which menu item to be visible
+						favouritesDatasource.open();
+						StationEntity favouritesStation = favouritesDatasource
+								.getStation(station);
+						if (favouritesStation != null) {
+							favouritesAdd.setVisible(false);
+							favouritesRemove.setVisible(true);
+						} else {
+							favouritesAdd.setVisible(true);
+							favouritesRemove.setVisible(false);
 						}
-					});
+						favouritesDatasource.close();
+
+						popup.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
+							@Override
+							public boolean onMenuItemClick(
+									android.view.MenuItem item) {
+								return menuItemClicks(item.getItemId(), station);
+							}
+						});
+					} else {
+						PopupMenu popup = new PopupMenu(context, v);
+						Menu menu = popup.getMenu();
+						popup.getMenuInflater().inflate(
+								R.menu.activity_metro_station_context_menu,
+								menu);
+						popup.show();
+
+						// Find the add/remove menu items
+						MenuItem favouritesAdd = menu
+								.findItem(R.id.menu_metro_station_add);
+						MenuItem favouritesRemove = menu
+								.findItem(R.id.menu_metro_station_remove);
+
+						// Check which menu item to be visible
+						favouritesDatasource.open();
+						StationEntity favouritesStation = favouritesDatasource
+								.getStation(station);
+						if (favouritesStation != null) {
+							favouritesAdd.setVisible(false);
+							favouritesRemove.setVisible(true);
+						} else {
+							favouritesAdd.setVisible(true);
+							favouritesRemove.setVisible(false);
+						}
+						favouritesDatasource.close();
+
+						popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+							@Override
+							public boolean onMenuItemClick(MenuItem item) {
+								return menuItemClicks(item.getItemId(), station);
+							}
+						});
+					}
 				}
 			}
 		});
+	}
+
+	/**
+	 * Assing different actions over each item in the menu
+	 * 
+	 * @param id
+	 *            the menu id
+	 * @param station
+	 *            the selected station
+	 * @return true
+	 */
+	private boolean menuItemClicks(int id, StationEntity station) {
+		switch (id) {
+		case R.id.menu_metro_station_add:
+			ActivityUtils.addToFavourites(context, favouritesDatasource,
+					station);
+			break;
+		case R.id.menu_metro_station_remove:
+			ActivityUtils.removeFromFavourites(context, favouritesDatasource,
+					station);
+			break;
+		case R.id.menu_metro_station_map:
+			if (!globalContext.areServicesAvailable()) {
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				googlePlayServicesErrorDialog.show(
+						metroStationFragment.getFragmentManager(),
+						"GooglePlayServicesErrorDialog");
+			} else {
+				Intent metroMapIntent = new Intent(context, StationMap.class);
+				metroMapIntent.putExtra(Constants.BUNDLE_STATION_MAP,
+						new MetroStationEntity(station));
+				context.startActivity(metroMapIntent);
+				break;
+			}
+		}
+
+		return true;
 	}
 
 	/**

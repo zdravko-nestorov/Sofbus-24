@@ -6,13 +6,11 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
@@ -38,6 +36,9 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.MenuItem;
+
 /**
  * Favourites fragment responsible for visualizing the items from Favorites DB
  * 
@@ -45,7 +46,7 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
  * @version 1.0
  * 
  */
-public class FavouritesStationFragment extends ListFragment implements
+public class FavouritesStationFragment extends SherlockListFragment implements
 		FragmentLifecycle, OnDeleteAllFavouritesListener,
 		OnRenameFavouritesListener, OnOrderChoiceListener,
 		OnSortChoiceListener, OnSortTypeChoiceListener {

@@ -57,10 +57,10 @@
 
         <ImageButton
             android:id="@+id/metro_item_settings_icon"
+            style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="20sp"
             android:adjustViewBounds="true"
-            android:background="@drawable/selectable_item_background"
             android:contentDescription="@string/app_img_empty_content_description"
             android:scaleType="fitXY"
             android:src="@drawable/context_menu_metro" />

@@ -7,6 +7,7 @@
     <!-- Sofbus 24 -->
     <dimen name="sofbus24_image_retry_height">50sp</dimen>
     <dimen name="sofbus24_image_retry_width">50sp</dimen>
+    <dimen name="sofbus24_default_button_height">42sp</dimen>
 
     <!-- Tabs (ScheduleVehicle and MetroStation) -->
     <dimen name="tab_border_radius">12sp</dimen>

@@ -29,11 +29,11 @@
 
         <ImageButton
             android:id="@+id/cs_list_street_view_button"
+            style="?android:attr/actionButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/cs_list_street_view_image"
             android:layout_alignRight="@+id/cs_list_street_view_image"
-            android:background="@drawable/selectable_item_background"
             android:contentDescription="@string/app_img_empty_content_description"
             android:src="@drawable/ic_google_street_view" />
     </RelativeLayout>

@@ -8,13 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
@@ -36,6 +34,9 @@ import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.MenuItem;
+
 /**
  * Metro Station Fragment containing information about the metro stations
  * 
@@ -43,7 +44,7 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
  * @version 1.0
  * 
  */
-public class MetroStationFragment extends ListFragment implements
+public class MetroStationFragment extends SherlockListFragment implements
 		OnItemClickListener {
 
 	private Activity context;
