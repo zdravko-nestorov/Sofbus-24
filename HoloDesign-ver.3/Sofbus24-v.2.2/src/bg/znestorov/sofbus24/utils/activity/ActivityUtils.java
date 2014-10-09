@@ -11,6 +11,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -36,7 +37,6 @@ import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.main.Sofbus24;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -244,20 +244,45 @@ public class ActivityUtils {
 	 *            the current Activity context
 	 */
 	public static void restartApplication(Activity context) {
-		// Set the application to be started again after 100 ms
-		Intent mStartActivity = new Intent(context, Sofbus24.class);
-		int mPendingIntentId = 123456;
-		PendingIntent mPendingIntent = PendingIntent.getActivity(context,
-				mPendingIntentId, mStartActivity,
-				PendingIntent.FLAG_CANCEL_CURRENT);
-		AlarmManager mgr = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
-		mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100,
-				mPendingIntent);
+		try {
+			// Check if the context is given
+			if (context != null) {
+				// Fetch the packagemanager so we can get the default launch
+				// activity (we can replace this intent with any other activity
+				// if you want)
+				PackageManager pm = context.getPackageManager();
 
-		// Close the application
-		context.finish();
-		android.os.Process.killProcess(android.os.Process.myPid());
+				// Check if we got the PackageManager
+				if (pm != null) {
+
+					// Create the intent with the default start activity for
+					// your application
+					Intent mStartActivity = pm
+							.getLaunchIntentForPackage(context.getPackageName());
+					if (mStartActivity != null) {
+						mStartActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						mStartActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						// Create a pending intent so the application is
+						// restarted after System.exit(0) was called. We use an
+						// AlarmManager to call this intent in 100ms
+						int mPendingIntentId = 223344;
+						PendingIntent mPendingIntent = PendingIntent
+								.getActivity(context, mPendingIntentId,
+										mStartActivity,
+										PendingIntent.FLAG_CANCEL_CURRENT);
+						AlarmManager mgr = (AlarmManager) context
+								.getSystemService(Context.ALARM_SERVICE);
+						mgr.set(AlarmManager.RTC,
+								System.currentTimeMillis() + 100,
+								mPendingIntent);
+
+						// Kill the application
+						closeApplication(context);
+					}
+				}
+			}
+		} catch (Exception ex) {
+		}
 	}
 
 	/**

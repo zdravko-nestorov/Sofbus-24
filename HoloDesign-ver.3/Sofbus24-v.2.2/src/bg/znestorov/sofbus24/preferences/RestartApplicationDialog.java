@@ -62,7 +62,6 @@ public class RestartApplicationDialog extends DialogFragment {
 				if (!isResetted) {
 					((GlobalEntity) context.getApplicationContext())
 							.setHasToRestart(false);
-					context.finish();
 				}
 			}
 		};
