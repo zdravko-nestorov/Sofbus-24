@@ -45,7 +45,6 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
-import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import bg.znestorov.sofbus24.utils.activity.PopupMenu;
@@ -428,11 +427,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 
 		// Remove the image
 		LayoutParams params = viewHolder.stationStreetView.getLayoutParams();
-		params.height = ActivityUtils
-				.spToPx(context,
-						Integer.parseInt(Utils.getOnlyDigits(Utils.getValueBefore(
-								context.getString(R.dimen.sofbus24_default_button_height),
-								"."))));
+		params.height = LayoutParams.MATCH_PARENT;
 		viewHolder.stationStreetView.setLayoutParams(params);
 		viewHolder.stationStreetView
 				.setImageResource(android.R.color.transparent);

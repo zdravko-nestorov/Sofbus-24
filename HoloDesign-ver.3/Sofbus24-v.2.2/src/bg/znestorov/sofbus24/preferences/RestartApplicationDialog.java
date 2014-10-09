@@ -21,17 +21,6 @@ import bg.znestorov.sofbus24.main.R;
  */
 public class RestartApplicationDialog extends DialogFragment {
 
-	private Activity context;
-	private int icon;
-	private String title;
-	private Spanned message;
-	private String negativeBtn;
-	private String positiveBtn;
-	private OnClickListener negativeOnClickListener;
-	private OnClickListener positiveOnClickListener;
-
-	private boolean isResetted;
-
 	public static final String BUNDLE_IS_RESETTED = "IS RESETTED";
 
 	public static RestartApplicationDialog newInstance(boolean isResetted) {
@@ -46,22 +35,28 @@ public class RestartApplicationDialog extends DialogFragment {
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		context = getActivity();
-		icon = android.R.drawable.ic_menu_info_details;
-		title = getString(R.string.app_dialog_title_important);
-		message = Html.fromHtml(getString(R.string.pref_restart_app));
-		negativeBtn = getString(R.string.app_button_no);
-		positiveBtn = getString(R.string.app_button_yes);
-		isResetted = getArguments().getBoolean(BUNDLE_IS_RESETTED);
+		return showRestartApplicationDialog(getActivity(), getArguments()
+				.getBoolean(BUNDLE_IS_RESETTED));
+	}
 
-		positiveOnClickListener = new OnClickListener() {
+	public static AlertDialog showRestartApplicationDialog(
+			final Activity context, final boolean isResetted) {
+		int icon = android.R.drawable.ic_menu_info_details;
+		String title = context.getString(R.string.app_dialog_title_important);
+		Spanned message = Html.fromHtml(context
+				.getString(R.string.pref_restart_app));
+		String negativeBtn = context.getString(R.string.app_button_no);
+		String positiveBtn = context.getString(R.string.app_button_yes);
+
+		OnClickListener positiveOnClickListener = new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				context.finish();
 			}
 		};
 
-		negativeOnClickListener = new OnClickListener() {
+		OnClickListener negativeOnClickListener = new OnClickListener() {
+
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				if (!isResetted) {

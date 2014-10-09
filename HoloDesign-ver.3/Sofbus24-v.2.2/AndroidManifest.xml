@@ -78,8 +78,12 @@
 
         <!-- Preferences -->
         <activity android:name="bg.znestorov.sofbus24.main.Preferences" />
+        <activity android:name="bg.znestorov.sofbus24.main.PreferencesPreHoneycomb" />
         <activity
             android:name="bg.znestorov.sofbus24.main.PreferencesDialog"
+            android:theme="@style/PopupTheme" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.PreferencesPreHoneycombDialog"
             android:theme="@style/PopupTheme" />
 
         <!-- Edit Tabs -->

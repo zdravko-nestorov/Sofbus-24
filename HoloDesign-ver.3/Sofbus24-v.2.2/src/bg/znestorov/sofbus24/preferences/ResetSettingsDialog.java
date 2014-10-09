@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
+import bg.znestorov.sofbus24.main.PreferencesPreHoneycomb;
 import bg.znestorov.sofbus24.main.R;
 
 /**
@@ -24,14 +25,6 @@ public class ResetSettingsDialog extends DialogFragment {
 	public interface OnResetSettingsListener {
 		public void onResetSettingsClicked();
 	}
-
-	private Activity context;
-	private int icon;
-	private String title;
-	private String message;
-	private String negativeBtn;
-	private String positiveBtn;
-	private OnClickListener positiveOnClickListener;
 
 	private OnResetSettingsListener onResetSettingsListener;
 
@@ -52,14 +45,19 @@ public class ResetSettingsDialog extends DialogFragment {
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		context = getActivity();
-		icon = android.R.drawable.ic_menu_info_details;
-		title = getString(R.string.app_dialog_title_important);
-		message = getString(R.string.pref_reset);
-		negativeBtn = getString(R.string.app_button_no);
-		positiveBtn = getString(R.string.app_button_yes);
+		return resetPreferences(getActivity(), onResetSettingsListener);
+	}
 
-		positiveOnClickListener = new OnClickListener() {
+	public static AlertDialog resetPreferences(final Activity context,
+			final Object instance) {
+		int icon = android.R.drawable.ic_menu_info_details;
+		String title = context.getString(R.string.app_dialog_title_important);
+		String message = context.getString(R.string.pref_reset);
+		String negativeBtn = context.getString(R.string.app_button_no);
+		String positiveBtn = context.getString(R.string.app_button_yes);
+
+		OnClickListener positiveOnClickListener = new OnClickListener() {
+
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				SharedPreferences preferences = PreferenceManager
@@ -71,7 +69,14 @@ public class ResetSettingsDialog extends DialogFragment {
 				// Check if the user wants to restart the application
 				((GlobalEntity) context.getApplicationContext())
 						.setHasToRestart(true);
-				onResetSettingsListener.onResetSettingsClicked();
+
+				if (instance instanceof OnResetSettingsListener) {
+					((OnResetSettingsListener) instance)
+							.onResetSettingsClicked();
+				} else {
+					((PreferencesPreHoneycomb) instance)
+							.restartApplication(true);
+				}
 			}
 		};
 

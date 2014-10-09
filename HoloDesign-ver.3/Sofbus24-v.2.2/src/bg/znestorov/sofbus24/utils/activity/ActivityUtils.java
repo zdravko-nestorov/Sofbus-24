@@ -37,6 +37,7 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.Sofbus24;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -669,9 +670,29 @@ public class ActivityUtils {
 		int sdkVersion = Build.VERSION.SDK_INT;
 		boolean isInverseBackgroundForced = true;
 
-		if (sdkVersion >= Build.VERSION_CODES.ECLAIR_MR1
-				&& sdkVersion < Build.VERSION_CODES.HONEYCOMB) {
+		if (sdkVersion < Build.VERSION_CODES.HONEYCOMB) {
 			dialogBuilder.setInverseBackgroundForced(isInverseBackgroundForced);
+		}
+	}
+
+	/**
+	 * Workaround to set the subtitle of the first started tab (in android
+	 * version lower than HONEYCOMB its in different language)
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param actionBar
+	 *            the action bar
+	 */
+	public static void setHomeScreenActionBarSubtitle(Activity context,
+			ActionBar actionBar, String subtitle, String subtitlePreHoneycomb) {
+		int sdkVersion = Build.VERSION.SDK_INT;
+
+		if (sdkVersion < Build.VERSION_CODES.HONEYCOMB
+				&& "bg".equals(LanguageChange.getUserLocale(context))) {
+			actionBar.setSubtitle(subtitlePreHoneycomb);
+		} else {
+			actionBar.setSubtitle(subtitle);
 		}
 	}
 }

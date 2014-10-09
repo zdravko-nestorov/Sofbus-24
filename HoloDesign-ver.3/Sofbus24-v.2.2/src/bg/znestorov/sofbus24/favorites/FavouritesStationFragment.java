@@ -32,6 +32,7 @@ import bg.znestorov.sofbus24.favorites.FavouritesRenameDialog.OnRenameFavourites
 import bg.znestorov.sofbus24.favorites.FavouritesSortDialog.OnSortChoiceListener;
 import bg.znestorov.sofbus24.favorites.FavouritesSortTypeDialog.OnSortTypeChoiceListener;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
@@ -64,6 +65,8 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		LanguageChange.selectLocale(getActivity());
+
 		View myFragmentView = inflater.inflate(
 				R.layout.activity_favourites_fragment, container, false);
 

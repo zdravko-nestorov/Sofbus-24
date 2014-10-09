@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.TabTypeEnum;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager;
 
 /**
@@ -45,6 +46,7 @@ public class MetroFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		LanguageChange.selectLocale(getActivity());
 
 		// Activate the option menu
 		setHasOptionsMenu(true);

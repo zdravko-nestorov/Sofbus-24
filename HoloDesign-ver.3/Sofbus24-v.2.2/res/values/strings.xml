@@ -158,9 +158,13 @@
     <!-- Edit Tabs Fragment -->
     <string name="edit_tabs_title">Начален екран</string>
     <string name="edit_tabs_favourites">Фаворити</string>
+    <string name="edit_tabs_favourites_pre_honeycomb">Фаворити</string>
     <string name="edit_tabs_search">Търсене</string>
+    <string name="edit_tabs_search_pre_honeycomb">Търсене</string>
     <string name="edit_tabs_schedule">Разписание</string>
+    <string name="edit_tabs_schedule_pre_honeycomb">Разписание</string>
     <string name="edit_tabs_metro">Метро</string>
+    <string name="edit_tabs_metro_pre_honeycomb">Метро</string>
     <string name="edit_tabs_toast">Началният екран беше променен</string>
 
     <!-- About -->

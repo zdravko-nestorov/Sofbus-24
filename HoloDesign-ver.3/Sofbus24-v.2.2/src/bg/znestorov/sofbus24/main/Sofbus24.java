@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -204,9 +205,20 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 		case R.id.action_settings:
 			Intent preferencesIntent;
 			if (globalContext.isPhoneDevice()) {
-				preferencesIntent = new Intent(context, Preferences.class);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					preferencesIntent = new Intent(context, Preferences.class);
+				} else {
+					preferencesIntent = new Intent(context,
+							PreferencesPreHoneycomb.class);
+				}
 			} else {
-				preferencesIntent = new Intent(context, PreferencesDialog.class);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					preferencesIntent = new Intent(context,
+							PreferencesDialog.class);
+				} else {
+					preferencesIntent = new Intent(context,
+							PreferencesPreHoneycombDialog.class);
+				}
 			}
 			startActivity(preferencesIntent);
 			return true;
@@ -652,13 +664,21 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 		if (mViewPager != null) {
 			Fragment fakeFragment = fragmentsList.get(tabPosition);
 			if (fakeFragment instanceof FavouritesStationFragment) {
-				actionBar.setSubtitle(getString(R.string.edit_tabs_favourites));
+				ActivityUtils.setHomeScreenActionBarSubtitle(context,
+						actionBar, getString(R.string.edit_tabs_favourites),
+						getString(R.string.edit_tabs_favourites_pre_honeycomb));
 			} else if (fakeFragment instanceof VirtualBoardsFragment) {
-				actionBar.setSubtitle(getString(R.string.edit_tabs_search));
+				ActivityUtils.setHomeScreenActionBarSubtitle(context,
+						actionBar, getString(R.string.edit_tabs_search),
+						getString(R.string.edit_tabs_search_pre_honeycomb));
 			} else if (fakeFragment instanceof ScheduleFragment) {
-				actionBar.setSubtitle(getString(R.string.edit_tabs_schedule));
+				ActivityUtils.setHomeScreenActionBarSubtitle(context,
+						actionBar, getString(R.string.edit_tabs_schedule),
+						getString(R.string.edit_tabs_schedule_pre_honeycomb));
 			} else {
-				actionBar.setSubtitle(getString(R.string.edit_tabs_metro));
+				ActivityUtils.setHomeScreenActionBarSubtitle(context,
+						actionBar, getString(R.string.edit_tabs_metro),
+						getString(R.string.edit_tabs_metro_pre_honeycomb));
 			}
 
 			// Check if the FragmentManager is created and proceed with actions

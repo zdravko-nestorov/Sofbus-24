@@ -28,6 +28,7 @@ import bg.znestorov.sofbus24.entity.FragmentLifecycle;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
@@ -61,6 +62,8 @@ public class VirtualBoardsFragment extends ListFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		LanguageChange.selectLocale(getActivity());
+
 		View myFragmentView = inflater.inflate(
 				R.layout.activity_virtual_boards_fragment, container, false);
 

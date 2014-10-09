@@ -29,20 +29,16 @@ public class LanguageChange {
 	 * @return the selected user locale
 	 */
 	public static String getUserLocale(Context context) {
-		try {
-			// Get SharedPreferences from option menu
-			SharedPreferences sharedPreferences = PreferenceManager
-					.getDefaultSharedPreferences(context);
+		// Get SharedPreferences from option menu
+		final SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
 
-			// Get "language" value from the Shared Preferences
-			String language = sharedPreferences.getString(
-					Constants.PREFERENCE_KEY_APP_LANGUAGE,
-					Constants.PREFERENCE_DEFAULT_VALUE_APP_LANGUAGE);
+		// Get "language" value from the Shared Preferences
+		final String language = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_APP_LANGUAGE,
+				Constants.PREFERENCE_DEFAULT_VALUE_APP_LANGUAGE);
 
-			return language;
-		} catch (Exception e) {
-			return "bg";
-		}
+		return language;
 	}
 
 	/**
