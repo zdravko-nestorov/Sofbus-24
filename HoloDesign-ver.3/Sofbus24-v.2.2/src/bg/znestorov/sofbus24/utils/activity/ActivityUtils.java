@@ -40,7 +40,6 @@ import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
@@ -611,9 +610,9 @@ public class ActivityUtils {
 	 * @param context
 	 *            the current activity context
 	 */
-	public static void forceTabs(SherlockFragmentActivity context) {
+	public static void forceTabs(FragmentActivity context) {
 		try {
-			final ActionBar actionBar = context.getSupportActionBar();
+			final android.app.ActionBar actionBar = context.getActionBar();
 			final Method setHasEmbeddedTabsMethod = actionBar.getClass()
 					.getDeclaredMethod("setHasEmbeddedTabs", boolean.class);
 			setHasEmbeddedTabsMethod.setAccessible(true);
