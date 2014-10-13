@@ -89,6 +89,25 @@ public class MetroFragment extends SherlockFragment {
 		}
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		List<Fragment> metroFragmentsList = getChildFragmentManager()
+				.getFragments();
+
+		if (metroFragmentsList != null
+				&& metroFragmentsList.size() > currentDirection) {
+			Fragment currentFragment = metroFragmentsList.get(currentDirection);
+
+			if (currentFragment != null
+					&& currentFragment instanceof MetroStationFragment) {
+				((MetroStationFragment) currentFragment)
+						.onOptionsItemSelected(item);
+			}
+		}
+
+		return super.onOptionsItemSelected(item);
+	}
+
 	/**
 	 * Get the current vehicle code from the Bundle object
 	 * 
@@ -102,24 +121,6 @@ public class MetroFragment extends SherlockFragment {
 		} else {
 			currentDirection = 0;
 		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		List<Fragment> metroFragmentsList = getChildFragmentManager()
-				.getFragments();
-
-		if (metroFragmentsList != null) {
-			Fragment currentFragment = metroFragmentsList.get(currentDirection);
-
-			if (currentFragment != null
-					&& currentFragment instanceof MetroStationFragment) {
-				((MetroStationFragment) currentFragment)
-						.onOptionsItemSelected(item);
-			}
-		}
-
-		return super.onOptionsItemSelected(item);
 	}
 
 	/**
