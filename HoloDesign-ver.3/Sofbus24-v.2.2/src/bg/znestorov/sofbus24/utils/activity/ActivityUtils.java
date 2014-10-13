@@ -34,9 +34,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.databases.NotificationsDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
+import bg.znestorov.sofbus24.entity.NotificationEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.notifications.NotificationsReceiver;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -718,5 +723,87 @@ public class ActivityUtils {
 		} else {
 			actionBar.setSubtitle(subtitle);
 		}
+	}
+
+	/**
+	 * Cancel the notification and delete it from the DB for the selected
+	 * vehicle
+	 * 
+	 * @param stationVehicle
+	 *            the station vehicle
+	 * 
+	 * @return if the notification is successfully cancelled
+	 */
+	public static boolean cancelNotificationAndRemoveFromDb(Activity context,
+			VirtualBoardsStationEntity vbTimeStation,
+			VehicleEntity stationVehicle) {
+
+		return cancelNotificationAndRemoveFromDb(context,
+				vbTimeStation.getNumber() + "~" + stationVehicle.getNumber());
+	}
+
+	/**
+	 * Cancel the notification and delete it from the DB for the given name
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param notificationName
+	 *            the id of the current notification
+	 * 
+	 * @return if the notification is successfully cancelled
+	 */
+	public static boolean cancelNotificationAndRemoveFromDb(Activity context,
+			String notificationName) {
+		boolean isNotificationCancelled = false;
+
+		NotificationsDataSource notificationsDatasource = new NotificationsDataSource(
+				context);
+		notificationsDatasource.open();
+
+		// Check if a notification is already set in the DB
+		NotificationEntity notification = notificationsDatasource
+				.getNotification(notificationName);
+
+		// Check if the norification exists in the DB
+		if (notification != null) {
+			// Delete the notification from the database and remove it from the
+			// AlarmManager (cancel it)
+			notificationsDatasource.deleteNotification(notification);
+			isNotificationCancelled = cancelNotification(context, notification);
+		}
+
+		notificationsDatasource.close();
+
+		return isNotificationCancelled;
+	}
+
+	/**
+	 * Cancel the notification
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param notification
+	 *            the selected notification
+	 * 
+	 * @return if the notification is successfully cancelled
+	 */
+	public static boolean cancelNotification(Activity context,
+			NotificationEntity notification) {
+		boolean isNotificationCancelled = false;
+
+		AlarmManager alarmManager = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(context, NotificationsReceiver.class);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+				notification.getId(), intent, PendingIntent.FLAG_NO_CREATE);
+
+		// Check if a notification was already set
+		if (pendingIntent != null) {
+			alarmManager.cancel(pendingIntent);
+			pendingIntent.cancel();
+			isNotificationCancelled = true;
+		}
+
+		return isNotificationCancelled;
 	}
 }

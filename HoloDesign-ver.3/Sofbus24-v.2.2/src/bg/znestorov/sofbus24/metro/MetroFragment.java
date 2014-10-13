@@ -2,6 +2,7 @@ package bg.znestorov.sofbus24.metro;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,9 @@ import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.MenuItem;
+
 /**
  * Metro Fragment containing information about the metro stations
  * 
@@ -25,7 +29,7 @@ import bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager;
  * @version 1.0
  * 
  */
-public class MetroFragment extends Fragment {
+public class MetroFragment extends SherlockFragment {
 
 	private ViewPager mNonSwipeableViewPager;
 	private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -98,6 +102,24 @@ public class MetroFragment extends Fragment {
 		} else {
 			currentDirection = 0;
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		List<Fragment> metroFragmentsList = getChildFragmentManager()
+				.getFragments();
+
+		if (metroFragmentsList != null) {
+			Fragment currentFragment = metroFragmentsList.get(currentDirection);
+
+			if (currentFragment != null
+					&& currentFragment instanceof MetroStationFragment) {
+				((MetroStationFragment) currentFragment)
+						.onOptionsItemSelected(item);
+			}
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	/**

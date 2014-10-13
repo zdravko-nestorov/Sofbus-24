@@ -4,10 +4,6 @@ import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -28,9 +24,9 @@ import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.notifications.NotificationsChooserDialog;
-import bg.znestorov.sofbus24.notifications.NotificationsReceiver;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * Array Adapted user to set each row a vehicle with its arrival times from the
@@ -433,6 +429,7 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 					Toast.LENGTH_LONG).show();
 		}
 
+		// Cancel the notification, refresh the list and show a notification
 		cancelNotification(stationVehicle);
 	}
 
@@ -453,37 +450,13 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 	 *            the station vehicle
 	 */
 	private void cancelNotification(VehicleEntity stationVehicle) {
-		notificationsDatasource.open();
+		if (ActivityUtils.cancelNotificationAndRemoveFromDb(context, vbTimeStation,
+				stationVehicle)) {
+			notifyDataSetChanged();
 
-		// Check if a notification is already set in the DB
-		NotificationEntity notification = notificationsDatasource
-				.getNotification(vbTimeStation.getNumber() + "~"
-						+ stationVehicle.getNumber());
-		if (notification != null) {
-			AlarmManager alarmManager = (AlarmManager) context
-					.getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(context, NotificationsReceiver.class);
-			PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-					notification.getId(), intent, PendingIntent.FLAG_NO_CREATE);
-
-			// Delete the notification from the database
-			notificationsDatasource.deleteNotification(notification);
-
-			// Check if a notification was already set
-			if (pendingIntent != null) {
-				alarmManager.cancel(pendingIntent);
-				pendingIntent.cancel();
-
-				Toast.makeText(
-						context,
-						context.getString(R.string.notifications_chooser_cancel),
-						Toast.LENGTH_LONG).show();
-			}
+			Toast.makeText(context,
+					context.getString(R.string.notifications_chooser_cancel),
+					Toast.LENGTH_LONG).show();
 		}
-
-		notificationsDatasource.close();
-
-		// Refresh the list
-		notifyDataSetChanged();
 	}
 }

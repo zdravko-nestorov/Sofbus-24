@@ -167,11 +167,13 @@ public class NotificationsAll extends SherlockListActivity implements
 
 	@Override
 	public void onDeleteAllNotificationsClicked() {
-		// TODO: Remove the notifications from Android Service...
-
 		notificationsDatasource.open();
 		notificationsDatasource.deleteAllNotifications();
 		notificationsDatasource.close();
+
+		for (NotificationEntity notification : notificationsList) {
+			ActivityUtils.cancelNotification(context, notification);
+		}
 
 		notificationsList.clear();
 		notificationsAdapter.notifyDataSetChanged();

@@ -18,7 +18,6 @@ import bg.znestorov.sofbus24.utils.Constants;
  * @version 1.0
  * 
  */
-// TODO: Find a way to implement in 2.2 (API8)
 public class PreferencesFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
 
