@@ -11,7 +11,6 @@ import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.RefreshableListFragment;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.notifications.NotificationsChooserDialog.OnNotificationSetListener;
 import bg.znestorov.sofbus24.utils.Constants;
 
 /**
@@ -23,7 +22,7 @@ import bg.znestorov.sofbus24.utils.Constants;
  * 
  */
 public class VirtualBoardsTimeFragment extends ListFragment implements
-		RefreshableListFragment, OnNotificationSetListener {
+		RefreshableListFragment {
 
 	private Activity context;
 	private VirtualBoardsStationEntity vbTimeStation;
@@ -80,25 +79,12 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 	}
 
 	/**
-	 * TODO: Need to be fixed for the next version (it is not needed for now as
-	 * on a device restart the application throws an exception)
-	 * 
-	 * <code>
-	 * 
-	 * @Override public void onListItemClick(ListView l, View v, int position,
-	 *           long id) { VirtualBoardsTimeAdapter virtualBoardsTimeAdapter =
-	 *           (VirtualBoardsTimeAdapter) getListAdapter();
-	 *           virtualBoardsTimeAdapter.setStationAlarm(position); } </code>
-	 */
-
-	/**
 	 * Set list adapter and the appropriate text message to it
 	 */
 	private void setListAdapter(String vbTimeEmptyText) {
 		VirtualBoardsTimeAdapter vbTimeAdapter = (VirtualBoardsTimeAdapter) getListAdapter();
 		if (vbTimeAdapter == null) {
-			vbTimeAdapter = new VirtualBoardsTimeAdapter(context, this,
-					vbTimeStation);
+			vbTimeAdapter = new VirtualBoardsTimeAdapter(context, vbTimeStation);
 			setListAdapter(vbTimeAdapter);
 		} else {
 			vbTimeAdapter.notifyDataSetChanged();
@@ -113,10 +99,5 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 		if (vbTimeAdapter.isEmpty()) {
 			vbListEmptyTextView.setText(Html.fromHtml(vbTimeEmptyText));
 		}
-	}
-
-	@Override
-	public void onNotificationsSet() {
-		((VirtualBoardsTimeAdapter) getListAdapter()).notifyDataSetChanged();
 	}
 }

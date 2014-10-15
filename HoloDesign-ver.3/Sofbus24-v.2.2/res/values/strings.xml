@@ -297,21 +297,4 @@
     <string name="history_item_station_number" formatted="false">Спирка номер: %s</string>
     <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Търсене от %s (%s)</font></i>]]></string>
 
-    <!-- Notifications -->
-    <string name="notifications_title">Напомняне</string>
-    <string name="notifications_chooser_title">Настройки за напомняне</string>
-    <string name="notifications_chooser_selection">Изберете линия и колко време преди пристигането на превозното средство да получите известие:</string>
-    <string name="notifications_chooser_message">Време (в минути) преди пристигането на превозното средство, когато ще получите известие:</string>
-    <string name="notifications_chooser_error_message">Не са регистрирани действия от известно време на този екран. Моля обновете информацията и опитайте отново.</string>
-    <string name="notifications_chooser_message_selected">Алармата е насрочена за след %s.</string>
-    <string name="notifications_chooser_cancel">Насрочената аларма беше отменена.</string>
-    <string name="notifications_error_message">Няма линия на градския транспорт, която да преминава след текущия момент (или има оставаща минута или по-малко)</string>
-    <string name="notifications_message">ВРЕМЕ НА ПРИСТИГАНЕ: %s</string>
-    <string name="notifications_minutes">МИНУТИ</string>
-    <string name="notifications_all_title">Аларми</string>
-    <string name="notifications_menu_remove_all_confirmation">Сигурни ли сте, че искате да премахнете всички настроени аларми?</string>
-    <string name="notifications_menu_remove_all_toast">Всички настроени аларми бяха премахнати.</string>
-    <string name="notifications_menu_remove_all_empty_toast">В момента няма настроени аларми.</string>
-    <string name="notifications_list_empty_text">В момента няма настроени аларми.</string>
-
 </resources>

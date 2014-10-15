@@ -38,14 +38,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <!-- Notifications access (vibration, screen lock and device restart) -->
-    <!--
-         Need to be fixed for the next version...
-    	<uses-permission android:name="android.permission.VIBRATE" />
-    	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-    	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    -->
-
     <application
         android:name="bg.znestorov.sofbus24.entity.GlobalEntity"
         android:allowBackup="true"
@@ -146,35 +138,6 @@
         <activity
             android:name="bg.znestorov.sofbus24.main.MetroScheduleDialog"
             android:theme="@style/PopupTheme" />
-
-        <!-- Notifications -->
-        <!--
-             Need to be fixed for the next version...
-	        <activity
-	            android:name="bg.znestorov.sofbus24.main.Notifications"
-	            android:theme="@style/TransperantTheme" />
-	
-	        <receiver
-	            android:name="bg.znestorov.sofbus24.notifications.NotificationsReceiver"
-	            android:enabled="true"
-	            android:process=":remote" >
-	            <intent-filter>
-	                <action android:name="android.intent.action.BOOT_COMPLETED" />
-	            </intent-filter>
-	        </receiver>
-	
-	        <service android:name="bg.znestorov.sofbus24.notifications.NotificationsService" />
-        -->
-
-
-        <!-- Notifications All -->
-        <!--
-             Need to be fixed for the next version...
-	        <activity android:name="bg.znestorov.sofbus24.main.NotificationsAll" />
-	        <activity
-	            android:name="bg.znestorov.sofbus24.main.NotificationsAllDialog"
-	            android:theme="@style/PopupTheme" />
-        -->
     </application>
 
 </manifest>

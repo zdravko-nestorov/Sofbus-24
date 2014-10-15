@@ -292,21 +292,4 @@
     <string name="history_item_station_number" formatted="false">Station number: %s</string>
     <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Search from %s (%s)</font></i>]]></string>
 
-    <!-- Notifications -->
-    <string name="notifications_title">Reminder</string>
-    <string name="notifications_chooser_title">Reminder settings</string>
-    <string name="notifications_chooser_selection">Select а line and how long before its arrival to receive a notification:</string>
-    <string name="notifications_chooser_message">Time (in minutes) before the arrival of the vehicle when you will receive a notification:</string>
-    <string name="notifications_chooser_error_message">There are no actions registred on this screen for some time. Please update the information and try again.</string>
-    <string name="notifications_chooser_message_selected">The alarm was shchedule for %s from now.</string>
-    <string name="notifications_chooser_cancel">The scheduled alarm was cancelled.</string>
-    <string name="notifications_error_message">There is no vehicle that passes through the station after the current time (or there is a minute remaining or less)</string>
-    <string name="notifications_message">ARRIVAL TIME: %s</string>
-    <string name="notifications_minutes">MINUTES</string>
-    <string name="notifications_all_title">Alarms</string>
-    <string name="notifications_menu_remove_all_confirmation">Are you sure that you want to remove all scheduled alarms?</string>
-    <string name="notifications_menu_remove_all_toast">All scheduled alarms were removed.</string>
-    <string name="notifications_menu_remove_all_empty_toast">Currently there are no alarms scheduled.</string>
-    <string name="notifications_list_empty_text">Currently there are no alarms scheduled.</string>
-
 </resources>

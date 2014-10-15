@@ -14,6 +14,7 @@ import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.main.ClosestStationsList;
 import bg.znestorov.sofbus24.main.ClosestStationsListDialog;
@@ -21,7 +22,6 @@ import bg.znestorov.sofbus24.main.ClosestStationsMap;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
-import bg.znestorov.sofbus24.utils.activity.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
