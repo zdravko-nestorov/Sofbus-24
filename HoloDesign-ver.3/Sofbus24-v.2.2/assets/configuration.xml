@@ -8,6 +8,6 @@
 	<string name="ScheduleTabPosition">2</string>
 	<string name="MetroTabVisibility">true</string>
 	<string name="MetroTabPosition">3</string>
-	<string name="CurrentStationsDBVersion">3</string>
-	<string name="CurrentVehiclesDBVersion">1</string>
+	<string name="CurrentStationsDBVersion">5</string>
+	<string name="CurrentVehiclesDBVersion">3</string>
 </map>
