@@ -25,7 +25,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -58,8 +58,8 @@ public class StationMap extends SherlockFragmentActivity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		// Get the station map fragment
-		stationMap = ((MapFragment) getFragmentManager().findFragmentById(
-				R.id.station_map)).getMap();
+		stationMap = ((SupportMapFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.station_map)).getMap();
 
 		// Check if the station map is found
 		if (stationMap != null) {

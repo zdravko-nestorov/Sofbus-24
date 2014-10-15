@@ -39,7 +39,7 @@ import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -108,8 +108,8 @@ public class StationRouteMap extends SherlockFragmentActivity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		// Get the station map fragment and the lines view
-		stationMap = ((MapFragment) getFragmentManager().findFragmentById(
-				R.id.station_route_map)).getMap();
+		stationMap = ((SupportMapFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.station_route_map)).getMap();
 		stationRouteLines = findViewById(R.id.station_route_lines);
 
 		// Check if the station map is found
