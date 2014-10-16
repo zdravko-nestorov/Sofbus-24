@@ -28,7 +28,7 @@ public class VehiclesSQLite extends SQLiteOpenHelper {
 	// The Android's default system path of the database
 	private static String DB_PATH = "//data//data//bg.znestorov.sofbus24.main//databases//";
 	private static String DB_NAME = "vehicles.db";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 
 	// Database creation SQL statement
 	private static final String DATABASE_CREATE_VEHICLES = "CREATE TABLE "
