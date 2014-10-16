@@ -86,6 +86,19 @@ public class MetroSchedule extends SherlockFragmentActivity {
 	}
 
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MenuItem reset = menu.findItem(R.id.action_ms_reset);
+
+		if (currentScheduleHourIndex != getActiveScheduleHourIndex(scheduleHourList)) {
+			reset.setVisible(true);
+		} else {
+			reset.setVisible(false);
+		}
+
+		return true;
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present
 		getSupportMenuInflater().inflate(
@@ -301,6 +314,10 @@ public class MetroSchedule extends SherlockFragmentActivity {
 	 * Initialize the active fragment
 	 */
 	private void initActiveFragmentContent() {
+		// Declare that the options menu has changed, so should be recreated
+		// (make the system calls the method onPrepareOptionsMenu)
+		supportInvalidateOptionsMenu();
+
 		// Get the active schedule (according to the current hour)
 		currentScheduleHourIndex = getActiveScheduleHourIndex(scheduleHourList);
 
@@ -320,6 +337,10 @@ public class MetroSchedule extends SherlockFragmentActivity {
 	 * Initialize the current fragment
 	 */
 	private void initCurrentFragmentContent() {
+		// Declare that the options menu has changed, so should be recreated
+		// (make the system calls the method onPrepareOptionsMenu)
+		supportInvalidateOptionsMenu();
+
 		// Format the schedule list
 		ArrayList<String> formattedScheduleList = formatScheduleList(scheduleHourList
 				.get(currentScheduleHourIndex));

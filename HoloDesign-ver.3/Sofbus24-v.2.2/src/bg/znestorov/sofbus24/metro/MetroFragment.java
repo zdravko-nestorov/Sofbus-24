@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +15,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.databases.VehiclesDataSource;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.TabTypeEnum;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager;
@@ -31,6 +35,9 @@ import com.actionbarsherlock.view.MenuItem;
  */
 public class MetroFragment extends SherlockFragment {
 
+	private Activity context;
+	private VehiclesDataSource vehiclesDataSource;
+
 	private ViewPager mNonSwipeableViewPager;
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -38,6 +45,8 @@ public class MetroFragment extends SherlockFragment {
 
 	private int currentDirection;
 	private static final String BUNDLE_CURRENT_DIRECTION = "CURRENT DIRECTION";
+
+	private boolean isPhoneDevice;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -51,6 +60,12 @@ public class MetroFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		LanguageChange.selectLocale(getActivity());
+
+		// Get the type of the device
+		context = getActivity();
+		vehiclesDataSource = new VehiclesDataSource(context);
+		isPhoneDevice = ((GlobalEntity) context.getApplicationContext())
+				.isPhoneDevice();
 
 		// Activate the option menu
 		setHasOptionsMenu(true);
@@ -173,6 +188,19 @@ public class MetroFragment extends SherlockFragment {
 	 */
 	private void actionsOverDirectionsTextViews(
 			final TextView textViewDirection1, final TextView textViewDirection2) {
+		// Set the TextViews text in case of tablet
+		if (!isPhoneDevice) {
+			vehiclesDataSource.open();
+			String direction1 = vehiclesDataSource.getVehicleDirection(
+					VehicleTypeEnum.METRO1).replaceAll("-.*-", " - ");
+			String direction2 = vehiclesDataSource.getVehicleDirection(
+					VehicleTypeEnum.METRO2).replaceAll("-.*-", " - ");
+			vehiclesDataSource.close();
+
+			textViewDirection1.setText(direction1);
+			textViewDirection2.setText(direction2);
+		}
+
 		// Assign the Direction1 TextView a click listener
 		textViewDirection1.setOnClickListener(new OnClickListener() {
 			@Override
