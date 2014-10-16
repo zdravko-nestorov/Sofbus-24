@@ -1,5 +1,7 @@
 package bg.znestorov.sobusf24.db.utils;
 
+import java.util.Locale;
+
 public class Utils {
 
 	public static String removeSpaces(String value) {
@@ -42,6 +44,17 @@ public class Utils {
 		} else {
 			return value;
 		}
+	}
+
+	public static String formatNumberOfDigits(String input, int outputLength) {
+		String formatType = String.format(Locale.getDefault(), "%%0%dd", outputLength);
+
+		try {
+			input = String.format(formatType, Integer.parseInt(input));
+		} catch (Exception e) {
+		}
+
+		return input;
 	}
 
 	public static String formatDirectionName(String directionName) {
