@@ -1,0 +1,14 @@
+<resources>
+
+    <!-- Closest Stations List -->
+    <dimen name="cs_list_image_street_view_height">95sp</dimen>
+
+    <!-- About -->
+    <dimen name="about_image_height">90sp</dimen>
+    <dimen name="about_image_width">90sp</dimen>
+    <dimen name="about_image_land_padding">15sp</dimen>
+
+    <!-- Virtual Boards Time -->
+    <dimen name="vb_time_image_street_view_height">95sp</dimen>
+
+</resources>

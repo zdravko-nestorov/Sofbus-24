@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="35sp"
+        android:layout_margin="@dimen/about_image_land_padding"
         android:drawableBottom="@drawable/ic_about"
         android:drawablePadding="15sp"
         android:gravity="center"
@@ -27,8 +27,10 @@
         android:autoLink="web"
         android:gravity="center"
         android:linksClickable="true"
+        android:paddingBottom="10sp"
         android:paddingLeft="20sp"
         android:paddingRight="20sp"
+        android:paddingTop="10sp"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="14sp" />
 

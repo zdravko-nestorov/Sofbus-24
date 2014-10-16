@@ -285,6 +285,9 @@
     <!-- Station Route Map Fragment -->
     <string name="metro_search_tab_line1">Линия 1</string>
     <string name="metro_search_tab_line2">Линия 2</string>
+    <string name="pt_time_retrieval_choice" formatted="false"><![CDATA[Информация за \"%s\"]]></string>
+    <string name="pt_time_retrieval_schedule">Разписание</string>
+    <string name="pt_time_retrieval_virtual_boards">Времена на пристигане</string>
 
     <!-- History -->
     <string name="history_title">История</string>

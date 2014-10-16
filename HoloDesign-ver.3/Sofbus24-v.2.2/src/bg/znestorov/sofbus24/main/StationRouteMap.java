@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.view.View;
 import android.widget.Toast;
@@ -22,7 +23,7 @@ import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
-import bg.znestorov.sofbus24.publictransport.RetrievePublicTransportStation;
+import bg.znestorov.sofbus24.publictransport.ChooseTimeRetrievalDialog;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.MapUtils;
@@ -444,16 +445,10 @@ public class StationRouteMap extends SherlockFragmentActivity {
 
 						// Getting the PublicTransport schedule from the station
 						// URL address
-						ProgressDialog progressDialog = new ProgressDialog(
-								context);
-						progressDialog.setMessage(Html.fromHtml(String.format(
-								getString(R.string.pt_item_loading_schedule),
-								String.format(ptStation.getName() + " (%s)",
-										ptStation.getNumber()))));
-						RetrievePublicTransportStation retrievePublicTransportStation = new RetrievePublicTransportStation(
-								context, progressDialog, ptStation,
-								directionsEntity);
-						retrievePublicTransportStation.execute();
+						DialogFragment dialogFragment = ChooseTimeRetrievalDialog
+								.newInstance(directionsEntity, ptStation);
+						dialogFragment.show(getSupportFragmentManager(),
+								"chooseTimeRetrievalDialog");
 					}
 				});
 	}

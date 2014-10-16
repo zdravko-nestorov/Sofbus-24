@@ -11,6 +11,7 @@ import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -238,6 +239,8 @@ public class ClosestStationsListFragment extends ListFragment implements
 	private void actionsOverSearchEditText(final SearchEditText searchEditText) {
 		// TODO: Find a way to set an alphanumeric keyboard with numeric as
 		// default
+		searchEditText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+				| InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 		searchEditText.setFilters(new InputFilter[] { ActivityUtils
 				.createInputFilter() });
 

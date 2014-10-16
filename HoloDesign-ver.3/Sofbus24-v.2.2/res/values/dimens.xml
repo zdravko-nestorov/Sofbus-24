@@ -24,6 +24,7 @@
     <!-- About -->
     <dimen name="about_image_height">175sp</dimen>
     <dimen name="about_image_width">175sp</dimen>
+    <dimen name="about_image_land_padding">35sp</dimen>
 
     <!-- Favourites -->
     <dimen name="favourites_item_height">130sp</dimen>
