@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -46,13 +45,20 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 	// Location Managers responsible for the current location
 	private LocationManager locationManager;
-	private Criteria criteria;
-	private String bestProvider;
+	private MyLocationListener myNetworkLocationListener;
+	private MyLocationListener myGPSLocationListener;
 
 	// Available Location providers
-	private boolean isMyLocationAvailable;
-	private boolean isCurrentLocationAvailable = false;
-	private MyLocationListener myLocationListener;
+	private boolean isLocationServicesAvailable;
+	private boolean isAnyProviderEabled;
+
+	// Different location providers
+	private static final String GPS_PROVIDER = LocationManager.GPS_PROVIDER;
+	private static final String NETWORK_PROVIDER = LocationManager.NETWORK_PROVIDER;
+
+	// The minimum distance and time to for the location updates
+	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
+	private static final long MIN_TIME_BETWEEN_UPDATES = 1000 * 60 * 1;
 
 	public RetrieveCurrentLocation(FragmentActivity context,
 			boolean isClosestStationsList, ProgressDialog progressDialog) {
@@ -70,44 +76,19 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 		String locationProviders = Settings.Secure.getString(
 				context.getContentResolver(),
 				Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-		isMyLocationAvailable = locationProviders
+		isLocationServicesAvailable = locationProviders
 				.contains(LocationManager.NETWORK_PROVIDER)
 				|| locationProviders.contains(LocationManager.GPS_PROVIDER);
 
-		if (isMyLocationAvailable) {
-			locationManager = (LocationManager) context
-					.getSystemService(Context.LOCATION_SERVICE);
-
-			/*
-			 * Criteria object will select best service based on: accuracy,
-			 * power consumption, response, bearing and monetary cost
-			 * 
-			 * Set false to use best service otherwise it will select the
-			 * default Sim network and give the location based on sim network
-			 * now it will first check satellite than Internet than Sim network
-			 * location
-			 */
-			criteria = new Criteria();
-
-			// Get the best provider
-			bestProvider = locationManager.getBestProvider(criteria, false);
-
-			// Get location
-			Location location = locationManager
-					.getLastKnownLocation(bestProvider);
-
-			if (location != null) {
-				isCurrentLocationAvailable = true;
-				latitude = location.getLatitude();
-				longitude = location.getLongitude();
-			} else {
-				myLocationListener = new MyLocationListener();
-				if (locationManager.isProviderEnabled(bestProvider)) {
-					isCurrentLocationAvailable = true;
-					locationManager.requestLocationUpdates(bestProvider, 0, 0,
-							myLocationListener);
-				}
+		try {
+			if (isLocationServicesAvailable) {
+				locationManager = (LocationManager) context
+						.getSystemService(Context.LOCATION_SERVICE);
+				registerForLocationUpdates(myNetworkLocationListener,
+						myGPSLocationListener);
 			}
+		} catch (Exception e) {
+			isAnyProviderEabled = false;
 		}
 
 		createLoadingView();
@@ -115,12 +96,25 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
+
 		while (latitude == 0.0 && longitude == 0.0) {
-			if (!isCurrentLocationAvailable
-					|| (progressDialog != null && !progressDialog.isShowing())) {
+
+			// In case of all providers are disabled - dissmiss the progress
+			// dialog (if any) and cancel the async task
+			if (!isAnyProviderEabled) {
+				if (progressDialog != null && progressDialog.isShowing()) {
+					progressDialog.dismiss();
+				}
+
 				cancel(true);
 			}
 
+			// In case the progress dialog is dissmissed - cancel the async task
+			if (progressDialog != null && !progressDialog.isShowing()) {
+				cancel(true);
+			}
+
+			// If the async task is cancelled stop the loop
 			if (isCancelled()) {
 				break;
 			}
@@ -133,8 +127,211 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	protected void onPostExecute(Void result) {
 		super.onPostExecute(result);
 
+		actionsOnLocationFound();
+		dismissLoadingView();
+	}
+
+	@Override
+	protected void onCancelled() {
+		super.onCancelled();
+
+		Location lastKnownLocation = null;
+		if (locationManager != null) {
+			lastKnownLocation = locationManager
+					.getLastKnownLocation(GPS_PROVIDER) == null ? locationManager
+					.getLastKnownLocation(NETWORK_PROVIDER) == null ? null
+					: locationManager.getLastKnownLocation(NETWORK_PROVIDER)
+					: locationManager.getLastKnownLocation(GPS_PROVIDER);
+		}
+
+		// Check if there is any last known location
+		if (lastKnownLocation == null) {
+			// Check if the ClosestStationsList was refreshed
+			if (isClosestStationsList && progressDialog == null) {
+				((ClosestStationsList) context)
+						.refreshClosestStationsListFragmentFailed();
+
+				showLongToast(context
+						.getString(R.string.app_location_modules_timeout_error));
+			} else {
+				if (!isAnyProviderEabled) {
+					showLongToast(context
+							.getString(R.string.app_location_modules_error));
+				} else {
+					if (progressDialog.isShowing()) {
+						showLongToast(context
+								.getString(R.string.app_location_timeout_error));
+					}
+				}
+
+				// In case of ClosestStationsMap - start the map fragment and it
+				// will take care for the rest (just inform the user)
+				if (!isClosestStationsList) {
+					Intent closestStationsMapIntent = new Intent(context,
+							ClosestStationsMap.class);
+					context.startActivity(closestStationsMapIntent);
+				}
+			}
+		} else {
+			actionsOnLocationFound();
+		}
+
+		dismissLoadingView();
+	}
+
+	public class MyLocationListener implements LocationListener {
+
+		@Override
+		public void onLocationChanged(Location location) {
+			if (location != null) {
+				latitude = location.getLatitude();
+				longitude = location.getLongitude();
+			}
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+			registerForLocationUpdates(myNetworkLocationListener,
+					myGPSLocationListener);
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+			registerForLocationUpdates(myNetworkLocationListener,
+					myGPSLocationListener);
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			registerForLocationUpdates(myNetworkLocationListener,
+					myGPSLocationListener);
+		}
+	}
+
+	/**
+	 * Create the loading view and lock the screen
+	 */
+	private void createLoadingView() {
+		ActivityUtils.lockScreenOrientation(context);
+
+		if (progressDialog != null) {
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						public void onCancel(DialogInterface dialog) {
+							cancel(true);
+						}
+					});
+			progressDialog.show();
+		}
+	}
+
+	/**
+	 * Dismiss the loading view and unlock the screen
+	 */
+	private void dismissLoadingView() {
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+		}
+
+		if (locationManager != null) {
+			if (myNetworkLocationListener != null) {
+				locationManager.removeUpdates(myNetworkLocationListener);
+			}
+
+			if (myGPSLocationListener != null) {
+				locationManager.removeUpdates(myGPSLocationListener);
+			}
+		}
+
+		ActivityUtils.unlockScreenOrientation(context);
+	}
+
+	/**
+	 * Check if any of the providers is enabled
+	 * 
+	 * @return if any provider is ebanled
+	 */
+	private void registerForLocationUpdates(
+			MyLocationListener myNetworkLocationListener,
+			MyLocationListener myGPSLocationListener) {
+
+		if (locationManager != null) {
+			// Getting the GPS status
+			boolean isGPSEnabled = locationManager
+					.isProviderEnabled(GPS_PROVIDER);
+
+			// Getting the network status
+			boolean isNetworkEnabled = locationManager
+					.isProviderEnabled(NETWORK_PROVIDER);
+
+			// Check if any of the providers is enabled
+			isAnyProviderEabled = isGPSEnabled || isNetworkEnabled;
+
+			if (isAnyProviderEabled) {
+				if (isNetworkEnabled) {
+					if (myNetworkLocationListener == null) {
+						myNetworkLocationListener = new MyLocationListener();
+					}
+
+					locationManager.requestLocationUpdates(NETWORK_PROVIDER,
+							MIN_TIME_BETWEEN_UPDATES,
+							MIN_DISTANCE_CHANGE_FOR_UPDATES,
+							myNetworkLocationListener);
+				} else {
+					if (myNetworkLocationListener != null) {
+						locationManager
+								.removeUpdates(myNetworkLocationListener);
+					}
+				}
+
+				if (isGPSEnabled) {
+					if (myGPSLocationListener == null) {
+						myGPSLocationListener = new MyLocationListener();
+					}
+
+					locationManager.requestLocationUpdates(GPS_PROVIDER,
+							MIN_TIME_BETWEEN_UPDATES,
+							MIN_DISTANCE_CHANGE_FOR_UPDATES,
+							myGPSLocationListener);
+				} else {
+					if (myGPSLocationListener != null) {
+						locationManager.removeUpdates(myGPSLocationListener);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Show a toast for a long period of time
+	 * 
+	 * @param message
+	 *            the message of the toast
+	 */
+	private void showLongToast(String message) {
+		final Toast registrationToast = Toast.makeText(context, message,
+				Toast.LENGTH_SHORT);
+		registrationToast.show();
+
+		new CountDownTimer(3000, 1000) {
+			public void onTick(long millisUntilFinished) {
+				registrationToast.show();
+			}
+
+			public void onFinish() {
+				registrationToast.show();
+			}
+		}.start();
+	}
+
+	/**
+	 * Actions when any location is found
+	 */
+	private void actionsOnLocationFound() {
 		// Check if the location is available
-		if (isMyLocationAvailable) {
+		if (isLocationServicesAvailable) {
 
 			// Check which activity called the async task
 			if (isClosestStationsList) {
@@ -181,115 +378,6 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 				 */
 			}
 		}
-
-		dismissLoadingView();
 	}
 
-	@Override
-	protected void onCancelled() {
-		super.onCancelled();
-
-		// Show a message when there is a timeout
-		if (progressDialog.isShowing()) {
-			final Toast registrationToast = Toast.makeText(context,
-					context.getString(R.string.app_location_timeout),
-					Toast.LENGTH_SHORT);
-			registrationToast.show();
-
-			new CountDownTimer(3000, 1000) {
-				public void onTick(long millisUntilFinished) {
-					registrationToast.show();
-				}
-
-				public void onFinish() {
-					registrationToast.show();
-				}
-			}.start();
-		}
-
-		// In case of refresh and timeout
-		if (isClosestStationsList && progressDialog == null) {
-			((ClosestStationsList) context)
-					.refreshClosestStationsListFragmentFailed();
-		}
-
-		dismissLoadingView();
-	}
-
-	public class MyLocationListener implements LocationListener {
-
-		@Override
-		public void onLocationChanged(Location location) {
-			if (location != null) {
-				latitude = location.getLatitude();
-				longitude = location.getLongitude();
-			}
-		}
-
-		@Override
-		public void onProviderDisabled(String provider) {
-			findBestProvider();
-		}
-
-		@Override
-		public void onProviderEnabled(String provider) {
-			findBestProvider();
-		}
-
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-			findBestProvider();
-		}
-
-		private void findBestProvider() {
-			if (locationManager != null) {
-				locationManager.removeUpdates(this);
-				bestProvider = locationManager.getBestProvider(criteria, false);
-
-				if (locationManager.isProviderEnabled(bestProvider)) {
-					isCurrentLocationAvailable = true;
-					locationManager.requestLocationUpdates(bestProvider, 0, 0,
-							this);
-				} else {
-					isCurrentLocationAvailable = false;
-				}
-			} else {
-				isCurrentLocationAvailable = false;
-			}
-		}
-	}
-
-	/**
-	 * Create the loading view and lock the screen
-	 */
-	private void createLoadingView() {
-		ActivityUtils.lockScreenOrientation(context);
-
-		if (progressDialog != null) {
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(true);
-			progressDialog
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						public void onCancel(DialogInterface dialog) {
-							cancel(true);
-						}
-					});
-			progressDialog.show();
-		}
-	}
-
-	/**
-	 * Dismiss the loading view and unlock the screen
-	 */
-	private void dismissLoadingView() {
-		if (progressDialog != null) {
-			progressDialog.dismiss();
-		}
-
-		if (locationManager != null && myLocationListener != null) {
-			locationManager.removeUpdates(myLocationListener);
-		}
-
-		ActivityUtils.unlockScreenOrientation(context);
-	}
 }

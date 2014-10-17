@@ -33,7 +33,7 @@ public class LocationSourceDialog extends DialogFragment {
 		context = getActivity();
 		icon = android.R.drawable.ic_menu_mylocation;
 		title = getString(R.string.app_dialog_title_error);
-		message = getString(R.string.app_location_error);
+		message = getString(R.string.app_location_modules_error);
 		negativeBtn = getString(R.string.app_button_no);
 		positiveBtn = getString(R.string.app_button_yes);
 

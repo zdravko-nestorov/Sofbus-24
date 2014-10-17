@@ -16,13 +16,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.widget.Toast;
@@ -60,8 +59,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-public class ClosestStationsMap extends SherlockFragmentActivity implements
-		LocationListener {
+/**
+ * Activity visualizing the google maps with all stations
+ * 
+ * @author Zdravko Nestorov
+ * @version 1.0
+ * 
+ */
+public class ClosestStationsMap extends SherlockFragmentActivity {
 
 	private Activity context;
 	private GlobalEntity globalContext;
@@ -76,7 +81,11 @@ public class ClosestStationsMap extends SherlockFragmentActivity implements
 	private SharedPreferences sharedPreferences;
 
 	private GoogleMap googleMap;
+	private Location previousLocation;
 	private List<Polyline> routePoylineList = new ArrayList<Polyline>();
+
+	private static final String GPS_PROVIDER = LocationManager.GPS_PROVIDER;
+	private static final String NETWORK_PROVIDER = LocationManager.NETWORK_PROVIDER;
 
 	/**
 	 * Indicates if my location has been already focused
@@ -236,50 +245,75 @@ public class ClosestStationsMap extends SherlockFragmentActivity implements
 			googleMap.setOnMapClickListener(onMapClickListener);
 			googleMap.setOnMapLongClickListener(onMapLongClickListener);
 
-			// Getting LocationManager object from System Service
-			// LOCATION_SERVICE
-			LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+			// Activate my location, set a location button that center the map
+			// over a point and start a LocationChangeListener
+			googleMap.setMyLocationEnabled(true);
+			googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+			googleMap
+					.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+						@Override
+						public void onMyLocationChange(Location currentLocation) {
+							// Check if there is any found location and if the
+							// distance between it and previous one (if exists)
+							// is more than 20 meters
+							if (currentLocation != null
+									&& (previousLocation == null || previousLocation
+											.distanceTo(currentLocation) > 20f)) {
+								// Get the current location as previous now
+								previousLocation = currentLocation;
 
-			// Creating a criteria object to retrieve provider
-			Criteria criteria = new Criteria();
+								// Clear the map and proceed with all needed
+								// actions
+								googleMap.clear();
+								onLocationChanged(currentLocation);
+							}
+						}
+					});
 
-			// Getting the name of the best provider
-			String provider = locationManager.getBestProvider(criteria, true);
+			// Start a new thread - just to wait 3 sec and if no location is
+			// found to display the last known location
+			Handler handler = new Handler();
+			Runnable myrunnable = new Runnable() {
+				public void run() {
+					try {
+						if (previousLocation == null) {
+							// Getting LocationManager object from System
+							// Service LOCATION_SERVICE
+							LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-			// Getting Current Location
-			Location location = locationManager.getLastKnownLocation(provider);
+							// Getting Current Location
+							Location location = locationManager
+									.getLastKnownLocation(GPS_PROVIDER) == null ? locationManager
+									.getLastKnownLocation(NETWORK_PROVIDER) == null ? null
+									: locationManager
+											.getLastKnownLocation(NETWORK_PROVIDER)
+									: locationManager
+											.getLastKnownLocation(GPS_PROVIDER);
 
-			if (location != null) {
-				animateMapFocus(location);
-			}
+							if (location != null) {
+								// Assign a value to the previous location
+								previousLocation = location;
 
-			// Add a LocationUpdate listener in case of location change
-			locationManager.requestLocationUpdates(provider, 20000, 0, this);
+								// Showing the current location and zoom it in
+								// GoogleMaps
+								animateMapFocus(location);
+
+								// Visualize the closest stations to the new
+								// location
+								new LoadStationsFromDb(context, location, null)
+										.execute();
+							}
+						}
+					} catch (Exception e) {
+					}
+				}
+			};
+
+			handler.postDelayed(myrunnable, 3000);
 
 			// Visualize the favorites stations on the map
 			new LoadStationsFromDb(context, null, null).execute();
 		}
-	}
-
-	@Override
-	public void onLocationChanged(Location location) {
-		// Showing the current location and zoom it in GoogleMaps
-		animateMapFocus(location, false);
-
-		// Visualize the closest stations to the new location
-		new LoadStationsFromDb(context, location, null).execute();
-	}
-
-	@Override
-	public void onProviderDisabled(String provider) {
-	}
-
-	@Override
-	public void onProviderEnabled(String provider) {
-	}
-
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
 	@Override
@@ -390,6 +424,15 @@ public class ClosestStationsMap extends SherlockFragmentActivity implements
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	// Actions on location changes
+	private void onLocationChanged(Location location) {
+		// Showing the current location and zoom it in GoogleMaps
+		animateMapFocus(location, false);
+
+		// Visualize the closest stations to the new location
+		new LoadStationsFromDb(context, location, null).execute();
 	}
 
 	/**
