@@ -333,12 +333,12 @@ public class MetroScheduleWrapperFragment extends SherlockFragment {
 	 * Initialize the active fragment
 	 */
 	private void initActiveFragmentContent() {
+		// Get the active schedule (according to the current hour)
+		currentScheduleHourIndex = getActiveScheduleHourIndex(scheduleHourList);
+
 		// Declare that the options menu has changed, so should be recreated
 		// (make the system calls the method onPrepareOptionsMenu)
 		context.supportInvalidateOptionsMenu();
-
-		// Get the active schedule (according to the current hour)
-		currentScheduleHourIndex = getActiveScheduleHourIndex(scheduleHourList);
 
 		// Format the schedule list
 		ArrayList<String> formattedScheduleList = formatScheduleList(scheduleHourList
@@ -356,13 +356,13 @@ public class MetroScheduleWrapperFragment extends SherlockFragment {
 	 * Initialize the current fragment
 	 */
 	private void initCurrentFragmentContent() {
-		// Declare that the options menu has changed, so should be recreated
-		// (make the system calls the method onPrepareOptionsMenu)
-		context.supportInvalidateOptionsMenu();
-
 		// Format the schedule list
 		ArrayList<String> formattedScheduleList = formatScheduleList(scheduleHourList
 				.get(currentScheduleHourIndex));
+
+		// Declare that the options menu has changed, so should be recreated
+		// (make the system calls the method onPrepareOptionsMenu)
+		context.supportInvalidateOptionsMenu();
 
 		// Get the active hour of the schedule (according to the current time
 		// for this hour)

@@ -42,6 +42,7 @@ public class LocationSourceDialog extends DialogFragment {
 				Intent intent = new Intent(
 						android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 				context.startActivity(intent);
+				dismiss();
 			}
 
 		};

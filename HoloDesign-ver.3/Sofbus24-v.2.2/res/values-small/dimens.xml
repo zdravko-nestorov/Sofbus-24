@@ -1,5 +1,9 @@
 <resources>
 
+    <!-- Sofbus 24 -->
+    <dimen name="sofbus24_empty_list_view_margin">10sp</dimen>
+    <dimen name="sofbus24_empty_text_view_margin">0sp</dimen>
+
     <!-- Closest Stations List -->
     <dimen name="cs_list_image_street_view_height">95sp</dimen>
 

@@ -58,7 +58,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 	// The minimum distance and time to for the location updates
 	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-	private static final long MIN_TIME_BETWEEN_UPDATES = 1000 * 60 * 1;
+	private static final long MIN_TIME_BETWEEN_UPDATES = 1000 * 2;
 
 	public RetrieveCurrentLocation(FragmentActivity context,
 			boolean isClosestStationsList, ProgressDialog progressDialog) {
@@ -84,8 +84,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 			if (isLocationServicesAvailable) {
 				locationManager = (LocationManager) context
 						.getSystemService(Context.LOCATION_SERVICE);
-				registerForLocationUpdates(myNetworkLocationListener,
-						myGPSLocationListener);
+				registerForLocationUpdates();
 			}
 		} catch (Exception e) {
 			isAnyProviderEabled = false;
@@ -191,20 +190,17 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 		@Override
 		public void onProviderDisabled(String provider) {
-			registerForLocationUpdates(myNetworkLocationListener,
-					myGPSLocationListener);
+			registerForLocationUpdates();
 		}
 
 		@Override
 		public void onProviderEnabled(String provider) {
-			registerForLocationUpdates(myNetworkLocationListener,
-					myGPSLocationListener);
+			registerForLocationUpdates();
 		}
 
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
-			registerForLocationUpdates(myNetworkLocationListener,
-					myGPSLocationListener);
+			registerForLocationUpdates();
 		}
 	}
 
@@ -253,9 +249,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	 * 
 	 * @return if any provider is ebanled
 	 */
-	private void registerForLocationUpdates(
-			MyLocationListener myNetworkLocationListener,
-			MyLocationListener myGPSLocationListener) {
+	private void registerForLocationUpdates() {
 
 		if (locationManager != null) {
 			// Getting the GPS status
@@ -273,31 +267,33 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 				if (isNetworkEnabled) {
 					if (myNetworkLocationListener == null) {
 						myNetworkLocationListener = new MyLocationListener();
-					}
 
-					locationManager.requestLocationUpdates(NETWORK_PROVIDER,
-							MIN_TIME_BETWEEN_UPDATES,
-							MIN_DISTANCE_CHANGE_FOR_UPDATES,
-							myNetworkLocationListener);
+						locationManager.requestLocationUpdates(
+								NETWORK_PROVIDER, MIN_TIME_BETWEEN_UPDATES,
+								MIN_DISTANCE_CHANGE_FOR_UPDATES,
+								myNetworkLocationListener);
+					}
 				} else {
 					if (myNetworkLocationListener != null) {
 						locationManager
 								.removeUpdates(myNetworkLocationListener);
+						myNetworkLocationListener = null;
 					}
 				}
 
 				if (isGPSEnabled) {
 					if (myGPSLocationListener == null) {
 						myGPSLocationListener = new MyLocationListener();
-					}
 
-					locationManager.requestLocationUpdates(GPS_PROVIDER,
-							MIN_TIME_BETWEEN_UPDATES,
-							MIN_DISTANCE_CHANGE_FOR_UPDATES,
-							myGPSLocationListener);
+						locationManager.requestLocationUpdates(GPS_PROVIDER,
+								MIN_TIME_BETWEEN_UPDATES,
+								MIN_DISTANCE_CHANGE_FOR_UPDATES,
+								myGPSLocationListener);
+					}
 				} else {
 					if (myGPSLocationListener != null) {
 						locationManager.removeUpdates(myGPSLocationListener);
+						myGPSLocationListener = null;
 					}
 				}
 			}
