@@ -19,7 +19,7 @@
     <!-- ANDROID DARK THEME -->
     <style name="AppBaseThemeDark" parent="android:Theme.Holo" />
 
-    <style name="AppThemeDark" parent="AppBaseTheme">
+    <style name="AppThemeDark" parent="AppBaseThemeDark">
         <item name="android:actionBarStyle">@style/MyTheme.ActionBarStyleDark</item>
     </style>
 
