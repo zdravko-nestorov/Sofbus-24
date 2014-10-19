@@ -290,18 +290,35 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 									: locationManager
 											.getLastKnownLocation(GPS_PROVIDER);
 
+							// Check if any location is found. If no - just
+							// center the map over the center of Sofia
 							if (location != null) {
 								// Assign a value to the previous location
 								previousLocation = location;
 
 								// Showing the current location and zoom it in
 								// GoogleMaps
-								animateMapFocus(location);
+								animateMapFocus(location, 16);
 
 								// Visualize the closest stations to the new
 								// location
 								new LoadStationsFromDb(context, location, null)
 										.execute();
+							} else {
+								// Sofia center location
+								Location centerStationLocation = new Location(
+										"no_location");
+								centerStationLocation
+										.setLatitude(Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE);
+								centerStationLocation
+										.setLongitude(Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE);
+
+								// Assign a value to the previous location
+								previousLocation = centerStationLocation;
+
+								// Showing the Sofia center location and zoom it
+								// in GoogleMaps
+								animateMapFocus(centerStationLocation, 13);
 							}
 						}
 					} catch (Exception e) {
@@ -506,11 +523,13 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 	 * @param location
 	 *            the location of the station over the map (using Location
 	 *            object)
+	 * @param zoom
+	 *            the requested zoom of the map
 	 */
-	private void animateMapFocus(Location location) {
+	private void animateMapFocus(Location location, int zoom) {
 		CameraPosition cameraPosition = new CameraPosition.Builder()
 				.target(new LatLng(location.getLatitude(), location
-						.getLongitude())).zoom(16).build();
+						.getLongitude())).zoom(zoom).build();
 
 		googleMap.animateCamera(CameraUpdateFactory
 				.newCameraPosition(cameraPosition));
