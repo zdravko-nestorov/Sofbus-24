@@ -30,7 +30,7 @@ public class MetroScheduleAdapter extends ArrayAdapter<String> {
 
 	public MetroScheduleAdapter(Activity context,
 			ScheduleEntity metroScheduleEntity) {
-		super(context, R.layout.activity_metro_schedule_list_item,
+		super(context, R.layout.activity_metro_schedule_wrapper_list_item,
 				metroScheduleEntity.getFormattedScheduleList());
 		this.context = context;
 		this.metroScheduleEntity = metroScheduleEntity;
@@ -49,7 +49,7 @@ public class MetroScheduleAdapter extends ArrayAdapter<String> {
 		if (rowView == null) {
 			LayoutInflater inflater = context.getLayoutInflater();
 			rowView = inflater.inflate(
-					R.layout.activity_metro_schedule_list_item, null);
+					R.layout.activity_metro_schedule_wrapper_list_item, null);
 
 			// Configure the view holder
 			viewHolder = new ViewHolder();

@@ -9,6 +9,8 @@ public class MetroScheduleDialog extends MetroSchedule {
 	protected void onCreate(Bundle savedInstanceState) {
 		ActivityUtils.showAsPopup(this, false);
 		super.onCreate(savedInstanceState);
+
+		ActivityUtils.forceTabs(MetroScheduleDialog.this);
 	}
 
 }

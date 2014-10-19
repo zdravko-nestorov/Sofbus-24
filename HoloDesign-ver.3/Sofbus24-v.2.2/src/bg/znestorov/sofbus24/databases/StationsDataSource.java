@@ -209,6 +209,17 @@ public class StationsDataSource {
 	}
 
 	/**
+	 * Check if a station exists in the DB via the station number
+	 * 
+	 * @param stationNumber
+	 *            the input station number
+	 * @return the station if it is found in the DB and null otherwise
+	 */
+	public StationEntity getStation(int stationNumber) {
+		return getStation(stationNumber + "");
+	}
+
+	/**
 	 * Get all stations via type from the database
 	 * 
 	 * @param vehicleType

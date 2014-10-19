@@ -16,6 +16,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import android.app.Activity;
+import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.WorkingDaysCalendar;
 
 /**
@@ -71,7 +74,12 @@ public class MetroStationEntity extends StationEntity implements Serializable {
 		}
 	}
 
-	public String getDirection() {
+	public String getDirection(Activity context) {
+		String language = LanguageChange.getUserLocale(context);
+		if (!"bg".equals(language)) {
+			direction = TranslatorCyrillicToLatin.translate(context, direction);
+		}
+
 		return direction;
 	}
 

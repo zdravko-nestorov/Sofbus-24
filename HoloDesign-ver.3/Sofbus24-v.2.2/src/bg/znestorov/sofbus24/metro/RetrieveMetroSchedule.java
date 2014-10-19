@@ -12,7 +12,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
+import bg.znestorov.sofbus24.entity.MetroScheduleEntity;
 import bg.znestorov.sofbus24.entity.MetroStationEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.MetroSchedule;
@@ -26,10 +28,11 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
  * parse it to a MetroStation object
  * 
  * @author Zdravko Nestorov
+ * @version 2.0
  * 
  */
 public class RetrieveMetroSchedule extends
-		AsyncTask<Void, Void, MetroStationEntity> {
+		AsyncTask<Void, Void, MetroScheduleEntity> {
 
 	private Activity context;
 	private GlobalEntity globalContext;
@@ -52,38 +55,43 @@ public class RetrieveMetroSchedule extends
 	}
 
 	@Override
-	protected MetroStationEntity doInBackground(Void... params) {
-		MetroStationEntity ms = null;
+	protected MetroScheduleEntity doInBackground(Void... params) {
+		MetroScheduleEntity metroSchedule = getMetroScheduleEntity();
 
 		try {
-			// Get the time schedule as InputSource from the station URL
-			// address
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(new URL(station.getCustomField())
-					.openStream());
+			for (int i = 0; i < metroSchedule.getMetroStationsSize(); i++) {
+				MetroStationEntity metroStation = metroSchedule
+						.getStationEntity(i);
 
-			// Set Direction and time schedule to the station
-			ms = new MetroStationEntity(station);
-			ms.setDirection(doc);
-			ms.setWeekdaySchedule(doc);
-			ms.setHolidaySchedule(doc);
+				// Get the time schedule as InputSource from the station URL
+				// address
+				DocumentBuilderFactory factory = DocumentBuilderFactory
+						.newInstance();
+				DocumentBuilder builder = factory.newDocumentBuilder();
+				Document doc = builder.parse(new URL(metroStation
+						.getCustomField()).openStream());
+
+				// Set Direction and time schedule to the station
+				metroSchedule.setDirection(i, doc);
+				metroSchedule.setWeekdaySchedule(i, doc);
+				metroSchedule.setHolidaySchedule(i, doc);
+			}
 		} catch (Exception e) {
-			ms = new MetroStationEntity();
+			metroSchedule = null;
 		}
 
-		return ms;
+		return metroSchedule;
 	}
 
 	@Override
-	protected void onPostExecute(MetroStationEntity ms) {
-		super.onPostExecute(ms);
+	protected void onPostExecute(MetroScheduleEntity metroSchedule) {
+		super.onPostExecute(metroSchedule);
 
 		// Check if the information is successfully retrieved or an Internet
 		// error occurred
-		if (ms.isScheduleSet()) {
-			Utils.addStationInHistory(context, ms);
+		if (metroSchedule != null && metroSchedule.isMetroInformationValid()) {
+			Utils.addStationInHistory(context,
+					metroSchedule.getChoosenStationEntity());
 
 			Intent metroScheduleIntent;
 			if (globalContext.isPhoneDevice()) {
@@ -92,7 +100,8 @@ public class RetrieveMetroSchedule extends
 				metroScheduleIntent = new Intent(context,
 						MetroScheduleDialog.class);
 			}
-			metroScheduleIntent.putExtra(Constants.BUNDLE_METRO_SCHEDULE, ms);
+			metroScheduleIntent.putExtra(Constants.BUNDLE_METRO_SCHEDULE,
+					metroSchedule);
 			context.startActivity(metroScheduleIntent);
 		} else {
 			ActivityUtils.showNoInternetToast(context);
@@ -133,5 +142,45 @@ public class RetrieveMetroSchedule extends
 		}
 
 		ActivityUtils.unlockScreenOrientation(context);
+	}
+
+	/**
+	 * Get a metro schedule entity with all the information about the station in
+	 * both directions
+	 * 
+	 * @return a MetroScheduleEntity with all the information about the station
+	 *         in both directions
+	 */
+	private MetroScheduleEntity getMetroScheduleEntity() {
+		int choosenDirection;
+		int oppositeStationNumber;
+
+		// Get the number of the choosen station
+		int choosenStationNumber = Integer.parseInt(Utils.getOnlyDigits(station
+				.getNumber()));
+
+		// Check the number of the choosen station, so determine the direction
+		// and the number of the opposite station
+		if (choosenStationNumber % 2 == 1) {
+			choosenDirection = 0;
+			oppositeStationNumber = choosenStationNumber + 1;
+		} else {
+			choosenDirection = 1;
+			oppositeStationNumber = choosenStationNumber - 1;
+		}
+
+		// Get the data of the oppsoite station from the database
+		StationsDataSource stationsDatasource = new StationsDataSource(context);
+		stationsDatasource.open();
+		StationEntity oppsoiteMetroStation = stationsDatasource
+				.getStation(oppositeStationNumber);
+		stationsDatasource.close();
+
+		// Construct the MetroScheduleEntity with the need information
+		MetroScheduleEntity metroSchedule = new MetroScheduleEntity(
+				choosenDirection, new MetroStationEntity(station),
+				new MetroStationEntity(oppsoiteMetroStation));
+
+		return metroSchedule;
 	}
 }
