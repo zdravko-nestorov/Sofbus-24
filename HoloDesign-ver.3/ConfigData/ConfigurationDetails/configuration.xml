@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
-	<NewVersionCode>13</NewVersionCode>
-	<NewVersionName>2.0</NewVersionName>
+	<NewVersionCode>21</NewVersionCode>
+	<NewVersionName>2.2</NewVersionName>
 	<NewStationsDBVersion>1</NewStationsDBVersion>
 	<NewVehiclesDBVersion>1</NewVehiclesDBVersion>
 </Configuration>
