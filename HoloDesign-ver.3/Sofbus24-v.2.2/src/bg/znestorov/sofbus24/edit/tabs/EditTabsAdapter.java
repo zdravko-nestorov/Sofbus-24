@@ -3,7 +3,6 @@ package bg.znestorov.sofbus24.edit.tabs;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,8 @@ import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.HomeTabEntity;
 import bg.znestorov.sofbus24.main.R;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 /**
  * Array Adapter used to set each row of the EditTabs Fragment
  * 
@@ -24,7 +25,7 @@ import bg.znestorov.sofbus24.main.R;
  */
 public class EditTabsAdapter extends ArrayAdapter<HomeTabEntity> {
 
-	private Activity context;
+	private SherlockFragmentActivity context;
 	private List<HomeTabEntity> editTabsList;
 
 	// Used for optimize performance of the ListView
@@ -34,7 +35,8 @@ public class EditTabsAdapter extends ArrayAdapter<HomeTabEntity> {
 		ImageView tabPosition;
 	}
 
-	public EditTabsAdapter(Activity context, List<HomeTabEntity> editTabsList) {
+	public EditTabsAdapter(SherlockFragmentActivity context,
+			List<HomeTabEntity> editTabsList) {
 		super(context, R.layout.activity_sofbus24_edit_tabs_fragment_item,
 				editTabsList);
 
@@ -104,6 +106,11 @@ public class EditTabsAdapter extends ArrayAdapter<HomeTabEntity> {
 							boolean isChecked) {
 						viewHolder.tabVisibility.setChecked(isChecked);
 						editTabsList.get(position).setTabVisible(isChecked);
+
+						// Declare that the options menu has changed, so should
+						// be recreated (make the system calls the method
+						// onPrepareOptionsMenu)
+						context.supportInvalidateOptionsMenu();
 					}
 				});
 	}

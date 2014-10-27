@@ -345,6 +345,20 @@ public class ConfigEntity implements Serializable {
 		return isValidConfig;
 	}
 
+	/**
+	 * Check if the Configuration is in default state (used to determine if the
+	 * reset button in EditTabs should be visible)
+	 * 
+	 * @return if it is a default configuration
+	 */
+	public boolean isDefaultConfig() {
+		boolean isDefaultConfig = favouritesVisiblå && favouritesPosition == 0
+				&& searchVisible && searchPosition == 1 && scheduleVisible
+				&& schedulePosition == 2 && metroVisible && metroPosition == 3;
+
+		return isDefaultConfig;
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tversionCode: " + versionCode

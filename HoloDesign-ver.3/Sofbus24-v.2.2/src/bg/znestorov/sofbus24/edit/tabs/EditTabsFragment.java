@@ -3,10 +3,8 @@ package bg.znestorov.sofbus24.edit.tabs;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,10 @@ import bg.znestorov.sofbus24.entity.HomeTabEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.SimpleFloatViewManager;
@@ -26,9 +28,9 @@ import com.mobeta.android.dslv.SimpleFloatViewManager;
  * @version 1.0
  * 
  */
-public class EditTabsFragment extends ListFragment {
+public class EditTabsFragment extends SherlockListFragment {
 
-	private Activity context;
+	private SherlockFragmentActivity context;
 	private ConfigEntity config;
 	private boolean isReset;
 
@@ -43,6 +45,11 @@ public class EditTabsFragment extends ListFragment {
 		public void drop(int from, int to) {
 			if (from != to) {
 				editTabsAdapter.rearrangeView(from, to);
+
+				// Declare that the options menu has changed, so should be
+				// recreated (make the system calls the method
+				// onPrepareOptionsMenu)
+				context.supportInvalidateOptionsMenu();
 			}
 		}
 	};
@@ -60,21 +67,6 @@ public class EditTabsFragment extends ListFragment {
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
-		DragSortListView editTabsListView = (DragSortListView) getListView();
-		editTabsListView.setDropListener(onDrop);
-
-		SimpleFloatViewManager simpleFloatViewManager = new SimpleFloatViewManager(
-				editTabsListView);
-		simpleFloatViewManager.setBackgroundColor(Color.TRANSPARENT);
-		editTabsListView.setFloatViewManager(simpleFloatViewManager);
-
-		setListAdapter();
-	}
-
-	@Override
 	@SuppressLint("ClickableViewAccessibility")
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -83,7 +75,7 @@ public class EditTabsFragment extends ListFragment {
 						container, false);
 
 		// Set the context (activity) associated with this fragment
-		context = getActivity();
+		context = getSherlockActivity();
 
 		// Get the configuration object and if the Fragment is started or
 		// reset from the Bundle or SavedInstanceState
@@ -105,7 +97,25 @@ public class EditTabsFragment extends ListFragment {
 		myFragmentView.setOnTouchListener(mController);
 		myFragmentView.setDragEnabled(DRAG_ENABLED);
 
+		// Activate the option menu
+		setHasOptionsMenu(true);
+
 		return myFragmentView;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		DragSortListView editTabsListView = (DragSortListView) getListView();
+		editTabsListView.setDropListener(onDrop);
+
+		SimpleFloatViewManager simpleFloatViewManager = new SimpleFloatViewManager(
+				editTabsListView);
+		simpleFloatViewManager.setBackgroundColor(Color.TRANSPARENT);
+		editTabsListView.setFloatViewManager(simpleFloatViewManager);
+
+		setListAdapter();
 	}
 
 	@Override
@@ -115,6 +125,16 @@ public class EditTabsFragment extends ListFragment {
 		savedInstanceState.putSerializable(Constants.BUNDLE_EDIT_TABS,
 				getNewConfig());
 		savedInstanceState.putBoolean(Constants.BUNDLE_EDIT_TABS_RESET, false);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		MenuItem editTabsReset = menu.findItem(R.id.action_edit_tabs_reset);
+		if (getNewConfig().isDefaultConfig()) {
+			editTabsReset.setVisible(false);
+		} else {
+			editTabsReset.setVisible(true);
+		}
 	}
 
 	/**

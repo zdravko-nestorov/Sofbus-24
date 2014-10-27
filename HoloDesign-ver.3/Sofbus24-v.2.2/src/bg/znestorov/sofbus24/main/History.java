@@ -94,19 +94,15 @@ public class History extends SherlockListActivity implements
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		ListView listView = getListView();
+		MenuItem historyTop = menu.findItem(R.id.action_history_top);
 
-		if (listView != null) {
-			MenuItem historyTop = menu.findItem(R.id.action_history_top);
-			if (listView.getFirstVisiblePosition() == 0) {
-				historyTop.setVisible(false);
-			} else {
-				historyTop.setVisible(true);
-			}
-
-			return true;
+		if (isListViewScrolledEnough(listView)) {
+			historyTop.setVisible(true);
 		} else {
-			return false;
+			historyTop.setVisible(false);
 		}
+
+		return true;
 	}
 
 	@Override
@@ -296,4 +292,29 @@ public class History extends SherlockListActivity implements
 		}
 	}
 
+	/**
+	 * Check if the ListView is scrolled enough, so the user will be provided
+	 * with the reset action bar button
+	 * 
+	 * @param listView
+	 *            the ListView of the fragment
+	 * 
+	 * @return if the ListView is scrolled enough, so all of the menu items are
+	 *         visible
+	 */
+	private boolean isListViewScrolledEnough(ListView listView) {
+		boolean isListViewScrolledEnough = false;
+
+		if (listView != null && listView.getCount() > 0) {
+			View firstListViewRow = listView.getChildAt(0);
+
+			int firstListViewRowHeight = firstListViewRow.getHeight();
+			int scrollY = listView.getFirstVisiblePosition()
+					* firstListViewRowHeight - firstListViewRow.getTop();
+
+			isListViewScrolledEnough = scrollY >= firstListViewRowHeight / 3;
+		}
+
+		return isListViewScrolledEnough;
+	}
 }
