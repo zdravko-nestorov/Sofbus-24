@@ -456,8 +456,7 @@ public class ActivityUtils {
 					SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder) source;
 					for (int i = end - 1; i >= start; i--) {
 						char currentChar = source.charAt(i);
-						if (!Character.isLetterOrDigit(currentChar)
-								&& !Character.isSpaceChar(currentChar)) {
+						if (!isCharAllowed(currentChar)) {
 							sourceAsSpannableBuilder.delete(i, i + 1);
 						}
 					}
@@ -466,8 +465,7 @@ public class ActivityUtils {
 					StringBuilder filteredStringBuilder = new StringBuilder();
 					for (int i = start; i < end; i++) {
 						char currentChar = source.charAt(i);
-						if (Character.isLetterOrDigit(currentChar)
-								|| Character.isSpaceChar(currentChar)) {
+						if (isCharAllowed(currentChar)) {
 							filteredStringBuilder.append(currentChar);
 						}
 					}
@@ -477,6 +475,24 @@ public class ActivityUtils {
 		};
 
 		return inputFilter;
+	}
+
+	/**
+	 * Check if a charecter is allowed (if it is a valid input)
+	 * 
+	 * @param currentChar
+	 *            the entered char
+	 * @return if it is allowed or not
+	 */
+	private static boolean isCharAllowed(char currentChar) {
+		boolean isCharAllowed = false;
+
+		if (Character.isLetterOrDigit(currentChar)
+				|| Character.isSpaceChar(currentChar) || currentChar == '-') {
+			isCharAllowed = true;
+		}
+
+		return isCharAllowed;
 	}
 
 	/**

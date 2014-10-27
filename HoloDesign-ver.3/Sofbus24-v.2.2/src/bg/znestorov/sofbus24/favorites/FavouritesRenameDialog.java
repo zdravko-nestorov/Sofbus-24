@@ -60,7 +60,7 @@ public class FavouritesRenameDialog extends DialogFragment {
 		if (savedInstanceState != null) {
 			inputText = savedInstanceState.getString(BUNDLE_INPUT_TEXT);
 		} else {
-			inputText = "";
+			inputText = station.getName();
 		}
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);

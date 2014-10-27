@@ -45,6 +45,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
+import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import bg.znestorov.sofbus24.utils.activity.PopupMenu;
@@ -307,10 +308,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		StationEntity station = filteredStations.get(position);
 
 		// Add the Station Name and the Station Number
-		viewHolder.stationName.setText(station.getName());
-		viewHolder.stationNumber.setText(String.format(
-				context.getString(R.string.fav_item_station_number_text),
-				station.getNumber()));
+		viewHolder.stationName.setText(getStationName(station));
+		viewHolder.stationNumber.setText(getStationNumber(station));
 
 		// Add the image of the station from the street view asynchronously
 		if (expandedListItem) {
@@ -340,6 +339,55 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		actionsOverSettingsButton(viewHolder.settingsStation, station);
 
 		return rowView;
+	}
+
+	/**
+	 * Get the station name that will be displayed on the Favorites screen
+	 * 
+	 * @param station
+	 *            the station on the current row
+	 * @return the station name
+	 */
+	private String getStationName(StationEntity station) {
+		String stationName = station.getName();
+		VehicleTypeEnum stationType = station.getType();
+
+		if (stationType == VehicleTypeEnum.METRO
+				|| stationType == VehicleTypeEnum.METRO1
+				|| stationType == VehicleTypeEnum.METRO2) {
+			stationName = Utils.getValueAfter(station.getName(), " ").trim();
+		}
+
+		return stationName;
+	}
+
+	/**
+	 * Get the station number that will be displayed on the Favorites screen
+	 * 
+	 * @param station
+	 *            the station on the current row
+	 * @return the station number
+	 */
+	private String getStationNumber(StationEntity station) {
+		String stationNumber = station.getName();
+		VehicleTypeEnum stationType = station.getType();
+
+		switch (stationType) {
+		case METRO:
+		case METRO1:
+		case METRO2:
+			stationNumber = String.format(context
+					.getString(R.string.fav_item_metro_station_number_text),
+					station.getNumber());
+			break;
+		default:
+			stationNumber = String.format(
+					context.getString(R.string.fav_item_station_number_text),
+					station.getNumber());
+			break;
+		}
+
+		return stationNumber;
 	}
 
 	/**

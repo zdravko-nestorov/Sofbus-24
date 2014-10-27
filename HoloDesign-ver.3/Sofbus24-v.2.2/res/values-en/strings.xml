@@ -22,6 +22,7 @@
     <string name="app_internet_or_info_error">No information is found at the moment. Please check your Internet connection or try again later.</string>
     <string name="app_location_modules_error">Please turn on at least one of the device\'s modules (Network, WiFi or GPS) to detect your current location.</string>
     <string name="app_location_timeout_error">Searching for the current location took too long. Please try again.</string>
+    <string name="app_location_timeout_map_error">Searching for the current location took too long. The map will me focused on the Sofia center until you have been localized.</string>
     <string name="app_location_modules_timeout_error">Searching for the current location took too long or all localization modules are offline (Network, WiFi or GPS). Please try again or turn on any of them.</string>
     <string name="app_coordinates_error">The station could not be visualized (its coordinates are not found in the database).</string>
     <string name="app_no_station_selected_error">Please select a station from the map to be visualized using Google Street View.</string>
@@ -183,6 +184,7 @@
     <!-- Favourites Fragment -->
     <string name="fav_search_hint">Search by name or number</string>
     <string name="fav_item_station_number_text" formatted="false">Station number: %s</string>
+    <string name="fav_item_metro_station_number_text" formatted="false">Metro station snumber: %s</string>
     <string name="fav_item_rename_title">Rename</string>
     <string name="fav_item_rename_msg" formatted="false"><![CDATA[Change the station\'s name <b><i>%s (%s)</i></b> to:]]></string>
     <string name="fav_item_rename_hint">Enter a new name</string>
@@ -262,7 +264,7 @@
     <string name="metro_search_hint">Search by name or number</string>
     <string name="metro_search_tab_direction1">Route 1</string>
     <string name="metro_search_tab_direction2">Route 2</string>
-    <string name="metro_item_station_number_text" formatted="false">Station number: %s</string>
+    <string name="metro_item_station_number_text" formatted="false">Metro station number: %s</string>
     <string name="metro_item_station_number_text_sign" formatted="false">Station №%s</string>
     <string name="metro_item_empty_list" formatted="false"><![CDATA[No stations are found for <b>%s</b> in direction <b>%s</b>. Please try again with another search criteria.]]></string>
     <string name="metro_menu_map_route_loading" formatted="false"><![CDATA[Drawing the route...]]></string>

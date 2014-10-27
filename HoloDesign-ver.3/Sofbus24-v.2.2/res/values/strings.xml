@@ -23,6 +23,7 @@
     <string name="app_internet_or_info_error">В момента няма намерена информация. Моля проверете вашата интернет връзка или опитайте по-късно.</string>
     <string name="app_location_modules_error">Моля включете поне едно от устройствата (Network, WiFi или GPS), за да бъде засечено текущото ви местоположение.</string>
     <string name="app_location_timeout_error">Намирането на текущото местоположение продължи твърде дълго. Моля опитайте отново.</string>
+    <string name="app_location_timeout_map_error">Намирането на текущото местоположение продължи твърде дълго. Картата ще бъде позиционирана върху ценътра на София, докато бъдете локализирани.</string>
     <string name="app_location_modules_timeout_error">Намирането на текущото местоположение продължи твърде дълго или всички локализиращи модули са изключени (Network, WiFi или GPS). Моля опитайте отново или включете някой от тях.</string>
     <string name="app_coordinates_error">Спирката не може да бъде визуализирана (не са намерени нейните координати в базата от данни).</string>
     <string name="app_no_station_selected_error">Моля изберете спирка от картата, за да бъде визуализирана чрез режима Google Street View.</string>
@@ -188,6 +189,7 @@
     <!-- Favourites Fragment -->
     <string name="fav_search_hint">Търсене по име или номер</string>
     <string name="fav_item_station_number_text" formatted="false">Спирка номер: %s</string>
+    <string name="fav_item_metro_station_number_text" formatted="false">Метростанция номер: %s</string>
     <string name="fav_item_rename_title">Преименувай</string>
     <string name="fav_item_rename_msg" formatted="false"><![CDATA[Промени името на спирка <b><i>%s (%s)</i></b> на:]]></string>
     <string name="fav_item_rename_hint">Въведи ново име</string>
@@ -267,7 +269,7 @@
     <string name="metro_search_hint">Търсене по име или номер</string>
     <string name="metro_search_tab_direction1">Маршрут 1</string>
     <string name="metro_search_tab_direction2">Маршрут 2</string>
-    <string name="metro_item_station_number_text" formatted="false">Спирка номер: %s</string>
+    <string name="metro_item_station_number_text" formatted="false">Метростанция номер: %s</string>
     <string name="metro_item_station_number_text_sign" formatted="false">Станция №%s</string>
     <string name="metro_item_empty_list" formatted="false"><![CDATA[Няма намерени метростанции за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
     <string name="metro_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>

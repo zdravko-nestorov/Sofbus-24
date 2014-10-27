@@ -158,8 +158,15 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 							.getString(R.string.app_location_modules_error));
 				} else {
 					if (progressDialog.isShowing()) {
-						showLongToast(context
-								.getString(R.string.app_location_timeout_error));
+						// Show different message in case of ClosestStationsList
+						// and ClosestStationsMap
+						if (isClosestStationsList) {
+							showLongToast(context
+									.getString(R.string.app_location_timeout_error));
+						} else {
+							showLongToast(context
+									.getString(R.string.app_location_timeout_map_error));
+						}
 					}
 				}
 

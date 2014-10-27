@@ -27,6 +27,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
+import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import bg.znestorov.sofbus24.utils.activity.PopupMenu;
@@ -122,11 +123,14 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 
 		// Fill the data
 		StationEntity station = filteredStations.get(position);
-		viewHolder.stationIcon.setImageResource(getMetroImage(station));
-		viewHolder.stationName.setText(station.getName());
-		viewHolder.stationNumber.setText(String.format(
+		String stationName = Utils.getValueAfter(station.getName(), " ").trim();
+		String stationNumber = String.format(
 				context.getString(R.string.metro_item_station_number_text),
-				station.getNumber()));
+				station.getNumber());
+
+		viewHolder.stationIcon.setImageResource(getMetroImage(station));
+		viewHolder.stationName.setText(stationName);
+		viewHolder.stationNumber.setText(stationNumber);
 
 		// Actions over the settings button
 		actionsOverSettingsButton(viewHolder.stationSettings, station);

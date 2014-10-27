@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -64,46 +66,47 @@ public class History extends SherlockListActivity implements
 		initActionBar();
 		initLayoutFields();
 		setListAdapter();
+		setListScrollListener();
 
 		// Start an asynchrnic task to load the data from the preferences file
-		new AsyncTask<Void, Void, ArrayList<HistoryEntity>>() {
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				ActivityUtils.lockScreenOrientation(context);
+		new RetrieveHistoryOfSearches().execute();
+	}
 
-				loadingHistory.setVisibility(View.VISIBLE);
-				historyContent.setVisibility(View.INVISIBLE);
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		// Check if there is the ListView is already created
+		ListView listView = getListView();
+		if (listView != null) {
+
+			// Start an asynchrnic task to refresh the history data
+			new RetrieveHistoryOfSearches().execute();
+
+			// If there are some items in the list after the refresh, scroll the
+			// ListView to the top
+			if (historyList != null && historyList.size() > 0) {
+				listView.setSelectionFromTop(0, 0);
+			}
+		}
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		ListView listView = getListView();
+
+		if (listView != null) {
+			MenuItem historyTop = menu.findItem(R.id.action_history_top);
+			if (listView.getFirstVisiblePosition() == 0) {
+				historyTop.setVisible(false);
+			} else {
+				historyTop.setVisible(true);
 			}
 
-			@Override
-			protected ArrayList<HistoryEntity> doInBackground(Void... params) {
-				return HistoryOfSearches.getInstance(context)
-						.getHistoryOfSearches(context);
-			}
-
-			@Override
-			protected void onPostExecute(
-					ArrayList<HistoryEntity> retrievedHistory) {
-				super.onPostExecute(retrievedHistory);
-
-				loadingHistory.setVisibility(View.INVISIBLE);
-				historyContent.setVisibility(View.VISIBLE);
-
-				historyList.clear();
-				historyList.addAll(retrievedHistory);
-				historyAdapter.notifyDataSetChanged();
-
-				ActivityUtils.unlockScreenOrientation(context);
-			}
-
-			@Override
-			protected void onCancelled() {
-				super.onCancelled();
-				ActivityUtils.unlockScreenOrientation(context);
-			}
-
-		}.execute();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -220,6 +223,28 @@ public class History extends SherlockListActivity implements
 		setListAdapter(historyAdapter);
 	}
 
+	/**
+	 * Set onScrollListener over the ListView so show the return to default menu
+	 * item to be visible only if the list is scrolled
+	 */
+	private void setListScrollListener() {
+		getListView().setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, final int totalItemCount) {
+				// Declare that the options menu has changed, so should be
+				// recreated (make the system calls the method
+				// onPrepareOptionsMenu)
+				supportInvalidateOptionsMenu();
+			}
+		});
+	}
+
 	@Override
 	public void onDeleteAllHistoryClicked() {
 		HistoryOfSearches.getInstance(context).clearHistoryOfSearches();
@@ -230,6 +255,45 @@ public class History extends SherlockListActivity implements
 				context,
 				Html.fromHtml(getString(R.string.history_menu_remove_all_toast)),
 				Toast.LENGTH_SHORT).show();
+	}
+
+	private class RetrieveHistoryOfSearches extends
+			AsyncTask<Void, Void, ArrayList<HistoryEntity>> {
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			ActivityUtils.lockScreenOrientation(context);
+
+			loadingHistory.setVisibility(View.VISIBLE);
+			historyContent.setVisibility(View.INVISIBLE);
+		}
+
+		@Override
+		protected ArrayList<HistoryEntity> doInBackground(Void... params) {
+			return HistoryOfSearches.getInstance(context).getHistoryOfSearches(
+					context);
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<HistoryEntity> retrievedHistory) {
+			super.onPostExecute(retrievedHistory);
+
+			loadingHistory.setVisibility(View.INVISIBLE);
+			historyContent.setVisibility(View.VISIBLE);
+
+			historyList.clear();
+			historyList.addAll(retrievedHistory);
+			historyAdapter.notifyDataSetChanged();
+
+			ActivityUtils.unlockScreenOrientation(context);
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			ActivityUtils.unlockScreenOrientation(context);
+		}
 	}
 
 }

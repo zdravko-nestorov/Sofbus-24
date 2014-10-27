@@ -262,9 +262,8 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 								// Get the current location as previous now
 								previousLocation = currentLocation;
 
-								// Clear the map and proceed with all needed
-								// actions
-								googleMap.clear();
+								// Proceed with all needed actions when a new
+								// location is found
 								onLocationChanged(currentLocation);
 							}
 						}
@@ -319,6 +318,11 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 								// Showing the Sofia center location and zoom it
 								// in GoogleMaps
 								animateMapFocus(centerStationLocation, 13);
+
+								// Visualize the closest stations to the Sofia
+								// center location
+								new LoadStationsFromDb(context,
+										centerStationLocation, null).execute();
 							}
 						}
 					} catch (Exception e) {
@@ -352,6 +356,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 			googleMap.clear();
 			isMyLocationAlreadyFocused = false;
 			selectedMarkerLatLng = null;
+			previousLocation = null;
 
 			initGoogleMaps();
 			Toast.makeText(context, getString(R.string.cs_map_clear_info),
@@ -443,7 +448,12 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		}
 	}
 
-	// Actions on location changes
+	/**
+	 * Actions on location changes
+	 * 
+	 * @param location
+	 *            the new location
+	 */
 	private void onLocationChanged(Location location) {
 		// Showing the current location and zoom it in GoogleMaps
 		animateMapFocus(location, false);
