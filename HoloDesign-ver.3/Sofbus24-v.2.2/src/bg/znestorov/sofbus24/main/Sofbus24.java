@@ -442,11 +442,6 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			// Creating and copying the DB to the SD card (used only for testing
-			// purposes) - DO NOT UNCOMMENT
-			// StationsDatabaseUtils.generateAndCopyStationsDB(context);
-			// VehiclesDatabaseUtils.generateAndCopyStationsDB(context);
-
 			// Create the database by copying it from the assets folder to the
 			// internal memory
 			StationsDatabaseUtils.createStationsDatabase(context);

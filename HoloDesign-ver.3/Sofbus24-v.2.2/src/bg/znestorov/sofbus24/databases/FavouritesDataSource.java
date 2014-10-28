@@ -339,6 +339,35 @@ public class FavouritesDataSource {
 	}
 
 	/**
+	 * Check if a station exists in the DB
+	 * 
+	 * @param stationNumber
+	 *            the number of the input station
+	 * @return the station if it is found in the DB and null otherwise
+	 */
+	public StationEntity getStation(String stationNumber) {
+		// Selecting the row that contains the station data
+		Cursor cursor = database.query(FavouritesSQLite.TABLE_FAVOURITES,
+				allColumns, FavouritesSQLite.COLUMN_NUMBER + " = "
+						+ stationNumber, null, null, null, null);
+
+		if (cursor.getCount() > 0) {
+			// Moving the cursor to the first column of the selected row
+			cursor.moveToFirst();
+
+			// Creating station object and closing the cursor
+			StationEntity foundStation = cursorToStation(cursor);
+			cursor.close();
+
+			return foundStation;
+		} else {
+			cursor.close();
+
+			return null;
+		}
+	}
+
+	/**
 	 * Check if a station exists in the DB (according to its position)
 	 * 
 	 * @param station

@@ -8,7 +8,7 @@
 
     <!-- Specify the correct minSDK and targetSDK versions. -->
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="4"
         android:targetSdkVersion="16"
         tools:ignore="OldTargetApi" />
 
