@@ -1,0 +1,49 @@
+<resources>
+
+    <!-- Language -->
+    <string-array name="languagenChoice">
+        <item name="bg">Български</item>
+        <item name="en">English</item>
+    </string-array>
+    <string-array name="languagenChoiceValues">
+        <item name="bg">bg</item>
+        <item name="en">en</item>
+    </string-array>
+
+    <!-- Virtual Boards -->
+    <string-array name="timeType">
+        <item name="timeRemaining">Оставащо време</item>
+        <item name="timeArrival">Времена на пристигане</item>
+    </string-array>
+    <string-array name="timeTypeValues">
+        <item name="timeRemaining">timeRemaining</item>
+        <item name="timeArrival">timeArrival</item>
+    </string-array>
+    <string-array name="timeSource">
+        <item name="timeSkgt">От сайта на СКГТ</item>
+        <item name="timeSystem">Системно време</item>
+    </string-array>
+    <string-array name="timeSourceValues">
+        <item name="timeSkgt">timeSkgt</item>
+        <item name="timeSystem">timeSystem</item>
+    </string-array>
+
+    <!-- Closest stations -->
+    <string-array name="stationsRadius">
+        <item name="400">400 метра</item>
+        <item name="600">600 метра</item>
+        <item name="1000">1000 метра</item>
+        <item name="1400">1400 метра</item>
+        <item name="2000">2000 метра</item>
+        <item name="2600">2600 метра</item>
+    </string-array>
+    <string-array name="stationsRadiusValues">
+        <item name="400">400</item>
+        <item name="600">600</item>
+        <item name="1000">1000</item>
+        <item name="1400">1400</item>
+        <item name="2000">2000</item>
+        <item name="2600">2600</item>
+    </string-array>
+
+</resources>
