@@ -298,4 +298,17 @@
     <string name="history_item_station_number" formatted="false">Station number: %s</string>
     <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Search from %s (%s)</font></i>]]></string>
 
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_home">Home screen</string>
+    <string name="navigation_drawer_home_standard">Standard</string>
+    <string name="navigation_drawer_home_map">Google Map</string>
+    <string name="navigation_drawer_home_cars">SKGT vehicles</string>
+    <string name="navigation_drawer_history">History</string>
+    <string name="navigation_drawer_cs">Closest stations</string>
+    <string name="navigation_drawer_cs_map">Google Map</string>
+    <string name="navigation_drawer_cs_list">List</string>
+    <string name="navigation_drawer_options">Settings</string>
+    <string name="navigation_drawer_info">Information</string>
+    <string name="navigation_drawer_exit">Exit</string>
+
 </resources>

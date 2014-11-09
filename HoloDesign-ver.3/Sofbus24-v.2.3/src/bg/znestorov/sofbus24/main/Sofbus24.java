@@ -9,16 +9,21 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.about.Configuration;
@@ -31,6 +36,7 @@ import bg.znestorov.sofbus24.entity.HomeTabEntity;
 import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
 import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
+import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -56,6 +62,12 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
 
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerList;
+	private ActionBarDrawerToggle mDrawerToggle;
+	private NavDrawerArrayAdapter mMenuAdapter;
+	private CharSequence mTitle;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,9 +78,8 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 		globalContext = (GlobalEntity) getApplicationContext();
 		context = Sofbus24.this;
 
-		// Set up the ActionBar
-		actionBar = getSupportActionBar();
-		actionBar.setTitle(getString(R.string.app_sofbus24));
+		// Initialize the ActionBar and the NavigationDrawer
+		initNavigationDrawer();
 
 		// Get the fields in the layout
 		ViewPager sofbusViewPager = (ViewPager) findViewById(R.id.sofbus24_pager);
@@ -79,6 +90,9 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 			// Check for updates (only when the application is started for the
 			// first time)
 			Utils.checkForUpdate(context);
+
+			// Creates the configuration file
+			Configuration.createConfiguration(context);
 
 			// Retrieve the information from the DB and set up the layout fields
 			CreateDatabases createDatabases = new CreateDatabases(context,
@@ -141,6 +155,7 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 	public void onTabSelected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
 		actionsOverHomeScreen(tab.getPosition());
+		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
 	@Override
@@ -163,14 +178,13 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 		ProgressDialog progressDialog = new ProgressDialog(context);
 
 		switch (item.getItemId()) {
-		case R.id.action_recent_history:
-			Intent historyIntent;
-			if (globalContext.isPhoneDevice()) {
-				historyIntent = new Intent(context, History.class);
+		case android.R.id.home:
+			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+				mDrawerLayout.closeDrawer(mDrawerList);
 			} else {
-				historyIntent = new Intent(context, HistoryDialog.class);
+				mDrawerLayout.openDrawer(mDrawerList);
 			}
-			startActivity(historyIntent);
+
 			return true;
 		case R.id.action_closest_stations_map:
 			if (!globalContext.areServicesAvailable()) {
@@ -189,7 +203,158 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 				(new Thread(retrieveCurrentLocationTimeout)).start();
 			}
 			return true;
-		case R.id.action_closest_stations_list:
+		case R.id.action_edit_tabs:
+			Intent editTabsIntent;
+			if (globalContext.isPhoneDevice()) {
+				editTabsIntent = new Intent(context, EditTabs.class);
+			} else {
+				editTabsIntent = new Intent(context, EditTabsDialog.class);
+			}
+			startActivity(editTabsIntent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	/**
+	 * Initialize the navigation drawer
+	 */
+	private void initNavigationDrawer() {
+
+		actionBar = getSupportActionBar();
+		actionBar.setTitle(getString(R.string.app_sofbus24));
+
+		// Get the Title
+		mTitle = getTitle();
+
+		// Enable ActionBar app icon to behave as action to toggle nav
+		// drawerActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
+
+		// Generate the titles of each row
+		ArrayList<String> navigationItems = initNavigationDrawerItems();
+
+		// Locate the DrawerLayout in the layout
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer_layout);
+		mDrawerLayout.setDrawerShadow(R.drawable.ic_drawer_shadow,
+				GravityCompat.START);
+
+		// Locate ListView in the layout
+		mDrawerList = (ListView) findViewById(R.id.navigation_drawer_listview);
+		mMenuAdapter = new NavDrawerArrayAdapter(context, navigationItems);
+		mDrawerList.setAdapter(mMenuAdapter);
+		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+		// ActionBarDrawerToggle ties together the the proper interactions
+		// between the sliding drawer and the action bar app icon
+		mDrawerToggle = new ActionBarDrawerToggle(context, mDrawerLayout,
+				R.drawable.ic_drawer, R.string.app_navigation_drawer_open,
+				R.string.app_navigation_drawer_close) {
+
+			public void onDrawerClosed(View view) {
+				super.onDrawerClosed(view);
+			}
+
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+			}
+		};
+
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+	}
+
+	private ArrayList<String> initNavigationDrawerItems() {
+
+		ArrayList<String> navigationItems = new ArrayList<String>();
+
+		navigationItems.add(getString(R.string.navigation_drawer_home));
+		navigationItems
+				.add(getString(R.string.navigation_drawer_home_standard));
+		navigationItems.add(getString(R.string.navigation_drawer_home_map));
+		navigationItems.add(getString(R.string.navigation_drawer_home_cars));
+		navigationItems.add(getString(R.string.navigation_drawer_history));
+		navigationItems.add(getString(R.string.navigation_drawer_cs));
+		navigationItems.add(getString(R.string.navigation_drawer_cs_map));
+		navigationItems.add(getString(R.string.navigation_drawer_cs_list));
+		navigationItems.add(getString(R.string.navigation_drawer_options));
+		navigationItems.add(getString(R.string.navigation_drawer_info));
+		navigationItems.add(getString(R.string.navigation_drawer_exit));
+
+		return navigationItems;
+	}
+
+	/**
+	 * Class responsible for registring user clicks over the navigation drawer
+	 */
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			selectItem(position);
+		}
+	}
+
+	/**
+	 * Define the user actions on navigation drawer item click
+	 * 
+	 * @param position
+	 *            the position of the click
+	 */
+	private void selectItem(int position) {
+
+		ProgressDialog progressDialog = new ProgressDialog(context);
+
+		mDrawerList.setItemChecked(position, true);
+		mDrawerLayout.closeDrawer(mDrawerList);
+
+		switch (position) {
+		case 0:
+			break;
+		case 1:
+			mViewPager.setCurrentItem(0);
+			break;
+		case 2:
+			Intent closestStationsMapIntent = new Intent(context,
+					ClosestStationsMap.class);
+			context.startActivity(closestStationsMapIntent);
+			break;
+		case 3:
+			// TODO Set the action to this item
+			break;
+		case 4:
+			Intent historyIntent;
+			if (globalContext.isPhoneDevice()) {
+				historyIntent = new Intent(context, History.class);
+			} else {
+				historyIntent = new Intent(context, HistoryDialog.class);
+			}
+			startActivity(historyIntent);
+			break;
+		case 5:
+			// TODO Set an action
+			break;
+		case 6:
+			if (!globalContext.areServicesAvailable()) {
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
+						"GooglePlayServicesErrorDialog");
+			} else {
+				progressDialog.setMessage(context
+						.getString(R.string.cs_list_loading_current_location));
+
+				RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
+						context, false, progressDialog);
+				retrieveCurrentLocation.execute();
+				RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
+						retrieveCurrentLocation);
+				(new Thread(retrieveCurrentLocationTimeout)).start();
+			}
+			break;
+		case 7:
 			progressDialog
 					.setMessage(String
 							.format(getString(R.string.cs_list_loading_current_location)));
@@ -200,8 +365,8 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 			RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
 					retrieveCurrentLocation);
 			(new Thread(retrieveCurrentLocationTimeout)).start();
-			return true;
-		case R.id.action_settings:
+			break;
+		case 8:
 			Intent preferencesIntent;
 			if (globalContext.isPhoneDevice()) {
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -220,17 +385,8 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 				}
 			}
 			startActivity(preferencesIntent);
-			return true;
-		case R.id.action_edit_tabs:
-			Intent editTabsIntent;
-			if (globalContext.isPhoneDevice()) {
-				editTabsIntent = new Intent(context, EditTabs.class);
-			} else {
-				editTabsIntent = new Intent(context, EditTabsDialog.class);
-			}
-			startActivity(editTabsIntent);
-			return true;
-		case R.id.action_about:
+			break;
+		case 9:
 			Intent aboutIntent;
 			if (globalContext.isPhoneDevice()) {
 				aboutIntent = new Intent(context, About.class);
@@ -238,10 +394,34 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 				aboutIntent = new Intent(context, AboutDialog.class);
 			}
 			startActivity(aboutIntent);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			break;
+		case 10:
+			ActivityUtils.closeApplication(context);
+			break;
 		}
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(
+			android.content.res.Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+
+		// Pass any configuration change to the drawer toggles
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public void setTitle(CharSequence title) {
+		mTitle = title;
+		getSupportActionBar().setTitle(mTitle);
 	}
 
 	/**
@@ -249,8 +429,6 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 	 * SectionsPagerAdapter)
 	 */
 	private void initLayoutFields() {
-		// Creates the configuration file
-		Configuration.createConfiguration(context);
 
 		// Set the tabs to the ActionBar
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

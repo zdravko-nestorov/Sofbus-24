@@ -569,7 +569,7 @@ public class ActivityUtils {
 	 *            the dip size
 	 * @return the pixel size
 	 */
-	public static int spToPx(Activity context, int dp) {
+	public static int dpToPx(Activity context, int dp) {
 		float density = context.getResources().getDisplayMetrics().density;
 		return Math.round((float) dp * density);
 	}

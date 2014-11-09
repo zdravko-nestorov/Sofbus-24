@@ -4,6 +4,8 @@
     <!-- Global labels -->
     <string name="app_name">Софбус 24</string>
     <string name="app_sofbus24">Софбус 24</string>
+    <string name="app_navigation_drawer_open">Отвори</string>
+    <string name="app_navigation_drawer_close">Затвори</string>
     <string name="app_img_empty_content_description" />
     <string name="app_button_ok">OK</string>
     <string name="app_button_save">Запази</string>
@@ -302,5 +304,18 @@
     <string name="history_type_metro">Метро</string>
     <string name="history_item_station_number" formatted="false">Спирка номер: %s</string>
     <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Търсене от %s (%s)</font></i>]]></string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_home">Начален екран</string>
+    <string name="navigation_drawer_home_standard">Стандартен</string>
+    <string name="navigation_drawer_home_map">Карта</string>
+    <string name="navigation_drawer_home_cars">Коли на СКГТ</string>
+    <string name="navigation_drawer_history">История</string>
+    <string name="navigation_drawer_cs">Най-близки спирки</string>
+    <string name="navigation_drawer_cs_map">Карта</string>
+    <string name="navigation_drawer_cs_list">Списък</string>
+    <string name="navigation_drawer_options">Настройки</string>
+    <string name="navigation_drawer_info">Информация</string>
+    <string name="navigation_drawer_exit">Изход</string>
 
 </resources>

@@ -1,32 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <!-- Recent History -->
+    <!-- Closest stations Map -->
     <item
-        android:id="@+id/action_recent_history"
-        android:icon="@android:drawable/ic_menu_recent_history"
-        android:showAsAction="always"
-        android:title="@string/action_recent_history"/>
-
-    <!-- Closest stations -->
-    <item
-        android:id="@+id/action_closest_stations"
+        android:id="@+id/action_closest_stations_map"
         android:icon="@android:drawable/ic_menu_mapmode"
         android:showAsAction="always"
-        android:title="@string/action_closest_stations">
-        <menu>
-            <item
-                android:id="@+id/action_closest_stations_map"
-                android:icon="@android:drawable/ic_menu_myplaces"
-                android:showAsAction="never"
-                android:title="@string/action_closest_stations_map"/>
-            <item
-                android:id="@+id/action_closest_stations_list"
-                android:icon="@android:drawable/ic_menu_sort_by_size"
-                android:showAsAction="never"
-                android:title="@string/action_closest_stations_list"/>
-        </menu>
-    </item>
+        android:title="@string/action_closest_stations_map"/>
 
     <!-- More -->
     <item
@@ -51,20 +31,10 @@
                 android:showAsAction="never"
                 android:title="@string/action_metro_map_route"/>
             <item
-                android:id="@+id/action_settings"
-                android:icon="@android:drawable/ic_menu_preferences"
-                android:showAsAction="never"
-                android:title="@string/action_settints"/>
-            <item
                 android:id="@+id/action_edit_tabs"
                 android:icon="@android:drawable/ic_menu_edit"
                 android:showAsAction="never"
                 android:title="@string/action_edit_tabs"/>
-            <item
-                android:id="@+id/action_about"
-                android:icon="@android:drawable/ic_menu_info_details"
-                android:showAsAction="never"
-                android:title="@string/action_about"/>
         </menu>
     </item>
 
