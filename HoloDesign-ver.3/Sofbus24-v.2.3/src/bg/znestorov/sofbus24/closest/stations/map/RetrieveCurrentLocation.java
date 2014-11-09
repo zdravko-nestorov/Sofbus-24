@@ -9,11 +9,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.main.ClosestStationsList;
 import bg.znestorov.sofbus24.main.ClosestStationsListDialog;
@@ -314,19 +312,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	 *            the message of the toast
 	 */
 	private void showLongToast(String message) {
-		final Toast registrationToast = Toast.makeText(context, message,
-				Toast.LENGTH_SHORT);
-		registrationToast.show();
-
-		new CountDownTimer(3000, 1000) {
-			public void onTick(long millisUntilFinished) {
-				registrationToast.show();
-			}
-
-			public void onFinish() {
-				registrationToast.show();
-			}
-		}.start();
+		ActivityUtils.showLongToast(context, message, 3000, 1000);
 	}
 
 	/**

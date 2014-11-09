@@ -36,9 +36,9 @@
     <string name="app_toast_remove_favourites" formatted="false"><![CDATA[The station <b><i>%s (%s)</b></i> was successfully removed from <b>Favorites</b>.]]></string>
     <string name="app_toast_rename_favourites" formatted="false"><![CDATA[The station <b><i>%s (%s)</b></i> was successfully renamed to <b><i>%s (%s)</b></i>.]]></string>
     <string name="app_google_play_title">Google Play services</string>
-    <string name="app_google_play_msg">Google Play services, which Sofbus 24 uses to show the Google Maps, are not supported by your device. Please, install them to move on.</string>
+    <string name="app_google_play_msg">Google Play services, which Sofbus 24 uses to show the Google Maps, are not supported by your device. Please install them to move on.</string>
     <string name="app_google_street_view_title">Google Street View</string>
-    <string name="app_google_street_view_msg">Google Play services, which Sofbus 24 uses to show the Google Street View, are not supported by your device. Please, install them to move on.</string>
+    <string name="app_google_street_view_msg">Google Play services, which Sofbus 24 uses to show the Google Street View, are not supported by your device. Please install them to move on.</string>
 
     <!-- Action Bar -->
     <!-- Sofbus24 -->
@@ -310,5 +310,8 @@
     <string name="navigation_drawer_options">Settings</string>
     <string name="navigation_drawer_info">Information</string>
     <string name="navigation_drawer_exit">Exit</string>
+    <string name="navigation_drawer_home_screen_error" formatted="false"><![CDATA[Google Play services, which Sofbus 24 uses to show the Google Maps, are not supported by your device. Please install them so you can choose <b><i>%s</i></b> as a home screen.]]></string>
+    <string name="navigation_drawer_home_screen_remains" formatted="false"><![CDATA[The home screen remains the same - <b><i>%s</i></b> and you will be only redirected to it.]]></string>
+    <string name="navigation_drawer_home_screen_changed" formatted="false"><![CDATA[The home screen has been changed to <b><i>%s</i></b> and you will be redirected to it. It will be visualised on every application startup until it is changed again.]]></string>
 
 </resources>

@@ -110,6 +110,17 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 			viewHolder = (ViewHolder) rowView.getTag();
 		}
 
+		// Disable the click options over the category rows
+		switch (position) {
+		case 0:
+		case 5:
+			rowView.setOnClickListener(null);
+			rowView.setOnLongClickListener(null);
+			rowView.setLongClickable(false);
+			break;
+		}
+
+		// Initialize each row of the NavigationDrawer
 		initSubTagsBackground(position, viewHolder);
 		viewHolder.navDrawerImg.setImageResource(navigationItemsImgs
 				.get(position));
@@ -135,20 +146,20 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 		case 3:
 		case 6:
 		case 7:
-			viewHolder.navDrawerLayout.setBackgroundColor(0x30CBCBCB);
+			viewHolder.navDrawerLayout.setBackgroundColor(0x30BBBBBB);
 			viewHolder.navDrawerLayout.setPadding(
 					ActivityUtils.dpToPx(context, 25),
-					ActivityUtils.dpToPx(context, 8),
+					ActivityUtils.dpToPx(context, 7),
 					ActivityUtils.dpToPx(context, 10),
-					ActivityUtils.dpToPx(context, 8));
+					ActivityUtils.dpToPx(context, 7));
 			break;
 		default:
 			viewHolder.navDrawerLayout.setBackgroundColor(0xECECEC);
 			viewHolder.navDrawerLayout.setPadding(
 					ActivityUtils.dpToPx(context, 10),
-					ActivityUtils.dpToPx(context, 8),
+					ActivityUtils.dpToPx(context, 7),
 					ActivityUtils.dpToPx(context, 10),
-					ActivityUtils.dpToPx(context, 8));
+					ActivityUtils.dpToPx(context, 7));
 			break;
 		}
 	}
@@ -175,8 +186,27 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 
 		if (userHomeScreenChoice == position - 1) {
 			viewHolder.navDrawerCheckedImg.setVisibility(View.VISIBLE);
+			viewHolder.navDrawerCheckedImg
+					.setImageResource(R.drawable.ic_slide_menu_checked);
 		} else {
-			viewHolder.navDrawerCheckedImg.setVisibility(View.GONE);
+			switch (position) {
+			case 0:
+			case 5:
+				viewHolder.navDrawerCheckedImg.setVisibility(View.VISIBLE);
+				viewHolder.navDrawerCheckedImg
+						.setImageResource(R.drawable.ic_slide_menu_arrow);
+				break;
+			case 1:
+			case 2:
+			case 3:
+				viewHolder.navDrawerCheckedImg.setVisibility(View.VISIBLE);
+				viewHolder.navDrawerCheckedImg
+						.setImageResource(R.drawable.ic_slide_menu_unchecked);
+				break;
+			default:
+				viewHolder.navDrawerCheckedImg.setVisibility(View.GONE);
+				break;
+			}
 		}
 	}
 

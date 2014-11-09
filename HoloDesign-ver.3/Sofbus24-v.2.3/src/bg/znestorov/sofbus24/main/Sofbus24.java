@@ -37,6 +37,7 @@ import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
 import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
+import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -67,6 +68,7 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 	private ActionBarDrawerToggle mDrawerToggle;
 	private NavDrawerArrayAdapter mMenuAdapter;
 	private CharSequence mTitle;
+	private ArrayList<String> navigationItems;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +101,7 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 					sofbusViewPager, sofbusLoading, sofbusRetry);
 			createDatabases.execute();
 		} else {
-			actionsOnPostExecute(sofbusViewPager, sofbusLoading, sofbusRetry);
-			initLayoutFields();
+			actionsAfterAsyncFinish(sofbusViewPager, sofbusLoading, sofbusRetry);
 		}
 	}
 
@@ -187,21 +188,8 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 
 			return true;
 		case R.id.action_closest_stations_map:
-			if (!globalContext.areServicesAvailable()) {
-				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
-				googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
-						"GooglePlayServicesErrorDialog");
-			} else {
-				progressDialog.setMessage(context
-						.getString(R.string.cs_list_loading_current_location));
+			startClosestStationsMap(progressDialog, false);
 
-				RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-						context, false, progressDialog);
-				retrieveCurrentLocation.execute();
-				RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
-						retrieveCurrentLocation);
-				(new Thread(retrieveCurrentLocationTimeout)).start();
-			}
 			return true;
 		case R.id.action_edit_tabs:
 			Intent editTabsIntent;
@@ -210,7 +198,9 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 			} else {
 				editTabsIntent = new Intent(context, EditTabsDialog.class);
 			}
+
 			startActivity(editTabsIntent);
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -234,7 +224,7 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 		actionBar.setHomeButtonEnabled(true);
 
 		// Generate the titles of each row
-		ArrayList<String> navigationItems = initNavigationDrawerItems();
+		navigationItems = initNavigationDrawerItems();
 
 		// Locate the DrawerLayout in the layout
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer_layout);
@@ -307,6 +297,8 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 	private void selectItem(int position) {
 
 		ProgressDialog progressDialog = new ProgressDialog(context);
+		int userHomeScreen = NavDrawerHomeScreenPreferences
+				.getUserHomeScreenChoice(context);
 
 		mDrawerList.setItemChecked(position, true);
 		mDrawerLayout.closeDrawer(mDrawerList);
@@ -315,15 +307,22 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 		case 0:
 			break;
 		case 1:
-			mViewPager.setCurrentItem(0);
+			if (isHomeScreenChanged(userHomeScreen, position)) {
+				mViewPager.setCurrentItem(0);
+			}
+
 			break;
 		case 2:
-			Intent closestStationsMapIntent = new Intent(context,
-					ClosestStationsMap.class);
-			context.startActivity(closestStationsMapIntent);
+			if (isHomeScreenChanged(userHomeScreen, position)) {
+				startClosestStationsMap(progressDialog, true);
+			}
+
 			break;
 		case 3:
-			// TODO Set the action to this item
+			if (isHomeScreenChanged(userHomeScreen, position)) {
+				// TODO Set the action to this item
+			}
+
 			break;
 		case 4:
 			Intent historyIntent;
@@ -338,33 +337,10 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 			// TODO Set an action
 			break;
 		case 6:
-			if (!globalContext.areServicesAvailable()) {
-				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
-				googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
-						"GooglePlayServicesErrorDialog");
-			} else {
-				progressDialog.setMessage(context
-						.getString(R.string.cs_list_loading_current_location));
-
-				RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-						context, false, progressDialog);
-				retrieveCurrentLocation.execute();
-				RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
-						retrieveCurrentLocation);
-				(new Thread(retrieveCurrentLocationTimeout)).start();
-			}
+			startClosestStationsMap(progressDialog, false);
 			break;
 		case 7:
-			progressDialog
-					.setMessage(String
-							.format(getString(R.string.cs_list_loading_current_location)));
-
-			RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-					context, true, progressDialog);
-			retrieveCurrentLocation.execute();
-			RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
-					retrieveCurrentLocation);
-			(new Thread(retrieveCurrentLocationTimeout)).start();
+			startClosestStationsList(progressDialog);
 			break;
 		case 8:
 			Intent preferencesIntent;
@@ -399,6 +375,103 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 			ActivityUtils.closeApplication(context);
 			break;
 		}
+	}
+
+	/**
+	 * Show a long toast about the changed home screen and set the change in the
+	 * preference file
+	 * 
+	 * @param userHomeScreen
+	 *            the current home screen
+	 * @param userChoice
+	 *            the user choice
+	 * 
+	 * @return if the home screen can be changed
+	 */
+	private boolean isHomeScreenChanged(int userHomeScreen, int userChoice) {
+
+		boolean isHomeScreenChanged = true;
+		String homeScreenName = navigationItems.get(userChoice);
+
+		if (userChoice == 2 && !globalContext.areServicesAvailable()) {
+			ActivityUtils.showLongToast(context, String.format(
+					getString(R.string.navigation_drawer_home_screen_error),
+					homeScreenName), 6000, 1000);
+
+			isHomeScreenChanged = false;
+		} else {
+			if (userHomeScreen == userChoice - 1) {
+				ActivityUtils
+						.showLongToast(
+								context,
+								String.format(
+										getString(R.string.navigation_drawer_home_screen_remains),
+										homeScreenName), 5000, 1000);
+			} else {
+				NavDrawerHomeScreenPreferences.setUserChoice(context,
+						userChoice - 1);
+				ActivityUtils
+						.showLongToast(
+								context,
+								String.format(
+										getString(R.string.navigation_drawer_home_screen_changed),
+										homeScreenName), 5500, 1000);
+			}
+		}
+
+		return isHomeScreenChanged;
+	}
+
+	/**
+	 * Start the ClosestStationsMap activity
+	 * 
+	 * @param progressDialog
+	 *            the progress dialog
+	 * @param isDirectStart
+	 *            check if we should check for the current location or just
+	 *            start the map activity
+	 */
+	private void startClosestStationsMap(ProgressDialog progressDialog,
+			boolean isDirectStart) {
+		if (!globalContext.areServicesAvailable()) {
+			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+			googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
+					"GooglePlayServicesErrorDialog");
+		} else {
+			if (isDirectStart) {
+				Intent closestStationsMapIntent = new Intent(context,
+						ClosestStationsMap.class);
+				context.startActivity(closestStationsMapIntent);
+			} else {
+				progressDialog.setMessage(context
+						.getString(R.string.cs_list_loading_current_location));
+
+				RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
+						context, false, progressDialog);
+				retrieveCurrentLocation.execute();
+				RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
+						retrieveCurrentLocation);
+				(new Thread(retrieveCurrentLocationTimeout)).start();
+			}
+		}
+	}
+
+	/**
+	 * Start the ClosestStationsList activity
+	 * 
+	 * @param progressDialog
+	 *            the progress dialog
+	 */
+	private void startClosestStationsList(ProgressDialog progressDialog) {
+		progressDialog.setMessage(String
+				.format(getString(R.string.cs_list_loading_current_location)));
+
+		RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
+				context, true, progressDialog);
+		retrieveCurrentLocation.execute();
+		RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
+				retrieveCurrentLocation);
+		(new Thread(retrieveCurrentLocationTimeout)).start();
 	}
 
 	@Override
@@ -628,6 +701,8 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 
 		@Override
 		protected void onPostExecute(Void result) {
+			startHomeScreen();
+
 			LoadStartingData loadStartingData = new LoadStartingData(context,
 					sofbusViewPager, sofbusLoading, sofbusRetry);
 			loadStartingData.execute();
@@ -693,8 +768,7 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 
 		@Override
 		protected void onPostExecute(Void result) {
-			actionsOnPostExecute(sofbusViewPager, sofbusLoading, sofbusRetry);
-			initLayoutFields();
+			actionsAfterAsyncFinish(sofbusViewPager, sofbusLoading, sofbusRetry);
 		}
 
 		@Override
@@ -769,6 +843,36 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 		sofbusViewPager.setVisibility(View.GONE);
 		sofbusLoading.setVisibility(View.GONE);
 		sofbusRetry.setVisibility(View.VISIBLE);
+	}
+
+	private void startHomeScreen() {
+
+		int userHomeScreenChoice = NavDrawerHomeScreenPreferences
+				.getUserHomeScreenChoice(context);
+		switch (userHomeScreenChoice) {
+		case 1:
+			startClosestStationsMap(new ProgressDialog(context), true);
+			break;
+		case 2:
+			// TODO: Start the DroidTrans
+			break;
+		}
+	}
+
+	/**
+	 * Actions after the AsyncTask is finished
+	 * 
+	 * @param sofbusViewPager
+	 *            the ViewPager of the Layout
+	 * @param sofbusLoading
+	 *            the ProgressBar of the Layout
+	 * @param sofbusRetry
+	 *            the ImageButton of the Layout
+	 */
+	private void actionsAfterAsyncFinish(ViewPager sofbusViewPager,
+			ProgressBar sofbusLoading, ImageButton sofbusRetry) {
+		actionsOnPostExecute(sofbusViewPager, sofbusLoading, sofbusRetry);
+		initLayoutFields();
 	}
 
 	/**

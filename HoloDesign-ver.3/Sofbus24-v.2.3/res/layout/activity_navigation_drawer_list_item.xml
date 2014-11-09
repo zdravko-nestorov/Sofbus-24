@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
-    android:paddingBottom="8dp"
+    android:paddingBottom="7dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:paddingTop="8dp" >
+    android:paddingTop="7dp" >
 
     <ImageView
         android:id="@+id/navigation_drawer_list_img"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
         android:contentDescription="@string/app_img_empty_content_description"
         android:scaleType="fitCenter" />
 
@@ -27,7 +27,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@android:color/black"
-        android:textSize="16sp" />
+        android:textSize="15sp" />
 
     <ImageView
         android:id="@id/navigation_drawer_list_home_img"
@@ -38,7 +38,6 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/app_img_empty_content_description"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_slide_menu_checked"
         android:visibility="gone" />
 
 </RelativeLayout>

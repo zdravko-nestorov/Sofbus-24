@@ -305,14 +305,17 @@ public class History extends SherlockListActivity implements
 	private boolean isListViewScrolledEnough(ListView listView) {
 		boolean isListViewScrolledEnough = false;
 
-		if (listView != null && listView.getCount() > 0) {
-			View firstListViewRow = listView.getChildAt(0);
+		try {
+			if (listView != null && listView.getCount() > 0) {
+				View firstListViewRow = listView.getChildAt(0);
 
-			int firstListViewRowHeight = firstListViewRow.getHeight();
-			int scrollY = listView.getFirstVisiblePosition()
-					* firstListViewRowHeight - firstListViewRow.getTop();
+				int firstListViewRowHeight = firstListViewRow.getHeight();
+				int scrollY = listView.getFirstVisiblePosition()
+						* firstListViewRowHeight - firstListViewRow.getTop();
 
-			isListViewScrolledEnough = scrollY >= firstListViewRowHeight / 3;
+				isListViewScrolledEnough = scrollY >= firstListViewRowHeight / 3;
+			}
+		} catch (Exception e) {
 		}
 
 		return isListViewScrolledEnough;

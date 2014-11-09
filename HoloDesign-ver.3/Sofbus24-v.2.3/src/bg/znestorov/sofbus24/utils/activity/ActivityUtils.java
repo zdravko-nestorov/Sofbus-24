@@ -18,6 +18,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
@@ -736,5 +737,54 @@ public class ActivityUtils {
 		} else {
 			actionBar.setSubtitle(subtitle);
 		}
+	}
+
+	/**
+	 * Show a long toast
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param message
+	 *            the message
+	 * @param millisInFuture
+	 *            the millis in future
+	 * @param countDownInterval
+	 *            the count down interval
+	 */
+	public static void showLongToast(Activity context, String message,
+			long millisInFuture, long countDownInterval) {
+
+		showLongToast(context, Html.fromHtml(message), millisInFuture,
+				countDownInterval);
+	}
+
+	/**
+	 * Show a long toast
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param message
+	 *            the message
+	 * @param millisInFuture
+	 *            the millis in future
+	 * @param countDownInterval
+	 *            the count down interval
+	 */
+	public static void showLongToast(Activity context, Spanned message,
+			long millisInFuture, long countDownInterval) {
+
+		final Toast registrationToast = Toast.makeText(context, message,
+				Toast.LENGTH_SHORT);
+		registrationToast.show();
+
+		new CountDownTimer(millisInFuture, countDownInterval) {
+			public void onTick(long millisUntilFinished) {
+				registrationToast.show();
+			}
+
+			public void onFinish() {
+				registrationToast.show();
+			}
+		}.start();
 	}
 }
