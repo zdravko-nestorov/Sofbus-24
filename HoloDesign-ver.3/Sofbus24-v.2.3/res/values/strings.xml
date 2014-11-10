@@ -310,8 +310,8 @@
     <string name="navigation_drawer_home_standard">Стандартен</string>
     <string name="navigation_drawer_home_map">Карта</string>
     <string name="navigation_drawer_home_cars">Коли на СКГТ</string>
+    <string name="navigation_drawer_cs">Спирки наоколо (списък)</string>
     <string name="navigation_drawer_history">История</string>
-    <string name="navigation_drawer_cs">Най-близки спирки</string>
     <string name="navigation_drawer_options">Настройки</string>
     <string name="navigation_drawer_info">Информация</string>
     <string name="navigation_drawer_exit">Изход</string>

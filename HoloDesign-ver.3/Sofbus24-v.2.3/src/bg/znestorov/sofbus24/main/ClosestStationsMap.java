@@ -317,7 +317,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 
 								// Showing the Sofia center location and zoom it
 								// in GoogleMaps
-								animateMapFocus(centerStationLocation, 13);
+								animateMapFocus(centerStationLocation, 14);
 
 								// Visualize the closest stations to the Sofia
 								// center location
