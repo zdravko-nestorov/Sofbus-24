@@ -65,15 +65,9 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_cs);
 				break;
 			case 6:
-				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_cs_map);
-				break;
-			case 7:
-				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_cs_list);
-				break;
-			case 8:
 				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_options);
 				break;
-			case 9:
+			case 7:
 				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_info);
 				break;
 			default:
@@ -110,16 +104,6 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 			viewHolder = (ViewHolder) rowView.getTag();
 		}
 
-		// Disable the click options over the category rows
-		switch (position) {
-		case 0:
-		case 5:
-			rowView.setOnClickListener(null);
-			rowView.setOnLongClickListener(null);
-			rowView.setLongClickable(false);
-			break;
-		}
-
 		// Initialize each row of the NavigationDrawer
 		initSubTagsBackground(position, viewHolder);
 		viewHolder.navDrawerImg.setImageResource(navigationItemsImgs
@@ -128,6 +112,16 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 		initCheckedImage(position, viewHolder);
 
 		return rowView;
+	}
+
+	@Override
+	public boolean isEnabled(int position) {
+		switch (position) {
+		case 0:
+			return false;
+		default:
+			return true;
+		}
 	}
 
 	/**
@@ -144,8 +138,6 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 		case 1:
 		case 2:
 		case 3:
-		case 6:
-		case 7:
 			viewHolder.navDrawerLayout.setBackgroundColor(0x30BBBBBB);
 			viewHolder.navDrawerLayout.setPadding(
 					ActivityUtils.dpToPx(context, 25),
@@ -191,7 +183,6 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 		} else {
 			switch (position) {
 			case 0:
-			case 5:
 				viewHolder.navDrawerCheckedImg.setVisibility(View.VISIBLE);
 				viewHolder.navDrawerCheckedImg
 						.setImageResource(R.drawable.ic_slide_menu_arrow);

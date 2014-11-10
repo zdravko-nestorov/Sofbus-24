@@ -266,8 +266,6 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 		navigationItems.add(getString(R.string.navigation_drawer_home_cars));
 		navigationItems.add(getString(R.string.navigation_drawer_history));
 		navigationItems.add(getString(R.string.navigation_drawer_cs));
-		navigationItems.add(getString(R.string.navigation_drawer_cs_map));
-		navigationItems.add(getString(R.string.navigation_drawer_cs_list));
 		navigationItems.add(getString(R.string.navigation_drawer_options));
 		navigationItems.add(getString(R.string.navigation_drawer_info));
 		navigationItems.add(getString(R.string.navigation_drawer_exit));
@@ -334,15 +332,9 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 			startActivity(historyIntent);
 			break;
 		case 5:
-			// TODO Set an action
-			break;
-		case 6:
-			startClosestStationsMap(progressDialog, false);
-			break;
-		case 7:
 			startClosestStationsList(progressDialog);
 			break;
-		case 8:
+		case 6:
 			Intent preferencesIntent;
 			if (globalContext.isPhoneDevice()) {
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -362,7 +354,7 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 			}
 			startActivity(preferencesIntent);
 			break;
-		case 9:
+		case 7:
 			Intent aboutIntent;
 			if (globalContext.isPhoneDevice()) {
 				aboutIntent = new Intent(context, About.class);
@@ -371,7 +363,7 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 			}
 			startActivity(aboutIntent);
 			break;
-		case 10:
+		case 8:
 			ActivityUtils.closeApplication(context);
 			break;
 		}
