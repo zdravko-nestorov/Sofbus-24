@@ -1,7 +1,6 @@
 package bg.znestorov.sofbus24.main;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -10,65 +9,45 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
 import bg.znestorov.sofbus24.databases.Sofbus24DatabaseUtils;
-import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
-import bg.znestorov.sofbus24.entity.HomeTabEntity;
-import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
-import bg.znestorov.sofbus24.metro.MetroFragment;
+import bg.znestorov.sofbus24.home.screen.Sofbus24Fragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
-import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
-import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
-import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class Sofbus24 extends SherlockFragmentActivity implements
-		ActionBar.TabListener {
+public class Sofbus24 extends SherlockFragmentActivity {
 
 	private FragmentActivity context;
 	private GlobalEntity globalContext;
 	private ActionBar actionBar;
 
-	private ViewPager mViewPager;
-	private SectionsPagerAdapter mSectionsPagerAdapter;
-	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
-
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private NavDrawerArrayAdapter mMenuAdapter;
-	private CharSequence mTitle;
 	private ArrayList<String> navigationItems;
+
+	private static final String TAG_SOFBUS_24_STANDARD_HOME_SCREEN_FRAGMENT = "SOFBUS_24_STANDARD_HOME_SCREEN_FRAGMENT";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +63,7 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 		initNavigationDrawer();
 
 		// Get the fields in the layout
-		ViewPager sofbusViewPager = (ViewPager) findViewById(R.id.sofbus24_pager);
 		ProgressBar sofbusLoading = (ProgressBar) findViewById(R.id.sofbus24_loading);
-		ImageButton sofbusRetry = (ImageButton) findViewById(R.id.sofbus24_retry);
 
 		if (savedInstanceState == null) {
 			// Check for updates (only when the application is started for the
@@ -98,75 +75,11 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 
 			// Retrieve the information from the DB and set up the layout fields
 			CreateDatabases createDatabases = new CreateDatabases(context,
-					sofbusViewPager, sofbusLoading, sofbusRetry);
+					sofbusLoading);
 			createDatabases.execute();
 		} else {
-			actionsAfterAsyncFinish(sofbusViewPager, sofbusLoading, sofbusRetry);
+			startHomeScreen(savedInstanceState, sofbusLoading);
 		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		actionsOverHomeScreen(-1);
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (mViewPager != null) {
-			int currentTab = mViewPager.getCurrentItem();
-			Fragment currentFragment = fragmentsList.get(currentTab);
-
-			MenuItem favouritesSort = menu
-					.findItem(R.id.action_favourites_sort);
-			MenuItem favouritesRemoveAll = menu
-					.findItem(R.id.action_favourites_remove_all);
-			MenuItem metroMapRoute = menu.findItem(R.id.action_metro_map_route);
-
-			if (currentFragment instanceof FavouritesStationFragment) {
-				favouritesSort.setVisible(true);
-				favouritesRemoveAll.setVisible(true);
-				metroMapRoute.setVisible(false);
-			} else if (currentFragment instanceof MetroFragment) {
-				favouritesSort.setVisible(false);
-				favouritesRemoveAll.setVisible(false);
-				metroMapRoute.setVisible(true);
-			} else {
-				favouritesSort.setVisible(false);
-				favouritesRemoveAll.setVisible(false);
-				metroMapRoute.setVisible(false);
-			}
-
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present
-		getSupportMenuInflater()
-				.inflate(R.menu.activity_sofbus24_actions, menu);
-
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public void onTabSelected(ActionBar.Tab tab,
-			FragmentTransaction fragmentTransaction) {
-		actionsOverHomeScreen(tab.getPosition());
-		mDrawerLayout.closeDrawer(mDrawerList);
-	}
-
-	@Override
-	public void onTabUnselected(ActionBar.Tab tab,
-			FragmentTransaction fragmentTransaction) {
-	}
-
-	@Override
-	public void onTabReselected(ActionBar.Tab tab,
-			FragmentTransaction fragmentTransaction) {
 	}
 
 	@Override
@@ -176,8 +89,6 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		ProgressDialog progressDialog = new ProgressDialog(context);
-
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
@@ -185,21 +96,6 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 			} else {
 				mDrawerLayout.openDrawer(mDrawerList);
 			}
-
-			return true;
-		case R.id.action_closest_stations_map:
-			startClosestStationsMap(progressDialog, false);
-
-			return true;
-		case R.id.action_edit_tabs:
-			Intent editTabsIntent;
-			if (globalContext.isPhoneDevice()) {
-				editTabsIntent = new Intent(context, EditTabs.class);
-			} else {
-				editTabsIntent = new Intent(context, EditTabsDialog.class);
-			}
-
-			startActivity(editTabsIntent);
 
 			return true;
 		default:
@@ -214,9 +110,6 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 
 		actionBar = getSupportActionBar();
 		actionBar.setTitle(getString(R.string.app_sofbus24));
-
-		// Get the Title
-		mTitle = getTitle();
 
 		// Enable ActionBar app icon to behave as action to toggle nav
 		// drawerActionBar actionBar = getActionBar();
@@ -255,6 +148,29 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 	}
 
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(
+			android.content.res.Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+
+		// Pass any configuration change to the drawer toggles
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	/**
+	 * Create a list with all items in the NavigationDrawer (each row of the
+	 * menu)
+	 * 
+	 * @return an ArrayList with all raws of the menu
+	 */
 	private ArrayList<String> initNavigationDrawerItems() {
 
 		ArrayList<String> navigationItems = new ArrayList<String>();
@@ -306,7 +222,7 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 			break;
 		case 1:
 			if (isHomeScreenChanged(userHomeScreen, position)) {
-				mViewPager.setCurrentItem(0);
+				// TODO Set the action to this item
 			}
 
 			break;
@@ -425,6 +341,7 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 	 */
 	private void startClosestStationsMap(ProgressDialog progressDialog,
 			boolean isDirectStart) {
+
 		if (!globalContext.areServicesAvailable()) {
 			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
 			googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
@@ -466,195 +383,6 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 		(new Thread(retrieveCurrentLocationTimeout)).start();
 	}
 
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		mDrawerToggle.syncState();
-	}
-
-	@Override
-	public void onConfigurationChanged(
-			android.content.res.Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-
-		// Pass any configuration change to the drawer toggles
-		mDrawerToggle.onConfigurationChanged(newConfig);
-	}
-
-	@Override
-	public void setTitle(CharSequence title) {
-		mTitle = title;
-		getSupportActionBar().setTitle(mTitle);
-	}
-
-	/**
-	 * Initialize the layout fields (ActionBar, ViewPager and
-	 * SectionsPagerAdapter)
-	 */
-	private void initLayoutFields() {
-
-		// Set the tabs to the ActionBar
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-		// Create the fragments list
-		createFragmentsList();
-
-		// Create the adapter that will return a fragment for each of the
-		// primary sections of the application
-		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());
-
-		// Set up the ViewPager with the sections adapter and load all tabs at
-		// once
-		mViewPager = (ViewPager) findViewById(R.id.sofbus24_pager);
-		mViewPager
-				.setOffscreenPageLimit(Constants.GLOBAL_PARAM_HOME_TABS_COUNT - 1);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
-
-		// When swiping between different sections, select the corresponding
-		// tab. We can also use ActionBar.Tab#select() to do this if we have
-		// a reference to the Tab.
-		mViewPager
-				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						actionBar.setSelectedNavigationItem(position);
-					}
-				});
-
-		// For each of the sections in the app, add a tab to the action bar
-		initTabs();
-	}
-
-	/**
-	 * For each of the sections in the app, add a tab to the action bar
-	 */
-	private void initTabs() {
-		if (actionBar.getTabCount() > 0) {
-			actionBar.removeAllTabs();
-		}
-
-		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-			actionBar.addTab(actionBar.newTab()
-					.setIcon(mSectionsPagerAdapter.getPageIcon(i))
-					.setTabListener(this));
-		}
-	}
-
-	/**
-	 * Create or rearrange (if already created) the FragmentsList, using the
-	 * current application config file
-	 */
-	private void createFragmentsList() {
-		// Get the application cofig file
-		ConfigEntity config = new ConfigEntity(context);
-
-		// Emtpy the fragmentsList if contains any elements
-		if (!fragmentsList.isEmpty()) {
-			fragmentsList.clear();
-		}
-
-		// Create a new ordered list with fragments (according to the
-		// configuration file)
-		for (int i = 0; i < Constants.GLOBAL_PARAM_HOME_TABS_COUNT; i++) {
-			HomeTabEntity homeTab = config.getTabByPosition(context, i);
-			if (homeTab.isTabVisible()) {
-				fragmentsList.add(getFragmentByTagName(homeTab));
-			}
-		}
-	}
-
-	/**
-	 * Get the fragment according to the given HomeTab
-	 * 
-	 * @param homeTab
-	 *            HomeTab object pointing which fragment to be choosen
-	 * @return the fragment associated to the given HomeTab
-	 */
-	private Fragment getFragmentByTagName(HomeTabEntity homeTab) {
-		Fragment fragment;
-
-		String homeTabName = homeTab.getTabName();
-		if (homeTabName.equals(getString(R.string.edit_tabs_favourites))) {
-			fragment = new FavouritesStationFragment();
-		} else if (homeTabName.equals(getString(R.string.edit_tabs_search))) {
-			fragment = new VirtualBoardsFragment();
-		} else if (homeTabName.equals(getString(R.string.edit_tabs_schedule))) {
-			fragment = new ScheduleFragment();
-		} else {
-			fragment = new MetroFragment();
-		}
-
-		return fragment;
-	}
-
-	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-	 * one of the sections/tabs/pages.
-	 */
-	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
-
-		public SectionsPagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
-
-		@Override
-		public Fragment getItem(int position) {
-			return fragmentsList.get(position);
-		}
-
-		/**
-		 * Purpose of this method is to check whether an item in the adapter
-		 * still exists in the dataset and where it should show. For each entry
-		 * in dataset, request its Fragment.
-		 * 
-		 * If the Fragment is found, return its (new) position. There's no need
-		 * to return POSITION_UNCHANGED; ViewPager handles it.
-		 * 
-		 * If the Fragment passed to this method is not found, remove all
-		 * references and let the ViewPager remove it from display by by
-		 * returning POSITION_NONE;
-		 */
-		@Override
-		public int getItemPosition(Object object) {
-			return POSITION_NONE;
-		}
-
-		@Override
-		public int getCount() {
-			return fragmentsList.size();
-		}
-
-		public Integer getPageIcon(int position) {
-			return getPageIconByTagName(fragmentsList.get(position));
-		}
-
-		/**
-		 * Get the current item page icon according to the fragment type
-		 * 
-		 * @param fragment
-		 *            the fragment set on this tab
-		 * @return the icon associated to the given fragment
-		 */
-		private int getPageIconByTagName(Fragment fragment) {
-			int pageIcon;
-
-			if (fragment instanceof FavouritesStationFragment) {
-				pageIcon = R.drawable.ic_tab_favorites;
-			} else if (fragment instanceof VirtualBoardsFragment) {
-				pageIcon = R.drawable.ic_tab_real_time;
-			} else if (fragment instanceof ScheduleFragment) {
-				pageIcon = R.drawable.ic_tab_schedule;
-			} else {
-				pageIcon = R.drawable.ic_tab_metro;
-			}
-
-			return pageIcon;
-		}
-	}
-
 	/**
 	 * Class responsible for async creation of the databases
 	 * 
@@ -665,21 +393,16 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 	public class CreateDatabases extends AsyncTask<Void, Void, Void> {
 
 		private Activity context;
-		private ViewPager sofbusViewPager;
 		private ProgressBar sofbusLoading;
-		private ImageButton sofbusRetry;
 
-		public CreateDatabases(Activity context, ViewPager sofbusViewPager,
-				ProgressBar sofbusLoading, ImageButton sofbusRetry) {
+		public CreateDatabases(Activity context, ProgressBar sofbusLoading) {
 			this.context = context;
-			this.sofbusViewPager = sofbusViewPager;
 			this.sofbusLoading = sofbusLoading;
-			this.sofbusRetry = sofbusRetry;
 		}
 
 		@Override
 		protected void onPreExecute() {
-			actionsOnPreExecute(sofbusViewPager, sofbusLoading, sofbusRetry);
+			actionsOnPreExecute(sofbusLoading);
 		}
 
 		@Override
@@ -693,10 +416,8 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 
 		@Override
 		protected void onPostExecute(Void result) {
-			startHomeScreen();
-
 			LoadStartingData loadStartingData = new LoadStartingData(context,
-					sofbusViewPager, sofbusLoading, sofbusRetry);
+					sofbusLoading);
 			loadStartingData.execute();
 		}
 
@@ -704,19 +425,9 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 		protected void onCancelled() {
 			super.onCancelled();
 
-			// Actions over the LayoutFields (which to be shown and visible)
-			actionsOnCancelled(sofbusViewPager, sofbusLoading, sofbusRetry);
-
-			// Set onClickListener to the retry button
-			sofbusRetry.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					CreateDatabases createDatabases = new CreateDatabases(
-							context, sofbusViewPager, sofbusLoading,
-							sofbusRetry);
-					createDatabases.execute();
-				}
-			});
+			CreateDatabases createDatabases = new CreateDatabases(context,
+					sofbusLoading);
+			createDatabases.execute();
 		}
 	}
 
@@ -730,21 +441,16 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 	public class LoadStartingData extends AsyncTask<Void, Void, Void> {
 
 		private Activity context;
-		private ViewPager sofbusViewPager;
 		private ProgressBar sofbusLoading;
-		private ImageButton sofbusRetry;
 
-		public LoadStartingData(Activity context, ViewPager sofbusViewPager,
-				ProgressBar sofbusLoading, ImageButton sofbusRetry) {
+		public LoadStartingData(Activity context, ProgressBar sofbusLoading) {
 			this.context = context;
-			this.sofbusViewPager = sofbusViewPager;
 			this.sofbusLoading = sofbusLoading;
-			this.sofbusRetry = sofbusRetry;
 		}
 
 		@Override
 		protected void onPreExecute() {
-			actionsOnPreExecute(sofbusViewPager, sofbusLoading, sofbusRetry);
+			actionsOnPreExecute(sofbusLoading);
 		}
 
 		@Override
@@ -760,26 +466,16 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 
 		@Override
 		protected void onPostExecute(Void result) {
-			actionsAfterAsyncFinish(sofbusViewPager, sofbusLoading, sofbusRetry);
+			startHomeScreen(null, sofbusLoading);
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
 
-			// Actions over the LayoutFields (which to be shown and visible)
-			actionsOnCancelled(sofbusViewPager, sofbusLoading, sofbusRetry);
-
-			// Set onClickListener to the retry button
-			sofbusRetry.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					LoadStartingData loadStartingData = new LoadStartingData(
-							context, sofbusViewPager, sofbusLoading,
-							sofbusRetry);
-					loadStartingData.execute();
-				}
-			});
+			LoadStartingData loadStartingData = new LoadStartingData(context,
+					sofbusLoading);
+			loadStartingData.execute();
 		}
 	}
 
@@ -787,201 +483,64 @@ public class Sofbus24 extends SherlockFragmentActivity implements
 	 * Actions over the LayoutFields (which to be shown and visible) - in
 	 * onPreExecute method of the AsyncTask
 	 * 
-	 * @param sofbusViewPager
-	 *            the ViewPager of the Layout
 	 * @param sofbusLoading
 	 *            the ProgressBar of the Layout
-	 * @param sofbusRetry
-	 *            the ImageButton of the Layout
 	 */
-	private void actionsOnPreExecute(ViewPager sofbusViewPager,
-			ProgressBar sofbusLoading, ImageButton sofbusRetry) {
-		sofbusViewPager.setVisibility(View.GONE);
+	private void actionsOnPreExecute(ProgressBar sofbusLoading) {
 		sofbusLoading.setVisibility(View.VISIBLE);
-		sofbusRetry.setVisibility(View.GONE);
 	}
 
 	/**
 	 * Actions over the LayoutFields (which to be shown and visible) - in
 	 * onPostExecute method of the AsyncTask
 	 * 
-	 * @param sofbusViewPager
-	 *            the ViewPager of the Layout
 	 * @param sofbusLoading
 	 *            the ProgressBar of the Layout
-	 * @param sofbusRetry
-	 *            the ImageButton of the Layout
 	 */
-	private void actionsOnPostExecute(ViewPager sofbusViewPager,
-			ProgressBar sofbusLoading, ImageButton sofbusRetry) {
-		sofbusViewPager.setVisibility(View.VISIBLE);
+	private void actionsOnPostExecute(ProgressBar sofbusLoading) {
 		sofbusLoading.setVisibility(View.GONE);
-		sofbusRetry.setVisibility(View.GONE);
 	}
 
 	/**
-	 * Actions over the LayoutFields (which to be shown and visible) - in
-	 * onCancelled method of the AsyncTask
+	 * Actions after the AsyncTask is finished
 	 * 
-	 * @param sofbusViewPager
-	 *            the ViewPager of the Layout
+	 * @param savedInstanceState
+	 *            the saved instance state
 	 * @param sofbusLoading
 	 *            the ProgressBar of the Layout
-	 * @param sofbusRetry
-	 *            the ImageButton of the Layout
 	 */
-	private void actionsOnCancelled(ViewPager sofbusViewPager,
-			ProgressBar sofbusLoading, ImageButton sofbusRetry) {
-		sofbusViewPager.setVisibility(View.GONE);
-		sofbusLoading.setVisibility(View.GONE);
-		sofbusRetry.setVisibility(View.VISIBLE);
-	}
+	private void startHomeScreen(Bundle savedInstanceState,
+			ProgressBar sofbusLoading) {
 
-	private void startHomeScreen() {
-
+		actionsOnPostExecute(sofbusLoading);
 		int userHomeScreenChoice = NavDrawerHomeScreenPreferences
 				.getUserHomeScreenChoice(context);
 		switch (userHomeScreenChoice) {
+		case 0:
+			Sofbus24Fragment sofbus24Fragment;
+
+			if (savedInstanceState == null) {
+				sofbus24Fragment = new Sofbus24Fragment();
+			} else {
+				sofbus24Fragment = (Sofbus24Fragment) getSupportFragmentManager()
+						.findFragmentByTag(
+								TAG_SOFBUS_24_STANDARD_HOME_SCREEN_FRAGMENT);
+			}
+
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.sofbus24_home_screen_standard,
+							sofbus24Fragment,
+							TAG_SOFBUS_24_STANDARD_HOME_SCREEN_FRAGMENT)
+					.addToBackStack(null).commit();
+
+			break;
 		case 1:
 			startClosestStationsMap(new ProgressDialog(context), true);
 			break;
 		case 2:
 			// TODO: Start the DroidTrans
 			break;
-		}
-	}
-
-	/**
-	 * Actions after the AsyncTask is finished
-	 * 
-	 * @param sofbusViewPager
-	 *            the ViewPager of the Layout
-	 * @param sofbusLoading
-	 *            the ProgressBar of the Layout
-	 * @param sofbusRetry
-	 *            the ImageButton of the Layout
-	 */
-	private void actionsAfterAsyncFinish(ViewPager sofbusViewPager,
-			ProgressBar sofbusLoading, ImageButton sofbusRetry) {
-		actionsOnPostExecute(sofbusViewPager, sofbusLoading, sofbusRetry);
-		initLayoutFields();
-	}
-
-	/**
-	 * Proceed with updating the HomeScreen if needed
-	 * 
-	 * @param tabPosition
-	 *            the tabPosition that is pressed or "-1" in case of onResume
-	 */
-	private void actionsOverHomeScreen(int tabPosition) {
-
-		// Check if this is called from "onResume(...)", so take the current
-		// active tab or from "onTabSelected(...)", so set the according menu
-		// items
-		if (tabPosition == -1) {
-			// Check if the activity has to be restarted
-			if (globalContext.isHasToRestart()) {
-				ActivityUtils.restartApplication(context);
-
-				return;
-			}
-
-			// Check if the ordering and visibility of the tabs should be
-			// changed
-			if (globalContext.isHomeScreenChanged()) {
-				// Rearrange the fragmentsList
-				createFragmentsList();
-
-				// Notify the adapter for the changes in the
-				// fragmentsList
-				mSectionsPagerAdapter.notifyDataSetChanged();
-
-				// For each of the sections in the application, add a
-				// tab to the ActionBar
-				initTabs();
-
-				// Show a message that the home screen is changed
-				Toast.makeText(context, getString(R.string.edit_tabs_toast),
-						Toast.LENGTH_SHORT).show();
-
-				// Reset to default
-				globalContext.setHomeScreenChanged(false);
-
-				return;
-			}
-
-			// Check if the view pager is already created (if the application
-			// has just started)
-			if (mViewPager != null) {
-				tabPosition = mViewPager.getCurrentItem();
-			}
-		} else {
-			// Declare that the options menu has changed, so should be recreated
-			// (make the system calls the method onPrepareOptionsMenu)
-			supportInvalidateOptionsMenu();
-
-			// When the given tab is selected, switch to the corresponding page
-			// in the ViewPager.
-			mViewPager.setCurrentItem(tabPosition);
-		}
-
-		// Get the Fragment from the fragmentsList (used to check what type is
-		// the current fragment. It doesn't store the real fragment - it will be
-		// taken from the FragmentManager)
-		if (mViewPager != null) {
-			Fragment fakeFragment = fragmentsList.get(tabPosition);
-			if (fakeFragment instanceof FavouritesStationFragment) {
-				ActivityUtils.setHomeScreenActionBarSubtitle(context,
-						actionBar, getString(R.string.edit_tabs_favourites),
-						getString(R.string.edit_tabs_favourites_pre_honeycomb));
-			} else if (fakeFragment instanceof VirtualBoardsFragment) {
-				ActivityUtils.setHomeScreenActionBarSubtitle(context,
-						actionBar, getString(R.string.edit_tabs_search),
-						getString(R.string.edit_tabs_search_pre_honeycomb));
-			} else if (fakeFragment instanceof ScheduleFragment) {
-				ActivityUtils.setHomeScreenActionBarSubtitle(context,
-						actionBar, getString(R.string.edit_tabs_schedule),
-						getString(R.string.edit_tabs_schedule_pre_honeycomb));
-			} else {
-				ActivityUtils.setHomeScreenActionBarSubtitle(context,
-						actionBar, getString(R.string.edit_tabs_metro),
-						getString(R.string.edit_tabs_metro_pre_honeycomb));
-			}
-
-			// Check if the FragmentManager is created and proceed with actions
-			// for each fragment (updates)
-			if (getSupportFragmentManager().getFragments() != null) {
-				List<Fragment> fmFragmentsList = getSupportFragmentManager()
-						.getFragments();
-
-				if (fakeFragment instanceof FavouritesStationFragment
-						&& globalContext.isFavouritesChanged()) {
-
-					// Match the fake fragment from the fragmentsList with the
-					// one from the FragmentManager
-					for (Fragment fragment : fmFragmentsList) {
-						if (fragment instanceof FavouritesStationFragment) {
-							((FavouritesStationFragment) fragment)
-									.onResumeFragment(context);
-							globalContext.setFavouritesChanged(false);
-						}
-					}
-				}
-
-				if (fakeFragment instanceof VirtualBoardsFragment
-						&& globalContext.isVbChanged()) {
-
-					// Match the fake fragment from the fragmentsList with the
-					// one from the FragmentManager
-					for (Fragment fragment : fmFragmentsList) {
-						if (fragment instanceof VirtualBoardsFragment) {
-							((VirtualBoardsFragment) fragment)
-									.onResumeFragment(context);
-							globalContext.setVbChanged(false);
-						}
-					}
-				}
-			}
 		}
 	}
 }

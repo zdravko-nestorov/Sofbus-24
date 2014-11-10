@@ -5,37 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <RelativeLayout
-        android:id="@+id/navigation_drawer_content"
+    <ProgressBar
+        android:id="@+id/sofbus24_loading"
+        style="?android:attr/progressBarStyleInverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/sofbus24_home_screen_standard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/sofbus24_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            tools:context=".Sofbus24" />
-
-        <ProgressBar
-            android:id="@+id/sofbus24_loading"
-            style="?android:attr/progressBarStyleInverse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone" />
-
-        <ImageButton
-            android:id="@+id/sofbus24_retry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/ic_action_ms_refresh"
-            android:contentDescription="@string/app_img_empty_content_description"
-            android:minHeight="@dimen/sofbus24_image_retry_height"
-            android:minWidth="@dimen/sofbus24_image_retry_width"
-            android:visibility="visible" />
-    </RelativeLayout>
+        android:layout_height="match_parent" />
 
     <ListView
         android:id="@+id/navigation_drawer_listview"
