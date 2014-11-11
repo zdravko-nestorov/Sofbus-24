@@ -23,7 +23,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.closest.stations.map.GoogleMapsRoute;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
@@ -33,8 +39,11 @@ import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.SortTypeEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
+import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
+import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
@@ -68,8 +77,9 @@ import com.google.android.gms.maps.model.PolylineOptions;
  */
 public class ClosestStationsMap extends SherlockFragmentActivity {
 
-	private Activity context;
+	private FragmentActivity context;
 	private GlobalEntity globalContext;
+	private boolean isCSMapHomeScreen;
 
 	private StationsDataSource stationsDatasource;
 	private FavouritesDataSource favouritesDatasource;
@@ -84,8 +94,16 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 	private Location previousLocation;
 	private List<Polyline> routePoylineList = new ArrayList<Polyline>();
 
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerList;
+	private ActionBarDrawerToggle mDrawerToggle;
+	private NavDrawerArrayAdapter mMenuAdapter;
+	private ArrayList<String> navigationItems;
+
 	private static final String GPS_PROVIDER = LocationManager.GPS_PROVIDER;
 	private static final String NETWORK_PROVIDER = LocationManager.NETWORK_PROVIDER;
+
+	public static final String BUNDLE_IS_CS_MAP_HOME_SCREEN = "IS CLOSEST STATIONS MAP HOME SCREEN";
 
 	/**
 	 * Indicates if my location has been already focused
@@ -163,12 +181,25 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		// StationsDatasource
 		context = ClosestStationsMap.this;
 		globalContext = (GlobalEntity) getApplicationContext();
+		isCSMapHomeScreen = getIntent().getExtras() != null ? getIntent()
+				.getExtras().getBoolean(BUNDLE_IS_CS_MAP_HOME_SCREEN, false)
+				: false;
 		stationsDatasource = new StationsDataSource(context);
 		favouritesDatasource = new FavouritesDataSource(context);
 
 		getSharedPreferencesFields();
 		initActionBar();
 		initGoogleMaps();
+
+		if (isCSMapHomeScreen) {
+			initNavigationDrawer();
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		setResult(Sofbus24.RESULT_CODE_ACTIVITY_FINISH, new Intent());
+		finish();
 	}
 
 	/**
@@ -350,7 +381,16 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			finish();
+			if (isCSMapHomeScreen) {
+				if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+					mDrawerLayout.closeDrawer(mDrawerList);
+				} else {
+					mDrawerLayout.openDrawer(mDrawerList);
+				}
+			} else {
+				finish();
+			}
+
 			return true;
 		case R.id.action_gm_map_clear:
 			googleMap.clear();
@@ -893,6 +933,77 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 			RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
 					context, progressDialog, station);
 			retrieveMetroSchedule.execute();
+		}
+	}
+
+	/**
+	 * Initialize the navigation drawer
+	 */
+	private void initNavigationDrawer() {
+
+		actionBar = getSupportActionBar();
+		actionBar.setTitle(getString(R.string.app_sofbus24));
+
+		// Enable ActionBar app icon to behave as action to toggle nav
+		// drawerActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
+
+		// Generate the titles of each row
+		navigationItems = Utils.initNavigationDrawerItems(context);
+
+		// Locate the DrawerLayout in the layout
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer_layout);
+		mDrawerLayout.setDrawerShadow(R.drawable.ic_drawer_shadow,
+				GravityCompat.START);
+
+		// Locate ListView in the layout
+		mDrawerList = (ListView) findViewById(R.id.navigation_drawer_listview);
+		mMenuAdapter = new NavDrawerArrayAdapter(context, navigationItems);
+		mDrawerList.setAdapter(mMenuAdapter);
+		mDrawerList.setOnItemClickListener(new NavDrawerHelper(context, null,
+				null, mDrawerLayout, mDrawerList, navigationItems)
+				.getDrawerItemClickListener());
+
+		// ActionBarDrawerToggle ties together the the proper interactions
+		// between the sliding drawer and the action bar app icon
+		mDrawerToggle = new ActionBarDrawerToggle(context, mDrawerLayout,
+				R.drawable.ic_drawer, R.string.app_navigation_drawer_open,
+				R.string.app_navigation_drawer_close) {
+
+			@Override
+			public void onDrawerClosed(View view) {
+				super.onDrawerClosed(view);
+			}
+
+			@Override
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				mMenuAdapter.notifyDataSetChanged();
+			}
+		};
+
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		if (mDrawerToggle != null) {
+			mDrawerToggle.syncState();
+		}
+	}
+
+	@Override
+	public void onConfigurationChanged(
+			android.content.res.Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+
+		// Pass any configuration change to the drawer toggles
+		if (mDrawerToggle != null) {
+			mDrawerToggle.onConfigurationChanged(newConfig);
 		}
 	}
 

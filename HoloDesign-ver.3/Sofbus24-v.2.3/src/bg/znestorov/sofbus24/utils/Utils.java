@@ -1,6 +1,7 @@
 package bg.znestorov.sofbus24.utils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -622,6 +623,37 @@ public class Utils {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Create a list with all items in the NavigationDrawer (each row of the
+	 * menu)
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * 
+	 * @return an ArrayList with all raws of the menu
+	 */
+	public static ArrayList<String> initNavigationDrawerItems(Activity context) {
+
+		ArrayList<String> navigationItems = new ArrayList<String>();
+
+		navigationItems.add(context.getString(R.string.navigation_drawer_home));
+		navigationItems.add(context
+				.getString(R.string.navigation_drawer_home_standard));
+		navigationItems.add(context
+				.getString(R.string.navigation_drawer_home_map));
+		navigationItems.add(context
+				.getString(R.string.navigation_drawer_home_cars));
+		navigationItems.add(context.getString(R.string.navigation_drawer_cs));
+		navigationItems.add(context
+				.getString(R.string.navigation_drawer_history));
+		navigationItems.add(context
+				.getString(R.string.navigation_drawer_options));
+		navigationItems.add(context.getString(R.string.navigation_drawer_info));
+		navigationItems.add(context.getString(R.string.navigation_drawer_exit));
+
+		return navigationItems;
 	}
 
 }

@@ -6,24 +6,21 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import bg.znestorov.sofbus24.about.Configuration;
-import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
-import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
 import bg.znestorov.sofbus24.databases.Sofbus24DatabaseUtils;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.home.screen.Sofbus24Fragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
+import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
 import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -48,6 +45,10 @@ public class Sofbus24 extends SherlockFragmentActivity {
 	private NavDrawerArrayAdapter mMenuAdapter;
 	private ArrayList<String> navigationItems;
 
+	public static final int REQUEST_CODE_SOFBUS_24 = 0;
+	public static final int RESULT_CODE_ACTIVITY_NEW = 1;
+	public static final int RESULT_CODE_ACTIVITY_FINISH = 2;
+
 	private static final String TAG_SOFBUS_24_STANDARD_HOME_SCREEN_FRAGMENT = "SOFBUS_24_STANDARD_HOME_SCREEN_FRAGMENT";
 
 	@Override
@@ -61,11 +62,11 @@ public class Sofbus24 extends SherlockFragmentActivity {
 		globalContext = (GlobalEntity) getApplicationContext();
 		this.savedInstanceState = savedInstanceState;
 
-		// Initialize the ActionBar and the NavigationDrawer
-		initNavigationDrawer();
-
 		// Get the fields in the layout
 		ProgressBar sofbusLoading = (ProgressBar) findViewById(R.id.sofbus24_loading);
+
+		// Initialize the ActionBar and the NavigationDrawer
+		initNavigationDrawer(sofbusLoading);
 
 		if (savedInstanceState == null) {
 			// Check for updates (only when the application is started for the
@@ -80,7 +81,25 @@ public class Sofbus24 extends SherlockFragmentActivity {
 					sofbusLoading);
 			createDatabases.execute();
 		} else {
-			startHomeScreen(savedInstanceState, sofbusLoading);
+			actionsOnPostExecute(sofbusLoading);
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+
+		ProgressBar sofbusLoading = (ProgressBar) findViewById(R.id.sofbus24_loading);
+
+		if (requestCode == REQUEST_CODE_SOFBUS_24) {
+			switch (resultCode) {
+			case RESULT_CODE_ACTIVITY_NEW:
+				startHomeScreen(savedInstanceState, sofbusLoading);
+				break;
+			case RESULT_CODE_ACTIVITY_FINISH:
+				finish();
+				break;
+			}
 		}
 	}
 
@@ -107,8 +126,11 @@ public class Sofbus24 extends SherlockFragmentActivity {
 
 	/**
 	 * Initialize the navigation drawer
+	 * 
+	 * @param sofbusLoading
+	 *            the loading of the Sofbus24 startup
 	 */
-	private void initNavigationDrawer() {
+	private void initNavigationDrawer(ProgressBar sofbusLoading) {
 
 		actionBar = getSupportActionBar();
 		actionBar.setTitle(getString(R.string.app_sofbus24));
@@ -119,7 +141,7 @@ public class Sofbus24 extends SherlockFragmentActivity {
 		actionBar.setHomeButtonEnabled(true);
 
 		// Generate the titles of each row
-		navigationItems = initNavigationDrawerItems();
+		navigationItems = Utils.initNavigationDrawerItems(context);
 
 		// Locate the DrawerLayout in the layout
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer_layout);
@@ -130,7 +152,9 @@ public class Sofbus24 extends SherlockFragmentActivity {
 		mDrawerList = (ListView) findViewById(R.id.navigation_drawer_listview);
 		mMenuAdapter = new NavDrawerArrayAdapter(context, navigationItems);
 		mDrawerList.setAdapter(mMenuAdapter);
-		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+		mDrawerList.setOnItemClickListener(new NavDrawerHelper(context,
+				savedInstanceState, sofbusLoading, mDrawerLayout, mDrawerList,
+				navigationItems).getDrawerItemClickListener());
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
@@ -138,12 +162,15 @@ public class Sofbus24 extends SherlockFragmentActivity {
 				R.drawable.ic_drawer, R.string.app_navigation_drawer_open,
 				R.string.app_navigation_drawer_close) {
 
+			@Override
 			public void onDrawerClosed(View view) {
 				super.onDrawerClosed(view);
 			}
 
+			@Override
 			public void onDrawerOpened(View drawerView) {
 				super.onDrawerOpened(drawerView);
+				mMenuAdapter.notifyDataSetChanged();
 			}
 		};
 
@@ -168,213 +195,28 @@ public class Sofbus24 extends SherlockFragmentActivity {
 	}
 
 	/**
-	 * Create a list with all items in the NavigationDrawer (each row of the
-	 * menu)
-	 * 
-	 * @return an ArrayList with all raws of the menu
-	 */
-	private ArrayList<String> initNavigationDrawerItems() {
-
-		ArrayList<String> navigationItems = new ArrayList<String>();
-
-		navigationItems.add(getString(R.string.navigation_drawer_home));
-		navigationItems
-				.add(getString(R.string.navigation_drawer_home_standard));
-		navigationItems.add(getString(R.string.navigation_drawer_home_map));
-		navigationItems.add(getString(R.string.navigation_drawer_home_cars));
-		navigationItems.add(getString(R.string.navigation_drawer_cs));
-		navigationItems.add(getString(R.string.navigation_drawer_history));
-		navigationItems.add(getString(R.string.navigation_drawer_options));
-		navigationItems.add(getString(R.string.navigation_drawer_info));
-		navigationItems.add(getString(R.string.navigation_drawer_exit));
-
-		return navigationItems;
-	}
-
-	/**
-	 * Class responsible for registring user clicks over the navigation drawer
-	 */
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			selectItem(position);
-		}
-	}
-
-	/**
-	 * Define the user actions on navigation drawer item click
-	 * 
-	 * @param position
-	 *            the position of the click
-	 */
-	private void selectItem(int position) {
-
-		ProgressDialog progressDialog = new ProgressDialog(context);
-		ProgressBar sofbusLoading = (ProgressBar) findViewById(R.id.sofbus24_loading);
-
-		int userHomeScreen = NavDrawerHomeScreenPreferences
-				.getUserHomeScreenChoice(context);
-
-		mDrawerList.setItemChecked(position, true);
-		mDrawerLayout.closeDrawer(mDrawerList);
-
-		switch (position) {
-		case 0:
-			break;
-		case 1:
-		case 2:
-		case 3:
-			if (isHomeScreenChanged(userHomeScreen, position)) {
-				startHomeScreen(savedInstanceState, sofbusLoading);
-			}
-
-			break;
-		case 4:
-			startClosestStationsList(progressDialog);
-			break;
-		case 5:
-			Intent historyIntent;
-			if (globalContext.isPhoneDevice()) {
-				historyIntent = new Intent(context, History.class);
-			} else {
-				historyIntent = new Intent(context, HistoryDialog.class);
-			}
-			startActivity(historyIntent);
-			break;
-		case 6:
-			Intent preferencesIntent;
-			if (globalContext.isPhoneDevice()) {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					preferencesIntent = new Intent(context, Preferences.class);
-				} else {
-					preferencesIntent = new Intent(context,
-							PreferencesPreHoneycomb.class);
-				}
-			} else {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					preferencesIntent = new Intent(context,
-							PreferencesDialog.class);
-				} else {
-					preferencesIntent = new Intent(context,
-							PreferencesPreHoneycombDialog.class);
-				}
-			}
-			startActivity(preferencesIntent);
-			break;
-		case 7:
-			Intent aboutIntent;
-			if (globalContext.isPhoneDevice()) {
-				aboutIntent = new Intent(context, About.class);
-			} else {
-				aboutIntent = new Intent(context, AboutDialog.class);
-			}
-			startActivity(aboutIntent);
-			break;
-		case 8:
-			ActivityUtils.closeApplication(context);
-			break;
-		}
-	}
-
-	/**
-	 * Show a long toast about the changed home screen and set the change in the
-	 * preference file
-	 * 
-	 * @param userHomeScreen
-	 *            the current home screen
-	 * @param userChoice
-	 *            the user choice
-	 * 
-	 * @return if the home screen can be changed
-	 */
-	private boolean isHomeScreenChanged(int userHomeScreen, int userChoice) {
-
-		boolean isHomeScreenChanged = true;
-		String homeScreenName = navigationItems.get(userChoice);
-
-		if (userChoice == 2 && !globalContext.areServicesAvailable()) {
-			ActivityUtils.showLongToast(context, String.format(
-					getString(R.string.navigation_drawer_home_screen_error),
-					homeScreenName), 6000, 1000);
-
-			isHomeScreenChanged = false;
-		} else {
-			if (userHomeScreen == userChoice - 1) {
-				ActivityUtils
-						.showLongToast(
-								context,
-								String.format(
-										getString(R.string.navigation_drawer_home_screen_remains),
-										homeScreenName), 5000, 1000);
-			} else {
-				NavDrawerHomeScreenPreferences.setUserChoice(context,
-						userChoice - 1);
-				ActivityUtils
-						.showLongToast(
-								context,
-								String.format(
-										getString(R.string.navigation_drawer_home_screen_changed),
-										homeScreenName), 5500, 1000);
-			}
-		}
-
-		return isHomeScreenChanged;
-	}
-
-	/**
 	 * Start the ClosestStationsMap activity
 	 * 
 	 * @param progressDialog
 	 *            the progress dialog
-	 * @param isDirectStart
-	 *            check if we should check for the current location or just
-	 *            start the map activity
 	 */
-	private void startClosestStationsMap(ProgressDialog progressDialog,
-			boolean isDirectStart) {
+	private void startClosestStationsMap(ProgressDialog progressDialog) {
 
 		if (!globalContext.areServicesAvailable()) {
 			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
 			googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
 					"GooglePlayServicesErrorDialog");
 		} else {
-			if (isDirectStart) {
-				Intent closestStationsMapIntent = new Intent(context,
-						ClosestStationsMap.class);
-				context.startActivity(closestStationsMapIntent);
-			} else {
-				progressDialog.setMessage(context
-						.getString(R.string.cs_list_loading_current_location));
+			Bundle bundle = new Bundle();
+			bundle.putBoolean(ClosestStationsMap.BUNDLE_IS_CS_MAP_HOME_SCREEN,
+					true);
 
-				RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-						context, false, progressDialog);
-				retrieveCurrentLocation.execute();
-				RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
-						retrieveCurrentLocation);
-				(new Thread(retrieveCurrentLocationTimeout)).start();
-			}
+			Intent closestStationsMapIntent = new Intent(context,
+					ClosestStationsMap.class);
+			closestStationsMapIntent.putExtras(bundle);
+			startActivityForResult(closestStationsMapIntent,
+					REQUEST_CODE_SOFBUS_24);
 		}
-	}
-
-	/**
-	 * Start the ClosestStationsList activity
-	 * 
-	 * @param progressDialog
-	 *            the progress dialog
-	 */
-	private void startClosestStationsList(ProgressDialog progressDialog) {
-		progressDialog.setMessage(String
-				.format(getString(R.string.cs_list_loading_current_location)));
-
-		RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-				context, true, progressDialog);
-		retrieveCurrentLocation.execute();
-		RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
-				retrieveCurrentLocation);
-		(new Thread(retrieveCurrentLocationTimeout)).start();
 	}
 
 	/**
@@ -503,12 +345,13 @@ public class Sofbus24 extends SherlockFragmentActivity {
 	 * @param sofbusLoading
 	 *            the ProgressBar of the Layout
 	 */
-	private void startHomeScreen(Bundle savedInstanceState,
+	public void startHomeScreen(Bundle savedInstanceState,
 			ProgressBar sofbusLoading) {
 
 		actionsOnPostExecute(sofbusLoading);
 		int userHomeScreenChoice = NavDrawerHomeScreenPreferences
 				.getUserHomeScreenChoice(context);
+
 		switch (userHomeScreenChoice) {
 		case 0:
 			Sofbus24Fragment sofbus24Fragment;
@@ -530,7 +373,7 @@ public class Sofbus24 extends SherlockFragmentActivity {
 
 			break;
 		case 1:
-			startClosestStationsMap(new ProgressDialog(context), true);
+			startClosestStationsMap(new ProgressDialog(context));
 			break;
 		case 2:
 			// TODO: Start the DroidTrans
