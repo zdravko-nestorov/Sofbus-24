@@ -379,5 +379,8 @@ public class Sofbus24 extends SherlockFragmentActivity {
 			// TODO: Start the DroidTrans
 			break;
 		}
+
+		Intent closestStationsMapIntent = new Intent(context, DroidTrans.class);
+		startActivity(closestStationsMapIntent);
 	}
 }
