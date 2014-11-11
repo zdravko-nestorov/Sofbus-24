@@ -141,17 +141,17 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 			viewHolder.navDrawerLayout.setBackgroundColor(0x30BBBBBB);
 			viewHolder.navDrawerLayout.setPadding(
 					ActivityUtils.dpToPx(context, 25),
-					ActivityUtils.dpToPx(context, 7),
+					ActivityUtils.dpToPx(context, 8),
 					ActivityUtils.dpToPx(context, 10),
-					ActivityUtils.dpToPx(context, 7));
+					ActivityUtils.dpToPx(context, 8));
 			break;
 		default:
 			viewHolder.navDrawerLayout.setBackgroundColor(0xECECEC);
 			viewHolder.navDrawerLayout.setPadding(
 					ActivityUtils.dpToPx(context, 10),
-					ActivityUtils.dpToPx(context, 7),
+					ActivityUtils.dpToPx(context, 8),
 					ActivityUtils.dpToPx(context, 10),
-					ActivityUtils.dpToPx(context, 7));
+					ActivityUtils.dpToPx(context, 8));
 			break;
 		}
 	}

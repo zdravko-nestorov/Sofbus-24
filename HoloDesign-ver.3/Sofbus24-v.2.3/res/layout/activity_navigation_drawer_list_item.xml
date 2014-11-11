@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
-    android:paddingBottom="7dp"
+    android:paddingBottom="8dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:paddingTop="7dp" >
+    android:paddingTop="8dp" >
 
     <ImageView
         android:id="@+id/navigation_drawer_list_img"
@@ -27,7 +27,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@android:color/black"
-        android:textSize="15sp" />
+        android:textSize="16sp" />
 
     <ImageView
         android:id="@id/navigation_drawer_list_home_img"

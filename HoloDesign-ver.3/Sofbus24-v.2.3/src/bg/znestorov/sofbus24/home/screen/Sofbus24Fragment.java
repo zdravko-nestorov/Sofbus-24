@@ -29,6 +29,7 @@ import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
@@ -39,6 +40,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.astuetz.PagerSlidingTabStrip;
+import com.astuetz.PagerSlidingTabStrip.IconTabProvider;
 
 public class Sofbus24Fragment extends SherlockFragment implements
 		ActionBar.TabListener {
@@ -49,6 +52,8 @@ public class Sofbus24Fragment extends SherlockFragment implements
 
 	private ViewPager mViewPager;
 	private SectionsPagerAdapter mSectionsPagerAdapter;
+	private PagerSlidingTabStrip mPagerSlidingTabs;
+
 	private List<Fragment> fragmentsList = new ArrayList<Fragment>();
 
 	@Override
@@ -199,7 +204,6 @@ public class Sofbus24Fragment extends SherlockFragment implements
 		// Set the tabs to the ActionBar
 		actionBar = context.getSupportActionBar();
 		actionBar.setTitle(getString(R.string.app_sofbus24));
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		// Create the fragments list
 		createFragmentsList();
@@ -211,21 +215,42 @@ public class Sofbus24Fragment extends SherlockFragment implements
 
 		// Set up the ViewPager with the sections adapter and load all tabs at
 		// once
+		mPagerSlidingTabs = (PagerSlidingTabStrip) fragmentView
+				.findViewById(R.id.sofbus24_tabs);
 		mViewPager = (ViewPager) fragmentView.findViewById(R.id.sofbus24_pager);
 		mViewPager
 				.setOffscreenPageLimit(Constants.GLOBAL_PARAM_HOME_TABS_COUNT - 1);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
-		// When swiping between different sections, select the corresponding
-		// tab. We can also use ActionBar.Tab#select() to do this if we have
-		// a reference to the Tab.
-		mViewPager
-				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						actionBar.setSelectedNavigationItem(position);
-					}
-				});
+		// Set the tabs to be expanded to fill the full width and assign the
+		// view pager to the SlidingTab pager
+		mPagerSlidingTabs.setShouldExpand(true);
+		mPagerSlidingTabs.setViewPager(mViewPager);
+
+		// When swiping between the sections, select the corresponding tab
+		if (!Utils.isInLandscapeMode(context)) {
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+			mPagerSlidingTabs.setVisibility(View.VISIBLE);
+
+			mPagerSlidingTabs
+					.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+						@Override
+						public void onPageSelected(int position) {
+							actionsOverHomeScreen(position);
+						}
+					});
+		} else {
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+			mPagerSlidingTabs.setVisibility(View.GONE);
+
+			mViewPager
+					.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+						@Override
+						public void onPageSelected(int position) {
+							actionBar.setSelectedNavigationItem(position);
+						}
+					});
+		}
 
 		// For each of the sections in the app, add a tab to the action bar
 		initTabs();
@@ -241,7 +266,7 @@ public class Sofbus24Fragment extends SherlockFragment implements
 
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
 			actionBar.addTab(actionBar.newTab()
-					.setIcon(mSectionsPagerAdapter.getPageIcon(i))
+					.setIcon(mSectionsPagerAdapter.getPageIconResId(i))
 					.setTabListener(this));
 		}
 	}
@@ -297,7 +322,8 @@ public class Sofbus24Fragment extends SherlockFragment implements
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
 	 */
-	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+	public class SectionsPagerAdapter extends FragmentStatePagerAdapter
+			implements IconTabProvider {
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -330,7 +356,8 @@ public class Sofbus24Fragment extends SherlockFragment implements
 			return fragmentsList.size();
 		}
 
-		public Integer getPageIcon(int position) {
+		@Override
+		public int getPageIconResId(int position) {
 			return getPageIconByTagName(fragmentsList.get(position));
 		}
 
@@ -383,9 +410,10 @@ public class Sofbus24Fragment extends SherlockFragment implements
 				// Rearrange the fragmentsList
 				createFragmentsList();
 
-				// Notify the adapter for the changes in the
+				// Notify the adapters for the changes in the
 				// fragmentsList
 				mSectionsPagerAdapter.notifyDataSetChanged();
+				mPagerSlidingTabs.notifyDataSetChanged();
 
 				// For each of the sections in the application, add a
 				// tab to the ActionBar

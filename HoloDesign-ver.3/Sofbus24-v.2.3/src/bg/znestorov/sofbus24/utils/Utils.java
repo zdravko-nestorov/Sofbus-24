@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map.Entry;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -603,6 +604,23 @@ public class Utils {
 			CheckForUpdatesPreferences.setLastCheckDate(context,
 					getCurrentDate());
 			new CheckForUpdatesAsync(context).execute();
+		}
+	}
+
+	/**
+	 * Check if the device is in landscape mod
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @return if the device is in landscape mode
+	 */
+	public static boolean isInLandscapeMode(Activity context) {
+
+		int currentOrientation = context.getResources().getConfiguration().orientation;
+		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
