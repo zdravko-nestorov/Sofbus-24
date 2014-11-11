@@ -40,6 +40,7 @@ public class Sofbus24 extends SherlockFragmentActivity {
 	private FragmentActivity context;
 	private GlobalEntity globalContext;
 	private ActionBar actionBar;
+	private Bundle savedInstanceState;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -56,8 +57,9 @@ public class Sofbus24 extends SherlockFragmentActivity {
 		setContentView(R.layout.activity_sofbus24);
 
 		// Get the application and curren context;
-		globalContext = (GlobalEntity) getApplicationContext();
 		context = Sofbus24.this;
+		globalContext = (GlobalEntity) getApplicationContext();
+		this.savedInstanceState = savedInstanceState;
 
 		// Initialize the ActionBar and the NavigationDrawer
 		initNavigationDrawer();
@@ -211,6 +213,8 @@ public class Sofbus24 extends SherlockFragmentActivity {
 	private void selectItem(int position) {
 
 		ProgressDialog progressDialog = new ProgressDialog(context);
+		ProgressBar sofbusLoading = (ProgressBar) findViewById(R.id.sofbus24_loading);
+
 		int userHomeScreen = NavDrawerHomeScreenPreferences
 				.getUserHomeScreenChoice(context);
 
@@ -221,20 +225,10 @@ public class Sofbus24 extends SherlockFragmentActivity {
 		case 0:
 			break;
 		case 1:
-			if (isHomeScreenChanged(userHomeScreen, position)) {
-				// TODO Set the action to this item
-			}
-
-			break;
 		case 2:
-			if (isHomeScreenChanged(userHomeScreen, position)) {
-				startClosestStationsMap(progressDialog, true);
-			}
-
-			break;
 		case 3:
 			if (isHomeScreenChanged(userHomeScreen, position)) {
-				// TODO Set the action to this item
+				startHomeScreen(savedInstanceState, sofbusLoading);
 			}
 
 			break;

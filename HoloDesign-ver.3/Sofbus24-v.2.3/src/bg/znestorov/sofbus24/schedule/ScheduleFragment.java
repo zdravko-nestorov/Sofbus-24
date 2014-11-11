@@ -18,6 +18,8 @@ import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager;
 
+import com.actionbarsherlock.app.SherlockFragment;
+
 /**
  * Schedule Fragment containing information about the public transport vehicles
  * 
@@ -25,7 +27,7 @@ import bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager;
  * @version 1.0
  * 
  */
-public class ScheduleFragment extends Fragment {
+public class ScheduleFragment extends SherlockFragment {
 
 	private ViewPager mNonSwipeableViewPager;
 	private SectionsPagerAdapter mSectionsPagerAdapter;

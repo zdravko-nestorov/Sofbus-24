@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
@@ -34,6 +33,8 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
+import com.actionbarsherlock.app.SherlockListFragment;
+
 /**
  * Fragment used to show the information in VirtualBoards section
  * 
@@ -41,7 +42,7 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
  * @version 1.0
  * 
  */
-public class VirtualBoardsFragment extends ListFragment implements
+public class VirtualBoardsFragment extends SherlockListFragment implements
 		FragmentLifecycle, OnItemClickListener {
 
 	private Activity context;
@@ -69,7 +70,7 @@ public class VirtualBoardsFragment extends ListFragment implements
 				R.layout.activity_virtual_boards_fragment, container, false);
 
 		// Set the context (activity) associated with this fragment
-		context = getActivity();
+		context = getSherlockActivity();
 
 		// Actions over the layout fields
 		initBundleInfo(savedInstanceState);

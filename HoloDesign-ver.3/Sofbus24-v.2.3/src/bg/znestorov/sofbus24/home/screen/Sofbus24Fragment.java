@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.home.screen;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,7 @@ import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -157,7 +159,55 @@ public class Sofbus24Fragment extends SherlockFragment implements
 
 			return true;
 		default:
+			if (mViewPager != null) {
+				Integer tabPosition = mViewPager.getCurrentItem();
+				List<Fragment> sofbus24FragmentsList = getChildFragmentManager()
+						.getFragments();
+
+				if (sofbus24FragmentsList != null && tabPosition != null
+						&& sofbus24FragmentsList.size() > tabPosition) {
+					Fragment currentFragment = sofbus24FragmentsList
+							.get(tabPosition);
+
+					// Check the type of the fragment
+					if (currentFragment != null) {
+						if (currentFragment instanceof SherlockFragment) {
+							((SherlockFragment) currentFragment)
+									.onOptionsItemSelected(item);
+						}
+
+						if (currentFragment instanceof SherlockListFragment) {
+							((SherlockListFragment) currentFragment)
+									.onOptionsItemSelected(item);
+						}
+					}
+				}
+			}
+
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	/**
+	 * This seems to be a bug in the newly added support for nested fragments.
+	 * Basically, the child FragmentManager ends up with a broken internal state
+	 * when it is detached from the activity. A short-term workaround that fixed
+	 * it for me is to add the following to onDetach() of every Fragment which
+	 * you call getChildFragmentManager() on:
+	 * www.stackoverflow.com/questions/18977923/viewpager-with-nested-fragments
+	 */
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		try {
+			Field childFragmentManager = Fragment.class
+					.getDeclaredField("mChildFragmentManager");
+			childFragmentManager.setAccessible(true);
+			childFragmentManager.set(this, null);
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -222,9 +272,7 @@ public class Sofbus24Fragment extends SherlockFragment implements
 				.setOffscreenPageLimit(Constants.GLOBAL_PARAM_HOME_TABS_COUNT - 1);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
-		// Set the tabs to be expanded to fill the full width and assign the
-		// view pager to the SlidingTab pager
-		mPagerSlidingTabs.setShouldExpand(true);
+		// Assign the view pager to the SlidingTab pager
 		mPagerSlidingTabs.setViewPager(mViewPager);
 
 		// When swiping between the sections, select the corresponding tab

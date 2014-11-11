@@ -12,6 +12,8 @@
         android:background="@drawable/sofbus24_tabs_background"
         app:pstsIndicatorColor="#33B5E5"
         app:pstsIndicatorHeight="6dp"
+        app:pstsShouldExpand="true"
+        app:pstsTabPaddingLeftRight="5dp"
         app:pstsUnderlineHeight="3dp" />
 
     <android.support.v4.view.ViewPager

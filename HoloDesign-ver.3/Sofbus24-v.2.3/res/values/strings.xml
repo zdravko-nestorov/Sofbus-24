@@ -316,7 +316,7 @@
     <string name="navigation_drawer_info">Информация</string>
     <string name="navigation_drawer_exit">Изход</string>
     <string name="navigation_drawer_home_screen_error" formatted="false"><![CDATA[Услугите за Google Play, на които разчита Софбус 24 за показване на картата на Google Maps, не се поддържат от устройството Ви. Моля, инсталирайте ги, за да може да изберете за начален екран <b><i>%s</i></b>.]]></string>
-    <string name="navigation_drawer_home_screen_remains" formatted="false"><![CDATA[Началният екран остава непроменен - <b><i>%s</i></b>, и само ще бъдете пренасочен към него.]]></string>
-    <string name="navigation_drawer_home_screen_changed" formatted="false"><![CDATA[Началният екран беше променен на <b><i>%s</i></b> и ще бъдете пренасочен към него. Той ще бъде визуализиран при всяко следващо стартиране на приложението, докато не бъде отново променен.]]></string>
+    <string name="navigation_drawer_home_screen_remains" formatted="false"><![CDATA[Началният екран остава непроменен - <b><i>%s</i></b>. Той ще бъде визуализиран при всяко следващо стартиране на приложението, докато не бъде отново променен.]]></string>
+    <string name="navigation_drawer_home_screen_changed" formatted="false"><![CDATA[Началният екран беше променен на <b><i>%s</i></b>. Той ще бъде визуализиран при всяко следващо стартиране на приложението, докато не бъде отново променен.]]></string>
 
 </resources>

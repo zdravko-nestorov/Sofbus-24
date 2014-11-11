@@ -309,7 +309,7 @@
     <string name="navigation_drawer_info">Information</string>
     <string name="navigation_drawer_exit">Exit</string>
     <string name="navigation_drawer_home_screen_error" formatted="false"><![CDATA[Google Play services, which Sofbus 24 uses to show the Google Maps, are not supported by your device. Please install them so you can choose <b><i>%s</i></b> as a home screen.]]></string>
-    <string name="navigation_drawer_home_screen_remains" formatted="false"><![CDATA[The home screen remains the same - <b><i>%s</i></b> and you will be only redirected to it.]]></string>
-    <string name="navigation_drawer_home_screen_changed" formatted="false"><![CDATA[The home screen has been changed to <b><i>%s</i></b> and you will be redirected to it. It will be visualised on every application startup until it is changed again.]]></string>
+    <string name="navigation_drawer_home_screen_remains" formatted="false"><![CDATA[The home screen remains the same - <b><i>%s</i></b>. It will be visualised on every application startup until it is changed again.]]></string>
+    <string name="navigation_drawer_home_screen_changed" formatted="false"><![CDATA[The home screen has been changed to <b><i>%s</i></b>. It will be visualised on every application startup until it is changed again.]]></string>
 
 </resources>
