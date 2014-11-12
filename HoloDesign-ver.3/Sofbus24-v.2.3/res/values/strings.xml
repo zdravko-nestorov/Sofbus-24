@@ -307,9 +307,13 @@
     <string name="history_type_metro">Метро</string>
     <string name="history_item_station_number" formatted="false">Спирка номер: %s</string>
     <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Търсене от %s (%s)</font></i>]]></string>
-    
+
     <!-- DroidTrans -->
     <string name="droid_trans_title">Коли на СКГТ</string>
+    <string name="droid_trans_type_bus">Автобус</string>
+    <string name="droid_trans_type_trolley">Тролей</string>
+    <string name="droid_trans_type_tram">Трамвай</string>
+    <string name="droid_trans_type_metro">Метро</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_home">Начален екран</string>
