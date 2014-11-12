@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,13 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
-import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
 import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HomeTabEntity;
 import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
-import bg.znestorov.sofbus24.main.ClosestStationsMap;
+import bg.znestorov.sofbus24.main.DroidTrans;
 import bg.znestorov.sofbus24.main.EditTabs;
 import bg.znestorov.sofbus24.main.EditTabsDialog;
 import bg.znestorov.sofbus24.main.R;
@@ -32,7 +29,6 @@ import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
-import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -140,11 +136,15 @@ public class Sofbus24Fragment extends SherlockFragment implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		ProgressDialog progressDialog = new ProgressDialog(context);
 
 		switch (item.getItemId()) {
+		case R.id.action_droidtans:
+			startDroidTrans();
+
+			return true;
 		case R.id.action_closest_stations_map:
-			startClosestStationsMap(progressDialog, false);
+			ActivityUtils.startClosestStationsMap(context,
+					getChildFragmentManager(), false);
 
 			return true;
 		case R.id.action_edit_tabs:
@@ -212,37 +212,11 @@ public class Sofbus24Fragment extends SherlockFragment implements
 	}
 
 	/**
-	 * Start the ClosestStationsMap activity
-	 * 
-	 * @param progressDialog
-	 *            the progress dialog
-	 * @param isDirectStart
-	 *            check if we should check for the current location or just
-	 *            start the map activity
+	 * Start the DroidTrans activity
 	 */
-	private void startClosestStationsMap(ProgressDialog progressDialog,
-			boolean isDirectStart) {
-		if (!globalContext.areServicesAvailable()) {
-			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
-			googlePlayServicesErrorDialog.show(getChildFragmentManager(),
-					"GooglePlayServicesErrorDialog");
-		} else {
-			if (isDirectStart) {
-				Intent closestStationsMapIntent = new Intent(context,
-						ClosestStationsMap.class);
-				context.startActivity(closestStationsMapIntent);
-			} else {
-				progressDialog.setMessage(context
-						.getString(R.string.cs_list_loading_current_location));
-
-				RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-						context, false, progressDialog);
-				retrieveCurrentLocation.execute();
-				RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
-						retrieveCurrentLocation);
-				(new Thread(retrieveCurrentLocationTimeout)).start();
-			}
-		}
+	private void startDroidTrans() {
+		Intent droidTransIntent = new Intent(context, DroidTrans.class);
+		context.startActivity(droidTransIntent);
 	}
 
 	/**

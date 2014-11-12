@@ -45,6 +45,7 @@
 
     <!-- Action Bar -->
     <!-- Sofbus24 -->
+    <string name="action_droidtrans">Коли на СКГТ</string>
     <string name="action_recent_history">История</string>
     <string name="action_closest_stations">Най-близки спирки</string>
     <string name="action_closest_stations_map">Карта</string>
@@ -100,6 +101,8 @@
     <!-- History -->
     <string name="action_history_top">Най-отгоре</string>
     <string name="action_history_delete_all">Изтрий всички</string>
+    <!-- DroidTrans -->
+    <string name="action_droidtrans_home_screen">Начален екран</string>
 
     <!-- Context Menu -->
     <!-- Favourites -->
@@ -304,6 +307,9 @@
     <string name="history_type_metro">Метро</string>
     <string name="history_item_station_number" formatted="false">Спирка номер: %s</string>
     <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Търсене от %s (%s)</font></i>]]></string>
+    
+    <!-- DroidTrans -->
+    <string name="droid_trans_title">Коли на СКГТ</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_home">Начален екран</string>

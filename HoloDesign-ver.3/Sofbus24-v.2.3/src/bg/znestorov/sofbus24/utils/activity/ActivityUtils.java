@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -18,9 +19,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
@@ -35,10 +38,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
+import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.main.ClosestStationsMap;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.Sofbus24;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -787,4 +794,52 @@ public class ActivityUtils {
 			}
 		}.start();
 	}
+
+	/**
+	 * Start the ClosestStationsMap activity and checking if this is possible
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param fragmentManager
+	 *            the fragment manager of the activity/fragment
+	 * @param isDirectStart
+	 *            is the ClosestStationsMap should be started directly or to
+	 *            found the current location firstly
+	 */
+	public static void startClosestStationsMap(FragmentActivity context,
+			FragmentManager fragmentManager, boolean isDirectStart) {
+
+		GlobalEntity globalContext = (GlobalEntity) context
+				.getApplicationContext();
+
+		if (!globalContext.areServicesAvailable()) {
+			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+			googlePlayServicesErrorDialog.show(fragmentManager,
+					"GooglePlayServicesErrorDialog");
+		} else {
+			if (isDirectStart) {
+				Bundle bundle = new Bundle();
+				bundle.putBoolean(
+						ClosestStationsMap.BUNDLE_IS_CS_MAP_HOME_SCREEN, true);
+
+				Intent closestStationsMapIntent = new Intent(context,
+						ClosestStationsMap.class);
+				closestStationsMapIntent.putExtras(bundle);
+				context.startActivityForResult(closestStationsMapIntent,
+						Sofbus24.REQUEST_CODE_SOFBUS_24);
+			} else {
+				ProgressDialog progressDialog = new ProgressDialog(context);
+				progressDialog.setMessage(context
+						.getString(R.string.cs_list_loading_current_location));
+
+				RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
+						context, false, progressDialog);
+				retrieveCurrentLocation.execute();
+				RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
+						retrieveCurrentLocation);
+				(new Thread(retrieveCurrentLocationTimeout)).start();
+			}
+		}
+	}
+
 }

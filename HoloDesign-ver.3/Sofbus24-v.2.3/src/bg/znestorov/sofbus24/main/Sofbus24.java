@@ -3,7 +3,6 @@ package bg.znestorov.sofbus24.main;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.databases.Sofbus24DatabaseUtils;
-import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.home.screen.Sofbus24Fragment;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
@@ -26,7 +24,6 @@ import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
-import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -35,7 +32,6 @@ import com.actionbarsherlock.view.MenuItem;
 public class Sofbus24 extends SherlockFragmentActivity {
 
 	private FragmentActivity context;
-	private GlobalEntity globalContext;
 	private ActionBar actionBar;
 	private Bundle savedInstanceState;
 
@@ -48,6 +44,7 @@ public class Sofbus24 extends SherlockFragmentActivity {
 	public static final int REQUEST_CODE_SOFBUS_24 = 0;
 	public static final int RESULT_CODE_ACTIVITY_NEW = 1;
 	public static final int RESULT_CODE_ACTIVITY_FINISH = 2;
+	public static final int RESULT_CODE_STANDARD_HOME_FRAGMENT = 3;
 
 	private static final String TAG_SOFBUS_24_STANDARD_HOME_SCREEN_FRAGMENT = "SOFBUS_24_STANDARD_HOME_SCREEN_FRAGMENT";
 
@@ -59,7 +56,6 @@ public class Sofbus24 extends SherlockFragmentActivity {
 
 		// Get the application and curren context;
 		context = Sofbus24.this;
-		globalContext = (GlobalEntity) getApplicationContext();
 		this.savedInstanceState = savedInstanceState;
 
 		// Get the fields in the layout
@@ -195,28 +191,40 @@ public class Sofbus24 extends SherlockFragmentActivity {
 	}
 
 	/**
-	 * Start the ClosestStationsMap activity
-	 * 
-	 * @param progressDialog
-	 *            the progress dialog
+	 * Start the standard home screen fragment
 	 */
-	private void startClosestStationsMap(ProgressDialog progressDialog) {
+	private void startStandardHomeScreen() {
+		Sofbus24Fragment sofbus24Fragment;
 
-		if (!globalContext.areServicesAvailable()) {
-			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
-			googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
-					"GooglePlayServicesErrorDialog");
+		if (savedInstanceState == null) {
+			sofbus24Fragment = new Sofbus24Fragment();
 		} else {
-			Bundle bundle = new Bundle();
-			bundle.putBoolean(ClosestStationsMap.BUNDLE_IS_CS_MAP_HOME_SCREEN,
-					true);
+			sofbus24Fragment = (Sofbus24Fragment) getSupportFragmentManager()
+					.findFragmentByTag(
+							TAG_SOFBUS_24_STANDARD_HOME_SCREEN_FRAGMENT);
 
-			Intent closestStationsMapIntent = new Intent(context,
-					ClosestStationsMap.class);
-			closestStationsMapIntent.putExtras(bundle);
-			startActivityForResult(closestStationsMapIntent,
-					REQUEST_CODE_SOFBUS_24);
+			if (sofbus24Fragment == null) {
+				sofbus24Fragment = new Sofbus24Fragment();
+			}
 		}
+
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.sofbus24_home_screen_standard, sofbus24Fragment,
+						TAG_SOFBUS_24_STANDARD_HOME_SCREEN_FRAGMENT)
+				.addToBackStack(null).commit();
+	}
+
+	/**
+	 * Start the DroidTrans activity
+	 */
+	private void startDroidTrans() {
+		Bundle bundle = new Bundle();
+		bundle.putBoolean(DroidTrans.BUNDLE_IS_DROID_TRANS_HOME_SCREEN, true);
+
+		Intent droidTransIntent = new Intent(context, DroidTrans.class);
+		droidTransIntent.putExtras(bundle);
+		context.startActivityForResult(droidTransIntent, REQUEST_CODE_SOFBUS_24);
 	}
 
 	/**
@@ -349,38 +357,22 @@ public class Sofbus24 extends SherlockFragmentActivity {
 			ProgressBar sofbusLoading) {
 
 		actionsOnPostExecute(sofbusLoading);
+
 		int userHomeScreenChoice = NavDrawerHomeScreenPreferences
 				.getUserHomeScreenChoice(context);
 
 		switch (userHomeScreenChoice) {
 		case 0:
-			Sofbus24Fragment sofbus24Fragment;
-
-			if (savedInstanceState == null) {
-				sofbus24Fragment = new Sofbus24Fragment();
-			} else {
-				sofbus24Fragment = (Sofbus24Fragment) getSupportFragmentManager()
-						.findFragmentByTag(
-								TAG_SOFBUS_24_STANDARD_HOME_SCREEN_FRAGMENT);
-			}
-
-			getSupportFragmentManager()
-					.beginTransaction()
-					.replace(R.id.sofbus24_home_screen_standard,
-							sofbus24Fragment,
-							TAG_SOFBUS_24_STANDARD_HOME_SCREEN_FRAGMENT)
-					.addToBackStack(null).commit();
+			startStandardHomeScreen();
 
 			break;
 		case 1:
-			startClosestStationsMap(new ProgressDialog(context));
+			ActivityUtils.startClosestStationsMap(context,
+					getSupportFragmentManager(), true);
 			break;
 		case 2:
-			// TODO: Start the DroidTrans
+			startDroidTrans();
 			break;
 		}
-
-		Intent closestStationsMapIntent = new Intent(context, DroidTrans.class);
-		startActivity(closestStationsMapIntent);
 	}
 }

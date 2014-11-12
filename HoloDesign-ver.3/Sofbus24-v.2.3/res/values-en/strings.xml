@@ -42,6 +42,7 @@
 
     <!-- Action Bar -->
     <!-- Sofbus24 -->
+    <string name="action_droidtrans">SKGT cars</string>
     <string name="action_recent_history">History</string>
     <string name="action_closest_stations">Closest stations</string>
     <string name="action_closest_stations_map">Google Maps</string>
@@ -97,6 +98,8 @@
     <!-- History -->
     <string name="action_history_top">Top</string>
     <string name="action_history_delete_all">Delete all</string>
+    <!-- DroidTrans -->
+    <string name="action_droidtrans_home_screen">Home screen</string>
 
     <!-- Context Menu -->
     <!-- Favourites -->
@@ -297,6 +300,9 @@
     <string name="history_type_metro">Metro</string>
     <string name="history_item_station_number" formatted="false">Station number: %s</string>
     <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Search from %s (%s)</font></i>]]></string>
+    
+    <!-- DroidTrans -->
+    <string name="droid_trans_title">SKGT cars</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_home">Home screen</string>
