@@ -19,6 +19,7 @@ public class Constants {
 
 	public static final String DB_VEHICLE_DIRECTION_REGEX = "<div class=\"info\">(.*?)<\\/div>";
 
+	public static final String DB_STATION_DIRECTION_REGEX = "<td><input type=\"submit\" value=\"Провери\" name=\"ch\" class=\"btn\"/></td>";
 	public static final String DB_STATION_REGEX = "<option id=\".*?\" value=\"(.*?)\">(.*?)<\\/option>";
 
 	public static final String DB_VEHICLE_STATION_REGEX = "<input type=\"hidden\" value=\"([0-9]+)\" name=\"%s\"/>";

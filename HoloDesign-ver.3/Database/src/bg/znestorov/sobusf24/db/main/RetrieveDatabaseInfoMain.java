@@ -32,6 +32,9 @@ public class RetrieveDatabaseInfoMain {
 	private static Logger logger;
 	private static FileHandler fh;
 
+	private static long startTime;
+	private static long endTime;
+
 	public static void main(String[] args) {
 		try {
 			logger = Logger.getLogger("VEHICLES AND STATION INFORMATION");
@@ -45,42 +48,42 @@ public class RetrieveDatabaseInfoMain {
 		}
 
 		logger.info("***RETRIEVE VEHICLES NUMBERS***\n");
-		HashMap<Integer, ArrayList<String>> vehiclesMap = VehiclesNumbersMain
-				.getVehiclesNumbers(logger);
+
+		startTime = getTime();
+		HashMap<Integer, ArrayList<String>> vehiclesMap = VehiclesNumbersMain.getVehiclesNumbers(logger);
+		endTime = getTime();
+
+		logger.info("The vehicles' numbers are retrieved for " + ((endTime - startTime) / 1000) + " seconds...");
+
 		retrieveVehicles(vehiclesMap);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static void retrieveVehicles(
-			HashMap<Integer, ArrayList<String>> vehiclesMap) {
+	private static void retrieveVehicles(HashMap<Integer, ArrayList<String>> vehiclesMap) {
 		logger.info("***RETRIEVE VEHICLES AND STATIONS***\n");
+
+		startTime = getTime();
 
 		ArrayList<Vehicle> vehiclesList = new ArrayList<Vehicle>();
 		Set<Station> stationsSet = new LinkedHashSet<Station>();
 		ArrayList<VehicleStation> vehicleStationsList = new ArrayList<VehicleStation>();
 
-		Iterator<Entry<Integer, ArrayList<String>>> vehiclesIterator = vehiclesMap
-				.entrySet().iterator();
+		Iterator<Entry<Integer, ArrayList<String>>> vehiclesIterator = vehiclesMap.entrySet().iterator();
 
 		// Iterate over the vehicles map (for each type)
 		while (vehiclesIterator.hasNext()) {
-			Map.Entry<Integer, ArrayList<String>> vehiclesEntry = (Map.Entry<Integer, ArrayList<String>>) vehiclesIterator
-					.next();
+			Map.Entry<Integer, ArrayList<String>> vehiclesEntry = (Map.Entry<Integer, ArrayList<String>>) vehiclesIterator.next();
 			String type = vehiclesEntry.getKey() + "";
 
 			// Iterate each number for this type
 			for (String number : vehiclesEntry.getValue()) {
-				logger.info("Retrieving information for vehicle[Type=" + type
-						+ ", Number=" + number + "]");
+				logger.info("Retrieving information for vehicle[Type=" + type + ", Number=" + number + "]");
 
-				HashMap<String, Object> info = InformationMain.getInformation(
-						logger, type, number);
+				HashMap<String, Object> info = InformationMain.getInformation(logger, type, number);
 				if (info != null) {
 					Vehicle vehicle = (Vehicle) info.get("vehicle");
-					ArrayList<Station> stations = (ArrayList<Station>) info
-							.get("stations");
-					ArrayList<VehicleStation> vehicleStations = (ArrayList<VehicleStation>) info
-							.get("vehice_stations");
+					ArrayList<Station> stations = (ArrayList<Station>) info.get("stations");
+					ArrayList<VehicleStation> vehicleStations = (ArrayList<VehicleStation>) info.get("vehice_stations");
 
 					vehiclesList.add(vehicle);
 					stationsSet.addAll(stations);
@@ -116,17 +119,21 @@ public class RetrieveDatabaseInfoMain {
 		// Add the metro vehicle stations
 		addMetroVehiclesStations(vehicleStationsList, metroStations);
 
+		endTime = getTime();
+		logger.info("The stations are retrieved for " + ((endTime - startTime) / 1000) + " seconds...");
+
 		// Update the databases
-		SQLiteJDBC sqLiteJDBC = new SQLiteJDBC(logger, stationsList,
-				vehiclesList, vehicleStationsList);
+		startTime = getTime();
+		SQLiteJDBC sqLiteJDBC = new SQLiteJDBC(logger, stationsList, vehiclesList, vehicleStationsList);
 		sqLiteJDBC.initStationsAndVehiclesTables();
+		endTime = getTime();
+
+		logger.info("The information is saved into the DB for " + ((endTime - startTime) / 1000) + " seconds...");
 	}
 
 	private static void addMetroVehicles(ArrayList<Vehicle> vehiclesList) {
-		vehiclesList.add(new Vehicle(VehicleType.METRO1, "1033",
-				"м.Джеймс Баучер-м.Обеля-м.Цариградско шосе"));
-		vehiclesList.add(new Vehicle(VehicleType.METRO2, "1034",
-				"м.Цариградско шосе-м.Обеля-м.Джеймс Баучер"));
+		vehiclesList.add(new Vehicle(VehicleType.METRO1, "1033", "м.Джеймс Баучер-м.Обеля-м.Цариградско шосе"));
+		vehiclesList.add(new Vehicle(VehicleType.METRO2, "1034", "м.Цариградско шосе-м.Обеля-м.Джеймс Баучер"));
 	}
 
 	private static ArrayList<Station> getMetroStations() {
@@ -134,9 +141,7 @@ public class RetrieveDatabaseInfoMain {
 		ArrayList<Station> metroStations = new ArrayList<Station>();
 		BufferedReader inputBufferedReader = null;
 		try {
-			inputBufferedReader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(new File("data/metro_stations.txt")),
-					"UTF8"));
+			inputBufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File("data/metro_stations.txt")), "UTF8"));
 
 			while (inputBufferedReader.ready()) {
 				Station station = new Station(inputBufferedReader.readLine());
@@ -157,25 +162,25 @@ public class RetrieveDatabaseInfoMain {
 		return metroStations;
 	}
 
-	private static void addMetroStations(ArrayList<Station> stationsList,
-			ArrayList<Station> metroStations) {
+	private static void addMetroStations(ArrayList<Station> stationsList, ArrayList<Station> metroStations) {
 		stationsList.addAll(metroStations);
 	}
 
-	private static void addMetroVehiclesStations(
-			ArrayList<VehicleStation> vehicleStationsList,
-			ArrayList<Station> metroStations) {
+	private static void addMetroVehiclesStations(ArrayList<VehicleStation> vehicleStationsList, ArrayList<Station> metroStations) {
 
 		for (int i = 0; i < metroStations.size(); i++) {
 			Station metroStation = metroStations.get(i);
 			VehicleType metroType = metroStation.getType();
-			String metroNumber = metroType == VehicleType.METRO1 ? "1033"
-					: "1034";
+			String metroNumber = metroType == VehicleType.METRO1 ? "1033" : "1034";
+			Integer metroDirection = metroType == VehicleType.METRO1 ? 1 : 2;
 
-			vehicleStationsList.add(new VehicleStation(metroType, metroNumber,
-					metroStation.getNumber(), "-1", "-1", "-1", metroStation
-							.getNumber()));
+			vehicleStationsList.add(new VehicleStation(metroType, metroNumber, metroStation.getNumber(), "-1", "-1", "-1", metroStation.getNumber(),
+					metroDirection));
 		}
 
+	}
+
+	private static long getTime() {
+		return System.currentTimeMillis();
 	}
 }

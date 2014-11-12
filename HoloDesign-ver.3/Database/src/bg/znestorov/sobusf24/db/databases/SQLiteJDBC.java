@@ -27,9 +27,7 @@ public class SQLiteJDBC {
 	private Connection c = null;
 	private Statement stmt = null;
 
-	public SQLiteJDBC(Logger logger, ArrayList<Station> stationsList,
-			ArrayList<Vehicle> vehiclesList,
-			ArrayList<VehicleStation> vehicleStationsList) {
+	public SQLiteJDBC(Logger logger, ArrayList<Station> stationsList, ArrayList<Vehicle> vehiclesList, ArrayList<VehicleStation> vehicleStationsList) {
 		this.logger = logger;
 		this.stationsList = stationsList;
 		this.vehiclesList = vehiclesList;
@@ -85,10 +83,8 @@ public class SQLiteJDBC {
 			try {
 
 				if (!stmt.executeQuery(sql).next()) {
-					sql = "INSERT INTO SOF_VEHI (VEHI_NUMBER, VEHI_TYPE, VEHI_DIRECTION) "
-							+ "VALUES ('%s', '%s', '%s');";
-					sql = String.format(sql, vehicle.getNumber(),
-							vehicle.getType(), vehicle.getDirection());
+					sql = "INSERT INTO SOF_VEHI (VEHI_NUMBER, VEHI_TYPE, VEHI_DIRECTION) " + "VALUES ('%s', '%s', '%s');";
+					sql = String.format(sql, vehicle.getNumber(), vehicle.getType(), vehicle.getDirection());
 					stmt.executeUpdate(sql);
 					insertedVehicles++;
 				}
@@ -96,9 +92,7 @@ public class SQLiteJDBC {
 			}
 		}
 
-		logger.info("Total vehicles (from SKGT) = " + totalVehicles
-				+ ", Inserted vehicles (in DB) = " + insertedVehicles
-				+ ", Not found vehicles (in DB) = "
+		logger.info("Total vehicles (from SKGT) = " + totalVehicles + ", Inserted vehicles (in DB) = " + insertedVehicles + ", Not found vehicles (in DB) = "
 				+ (totalVehicles - insertedVehicles));
 	}
 
@@ -124,11 +118,8 @@ public class SQLiteJDBC {
 			try {
 
 				if (!stmt.executeQuery(sql).next()) {
-					sql = "INSERT INTO SOF_STAT (STAT_NUMBER, STAT_NAME, STAT_LATITUDE, STAT_LONGITUDE, STAT_TYPE) "
-							+ "VALUES ('%s', '%s', '%s', '%s', '%s');";
-					sql = String.format(sql, station.getNumber(),
-							station.getName(), station.getLatitude(),
-							station.getLongitude(), station.getType());
+					sql = "INSERT INTO SOF_STAT (STAT_NUMBER, STAT_NAME, STAT_LATITUDE, STAT_LONGITUDE, STAT_TYPE) " + "VALUES ('%s', '%s', '%s', '%s', '%s');";
+					sql = String.format(sql, station.getNumber(), station.getName(), station.getLatitude(), station.getLongitude(), station.getType());
 
 					// Add the station number to the list
 					skgtStationsNumbersList.add(station.getNumber());
@@ -140,15 +131,13 @@ public class SQLiteJDBC {
 				}
 			} catch (Exception e1) {
 				sql = "UPDATE SOF_STAT SET STAT_NAME = '%s' WHERE STAT_NUMBER = %s;";
-				sql = String
-						.format(sql, station.getName(), station.getNumber());
+				sql = String.format(sql, station.getName(), station.getNumber());
 
 				try {
 					stmt.executeUpdate(sql);
 					updatedStations++;
 				} catch (Exception e2) {
-					logger.info("Problem with updating a station with number="
-							+ station.getNumber());
+					logger.info("Problem with updating a station with number=" + station.getNumber());
 				}
 			}
 		}
@@ -183,11 +172,9 @@ public class SQLiteJDBC {
 						try {
 							stmt.executeUpdate(sql);
 							deletedStations++;
-							deletedStationsList.add(station.getName() + " ("
-									+ station.getNumber() + ")");
+							deletedStationsList.add(station.getName() + " (" + station.getNumber() + ")");
 						} catch (Exception e2) {
-							logger.info("Problem with deleting a station with number="
-									+ station.getNumber());
+							logger.info("Problem with deleting a station with number=" + station.getNumber());
 						}
 					}
 				}
@@ -196,30 +183,22 @@ public class SQLiteJDBC {
 			}
 		}
 
-		logger.info("Total stations (from SKGT) = "
-				+ (totalStationsSKGT + getAllExceptionStationNumbers().size())
-				+ ", Total stations (from DB) = " + totalStationsDB
-				+ ", Inserted stations (in DB) = " + insertedStations
-				+ ", Updated stations (in DB) = " + updatedStations
-				+ ", Deleted stations (from DB) = " + deletedStations
-				+ ", Not found stations (in DB) = "
+		logger.info("Total stations (from SKGT) = " + (totalStationsSKGT + getAllExceptionStationNumbers().size()) + ", Total stations (from DB) = "
+				+ totalStationsDB + ", Inserted stations (in DB) = " + insertedStations + ", Updated stations (in DB) = " + updatedStations
+				+ ", Deleted stations (from DB) = " + deletedStations + ", Not found stations (in DB) = "
 				+ (totalStationsSKGT - insertedStations - updatedStations));
 
 		if (deletedStationsList.size() > 0) {
-			logger.info("List with the deleted stations:\n"
-					+ deletedStationsList.toString());
+			logger.info("List with the deleted stations:\n" + deletedStationsList.toString());
 		}
 	}
 
-	private static List<Station> getAllStationsFromDb(
-			ResultSet stationsResultSet) throws SQLException {
+	private static List<Station> getAllStationsFromDb(ResultSet stationsResultSet) throws SQLException {
 		List<Station> stationsList = new ArrayList<Station>();
 
 		while (stationsResultSet.next()) {
-			stationsList.add(new Station(VehicleType.BTT, Utils
-					.formatNumberOfDigits(
-							stationsResultSet.getString("STAT_NUMBER"), 4),
-					stationsResultSet.getString("STAT_NAME"), ""));
+			stationsList.add(new Station(VehicleType.BTT, Utils.formatNumberOfDigits(stationsResultSet.getString("STAT_NUMBER"), 4), stationsResultSet
+					.getString("STAT_NAME"), "", -1));
 		}
 
 		return stationsList;
@@ -277,29 +256,24 @@ public class SQLiteJDBC {
 
 	private void initVehicleStationsTable() throws Exception {
 
-		int totalVehicleStations = vehicleStationsList != null ? vehicleStationsList
-				.size() : 0;
+		int totalVehicleStations = vehicleStationsList != null ? vehicleStationsList.size() : 0;
 		int insertedVehicleStations = 0;
 
 		stmt.executeUpdate("DELETE FROM SOF_VEST;");
 		c.commit();
 
 		for (VehicleStation vehicleStation : vehicleStationsList) {
-			String sql = "SELECT * FROM SOF_VEST WHERE FK_VEST_VEHI_ID = '%s' AND FK_VEST_STAT_ID = '%s' AND VEST_STOP = '%s' AND VEST_LID = '%s' AND VEST_VT = '%s' AND VEST_RID = '%s';";
-			sql = String.format(sql, getVehicleId(vehicleStation),
-					getStationId(vehicleStation), vehicleStation.getStop(),
-					vehicleStation.getLid(), vehicleStation.getVt(),
-					vehicleStation.getRid());
+			String sql = "SELECT * FROM SOF_VEST WHERE FK_VEST_VEHI_ID = '%s' AND FK_VEST_STAT_ID = '%s' AND VEST_DIRECTION = '%s' AND VEST_STOP = '%s' AND VEST_LID = '%s' AND VEST_VT = '%s' AND VEST_RID = '%s';";
+			sql = String.format(sql, getVehicleId(vehicleStation), getStationId(vehicleStation), vehicleStation.getDirection(), vehicleStation.getStop(),
+					vehicleStation.getLid(), vehicleStation.getVt(), vehicleStation.getRid());
 
 			try {
 
 				if (!stmt.executeQuery(sql).next()) {
-					sql = "INSERT INTO SOF_VEST (FK_VEST_VEHI_ID, FK_VEST_STAT_ID, VEST_STOP, VEST_LID, VEST_VT, VEST_RID) "
-							+ "VALUES (%s, %s, %s, %s, %s, %s);";
-					sql = String.format(sql, getVehicleId(vehicleStation),
-							getStationId(vehicleStation),
-							vehicleStation.getStop(), vehicleStation.getLid(),
-							vehicleStation.getVt(), vehicleStation.getRid());
+					sql = "INSERT INTO SOF_VEST (FK_VEST_VEHI_ID, FK_VEST_STAT_ID, VEST_DIRECTION, VEST_STOP, VEST_LID, VEST_VT, VEST_RID) "
+							+ "VALUES (%s, %s, %s, %s, %s, %s, %s);";
+					sql = String.format(sql, getVehicleId(vehicleStation), getStationId(vehicleStation), vehicleStation.getDirection(),
+							vehicleStation.getStop(), vehicleStation.getLid(), vehicleStation.getVt(), vehicleStation.getRid());
 					stmt.executeUpdate(sql);
 
 					insertedVehicleStations++;
@@ -308,12 +282,8 @@ public class SQLiteJDBC {
 			}
 		}
 
-		logger.info("Total vehicleStations (from SKGT) = "
-				+ totalVehicleStations
-				+ ", Inserted vehicleStations (in DB) = "
-				+ insertedVehicleStations
-				+ ", Duplicated vehicleStations (in DB) = "
-				+ (totalVehicleStations - insertedVehicleStations));
+		logger.info("Total vehicleStations (from SKGT) = " + totalVehicleStations + ", Inserted vehicleStations (in DB) = " + insertedVehicleStations
+				+ ", Duplicated vehicleStations (in DB) = " + (totalVehicleStations - insertedVehicleStations));
 	}
 
 	private int getVehicleId(VehicleStation vehicleStation) throws SQLException {
@@ -321,8 +291,7 @@ public class SQLiteJDBC {
 		int vehicleId = 0;
 
 		String sql = "SELECT PK_VEHI_ID FROM SOF_VEHI WHERE VEHI_NUMBER = '%s' AND VEHI_TYPE = '%s';";
-		sql = String.format(sql, vehicleStation.getVehicleNumber(),
-				vehicleStation.getVehicleType());
+		sql = String.format(sql, vehicleStation.getVehicleNumber(), vehicleStation.getVehicleType());
 		ResultSet rs = stmt.executeQuery(sql);
 
 		while (rs.next()) {
