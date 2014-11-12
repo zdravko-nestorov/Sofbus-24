@@ -59,7 +59,7 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 						.add(R.drawable.ic_slide_menu_home_cars);
 				break;
 			case 4:
-				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_cs);
+				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_cs_list);
 				break;
 			case 5:
 				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_history);
