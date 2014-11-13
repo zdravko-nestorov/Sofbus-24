@@ -314,6 +314,7 @@
     <string name="droid_trans_type_trolley">Тролей</string>
     <string name="droid_trans_type_tram">Трамвай</string>
     <string name="droid_trans_type_metro">Метро</string>
+    <string name="droid_trans_type_metro_line_1">Линия 1</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_home">Начален екран</string>
