@@ -191,4 +191,13 @@ public class Constants {
 	 */
 	public static final String CHECK_FOR_UPDATES_PREFERENCES_NAME = "application_update";
 	public static final String CHECK_FOR_UPDATES_PREFERENCES_LAST_CHECK = "last_check";
+
+	/**
+	 * DroidTrans
+	 */
+	public static final String DROIDTRANS_URL_SCHEDULE = "http://m.sofiatraffic.bg/schedules/vehicle-vt";
+	public static final String DROIDTRANS_URL_SCHEDULE_STOP = "stop";
+	public static final String DROIDTRANS_URL_SCHEDULE_VT = "vt";
+	public static final String DROIDTRANS_URL_SCHEDULE_LID = "lid";
+	public static final String DROIDTRANS_URL_SCHEDULE_RID = "rid";
 }
