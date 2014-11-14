@@ -21,6 +21,7 @@ import bg.znestorov.sobusf24.db.databases.SQLiteJDBC;
 import bg.znestorov.sobusf24.db.information.InformationMain;
 import bg.znestorov.sobusf24.db.utils.Constants;
 import bg.znestorov.sobusf24.db.utils.LogFormatter;
+import bg.znestorov.sobusf24.db.utils.Utils;
 import bg.znestorov.sofbus24.db.entity.Station;
 import bg.znestorov.sofbus24.db.entity.Vehicle;
 import bg.znestorov.sofbus24.db.entity.VehicleStation;
@@ -47,13 +48,13 @@ public class RetrieveDatabaseInfoMain {
 			e.printStackTrace();
 		}
 
-		logger.info("***RETRIEVE VEHICLES NUMBERS***\n");
+		logger.info("***RETRIEVE VEHICLES NUMBERS***");
 
-		startTime = getTime();
+		startTime = Utils.getTime();
 		HashMap<Integer, ArrayList<String>> vehiclesMap = VehiclesNumbersMain.getVehiclesNumbers(logger);
-		endTime = getTime();
+		endTime = Utils.getTime();
 
-		logger.info("The vehicles' numbers are retrieved for " + ((endTime - startTime) / 1000) + " seconds...");
+		logger.info("The vehicles' numbers are retrieved for " + ((endTime - startTime) / 1000) + " seconds...\n");
 
 		retrieveVehicles(vehiclesMap);
 	}
@@ -62,7 +63,7 @@ public class RetrieveDatabaseInfoMain {
 	private static void retrieveVehicles(HashMap<Integer, ArrayList<String>> vehiclesMap) {
 		logger.info("***RETRIEVE VEHICLES AND STATIONS***\n");
 
-		startTime = getTime();
+		startTime = Utils.getTime();
 
 		ArrayList<Vehicle> vehiclesList = new ArrayList<Vehicle>();
 		Set<Station> stationsSet = new LinkedHashSet<Station>();
@@ -119,14 +120,14 @@ public class RetrieveDatabaseInfoMain {
 		// Add the metro vehicle stations
 		addMetroVehiclesStations(vehicleStationsList, metroStations);
 
-		endTime = getTime();
-		logger.info("The stations are retrieved for " + ((endTime - startTime) / 1000) + " seconds...");
+		endTime = Utils.getTime();
+		logger.info("The stations are retrieved for " + ((endTime - startTime) / 1000) + " seconds...\n");
 
 		// Update the databases
-		startTime = getTime();
+		startTime = Utils.getTime();
 		SQLiteJDBC sqLiteJDBC = new SQLiteJDBC(logger, stationsList, vehiclesList, vehicleStationsList);
 		sqLiteJDBC.initStationsAndVehiclesTables();
-		endTime = getTime();
+		endTime = Utils.getTime();
 
 		logger.info("The information is saved into the DB for " + ((endTime - startTime) / 1000) + " seconds...");
 	}
@@ -178,9 +179,5 @@ public class RetrieveDatabaseInfoMain {
 					metroDirection));
 		}
 
-	}
-
-	private static long getTime() {
-		return System.currentTimeMillis();
 	}
 }

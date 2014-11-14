@@ -27,6 +27,9 @@ public class SQLiteJDBC {
 	private Connection c = null;
 	private Statement stmt = null;
 
+	private long startTime;
+	private long endTime;
+
 	public SQLiteJDBC(Logger logger, ArrayList<Station> stationsList, ArrayList<Vehicle> vehiclesList, ArrayList<VehicleStation> vehicleStationsList) {
 		this.logger = logger;
 		this.stationsList = stationsList;
@@ -44,9 +47,20 @@ public class SQLiteJDBC {
 
 			stmt = c.createStatement();
 
+			startTime = Utils.getTime();
 			initVehiclesTable();
+			endTime = Utils.getTime();
+			logger.info("The 'VEHI' table is initialized for " + ((endTime - startTime) / 1000) + " seconds...\n");
+
+			startTime = Utils.getTime();
 			initStationsTable();
+			endTime = Utils.getTime();
+			logger.info("The 'STAT' table is initialized for " + ((endTime - startTime) / 1000) + " seconds...\n");
+
+			startTime = Utils.getTime();
 			initVehicleStationsTable();
+			endTime = Utils.getTime();
+			logger.info("The 'VEST' table is initialized for " + ((endTime - startTime) / 1000) + " seconds...\n");
 
 		} catch (Exception e) {
 			logger.info(e.getClass().getName() + ": " + e.getMessage());
@@ -263,21 +277,16 @@ public class SQLiteJDBC {
 		c.commit();
 
 		for (VehicleStation vehicleStation : vehicleStationsList) {
-			String sql = "SELECT * FROM SOF_VEST WHERE FK_VEST_VEHI_ID = '%s' AND FK_VEST_STAT_ID = '%s' AND VEST_DIRECTION = '%s' AND VEST_STOP = '%s' AND VEST_LID = '%s' AND VEST_VT = '%s' AND VEST_RID = '%s';";
+
+			String sql = "INSERT INTO SOF_VEST (FK_VEST_VEHI_ID, FK_VEST_STAT_ID, VEST_DIRECTION, VEST_STOP, VEST_LID, VEST_VT, VEST_RID) "
+					+ "VALUES (%s, %s, %s, %s, %s, %s, %s);";
 			sql = String.format(sql, getVehicleId(vehicleStation), getStationId(vehicleStation), vehicleStation.getDirection(), vehicleStation.getStop(),
 					vehicleStation.getLid(), vehicleStation.getVt(), vehicleStation.getRid());
 
 			try {
+				stmt.executeUpdate(sql);
 
-				if (!stmt.executeQuery(sql).next()) {
-					sql = "INSERT INTO SOF_VEST (FK_VEST_VEHI_ID, FK_VEST_STAT_ID, VEST_DIRECTION, VEST_STOP, VEST_LID, VEST_VT, VEST_RID) "
-							+ "VALUES (%s, %s, %s, %s, %s, %s, %s);";
-					sql = String.format(sql, getVehicleId(vehicleStation), getStationId(vehicleStation), vehicleStation.getDirection(),
-							vehicleStation.getStop(), vehicleStation.getLid(), vehicleStation.getVt(), vehicleStation.getRid());
-					stmt.executeUpdate(sql);
-
-					insertedVehicleStations++;
-				}
+				insertedVehicleStations++;
 			} catch (Exception e) {
 			}
 		}
