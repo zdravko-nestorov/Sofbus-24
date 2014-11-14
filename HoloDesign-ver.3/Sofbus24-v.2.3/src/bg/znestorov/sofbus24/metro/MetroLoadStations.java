@@ -9,6 +9,7 @@ import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
+import bg.znestorov.sofbus24.utils.Utils;
 
 /**
  * Singleton used for loading the metro stations on the first creation and used
@@ -24,6 +25,7 @@ public class MetroLoadStations {
 
 	private ArrayList<String> metroDirectionsNames;
 	private ArrayList<ArrayList<StationEntity>> metroDirectionsList;
+	private ArrayList<ArrayList<StationEntity>> metroDirectionsListFormatted;
 
 	protected MetroLoadStations(Activity context) {
 		// Get the directions' names
@@ -54,6 +56,12 @@ public class MetroLoadStations {
 		metroDirectionsList = new ArrayList<ArrayList<StationEntity>>();
 		metroDirectionsList.add((ArrayList<StationEntity>) metroDirection1);
 		metroDirectionsList.add((ArrayList<StationEntity>) metroDirection2);
+
+		metroDirectionsListFormatted = new ArrayList<ArrayList<StationEntity>>();
+		metroDirectionsListFormatted
+				.add((ArrayList<StationEntity>) formatMetroStations(metroDirection1));
+		metroDirectionsListFormatted
+				.add((ArrayList<StationEntity>) formatMetroStations(metroDirection2));
 	}
 
 	public static MetroLoadStations getInstance(Activity context) {
@@ -79,6 +87,40 @@ public class MetroLoadStations {
 	public void setMetroDirectionsList(
 			ArrayList<ArrayList<StationEntity>> metroDirectionsList) {
 		this.metroDirectionsList = metroDirectionsList;
+	}
+
+	public ArrayList<ArrayList<StationEntity>> getMetroDirectionsListFormatted() {
+		return metroDirectionsListFormatted;
+	}
+
+	public void setMetroDirectionsListFormatted(
+			ArrayList<ArrayList<StationEntity>> metroDirectionsListFormatted) {
+		this.metroDirectionsListFormatted = metroDirectionsListFormatted;
+	}
+
+	/**
+	 * Format the METRO stations name
+	 * 
+	 * @param metroDirection
+	 *            the metro stations in the selected directions
+	 * @return the formatted metro direction
+	 */
+	private List<StationEntity> formatMetroStations(
+			List<StationEntity> metroDirection) {
+
+		List<StationEntity> metroDirectionFormatted = new ArrayList<StationEntity>();
+
+		for (int i = 0; i < metroDirection.size(); i++) {
+			StationEntity metroStation = metroDirection.get(i);
+			String metroStationName = metroStation.getName();
+			metroStationName = metroStationName.substring(0, 4) + ". "
+					+ Utils.getValueAfter(metroStationName, " ").trim();
+
+			metroStation.setName(metroStationName);
+			metroDirectionFormatted.add(metroStation);
+		}
+
+		return metroDirectionFormatted;
 	}
 
 	/**

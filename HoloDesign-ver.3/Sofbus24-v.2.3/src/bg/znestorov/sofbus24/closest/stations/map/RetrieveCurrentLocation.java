@@ -170,7 +170,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 				// In case of ClosestStationsMap - start the map fragment and it
 				// will take care for the rest (just inform the user)
-				if (!isClosestStationsList) {
+				if (progressDialog.isShowing() && !isClosestStationsList) {
 					Intent closestStationsMapIntent = new Intent(context,
 							ClosestStationsMap.class);
 					context.startActivity(closestStationsMapIntent);

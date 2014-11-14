@@ -1,6 +1,7 @@
 package bg.znestorov.sofbus24.databases;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -76,11 +77,12 @@ public class DroidTransDataSource {
 		cursor.close();
 
 		// Reorder the vehicle types in the list
-		if (vehicleTypes.size() > 2) {
-			VehicleTypeEnum vehicleType = vehicleTypes.get(0);
-			vehicleTypes.set(0, vehicleTypes.get(1));
-			vehicleTypes.set(1, vehicleTypes.get(2));
-			vehicleTypes.set(2, vehicleType);
+		if (vehicleTypes.size() >= 4) {
+			vehicleTypes.clear();
+			vehicleTypes.add(VehicleTypeEnum.BUS);
+			vehicleTypes.add(VehicleTypeEnum.TROLLEY);
+			vehicleTypes.add(VehicleTypeEnum.TRAM);
+			vehicleTypes.add(VehicleTypeEnum.METRO);
 		}
 
 		return vehicleTypes;
@@ -194,7 +196,8 @@ public class DroidTransDataSource {
 		if (cursor.getCount() > 0) {
 			cursor.moveToFirst();
 
-			String vehicleDirection = cursor.getString(0);
+			String vehicleDirection = cursor.getString(0).toUpperCase(
+					new Locale(LanguageChange.getUserLocale(context)));
 			vehiclesDirections.add(vehicleDirection.replace("-", " - "));
 			vehiclesDirections.add(getOppositeDirection(vehicleDirection));
 		}
@@ -269,23 +272,10 @@ public class DroidTransDataSource {
 				+ "																											\n");
 		query.append(" 		JOIN SOF_VEHI																					\n");
 		query.append(" 			ON SOF_VEHI.PK_VEHI_ID = SOF_VEST.FK_VEST_VEHI_ID											\n");
-
-		// In case of metro vehicle search only by vehicle type, because we want
-		// all stations for this line (METRO1 and METRO2)
-		switch (vehicleType) {
-		case METRO:
-			query.append(" 			AND (SOF_VEHI.VEHI_TYPE LIKE '%"
-					+ String.valueOf(vehicleType)
-					+ "%' OR SOF_VEHI.VEHI_TYPE LIKE '%"
-					+ String.valueOf(vehicleType) + "%')																	\n");
-			break;
-		default:
-			query.append(" 			AND SOF_VEHI.VEHI_NUMBER LIKE '%" + vehicleNumber
-					+ "%'																									\n");
-			query.append(" 			AND SOF_VEHI.VEHI_TYPE LIKE '%"
-					+ String.valueOf(vehicleType) + "%'																		\n");
-			break;
-		}
+		query.append(" 			AND SOF_VEHI.VEHI_NUMBER LIKE '%" + vehicleNumber
+				+ "%'																										\n");
+		query.append(" 			AND SOF_VEHI.VEHI_TYPE LIKE '%"
+				+ String.valueOf(vehicleType) + "%'																			\n");
 
 		// Selecting the row that contains the stations data
 		Cursor cursor = database.rawQuery(query.toString(), null);
@@ -316,7 +306,8 @@ public class DroidTransDataSource {
 		StationEntity station = new StationEntity();
 
 		// Check if have to translate the station name
-		String stationName = cursor.getString(1);
+		String stationName = cursor.getString(1).toUpperCase(
+				new Locale(LanguageChange.getUserLocale(context)));
 		if (!"bg".equals(language)) {
 			stationName = TranslatorCyrillicToLatin.translate(context,
 					stationName);
@@ -349,33 +340,20 @@ public class DroidTransDataSource {
 		VehicleStationEntity vehicleStation = null;
 
 		StringBuilder query = new StringBuilder();
-		query.append(" SELECT SOF_VEST.VEST_STOP, SOF_VEST.VEST_VEST_LID, SOF_VEST.VEST_VT, SOF_VEST.VEST_RID				\n");
+		query.append(" SELECT SOF_VEST.VEST_STOP, SOF_VEST.VEST_LID, SOF_VEST.VEST_VT, SOF_VEST.VEST_RID					\n");
 		query.append(" FROM SOF_STAT																						\n");
-		query.append(" WHERE SOF_STAT.STAT_NUMBER = " + stationNumber
-				+ "																											\n");
 		query.append(" 		JOIN SOF_VEST																					\n");
 		query.append(" 			ON SOF_VEST.FK_VEST_STAT_ID = SOF_STAT.PK_STAT_ID											\n");
 		query.append(" 			AND SOF_VEST.VEST_DIRECTION = " + vehicleDirection
 				+ "																											\n");
 		query.append(" 		JOIN SOF_VEHI																					\n");
 		query.append(" 			ON SOF_VEHI.PK_VEHI_ID = SOF_VEST.FK_VEST_VEHI_ID											\n");
-
-		// In case of metro vehicle search only by vehicle type, because we want
-		// all stations for this line (METRO1 and METRO2)
-		switch (vehicleType) {
-		case METRO:
-			query.append(" 			AND (SOF_VEHI.VEHI_TYPE LIKE '%"
-					+ String.valueOf(vehicleType)
-					+ "%' OR SOF_VEHI.VEHI_TYPE LIKE '%"
-					+ String.valueOf(vehicleType) + "%')																	\n");
-			break;
-		default:
-			query.append(" 			AND SOF_VEHI.VEHI_NUMBER LIKE '%" + vehicleNumber
-					+ "%'																									\n");
-			query.append(" 			AND SOF_VEHI.VEHI_TYPE LIKE '%"
-					+ String.valueOf(vehicleType) + "%'																		\n");
-			break;
-		}
+		query.append(" 			AND SOF_VEHI.VEHI_NUMBER LIKE '%" + vehicleNumber
+				+ "%'																										\n");
+		query.append(" 			AND SOF_VEHI.VEHI_TYPE LIKE '%"
+				+ String.valueOf(vehicleType) + "%'																			\n");
+		query.append(" WHERE SOF_STAT.STAT_NUMBER = " + stationNumber
+				+ "																											\n");
 
 		// Selecting the row that contains the stations data
 		Cursor cursor = database.rawQuery(query.toString(), null);

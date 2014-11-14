@@ -1,11 +1,14 @@
 package bg.znestorov.sofbus24.entity;
 
+import bg.znestorov.sofbus24.utils.Constants;
+
 public class VehicleStationEntity {
 
 	private Integer stop;
 	private Integer lid;
 	private Integer vt;
 	private Integer rid;
+	private String url;
 
 	public VehicleStationEntity(Integer stop, Integer lid, Integer vt,
 			Integer rid) {
@@ -13,38 +16,47 @@ public class VehicleStationEntity {
 		this.lid = lid;
 		this.vt = vt;
 		this.rid = rid;
+		this.url = Constants.DROIDTRANS_URL_SCHEDULE;
 	}
 
-	public Integer getStop() {
-		return stop;
+	public String getStop() {
+		return stop + "";
 	}
 
 	public void setStop(Integer stop) {
 		this.stop = stop;
 	}
 
-	public Integer getLid() {
-		return lid;
+	public String getLid() {
+		return lid + "";
 	}
 
 	public void setLid(Integer lid) {
 		this.lid = lid;
 	}
 
-	public Integer getVt() {
-		return vt;
+	public String getVt() {
+		return vt + "";
 	}
 
 	public void setVt(Integer vt) {
 		this.vt = vt;
 	}
 
-	public Integer getRid() {
-		return rid;
+	public String getRid() {
+		return rid + "";
 	}
 
 	public void setRid(Integer rid) {
 		this.rid = rid;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	/**
@@ -67,7 +79,8 @@ public class VehicleStationEntity {
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tstop: " + stop + "\n\tlid: " + lid
-				+ "\n\tvt: " + vt + "\n\trid: " + rid + "\n}";
+				+ "\n\tvt: " + vt + "\n\trid: " + rid + "\n\turl: " + url
+				+ "\n}";
 	}
 
 }

@@ -8,7 +8,10 @@ import java.util.Locale;
 import java.util.Map.Entry;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -654,6 +657,39 @@ public class Utils {
 		navigationItems.add(context.getString(R.string.navigation_drawer_exit));
 
 		return navigationItems;
+	}
+
+	public static boolean haveNetworkConnection(Activity context) {
+		boolean haveConnectedWifi = false;
+		boolean haveConnectedMobile = false;
+		boolean haveConnected = false;
+
+		ConnectivityManager connectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo[] allNetworkInfo = connectivityManager.getAllNetworkInfo();
+
+		for (NetworkInfo networkIngo : allNetworkInfo) {
+			if ("WIFI".equalsIgnoreCase(networkIngo.getTypeName())) {
+				if (networkIngo.isConnected()) {
+					haveConnectedWifi = true;
+				}
+			}
+
+			if ("MOBILE".equalsIgnoreCase(networkIngo.getTypeName())) {
+				if (networkIngo.isConnected()) {
+					haveConnectedMobile = true;
+				}
+			}
+		}
+
+		if (!haveConnectedWifi && !haveConnectedMobile) {
+			NetworkInfo networkInfo = connectivityManager
+					.getActiveNetworkInfo();
+			haveConnected = networkInfo != null && networkInfo.isAvailable()
+					&& networkInfo.isConnected();
+		}
+
+		return haveConnectedWifi || haveConnectedMobile || haveConnected;
 	}
 
 }

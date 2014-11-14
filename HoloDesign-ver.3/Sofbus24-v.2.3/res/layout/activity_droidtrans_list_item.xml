@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/droidtrans_vehicle_type_img"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/app_img_empty_content_description"
         android:cropToPadding="true"

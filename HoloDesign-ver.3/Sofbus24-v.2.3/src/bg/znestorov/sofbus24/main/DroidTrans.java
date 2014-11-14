@@ -9,19 +9,28 @@ import kankan.wheel.widget.WheelView;
 import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
 import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Html;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import bg.znestorov.sofbus24.databases.DroidTransDataSource;
+import bg.znestorov.sofbus24.droidtrans.RetrieveDroidTransSchedule;
 import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleStationEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
+import bg.znestorov.sofbus24.entity.WheelStateEntity;
+import bg.znestorov.sofbus24.metro.MetroLoadStations;
+import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -45,7 +54,10 @@ public class DroidTrans extends SherlockFragmentActivity {
 	private WheelView vehicleNumbersWheel;
 	private WheelView vehicleDirectionsWheel;
 	private WheelView vehicleStationsWheel;
+	private Button vehicleSchedule;
+
 	private boolean scrolling = false;
+	private WheelStateEntity wheelState;
 
 	private ArrayList<VehicleTypeEnum> vehicleTypes;
 	private ArrayList<String> vehicleNumbers;
@@ -58,6 +70,7 @@ public class DroidTrans extends SherlockFragmentActivity {
 	private NavDrawerArrayAdapter mMenuAdapter;
 	private ArrayList<String> navigationItems;
 
+	private static final String BUNDLE_WHEEL_STATE = "BUNDLE WHEEL STATE";
 	public static final String BUNDLE_IS_DROID_TRANS_HOME_SCREEN = "IS DROID TRANS HOME SCREEN";
 
 	@Override
@@ -74,12 +87,29 @@ public class DroidTrans extends SherlockFragmentActivity {
 				.getExtras().getBoolean(BUNDLE_IS_DROID_TRANS_HOME_SCREEN,
 						false) : false;
 
+		// Get the wheels state
+		if (savedInstanceState == null) {
+			wheelState = new WheelStateEntity();
+		} else {
+			wheelState = (WheelStateEntity) savedInstanceState
+					.getSerializable(BUNDLE_WHEEL_STATE);
+		}
+
 		initActionBar();
 		initLayoutFields();
 
 		if (isDroidTransHomeScreen) {
 			initNavigationDrawer();
 		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
+
+		setWheelStateEntity();
+		savedInstanceState.putSerializable(BUNDLE_WHEEL_STATE, wheelState);
+
+		super.onSaveInstanceState(savedInstanceState);
 	}
 
 	@Override
@@ -202,10 +232,20 @@ public class DroidTrans extends SherlockFragmentActivity {
 	 */
 	private void getStationsList(VehicleTypeEnum vehicleType,
 			String vehicleNumber, Integer vehicleDirection) {
-		droidtransDatasource.open();
-		vehicleStations = droidtransDatasource.getVehicleStations(vehicleType,
-				vehicleNumber, vehicleDirection);
-		droidtransDatasource.close();
+
+		switch (vehicleType) {
+		case METRO:
+			vehicleStations = MetroLoadStations.getInstance(context)
+					.getMetroDirectionsListFormatted()
+					.get(vehicleDirection - 1);
+			break;
+		default:
+			droidtransDatasource.open();
+			vehicleStations = droidtransDatasource.getVehicleStations(
+					vehicleType, vehicleNumber, vehicleDirection);
+			droidtransDatasource.close();
+			break;
+		}
 	}
 
 	/**
@@ -213,11 +253,8 @@ public class DroidTrans extends SherlockFragmentActivity {
 	 */
 	private void initLayoutFields() {
 
-		getVehicleTypes();
 		vehicleTypesWheel = (WheelView) findViewById(R.id.droidtrans_vehicle_types);
 		vehicleTypesWheel.setVisibleItems(4);
-		vehicleTypesWheel.setViewAdapter(new VehiclesAdapter(context,
-				vehicleTypes));
 
 		vehicleNumbersWheel = (WheelView) findViewById(R.id.droidtrans_vehicle_numbers);
 		vehicleNumbersWheel.setVisibleItems(5);
@@ -228,8 +265,12 @@ public class DroidTrans extends SherlockFragmentActivity {
 		vehicleStationsWheel = (WheelView) findViewById(R.id.droidtrans_stations);
 		vehicleDirectionsWheel.setVisibleItems(5);
 
+		vehicleSchedule = (Button) findViewById(R.id.droidtrans_schedule);
+
 		updateVehicleWheels();
 		setVehicleWheelsListeners();
+		setVehicleWheelsState();
+		retrieveVehicleSchedule();
 	}
 
 	/**
@@ -288,6 +329,9 @@ public class DroidTrans extends SherlockFragmentActivity {
 	 * Update all information in the vehicles wheels
 	 */
 	private void updateVehicleWheels() {
+
+		updateVehicleWheelTypes();
+
 		updateVehicleWheel(0);
 		updateVehicleWheel(1);
 		updateVehicleWheel(2);
@@ -305,6 +349,7 @@ public class DroidTrans extends SherlockFragmentActivity {
 	 *            </ul>
 	 */
 	private void updateVehicleWheel(int wheelViewPosition) {
+
 		switch (wheelViewPosition) {
 		case 0:
 			updateVehicleWheelNumbers();
@@ -322,28 +367,66 @@ public class DroidTrans extends SherlockFragmentActivity {
 	}
 
 	/**
+	 * Set the state entity values
+	 */
+	private void setWheelStateEntity() {
+		wheelState.setVehiclesType(vehicleTypesWheel.getCurrentItem());
+		wheelState.setVehiclesNumber(vehicleNumbersWheel.getCurrentItem());
+		wheelState
+				.setVehiclesDirection(vehicleDirectionsWheel.getCurrentItem());
+		wheelState.setStationsNumbers(vehicleStationsWheel.getCurrentItem());
+	}
+
+	/**
+	 * Set the state of the wheels (the current items)
+	 */
+	private void setVehicleWheelsState() {
+
+		if (wheelState.isWheelStateSet()) {
+			vehicleTypesWheel.setCurrentItem(wheelState.getVehiclesType());
+			vehicleNumbersWheel.setCurrentItem(wheelState.getVehiclesNumber());
+			vehicleDirectionsWheel.setCurrentItem(wheelState
+					.getVehiclesDirection());
+			vehicleStationsWheel
+					.setCurrentItem(wheelState.getStationsNumbers());
+		}
+	}
+
+	/**
+	 * Update the vehicles wheel type
+	 */
+	private void updateVehicleWheelTypes() {
+
+		getVehicleTypes();
+
+		VehiclesAdapter vehiclesAdapter = new VehiclesAdapter(context,
+				vehicleTypes);
+		vehiclesAdapter.setTextSize(18);
+		vehicleTypesWheel.setViewAdapter(vehiclesAdapter);
+	}
+
+	/**
 	 * Update the vehicles wheel numbers
 	 */
 	private void updateVehicleWheelNumbers() {
 
-		VehicleTypeEnum vehicleType = vehicleTypes.get(vehicleTypesWheel
-				.getCurrentItem());
+		VehicleTypeEnum vehicleType = getCurrentVehicleType();
 		getVehicleNumbers(vehicleType);
 
 		String[] vehicleNumbersArray = getVehicleNumberArray(vehicleType);
 		ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(this,
 				vehicleNumbersArray);
-		adapter.setTextSize(13);
+		adapter.setTextSize(18);
 		vehicleNumbersWheel.setViewAdapter(adapter);
-		vehicleNumbersWheel.setCurrentItem(0);
-		vehicleNumbersWheel.setCurrentItem(vehicleNumbersArray.length / 2);
 
 		switch (vehicleType) {
 		case METRO:
 			vehicleNumbersWheel.setCyclic(false);
+			vehicleNumbersWheel.setCurrentItem(0);
 			break;
 		default:
 			vehicleNumbersWheel.setCyclic(true);
+			vehicleNumbersWheel.setCurrentItem(vehicleNumbersArray.length / 2);
 			break;
 		}
 	}
@@ -383,10 +466,8 @@ public class DroidTrans extends SherlockFragmentActivity {
 	 */
 	private void updateVehicleWheelDirections() {
 
-		VehicleTypeEnum vehicleType = vehicleTypes.get(vehicleTypesWheel
-				.getCurrentItem());
-		String vehicleNumber = vehicleNumbers.get(vehicleNumbersWheel
-				.getCurrentItem());
+		VehicleTypeEnum vehicleType = getCurrentVehicleType();
+		String vehicleNumber = getCurrentVehicleNumber();
 		getVehicleDirections(vehicleType, vehicleNumber);
 
 		String[] vehicleDirectionsArray = new String[vehicleDirections.size()];
@@ -404,11 +485,9 @@ public class DroidTrans extends SherlockFragmentActivity {
 	 */
 	private void updateVehicleWheelStations() {
 
-		VehicleTypeEnum vehicleType = vehicleTypes.get(vehicleTypesWheel
-				.getCurrentItem());
-		String vehicleNumber = vehicleNumbers.get(vehicleNumbersWheel
-				.getCurrentItem());
-		Integer vehicleDirection = vehicleDirectionsWheel.getCurrentItem() + 1;
+		VehicleTypeEnum vehicleType = getCurrentVehicleType();
+		String vehicleNumber = getCurrentVehicleNumber();
+		Integer vehicleDirection = getCurrentVehicleDirection();
 		getStationsList(vehicleType, vehicleNumber, vehicleDirection);
 
 		String[] vehicleStationsArray = getStationsNameArray();
@@ -418,6 +497,87 @@ public class DroidTrans extends SherlockFragmentActivity {
 		vehicleStationsWheel.setViewAdapter(adapter);
 		vehicleStationsWheel.setCurrentItem(0);
 		vehicleStationsWheel.setCurrentItem(vehicleStationsArray.length / 2);
+	}
+
+	private void retrieveVehicleSchedule() {
+
+		vehicleSchedule.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+
+				ProgressDialog progressDialog = new ProgressDialog(context);
+
+				VehicleTypeEnum vehicleType = getCurrentVehicleType();
+				String vehicleNumber = getCurrentVehicleNumber();
+				Integer vehicleDirection = getCurrentVehicleDirection();
+				StationEntity station = getCurrentStation();
+
+				switch (vehicleType) {
+				case METRO:
+					progressDialog.setMessage(Html.fromHtml(String.format(
+							getString(R.string.metro_loading_schedule),
+							station.getName(), station.getNumber())));
+					RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
+							context, progressDialog, station);
+					retrieveMetroSchedule.execute();
+					break;
+				default:
+					droidtransDatasource.open();
+					VehicleStationEntity vehicleStationEntity = droidtransDatasource
+							.getVehicleStations(vehicleType, vehicleNumber,
+									vehicleDirection,
+									Integer.parseInt(station.getNumber()));
+					droidtransDatasource.close();
+
+					progressDialog.setMessage(Html.fromHtml(String.format(
+							getString(R.string.vb_time_retrieve_info),
+							String.format(station.getName() + " (%s)",
+									station.getNumber()))));
+					RetrieveDroidTransSchedule retrieveDroidTransSchedule = new RetrieveDroidTransSchedule(
+							context, progressDialog, vehicleStationEntity,
+							station);
+					retrieveDroidTransSchedule.execute();
+					break;
+				}
+			}
+		});
+	}
+
+	/**
+	 * Get the current vehicle type
+	 * 
+	 * @return the current vehicle type
+	 */
+	private VehicleTypeEnum getCurrentVehicleType() {
+		return vehicleTypes.get(vehicleTypesWheel.getCurrentItem());
+	}
+
+	/**
+	 * Get the current vehicle number
+	 * 
+	 * @return the current vehicle number
+	 */
+	private String getCurrentVehicleNumber() {
+		return vehicleNumbers.get(vehicleNumbersWheel.getCurrentItem());
+	}
+
+	/**
+	 * Get the current vehicle direction
+	 * 
+	 * @return the current vehicle direction
+	 */
+	private Integer getCurrentVehicleDirection() {
+		return vehicleDirectionsWheel.getCurrentItem() + 1;
+	}
+
+	/**
+	 * Get the current stations number
+	 * 
+	 * @return the current stations number
+	 */
+	private StationEntity getCurrentStation() {
+		return vehicleStations.get(vehicleStationsWheel.getCurrentItem());
 	}
 
 	/**

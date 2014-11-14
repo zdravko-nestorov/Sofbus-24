@@ -310,11 +310,12 @@
 
     <!-- DroidTrans -->
     <string name="droid_trans_title">Коли на СКГТ</string>
-    <string name="droid_trans_type_bus">Автобус</string>
-    <string name="droid_trans_type_trolley">Тролей</string>
-    <string name="droid_trans_type_tram">Трамвай</string>
+    <string name="droid_trans_type_bus">Автобусен</string>
+    <string name="droid_trans_type_trolley">Тролейбусен</string>
+    <string name="droid_trans_type_tram">Трамваен</string>
     <string name="droid_trans_type_metro">Метро</string>
     <string name="droid_trans_type_metro_line_1">Линия 1</string>
+    <string name="droid_trans_schedule">Разписание</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_home">Начален екран</string>

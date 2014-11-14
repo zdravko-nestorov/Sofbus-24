@@ -308,6 +308,7 @@
     <string name="droid_trans_type_tram">Tram</string>
     <string name="droid_trans_type_metro">Subway</string>
     <string name="droid_trans_type_metro_line_1">Line 1</string>
+    <string name="droid_trans_schedule">Schedule</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_home">Home screen</string>
