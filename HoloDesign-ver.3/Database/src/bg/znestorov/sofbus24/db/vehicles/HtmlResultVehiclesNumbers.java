@@ -16,7 +16,7 @@ public class HtmlResultVehiclesNumbers {
 	public static HashMap<Integer, ArrayList<String>> getVehiclesNumbers(
 			Logger logger, String htmlResponse) {
 
-		logger.info("Start parsing the information...\n");
+		logger.info("Start parsing the information...");
 
 		HashMap<Integer, ArrayList<String>> vehiclesMap = new HashMap<Integer, ArrayList<String>>();
 		ArrayList<String> autobusList = new ArrayList<String>();
