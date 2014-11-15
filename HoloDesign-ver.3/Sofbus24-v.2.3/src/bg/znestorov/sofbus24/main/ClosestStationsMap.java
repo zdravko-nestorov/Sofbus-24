@@ -198,7 +198,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-		setResult(Sofbus24.RESULT_CODE_ACTIVITY_FINISH, new Intent());
+		setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_FINISH, new Intent());
 		finish();
 	}
 
@@ -961,8 +961,8 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		mDrawerList = (ListView) findViewById(R.id.navigation_drawer_listview);
 		mMenuAdapter = new NavDrawerArrayAdapter(context, navigationItems);
 		mDrawerList.setAdapter(mMenuAdapter);
-		mDrawerList.setOnItemClickListener(new NavDrawerHelper(context, null,
-				null, mDrawerLayout, mDrawerList, navigationItems)
+		mDrawerList.setOnItemClickListener(new NavDrawerHelper(context,
+				mDrawerLayout, mDrawerList, navigationItems)
 				.getDrawerItemClickListener());
 
 		// ActionBarDrawerToggle ties together the the proper interactions

@@ -45,7 +45,7 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.ClosestStationsMap;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.main.Sofbus24;
+import bg.znestorov.sofbus24.main.HomeScreenSelect;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -826,7 +826,7 @@ public class ActivityUtils {
 						ClosestStationsMap.class);
 				closestStationsMapIntent.putExtras(bundle);
 				context.startActivityForResult(closestStationsMapIntent,
-						Sofbus24.REQUEST_CODE_SOFBUS_24);
+						HomeScreenSelect.REQUEST_CODE_HOME_SCREEN_SELECT);
 			} else {
 				ProgressDialog progressDialog = new ProgressDialog(context);
 				progressDialog.setMessage(context

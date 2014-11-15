@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
@@ -19,21 +17,18 @@ import bg.znestorov.sofbus24.main.About;
 import bg.znestorov.sofbus24.main.AboutDialog;
 import bg.znestorov.sofbus24.main.History;
 import bg.znestorov.sofbus24.main.HistoryDialog;
+import bg.znestorov.sofbus24.main.HomeScreenSelect;
 import bg.znestorov.sofbus24.main.Preferences;
 import bg.znestorov.sofbus24.main.PreferencesDialog;
 import bg.znestorov.sofbus24.main.PreferencesPreHoneycomb;
 import bg.znestorov.sofbus24.main.PreferencesPreHoneycombDialog;
 import bg.znestorov.sofbus24.main.R;
-import bg.znestorov.sofbus24.main.Sofbus24;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 public class NavDrawerHelper {
 
 	private FragmentActivity context;
 	private GlobalEntity globalContext;
-
-	private Bundle savedInstanceState;
-	private ProgressBar sofbusLoading;
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -54,15 +49,12 @@ public class NavDrawerHelper {
 		}
 	}
 
-	public NavDrawerHelper(FragmentActivity context, Bundle savedInstanceState,
-			ProgressBar sofbusLoading, DrawerLayout mDrawerLayout,
-			ListView mDrawerList, ArrayList<String> navigationItems) {
+	public NavDrawerHelper(FragmentActivity context,
+			DrawerLayout mDrawerLayout, ListView mDrawerList,
+			ArrayList<String> navigationItems) {
 
 		this.context = context;
 		this.globalContext = (GlobalEntity) context.getApplicationContext();
-
-		this.savedInstanceState = savedInstanceState;
-		this.sofbusLoading = sofbusLoading;
 
 		this.mDrawerLayout = mDrawerLayout;
 		this.mDrawerList = mDrawerList;
@@ -96,13 +88,8 @@ public class NavDrawerHelper {
 				NavDrawerHomeScreenPreferences.setUserChoice(context,
 						position - 1);
 
-				if (context instanceof Sofbus24) {
-					((Sofbus24) context).startHomeScreen(savedInstanceState,
-							sofbusLoading);
-				} else {
-					context.setResult(Sofbus24.RESULT_CODE_ACTIVITY_NEW);
-					context.finish();
-				}
+				context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_NEW);
+				context.finish();
 			}
 
 			break;
@@ -148,7 +135,7 @@ public class NavDrawerHelper {
 			context.startActivity(aboutIntent);
 			break;
 		case 8:
-			context.setResult(Sofbus24.RESULT_CODE_ACTIVITY_FINISH);
+			context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_FINISH);
 			context.finish();
 			break;
 		}

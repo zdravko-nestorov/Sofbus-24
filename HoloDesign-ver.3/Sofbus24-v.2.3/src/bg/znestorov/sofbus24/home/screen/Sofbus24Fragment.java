@@ -23,10 +23,12 @@ import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
 import bg.znestorov.sofbus24.main.DroidTrans;
 import bg.znestorov.sofbus24.main.EditTabs;
 import bg.znestorov.sofbus24.main.EditTabsDialog;
+import bg.znestorov.sofbus24.main.HomeScreenSelect;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
@@ -64,6 +66,7 @@ public class Sofbus24Fragment extends SherlockFragment implements
 		// Get the application and curren context;
 		context = getSherlockActivity();
 		globalContext = (GlobalEntity) context.getApplicationContext();
+		LanguageChange.selectLocale(context);
 
 		// Activate the option menu
 		setHasOptionsMenu(true);
@@ -328,7 +331,7 @@ public class Sofbus24Fragment extends SherlockFragment implements
 
 		String homeTabName = homeTab.getTabName();
 		if (homeTabName.equals(getString(R.string.edit_tabs_favourites))) {
-			fragment = new FavouritesStationFragment();
+			fragment = FavouritesStationFragment.getInstance(true);
 		} else if (homeTabName.equals(getString(R.string.edit_tabs_search))) {
 			fragment = new VirtualBoardsFragment();
 		} else if (homeTabName.equals(getString(R.string.edit_tabs_schedule))) {
@@ -421,7 +424,8 @@ public class Sofbus24Fragment extends SherlockFragment implements
 		if (tabPosition == -1) {
 			// Check if the activity has to be restarted
 			if (globalContext.isHasToRestart()) {
-				ActivityUtils.restartApplication(context);
+				context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_RESTART);
+				context.finish();
 
 				return;
 			}

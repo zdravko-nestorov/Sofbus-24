@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import bg.znestorov.sofbus24.entity.StationEntity;
-import bg.znestorov.sofbus24.entity.VehicleStationEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
@@ -320,73 +319,6 @@ public class DroidTransDataSource {
 		station.setLon(cursor.getString(3));
 
 		return station;
-	}
-
-	/**
-	 * Get the stations for the current vehicle in the desired location
-	 * 
-	 * @param vehicleType
-	 *            the vehicle type
-	 * @param vehicleNumber
-	 *            the vehicle number
-	 * @param vehicleDirection
-	 *            the desired location
-	 * @return a list with all stations for the vehicle
-	 */
-	public VehicleStationEntity getVehicleStations(VehicleTypeEnum vehicleType,
-			String vehicleNumber, Integer vehicleDirection,
-			Integer stationNumber) {
-
-		VehicleStationEntity vehicleStation = null;
-
-		StringBuilder query = new StringBuilder();
-		query.append(" SELECT SOF_VEST.VEST_STOP, SOF_VEST.VEST_LID, SOF_VEST.VEST_VT, SOF_VEST.VEST_RID					\n");
-		query.append(" FROM SOF_STAT																						\n");
-		query.append(" 		JOIN SOF_VEST																					\n");
-		query.append(" 			ON SOF_VEST.FK_VEST_STAT_ID = SOF_STAT.PK_STAT_ID											\n");
-		query.append(" 			AND SOF_VEST.VEST_DIRECTION = " + vehicleDirection
-				+ "																											\n");
-		query.append(" 		JOIN SOF_VEHI																					\n");
-		query.append(" 			ON SOF_VEHI.PK_VEHI_ID = SOF_VEST.FK_VEST_VEHI_ID											\n");
-		query.append(" 			AND SOF_VEHI.VEHI_NUMBER LIKE '%" + vehicleNumber
-				+ "%'																										\n");
-		query.append(" 			AND SOF_VEHI.VEHI_TYPE LIKE '%"
-				+ String.valueOf(vehicleType) + "%'																			\n");
-		query.append(" WHERE SOF_STAT.STAT_NUMBER = " + stationNumber
-				+ "																											\n");
-
-		// Selecting the row that contains the stations data
-		Cursor cursor = database.rawQuery(query.toString(), null);
-
-		// Iterating the cursor and fill the empty List<Station>
-		if (cursor.getCount() > 0) {
-			cursor.moveToFirst();
-			vehicleStation = cursorToVehicleStation(cursor);
-			cursor.moveToNext();
-		}
-
-		// Closing the cursor
-		cursor.close();
-
-		return vehicleStation;
-	}
-
-	/**
-	 * Creating new VehicleStation object with the data of the current row of
-	 * the database
-	 * 
-	 * @param cursor
-	 *            the input cursor for interacting with the DB
-	 * @return the station object on the current row
-	 */
-	private VehicleStationEntity cursorToVehicleStation(Cursor cursor) {
-
-		Integer stop = cursor.getInt(0);
-		Integer lid = cursor.getInt(1);
-		Integer vt = cursor.getInt(2);
-		Integer rid = cursor.getInt(3);
-
-		return new VehicleStationEntity(stop, lid, vt, rid);
 	}
 
 }

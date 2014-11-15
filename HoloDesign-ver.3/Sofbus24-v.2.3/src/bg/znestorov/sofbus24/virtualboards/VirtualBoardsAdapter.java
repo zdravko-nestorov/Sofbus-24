@@ -26,9 +26,11 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
  */
 public class VirtualBoardsAdapter extends ArrayAdapter<StationEntity> {
 
-	private final FavouritesDataSource favouritesDatasource;
 	private final Activity context;
+	private final FavouritesDataSource favouritesDatasource;
 	private final List<StationEntity> stations;
+
+	private boolean isPhoneDevice;
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
@@ -39,7 +41,10 @@ public class VirtualBoardsAdapter extends ArrayAdapter<StationEntity> {
 
 	public VirtualBoardsAdapter(Activity context, List<StationEntity> stations) {
 		super(context, R.layout.activity_virtual_boards_list_item, stations);
+
 		this.context = context;
+		this.isPhoneDevice = ((GlobalEntity) context.getApplicationContext())
+				.isPhoneDevice();
 		this.stations = stations;
 		this.favouritesDatasource = new FavouritesDataSource(context);
 	}
@@ -70,6 +75,13 @@ public class VirtualBoardsAdapter extends ArrayAdapter<StationEntity> {
 			rowView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) rowView.getTag();
+		}
+
+		// In case of a tablet - put border between GridView items
+		if (!isPhoneDevice) {
+			rowView.setBackgroundResource(R.drawable.grid_border);
+			int pixels = ActivityUtils.dpToPx(context, 8);
+			rowView.setPadding(pixels, pixels, pixels, pixels);
 		}
 
 		// Fill the data

@@ -84,6 +84,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	private boolean isPhoneDevice;
 	private String language;
 
+	private boolean isHomeScreenFragment;
 	private boolean isReorderVisible;
 
 	// Used for optimize performance of the ListView
@@ -104,7 +105,8 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 
 	private boolean expandedListItem;
 
-	public FavouritesStationAdapter(Activity context, View emptyView,
+	public FavouritesStationAdapter(Activity context,
+			boolean isHomeScreenFragment, View emptyView,
 			FavouritesStationFragment favouritesStationFragment,
 			List<StationEntity> stations) {
 		super(context, R.layout.activity_favourites_list_item, stations);
@@ -126,6 +128,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		this.displayImageOptions = ActivityUtils.displayImageOptions();
 		this.imageLoader.init(ActivityUtils.initImageLoader(context));
 
+		this.isHomeScreenFragment = isHomeScreenFragment;
 		this.isReorderVisible = isReorderVisible();
 
 		setExpandedListItemValue();
@@ -156,7 +159,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	 * Get the current state of the Favorites ListItems
 	 */
 	public void setExpandedListItemValue() {
-		if (!isPhoneDevice) {
+		if (!isPhoneDevice && isHomeScreenFragment) {
 			expandedListItem = true;
 		} else {
 			SharedPreferences sharedPreferences = PreferenceManager
@@ -328,10 +331,10 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		}
 
 		// Attach click listeners to the EXPAND, EDIT and REMOVE buttons
-		if (isPhoneDevice) {
-			expandStation(viewHolder, station);
-		} else {
+		if (!isPhoneDevice && isHomeScreenFragment) {
 			changeExpandStationIcon(viewHolder.expandStation);
+		} else {
+			expandStation(viewHolder, station);
 		}
 
 		reorderStation(viewHolder.reorderStation, station, position);
@@ -454,8 +457,15 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	 * @return the height of the StationImage in pixels
 	 */
 	private int getExpandedStationImageHeight() {
-		int pixels = (int) context.getResources().getDimension(
-				R.dimen.favourites_item_height);
+		int pixels;
+
+		if (isHomeScreenFragment) {
+			pixels = (int) context.getResources().getDimension(
+					R.dimen.favourites_item_height);
+		} else {
+			pixels = (int) context.getResources().getDimension(
+					R.dimen.favourites_item_height_dialog);
+		}
 
 		return pixels;
 	}

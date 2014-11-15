@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
@@ -26,6 +27,8 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 	private ArrayList<String> navigationItems;
 	private ArrayList<Integer> navigationItemsImgs;
 
+	private boolean isPhoneDevice;
+
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
 		View navDrawerLayout;
@@ -36,9 +39,13 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 
 	public NavDrawerArrayAdapter(Activity context,
 			ArrayList<String> navigationItems) {
+
 		super(context, R.layout.activity_navigation_drawer_list_item,
 				navigationItems);
+
 		this.context = context;
+		this.isPhoneDevice = ((GlobalEntity) context.getApplicationContext())
+				.isPhoneDevice();
 		this.navigationItems = navigationItems;
 		this.navigationItemsImgs = new ArrayList<Integer>();
 
@@ -80,38 +87,44 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 	@Override
 	@SuppressLint("InflateParams")
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View rowView = convertView;
-		ViewHolder viewHolder;
 
-		// Reuse views
-		if (rowView == null) {
-			LayoutInflater inflater = context.getLayoutInflater();
-			rowView = inflater.inflate(
-					R.layout.activity_navigation_drawer_list_item, null);
-
-			// Configure view holder
-			viewHolder = new ViewHolder();
-			viewHolder.navDrawerLayout = rowView
-					.findViewById(R.id.navigation_drawer_list_item_layout);
-			viewHolder.navDrawerImg = (ImageView) rowView
-					.findViewById(R.id.navigation_drawer_list_img);
-			viewHolder.navDrawerText = (TextView) rowView
-					.findViewById(R.id.navigation_drawer_list_text);
-			viewHolder.navDrawerCheckedImg = (ImageView) rowView
-					.findViewById(R.id.navigation_drawer_list_home_img);
-			rowView.setTag(viewHolder);
+		// In case of tablet do not show the DroidTrans as possible home screen
+		if (!isPhoneDevice && position == 3) {
+			return new View(context);
 		} else {
-			viewHolder = (ViewHolder) rowView.getTag();
+			View rowView = convertView;
+			ViewHolder viewHolder;
+
+			// Reuse views
+			if (rowView == null) {
+				LayoutInflater inflater = context.getLayoutInflater();
+				rowView = inflater.inflate(
+						R.layout.activity_navigation_drawer_list_item, null);
+
+				// Configure view holder
+				viewHolder = new ViewHolder();
+				viewHolder.navDrawerLayout = rowView
+						.findViewById(R.id.navigation_drawer_list_item_layout);
+				viewHolder.navDrawerImg = (ImageView) rowView
+						.findViewById(R.id.navigation_drawer_list_img);
+				viewHolder.navDrawerText = (TextView) rowView
+						.findViewById(R.id.navigation_drawer_list_text);
+				viewHolder.navDrawerCheckedImg = (ImageView) rowView
+						.findViewById(R.id.navigation_drawer_list_home_img);
+				rowView.setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) rowView.getTag();
+			}
+
+			// Initialize each row of the NavigationDrawer
+			initSubTagsBackground(position, viewHolder);
+			viewHolder.navDrawerImg.setImageResource(navigationItemsImgs
+					.get(position));
+			viewHolder.navDrawerText.setText(navigationItems.get(position));
+			initCheckedImage(position, viewHolder);
+
+			return rowView;
 		}
-
-		// Initialize each row of the NavigationDrawer
-		initSubTagsBackground(position, viewHolder);
-		viewHolder.navDrawerImg.setImageResource(navigationItemsImgs
-				.get(position));
-		viewHolder.navDrawerText.setText(navigationItems.get(position));
-		initCheckedImage(position, viewHolder);
-
-		return rowView;
 	}
 
 	@Override

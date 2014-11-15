@@ -14,11 +14,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * Array Adapted user for set each row a station from the Vehicles DB
@@ -38,6 +40,7 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<VehicleEntity> {
 	private final List<VehicleEntity> originalVehicles;
 	private List<VehicleEntity> filteredVehicles;
 
+	private boolean isPhoneDevice;
 	private Filter stationsFilter;
 	private String language;
 
@@ -54,6 +57,8 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<VehicleEntity> {
 		super(context, R.layout.activity_schedule_vehicle_list_item, vehicles);
 
 		this.context = context;
+		this.isPhoneDevice = ((GlobalEntity) context.getApplicationContext())
+				.isPhoneDevice();
 		this.language = LanguageChange.getUserLocale(context);
 
 		this.emptyView = emptyView;
@@ -92,6 +97,13 @@ public class ScheduleVehicleAdapter extends ArrayAdapter<VehicleEntity> {
 			rowView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) rowView.getTag();
+		}
+
+		// In case of a tablet - put border between GridView items
+		if (!isPhoneDevice) {
+			rowView.setBackgroundResource(R.drawable.grid_border);
+			int pixels = ActivityUtils.dpToPx(context, 8);
+			rowView.setPadding(pixels, pixels, pixels, pixels);
 		}
 
 		VehicleEntity vehicle = filteredVehicles.get(position);

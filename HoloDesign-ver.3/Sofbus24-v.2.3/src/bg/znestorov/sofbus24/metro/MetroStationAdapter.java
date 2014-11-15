@@ -57,6 +57,7 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 	private List<StationEntity> originalStations;
 	private List<StationEntity> filteredStations;
 
+	private boolean isPhoneDevice;
 	private Filter stationsFilter;
 	private String language;
 
@@ -76,6 +77,7 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 
 		this.context = context;
 		this.globalContext = (GlobalEntity) context.getApplicationContext();
+		this.isPhoneDevice = globalContext.isPhoneDevice();
 
 		this.metroStationFragment = metroStationFragment;
 		this.favouritesDatasource = new FavouritesDataSource(context);
@@ -119,6 +121,13 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 			rowView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) rowView.getTag();
+		}
+
+		// In case of a tablet - put border between GridView items
+		if (!isPhoneDevice) {
+			rowView.setBackgroundResource(R.drawable.grid_border);
+			int pixels = ActivityUtils.dpToPx(context, 8);
+			rowView.setPadding(pixels, pixels, pixels, pixels);
 		}
 
 		// Fill the data

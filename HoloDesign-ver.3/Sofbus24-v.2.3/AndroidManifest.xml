@@ -51,9 +51,9 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_maps_api_2_map_release_home" />
 
-        <!-- Sofbus 24 -->
+        <!-- HomeScreen Select -->
         <activity
-            android:name="bg.znestorov.sofbus24.main.Sofbus24"
+            android:name="bg.znestorov.sofbus24.main.HomeScreenSelect"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan" >
             <intent-filter>
@@ -62,6 +62,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Sofbus 24 -->
+        <activity android:name="bg.znestorov.sofbus24.main.Sofbus24" />
 
         <!-- History -->
         <activity android:name="bg.znestorov.sofbus24.main.History" />
@@ -141,6 +144,12 @@
 
         <!-- DroidTrans -->
         <activity android:name="bg.znestorov.sofbus24.main.DroidTrans" />
+
+        <!-- Favourites -->
+        <activity android:name="bg.znestorov.sofbus24.main.Favourites" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.FavouritesDialog"
+            android:theme="@style/PopupTheme" />
     </application>
 
 </manifest>

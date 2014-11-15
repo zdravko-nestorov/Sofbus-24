@@ -102,7 +102,7 @@
     <string name="action_history_top">Най-отгоре</string>
     <string name="action_history_delete_all">Изтрий всички</string>
     <!-- DroidTrans -->
-    <string name="action_droidtrans_home_screen">Начален екран</string>
+    <string name="action_droidtrans_favourites">Фаворити</string>
 
     <!-- Context Menu -->
     <!-- Favourites -->

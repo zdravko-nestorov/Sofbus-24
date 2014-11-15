@@ -47,6 +47,8 @@ public class Constants {
 	public static final String BUNDLE_GOOGLE_STREET_VIEW = "GOOGLE_STREET_VIEW";
 	// History --> HistoryFragment
 	public static final String BUNDLE_HISTORY_LIST = "HISTORY LIST";
+	// Sofbus24/DroidTrans/ClosestStationsMap --> FavouritesFragmen
+	public static final String BUNDLE_IS_HOME_SCREEN_FRAGMENT = "IS HOME SCREEN FRAGMENT";
 
 	/**
 	 * Preferences

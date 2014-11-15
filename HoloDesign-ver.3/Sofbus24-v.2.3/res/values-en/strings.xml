@@ -99,7 +99,7 @@
     <string name="action_history_top">Top</string>
     <string name="action_history_delete_all">Delete all</string>
     <!-- DroidTrans -->
-    <string name="action_droidtrans_home_screen">Home screen</string>
+    <string name="action_droidtrans_favourites">Favorites</string>
 
     <!-- Context Menu -->
     <!-- Favourites -->

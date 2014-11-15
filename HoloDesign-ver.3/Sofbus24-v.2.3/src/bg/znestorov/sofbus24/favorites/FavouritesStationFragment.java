@@ -33,6 +33,7 @@ import bg.znestorov.sofbus24.favorites.FavouritesRenameDialog.OnRenameFavourites
 import bg.znestorov.sofbus24.favorites.FavouritesSortDialog.OnSortChoiceListener;
 import bg.znestorov.sofbus24.favorites.FavouritesSortTypeDialog.OnSortTypeChoiceListener;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
@@ -54,6 +55,7 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 		OnSortChoiceListener, OnSortTypeChoiceListener {
 
 	private Activity context;
+	private boolean isHomeScreenFragment;
 
 	private GridView gridViewFavourites;
 	private SearchEditText searchEditText;
@@ -63,13 +65,24 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 	private List<StationEntity> favouritesStations = new ArrayList<StationEntity>();
 	private FavouritesDataSource favouritesDatasource;
 
+	public static FavouritesStationFragment getInstance(
+			boolean isHomeScreenFragment) {
+		FavouritesStationFragment favouritesStationFragment = new FavouritesStationFragment();
+
+		Bundle bundle = new Bundle();
+		bundle.putBoolean(Constants.BUNDLE_IS_HOME_SCREEN_FRAGMENT,
+				isHomeScreenFragment);
+		favouritesStationFragment.setArguments(bundle);
+
+		return favouritesStationFragment;
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		LanguageChange.selectLocale(getActivity());
 
-		View myFragmentView = inflater.inflate(
-				R.layout.activity_favourites_fragment, container, false);
+		View myFragmentView = getFragmentView(inflater, container);
 
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
@@ -231,6 +244,35 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 							newStationName, station.getNumber())),
 					Toast.LENGTH_LONG).show();
 		}
+	}
+
+	/**
+	 * Get the FragmentView for the fragment. It depends of the activity that
+	 * calls that Fragment (in case of the home screen or another activity -
+	 * ClosestStationsMap or DroidTrans)
+	 * 
+	 * @param inflater
+	 *            the view inflater
+	 * @param container
+	 *            the view group
+	 * @return the fragment view
+	 */
+	private View getFragmentView(LayoutInflater inflater, ViewGroup container) {
+
+		View myFragmentView;
+		isHomeScreenFragment = getArguments().getBoolean(
+				Constants.BUNDLE_IS_HOME_SCREEN_FRAGMENT);
+
+		if (isHomeScreenFragment) {
+			myFragmentView = inflater.inflate(
+					R.layout.activity_favourites_fragment, container, false);
+		} else {
+			myFragmentView = inflater.inflate(
+					R.layout.activity_favourites_fragment_dialog, container,
+					false);
+		}
+
+		return myFragmentView;
 	}
 
 	/**
@@ -396,7 +438,8 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 	 */
 	private void setAdapter() {
 		ArrayAdapter<StationEntity> adapter = new FavouritesStationAdapter(
-				context, emptyView, this, favouritesStations);
+				context, isHomeScreenFragment, emptyView, this,
+				favouritesStations);
 		if (gridViewFavourites == null) {
 			setListAdapter(adapter);
 		} else {

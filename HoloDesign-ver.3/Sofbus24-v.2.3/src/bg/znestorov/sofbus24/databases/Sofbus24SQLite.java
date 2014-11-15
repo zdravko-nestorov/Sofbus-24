@@ -42,10 +42,6 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 	public static final String COLUMN_FK_VEST_VEHI_ID = "FK_VEST_VEHI_ID";
 	public static final String COLUMN_FK_VEST_STAT_ID = "FK_VEST_STAT_ID";
 	public static final String COLUMN_VEST_DIRECTION = "VEST_DIRECTION";
-	public static final String COLUMN_VEST_STOP = "VEST_STOP";
-	public static final String COLUMN_VEST_LID = "VEST_LID";
-	public static final String COLUMN_VEST_VT = "VEST_VT";
-	public static final String COLUMN_VEST_RID = "VEST_RID";
 
 	// The Android's default system path of the database
 	private static String DB_PATH = "//data//data//bg.znestorov.sofbus24.main//databases//";

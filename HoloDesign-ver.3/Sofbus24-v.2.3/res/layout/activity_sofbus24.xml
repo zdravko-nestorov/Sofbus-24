@@ -5,23 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <RelativeLayout
+    <FrameLayout
+        android:id="@+id/sofbus24_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <ProgressBar
-            android:id="@+id/sofbus24_loading"
-            style="?android:attr/progressBarStyleInverse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone" />
-
-        <FrameLayout
-            android:id="@+id/sofbus24_home_screen_standard"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </RelativeLayout>
+        android:layout_height="match_parent" />
 
     <ListView
         android:id="@+id/navigation_drawer_listview"

@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import bg.znestorov.sofbus24.databases.DroidTransDataSource;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
@@ -45,6 +46,7 @@ import com.actionbarsherlock.view.MenuItem;
 public class DroidTrans extends SherlockFragmentActivity {
 
 	private FragmentActivity context;
+	private GlobalEntity globalContext;
 	private DroidTransDataSource droidtransDatasource;
 
 	private ActionBar actionBar;
@@ -82,6 +84,7 @@ public class DroidTrans extends SherlockFragmentActivity {
 		// Get the current activity context and check if this activity is the
 		// home screen
 		context = DroidTrans.this;
+		globalContext = (GlobalEntity) getApplicationContext();
 		droidtransDatasource = new DroidTransDataSource(context);
 		isDroidTransHomeScreen = getIntent().getExtras() != null ? getIntent()
 				.getExtras().getBoolean(BUNDLE_IS_DROID_TRANS_HOME_SCREEN,
@@ -114,7 +117,7 @@ public class DroidTrans extends SherlockFragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-		setResult(Sofbus24.RESULT_CODE_ACTIVITY_FINISH, new Intent());
+		setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_FINISH, new Intent());
 		finish();
 	}
 
@@ -124,6 +127,19 @@ public class DroidTrans extends SherlockFragmentActivity {
 				menu);
 
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+
+		MenuItem favourites = menu.findItem(R.id.action_favourites);
+		if (isDroidTransHomeScreen) {
+			favourites.setVisible(true);
+		} else {
+			favourites.setVisible(false);
+		}
+
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -140,6 +156,17 @@ public class DroidTrans extends SherlockFragmentActivity {
 			} else {
 				finish();
 			}
+
+			return true;
+		case R.id.action_favourites:
+			Intent favouritesIntent;
+			if (globalContext.isPhoneDevice()) {
+				favouritesIntent = new Intent(context, Favourites.class);
+			} else {
+				favouritesIntent = new Intent(context, FavouritesDialog.class);
+			}
+
+			startActivity(favouritesIntent);
 
 			return true;
 		case R.id.action_closest_stations_map:
@@ -610,8 +637,8 @@ public class DroidTrans extends SherlockFragmentActivity {
 		mDrawerList = (ListView) findViewById(R.id.navigation_drawer_listview);
 		mMenuAdapter = new NavDrawerArrayAdapter(context, navigationItems);
 		mDrawerList.setAdapter(mMenuAdapter);
-		mDrawerList.setOnItemClickListener(new NavDrawerHelper(context, null,
-				null, mDrawerLayout, mDrawerList, navigationItems)
+		mDrawerList.setOnItemClickListener(new NavDrawerHelper(context,
+				mDrawerLayout, mDrawerList, navigationItems)
 				.getDrawerItemClickListener());
 
 		// ActionBarDrawerToggle ties together the the proper interactions
