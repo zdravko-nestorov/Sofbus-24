@@ -24,9 +24,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import bg.znestorov.sofbus24.databases.DroidTransDataSource;
-import bg.znestorov.sofbus24.droidtrans.RetrieveDroidTransSchedule;
+import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
-import bg.znestorov.sofbus24.entity.VehicleStationEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.entity.WheelStateEntity;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
@@ -36,6 +35,7 @@ import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -509,8 +509,6 @@ public class DroidTrans extends SherlockFragmentActivity {
 				ProgressDialog progressDialog = new ProgressDialog(context);
 
 				VehicleTypeEnum vehicleType = getCurrentVehicleType();
-				String vehicleNumber = getCurrentVehicleNumber();
-				Integer vehicleDirection = getCurrentVehicleDirection();
 				StationEntity station = getCurrentStation();
 
 				switch (vehicleType) {
@@ -523,21 +521,10 @@ public class DroidTrans extends SherlockFragmentActivity {
 					retrieveMetroSchedule.execute();
 					break;
 				default:
-					droidtransDatasource.open();
-					VehicleStationEntity vehicleStationEntity = droidtransDatasource
-							.getVehicleStations(vehicleType, vehicleNumber,
-									vehicleDirection,
-									Integer.parseInt(station.getNumber()));
-					droidtransDatasource.close();
-
-					progressDialog.setMessage(Html.fromHtml(String.format(
-							getString(R.string.vb_time_retrieve_info),
-							String.format(station.getName() + " (%s)",
-									station.getNumber()))));
-					RetrieveDroidTransSchedule retrieveDroidTransSchedule = new RetrieveDroidTransSchedule(
-							context, progressDialog, vehicleStationEntity,
-							station);
-					retrieveDroidTransSchedule.execute();
+					RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
+							context, this, station,
+							HtmlRequestCodesEnum.SINGLE_RESULT);
+					retrieveVirtualBoards.getSumcInformation();
 					break;
 				}
 			}
