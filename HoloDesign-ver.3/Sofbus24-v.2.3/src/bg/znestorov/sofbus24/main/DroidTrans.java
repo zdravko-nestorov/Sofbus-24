@@ -107,6 +107,16 @@ public class DroidTrans extends SherlockFragmentActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (globalContext.isHasToRestart()) {
+			context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_RESTART);
+			context.finish();
+		}
+	}
+
+	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 
 		setWheelStateEntity();

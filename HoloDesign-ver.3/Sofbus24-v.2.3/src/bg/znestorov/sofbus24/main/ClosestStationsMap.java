@@ -197,6 +197,16 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (globalContext.isHasToRestart()) {
+			context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_RESTART);
+			context.finish();
+		}
+	}
+
+	@Override
 	public void onBackPressed() {
 		setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_FINISH, new Intent());
 		finish();

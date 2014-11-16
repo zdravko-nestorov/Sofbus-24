@@ -21,6 +21,7 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HomeTabEntity;
 import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
 import bg.znestorov.sofbus24.main.DroidTrans;
+import bg.znestorov.sofbus24.main.DroidTransDialog;
 import bg.znestorov.sofbus24.main.EditTabs;
 import bg.znestorov.sofbus24.main.EditTabsDialog;
 import bg.znestorov.sofbus24.main.HomeScreenSelect;
@@ -218,7 +219,13 @@ public class Sofbus24Fragment extends SherlockFragment implements
 	 * Start the DroidTrans activity
 	 */
 	private void startDroidTrans() {
-		Intent droidTransIntent = new Intent(context, DroidTrans.class);
+		Intent droidTransIntent;
+		if (globalContext.isPhoneDevice()) {
+			droidTransIntent = new Intent(context, DroidTrans.class);
+		} else {
+			droidTransIntent = new Intent(context, DroidTransDialog.class);
+		}
+
 		context.startActivity(droidTransIntent);
 	}
 

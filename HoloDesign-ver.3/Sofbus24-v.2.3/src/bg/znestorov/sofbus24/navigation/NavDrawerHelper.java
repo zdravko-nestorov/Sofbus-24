@@ -160,7 +160,7 @@ public class NavDrawerHelper {
 		if (userChoice == 2 && !globalContext.areServicesAvailable()) {
 			ActivityUtils.showLongToast(context, String.format(context
 					.getString(R.string.navigation_drawer_home_screen_error),
-					homeScreenName), 6000, 1000);
+					homeScreenName), 3000, 1000);
 
 			isHomeScreenChanged = false;
 		} else {
@@ -170,7 +170,7 @@ public class NavDrawerHelper {
 								context,
 								String.format(
 										context.getString(R.string.navigation_drawer_home_screen_remains),
-										homeScreenName), 5000, 1000);
+										homeScreenName), 3000, 1000);
 
 				isHomeScreenChanged = false;
 			} else {
@@ -179,7 +179,7 @@ public class NavDrawerHelper {
 								context,
 								String.format(
 										context.getString(R.string.navigation_drawer_home_screen_changed),
-										homeScreenName), 5500, 1000);
+										homeScreenName), 3000, 1000);
 			}
 		}
 
