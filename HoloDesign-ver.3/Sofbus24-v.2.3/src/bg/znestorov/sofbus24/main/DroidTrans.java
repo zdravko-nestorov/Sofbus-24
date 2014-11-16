@@ -27,6 +27,7 @@ import bg.znestorov.sofbus24.databases.DroidTransDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.entity.WheelStateEntity;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
@@ -102,6 +103,10 @@ public class DroidTrans extends SherlockFragmentActivity {
 		initLayoutFields();
 
 		if (isDroidTransHomeScreen) {
+			if (savedInstanceState == null) {
+				Utils.checkForUpdate(context, UpdateTypeEnum.APP);
+			}
+
 			initNavigationDrawer();
 		}
 	}

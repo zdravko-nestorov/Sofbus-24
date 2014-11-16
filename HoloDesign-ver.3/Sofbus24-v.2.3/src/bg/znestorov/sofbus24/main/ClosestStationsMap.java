@@ -38,6 +38,7 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.SortTypeEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
@@ -192,6 +193,10 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		initGoogleMaps();
 
 		if (isCSMapHomeScreen) {
+			if (savedInstanceState == null) {
+				Utils.checkForUpdate(context, UpdateTypeEnum.APP);
+			}
+
 			initNavigationDrawer();
 		}
 	}

@@ -1,12 +1,18 @@
 package bg.znestorov.sofbus24.utils;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -15,12 +21,12 @@ import android.net.NetworkInfo;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.history.HistoryOfSearches;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.updates.check.CheckForUpdatesAsync;
 import bg.znestorov.sofbus24.updates.check.CheckForUpdatesPreferences;
-import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * Utility class
@@ -591,27 +597,6 @@ public class Utils {
 	}
 
 	/**
-	 * Check if an application update is deployed in the GooglePlay market (only
-	 * on the first of each month)
-	 * 
-	 * @param context
-	 *            current Activity context
-	 */
-	public static void checkForUpdate(FragmentActivity context) {
-		boolean isDayForUpdate = getCurrentDay() == 1 || getCurrentDay() == 15;
-		boolean isUpdateAlreadyChecked = CheckForUpdatesPreferences
-				.isUpdateAlreadyChecked(context, getCurrentDate());
-		boolean haveInternetConnection = ActivityUtils
-				.haveNetworkConnection(context);
-
-		if (isDayForUpdate && !isUpdateAlreadyChecked && haveInternetConnection) {
-			CheckForUpdatesPreferences.setLastCheckDate(context,
-					getCurrentDate());
-			new CheckForUpdatesAsync(context).execute();
-		}
-	}
-
-	/**
 	 * Check if the device is in landscape mod
 	 * 
 	 * @param context
@@ -659,7 +644,15 @@ public class Utils {
 		return navigationItems;
 	}
 
+	/**
+	 * Check if there is an available network connection
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @return if there is a network connection
+	 */
 	public static boolean haveNetworkConnection(Activity context) {
+
 		boolean haveConnectedWifi = false;
 		boolean haveConnectedMobile = false;
 		boolean haveConnected = false;
@@ -690,6 +683,152 @@ public class Utils {
 		}
 
 		return haveConnectedWifi || haveConnectedMobile || haveConnected;
+	}
+
+	/**
+	 * Get the difference between two dates in days
+	 * 
+	 * @param startDateString
+	 *            the start date
+	 * @param endDateString
+	 *            the end date
+	 * @return the difference between the start and end date in days
+	 */
+	@SuppressLint("SimpleDateFormat")
+	public static int getDateDifferenceInDays(String startDateString,
+			String endDateString) {
+		try {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+					"dd.MM.yyyy");
+			Date startDate = simpleDateFormat.parse(startDateString);
+			Date endDate = simpleDateFormat.parse(endDateString);
+
+			long difference = endDate.getTime() - startDate.getTime();
+			int daysDifference = (int) (difference / (1000 * 60 * 60 * 24));
+
+			return daysDifference;
+		} catch (ParseException e) {
+			return 0;
+		}
+	}
+
+	/**
+	 * Get the closest date when the app had to be updated
+	 * 
+	 * @param updateType
+	 *            the update type (what would be updated - APP or DB)
+	 * 
+	 * @return the closest date when the app had to be updated
+	 */
+	public static String getClosestDateForUpdate(UpdateTypeEnum updateType) {
+		String closestDateForUpdate;
+
+		Integer[] daysForUpdate;
+		int currentDay = getCurrentDay();
+
+		switch (updateType) {
+		case APP:
+			daysForUpdate = DAYS_FOR_APP_UPDATE
+					.toArray(new Integer[DAYS_FOR_APP_UPDATE.size()]);
+			closestDateForUpdate = daysForUpdate[0] + "";
+
+			break;
+		default:
+			daysForUpdate = DAYS_FOR_DB_UPDATE
+					.toArray(new Integer[DAYS_FOR_DB_UPDATE.size()]);
+
+			if (currentDay >= daysForUpdate[1]) {
+				closestDateForUpdate = daysForUpdate[1] + "";
+			} else {
+				closestDateForUpdate = daysForUpdate[0] + "";
+			}
+
+			break;
+		}
+
+		closestDateForUpdate += "." + getValueAfter(getCurrentDate(), ".");
+
+		return closestDateForUpdate;
+	}
+
+	/**
+	 * Check if the date for update is in range
+	 * 
+	 * @param startDateString
+	 *            the start date in string format
+	 * @param endDateString
+	 *            the end date in string format
+	 * @param updateType
+	 *            the update type (what would be updated - APP or DB)
+	 * 
+	 * @return if the date is in range
+	 */
+	public static boolean isDateInRange(String startDateString,
+			String endDateString, UpdateTypeEnum updateType) {
+		int startCheckDifference = getDateDifferenceInDays(startDateString,
+				getClosestDateForUpdate(updateType));
+		int endCheckDifference = getDateDifferenceInDays(
+				getClosestDateForUpdate(updateType), endDateString);
+
+		if (startCheckDifference > 0 && endCheckDifference > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * The days that the application and the database should be updated
+	 */
+	private static final Set<Integer> DAYS_FOR_APP_UPDATE;
+	static {
+		DAYS_FOR_APP_UPDATE = new LinkedHashSet<Integer>();
+		DAYS_FOR_APP_UPDATE.add(1);
+	}
+
+	/**
+	 * The days that the application and the database should be updated
+	 */
+	private static final Set<Integer> DAYS_FOR_DB_UPDATE;
+	static {
+		DAYS_FOR_DB_UPDATE = new LinkedHashSet<Integer>();
+		DAYS_FOR_DB_UPDATE.add(1);
+		DAYS_FOR_DB_UPDATE.add(15);
+	}
+
+	/**
+	 * Check if an application or database update is available (APP - one per
+	 * month, DB - twice per month)
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param updateType
+	 *            the update type (what would be updated - APP or DB)
+	 */
+	public static void checkForUpdate(FragmentActivity context,
+			UpdateTypeEnum updateType) {
+
+		Set<Integer> daysForUpdate;
+		switch (updateType) {
+		case APP:
+			daysForUpdate = DAYS_FOR_APP_UPDATE;
+			break;
+		default:
+			daysForUpdate = DAYS_FOR_DB_UPDATE;
+			break;
+		}
+
+		boolean haveInternetConnection = haveNetworkConnection(context);
+		boolean isFirstOrDelayedUpdate = CheckForUpdatesPreferences
+				.isFirstOrDelayedUpdate(context, getCurrentDate(), updateType);
+		boolean isDayForUpdate = daysForUpdate.contains(getCurrentDay());
+		boolean isUpdateAlreadyChecked = CheckForUpdatesPreferences
+				.isUpdateAlreadyChecked(context, getCurrentDate(), updateType);
+
+		if (haveInternetConnection
+				&& (isFirstOrDelayedUpdate || (isDayForUpdate && !isUpdateAlreadyChecked))) {
+			new CheckForUpdatesAsync(context, updateType).execute();
+		}
 	}
 
 }

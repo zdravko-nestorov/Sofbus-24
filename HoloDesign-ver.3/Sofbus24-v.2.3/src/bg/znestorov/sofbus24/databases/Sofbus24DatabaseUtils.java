@@ -1,6 +1,8 @@
 package bg.znestorov.sofbus24.databases;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import android.app.Activity;
 
@@ -30,10 +32,16 @@ public class Sofbus24DatabaseUtils {
 	public static void createSofbus24Database(Activity context) {
 		deleteOldDatabases(context);
 
+		InputStream dbInputStream = getDatabaseInputStream(context);
 		Sofbus24SQLite myDbHelper = new Sofbus24SQLite(context);
-		myDbHelper.createDataBase(null);
+		myDbHelper.createDataBase(dbInputStream);
 		myDbHelper.getWritableDatabase();
 		myDbHelper.close();
+
+		// Delete the new db file after the DB is updated
+		if (dbInputStream != null) {
+			context.deleteFile(Sofbus24SQLite.DB_NAME);
+		}
 	}
 
 	/**
@@ -51,21 +59,50 @@ public class Sofbus24DatabaseUtils {
 	}
 
 	/**
+	 * Delete the database file in the current path
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @param path
+	 *            the dabatase file
+	 */
+	private static void deleteDabatase(Activity context, String path) {
+		File dbFile = new File(path);
+		dbFile.delete();
+	}
+
+	/**
 	 * Delete the old databases that were used (Stations and Vehicles)
 	 * 
 	 * @param context
 	 *            the current activity context
 	 */
 	private static void deleteOldDatabases(Activity context) {
-		File stationsDb = new File(DB_PATH + DB_STATIONS_NAME);
-		stationsDb.delete();
-		stationsDb = new File(DB_PATH + DB_STATIONS_JOURNAL_NAME);
-		stationsDb.delete();
+		deleteDabatase(context, DB_PATH + DB_STATIONS_NAME);
+		deleteDabatase(context, DB_PATH + DB_STATIONS_JOURNAL_NAME);
+		deleteDabatase(context, DB_PATH + DB_VEHICLES_NAME);
+		deleteDabatase(context, DB_PATH + DB_VEHICLES_JOURNAL_NAME);
+	}
 
-		File vehiclesDb = new File(DB_PATH + DB_VEHICLES_NAME);
-		vehiclesDb.delete();
-		vehiclesDb = new File(DB_PATH + DB_VEHICLES_JOURNAL_NAME);
-		vehiclesDb.delete();
+	/**
+	 * Get the input dabatase stream (if a dabatase update is found - get the
+	 * stream from the Files folder and delete the existing database)
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @return the input database stream
+	 */
+	private static InputStream getDatabaseInputStream(Activity context) {
+
+		FileInputStream dbInputStream;
+		try {
+			dbInputStream = context.openFileInput(Sofbus24SQLite.DB_NAME);
+			deleteDabatase(context, DB_PATH + Sofbus24SQLite.DB_NAME);
+		} catch (Exception e) {
+			dbInputStream = null;
+		}
+
+		return dbInputStream;
 	}
 
 }

@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.ListView;
+import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
 import bg.znestorov.sofbus24.home.screen.Sofbus24Fragment;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
@@ -47,6 +48,9 @@ public class Sofbus24 extends SherlockFragmentActivity {
 
 		// Start the Sofbus24 fragment
 		startSofbus24Fragment(savedInstanceState);
+
+		// Check for an update
+		Utils.checkForUpdate(context, UpdateTypeEnum.APP);
 	}
 
 	@Override

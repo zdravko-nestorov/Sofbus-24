@@ -1,6 +1,5 @@
 package bg.znestorov.sofbus24.main;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.databases.Sofbus24DatabaseUtils;
+import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
@@ -45,10 +45,6 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 		ProgressBar sofbusLoading = (ProgressBar) findViewById(R.id.sofbus24_loading);
 
 		if (savedInstanceState == null) {
-
-			// Check for updates (only when the application is started for the
-			// first time)
-			Utils.checkForUpdate(context);
 
 			// Creates the configuration file
 			Configuration.createConfiguration(context);
@@ -124,10 +120,11 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	 */
 	public class CreateDatabases extends AsyncTask<Void, Void, Void> {
 
-		private Activity context;
+		private FragmentActivity context;
 		private ProgressBar sofbusLoading;
 
-		public CreateDatabases(Activity context, ProgressBar sofbusLoading) {
+		public CreateDatabases(FragmentActivity context,
+				ProgressBar sofbusLoading) {
 			this.context = context;
 			this.sofbusLoading = sofbusLoading;
 		}
@@ -174,10 +171,11 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	 */
 	public class LoadStartingData extends AsyncTask<Void, Void, Void> {
 
-		private Activity context;
+		private FragmentActivity context;
 		private ProgressBar sofbusLoading;
 
-		public LoadStartingData(Activity context, ProgressBar sofbusLoading) {
+		public LoadStartingData(FragmentActivity context,
+				ProgressBar sofbusLoading) {
 			this.context = context;
 			this.sofbusLoading = sofbusLoading;
 		}
@@ -204,6 +202,10 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 
 			actionsOnPostExecute(sofbusLoading);
 			startHomeScreen();
+
+			// Check for updates (only when the application is started for the
+			// first time and everything is visualized)
+			Utils.checkForUpdate(context, UpdateTypeEnum.DB);
 		}
 
 		@Override

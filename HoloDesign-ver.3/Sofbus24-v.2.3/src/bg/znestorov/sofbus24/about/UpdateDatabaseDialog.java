@@ -29,16 +29,12 @@ public class UpdateDatabaseDialog extends DialogFragment {
 	private String positiveBtn;
 	private OnClickListener positiveOnClickListener;
 
-	private String stationsSofbus24Url;
 	private ConfigEntity newConfig;
 
-	public static final String BUNDLE_SOFBUS24_DB_URL = "SOFBUS-24 DB URL";
 	public static final String BUNDLE_NEW_APPLICATION_CONFIG = "NEW APPLICATION CONFIG";
 
-	public static UpdateDatabaseDialog newInstance(String sofbus24DatabaseUrl,
-			ConfigEntity newConfig) {
+	public static UpdateDatabaseDialog newInstance(ConfigEntity newConfig) {
 		Bundle bundle = new Bundle();
-		bundle.putString(BUNDLE_SOFBUS24_DB_URL, sofbus24DatabaseUrl);
 		bundle.putSerializable(BUNDLE_NEW_APPLICATION_CONFIG, newConfig);
 
 		UpdateDatabaseDialog updateDatabaseDialog = new UpdateDatabaseDialog();
@@ -57,7 +53,6 @@ public class UpdateDatabaseDialog extends DialogFragment {
 		positiveBtn = getString(R.string.app_button_update);
 
 		Bundle bundle = getArguments();
-		stationsSofbus24Url = bundle.getString(BUNDLE_SOFBUS24_DB_URL);
 		newConfig = (ConfigEntity) bundle
 				.getSerializable(BUNDLE_NEW_APPLICATION_CONFIG);
 
@@ -68,7 +63,7 @@ public class UpdateDatabaseDialog extends DialogFragment {
 				progressDialog.setMessage(Html.fromHtml(context
 						.getString(R.string.about_update_db_copy)));
 				RetrieveDatabases retrieveDatabases = new RetrieveDatabases(
-						context, progressDialog, stationsSofbus24Url, newConfig);
+						context, progressDialog, newConfig);
 				retrieveDatabases.execute();
 			}
 		};

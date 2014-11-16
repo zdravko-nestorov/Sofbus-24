@@ -45,7 +45,7 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 
 	// The Android's default system path of the database
 	private static String DB_PATH = "//data//data//bg.znestorov.sofbus24.main//databases//";
-	private static String DB_NAME = "sofbus24.db";
+	public static String DB_NAME = "sofbus24.db";
 	private static final int DATABASE_VERSION = 1;
 
 	private final Activity context;

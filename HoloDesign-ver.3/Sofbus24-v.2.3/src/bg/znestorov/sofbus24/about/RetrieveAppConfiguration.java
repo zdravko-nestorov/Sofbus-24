@@ -103,18 +103,12 @@ public class RetrieveAppConfiguration extends
 	 */
 	private void updateDb(ConfigEntity currentConfig,
 			final ConfigEntity newConfig) {
-		String sofbus24DatabaseUrl = null;
-
-		if (currentConfig.getSofbus24DbVersion() < newConfig
-				.getSofbus24DbVersion()) {
-			sofbus24DatabaseUrl = Constants.CONFIGURATION_STATIONS_DB_URL;
-		}
 
 		// Check if new DB is available
 		DialogFragment dialogFragment;
-		if (sofbus24DatabaseUrl != null) {
-			dialogFragment = UpdateDatabaseDialog.newInstance(
-					sofbus24DatabaseUrl, newConfig);
+		if (currentConfig.getSofbus24DbVersion() < newConfig
+				.getSofbus24DbVersion()) {
+			dialogFragment = UpdateDatabaseDialog.newInstance(newConfig);
 			dialogFragment.show(context.getSupportFragmentManager(),
 					"dialogFragment");
 		} else {

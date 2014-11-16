@@ -1,10 +1,12 @@
 package bg.znestorov.sofbus24.about;
 
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
@@ -26,15 +28,13 @@ public class RetrieveDatabases extends
 
 	private FragmentActivity context;
 	private ProgressDialog progressDialog;
-	private String stationsDatabaseUrl;
 	private ConfigEntity newConfig;
 
 	public RetrieveDatabases(FragmentActivity context,
-			ProgressDialog progressDialog, String stationsDatabaseUrl,
-			ConfigEntity newConfig) {
+			ProgressDialog progressDialog, ConfigEntity newConfig) {
+
 		this.context = context;
 		this.progressDialog = progressDialog;
-		this.stationsDatabaseUrl = stationsDatabaseUrl;
 		this.newConfig = newConfig;
 	}
 
@@ -46,13 +46,12 @@ public class RetrieveDatabases extends
 
 	@Override
 	protected HashMap<String, InputStream> doInBackground(Void... params) {
+
 		HashMap<String, InputStream> databases = new HashMap<String, InputStream>();
 
 		try {
-			if (stationsDatabaseUrl != null) {
-				databases.put(Constants.CONFIGURATION_PREF_SOFBUS24_KEY,
-						new URL(stationsDatabaseUrl).openStream());
-			}
+			databases.put(Constants.CONFIGURATION_PREF_SOFBUS24_KEY, new URL(
+					Constants.CONFIGURATION_SOFBUS_24_DB_URL).openStream());
 
 			// Check if DB should be updated
 			if (databases.size() > 0) {
@@ -62,10 +61,11 @@ public class RetrieveDatabases extends
 				dbInputStream = databases
 						.get(Constants.CONFIGURATION_PREF_SOFBUS24_KEY);
 				if (dbInputStream != null) {
-					updateStationsDatbase(dbInputStream);
+					createSofbusDbInFiles(dbInputStream);
 				}
 			}
 		} catch (Exception e) {
+			databases.clear();
 		}
 
 		return databases;
@@ -75,15 +75,23 @@ public class RetrieveDatabases extends
 	protected void onPostExecute(HashMap<String, InputStream> databases) {
 		super.onPostExecute(databases);
 
-		// Check if the information is successfully retrieved or an Internet
-		// error occurred
 		if (databases.size() > 0) {
 			Configuration.editDbConfigurationVersionField(context, newConfig);
-			DialogFragment dialogFragment = RestartApplicationDialog
-					.newInstance();
-			dialogFragment.show(context.getSupportFragmentManager(), "dialog");
-		} else {
-			ActivityUtils.showNoInternetToast(context);
+		}
+
+		// Check if this is an user update (progressDialog is not null)
+		if (progressDialog != null) {
+
+			// Check if the information is successfully retrieved or an Internet
+			// error occurred
+			if (databases.size() > 0) {
+				DialogFragment dialogFragment = RestartApplicationDialog
+						.newInstance();
+				dialogFragment.show(context.getSupportFragmentManager(),
+						"dialog");
+			} else {
+				ActivityUtils.showNoInternetToast(context);
+			}
 		}
 
 		dismissLoadingView();
@@ -96,33 +104,51 @@ public class RetrieveDatabases extends
 	}
 
 	/**
-	 * Replace the existing Stations DB with the one that was download from the
-	 * URL address
+	 * Replace the existing Sofbus 24 DB in files folder with the one that was
+	 * download from the URL address
 	 * 
 	 * @param dbInputStream
 	 *            the stations DB input stream
+	 * @throws Exception
 	 */
-	private void updateStationsDatbase(InputStream dbInputStream) {
-		context.deleteDatabase("stations.db");
-		Sofbus24SQLite myDbHelper = new Sofbus24SQLite(context);
-		myDbHelper.createDataBase(dbInputStream);
+	private void createSofbusDbInFiles(InputStream dbInputStream)
+			throws Exception {
+
+		context.deleteFile(Sofbus24SQLite.DB_NAME);
+
+		FileOutputStream dbOutputStream = null;
+		try {
+			dbOutputStream = context.openFileOutput(Sofbus24SQLite.DB_NAME,
+					Context.MODE_PRIVATE);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len = dbInputStream.read(buf)) > 0) {
+				dbOutputStream.write(buf, 0, len);
+			}
+		} finally {
+			dbOutputStream.close();
+			dbInputStream.close();
+		}
 	}
 
 	/**
 	 * Create the loading view and lock the screen
 	 */
 	private void createLoadingView() {
-		ActivityUtils.lockScreenOrientation(context);
 
-		progressDialog.setIndeterminate(true);
-		progressDialog.setCancelable(true);
-		progressDialog
-				.setOnCancelListener(new DialogInterface.OnCancelListener() {
-					public void onCancel(DialogInterface dialog) {
-						cancel(true);
-					}
-				});
-		progressDialog.show();
+		if (progressDialog != null) {
+			ActivityUtils.lockScreenOrientation(context);
+
+			progressDialog.setIndeterminate(true);
+			progressDialog.setCancelable(true);
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						public void onCancel(DialogInterface dialog) {
+							cancel(true);
+						}
+					});
+			progressDialog.show();
+		}
 	}
 
 	/**
@@ -131,8 +157,8 @@ public class RetrieveDatabases extends
 	private void dismissLoadingView() {
 		if (progressDialog != null) {
 			progressDialog.dismiss();
-		}
 
-		ActivityUtils.unlockScreenOrientation(context);
+			ActivityUtils.unlockScreenOrientation(context);
+		}
 	}
 }
