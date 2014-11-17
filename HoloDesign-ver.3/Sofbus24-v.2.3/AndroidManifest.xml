@@ -55,6 +55,7 @@
         <activity
             android:name="bg.znestorov.sofbus24.main.HomeScreenSelect"
             android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

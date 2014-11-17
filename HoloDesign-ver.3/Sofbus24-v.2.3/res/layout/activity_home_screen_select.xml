@@ -3,6 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/app_img_empty_content_description"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bkg_home_screen_select" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#66000000" />
+
     <ProgressBar
         android:id="@+id/sofbus24_loading"
         style="?android:attr/progressBarStyleInverse"

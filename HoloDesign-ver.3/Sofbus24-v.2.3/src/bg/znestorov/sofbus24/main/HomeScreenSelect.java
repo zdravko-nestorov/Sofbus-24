@@ -16,13 +16,11 @@ import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class HomeScreenSelect extends SherlockFragmentActivity {
 
 	private FragmentActivity context;
-	private ActionBar actionBar;
 
 	public static final int REQUEST_CODE_HOME_SCREEN_SELECT = 0;
 	public static final int RESULT_CODE_ACTIVITY_NEW = 1;
@@ -32,14 +30,12 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_home_screen_select);
 
 		// Get the application and the current context;
 		context = HomeScreenSelect.this;
-
-		// Initialize the ActionBar
-		initActionBar();
 
 		// Get the fields in the layout
 		ProgressBar sofbusLoading = (ProgressBar) findViewById(R.id.sofbus24_loading);
@@ -80,14 +76,6 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	@Override
 	public void onBackPressed() {
 		ActivityUtils.closeApplication(context);
-	}
-
-	/**
-	 * Initialize the action bar
-	 */
-	private void initActionBar() {
-		actionBar = getSupportActionBar();
-		actionBar.setTitle(getString(R.string.app_sofbus24));
 	}
 
 	/**
@@ -200,7 +188,6 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 
-			actionsOnPostExecute(sofbusLoading);
 			startHomeScreen();
 
 			// Check for updates (only when the application is started for the
