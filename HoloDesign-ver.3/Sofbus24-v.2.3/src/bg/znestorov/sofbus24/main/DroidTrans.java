@@ -148,10 +148,14 @@ public class DroidTrans extends SherlockFragmentActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
 		MenuItem favourites = menu.findItem(R.id.action_favourites);
+		MenuItem csMap = menu.findItem(R.id.action_closest_stations_map);
+
 		if (isDroidTransHomeScreen) {
 			favourites.setVisible(true);
+			csMap.setVisible(true);
 		} else {
 			favourites.setVisible(false);
+			csMap.setVisible(false);
 		}
 
 		return super.onPrepareOptionsMenu(menu);

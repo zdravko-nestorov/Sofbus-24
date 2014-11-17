@@ -24,6 +24,7 @@ import bg.znestorov.sofbus24.main.PreferencesPreHoneycomb;
 import bg.znestorov.sofbus24.main.PreferencesPreHoneycombDialog;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesHomeScreenErrorDialog;
 
 public class NavDrawerHelper {
 
@@ -158,9 +159,10 @@ public class NavDrawerHelper {
 		String homeScreenName = navigationItems.get(userChoice);
 
 		if (userChoice == 2 && !globalContext.areServicesAvailable()) {
-			ActivityUtils.showLongToast(context, String.format(context
-					.getString(R.string.navigation_drawer_home_screen_error),
-					homeScreenName), 3000, 1000);
+			GooglePlayServicesHomeScreenErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesHomeScreenErrorDialog();
+			googlePlayServicesErrorDialog.show(
+					context.getSupportFragmentManager(),
+					"GooglePlayServicesHomeScreenErrorDialog");
 
 			isHomeScreenChanged = false;
 		} else {

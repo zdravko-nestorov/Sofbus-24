@@ -11,6 +11,7 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.databases.Sofbus24DatabaseUtils;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
@@ -18,12 +19,14 @@ import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
+import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesHomeScreenErrorDialog;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class HomeScreenSelect extends SherlockFragmentActivity {
 
 	private FragmentActivity context;
+	private GlobalEntity globalContext;
 
 	private int userChoice = -1;
 	private static final String BUNDLE_USER_CHOICE = "USER CHOICE";
@@ -42,11 +45,12 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 
 		// Get the application and the current context
 		context = HomeScreenSelect.this;
+		globalContext = (GlobalEntity) getApplicationContext();
 		userChoice = savedInstanceState == null ? -1 : savedInstanceState
 				.getInt(BUNDLE_USER_CHOICE);
 
 		// Init the layout fields
-		initLayoutFields(savedInstanceState);
+		initLayoutFields(savedInstanceState, true);
 	}
 
 	@Override
@@ -55,8 +59,10 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 
 		if (requestCode == REQUEST_CODE_HOME_SCREEN_SELECT) {
 			switch (resultCode) {
-			case RESULT_CODE_ACTIVITY_NEW:
 			case RESULT_CODE_ACTIVITY_RESTART:
+				GlobalEntity globalContext = (GlobalEntity) getApplicationContext();
+				globalContext.setHasToRestart(false);
+			case RESULT_CODE_ACTIVITY_NEW:
 				startHomeScreen();
 				break;
 			case RESULT_CODE_ACTIVITY_FINISH:
@@ -83,8 +89,11 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	 * 
 	 * @param savedInstanceState
 	 *            the state of the activity
+	 * @param isFirstTimeStart
+	 *            check if the method has been already started
 	 */
-	private void initLayoutFields(Bundle savedInstanceState) {
+	private void initLayoutFields(Bundle savedInstanceState,
+			boolean isFirstTimeStart) {
 
 		View homeScreenView = findViewById(R.id.sofbus24_home_screen);
 		View loadingView = findViewById(R.id.sofbus24_loading);
@@ -92,16 +101,16 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 		boolean isHomeScreenSet = NavDrawerHomeScreenPreferences
 				.isUserHomeScreenChoosen(context);
 
-		if (isHomeScreenSet) {
-			homeScreenView.setVisibility(View.GONE);
-			loadingView.setVisibility(View.VISIBLE);
-
-			processAppStartUp(savedInstanceState);
-		} else {
+		if (!isHomeScreenSet) {
 			homeScreenView.setVisibility(View.VISIBLE);
 			loadingView.setVisibility(View.GONE);
 
 			processUserChoice(savedInstanceState);
+		} else {
+			homeScreenView.setVisibility(View.GONE);
+			loadingView.setVisibility(View.VISIBLE);
+
+			processAppStartUp(savedInstanceState, isFirstTimeStart);
 		}
 	}
 
@@ -120,6 +129,13 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 		if (userChoice >= 0) {
 			homeScreenChoiceGroup.check(getCheckedViewId());
 			homeScreenChoiceBtn.setVisibility(View.VISIBLE);
+		}
+
+		// Check if the device is a tablet and show only two possible home
+		// screens
+		if (!globalContext.isPhoneDevice()) {
+			findViewById(R.id.sofbus24_home_screen_droidtrans).setVisibility(
+					View.GONE);
 		}
 
 		// Show the next button in case of the first item selected
@@ -143,10 +159,20 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 			public void onClick(View v) {
 				int userChoice = getCheckedViewNumber(homeScreenChoiceGroup
 						.getCheckedRadioButtonId());
-				NavDrawerHomeScreenPreferences.setUserChoice(context,
-						userChoice);
 
-				initLayoutFields(savedInstanceState);
+				// Check if the user selected GoogleMaps as a home screen and if
+				// there are GooglePlayServices installed on its device
+				if (userChoice == 1 && !globalContext.areServicesAvailable()) {
+					GooglePlayServicesHomeScreenErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesHomeScreenErrorDialog();
+					googlePlayServicesErrorDialog.show(
+							getSupportFragmentManager(),
+							"GooglePlayServicesHomeScreenErrorDialog");
+				} else {
+					NavDrawerHomeScreenPreferences.setUserChoice(context,
+							userChoice);
+
+					initLayoutFields(savedInstanceState, false);
+				}
 			}
 		});
 	}
@@ -211,10 +237,13 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	 * 
 	 * @param savedInstanceState
 	 *            the state of the activity
+	 * @param isFirstTimeStart
+	 *            check if the method has been already started
 	 */
-	private void processAppStartUp(Bundle savedInstanceState) {
+	private void processAppStartUp(Bundle savedInstanceState,
+			boolean isFirstTimeStart) {
 
-		if (savedInstanceState == null) {
+		if (savedInstanceState == null || !isFirstTimeStart) {
 
 			// Creates the configuration file
 			Configuration.createConfiguration(context);
