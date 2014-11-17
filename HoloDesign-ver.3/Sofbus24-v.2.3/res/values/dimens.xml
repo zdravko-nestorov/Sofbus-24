@@ -45,4 +45,11 @@
     <dimen name="schedule_image_vehicle_type_height">40sp</dimen>
     <dimen name="schedule_image_vehicle_type_width">40sp</dimen>
 
+    <!-- Home Screen -->
+    <dimen name="home_screen_loading_border_radius">15sp</dimen>
+    <dimen name="home_screen_layout_width">320sp</dimen>
+    <dimen name="home_screen_copyright_txt_padding">3sp</dimen>
+    <dimen name="home_screen_copyright_txt_size">12sp</dimen>
+    <dimen name="home_screen_subtitle_txt_size">14sp</dimen>
+
 </resources>

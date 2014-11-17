@@ -324,4 +324,9 @@
     <string name="navigation_drawer_home_screen_remains" formatted="false"><![CDATA[The home screen remains the same - <b><i>%s</i></b>. It will be visualised on every application startup until it is changed again.]]></string>
     <string name="navigation_drawer_home_screen_changed" formatted="false"><![CDATA[The home screen has been changed to <b><i>%s</i></b>. It will be visualised on every application startup until it is changed again.]]></string>
 
+    <!-- Home Screen Select -->
+    <string name="home_screen_copyright">Copyright © Sofbus 24 2012. All rights reserved</string>
+    <string name="home_screen_choice">Please choose а start screen (it can be cnaged anytime from the left menu):</string>
+    <string name="home_screen_summary">Find your easiest way around Sofia.</string>
+
 </resources>

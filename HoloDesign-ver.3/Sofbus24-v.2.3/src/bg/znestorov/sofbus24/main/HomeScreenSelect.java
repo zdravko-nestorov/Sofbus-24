@@ -5,7 +5,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.widget.ProgressBar;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.databases.Sofbus24DatabaseUtils;
 import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
@@ -22,6 +25,9 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 
 	private FragmentActivity context;
 
+	private int userChoice = -1;
+	private static final String BUNDLE_USER_CHOICE = "USER CHOICE";
+
 	public static final int REQUEST_CODE_HOME_SCREEN_SELECT = 0;
 	public static final int RESULT_CODE_ACTIVITY_NEW = 1;
 	public static final int RESULT_CODE_ACTIVITY_FINISH = 2;
@@ -34,24 +40,13 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_home_screen_select);
 
-		// Get the application and the current context;
+		// Get the application and the current context
 		context = HomeScreenSelect.this;
+		userChoice = savedInstanceState == null ? -1 : savedInstanceState
+				.getInt(BUNDLE_USER_CHOICE);
 
-		// Get the fields in the layout
-		ProgressBar sofbusLoading = (ProgressBar) findViewById(R.id.sofbus24_loading);
-
-		if (savedInstanceState == null) {
-
-			// Creates the configuration file
-			Configuration.createConfiguration(context);
-
-			// Retrieve the information from the DB and set up the layout fields
-			CreateDatabases createDatabases = new CreateDatabases(context,
-					sofbusLoading);
-			createDatabases.execute();
-		} else {
-			actionsOnPostExecute(sofbusLoading);
-		}
+		// Init the layout fields
+		initLayoutFields(savedInstanceState);
 	}
 
 	@Override
@@ -61,16 +56,21 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 		if (requestCode == REQUEST_CODE_HOME_SCREEN_SELECT) {
 			switch (resultCode) {
 			case RESULT_CODE_ACTIVITY_NEW:
+			case RESULT_CODE_ACTIVITY_RESTART:
 				startHomeScreen();
 				break;
 			case RESULT_CODE_ACTIVITY_FINISH:
 				finish();
 				break;
-			case RESULT_CODE_ACTIVITY_RESTART:
-				ActivityUtils.restartApplication(context);
-				break;
 			}
 		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+
+		outState.putInt(BUNDLE_USER_CHOICE, userChoice);
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
@@ -79,24 +79,150 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	}
 
 	/**
-	 * Start the standard home screen fragment
+	 * Initialize the layout fields and load the needed data
+	 * 
+	 * @param savedInstanceState
+	 *            the state of the activity
 	 */
-	private void startSofbus24() {
-		Intent sofbus24Intent = new Intent(context, Sofbus24.class);
-		startActivityForResult(sofbus24Intent, REQUEST_CODE_HOME_SCREEN_SELECT);
+	private void initLayoutFields(Bundle savedInstanceState) {
+
+		View homeScreenView = findViewById(R.id.sofbus24_home_screen);
+		View loadingView = findViewById(R.id.sofbus24_loading);
+
+		boolean isHomeScreenSet = NavDrawerHomeScreenPreferences
+				.isUserHomeScreenChoosen(context);
+
+		if (isHomeScreenSet) {
+			homeScreenView.setVisibility(View.GONE);
+			loadingView.setVisibility(View.VISIBLE);
+
+			processAppStartUp(savedInstanceState);
+		} else {
+			homeScreenView.setVisibility(View.VISIBLE);
+			loadingView.setVisibility(View.GONE);
+
+			processUserChoice(savedInstanceState);
+		}
 	}
 
 	/**
-	 * Start the DroidTrans activity
+	 * Process the user choice and load the needed information
+	 * 
+	 * @param savedInstanceState
+	 *            the state of the activity
 	 */
-	private void startDroidTrans() {
-		Bundle bundle = new Bundle();
-		bundle.putBoolean(DroidTrans.BUNDLE_IS_DROID_TRANS_HOME_SCREEN, true);
+	private void processUserChoice(final Bundle savedInstanceState) {
 
-		Intent droidTransIntent = new Intent(context, DroidTrans.class);
-		droidTransIntent.putExtras(bundle);
-		startActivityForResult(droidTransIntent,
-				REQUEST_CODE_HOME_SCREEN_SELECT);
+		final RadioGroup homeScreenChoiceGroup = (RadioGroup) findViewById(R.id.sofbus24_home_screen_select);
+		final ImageButton homeScreenChoiceBtn = (ImageButton) findViewById(R.id.sofbus24_home_screen_select_btn);
+
+		// Check if there is any user choice
+		if (userChoice >= 0) {
+			homeScreenChoiceGroup.check(getCheckedViewId());
+			homeScreenChoiceBtn.setVisibility(View.VISIBLE);
+		}
+
+		// Show the next button in case of the first item selected
+		homeScreenChoiceGroup
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(RadioGroup group, int checkedId) {
+						userChoice = checkedId;
+
+						if (homeScreenChoiceBtn.getVisibility() == View.GONE) {
+							homeScreenChoiceBtn.setVisibility(View.VISIBLE);
+						}
+					}
+				});
+
+		// Set on click listener over the next button
+		homeScreenChoiceBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				int userChoice = getCheckedViewNumber(homeScreenChoiceGroup
+						.getCheckedRadioButtonId());
+				NavDrawerHomeScreenPreferences.setUserChoice(context,
+						userChoice);
+
+				initLayoutFields(savedInstanceState);
+			}
+		});
+	}
+
+	/**
+	 * Get the id of the selected radio button
+	 * 
+	 * @return the checked view id
+	 */
+	private int getCheckedViewId() {
+
+		int checkedViewId;
+
+		switch (userChoice) {
+		case 1:
+			checkedViewId = R.id.sofbus24_home_screen_standard;
+			break;
+		case 2:
+			checkedViewId = R.id.sofbus24_home_screen_map;
+			break;
+		case 3:
+			checkedViewId = R.id.sofbus24_home_screen_droidtrans;
+			break;
+		default:
+			checkedViewId = -1;
+			break;
+		}
+
+		return checkedViewId;
+	}
+
+	/**
+	 * Check which radio button is checked by its id
+	 * 
+	 * @param viewId
+	 *            the id of the checked radio button
+	 * @return the consequent number of the radio button
+	 */
+	private int getCheckedViewNumber(int viewId) {
+
+		int checkedViewNumber;
+
+		switch (viewId) {
+		case R.id.sofbus24_home_screen_standard:
+			checkedViewNumber = 0;
+			break;
+		case R.id.sofbus24_home_screen_map:
+			checkedViewNumber = 1;
+			break;
+		default:
+			checkedViewNumber = 2;
+			break;
+		}
+
+		return checkedViewNumber;
+
+	}
+
+	/**
+	 * Load the information into the dabatase/objects and start the appropriate
+	 * screens
+	 * 
+	 * @param savedInstanceState
+	 *            the state of the activity
+	 */
+	private void processAppStartUp(Bundle savedInstanceState) {
+
+		if (savedInstanceState == null) {
+
+			// Creates the configuration file
+			Configuration.createConfiguration(context);
+
+			// Retrieve the information from the DB
+			CreateDatabases createDatabases = new CreateDatabases(context);
+			createDatabases.execute();
+		}
 	}
 
 	/**
@@ -109,17 +235,9 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	public class CreateDatabases extends AsyncTask<Void, Void, Void> {
 
 		private FragmentActivity context;
-		private ProgressBar sofbusLoading;
 
-		public CreateDatabases(FragmentActivity context,
-				ProgressBar sofbusLoading) {
+		public CreateDatabases(FragmentActivity context) {
 			this.context = context;
-			this.sofbusLoading = sofbusLoading;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			actionsOnPreExecute(sofbusLoading);
 		}
 
 		@Override
@@ -134,19 +252,14 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 
 		@Override
 		protected void onPostExecute(Void result) {
-
-			LoadStartingData loadStartingData = new LoadStartingData(context,
-					sofbusLoading);
-			loadStartingData.execute();
+			super.onPostExecute(result);
+			new LoadStartingData(context).execute();
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-
-			CreateDatabases createDatabases = new CreateDatabases(context,
-					sofbusLoading);
-			createDatabases.execute();
+			new CreateDatabases(context).execute();
 		}
 	}
 
@@ -160,17 +273,9 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	public class LoadStartingData extends AsyncTask<Void, Void, Void> {
 
 		private FragmentActivity context;
-		private ProgressBar sofbusLoading;
 
-		public LoadStartingData(FragmentActivity context,
-				ProgressBar sofbusLoading) {
+		public LoadStartingData(FragmentActivity context) {
 			this.context = context;
-			this.sofbusLoading = sofbusLoading;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			actionsOnPreExecute(sofbusLoading);
 		}
 
 		@Override
@@ -198,33 +303,29 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-
-			LoadStartingData loadStartingData = new LoadStartingData(context,
-					sofbusLoading);
-			loadStartingData.execute();
+			new LoadStartingData(context).execute();
 		}
 	}
 
 	/**
-	 * Actions over the LayoutFields (which to be shown and visible) - in
-	 * onPreExecute method of the AsyncTask
-	 * 
-	 * @param sofbusLoading
-	 *            the ProgressBar of the Layout
+	 * Start the standard home screen fragment
 	 */
-	private void actionsOnPreExecute(ProgressBar sofbusLoading) {
-		sofbusLoading.setVisibility(View.VISIBLE);
+	private void startSofbus24() {
+		Intent sofbus24Intent = new Intent(context, Sofbus24.class);
+		startActivityForResult(sofbus24Intent, REQUEST_CODE_HOME_SCREEN_SELECT);
 	}
 
 	/**
-	 * Actions over the LayoutFields (which to be shown and visible) - in
-	 * onPostExecute method of the AsyncTask
-	 * 
-	 * @param sofbusLoading
-	 *            the ProgressBar of the Layout
+	 * Start the DroidTrans activity
 	 */
-	private void actionsOnPostExecute(ProgressBar sofbusLoading) {
-		sofbusLoading.setVisibility(View.GONE);
+	private void startDroidTrans() {
+		Bundle bundle = new Bundle();
+		bundle.putBoolean(DroidTrans.BUNDLE_IS_DROID_TRANS_HOME_SCREEN, true);
+
+		Intent droidTransIntent = new Intent(context, DroidTrans.class);
+		droidTransIntent.putExtras(bundle);
+		startActivityForResult(droidTransIntent,
+				REQUEST_CODE_HOME_SCREEN_SELECT);
 	}
 
 	/**

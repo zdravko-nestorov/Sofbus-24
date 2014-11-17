@@ -331,4 +331,9 @@
     <string name="navigation_drawer_home_screen_remains" formatted="false"><![CDATA[Началният екран остава непроменен - <b><i>%s</i></b>. Той ще бъде визуализиран при всяко следващо стартиране на приложението, докато не бъде отново променен.]]></string>
     <string name="navigation_drawer_home_screen_changed" formatted="false"><![CDATA[Началният екран беше променен на <b><i>%s</i></b>. Той ще бъде визуализиран при всяко следващо стартиране на приложението, докато не бъде отново променен.]]></string>
 
+    <!-- Home Screen Select -->
+    <string name="home_screen_copyright">Copyright © Софбус 24 2012. All rights reserved</string>
+    <string name="home_screen_choice">Моля изберете стартов екран (може да бъде променен по всяко време от менюто в ляво):</string>
+    <string name="home_screen_summary">Намерете най-лесния маршрут в София.</string>
+
 </resources>
