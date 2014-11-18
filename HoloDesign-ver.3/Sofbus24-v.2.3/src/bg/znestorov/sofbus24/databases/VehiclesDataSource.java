@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -246,6 +247,65 @@ public class VehiclesDataSource {
 		vehicle.setNumber(cursor.getString(1));
 		vehicle.setType(VehicleTypeEnum.valueOf(cursor.getString(2)));
 		vehicle.setDirection(vehicleDirection);
+
+		return vehicle;
+	}
+
+	/**
+	 * Get a vehicle that is passing through the choosen station
+	 * 
+	 * @param station
+	 *            the choosen station
+	 * @return a vehicle that is passing through the choosen station
+	 */
+	public VehicleEntity getVehicleViaStation(StationEntity station) {
+
+		VehicleEntity vehicle = null;
+
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT SOF_VEHI.VEHI_NUMBER, SOF_VEHI.VEHI_TYPE, SOF_VEST.VEST_DIRECTION								\n");
+		query.append(" FROM SOF_VEHI																						\n");
+		query.append(" 		JOIN SOF_VEST																					\n");
+		query.append(" 			ON SOF_VEST.FK_VEST_VEHI_ID = SOF_VEHI.PK_VEHI_ID											\n");
+		query.append(" 		JOIN SOF_STAT																					\n");
+		query.append(" 			ON SOF_STAT.PK_STAT_ID = SOF_VEST.FK_VEST_STAT_ID											\n");
+		query.append(" 			AND SOF_STAT.STAT_NUMBER = " + station.getNumber()
+				+ "																											\n");
+
+		// Selecting the row that contains the stations data
+		Cursor cursor = database.rawQuery(query.toString(), null);
+
+		// Iterating the cursor and fill the empty List<Station>
+		if (cursor.getCount() > 0) {
+
+			// Moving the cursor to the first column of the selected row
+			cursor.moveToFirst();
+
+			vehicle = cursorToVehicleStation(cursor);
+		}
+
+		// Closing the cursor
+		cursor.close();
+
+		return vehicle;
+	}
+
+	/**
+	 * Creating new Vehicle object with the data of the current row of the
+	 * database
+	 * 
+	 * @param cursor
+	 *            the input cursor for interacting with the DB
+	 * @return the vehicle object on the current row
+	 */
+	private VehicleEntity cursorToVehicleStation(Cursor cursor) {
+
+		VehicleEntity vehicle = new VehicleEntity();
+
+		// Getting all columns of the row and setting them to a Vehicle object
+		vehicle.setNumber(cursor.getString(0));
+		vehicle.setType(VehicleTypeEnum.valueOf(cursor.getString(1)));
+		vehicle.setDirection(cursor.getString(2));
 
 		return vehicle;
 	}

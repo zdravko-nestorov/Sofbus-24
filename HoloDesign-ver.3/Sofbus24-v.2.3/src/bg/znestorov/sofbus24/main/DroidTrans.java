@@ -10,8 +10,13 @@ import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
 import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
@@ -24,10 +29,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import bg.znestorov.sofbus24.databases.DroidTransDataSource;
+import bg.znestorov.sofbus24.databases.StationsDataSource;
+import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.entity.WheelStateEntity;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
@@ -44,10 +52,27 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class DroidTrans extends SherlockFragmentActivity {
+/**
+ * Represents the funcionality of the DroidTrans application (not active in the
+ * market). The main functionality of the class is to start a location update
+ * listener to find the current location (if enabled) and the nearest station to
+ * it. If no location is found in next 3 seconds, check if there is available
+ * LastKnownLocation and find the nearest station to it. Also the class saves
+ * the state of the wheels on orientation change.
+ * 
+ * 
+ * @author Zdravko Nestorov
+ * @version 1.0
+ * 
+ */
+public class DroidTrans extends SherlockFragmentActivity implements
+		LocationListener {
 
 	private FragmentActivity context;
 	private GlobalEntity globalContext;
+
+	private StationsDataSource stationsDatasource;
+	private VehiclesDataSource vehiclesDatasource;
 	private DroidTransDataSource droidtransDatasource;
 
 	private ActionBar actionBar;
@@ -73,6 +98,14 @@ public class DroidTrans extends SherlockFragmentActivity {
 	private NavDrawerArrayAdapter mMenuAdapter;
 	private ArrayList<String> navigationItems;
 
+	private LocationManager locationManager;
+
+	private static final long MIN_DISTANCE_FOR_UPDATE = 20;
+	private static final long MIN_TIME_FOR_UPDATE = 1000 * 60 * 2;
+
+	private static final String GPS_PROVIDER = LocationManager.GPS_PROVIDER;
+	private static final String NETWORK_PROVIDER = LocationManager.NETWORK_PROVIDER;
+
 	private static final String BUNDLE_WHEEL_STATE = "BUNDLE WHEEL STATE";
 	public static final String BUNDLE_IS_DROID_TRANS_HOME_SCREEN = "IS DROID TRANS HOME SCREEN";
 
@@ -86,6 +119,8 @@ public class DroidTrans extends SherlockFragmentActivity {
 		// home screen
 		context = DroidTrans.this;
 		globalContext = (GlobalEntity) getApplicationContext();
+		stationsDatasource = new StationsDataSource(context);
+		vehiclesDatasource = new VehiclesDataSource(context);
 		droidtransDatasource = new DroidTransDataSource(context);
 		isDroidTransHomeScreen = getIntent().getExtras() != null ? getIntent()
 				.getExtras().getBoolean(BUNDLE_IS_DROID_TRANS_HOME_SCREEN,
@@ -109,6 +144,8 @@ public class DroidTrans extends SherlockFragmentActivity {
 
 			initNavigationDrawer();
 		}
+
+		initLocationListener();
 	}
 
 	@Override
@@ -122,9 +159,16 @@ public class DroidTrans extends SherlockFragmentActivity {
 	}
 
 	@Override
+	protected void onPause() {
+		super.onResume();
+
+		removeLocationListener();
+	}
+
+	@Override
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 
-		setWheelStateEntity();
+		setWheelStateEntity(wheelState);
 		savedInstanceState.putSerializable(BUNDLE_WHEEL_STATE, wheelState);
 
 		super.onSaveInstanceState(savedInstanceState);
@@ -315,7 +359,7 @@ public class DroidTrans extends SherlockFragmentActivity {
 
 		updateVehicleWheels();
 		setVehicleWheelsListeners();
-		setVehicleWheelsState();
+		setVehicleWheelsState(null);
 		retrieveVehicleSchedule();
 	}
 
@@ -414,8 +458,11 @@ public class DroidTrans extends SherlockFragmentActivity {
 
 	/**
 	 * Set the state entity values
+	 * 
+	 * @param wheelState
+	 *            the wheel state entity
 	 */
-	private void setWheelStateEntity() {
+	private void setWheelStateEntity(WheelStateEntity wheelState) {
 		wheelState.setVehiclesType(vehicleTypesWheel.getCurrentItem());
 		wheelState.setVehiclesNumber(vehicleNumbersWheel.getCurrentItem());
 		wheelState
@@ -425,17 +472,140 @@ public class DroidTrans extends SherlockFragmentActivity {
 
 	/**
 	 * Set the state of the wheels (the current items)
+	 * 
+	 * @param currentLocation
+	 *            the current location of the user
 	 */
-	private void setVehicleWheelsState() {
+	private void setVehicleWheelsState(Location currentLocation) {
 
-		if (wheelState.isWheelStateSet()) {
-			vehicleTypesWheel.setCurrentItem(wheelState.getVehiclesType());
-			vehicleNumbersWheel.setCurrentItem(wheelState.getVehiclesNumber());
-			vehicleDirectionsWheel.setCurrentItem(wheelState
-					.getVehiclesDirection());
-			vehicleStationsWheel
-					.setCurrentItem(wheelState.getStationsNumbers());
+		// In case of a new location found and no wheels state set, change the
+		// WheelStateEntity object values
+		if (currentLocation != null && !wheelState.isWheelStateSet()) {
+
+			WheelStateEntity currentWheelState = new WheelStateEntity();
+			setWheelStateEntity(currentWheelState);
+
+			// Check if the current state of the wheels is the base position
+			// (all ate the 0 position)
+			if (!currentWheelState.isWheelStateInBasePosition()) {
+				changeWheelsStateValuesByLocation(currentLocation);
+				changeWheelsStateValues();
+			}
+		} else if (wheelState.isWheelStateSet()) {
+			changeWheelsStateValues();
+			wheelState.reset();
 		}
+	}
+
+	/**
+	 * Get the wheel views positions according to the current location
+	 * 
+	 * @param currentLocation
+	 *            the current user location
+	 */
+	private void changeWheelsStateValuesByLocation(Location currentLocation) {
+
+		int vehiclesTypeWheelPosition;
+		int vehiclesNumberWheelPosition;
+		int vehiclesDirectionWheelPosition;
+		int stationsNumbersWheelPosition;
+
+		// Get the closest station
+		stationsDatasource.open();
+		StationEntity closestStation = stationsDatasource.getClosestStation(
+				context, currentLocation);
+		stationsDatasource.close();
+
+		// Get the vehicle passing through the closest station
+		vehiclesDatasource.open();
+		VehicleEntity closestVehicle = vehiclesDatasource
+				.getVehicleViaStation(closestStation);
+		vehiclesTypeWheelPosition = getVehicleTypePosition(closestVehicle
+				.getType());
+		vehiclesDirectionWheelPosition = Integer.parseInt(closestVehicle
+				.getDirection());
+		vehiclesDatasource.close();
+
+		// Get the position of the wheel views
+		droidtransDatasource.open();
+		vehiclesNumberWheelPosition = droidtransDatasource
+				.getVehicleNumbersPosition(
+						getVehicleType(closestVehicle.getType()),
+						closestVehicle.getNumber());
+		stationsNumbersWheelPosition = droidtransDatasource
+				.getVehicleStationPosition(
+						getVehicleType(closestVehicle.getType()),
+						closestVehicle.getNumber(),
+						vehiclesDirectionWheelPosition,
+						closestStation.getNumber());
+		droidtransDatasource.close();
+
+		// Set the values into the WheelState object
+		wheelState = new WheelStateEntity(vehiclesTypeWheelPosition,
+				vehiclesNumberWheelPosition, vehiclesDirectionWheelPosition,
+				stationsNumbersWheelPosition);
+	}
+
+	/**
+	 * Get the vehicle type accordingly
+	 * 
+	 * @param vehicleType
+	 *            the current vehicle type
+	 * @return the output vehicle type
+	 */
+	private VehicleTypeEnum getVehicleType(VehicleTypeEnum vehicleType) {
+
+		if (vehicleType == VehicleTypeEnum.METRO1
+				|| vehicleType == VehicleTypeEnum.METRO2) {
+			vehicleType = VehicleTypeEnum.METRO;
+		}
+
+		return vehicleType;
+	}
+
+	/**
+	 * Get the vehcile type position in the wheel view via the vehicle type
+	 * 
+	 * @param vehicleType
+	 *            the current vehicle type
+	 * @return the position of the vehicle type in the wheel view
+	 */
+	private int getVehicleTypePosition(VehicleTypeEnum vehicleType) {
+
+		int vehicleTypePosition;
+		if (vehicleType == VehicleTypeEnum.METRO1
+				|| vehicleType == VehicleTypeEnum.METRO2) {
+			vehicleType = VehicleTypeEnum.METRO;
+		}
+
+		switch (vehicleType) {
+		case BUS:
+			vehicleTypePosition = 0;
+			break;
+		case TROLLEY:
+			vehicleTypePosition = 1;
+			break;
+		case TRAM:
+			vehicleTypePosition = 2;
+			break;
+		default:
+			vehicleTypePosition = 3;
+			break;
+		}
+
+		return vehicleTypePosition;
+	}
+
+	/**
+	 * In case of a location found or an orientation changes, change the
+	 * WheelStateEntity object values
+	 */
+	private void changeWheelsStateValues() {
+		vehicleTypesWheel.setCurrentItem(wheelState.getVehiclesType());
+		vehicleNumbersWheel.setCurrentItem(wheelState.getVehiclesNumber());
+		vehicleDirectionsWheel
+				.setCurrentItem(wheelState.getVehiclesDirection());
+		vehicleStationsWheel.setCurrentItem(wheelState.getStationsNumbers());
 	}
 
 	/**
@@ -468,13 +638,13 @@ public class DroidTrans extends SherlockFragmentActivity {
 		switch (vehicleType) {
 		case METRO:
 			vehicleNumbersWheel.setCyclic(false);
-			vehicleNumbersWheel.setCurrentItem(0);
 			break;
 		default:
 			vehicleNumbersWheel.setCyclic(true);
-			vehicleNumbersWheel.setCurrentItem(vehicleNumbersArray.length / 2);
 			break;
 		}
+
+		vehicleNumbersWheel.setCurrentItem(0);
 	}
 
 	/**
@@ -542,9 +712,11 @@ public class DroidTrans extends SherlockFragmentActivity {
 		adapter.setTextSize(13);
 		vehicleStationsWheel.setViewAdapter(adapter);
 		vehicleStationsWheel.setCurrentItem(0);
-		vehicleStationsWheel.setCurrentItem(vehicleStationsArray.length / 2);
 	}
 
+	/**
+	 * Retrieve the schedule of the vehicle
+	 */
 	private void retrieveVehicleSchedule() {
 
 		vehicleSchedule.setOnClickListener(new OnClickListener() {
@@ -764,6 +936,76 @@ public class DroidTrans extends SherlockFragmentActivity {
 			}
 
 			return vehicleType;
+		}
+	}
+
+	/**
+	 * Initialize a location listener to find the closest location
+	 */
+	private void initLocationListener() {
+
+		if (locationManager == null) {
+			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		}
+
+		removeLocationListener();
+
+		// Check if the NETWORK provider is enabled
+		if (locationManager != null
+				&& locationManager.isProviderEnabled(GPS_PROVIDER)) {
+
+			// Request location updates from the available provider
+			locationManager.requestLocationUpdates(GPS_PROVIDER,
+					MIN_TIME_FOR_UPDATE, MIN_DISTANCE_FOR_UPDATE, this);
+
+			// Start a new thread - just to wait 1 second and after that
+			// proceed with the LastKnownLocation
+			Handler handler = new Handler();
+			Runnable myrunnable = new Runnable() {
+				public void run() {
+					try {
+						Location location = locationManager
+								.getLastKnownLocation(GPS_PROVIDER);
+
+						if (location != null) {
+							setVehicleWheelsState(location);
+						}
+					} catch (Exception e) {
+					}
+				}
+			};
+
+			handler.postDelayed(myrunnable, 1000);
+		}
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		setVehicleWheelsState(location);
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+	}
+
+	/**
+	 * Remove the location listener
+	 */
+	private void removeLocationListener() {
+
+		if (locationManager != null) {
+			try {
+				locationManager.removeUpdates(this);
+			} catch (Exception e) {
+			}
 		}
 	}
 

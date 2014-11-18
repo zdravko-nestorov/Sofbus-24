@@ -75,6 +75,26 @@ public class WheelStateEntity implements Serializable {
 				&& this.vehiclesDirection != -1 && this.stationsNumbers != -1;
 	}
 
+	/**
+	 * Check if the wheel state is set in base position (all is at 0 position)
+	 * 
+	 * @return if the wheel state is set in base position (all is at 0 position)
+	 */
+	public boolean isWheelStateInBasePosition() {
+		return this.vehiclesType != 0 && this.vehiclesNumber != 0
+				&& this.vehiclesDirection != 0 && this.stationsNumbers != 0;
+	}
+
+	/**
+	 * Reset the wheel state
+	 */
+	public void reset() {
+		this.vehiclesType = -1;
+		this.vehiclesNumber = -1;
+		this.vehiclesDirection = -1;
+		this.stationsNumbers = -1;
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tvehiclesType: " + vehiclesType

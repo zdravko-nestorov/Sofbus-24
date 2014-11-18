@@ -887,6 +887,11 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	 *            the station on the rowView
 	 */
 	private void getStationInfo(StationEntity station) {
+
+		favouritesDatasource.open();
+		station = favouritesDatasource.getStation(station);
+		favouritesDatasource.close();
+
 		FavouritesInfoDialog favouritesInfoDialog = FavouritesInfoDialog
 				.newInstance(station);
 		favouritesInfoDialog.setTargetFragment(favouritesInfoDialog, 0);

@@ -154,6 +154,62 @@ public class DroidTransDataSource {
 	}
 
 	/**
+	 * Get the vehcile number position for the selected type (retrieve the
+	 * position in the WheelView)
+	 * 
+	 * @param vehicleType
+	 *            the choosen vehicle type
+	 * @param serachedVehicleNumber
+	 *            the searched vehicle number
+	 * 
+	 * @return the vehicle number position by type
+	 */
+	public int getVehicleNumbersPosition(VehicleTypeEnum vehicleType,
+			String serachedVehicleNumber) {
+
+		int vehiclePosition = 0;
+
+		String[] vehicleColumns = new String[] { vehiColumns[1] };
+
+		String selection;
+		String[] selectionArgs;
+		switch (vehicleType) {
+		case METRO:
+			selection = Sofbus24SQLite.COLUMN_VEHI_TYPE + " = ? OR "
+					+ Sofbus24SQLite.COLUMN_VEHI_TYPE + " = ?";
+			selectionArgs = new String[] {
+					String.valueOf(VehicleTypeEnum.METRO1),
+					String.valueOf(VehicleTypeEnum.METRO2) };
+			break;
+		default:
+			selection = Sofbus24SQLite.COLUMN_VEHI_TYPE + " = ?";
+			selectionArgs = new String[] { String.valueOf(vehicleType) };
+			break;
+		}
+
+		// Selecting the row that contains the vehicle data
+		Cursor cursor = database.query(Sofbus24SQLite.TABLE_SOF_VEHI,
+				vehicleColumns, selection, selectionArgs, null, null, null);
+
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+
+			String dbVehicleNumber = cursor.getString(0);
+			if (dbVehicleNumber.equals(serachedVehicleNumber)) {
+				break;
+			}
+
+			vehiclePosition++;
+			cursor.moveToNext();
+		}
+
+		// Closing the cursor
+		cursor.close();
+
+		return vehiclePosition;
+	}
+
+	/**
 	 * Get the directions according a vehicle type and vehicle number
 	 * 
 	 * @param vehicleType
@@ -291,6 +347,65 @@ public class DroidTransDataSource {
 		cursor.close();
 
 		return vehicleStations;
+	}
+
+	/**
+	 * Get the station position for the current vehicle in the desired location
+	 * (retrieve the position in the WheelView)
+	 * 
+	 * @param vehicleType
+	 *            the vehicle type
+	 * @param vehicleNumber
+	 *            the vehicle number
+	 * @param vehicleDirection
+	 *            the desired location
+	 * @param searchedStationNumber
+	 *            the searched station number
+	 * 
+	 * @return a list with all stations for the vehicle
+	 */
+	public int getVehicleStationPosition(VehicleTypeEnum vehicleType,
+			String vehicleNumber, Integer vehicleDirection,
+			String searchedStationNumber) {
+
+		int stationPosition = 0;
+
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT SOF_STAT.STAT_NUMBER, SOF_STAT.STAT_NAME, SOF_STAT.STAT_LATITUDE, SOF_STAT.STAT_LONGITUDE		\n");
+		query.append(" FROM SOF_STAT																						\n");
+		query.append(" 		JOIN SOF_VEST																					\n");
+		query.append(" 			ON SOF_VEST.FK_VEST_STAT_ID = SOF_STAT.PK_STAT_ID											\n");
+		query.append(" 			AND (SOF_VEST.VEST_DIRECTION = " + vehicleDirection
+				+ "																											\n");
+		query.append(" 			OR SOF_VEST.VEST_DIRECTION = " + vehicleDirection
+				+ ")																										\n");
+		query.append(" 		JOIN SOF_VEHI																					\n");
+		query.append(" 			ON SOF_VEHI.PK_VEHI_ID = SOF_VEST.FK_VEST_VEHI_ID											\n");
+		query.append(" 			AND SOF_VEHI.VEHI_NUMBER LIKE '%" + vehicleNumber
+				+ "%'																										\n");
+		query.append(" 			AND SOF_VEHI.VEHI_TYPE LIKE '%"
+				+ String.valueOf(vehicleType) + "%'																			\n");
+
+		// Selecting the row that contains the stations data
+		Cursor cursor = database.rawQuery(query.toString(), null);
+
+		// Iterating the cursor and fill the empty List<Station>
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+
+			StationEntity station = cursorToStation(cursor);
+			if (station.getNumber().equals(searchedStationNumber)) {
+				break;
+			}
+
+			stationPosition++;
+			cursor.moveToNext();
+		}
+
+		// Closing the cursor
+		cursor.close();
+
+		return stationPosition;
 	}
 
 	/**

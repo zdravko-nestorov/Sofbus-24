@@ -11,6 +11,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -360,7 +361,7 @@ public class StationsDataSource {
 	}
 
 	/**
-	 * Get the nearest station from the DB to a location according to a radius
+	 * Get the nearest stations from the DB to a location according to a radius
 	 * 
 	 * @param context
 	 *            current activity context
@@ -368,10 +369,11 @@ public class StationsDataSource {
 	 *            the current position
 	 * @param stationsRadius
 	 *            current position radiusF
-	 * @return a list with the closest station
+	 * @return a list with the closest stations
 	 */
 	public List<StationEntity> getClosestStations(Activity context,
 			LatLng currentPosition, BigDecimal stationsRadius) {
+
 		FavouritesDataSource favouritesDatasource = new FavouritesDataSource(
 				context);
 		List<StationEntity> stations = new ArrayList<StationEntity>();
@@ -437,6 +439,8 @@ public class StationsDataSource {
 				} else {
 					break;
 				}
+			} else {
+				cursor.moveToNext();
 			}
 		}
 
@@ -450,8 +454,68 @@ public class StationsDataSource {
 	}
 
 	/**
-	 * Get the nearest station from the DB to a location according to the needed
-	 * page
+	 * Get the nearest station from the DB to a location
+	 * 
+	 * @param context
+	 *            current activity context
+	 * @param currentLocation
+	 *            the current location
+	 * @return the closest station
+	 */
+	public StationEntity getClosestStation(Activity context,
+			Location currentLocation) {
+
+		StationEntity station = null;
+
+		// IMPORTANT: Used for correct ordering
+		Double fudge = Math.pow(
+				Math.cos(Math.toRadians(currentLocation.getLatitude())), 2);
+
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT * 											\n");
+		query.append(" FROM " + Sofbus24SQLite.TABLE_SOF_STAT + "			\n");
+		query.append(" ORDER BY												\n");
+		query.append(" 		( (												\n");
+		query.append(Sofbus24SQLite.COLUMN_STAT_LATITUDE + " - "
+				+ currentLocation.getLatitude());
+		query.append(" 		) * (											\n");
+		query.append(Sofbus24SQLite.COLUMN_STAT_LATITUDE + " - "
+				+ currentLocation.getLatitude());
+		query.append(" 		) + (											\n");
+		query.append(Sofbus24SQLite.COLUMN_STAT_LONGITUDE + " - "
+				+ currentLocation.getLongitude());
+		query.append(" 		) * (											\n");
+		query.append(Sofbus24SQLite.COLUMN_STAT_LONGITUDE + " - "
+				+ currentLocation.getLongitude());
+		query.append(" 		) * " + fudge + " ) ASC							\n");
+
+		Cursor cursor = database.rawQuery(query.toString(), null);
+
+		// Iterating the cursor and fill the empty List<Station>
+		cursor.moveToFirst();
+
+		while (!cursor.isAfterLast()) {
+			StationEntity foundStation = cursorToStation(cursor);
+
+			// Check if the station has coordinates in the database
+			if (foundStation.hasCoordinates()) {
+				station = foundStation;
+
+				break;
+			} else {
+				cursor.moveToNext();
+			}
+		}
+
+		// Closing the cursor
+		cursor.close();
+
+		return station;
+	}
+
+	/**
+	 * Get the nearest stations from the DB to a location according to the
+	 * needed page
 	 * 
 	 * @param currentPosition
 	 *            the current position
@@ -459,7 +523,7 @@ public class StationsDataSource {
 	 *            number of stations to load
 	 * @param searchText
 	 *            if there is any criteria for searching
-	 * @return a list with the closest station
+	 * @return a list with the closest stations
 	 */
 	public List<StationEntity> getClosestStations(LatLng currentPosition,
 			int stationsToLoad, String searchText) {
@@ -543,8 +607,8 @@ public class StationsDataSource {
 	}
 
 	/**
-	 * Get the nearest station from the DB to a location according to the needed
-	 * page
+	 * Get the nearest stations from the DB to a location according to the
+	 * needed page
 	 * 
 	 * @param currentPosition
 	 *            the current position
@@ -552,7 +616,7 @@ public class StationsDataSource {
 	 *            each page contains 10 stations
 	 * @param searchText
 	 *            if there is any criteria for searching
-	 * @return a list with the closest station
+	 * @return a list with the closest stations
 	 */
 	public List<StationEntity> getClosestStationsByPage(LatLng currentPosition,
 			int stationPage, String searchText) {
