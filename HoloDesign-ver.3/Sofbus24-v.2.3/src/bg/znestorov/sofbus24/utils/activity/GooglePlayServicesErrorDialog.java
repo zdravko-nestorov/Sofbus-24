@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
+import android.text.Spanned;
 import bg.znestorov.sofbus24.main.R;
 
 /**
@@ -26,16 +28,31 @@ public class GooglePlayServicesErrorDialog extends DialogFragment {
 
 	private Activity context;
 	private String title;
-	private String message;
+	private Spanned message;
 	private String negativeBtn;
 	private String positiveBtn;
 	private OnClickListener positiveOnClickListener;
 
+	public static final String BUNDLE_GOOGLE_PLAY_SERVICES_MESSAGE = "GOOGLE PLAY SERVICES MESSAGE";
+
+	public static GooglePlayServicesErrorDialog newInstance(String message) {
+
+		Bundle bundle = new Bundle();
+		bundle.putString(BUNDLE_GOOGLE_PLAY_SERVICES_MESSAGE, message);
+
+		GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+		googlePlayServicesErrorDialog.setArguments(bundle);
+
+		return googlePlayServicesErrorDialog;
+	}
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+
 		context = getActivity();
-		title = getString(R.string.app_google_play_title);
-		message = getString(R.string.app_google_play_msg);
+		title = getString(R.string.app_google_play_titlte);
+		message = Html.fromHtml(getArguments().getString(
+				BUNDLE_GOOGLE_PLAY_SERVICES_MESSAGE));
 		negativeBtn = getString(R.string.app_button_later);
 		positiveBtn = getString(R.string.app_button_install);
 

@@ -374,7 +374,9 @@ public class MetroStationAdapter extends ArrayAdapter<StationEntity> {
 			break;
 		case R.id.menu_metro_station_map:
 			if (!globalContext.areServicesAvailable()) {
-				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
+						.newInstance(context
+								.getString(R.string.app_google_play_msg));
 				googlePlayServicesErrorDialog.show(
 						metroStationFragment.getFragmentManager(),
 						"GooglePlayServicesErrorDialog");

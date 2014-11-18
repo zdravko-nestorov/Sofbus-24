@@ -81,7 +81,8 @@ public class ClosestStationsList extends SherlockFragmentActivity {
 			return true;
 		case R.id.action_cs_list_map:
 			if (!globalContext.areServicesAvailable()) {
-				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
+						.newInstance(getString(R.string.app_google_play_msg));
 				googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
 						"GooglePlayServicesErrorDialog");
 			} else {
@@ -148,7 +149,8 @@ public class ClosestStationsList extends SherlockFragmentActivity {
 					@Override
 					public void onClick(View arg0) {
 						if (!globalContext.areServicesAvailable()) {
-							GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+							GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
+									.newInstance(getString(R.string.app_google_play_msg));
 							googlePlayServicesErrorDialog.show(
 									getSupportFragmentManager(),
 									"GooglePlayServicesErrorDialog");

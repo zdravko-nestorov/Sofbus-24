@@ -35,7 +35,7 @@
     <string name="app_toast_add_favourites" formatted="false"><![CDATA[The station <b><i>%s (%s)</b></i> was successfully added to <b>Favorites</b>.]]></string>
     <string name="app_toast_remove_favourites" formatted="false"><![CDATA[The station <b><i>%s (%s)</b></i> was successfully removed from <b>Favorites</b>.]]></string>
     <string name="app_toast_rename_favourites" formatted="false"><![CDATA[The station <b><i>%s (%s)</b></i> was successfully renamed to <b><i>%s (%s)</b></i>.]]></string>
-    <string name="app_google_play_title">Google Play services</string>
+    <string name="app_google_play_titlte">Google Play services</string>
     <string name="app_google_play_msg">Google Play services, which Sofbus 24 uses to show the Google Maps, are not supported by your device. Please install them to move on.</string>
     <string name="app_google_street_view_title">Google Street View</string>
     <string name="app_google_street_view_msg">Google Play services, which Sofbus 24 uses to show the Google Street View, are not supported by your device. Please install them to move on.</string>

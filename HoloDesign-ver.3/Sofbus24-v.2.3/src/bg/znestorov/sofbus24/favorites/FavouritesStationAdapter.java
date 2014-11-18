@@ -824,7 +824,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	 */
 	private void seeStationOnGoogleMaps(StationEntity station) {
 		if (!globalContext.areServicesAvailable()) {
-			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
+					.newInstance(context
+							.getString(R.string.app_google_play_msg));
 			googlePlayServicesErrorDialog.show(
 					favouritesStationFragment.getFragmentManager(),
 					"GooglePlayServicesErrorDialog");

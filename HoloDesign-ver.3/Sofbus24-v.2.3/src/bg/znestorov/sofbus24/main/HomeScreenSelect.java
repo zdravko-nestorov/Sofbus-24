@@ -19,7 +19,7 @@ import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
-import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesHomeScreenErrorDialog;
+import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
@@ -163,7 +163,10 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 				// Check if the user selected GoogleMaps as a home screen and if
 				// there are GooglePlayServices installed on its device
 				if (userChoice == 1 && !globalContext.areServicesAvailable()) {
-					GooglePlayServicesHomeScreenErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesHomeScreenErrorDialog();
+					GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
+							.newInstance(getString(
+									R.string.navigation_drawer_home_screen_error,
+									getString(R.string.navigation_drawer_home_map)));
 					googlePlayServicesErrorDialog.show(
 							getSupportFragmentManager(),
 							"GooglePlayServicesHomeScreenErrorDialog");

@@ -38,7 +38,7 @@
     <string name="app_toast_add_favourites" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно добавена в <b>Любими</b>.]]></string>
     <string name="app_toast_remove_favourites" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше успешно премахната от <b>Любими</b>.]]></string>
     <string name="app_toast_rename_favourites" formatted="false"><![CDATA[Спирката <b><i>%s (%s)</b></i> беше преименувана на <b><i>%s (%s)</b></i>.]]></string>
-    <string name="app_google_play_title">Услуги за Google Play</string>
+    <string name="app_google_play_titlte">Услуги за Google Play</string>
     <string name="app_google_play_msg">Услугите за Google Play, на които разчита Софбус 24 за показване на картата на Google Maps, не се поддържат от устройството Ви. Моля, инсталирайте ги, за да продължите.</string>
     <string name="app_google_street_view_title">Google Street View</string>
     <string name="app_google_street_view_msg">Услугите за Google Play, на които разчита Софбус 24 за показване на Google Street View, не се поддържат от устройството Ви. Моля, инсталирайте ги, за да продължите.</string>

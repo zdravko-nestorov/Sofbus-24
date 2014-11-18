@@ -44,8 +44,8 @@ import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.ClosestStationsMap;
-import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.HomeScreenSelect;
+import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -655,7 +655,8 @@ public class ActivityUtils {
 	 *            the current fragment
 	 */
 	public static void showGooglePlayServicesErrorDialog(Fragment fragment) {
-		GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+		GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
+				.newInstance(fragment.getString(R.string.app_google_play_msg));
 		googlePlayServicesErrorDialog.show(fragment.getFragmentManager(),
 				"GooglePlayServicesErrorDialog");
 	}
@@ -668,7 +669,9 @@ public class ActivityUtils {
 	 */
 	public static void showGooglePlayServicesErrorDialog(
 			FragmentActivity fragmentActivity) {
-		GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+		GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
+				.newInstance(fragmentActivity
+						.getString(R.string.app_google_play_msg));
 		googlePlayServicesErrorDialog.show(
 				fragmentActivity.getSupportFragmentManager(),
 				"GooglePlayServicesErrorDialog");
@@ -813,7 +816,9 @@ public class ActivityUtils {
 				.getApplicationContext();
 
 		if (!globalContext.areServicesAvailable()) {
-			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
+					.newInstance(context
+							.getString(R.string.app_google_play_msg));
 			googlePlayServicesErrorDialog.show(fragmentManager,
 					"GooglePlayServicesErrorDialog");
 		} else {

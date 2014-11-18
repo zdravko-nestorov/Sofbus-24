@@ -337,7 +337,8 @@ public class MetroStationFragment extends SherlockListFragment implements
 			super.onPostExecute(metroMapRouteIntent);
 
 			if (!globalContext.areServicesAvailable()) {
-				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
+						.newInstance(getString(R.string.app_google_play_msg));
 				googlePlayServicesErrorDialog.show(getFragmentManager(),
 						"GooglePlayServicesErrorDialog");
 			} else {

@@ -283,7 +283,8 @@ public class PublicTransport extends SherlockFragmentActivity implements
 			super.onPostExecute(ptMapRouteIntent);
 
 			if (!globalContext.areServicesAvailable()) {
-				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = new GooglePlayServicesErrorDialog();
+				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
+						.newInstance(getString(R.string.app_google_play_msg));
 				googlePlayServicesErrorDialog.show(getSupportFragmentManager(),
 						"GooglePlayServicesErrorDialog");
 			} else {
