@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.preferences;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -18,6 +19,7 @@ import bg.znestorov.sofbus24.utils.Constants;
  * @version 1.0
  * 
  */
+@SuppressLint("NewApi")
 public class PreferencesFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
 

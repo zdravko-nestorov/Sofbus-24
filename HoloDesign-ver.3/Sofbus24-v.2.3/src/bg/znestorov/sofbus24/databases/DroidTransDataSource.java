@@ -375,10 +375,8 @@ public class DroidTransDataSource {
 		query.append(" FROM SOF_STAT																						\n");
 		query.append(" 		JOIN SOF_VEST																					\n");
 		query.append(" 			ON SOF_VEST.FK_VEST_STAT_ID = SOF_STAT.PK_STAT_ID											\n");
-		query.append(" 			AND (SOF_VEST.VEST_DIRECTION = " + vehicleDirection
+		query.append(" 			AND SOF_VEST.VEST_DIRECTION = " + vehicleDirection
 				+ "																											\n");
-		query.append(" 			OR SOF_VEST.VEST_DIRECTION = " + vehicleDirection
-				+ ")																										\n");
 		query.append(" 		JOIN SOF_VEHI																					\n");
 		query.append(" 			ON SOF_VEHI.PK_VEHI_ID = SOF_VEST.FK_VEST_VEHI_ID											\n");
 		query.append(" 			AND SOF_VEHI.VEHI_NUMBER LIKE '%" + vehicleNumber

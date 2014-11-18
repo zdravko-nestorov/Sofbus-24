@@ -81,8 +81,8 @@ public class WheelStateEntity implements Serializable {
 	 * @return if the wheel state is set in base position (all is at 0 position)
 	 */
 	public boolean isWheelStateInBasePosition() {
-		return this.vehiclesType != 0 && this.vehiclesNumber != 0
-				&& this.vehiclesDirection != 0 && this.stationsNumbers != 0;
+		return this.vehiclesType == 0 && this.vehiclesNumber == 0
+				&& this.vehiclesDirection == 0 && this.stationsNumbers == 0;
 	}
 
 	/**

@@ -101,7 +101,8 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	private LocationManager locationManager;
 
 	private static final long MIN_DISTANCE_FOR_UPDATE = 20;
-	private static final long MIN_TIME_FOR_UPDATE = 1000 * 60 * 2;
+	private static final long MIN_TIME_FOR_UPDATE = 1000 * 2;
+	private static final long WAIT_TIME = 500;
 
 	private static final String GPS_PROVIDER = LocationManager.GPS_PROVIDER;
 	private static final String NETWORK_PROVIDER = LocationManager.NETWORK_PROVIDER;
@@ -155,12 +156,14 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		if (globalContext.isHasToRestart()) {
 			context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_RESTART);
 			context.finish();
+		} else if (locationManager != null) {
+			initLocationListener();
 		}
 	}
 
 	@Override
 	protected void onPause() {
-		super.onResume();
+		super.onPause();
 
 		removeLocationListener();
 	}
@@ -486,8 +489,8 @@ public class DroidTrans extends SherlockFragmentActivity implements
 			setWheelStateEntity(currentWheelState);
 
 			// Check if the current state of the wheels is the base position
-			// (all ate the 0 position)
-			if (!currentWheelState.isWheelStateInBasePosition()) {
+			// (all are at the 0 position)
+			if (currentWheelState.isWheelStateInBasePosition()) {
 				changeWheelsStateValuesByLocation(currentLocation);
 				changeWheelsStateValues();
 			}
@@ -542,7 +545,8 @@ public class DroidTrans extends SherlockFragmentActivity implements
 
 		// Set the values into the WheelState object
 		wheelState = new WheelStateEntity(vehiclesTypeWheelPosition,
-				vehiclesNumberWheelPosition, vehiclesDirectionWheelPosition,
+				vehiclesNumberWheelPosition,
+				vehiclesDirectionWheelPosition - 1,
 				stationsNumbersWheelPosition);
 	}
 
@@ -948,34 +952,80 @@ public class DroidTrans extends SherlockFragmentActivity implements
 			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		}
 
-		removeLocationListener();
+		// Check if there is any location manager available
+		if (locationManager != null) {
 
-		// Check if the NETWORK provider is enabled
-		if (locationManager != null
-				&& locationManager.isProviderEnabled(GPS_PROVIDER)) {
+			// Check if the GPS provider is ebabled
+			if (locationManager.isProviderEnabled(GPS_PROVIDER)) {
 
-			// Request location updates from the available provider
-			locationManager.requestLocationUpdates(GPS_PROVIDER,
-					MIN_TIME_FOR_UPDATE, MIN_DISTANCE_FOR_UPDATE, this);
+				// Request location updates from the available provider
+				locationManager.requestLocationUpdates(GPS_PROVIDER,
+						MIN_TIME_FOR_UPDATE, MIN_DISTANCE_FOR_UPDATE, this);
 
-			// Start a new thread - just to wait 1 second and after that
-			// proceed with the LastKnownLocation
+				// Start a new thread - just to wait 1 second and after that
+				// proceed with the LastKnownLocation
+				Handler handler = new Handler();
+				Runnable myrunnable = new Runnable() {
+					public void run() {
+						try {
+							Location location = locationManager
+									.getLastKnownLocation(GPS_PROVIDER);
+
+							if (location != null) {
+								setVehicleWheelsState(location);
+							}
+						} catch (Exception e) {
+						}
+					}
+				};
+
+				handler.postDelayed(myrunnable, WAIT_TIME);
+			}
+
+			// Wait 500 ms and if no location is found activate the NETWORK
+			// provider to listen for new updates
 			Handler handler = new Handler();
 			Runnable myrunnable = new Runnable() {
 				public void run() {
 					try {
-						Location location = locationManager
-								.getLastKnownLocation(GPS_PROVIDER);
 
-						if (location != null) {
-							setVehicleWheelsState(location);
+						// Check if the NETWORK provider is enabled
+						if (locationManager.isProviderEnabled(NETWORK_PROVIDER)) {
+
+							// Remove the GPS listener
+							removeLocationListener();
+
+							// Request location updates from the available
+							// provider
+							locationManager.requestLocationUpdates(
+									NETWORK_PROVIDER, MIN_TIME_FOR_UPDATE,
+									MIN_DISTANCE_FOR_UPDATE, DroidTrans.this);
+
+							// Start a new thread - just to wait 1 second and
+							// after that proceed with the LastKnownLocation
+							Handler handler = new Handler();
+							Runnable myrunnable = new Runnable() {
+								public void run() {
+									try {
+										Location location = locationManager
+												.getLastKnownLocation(NETWORK_PROVIDER);
+
+										if (location != null) {
+											setVehicleWheelsState(location);
+										}
+									} catch (Exception e) {
+									}
+								}
+							};
+
+							handler.postDelayed(myrunnable, WAIT_TIME);
 						}
 					} catch (Exception e) {
 					}
 				}
 			};
 
-			handler.postDelayed(myrunnable, 1000);
+			handler.postDelayed(myrunnable, WAIT_TIME);
 		}
 	}
 
