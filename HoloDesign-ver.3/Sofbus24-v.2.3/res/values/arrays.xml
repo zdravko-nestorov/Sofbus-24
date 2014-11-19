@@ -29,6 +29,14 @@
     </string-array>
 
     <!-- Closest stations -->
+    <string-array name="markerOptions">
+        <item name="markerInfo">Балонче с информацията</item>
+        <item name="markerSchedule">Времена на пристигане</item>
+    </string-array>
+    <string-array name="markerOptionsValues">
+        <item name="markerInfo">markerInfo</item>
+        <item name="markerSchedule">markerSchedule</item>
+    </string-array>
     <string-array name="stationsRadius">
         <item name="400">400 метра</item>
         <item name="600">600 метра</item>

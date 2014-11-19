@@ -87,6 +87,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 
 	private ActionBar actionBar;
 
+	private String markerOptions;
 	private boolean positionFocus;
 	private BigDecimal stationsRadius;
 	private SharedPreferences sharedPreferences;
@@ -154,6 +155,13 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 						.getLat()), Double.parseDouble(station.getLon()));
 			} else {
 				selectedMarkerLatLng = null;
+			}
+
+			if (!markerOptions
+					.equals(Constants.PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS)) {
+				// Get the station associated to this marker
+				StationEntity station = markersAndStations.get(marker.getId());
+				proccessWithStationResult(station);
 			}
 
 			return false;
@@ -225,6 +233,11 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		// Get SharedPreferences from option menu
 		sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(context);
+
+		// Get "markerOptions" value from the SharedPreferences file
+		markerOptions = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_MARKER_OPTIONS,
+				Constants.PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS);
 
 		// Get "positionFocus" value from the SharedPreferences file
 		positionFocus = sharedPreferences.getBoolean(

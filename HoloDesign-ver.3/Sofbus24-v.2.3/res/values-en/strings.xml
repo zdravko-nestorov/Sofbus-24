@@ -154,6 +154,8 @@
     <string name="pref_category_stations_timeSource_title">Public trasnport</string>
     <string name="pref_category_stations_timeSource_summary">Determine what time to be used for display/calculate the extracted information</string>
     <string name="pref_category_map">GOOGLE MAP</string>
+    <string name="pref_category_map_marker_title">Google Maps marker</string>
+    <string name="pref_category_map_marker_summary">Visualize an information snippet for the selected station or retrieve the times of arrival (closest stations)</string>
     <string name="pref_category_map_radius_title">Current location radius</string>
     <string name="pref_category_map_radius_summary">The size of the current location or a selected point radius in which the stations have to be displayed</string>
     <string name="pref_category_map_position_title">Focus current position</string>

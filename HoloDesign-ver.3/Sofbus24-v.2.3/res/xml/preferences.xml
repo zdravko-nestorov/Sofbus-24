@@ -37,6 +37,13 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_map" >
         <ListPreference
+            android:defaultValue="markerInfo"
+            android:entries="@array/markerOptions"
+            android:entryValues="@array/markerOptionsValues"
+            android:key="markerOptions"
+            android:summary="@string/pref_category_map_marker_summary"
+            android:title="@string/pref_category_map_marker_title" />
+        <ListPreference
             android:defaultValue="600"
             android:entries="@array/stationsRadius"
             android:entryValues="@array/stationsRadiusValues"

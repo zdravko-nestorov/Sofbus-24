@@ -11,6 +11,10 @@
     </string-array>
 
     <!-- Closest stations -->
+    <string-array name="markerOptions">
+        <item name="markerInfo">Information snippet</item>
+        <item name="markerSchedule">Times of arrival</item>
+    </string-array>
     <string-array name="stationsRadius">
         <item name="400">400 meters</item>
         <item name="600">600 meters</item>

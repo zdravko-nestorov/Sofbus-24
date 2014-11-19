@@ -62,6 +62,8 @@ public class Constants {
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_TYPE = "timeRemaining";
 	public static final String PREFERENCE_KEY_TIME_SOURCE = "timeSource";
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_SOURCE = "timeSkgt";
+	public static final String PREFERENCE_KEY_MARKER_OPTIONS = "markerOptions";
+	public static final String PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS = "markerInfo";
 	public static final String PREFERENCE_KEY_STATIONS_RADIUS = "stationsRadius";
 	public static final String PREFERENCE_DEFAULT_VALUE_STATIONS_RADIUS = "600";
 	public static final String PREFERENCE_KEY_POSITION_FOCUS = "positionFocus";
