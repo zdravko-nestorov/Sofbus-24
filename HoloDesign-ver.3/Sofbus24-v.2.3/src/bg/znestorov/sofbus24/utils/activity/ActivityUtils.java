@@ -31,10 +31,12 @@ import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -843,6 +845,41 @@ public class ActivityUtils {
 				RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
 						retrieveCurrentLocation);
 				(new Thread(retrieveCurrentLocationTimeout)).start();
+			}
+		}
+	}
+
+	/**
+	 * Clear all allocated memory and calls the GC
+	 * 
+	 * @param view
+	 *            the top view of the layout
+	 */
+	public static void clearAllocatedMemory(View view) {
+		unbindDrawables(view);
+		System.gc();
+		Runtime.getRuntime().gc();
+	}
+
+	/**
+	 * Unbind the drawables from the current view (free the allocated memory).
+	 * Recursively go through all views from the layout an remove the drawables
+	 * 
+	 * @param view
+	 *            the top view of the layout
+	 */
+	private static void unbindDrawables(View view) {
+		if (view.getBackground() != null) {
+			view.getBackground().setCallback(null);
+		}
+
+		if (view instanceof ViewGroup) {
+			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+				unbindDrawables(((ViewGroup) view).getChildAt(i));
+			}
+
+			if (!(view instanceof AdapterView)) {
+				((ViewGroup) view).removeAllViews();
 			}
 		}
 	}

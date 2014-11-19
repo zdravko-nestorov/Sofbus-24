@@ -11,7 +11,7 @@
     <!-- Add to favourites -->
     <item
         android:id="@+id/action_favourites"
-        android:icon="@drawable/ic_menu_star_empty"
+        android:icon="@drawable/ic_menu_favorites"
         android:showAsAction="always"
         android:title="@string/action_droidtrans_favourites"/>
 

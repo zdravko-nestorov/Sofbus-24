@@ -97,6 +97,9 @@ public class EditTabsFragment extends SherlockListFragment {
 		myFragmentView.setOnTouchListener(mController);
 		myFragmentView.setDragEnabled(DRAG_ENABLED);
 
+		// Create the list adapter
+		createListAdapter();
+
 		// Activate the option menu
 		setHasOptionsMenu(true);
 
@@ -115,7 +118,7 @@ public class EditTabsFragment extends SherlockListFragment {
 		simpleFloatViewManager.setBackgroundColor(Color.TRANSPARENT);
 		editTabsListView.setFloatViewManager(simpleFloatViewManager);
 
-		setListAdapter();
+		setListAdapter(editTabsAdapter);
 	}
 
 	@Override
@@ -140,7 +143,7 @@ public class EditTabsFragment extends SherlockListFragment {
 	/**
 	 * Create the list adapter and set it to the Fragment ListView
 	 */
-	private void setListAdapter() {
+	private void createListAdapter() {
 		ArrayList<HomeTabEntity> homeTabs;
 
 		// Check if the fragment is reset or not
@@ -151,7 +154,6 @@ public class EditTabsFragment extends SherlockListFragment {
 		}
 
 		editTabsAdapter = new EditTabsAdapter(context, homeTabs);
-		setListAdapter(editTabsAdapter);
 	}
 
 	/**
