@@ -59,11 +59,9 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 
 		if (requestCode == REQUEST_CODE_HOME_SCREEN_SELECT) {
 			switch (resultCode) {
-			case RESULT_CODE_ACTIVITY_RESTART:
-				GlobalEntity globalContext = (GlobalEntity) getApplicationContext();
-				globalContext.setHasToRestart(false);
 			case RESULT_CODE_ACTIVITY_NEW:
-				startHomeScreen();
+			case RESULT_CODE_ACTIVITY_RESTART:
+				processAppStartUp(null, false);
 				break;
 			case RESULT_CODE_ACTIVITY_FINISH:
 				finish();
@@ -313,11 +311,25 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			// Load all vehicles from the Database, so use them lately
-			ScheduleLoadVehicles.getInstance(context);
+			GlobalEntity globalContext = (GlobalEntity) context
+					.getApplicationContext();
 
-			// Load all metro stations from the Database, so use them lately
-			MetroLoadStations.getInstance(context);
+			if (globalContext.isHasToRestart()) {
+				globalContext.setHasToRestart(false);
+
+				// Reset all vehicles from the Database, so use them lately
+				ScheduleLoadVehicles.resetInstance(context);
+
+				// Reset all metro stations from the Database, so use them
+				// lately
+				MetroLoadStations.resetInstance(context);
+			} else {
+				// Load all vehicles from the Database, so use them lately
+				ScheduleLoadVehicles.getInstance(context);
+
+				// Load all metro stations from the Database, so use them lately
+				MetroLoadStations.getInstance(context);
+			}
 
 			return null;
 		}

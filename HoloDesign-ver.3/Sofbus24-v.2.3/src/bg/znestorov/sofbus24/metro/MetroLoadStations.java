@@ -72,6 +72,10 @@ public class MetroLoadStations {
 		return instance;
 	}
 
+	public static void resetInstance(Activity context) {
+		instance = new MetroLoadStations(context);
+	}
+
 	public ArrayList<String> getMetroDirectionsNames() {
 		return metroDirectionsNames;
 	}

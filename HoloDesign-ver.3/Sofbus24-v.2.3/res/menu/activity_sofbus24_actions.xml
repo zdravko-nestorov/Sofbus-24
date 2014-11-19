@@ -4,7 +4,7 @@
     <!-- DroidTrans -->
     <item
         android:id="@+id/action_droidtans"
-        android:icon="@android:drawable/ic_menu_directions"
+        android:icon="@android:drawable/ic_menu_month"
         android:showAsAction="always"
         android:title="@string/action_droidtrans"/>
 

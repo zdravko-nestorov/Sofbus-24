@@ -196,6 +196,9 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		stationsDatasource = new StationsDataSource(context);
 		favouritesDatasource = new FavouritesDataSource(context);
 
+		ActivityUtils.showHomeActivtyChangedToast(context,
+				getString(R.string.navigation_drawer_home_standard));
+
 		getSharedPreferencesFields();
 		initActionBar();
 		initGoogleMaps();

@@ -180,12 +180,7 @@ public class NavDrawerHelper {
 
 				isHomeScreenChanged = false;
 			} else {
-				ActivityUtils
-						.showLongToast(
-								context,
-								String.format(
-										context.getString(R.string.navigation_drawer_home_screen_changed),
-										homeScreenName), 3000, 1000);
+				globalContext.setHomeActivityChanged(true);
 			}
 		}
 

@@ -46,6 +46,10 @@ public class ScheduleLoadVehicles {
 		return instance;
 	}
 
+	public static void resetInstance(Activity context) {
+		instance = new ScheduleLoadVehicles(context);
+	}
+
 	public List<VehicleEntity> getBusses() {
 		return busses;
 	}

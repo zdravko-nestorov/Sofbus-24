@@ -16,6 +16,7 @@ import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -42,6 +43,8 @@ public class Sofbus24 extends SherlockFragmentActivity {
 
 		// Get the application and curren context;
 		context = Sofbus24.this;
+		ActivityUtils.showHomeActivtyChangedToast(context,
+				getString(R.string.navigation_drawer_home_standard));
 
 		// Initialize the ActionBar and the NavigationDrawer
 		initNavigationDrawer();

@@ -21,10 +21,14 @@ public class GlobalEntity extends Application {
 	private boolean areServicesAvailable;
 	private boolean isGoogleStreetViewAvailable;
 
+	// Indicates if the standard home screen has changed tabs
 	private boolean hasToRestart = false;
 	private boolean isFavouritesChanged = false;
 	private boolean isVbChanged = false;
 	private boolean isHomeScreenChanged = false;
+
+	// Indicates if the home activity is changed
+	private boolean isHomeActivityChanged = false;
 
 	@Override
 	public void onCreate() {
@@ -88,6 +92,14 @@ public class GlobalEntity extends Application {
 		this.isGoogleStreetViewAvailable = isGoogleStreetViewAvailable;
 	}
 
+	public boolean isHomeActivityChanged() {
+		return isHomeActivityChanged;
+	}
+
+	public void setHomeActivityChanged(boolean isHomeActivityChanged) {
+		this.isHomeActivityChanged = isHomeActivityChanged;
+	}
+
 	private void initialize() {
 		isPhoneDevice = getResources().getBoolean(R.bool.isPhone);
 
@@ -115,7 +127,8 @@ public class GlobalEntity extends Application {
 				+ isGoogleStreetViewAvailable + "\n\thasToRestart: "
 				+ hasToRestart + "\n\tisFavouritesChanged: "
 				+ isFavouritesChanged + "\n\tisVbChanged: " + isVbChanged
-				+ "\n\tisHomeScreenChanged: " + isHomeScreenChanged + "\n}";
+				+ "\n\tisHomeScreenChanged: " + isHomeScreenChanged
+				+ "\n\tisHomeActivityChanged: " + isHomeActivityChanged + "\n}";
 	}
 
 }

@@ -31,12 +31,10 @@ import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -786,7 +784,7 @@ public class ActivityUtils {
 			long millisInFuture, long countDownInterval) {
 
 		final Toast registrationToast = Toast.makeText(context, message,
-				Toast.LENGTH_SHORT);
+				Toast.LENGTH_LONG);
 		registrationToast.show();
 
 		new CountDownTimer(millisInFuture, countDownInterval) {
@@ -850,38 +848,24 @@ public class ActivityUtils {
 	}
 
 	/**
-	 * Clear all allocated memory and calls the GC
+	 * Show a toast that the home screen has changed
 	 * 
-	 * @param view
-	 *            the top view of the layout
+	 * @param context
+	 *            the activity context
+	 * @param homeScreenName
+	 *            the home screen name
 	 */
-	public static void clearAllocatedMemory(View view) {
-		unbindDrawables(view);
-		System.gc();
-		Runtime.getRuntime().gc();
-	}
+	public static void showHomeActivtyChangedToast(Activity context,
+			String homeScreenName) {
 
-	/**
-	 * Unbind the drawables from the current view (free the allocated memory).
-	 * Recursively go through all views from the layout an remove the drawables
-	 * 
-	 * @param view
-	 *            the top view of the layout
-	 */
-	private static void unbindDrawables(View view) {
-		if (view.getBackground() != null) {
-			view.getBackground().setCallback(null);
-		}
+		GlobalEntity globalContext = (GlobalEntity) context
+				.getApplicationContext();
 
-		if (view instanceof ViewGroup) {
-			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-				unbindDrawables(((ViewGroup) view).getChildAt(i));
-			}
-
-			if (!(view instanceof AdapterView)) {
-				((ViewGroup) view).removeAllViews();
-			}
+		if (globalContext.isHomeActivityChanged()) {
+			globalContext.setHomeActivityChanged(false);
+			ActivityUtils.showLongToast(context, String.format(context
+					.getString(R.string.navigation_drawer_home_screen_changed),
+					homeScreenName), 2000, 1000);
 		}
 	}
-
 }
