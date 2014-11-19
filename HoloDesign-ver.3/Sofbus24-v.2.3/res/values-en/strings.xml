@@ -100,6 +100,7 @@
     <string name="action_history_delete_all">Delete all</string>
     <!-- DroidTrans -->
     <string name="action_droidtrans_favourites">Favorites</string>
+    <string name="action_droidtrans_reset">Locate</string>
 
     <!-- Context Menu -->
     <!-- Favourites -->
@@ -311,6 +312,7 @@
     <string name="droid_trans_type_metro">Subway</string>
     <string name="droid_trans_type_metro_line_1">Line 1</string>
     <string name="droid_trans_schedule">Schedule</string>
+    <string name="droid_trans_reset_location">Please wait to be located again or find the station you look for.</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_home">Home screen</string>

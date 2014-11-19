@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.DroidTransDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
@@ -100,9 +101,9 @@ public class DroidTrans extends SherlockFragmentActivity implements
 
 	private LocationManager locationManager;
 
-	private static final long MIN_DISTANCE_FOR_UPDATE = 20;
-	private static final long MIN_TIME_FOR_UPDATE = 1000 * 2;
 	private static final long WAIT_TIME = 500;
+	private static final long MIN_DISTANCE_FOR_UPDATE = 0;
+	private static final long MIN_TIME_FOR_UPDATE = 1000 * 2;
 
 	private static final String GPS_PROVIDER = LocationManager.GPS_PROVIDER;
 	private static final String NETWORK_PROVIDER = LocationManager.NETWORK_PROVIDER;
@@ -238,6 +239,13 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		case R.id.action_closest_stations_map:
 			ActivityUtils.startClosestStationsMap(context,
 					getSupportFragmentManager(), false);
+
+			return true;
+		case R.id.action_droidtrans_reset:
+			resetWheelsStateValues();
+			Toast.makeText(context,
+					getString(R.string.droid_trans_reset_location),
+					Toast.LENGTH_LONG).show();
 
 			return true;
 		default:
@@ -610,6 +618,16 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		vehicleDirectionsWheel
 				.setCurrentItem(wheelState.getVehiclesDirection());
 		vehicleStationsWheel.setCurrentItem(wheelState.getStationsNumbers());
+	}
+
+	/**
+	 * Reset the vehicle wheels views
+	 */
+	private void resetWheelsStateValues() {
+		vehicleTypesWheel.setCurrentItem(0);
+		vehicleNumbersWheel.setCurrentItem(0);
+		vehicleDirectionsWheel.setCurrentItem(0);
+		vehicleStationsWheel.setCurrentItem(0);
 	}
 
 	/**
@@ -991,9 +1009,6 @@ public class DroidTrans extends SherlockFragmentActivity implements
 
 						// Check if the NETWORK provider is enabled
 						if (locationManager.isProviderEnabled(NETWORK_PROVIDER)) {
-
-							// Remove the GPS listener
-							removeLocationListener();
 
 							// Request location updates from the available
 							// provider

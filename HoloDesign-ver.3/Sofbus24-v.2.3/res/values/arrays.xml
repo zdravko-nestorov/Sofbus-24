@@ -30,7 +30,7 @@
 
     <!-- Closest stations -->
     <string-array name="markerOptions">
-        <item name="markerInfo">Балонче с информацията</item>
+        <item name="markerInfo">Балонче с информация</item>
         <item name="markerSchedule">Времена на пристигане</item>
     </string-array>
     <string-array name="markerOptionsValues">

@@ -103,6 +103,7 @@
     <string name="action_history_delete_all">Изтрий всички</string>
     <!-- DroidTrans -->
     <string name="action_droidtrans_favourites">Фаворити</string>
+    <string name="action_droidtrans_reset">Локализирай</string>
 
     <!-- Context Menu -->
     <!-- Favourites -->
@@ -318,6 +319,7 @@
     <string name="droid_trans_type_metro">Метро</string>
     <string name="droid_trans_type_metro_line_1">Линия 1</string>
     <string name="droid_trans_schedule">Разписание</string>
+    <string name="droid_trans_reset_location">Моля изчакайте да бъдете локализирани отново или намерете търсената от вас спирка.</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_home">Начален екран</string>
