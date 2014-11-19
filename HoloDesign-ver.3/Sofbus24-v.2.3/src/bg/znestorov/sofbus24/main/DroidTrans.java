@@ -905,16 +905,16 @@ public class DroidTrans extends SherlockFragmentActivity implements
 			for (int i = 0; i < vehicleTypes.size(); i++) {
 				switch (i) {
 				case 0:
-					vehicleImages.add(R.drawable.ic_menu_map_traffic);
+					vehicleImages.add(R.drawable.ic_droidtrans_bus);
 					break;
 				case 1:
-					vehicleImages.add(R.drawable.ic_menu_map_traffic);
+					vehicleImages.add(R.drawable.ic_droidtrans_trolley);
 					break;
 				case 2:
-					vehicleImages.add(R.drawable.ic_menu_map_traffic);
+					vehicleImages.add(R.drawable.ic_droidtrans_tram);
 					break;
 				default:
-					vehicleImages.add(R.drawable.ic_menu_map_traffic);
+					vehicleImages.add(R.drawable.ic_droidtrans_subway);
 					break;
 				}
 			}
