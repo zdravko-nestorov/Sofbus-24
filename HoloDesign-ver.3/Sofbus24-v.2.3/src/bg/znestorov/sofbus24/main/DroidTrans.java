@@ -100,6 +100,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	private ArrayList<String> navigationItems;
 
 	private LocationManager locationManager;
+	private boolean isUserLocated = false;
 
 	private static final long WAIT_TIME = 500;
 	private static final long MIN_DISTANCE_FOR_UPDATE = 0;
@@ -108,6 +109,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	private static final String GPS_PROVIDER = LocationManager.GPS_PROVIDER;
 	private static final String NETWORK_PROVIDER = LocationManager.NETWORK_PROVIDER;
 
+	private static final String BUNDLE_IS_USER_LOCATED = "BUNDLE IS USER LOCATED";
 	private static final String BUNDLE_WHEEL_STATE = "BUNDLE WHEEL STATE";
 	public static final String BUNDLE_IS_DROID_TRANS_HOME_SCREEN = "IS DROID TRANS HOME SCREEN";
 
@@ -132,6 +134,8 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		if (savedInstanceState == null) {
 			wheelState = new WheelStateEntity();
 		} else {
+			isUserLocated = savedInstanceState
+					.getBoolean(BUNDLE_IS_USER_LOCATED);
 			wheelState = (WheelStateEntity) savedInstanceState
 					.getSerializable(BUNDLE_WHEEL_STATE);
 		}
@@ -173,6 +177,8 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	protected void onSaveInstanceState(Bundle savedInstanceState) {
 
 		setWheelStateEntity(wheelState);
+
+		savedInstanceState.putBoolean(BUNDLE_IS_USER_LOCATED, isUserLocated);
 		savedInstanceState.putSerializable(BUNDLE_WHEEL_STATE, wheelState);
 
 		super.onSaveInstanceState(savedInstanceState);
@@ -242,7 +248,10 @@ public class DroidTrans extends SherlockFragmentActivity implements
 
 			return true;
 		case R.id.action_droidtrans_reset:
-			resetWheelsStateValues();
+			isUserLocated = false;
+			removeLocationListener();
+			initLocationListener();
+
 			Toast.makeText(context,
 					getString(R.string.droid_trans_reset_location),
 					Toast.LENGTH_LONG).show();
@@ -493,12 +502,11 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		// WheelStateEntity object values
 		if (currentLocation != null && !wheelState.isWheelStateSet()) {
 
-			WheelStateEntity currentWheelState = new WheelStateEntity();
-			setWheelStateEntity(currentWheelState);
-
 			// Check if the current state of the wheels is the base position
 			// (all are at the 0 position)
-			if (currentWheelState.isWheelStateInBasePosition()) {
+			if (!isUserLocated) {
+				isUserLocated = true;
+
 				changeWheelsStateValuesByLocation(currentLocation);
 				changeWheelsStateValues();
 			}
@@ -618,16 +626,6 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		vehicleDirectionsWheel
 				.setCurrentItem(wheelState.getVehiclesDirection());
 		vehicleStationsWheel.setCurrentItem(wheelState.getStationsNumbers());
-	}
-
-	/**
-	 * Reset the vehicle wheels views
-	 */
-	private void resetWheelsStateValues() {
-		vehicleTypesWheel.setCurrentItem(0);
-		vehicleNumbersWheel.setCurrentItem(0);
-		vehicleDirectionsWheel.setCurrentItem(0);
-		vehicleStationsWheel.setCurrentItem(0);
 	}
 
 	/**

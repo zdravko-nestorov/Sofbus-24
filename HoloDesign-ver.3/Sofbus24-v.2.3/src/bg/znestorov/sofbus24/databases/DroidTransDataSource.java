@@ -253,8 +253,15 @@ public class DroidTransDataSource {
 
 			String vehicleDirection = cursor.getString(0).toUpperCase(
 					new Locale(LanguageChange.getUserLocale(context)));
-			vehiclesDirections.add(vehicleDirection.replace("-", " - "));
-			vehiclesDirections.add(getOppositeDirection(vehicleDirection));
+
+			if (vehicleType == VehicleTypeEnum.METRO) {
+				vehicleDirection = vehicleDirection.replaceAll("-.*-", "-");
+			}
+
+			vehiclesDirections.add(vehicleDirection.replace("-", " - ")
+					.replaceAll(" +", " "));
+			vehiclesDirections.add(getOppositeDirection(vehicleDirection)
+					.replace("-", " - ").replaceAll(" +", " "));
 		}
 
 		// Closing the cursor
