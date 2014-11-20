@@ -219,7 +219,8 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-		if (item.getItemId() != android.R.id.home) {
+		if (mDrawerLayout != null && mDrawerList != null
+				&& item.getItemId() != android.R.id.home) {
 			mDrawerLayout.closeDrawer(mDrawerList);
 		}
 
