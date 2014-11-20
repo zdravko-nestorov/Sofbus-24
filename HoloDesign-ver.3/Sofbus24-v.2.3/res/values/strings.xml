@@ -320,6 +320,7 @@
     <string name="droid_trans_type_metro_line_1">Линия 1</string>
     <string name="droid_trans_schedule">Разписание</string>
     <string name="droid_trans_reset_location">Моля изчакайте да бъдете локализирани отново или намерете търсената от вас спирка.</string>
+    <string name="droid_trans_no_info">Няма достатъчно информация за избраната линия. Моля опитайте с някой от другите начини за търсене.</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_home">Начален екран</string>

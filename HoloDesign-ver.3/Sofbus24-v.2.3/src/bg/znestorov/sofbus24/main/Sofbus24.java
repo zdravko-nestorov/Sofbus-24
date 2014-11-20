@@ -64,6 +64,11 @@ public class Sofbus24 extends SherlockFragmentActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
+		if (item.getItemId() != android.R.id.home) {
+			mDrawerLayout.closeDrawer(mDrawerList);
+		}
+
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			if (mDrawerLayout.isDrawerOpen(mDrawerList)) {

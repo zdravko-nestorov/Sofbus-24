@@ -410,6 +410,11 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
+		if (item.getItemId() != android.R.id.home) {
+			mDrawerLayout.closeDrawer(mDrawerList);
+		}
+
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			if (isCSMapHomeScreen) {
@@ -974,6 +979,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 
 		actionBar = getSupportActionBar();
 		actionBar.setTitle(getString(R.string.app_sofbus24));
+		actionBar.setSubtitle(getString(R.string.cs_map_title));
 
 		// Enable ActionBar app icon to behave as action to toggle nav
 		// drawerActionBar actionBar = getActionBar();

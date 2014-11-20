@@ -219,6 +219,10 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
+		if (item.getItemId() != android.R.id.home) {
+			mDrawerLayout.closeDrawer(mDrawerList);
+		}
+
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			if (isDroidTransHomeScreen) {
@@ -653,7 +657,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		String[] vehicleNumbersArray = getVehicleNumberArray(vehicleType);
 		ArrayWheelAdapter<String> adapter = new ArrayWheelAdapter<String>(this,
 				vehicleNumbersArray);
-		adapter.setTextSize(18);
+		adapter.setTextSize(15);
 		vehicleNumbersWheel.setViewAdapter(adapter);
 
 		switch (vehicleType) {
@@ -745,26 +749,32 @@ public class DroidTrans extends SherlockFragmentActivity implements
 			@Override
 			public void onClick(View arg0) {
 
-				ProgressDialog progressDialog = new ProgressDialog(context);
+				try {
+					ProgressDialog progressDialog = new ProgressDialog(context);
 
-				VehicleTypeEnum vehicleType = getCurrentVehicleType();
-				StationEntity station = getCurrentStation();
+					VehicleTypeEnum vehicleType = getCurrentVehicleType();
+					StationEntity station = getCurrentStation();
 
-				switch (vehicleType) {
-				case METRO:
-					progressDialog.setMessage(Html.fromHtml(String.format(
-							getString(R.string.metro_loading_schedule),
-							station.getName(), station.getNumber())));
-					RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
-							context, progressDialog, station);
-					retrieveMetroSchedule.execute();
-					break;
-				default:
-					RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-							context, this, station,
-							HtmlRequestCodesEnum.SINGLE_RESULT);
-					retrieveVirtualBoards.getSumcInformation();
-					break;
+					switch (vehicleType) {
+					case METRO:
+						progressDialog.setMessage(Html.fromHtml(String.format(
+								getString(R.string.metro_loading_schedule),
+								station.getName(), station.getNumber())));
+						RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
+								context, progressDialog, station);
+						retrieveMetroSchedule.execute();
+						break;
+					default:
+						RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
+								context, this, station,
+								HtmlRequestCodesEnum.SINGLE_RESULT);
+						retrieveVirtualBoards.getSumcInformation();
+						break;
+					}
+				} catch (Exception e) {
+					Toast.makeText(context,
+							getString(R.string.droid_trans_no_info),
+							Toast.LENGTH_LONG).show();
 				}
 			}
 		});
@@ -831,6 +841,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 
 		actionBar = getSupportActionBar();
 		actionBar.setTitle(getString(R.string.app_sofbus24));
+		actionBar.setSubtitle(getString(R.string.droid_trans_title));
 
 		// Enable ActionBar app icon to behave as action to toggle nav
 		// drawerActionBar actionBar = getActionBar();
