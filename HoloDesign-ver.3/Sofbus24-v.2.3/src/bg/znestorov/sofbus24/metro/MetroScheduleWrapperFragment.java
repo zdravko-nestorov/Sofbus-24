@@ -357,6 +357,7 @@ public class MetroScheduleWrapperFragment extends SherlockFragment {
 	 * Initialize the current fragment
 	 */
 	private void initCurrentFragmentContent() {
+
 		// Format the schedule list
 		ArrayList<String> formattedScheduleList = formatScheduleList(scheduleHourList
 				.get(currentScheduleHourIndex));

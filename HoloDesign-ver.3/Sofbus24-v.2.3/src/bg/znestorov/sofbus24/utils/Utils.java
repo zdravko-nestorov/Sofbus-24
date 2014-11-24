@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -831,4 +832,12 @@ public class Utils {
 		}
 	}
 
+	/**
+	 * Check if the version is before HONEYCOMB
+	 * 
+	 * @return if the version is before HONEYCOMB
+	 */
+	public static boolean isPreHoneycomb() {
+		return Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB;
+	}
 }

@@ -322,12 +322,13 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 	 * Initialize the active fragment
 	 */
 	private void initActiveFragmentContent() {
-		// Declare that the options menu has changed, so should be recreated
-		// (make the system calls the method onPrepareOptionsMenu)
-		supportInvalidateOptionsMenu();
 
 		// Get the active schedule (according to the current hour)
 		currentScheduleHourIndex = getActiveScheduleHourIndex(scheduleHourList);
+
+		// Declare that the options menu has changed, so should be recreated
+		// (make the system calls the method onPrepareOptionsMenu)
+		supportInvalidateOptionsMenu();
 
 		// Format the schedule list
 		ArrayList<String> formattedScheduleList = formatScheduleList(scheduleHourList

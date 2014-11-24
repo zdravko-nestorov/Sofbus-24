@@ -96,7 +96,7 @@ public class History extends SherlockListActivity implements
 		ListView listView = getListView();
 		MenuItem historyTop = menu.findItem(R.id.action_history_top);
 
-		if (isListViewScrolledEnough(listView)) {
+		if (isListViewScrolledEnough(listView) || Utils.isPreHoneycomb()) {
 			historyTop.setVisible(true);
 		} else {
 			historyTop.setVisible(false);
@@ -224,21 +224,25 @@ public class History extends SherlockListActivity implements
 	 * item to be visible only if the list is scrolled
 	 */
 	private void setListScrollListener() {
-		getListView().setOnScrollListener(new OnScrollListener() {
 
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-			}
+		if (!Utils.isPreHoneycomb()) {
+			getListView().setOnScrollListener(new OnScrollListener() {
 
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, final int totalItemCount) {
-				// Declare that the options menu has changed, so should be
-				// recreated (make the system calls the method
-				// onPrepareOptionsMenu)
-				supportInvalidateOptionsMenu();
-			}
-		});
+				@Override
+				public void onScrollStateChanged(AbsListView view,
+						int scrollState) {
+				}
+
+				@Override
+				public void onScroll(AbsListView view, int firstVisibleItem,
+						int visibleItemCount, final int totalItemCount) {
+					// Declare that the options menu has changed, so should be
+					// recreated (make the system calls the method
+					// onPrepareOptionsMenu)
+					supportInvalidateOptionsMenu();
+				}
+			});
+		}
 	}
 
 	@Override
