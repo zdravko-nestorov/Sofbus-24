@@ -11,7 +11,7 @@
     <!-- Draw route -->
     <item
         android:id="@+id/action_gm_map_route"
-        android:icon="@android:drawable/ic_menu_directions"
+        android:icon="@drawable/ic_menu_directions"
         android:showAsAction="always"
         android:title="@string/action_gm_map_route"/>
 

@@ -39,7 +39,7 @@ public class FavouritesDeleteAllDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		context = getActivity();
-		icon = android.R.drawable.ic_menu_delete;
+		icon = R.drawable.ic_menu_delete;
 		title = getString(R.string.app_dialog_title_important);
 		message = Html
 				.fromHtml(getString(R.string.fav_menu_remove_all_confirmation));

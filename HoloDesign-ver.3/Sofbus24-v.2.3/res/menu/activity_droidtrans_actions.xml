@@ -4,21 +4,21 @@
     <!-- Reset position -->
     <item
         android:id="@+id/action_droidtrans_reset"
-        android:icon="@android:drawable/ic_menu_mylocation"
+        android:icon="@drawable/ic_menu_mylocation"
         android:showAsAction="always"
         android:title="@string/action_droidtrans_reset"/>
 
     <!-- Add to favourites -->
     <item
         android:id="@+id/action_favourites"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_menu_star"
         android:showAsAction="always"
         android:title="@string/action_droidtrans_favourites"/>
 
     <!-- Closest stations Map -->
     <item
         android:id="@+id/action_closest_stations_map"
-        android:icon="@android:drawable/ic_menu_mapmode"
+        android:icon="@drawable/ic_menu_mapmode"
         android:showAsAction="always"
         android:title="@string/action_closest_stations_map"/>
 

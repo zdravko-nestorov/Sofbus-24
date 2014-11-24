@@ -31,7 +31,7 @@ public class LocationSourceDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		context = getActivity();
-		icon = android.R.drawable.ic_menu_mylocation;
+		icon = R.drawable.ic_menu_mylocation;
 		title = getString(R.string.app_dialog_title_error);
 		message = getString(R.string.app_location_modules_error);
 		negativeBtn = getString(R.string.app_button_no);

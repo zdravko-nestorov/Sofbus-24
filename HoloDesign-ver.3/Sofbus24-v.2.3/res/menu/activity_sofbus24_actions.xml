@@ -4,14 +4,14 @@
     <!-- DroidTrans -->
     <item
         android:id="@+id/action_droidtans"
-        android:icon="@android:drawable/ic_menu_month"
+        android:icon="@drawable/ic_menu_month"
         android:showAsAction="always"
         android:title="@string/action_droidtrans"/>
 
     <!-- Closest stations Map -->
     <item
         android:id="@+id/action_closest_stations_map"
-        android:icon="@android:drawable/ic_menu_mapmode"
+        android:icon="@drawable/ic_menu_mapmode"
         android:showAsAction="always"
         android:title="@string/action_closest_stations_map"/>
 
@@ -24,7 +24,7 @@
         <menu>
             <item
                 android:id="@+id/action_favourites_sort"
-                android:icon="@android:drawable/ic_menu_sort_alphabetically"
+                android:icon="@drawable/ic_menu_sort_alphabetically"
                 android:showAsAction="never"
                 android:title="@string/action_favourites_sort"/>
             <item
@@ -34,12 +34,12 @@
                 android:title="@string/action_favourites_remove_all"/>
             <item
                 android:id="@+id/action_metro_map_route"
-                android:icon="@android:drawable/ic_menu_mapmode"
+                android:icon="@drawable/ic_menu_mapmode"
                 android:showAsAction="never"
                 android:title="@string/action_metro_map_route"/>
             <item
                 android:id="@+id/action_edit_tabs"
-                android:icon="@android:drawable/ic_menu_edit"
+                android:icon="@drawable/ic_menu_edit"
                 android:showAsAction="never"
                 android:title="@string/action_edit_tabs"/>
         </menu>

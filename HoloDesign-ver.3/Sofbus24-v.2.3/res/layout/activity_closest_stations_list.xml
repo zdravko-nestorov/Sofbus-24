@@ -44,9 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/cs_list_street_view"
         android:layout_marginTop="2sp"
-        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:drawableLeft="@drawable/ic_menu_search"
         android:drawablePadding="5sp"
-        android:drawableRight="@android:drawable/ic_menu_close_clear_cancel"
+        android:drawableRight="@drawable/ic_menu_close_clear_cancel"
         android:hint="@string/cs_list_search_hint"
         android:maxLines="1" />
 

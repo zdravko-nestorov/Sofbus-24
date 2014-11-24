@@ -4,7 +4,7 @@
     <!-- Map Route -->
     <item
         android:id="@+id/action_pt_route_map"
-        android:icon="@android:drawable/ic_menu_mapmode"
+        android:icon="@drawable/ic_menu_mapmode"
         android:showAsAction="always"
         android:title="@string/action_pt_route_map"/>
 

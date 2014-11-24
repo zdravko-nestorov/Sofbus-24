@@ -41,7 +41,7 @@ public class RestartApplicationDialog extends DialogFragment {
 
 	public static AlertDialog showRestartApplicationDialog(
 			final Activity context, final boolean isResetted) {
-		int icon = android.R.drawable.ic_menu_info_details;
+		int icon = R.drawable.ic_menu_info_details;
 		String title = context.getString(R.string.app_dialog_title_important);
 		Spanned message = Html.fromHtml(context
 				.getString(R.string.pref_restart_app));

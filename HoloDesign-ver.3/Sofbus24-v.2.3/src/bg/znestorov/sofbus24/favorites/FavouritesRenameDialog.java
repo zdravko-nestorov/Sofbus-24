@@ -65,7 +65,7 @@ public class FavouritesRenameDialog extends DialogFragment {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(R.string.fav_item_rename_title);
-		builder.setIcon(android.R.drawable.ic_menu_edit);
+		builder.setIcon(R.drawable.ic_menu_edit);
 		builder.setMessage(Html.fromHtml(String.format(
 				context.getString(R.string.fav_item_rename_msg),
 				station.getName(), station.getNumber())));

@@ -50,7 +50,7 @@ public class ResetSettingsDialog extends DialogFragment {
 
 	public static AlertDialog resetPreferences(final Activity context,
 			final Object instance) {
-		int icon = android.R.drawable.ic_menu_info_details;
+		int icon = R.drawable.ic_menu_info_details;
 		String title = context.getString(R.string.app_dialog_title_important);
 		String message = context.getString(R.string.pref_reset);
 		String negativeBtn = context.getString(R.string.app_button_no);

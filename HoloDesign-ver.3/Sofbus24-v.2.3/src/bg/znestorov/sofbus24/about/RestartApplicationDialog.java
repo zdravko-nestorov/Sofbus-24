@@ -36,7 +36,7 @@ public class RestartApplicationDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		context = getActivity();
-		icon = android.R.drawable.ic_menu_info_details;
+		icon = R.drawable.ic_menu_info_details;
 		title = getString(R.string.app_dialog_title_important);
 		message = Html.fromHtml(getString(R.string.about_update_db_restart));
 		negativeBtn = getString(R.string.app_button_no);

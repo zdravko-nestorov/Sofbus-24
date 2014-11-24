@@ -12,9 +12,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="2sp"
-        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:drawableLeft="@drawable/ic_menu_search"
         android:drawablePadding="5sp"
-        android:drawableRight="@android:drawable/ic_menu_close_clear_cancel"
+        android:drawableRight="@drawable/ic_menu_close_clear_cancel"
         android:hint="@string/fav_search_hint"
         android:maxLines="1" />
 

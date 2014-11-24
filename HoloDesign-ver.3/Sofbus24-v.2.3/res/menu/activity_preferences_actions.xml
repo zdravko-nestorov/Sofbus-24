@@ -4,14 +4,14 @@
     <!-- Reset to default -->
     <item
         android:id="@+id/action_pref_reset"
-        android:icon="@android:drawable/ic_menu_rotate"
+        android:icon="@drawable/ic_menu_rotate"
         android:showAsAction="always"
         android:title="@string/action_pref_reset"/>
 
     <!-- Information -->
     <item
         android:id="@+id/action_pref_info_details"
-        android:icon="@android:drawable/ic_menu_info_details"
+        android:icon="@drawable/ic_menu_info_details"
         android:showAsAction="always"
         android:title="@string/action_pref_info_details"/>
 
