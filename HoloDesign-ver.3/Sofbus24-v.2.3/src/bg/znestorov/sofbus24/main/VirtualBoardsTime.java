@@ -293,14 +293,12 @@ public class VirtualBoardsTime extends SherlockFragmentActivity {
 		if (savedInstanceState == null) {
 			fragment = VirtualBoardsTimeFragment.newInstance(vbTimeStation,
 					vbTimeEmptyText);
-		} else {
-			fragment = getSupportFragmentManager().findFragmentByTag(
-					FRAGMENT_TAG_NAME);
-		}
 
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.vb_time_fragment, fragment, FRAGMENT_TAG_NAME)
-				.commit();
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.vb_time_fragment, fragment, FRAGMENT_TAG_NAME)
+					.commit();
+		}
 
 		actionsOnFragmentStart();
 	}

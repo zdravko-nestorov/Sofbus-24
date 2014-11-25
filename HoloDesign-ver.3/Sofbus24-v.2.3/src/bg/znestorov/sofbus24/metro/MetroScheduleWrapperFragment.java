@@ -131,7 +131,7 @@ public class MetroScheduleWrapperFragment extends SherlockFragment {
 			if (!globalContext.areServicesAvailable()) {
 				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
 						.newInstance(getString(R.string.app_google_play_msg));
-				googlePlayServicesErrorDialog.show(getChildFragmentManager(),
+				googlePlayServicesErrorDialog.show(getFragmentManager(),
 						"GooglePlayServicesErrorDialog");
 			} else {
 				Intent metroMapIntent = new Intent(context, StationMap.class);

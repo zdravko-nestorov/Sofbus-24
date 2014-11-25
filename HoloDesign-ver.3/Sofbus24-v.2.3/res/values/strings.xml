@@ -168,14 +168,20 @@
     <!-- Edit Tabs Fragment -->
     <string name="edit_tabs_title">Начален екран</string>
     <string name="edit_tabs_favourites">Фаворити</string>
+    <string name="edit_tabs_favourites_orientation">Фаворити</string>
     <string name="edit_tabs_favourites_pre_honeycomb">Фаворити</string>
     <string name="edit_tabs_search">Търсене</string>
+    <string name="edit_tabs_search_orientation">Търсене</string>
     <string name="edit_tabs_search_pre_honeycomb">Търсене</string>
     <string name="edit_tabs_schedule">Разписание</string>
+    <string name="edit_tabs_schedule_orientation">Разписание</string>
     <string name="edit_tabs_schedule_pre_honeycomb">Разписание</string>
     <string name="edit_tabs_metro">Метро</string>
+    <string name="edit_tabs_metro_orientation">Метро</string>
     <string name="edit_tabs_metro_pre_honeycomb">Метро</string>
     <string name="edit_tabs_toast">Началният екран беше променен</string>
+    <string name="edit_tabs_not_saved_title">Потвърждение</string>
+    <string name="edit_tabs_not_saved_msg">Направили сте промяна на началния екран. Сигурни ли сте, че искате да продължите без да запаметите промените.</string>
 
     <!-- About -->
     <string name="about_subtitle" formatted="false"><![CDATA[Версия %s]]></string>

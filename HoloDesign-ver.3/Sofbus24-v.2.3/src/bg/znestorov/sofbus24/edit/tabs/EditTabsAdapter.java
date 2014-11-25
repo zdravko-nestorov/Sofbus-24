@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.HomeTabEntity;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.Utils;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
@@ -131,6 +132,13 @@ public class EditTabsAdapter extends ArrayAdapter<HomeTabEntity> {
 
 		for (int i = 0; i < editTabsList.size(); i++) {
 			editTabsList.get(i).setTabPosition(i);
+
+			// Just a workaround as can't fix the issue with the automatic
+			// change of the checkboxes on rearrange (only on pre HONEYCOMB
+			// devices)
+			if (Utils.isPreHoneycomb()) {
+				editTabsList.get(i).setTabVisible(true);
+			}
 		}
 	}
 }

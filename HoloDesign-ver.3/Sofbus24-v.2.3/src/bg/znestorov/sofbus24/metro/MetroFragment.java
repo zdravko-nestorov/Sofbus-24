@@ -106,17 +106,32 @@ public class MetroFragment extends SherlockFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		List<Fragment> metroFragmentsList = getChildFragmentManager()
+
+		// Get all fragments in the ChildFragmentManager - the fragments are for
+		// schedule and metro wrapper fragments
+		List<Fragment> fakeMetroFragmentsList = getChildFragmentManager()
 				.getFragments();
 
-		if (metroFragmentsList != null
-				&& metroFragmentsList.size() > currentDirection) {
-			Fragment currentFragment = metroFragmentsList.get(currentDirection);
+		// Check if any fragments exist in the ChildFragmentManager. If any -
+		// get the MetroStationFragments and get the one that corresponds to the
+		// current direction
+		if (fakeMetroFragmentsList != null) {
+			List<MetroStationFragment> metroFragmentsList = new ArrayList<MetroStationFragment>();
 
-			if (currentFragment != null
-					&& currentFragment instanceof MetroStationFragment) {
-				((MetroStationFragment) currentFragment)
-						.onOptionsItemSelected(item);
+			// Fill a list with the MetroStationFragments
+			for (Fragment fragment : fakeMetroFragmentsList) {
+				if (fragment != null
+						&& fragment instanceof MetroStationFragment) {
+					metroFragmentsList.add((MetroStationFragment) fragment);
+				}
+			}
+
+			// Get the MetroStationFragment that corresponds to the current
+			// direction
+			if (!metroFragmentsList.isEmpty()
+					&& metroFragmentsList.size() > currentDirection) {
+				metroFragmentsList.get(currentDirection).onOptionsItemSelected(
+						item);
 			}
 		}
 

@@ -49,6 +49,21 @@ public class EditTabs extends SherlockFragmentActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+
+		if (editTabsFragment != null) {
+			EditTabsFragment currentFragment = (EditTabsFragment) editTabsFragment;
+
+			if (!currentFragment.isSameConfig()) {
+				currentFragment.onBackPressed();
+				return;
+			}
+		}
+
+		finish();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present
 		getSupportMenuInflater().inflate(R.menu.activity_edit_tabs_actions,
@@ -61,7 +76,7 @@ public class EditTabs extends SherlockFragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			finish();
+			onBackPressed();
 			return true;
 		case R.id.action_edit_tabs_reset:
 			startFragment(true);

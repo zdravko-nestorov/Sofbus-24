@@ -335,6 +335,28 @@ public class ConfigEntity implements Serializable {
 		return isDefaultConfig;
 	}
 
+	/**
+	 * Check if two configs are same
+	 * 
+	 * @param config
+	 *            the current config
+	 * @return if the configurations are the same
+	 */
+	public boolean isSameConfig(ConfigEntity config) {
+		boolean isSameConfig = this.isFavouritesVisibilå() == config
+				.isFavouritesVisibilå()
+				&& this.getFavouritesPosition() == config
+						.getFavouritesPosition()
+				&& this.isSearchVisibile() == config.isSearchVisibile()
+				&& this.getSearchPosition() == config.getSearchPosition()
+				&& this.isScheduleVisibile() == config.isScheduleVisibile()
+				&& this.getSchedulePosition() == config.getSchedulePosition()
+				&& this.isMetroVisibile() == config.isMetroVisibile()
+				&& this.getMetroPosition() == config.getMetroPosition();
+
+		return isSameConfig;
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tversionCode: " + versionCode

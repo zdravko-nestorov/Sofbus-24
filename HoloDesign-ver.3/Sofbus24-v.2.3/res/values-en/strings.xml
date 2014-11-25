@@ -169,6 +169,8 @@
     <string name="edit_tabs_schedule">Schedule</string>
     <string name="edit_tabs_metro">Metro</string>
     <string name="edit_tabs_toast">The home screen has been modified.</string>
+    <string name="edit_tabs_not_saved_title">Confirmation</string>
+    <string name="edit_tabs_not_saved_msg">You have made a change over the home screen. Are you sure you want to continue without saving the changes.</string>
 
     <!-- About -->
     <string name="about_subtitle" formatted="false"><![CDATA[Version %s]]></string>

@@ -383,15 +383,12 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 					formattedScheduleList, isActive, scheduleIndex);
 			fragment = PublicTransportScheduleFragment
 					.newInstance(ptScheduleEntity);
-		} else {
-			fragment = getSupportFragmentManager().findFragmentByTag(
-					FRAGMENT_TAG_NAME);
-		}
 
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.pt_schedule_fragment, fragment, FRAGMENT_TAG_NAME)
-				.commit();
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.pt_schedule_fragment, fragment,
+							FRAGMENT_TAG_NAME).commit();
+		}
 
 		actionsOnFragmentChange();
 	}

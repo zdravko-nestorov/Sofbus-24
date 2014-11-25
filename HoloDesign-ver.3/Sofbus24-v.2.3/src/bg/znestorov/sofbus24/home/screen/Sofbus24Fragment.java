@@ -170,8 +170,30 @@ public class Sofbus24Fragment extends SherlockFragment implements
 
 				if (sofbus24FragmentsList != null && tabPosition != null
 						&& sofbus24FragmentsList.size() > tabPosition) {
-					Fragment currentFragment = sofbus24FragmentsList
-							.get(tabPosition);
+
+					Fragment fakeFragment = fragmentsList.get(tabPosition);
+					Fragment currentFragment = null;
+
+					// Check which fragment from the child manager fragment list
+					// is the current one. In case of FavouritesStationFragment
+					// or MetroStationFragment, proceed with options menu
+					if (fakeFragment instanceof FavouritesStationFragment) {
+						for (Fragment fragment : sofbus24FragmentsList) {
+							if (fragment != null
+									&& fragment instanceof FavouritesStationFragment) {
+								currentFragment = fragment;
+							}
+						}
+					}
+
+					if (fakeFragment instanceof MetroFragment) {
+						for (Fragment fragment : sofbus24FragmentsList) {
+							if (fragment != null
+									&& fragment instanceof MetroFragment) {
+								currentFragment = fragment;
+							}
+						}
+					}
 
 					// Check the type of the fragment
 					if (currentFragment != null) {

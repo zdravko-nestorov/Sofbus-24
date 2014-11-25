@@ -202,14 +202,12 @@ public class ClosestStationsList extends SherlockFragmentActivity {
 
 		if (savedInstanceState == null) {
 			fragment = ClosestStationsListFragment.newInstance(currentLocation);
-		} else {
-			fragment = getSupportFragmentManager().findFragmentByTag(
-					FRAGMENT_TAG_NAME);
-		}
 
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.cs_list_fragment, fragment, FRAGMENT_TAG_NAME)
-				.commit();
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.cs_list_fragment, fragment, FRAGMENT_TAG_NAME)
+					.commit();
+		}
 
 		actionsOnFragmentStart();
 	}

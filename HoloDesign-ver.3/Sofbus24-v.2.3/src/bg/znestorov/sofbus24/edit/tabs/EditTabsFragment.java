@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,6 +142,14 @@ public class EditTabsFragment extends SherlockListFragment {
 	}
 
 	/**
+	 * Executed when the user presses back button
+	 */
+	public void onBackPressed() {
+		DialogFragment dialogFragment = new EditTabsNotSavedDialog();
+		dialogFragment.show(getChildFragmentManager(), "dialog");
+	}
+
+	/**
 	 * Create the list adapter and set it to the Fragment ListView
 	 */
 	private void createListAdapter() {
@@ -259,13 +268,19 @@ public class EditTabsFragment extends SherlockListFragment {
 			int tabPosition = adapterItem.getTabPosition();
 			boolean isTabVisible = adapterItem.isTabVisible();
 
-			if (tabName.equals(getString(R.string.edit_tabs_favourites))) {
+			if (tabName.equals(getString(R.string.edit_tabs_favourites))
+					|| tabName
+							.equals(getString(R.string.edit_tabs_favourites_orientation))) {
 				currentConfig.setFavouritesPosition(tabPosition);
 				currentConfig.setFavouritesVisibilå(isTabVisible);
-			} else if (tabName.equals(getString(R.string.edit_tabs_search))) {
+			} else if (tabName.equals(getString(R.string.edit_tabs_search))
+					|| tabName
+							.equals(getString(R.string.edit_tabs_search_orientation))) {
 				currentConfig.setSearchPosition(tabPosition);
 				currentConfig.setSearchVisibile(isTabVisible);
-			} else if (tabName.equals(getString(R.string.edit_tabs_schedule))) {
+			} else if (tabName.equals(getString(R.string.edit_tabs_schedule))
+					|| tabName
+							.equals(getString(R.string.edit_tabs_schedule_orientation))) {
 				currentConfig.setSchedulePosition(tabPosition);
 				currentConfig.setScheduleVisibile(isTabVisible);
 			} else {
@@ -275,5 +290,14 @@ public class EditTabsFragment extends SherlockListFragment {
 		}
 
 		return currentConfig;
+	}
+
+	/**
+	 * Check if the current config is the default for the application
+	 * 
+	 * @return if the current config is the default for the application
+	 */
+	public boolean isSameConfig() {
+		return getNewConfig().isSameConfig(new ConfigEntity(context));
 	}
 }

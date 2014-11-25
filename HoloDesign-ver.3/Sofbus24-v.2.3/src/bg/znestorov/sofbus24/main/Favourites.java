@@ -74,19 +74,12 @@ public class Favourites extends SherlockFragmentActivity {
 
 		if (savedInstanceState == null) {
 			favouritesFragment = FavouritesStationFragment.getInstance(false);
-		} else {
-			favouritesFragment = (FavouritesStationFragment) getSupportFragmentManager()
-					.findFragmentByTag(TAG_FAVOURITES_FRAGMENT);
 
-			if (favouritesFragment == null) {
-				favouritesFragment = FavouritesStationFragment
-						.getInstance(false);
-			}
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.favourites_fragment, favouritesFragment,
+							TAG_FAVOURITES_FRAGMENT).addToBackStack(null)
+					.commit();
 		}
-
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.favourites_fragment, favouritesFragment,
-						TAG_FAVOURITES_FRAGMENT).addToBackStack(null).commit();
 	}
 }

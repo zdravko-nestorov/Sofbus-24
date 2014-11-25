@@ -16,6 +16,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -839,5 +841,50 @@ public class Utils {
 	 */
 	public static boolean isPreHoneycomb() {
 		return Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB;
+	}
+
+	/**
+	 * Decode drawable to a Bitmap (save the allocated memory, but doesn't
+	 * really help)
+	 * 
+	 * @param context
+	 *            the activity context
+	 * @param resId
+	 *            the drawable res id
+	 * @return the decoded bitmap
+	 */
+	public static Bitmap decodeDrawable(Activity context, int resId) {
+
+		// Decode image size
+		BitmapFactory.Options o = new BitmapFactory.Options();
+		BitmapFactory.decodeResource(context.getResources(), resId, o);
+		o.inJustDecodeBounds = true;
+
+		// In Samsung Galaxy S3, typically max memory is 64mb
+		// Camera max resolution is 3264 x 2448, times 4 to get Bitmap
+		// memory of 30.5mb for one bitmap
+		// If we use scale of 2, resolution will be halved, 1632 x 1224 and
+		// x 4 to get Bitmap memory of 7.62mb
+		// We try use 25% memory which equals to 16mb maximum for one bitmap
+		long maxMemory = Runtime.getRuntime().maxMemory();
+		int maxMemoryForImage = (int) (maxMemory / 100 * 25);
+
+		// Refer to
+		// http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
+		// A full screen GridView filled with images on a device with
+		// 800x480 resolution would use around 1.5MB (800*480*4 bytes)
+		// When bitmap option's inSampleSize doubled, pixel height and
+		// weight both reduce in half
+		int scale = 1;
+		while ((o.outWidth / scale) * (o.outHeight / scale) * 4 > maxMemoryForImage)
+			scale *= 2;
+
+		// Decode with inSampleSize
+		BitmapFactory.Options o2 = new BitmapFactory.Options();
+		o2.inSampleSize = scale;
+		Bitmap b = BitmapFactory.decodeResource(context.getResources(), resId,
+				o2);
+
+		return b;
 	}
 }
