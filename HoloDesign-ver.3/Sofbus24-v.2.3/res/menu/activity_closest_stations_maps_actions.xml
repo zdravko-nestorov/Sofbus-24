@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <!-- Favourites -->
+    <item
+        android:id="@+id/action_gm_map_favorites"
+        android:icon="@drawable/ic_menu_star"
+        android:showAsAction="never"
+        android:title="@string/action_gm_map_favorites"/>
+
+    <!-- Droidtrans -->
+    <item
+        android:id="@+id/action_gm_map_droidtrans"
+        android:icon="@drawable/ic_menu_month"
+        android:showAsAction="never"
+        android:title="@string/action_gm_map_droidtrans"/>
+
     <!-- Clear map -->
     <item
         android:id="@+id/action_gm_map_clear"

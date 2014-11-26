@@ -8,7 +8,7 @@
         android:showAsAction="always"
         android:title="@string/action_droidtrans_reset"/>
 
-    <!-- Add to favourites -->
+    <!-- Favourites -->
     <item
         android:id="@+id/action_favourites"
         android:icon="@drawable/ic_menu_star"

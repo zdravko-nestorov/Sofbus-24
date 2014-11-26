@@ -142,7 +142,7 @@ public class Sofbus24Fragment extends SherlockFragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case R.id.action_droidtans:
+		case R.id.action_droidtrans:
 			startDroidTrans();
 
 			return true;

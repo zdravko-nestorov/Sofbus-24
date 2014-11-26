@@ -58,6 +58,8 @@
     <string name="action_settints">Настройки</string>
     <string name="action_about">Информация</string>
     <!-- Google Maps -->
+    <string name="action_gm_map_favorites">Фаворити</string>
+    <string name="action_gm_map_droidtrans">Коли на СКГТ</string>
     <string name="action_gm_map_clear">Изчисти</string>
     <string name="action_gm_map_route">Маршрут</string>
     <string name="action_gm_map_gsv">Street View</string>

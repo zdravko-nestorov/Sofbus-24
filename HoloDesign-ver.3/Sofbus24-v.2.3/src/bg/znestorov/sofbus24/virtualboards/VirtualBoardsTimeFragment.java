@@ -27,7 +27,10 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 	private Activity context;
 	private VirtualBoardsStationEntity vbTimeStation;
 
+	private String vbTimeEmptyText;
 	private TextView vbListEmptyTextView;
+
+	private static final String BUNDLE_VB_TIME_EMPTY_TEXT = "BUNDLE VB TIME EMPTY TEXT";
 
 	public static VirtualBoardsTimeFragment newInstance(
 			VirtualBoardsStationEntity vbTimeStation, String vbTimeEmptyText) {
@@ -59,15 +62,29 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 
 		// Get the VirtualBoardsStation object and the empty list text from the
 		// Bundle
-		String vbTimeEmptyText = getArguments().getString(
-				Constants.BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST);
 		vbTimeStation = (VirtualBoardsStationEntity) getArguments()
 				.getSerializable(Constants.BUNDLE_VIRTUAL_BOARDS_TIME);
+
+		if (savedInstanceState == null) {
+			vbTimeEmptyText = getArguments().getString(
+					Constants.BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST);
+		} else {
+			vbTimeEmptyText = savedInstanceState
+					.getString(BUNDLE_VB_TIME_EMPTY_TEXT);
+		}
 
 		// Set the ListAdapter
 		setListAdapter(vbTimeEmptyText);
 
 		return myFragmentView;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+
+		savedInstanceState
+				.putString(BUNDLE_VB_TIME_EMPTY_TEXT, vbTimeEmptyText);
 	}
 
 	@Override
@@ -82,6 +99,7 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 	 * Set list adapter and the appropriate text message to it
 	 */
 	private void setListAdapter(String vbTimeEmptyText) {
+
 		VirtualBoardsTimeAdapter vbTimeAdapter = (VirtualBoardsTimeAdapter) getListAdapter();
 		if (vbTimeAdapter == null) {
 			vbTimeAdapter = new VirtualBoardsTimeAdapter(context, vbTimeStation);
@@ -99,5 +117,7 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 		if (vbTimeAdapter.isEmpty()) {
 			vbListEmptyTextView.setText(Html.fromHtml(vbTimeEmptyText));
 		}
+
+		this.vbTimeEmptyText = vbTimeEmptyText;
 	}
 }

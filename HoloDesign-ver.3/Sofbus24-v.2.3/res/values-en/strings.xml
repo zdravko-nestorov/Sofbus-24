@@ -55,6 +55,8 @@
     <string name="action_settints">Settings</string>
     <string name="action_about">Information</string>
     <!-- Google Maps -->
+    <string name="action_gm_map_favorites">Favourites</string>
+    <string name="action_gm_map_droidtrans">SKGT cars</string>
     <string name="action_gm_map_clear">Clear</string>
     <string name="action_gm_map_route">Route</string>
     <string name="action_gm_map_gsv">Street View</string>

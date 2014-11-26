@@ -409,6 +409,23 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 	}
 
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+
+		MenuItem favoritesItem = menu.findItem(R.id.action_gm_map_favorites);
+		MenuItem droidtransItem = menu.findItem(R.id.action_gm_map_droidtrans);
+
+		if (isCSMapHomeScreen) {
+			favoritesItem.setVisible(true);
+			droidtransItem.setVisible(true);
+		} else {
+			favoritesItem.setVisible(false);
+			droidtransItem.setVisible(false);
+		}
+
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		if (mDrawerLayout != null && mDrawerList != null
@@ -427,6 +444,28 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 			} else {
 				finish();
 			}
+
+			return true;
+		case R.id.action_gm_map_favorites:
+			Intent favouritesIntent;
+			if (globalContext.isPhoneDevice()) {
+				favouritesIntent = new Intent(context, Favourites.class);
+			} else {
+				favouritesIntent = new Intent(context, FavouritesDialog.class);
+			}
+
+			startActivity(favouritesIntent);
+
+			return true;
+		case R.id.action_gm_map_droidtrans:
+			Intent droidTransIntent;
+			if (globalContext.isPhoneDevice()) {
+				droidTransIntent = new Intent(context, DroidTrans.class);
+			} else {
+				droidTransIntent = new Intent(context, DroidTransDialog.class);
+			}
+
+			startActivity(droidTransIntent);
 
 			return true;
 		case R.id.action_gm_map_clear:
