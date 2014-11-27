@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 
 /**
  * Sofbus24 SQLite helper class, responsible for DB life-cycle (keeping
@@ -93,6 +94,10 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 			try {
 				copyDataBase(is);
 			} catch (IOException e) {
+				ActivityTracker.sendCaughtException(context,
+						"Sofbus24SQLite.createDataBase(...)",
+						"Error copying database", e);
+
 				throw new Error("Error copying database: \n" + e.getMessage());
 			}
 		}

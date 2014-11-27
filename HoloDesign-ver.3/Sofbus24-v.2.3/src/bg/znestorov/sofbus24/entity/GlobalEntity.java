@@ -1,8 +1,13 @@
 package bg.znestorov.sofbus24.entity;
 
+import java.util.HashMap;
+
 import android.app.Application;
 import android.content.pm.PackageManager;
 import bg.znestorov.sofbus24.main.R;
+
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 
 /**
  * Global class that extends Application and save state across several
@@ -17,6 +22,17 @@ import bg.znestorov.sofbus24.main.R;
  */
 public class GlobalEntity extends Application {
 
+	/**
+	 * Enum used to identify the tracker that needs to be used for tracking.
+	 * 
+	 * A single tracker is usually enough for most purposes. In case you do need
+	 * multiple trackers, storing them all in Application object helps ensure
+	 * that they are created only once per application instance.
+	 */
+	public enum TrackerName {
+		APP_TRACKER;
+	}
+
 	private boolean isPhoneDevice;
 	private boolean areServicesAvailable;
 	private boolean isGoogleStreetViewAvailable;
@@ -29,6 +45,9 @@ public class GlobalEntity extends Application {
 
 	// Indicates if the home activity is changed
 	private boolean isHomeActivityChanged = false;
+
+	// Google Analytics
+	private HashMap<TrackerName, Tracker> mTrackers;;
 
 	@Override
 	public void onCreate() {
@@ -100,6 +119,26 @@ public class GlobalEntity extends Application {
 		this.isHomeActivityChanged = isHomeActivityChanged;
 	}
 
+	public synchronized Tracker getTracker(TrackerName trackerId) {
+
+		if (!mTrackers.containsKey(trackerId)) {
+
+			GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+
+			// Check what tracker to be created. In case we need multiple
+			// trackers, create different ones using the appropriate
+			// configuration file
+			switch (trackerId) {
+			default:
+				Tracker tracker = analytics.newTracker(R.xml.app_tracker);
+				mTrackers.put(trackerId, tracker);
+				break;
+			}
+		}
+
+		return mTrackers.get(trackerId);
+	}
+
 	private void initialize() {
 		isPhoneDevice = getResources().getBoolean(R.bool.isPhone);
 
@@ -117,6 +156,8 @@ public class GlobalEntity extends Application {
 		} catch (PackageManager.NameNotFoundException e) {
 			isGoogleStreetViewAvailable = false;
 		}
+
+		mTrackers = new HashMap<TrackerName, Tracker>();
 	}
 
 	@Override

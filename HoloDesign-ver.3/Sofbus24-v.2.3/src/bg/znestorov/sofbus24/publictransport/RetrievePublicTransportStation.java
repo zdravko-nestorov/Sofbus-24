@@ -24,6 +24,7 @@ import bg.znestorov.sofbus24.main.PublicTransportSchedule;
 import bg.znestorov.sofbus24.main.PublicTransportScheduleDialog;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
@@ -50,6 +51,7 @@ public class RetrievePublicTransportStation extends
 			ProgressDialog progressDialog,
 			PublicTransportStationEntity ptStation,
 			DirectionsEntity ptDirectionsEntity) {
+
 		this.context = context;
 		this.globalContext = (GlobalEntity) context.getApplicationContext();
 		this.progressDialog = progressDialog;
@@ -63,6 +65,8 @@ public class RetrievePublicTransportStation extends
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
+
+		ActivityTracker.queriedScheduleInformation(context);
 		createLoadingView();
 	}
 

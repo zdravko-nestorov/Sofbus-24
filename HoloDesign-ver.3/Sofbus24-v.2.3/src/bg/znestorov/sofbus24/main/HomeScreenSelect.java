@@ -3,6 +3,7 @@ package bg.znestorov.sofbus24.main;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,12 +17,15 @@ import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.google.android.gms.analytics.GoogleAnalytics;
 
 public class HomeScreenSelect extends SherlockFragmentActivity {
 
@@ -51,6 +55,12 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 
 		// Init the layout fields
 		initLayoutFields(savedInstanceState, true);
+
+		// In case of first start, check if the statistics should be
+		// enabled/disabled
+		if (savedInstanceState == null) {
+			enableDisableStatistics();
+		}
 	}
 
 	@Override
@@ -60,6 +70,7 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 		if (requestCode == REQUEST_CODE_HOME_SCREEN_SELECT) {
 			switch (resultCode) {
 			case RESULT_CODE_ACTIVITY_NEW:
+				ActivityTracker.selectedHomeScreen(context);
 			case RESULT_CODE_ACTIVITY_RESTART:
 				processAppStartUp(null, false);
 				break;
@@ -400,4 +411,20 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 			break;
 		}
 	}
+
+	/**
+	 * Enable or disable the GoogleAnalytics
+	 */
+	private void enableDisableStatistics() {
+		boolean googleAnalytics = PreferenceManager
+				.getDefaultSharedPreferences(context).getBoolean(
+						Constants.PREFERENCE_KEY_GOOGLE_ANALYTICS,
+						Constants.PREFERENCE_DEFAULT_VALUE_GOOGLE_ANALYTICS);
+
+		// Set the opposite value of the user choice to the AppOptOut (so
+		// enable/disable automatic tracking)
+		GoogleAnalytics.getInstance(getApplicationContext()).setAppOptOut(
+				!googleAnalytics);
+	}
+
 }

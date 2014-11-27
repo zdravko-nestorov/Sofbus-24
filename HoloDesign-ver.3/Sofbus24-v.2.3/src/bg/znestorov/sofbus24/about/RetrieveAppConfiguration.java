@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentActivity;
 import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
@@ -61,6 +62,9 @@ public class RetrieveAppConfiguration extends
 			appConfig = new ConfigEntity(doc);
 		} catch (Exception e) {
 			appConfig = new ConfigEntity();
+			ActivityTracker.sendCaughtException(context,
+					"RetrieveAppConfiguration.doInBackground(...)",
+					"Problem with retrieving configuration", e);
 		}
 
 		return appConfig;

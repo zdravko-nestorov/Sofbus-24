@@ -16,6 +16,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.gms.analytics.GoogleAnalytics;
 
 @SuppressWarnings("deprecation")
 public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
@@ -106,12 +107,23 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
+
 		if (key.equals(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED)) {
 			globalContext.setFavouritesChanged(true);
 		}
 
 		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
 			globalContext.setHasToRestart(true);
+		}
+
+		if (key.equals(Constants.PREFERENCE_KEY_GOOGLE_ANALYTICS)) {
+			GoogleAnalytics
+					.getInstance(globalContext)
+					.setAppOptOut(
+							!sharedPreferences
+									.getBoolean(
+											key,
+											Constants.PREFERENCE_DEFAULT_VALUE_GOOGLE_ANALYTICS));
 		}
 	}
 

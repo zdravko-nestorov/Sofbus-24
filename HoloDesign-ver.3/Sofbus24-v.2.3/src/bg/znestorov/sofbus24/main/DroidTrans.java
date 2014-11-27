@@ -44,6 +44,7 @@ import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
@@ -147,6 +148,8 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		if (isDroidTransHomeScreen) {
 			if (savedInstanceState == null) {
 				Utils.checkForUpdate(context, UpdateTypeEnum.APP);
+				ActivityTracker.homeScreenUsed(context,
+						"DroidTrans (Home Screen)");
 			}
 
 			initNavigationDrawer();

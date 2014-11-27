@@ -21,6 +21,7 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -811,26 +812,38 @@ public class Utils {
 	public static void checkForUpdate(FragmentActivity context,
 			UpdateTypeEnum updateType) {
 
-		Set<Integer> daysForUpdate;
-		switch (updateType) {
-		case APP:
-			daysForUpdate = DAYS_FOR_APP_UPDATE;
-			break;
-		default:
-			daysForUpdate = DAYS_FOR_DB_UPDATE;
-			break;
-		}
+		// Get "automaticUpdate" value from the SharedPreferences file
+		boolean automaticUpdate = PreferenceManager
+				.getDefaultSharedPreferences(context).getBoolean(
+						Constants.PREFERENCE_KEY_AUTOMATIC_UPDATE,
+						Constants.PREFERENCE_DEFAULT_VALUE_AUTOMATIC_UPDATE);
 
-		boolean haveInternetConnection = haveNetworkConnection(context);
-		boolean isFirstOrDelayedUpdate = CheckForUpdatesPreferences
-				.isFirstOrDelayedUpdate(context, getCurrentDate(), updateType);
-		boolean isDayForUpdate = daysForUpdate.contains(getCurrentDay());
-		boolean isUpdateAlreadyChecked = CheckForUpdatesPreferences
-				.isUpdateAlreadyChecked(context, getCurrentDate(), updateType);
+		// Update the application if the user selected the option in the
+		// Preferences file
+		if (automaticUpdate) {
+			Set<Integer> daysForUpdate;
+			switch (updateType) {
+			case APP:
+				daysForUpdate = DAYS_FOR_APP_UPDATE;
+				break;
+			default:
+				daysForUpdate = DAYS_FOR_DB_UPDATE;
+				break;
+			}
 
-		if (haveInternetConnection
-				&& (isFirstOrDelayedUpdate || (isDayForUpdate && !isUpdateAlreadyChecked))) {
-			new CheckForUpdatesAsync(context, updateType).execute();
+			boolean haveInternetConnection = haveNetworkConnection(context);
+			boolean isFirstOrDelayedUpdate = CheckForUpdatesPreferences
+					.isFirstOrDelayedUpdate(context, getCurrentDate(),
+							updateType);
+			boolean isDayForUpdate = daysForUpdate.contains(getCurrentDay());
+			boolean isUpdateAlreadyChecked = CheckForUpdatesPreferences
+					.isUpdateAlreadyChecked(context, getCurrentDate(),
+							updateType);
+
+			if (haveInternetConnection
+					&& (isFirstOrDelayedUpdate || (isDayForUpdate && !isUpdateAlreadyChecked))) {
+				new CheckForUpdatesAsync(context, updateType).execute();
+			}
 		}
 	}
 

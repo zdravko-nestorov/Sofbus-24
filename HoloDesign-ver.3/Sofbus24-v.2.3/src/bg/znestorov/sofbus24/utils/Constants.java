@@ -68,6 +68,10 @@ public class Constants {
 	public static final String PREFERENCE_DEFAULT_VALUE_STATIONS_RADIUS = "600";
 	public static final String PREFERENCE_KEY_POSITION_FOCUS = "positionFocus";
 	public static final boolean PREFERENCE_DEFAULT_VALUE_POSITION_FOCUS = false;
+	public static final String PREFERENCE_KEY_AUTOMATIC_UPDATE = "automaticUpdate";
+	public static final boolean PREFERENCE_DEFAULT_VALUE_AUTOMATIC_UPDATE = true;
+	public static final String PREFERENCE_KEY_GOOGLE_ANALYTICS = "googleAnalytics";
+	public static final boolean PREFERENCE_DEFAULT_VALUE_GOOGLE_ANALYTICS = true;
 
 	/**
 	 * Edit Tabs

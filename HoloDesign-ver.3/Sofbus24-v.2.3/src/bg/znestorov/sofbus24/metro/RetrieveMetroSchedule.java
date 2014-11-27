@@ -21,6 +21,7 @@ import bg.znestorov.sofbus24.main.MetroSchedule;
 import bg.znestorov.sofbus24.main.MetroScheduleDialog;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
@@ -51,6 +52,8 @@ public class RetrieveMetroSchedule extends
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
+
+		ActivityTracker.queriedMetroInformation(context);
 		createLoadingView();
 	}
 

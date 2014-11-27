@@ -57,5 +57,17 @@
             android:summary="@string/pref_category_map_position_summary"
             android:title="@string/pref_category_map_position_title" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_more" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="automaticUpdate"
+            android:summary="@string/pref_category_more_automatic_update_summary"
+            android:title="@string/pref_category_more_automatic_update_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="googleAnalytics"
+            android:summary="@string/pref_category_more_google_analytics_summary"
+            android:title="@string/pref_category_more_google_analytics_title" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

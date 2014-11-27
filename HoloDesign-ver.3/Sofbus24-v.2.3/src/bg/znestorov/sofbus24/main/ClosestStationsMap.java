@@ -45,6 +45,7 @@ import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
 
@@ -206,6 +207,8 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		if (isCSMapHomeScreen) {
 			if (savedInstanceState == null) {
 				Utils.checkForUpdate(context, UpdateTypeEnum.APP);
+				ActivityTracker.homeScreenUsed(context,
+						"Closest Stations Map (Home Screen)");
 			}
 
 			initNavigationDrawer();

@@ -62,6 +62,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
 import bg.znestorov.sofbus24.utils.TranslatorLatinToCyrillic;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
@@ -118,6 +119,11 @@ public class RetrieveVirtualBoards {
 	 * Retrieve the information for the selected station
 	 */
 	public void getSumcInformation() {
+
+		ActivityTracker.queriedVirtualBoardsInformation(context);
+		ActivityTracker.queriedVirtualBoardsInformationType(context,
+				htmlRequestCode);
+
 		// Load the cookies from the preferences (if exists)
 		loadCookiesFromPreferences();
 
@@ -289,6 +295,9 @@ public class RetrieveVirtualBoards {
 					"UTF-8");
 			result.setEntity(entity);
 		} catch (UnsupportedEncodingException e) {
+			ActivityTracker.sendCaughtException(context,
+					"RetrieveVirtualBoards.createSumcRequest(...)",
+					"Not supported default encoding?", e);
 			throw new IllegalStateException("Not supported default encoding?",
 					e);
 		}
@@ -959,6 +968,9 @@ public class RetrieveVirtualBoards {
 				httpGet = createCaptchaRequest(captchaId);
 				captchaImage = getCaptchaImage(httpGet, captchaId);
 			} catch (Exception e) {
+				ActivityTracker.sendCaughtException(context,
+						"RetrieveCaptchaInformation.doInBackground(...)",
+						"Problem with retrieving captcha image", e);
 				captchaImage = null;
 			}
 

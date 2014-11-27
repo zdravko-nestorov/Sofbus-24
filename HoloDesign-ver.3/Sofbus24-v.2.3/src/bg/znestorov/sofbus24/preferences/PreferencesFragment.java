@@ -12,6 +12,8 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+
 /**
  * Preferences fragment - containing the user settings
  * 
@@ -66,12 +68,23 @@ public class PreferencesFragment extends PreferenceFragment implements
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
+
 		if (key.equals(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED)) {
 			globalContext.setFavouritesChanged(true);
 		}
 
 		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
 			globalContext.setHasToRestart(true);
+		}
+
+		if (key.equals(Constants.PREFERENCE_KEY_GOOGLE_ANALYTICS)) {
+			GoogleAnalytics
+					.getInstance(globalContext)
+					.setAppOptOut(
+							!sharedPreferences
+									.getBoolean(
+											key,
+											Constants.PREFERENCE_DEFAULT_VALUE_GOOGLE_ANALYTICS));
 		}
 	}
 }

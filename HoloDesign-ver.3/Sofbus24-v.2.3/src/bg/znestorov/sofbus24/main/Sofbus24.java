@@ -16,6 +16,7 @@ import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -53,7 +54,11 @@ public class Sofbus24 extends SherlockFragmentActivity {
 		startSofbus24Fragment(savedInstanceState);
 
 		// Check for an update
-		Utils.checkForUpdate(context, UpdateTypeEnum.APP);
+		if (savedInstanceState == null) {
+			Utils.checkForUpdate(context, UpdateTypeEnum.APP);
+			ActivityTracker.homeScreenUsed(context,
+					"Sofbus 24 (Home Screen)");
+		}
 	}
 
 	@Override
