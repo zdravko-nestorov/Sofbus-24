@@ -344,6 +344,7 @@
     <string name="navigation_drawer_history">История</string>
     <string name="navigation_drawer_options">Настройки</string>
     <string name="navigation_drawer_info">Информация</string>
+    <string name="navigation_drawer_update">Актуализация</string>
     <string name="navigation_drawer_exit">Изход</string>
     <string name="navigation_drawer_home_screen_error" formatted="false"><![CDATA[Услугите за Google Play, на които разчита Софбус 24 за показване на картата на Google Maps, не се поддържат от устройството Ви. Моля, инсталирайте ги, за да може да изберете за начален екран <b><i>%s</i></b>.]]></string>
     <string name="navigation_drawer_home_screen_remains" formatted="false"><![CDATA[Началният екран остава непроменен - <b><i>%s</i></b>. Той ще бъде визуализиран при всяко следващо стартиране на приложението, докато не бъде отново променен.]]></string>

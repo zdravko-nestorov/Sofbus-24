@@ -77,6 +77,9 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 			case 7:
 				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_info);
 				break;
+			case 8:
+				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_update);
+				break;
 			default:
 				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_exit);
 				break;

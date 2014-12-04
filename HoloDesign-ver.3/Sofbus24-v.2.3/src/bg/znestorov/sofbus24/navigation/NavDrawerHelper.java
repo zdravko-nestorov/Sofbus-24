@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import bg.znestorov.sofbus24.about.RetrieveAppConfiguration;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
@@ -136,6 +137,19 @@ public class NavDrawerHelper {
 			context.startActivity(aboutIntent);
 			break;
 		case 8:
+			if (ActivityUtils.haveNetworkConnection(context)) {
+				progressDialog.setMessage(context
+						.getString(R.string.about_update_app));
+
+				RetrieveAppConfiguration retrieveAppConfiguration;
+				retrieveAppConfiguration = new RetrieveAppConfiguration(
+						context, progressDialog, true);
+				retrieveAppConfiguration.execute();
+			} else {
+				ActivityUtils.showNoInternetToast(context);
+			}
+			break;
+		case 9:
 			context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_FINISH);
 			context.finish();
 			break;

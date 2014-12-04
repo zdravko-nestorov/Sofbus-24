@@ -643,6 +643,8 @@ public class Utils {
 		navigationItems.add(context
 				.getString(R.string.navigation_drawer_options));
 		navigationItems.add(context.getString(R.string.navigation_drawer_info));
+		navigationItems.add(context
+				.getString(R.string.navigation_drawer_update));
 		navigationItems.add(context.getString(R.string.navigation_drawer_exit));
 
 		return navigationItems;
