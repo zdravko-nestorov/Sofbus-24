@@ -566,7 +566,7 @@ public class WheelView extends View {
 	 * @param canvas the canvas for drawing
 	 */
 	private void drawShadows(Canvas canvas) {
-		int height = (int)(1.5 * getItemHeight());
+		int height = (int)(0.6 * getItemHeight());
 		topShadow.setBounds(0, 0, getWidth(), height);
 		topShadow.draw(canvas);
 
