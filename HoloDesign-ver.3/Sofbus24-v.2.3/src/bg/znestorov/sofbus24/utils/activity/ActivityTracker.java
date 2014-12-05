@@ -33,7 +33,7 @@ public class ActivityTracker {
 
 		// Build and send an Event
 		tracker.send(new HitBuilders.EventBuilder()
-				.setCategory("Home Screen")
+				.setCategory("Selected Home Screen")
 				.setAction("homeScreenSelect")
 				.setLabel(
 						"homeScreenSelect: "
@@ -54,14 +54,14 @@ public class ActivityTracker {
 	public static void homeScreenUsed(Activity context, String screenName) {
 
 		// Get tracker
-		Tracker t = ((GlobalEntity) context.getApplicationContext())
+		Tracker tracker = ((GlobalEntity) context.getApplicationContext())
 				.getTracker(TrackerName.APP_TRACKER);
 
 		// Set screen name
-		t.setScreenName(screenName);
+		tracker.setScreenName(screenName);
 
 		// Send a screen view
-		t.send(new HitBuilders.AppViewBuilder().build());
+		tracker.send(new HitBuilders.AppViewBuilder().build());
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class ActivityTracker {
 
 		// Build and send an Event
 		tracker.send(new HitBuilders.EventBuilder()
-				.setCategory("Virtual Boards Info")
+				.setCategory("Info Search [Virtual Boards]")
 				.setAction("queryVirtualBoards").setLabel("queryVirtualBoards")
 				.build());
 	}
@@ -135,7 +135,7 @@ public class ActivityTracker {
 		String label = "queryVirtualBoards" + htmlRequestCode;
 		tracker.send(new HitBuilders.EventBuilder()
 				.setCategory("Virtual Boards Info [" + htmlRequestCode + "]")
-				.setAction(label).setLabel(label).build());
+				.setAction("queryVirtualBoards").setLabel(label).build());
 	}
 
 	/**
@@ -152,8 +152,8 @@ public class ActivityTracker {
 
 		// Build and send an Event
 		tracker.send(new HitBuilders.EventBuilder()
-				.setCategory("Schedule Info").setAction("querySchedule")
-				.setLabel("querySchedule").build());
+				.setCategory("Info Search [Schedule]")
+				.setAction("querySchedule").setLabel("querySchedule").build());
 	}
 
 	/**
@@ -169,8 +169,29 @@ public class ActivityTracker {
 				.getTracker(TrackerName.APP_TRACKER);
 
 		// Build and send an Event
-		tracker.send(new HitBuilders.EventBuilder().setCategory("Metro Info")
-				.setAction("queryMetro").setLabel("queryMetro").build());
+		tracker.send(new HitBuilders.EventBuilder()
+				.setCategory("Info Search [Metro]").setAction("queryMetro")
+				.setLabel("queryMetro").build());
+	}
+
+	/**
+	 * Send an event to GoogleAnalytics on "check for update" action (from the
+	 * navigation drawer items or about activity)
+	 * 
+	 * @param context
+	 *            the current activity context
+	 */
+	public static void queriedCheckForUpdate(Activity context) {
+
+		// Get tracker
+		Tracker tracker = ((GlobalEntity) context.getApplicationContext())
+				.getTracker(TrackerName.APP_TRACKER);
+
+		// Build and send an Event
+		tracker.send(new HitBuilders.EventBuilder()
+				.setCategory("Check For Update")
+				.setAction("queryCheckForUpdate")
+				.setLabel("queryCheckForUpdate").build());
 	}
 
 }

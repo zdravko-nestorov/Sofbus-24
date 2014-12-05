@@ -44,6 +44,10 @@ public class RetrieveAppConfiguration extends
 	protected void onPreExecute() {
 		super.onPreExecute();
 		createLoadingView();
+
+		if (updateApp) {
+			ActivityTracker.queriedCheckForUpdate(context);
+		}
 	}
 
 	@Override
