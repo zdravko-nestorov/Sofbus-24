@@ -78,6 +78,7 @@ public class HtmlResult {
 					number = Utils.removeSpaces(number);
 					name = Utils.getValueBeforeLast(name, "(");
 					name = name.trim();
+					name = name.replaceAll("&quot;", "\"");
 					stop = stop.trim();
 
 					if (number.matches("-?\\d+(\\.\\d+)?")) {
