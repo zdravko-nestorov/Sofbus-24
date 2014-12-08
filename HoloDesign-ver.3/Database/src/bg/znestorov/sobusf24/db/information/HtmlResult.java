@@ -25,9 +25,9 @@ public class HtmlResult {
 		if (directionMatcher.find()) {
 			direction = directionMatcher.group(1);
 			direction = Utils.formatDirectionName(direction);
-		} else {
-			direction = proceedSpecialTypeOfDirection(number, direction);
 		}
+
+		direction = proceedSpecialTypeOfDirection(number, direction);
 
 		return new Vehicle(type, number, direction);
 	}
