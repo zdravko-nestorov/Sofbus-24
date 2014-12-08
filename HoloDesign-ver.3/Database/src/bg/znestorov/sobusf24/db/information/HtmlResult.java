@@ -43,7 +43,7 @@ public class HtmlResult {
 		}
 
 		if ("8-ТМ".equals(number)) {
-			direction = "Ж.к. Западен парк - ул. Димитър Петков";
+			direction = "ж.к. Западен парк - ул. Димитър Петков";
 		}
 
 		if ("10-ТМ".equals(number)) {
