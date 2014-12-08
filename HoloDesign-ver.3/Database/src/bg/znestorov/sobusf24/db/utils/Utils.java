@@ -176,6 +176,18 @@ public class Utils {
 		directionName = directionName.replaceAll("Св\\. ", "Св\\.");
 		directionName = directionName.replaceAll("Св\\.", "Света ");
 
+		// Special cases
+		directionName = directionName.replaceAll("кв\\. Орландовци Гара Захарна фабрика", "кв\\. Орландовци - Гара Захарна фабрика");
+		directionName = directionName.replaceAll("ул\\. Кораб планина Гара Захарна фабрика", "ул\\. Кораб планина - Гара Захарна фабрика");
+		directionName = directionName.replaceAll("Автостанция Орландовци ГАРА КУРИЛО", "Автостанция Орландовци - ГАРА КУРИЛО");
+		directionName = directionName.replaceAll("кв\\. Иваняне Гара Обеля", "кв\\. Иваняне - Гара Обеля");
+		directionName = directionName.replaceAll("АП Малашевци Град Бухово", "АП Малашевци - Град Бухово");
+		directionName = directionName.replaceAll("УМБАЛСМ Пирогов Гара Искър", "УМБАЛСМ Пирогов - Гара Искър");
+		directionName = directionName.replaceAll("ЧИТАЛИЩЕ СВЕТЛИНА Гара Искър", "ЧИТАЛИЩЕ СВЕТЛИНА - Гара Искър");
+		if ("ж.к. Младост 1".equals(directionName)) {
+			directionName = directionName.replaceAll("ж\\.к\\. Младост 1", "ж\\.к\\. Младост 1 - ж\\.к\\. Люлин 1,2");
+		}
+
 		directionName = directionName.trim().replaceAll("-", " - ");
 		directionName = directionName.trim().replaceAll(" +", " ");
 

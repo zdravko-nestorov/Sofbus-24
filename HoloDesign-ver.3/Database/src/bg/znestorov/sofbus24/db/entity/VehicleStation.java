@@ -22,6 +22,13 @@ public class VehicleStation {
 		this.direction = direction;
 	}
 
+	public VehicleStation(VehicleType vehicleType, String vehicleNumber, String stationNumber, Integer direction) {
+		this.vehicleType = vehicleType;
+		this.vehicleNumber = vehicleNumber;
+		this.stationNumber = stationNumber;
+		this.direction = direction;
+	}
+
 	public VehicleType getVehicleType() {
 		return vehicleType;
 	}
