@@ -31,6 +31,7 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.DroidTransDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
+import bg.znestorov.sofbus24.droidtrans.DroidTransLoadInfo;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -71,6 +72,8 @@ public class DroidTrans extends SherlockFragmentActivity implements
 
 	private FragmentActivity context;
 	private GlobalEntity globalContext;
+
+	private DroidTransLoadInfo droidtransLoadInfo;
 
 	private StationsDataSource stationsDatasource;
 	private VehiclesDataSource vehiclesDatasource;
@@ -122,6 +125,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		// home screen
 		context = DroidTrans.this;
 		globalContext = (GlobalEntity) getApplicationContext();
+		droidtransLoadInfo = DroidTransLoadInfo.getInstance(context);
 		stationsDatasource = new StationsDataSource(context);
 		vehiclesDatasource = new VehiclesDataSource(context);
 		droidtransDatasource = new DroidTransDataSource(context);
@@ -130,7 +134,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 						false) : false;
 
 		ActivityUtils.showHomeActivtyChangedToast(context,
-				getString(R.string.navigation_drawer_home_standard));
+				getString(R.string.navigation_drawer_home_cars));
 
 		// Get the wheels state
 		if (savedInstanceState == null) {
@@ -305,9 +309,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	 * Get all vehicle types
 	 */
 	private void getVehicleTypes() {
-		droidtransDatasource.open();
-		vehicleTypes = droidtransDatasource.getVehicleTypes();
-		droidtransDatasource.close();
+		vehicleTypes = droidtransLoadInfo.getVehicleTypes();
 	}
 
 	/**
@@ -317,9 +319,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	 *            the selected vehicle type
 	 */
 	private void getVehicleNumbers(VehicleTypeEnum vehicleType) {
-		droidtransDatasource.open();
-		vehicleNumbers = droidtransDatasource.getVehicleNumbers(vehicleType);
-		droidtransDatasource.close();
+		vehicleNumbers = droidtransLoadInfo.getVehicleNumbers(vehicleType);
 	}
 
 	/**

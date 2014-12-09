@@ -56,8 +56,7 @@ public class Sofbus24 extends SherlockFragmentActivity {
 		// Check for an update
 		if (savedInstanceState == null) {
 			Utils.checkForUpdate(context, UpdateTypeEnum.APP);
-			ActivityTracker.homeScreenUsed(context,
-					"Sofbus 24 (Home Screen)");
+			ActivityTracker.homeScreenUsed(context, "Sofbus 24 (Home Screen)");
 		}
 	}
 

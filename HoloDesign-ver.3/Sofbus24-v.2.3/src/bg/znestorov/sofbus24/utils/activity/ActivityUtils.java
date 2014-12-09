@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -30,7 +31,9 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
@@ -866,6 +869,18 @@ public class ActivityUtils {
 			ActivityUtils.showLongToast(context, String.format(context
 					.getString(R.string.navigation_drawer_home_screen_changed),
 					homeScreenName), 2000, 1000);
+		}
+	}
+
+	public static void setMapTransparent(ViewGroup group) {
+		int childCount = group.getChildCount();
+		for (int i = 0; i < childCount; i++) {
+			View child = group.getChildAt(i);
+			if (child instanceof ViewGroup) {
+				setMapTransparent((ViewGroup) child);
+			} else if (child instanceof SurfaceView) {
+				child.setBackgroundColor(Color.TRANSPARENT);
+			}
 		}
 	}
 }

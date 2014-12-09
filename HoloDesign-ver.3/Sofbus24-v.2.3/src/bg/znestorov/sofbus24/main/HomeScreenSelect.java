@@ -12,6 +12,7 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.databases.Sofbus24DatabaseUtils;
+import bg.znestorov.sofbus24.droidtrans.DroidTransLoadInfo;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
@@ -334,12 +335,20 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 				// Reset all metro stations from the Database, so use them
 				// lately
 				MetroLoadStations.resetInstance(context);
+
+				// Reset all droidtrans information from the Database, so use
+				// them lately
+				DroidTransLoadInfo.resetInstance(context);
 			} else {
 				// Load all vehicles from the Database, so use them lately
 				ScheduleLoadVehicles.getInstance(context);
 
 				// Load all metro stations from the Database, so use them lately
 				MetroLoadStations.getInstance(context);
+
+				// Load all droidtrans info from the Database, so use them
+				// lately
+				DroidTransLoadInfo.getInstance(context);
 			}
 
 			return null;

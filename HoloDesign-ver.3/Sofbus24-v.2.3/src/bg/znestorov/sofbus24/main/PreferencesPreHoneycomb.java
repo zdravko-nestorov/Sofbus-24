@@ -7,6 +7,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
+import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
 import bg.znestorov.sofbus24.preferences.ResetSettingsDialog;
 import bg.znestorov.sofbus24.preferences.RestartApplicationDialog;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -113,6 +114,14 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 		}
 
 		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
+			globalContext.setHasToRestart(true);
+		}
+
+		if (NavDrawerHomeScreenPreferences.getUserHomeScreenChoice(context) == 1
+				&& (key.equals(Constants.PREFERENCE_KEY_MARKER_TYPE)
+						|| key.equals(Constants.PREFERENCE_KEY_MARKER_OPTIONS)
+						|| key.equals(Constants.PREFERENCE_KEY_STATIONS_RADIUS) || key
+							.equals(Constants.PREFERENCE_KEY_POSITION_FOCUS))) {
 			globalContext.setHasToRestart(true);
 		}
 

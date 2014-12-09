@@ -160,6 +160,8 @@
     <string name="pref_category_stations_timeSource_title">Времена на градския транспорт</string>
     <string name="pref_category_stations_timeSource_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация</string>
     <string name="pref_category_map">КАРТА</string>
+    <string name="pref_category_map_marker_type_title">Вид на маркера върху картата</string>
+    <string name="pref_category_map_marker_type_summary">Определяне на вида на картинката на маркера върху картата</string>
     <string name="pref_category_map_marker_title">Маркер на картата</string>
     <string name="pref_category_map_marker_summary">Визуализиране на балонче с информация за избраната спирка или директно показване на времената на пристигане (най-близки спирки)</string>
     <string name="pref_category_map_radius_title">Радиус около текущото местоположение</string>

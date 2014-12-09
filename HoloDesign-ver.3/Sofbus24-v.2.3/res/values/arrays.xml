@@ -29,6 +29,14 @@
     </string-array>
 
     <!-- Closest stations -->
+    <string-array name="markerType">
+        <item name="markerStandard">Стандартен</item>
+        <item name="markerSkgtCars">Коли на СКГТ</item>
+    </string-array>
+    <string-array name="markerTypeValues">
+        <item name="markerStandard">markerStandard</item>
+        <item name="markerSkgtCars">markerSkgtCars</item>
+    </string-array>
     <string-array name="markerOptions">
         <item name="markerInfo">Балонче с информация</item>
         <item name="markerSchedule">Времена на пристигане</item>

@@ -10,6 +10,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
 import bg.znestorov.sofbus24.utils.Constants;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -74,6 +75,14 @@ public class PreferencesFragment extends PreferenceFragment implements
 		}
 
 		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
+			globalContext.setHasToRestart(true);
+		}
+
+		if (NavDrawerHomeScreenPreferences.getUserHomeScreenChoice(context) == 1
+				&& (key.equals(Constants.PREFERENCE_KEY_MARKER_TYPE)
+						|| key.equals(Constants.PREFERENCE_KEY_MARKER_OPTIONS)
+						|| key.equals(Constants.PREFERENCE_KEY_STATIONS_RADIUS) || key
+							.equals(Constants.PREFERENCE_KEY_POSITION_FOCUS))) {
 			globalContext.setHasToRestart(true);
 		}
 

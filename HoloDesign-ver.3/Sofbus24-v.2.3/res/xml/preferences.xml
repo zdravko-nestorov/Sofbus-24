@@ -37,6 +37,13 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_map" >
         <ListPreference
+            android:defaultValue="markerStandard"
+            android:entries="@array/markerType"
+            android:entryValues="@array/markerTypeValues"
+            android:key="markerType"
+            android:summary="@string/pref_category_map_marker_type_summary"
+            android:title="@string/pref_category_map_marker_type_title" />
+        <ListPreference
             android:defaultValue="markerInfo"
             android:entries="@array/markerOptions"
             android:entryValues="@array/markerOptionsValues"

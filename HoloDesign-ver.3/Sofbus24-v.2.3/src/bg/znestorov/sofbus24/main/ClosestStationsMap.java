@@ -39,6 +39,7 @@ import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.SortTypeEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
@@ -88,6 +89,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 
 	private ActionBar actionBar;
 
+	private String markerType;
 	private String markerOptions;
 	private boolean positionFocus;
 	private BigDecimal stationsRadius;
@@ -198,7 +200,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		favouritesDatasource = new FavouritesDataSource(context);
 
 		ActivityUtils.showHomeActivtyChangedToast(context,
-				getString(R.string.navigation_drawer_home_standard));
+				getString(R.string.navigation_drawer_home_map));
 
 		getSharedPreferencesFields();
 		initActionBar();
@@ -239,6 +241,11 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		// Get SharedPreferences from option menu
 		sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(context);
+
+		// Get "markerOptions" value from the SharedPreferences file
+		markerType = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_MARKER_TYPE,
+				Constants.PREFERENCE_DEFAULT_VALUE_MARKER_TYPE);
 
 		// Get "markerOptions" value from the SharedPreferences file
 		markerOptions = sharedPreferences.getString(
@@ -395,7 +402,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 				}
 			};
 
-			handler.postDelayed(myrunnable, 3000);
+			handler.postDelayed(myrunnable, isCSMapHomeScreen ? 1000 : 3000);
 
 			// Visualize the favorites stations on the map
 			new LoadStationsFromDb(context, null, null).execute();
@@ -728,6 +735,16 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 						.title(String.format(station.getName() + " (%s)",
 								station.getNumber()))
 						.snippet(getStationTypeText(station));
+
+				// Assign an icon to the marker (according to the user choice)
+				if (!Constants.PREFERENCE_DEFAULT_VALUE_MARKER_TYPE
+						.equals(markerType)) {
+					stationMarkerOptions = stationMarkerOptions
+							.icon(BitmapDescriptorFactory
+									.fromResource(getMarkerIcon(station
+											.getType())));
+				}
+
 				Marker marker = googleMap.addMarker(stationMarkerOptions);
 
 				// Associate the marker and the station
@@ -985,6 +1002,29 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		}
 
 		return historyType;
+	}
+
+	/**
+	 * Get the appropriate marker icon according to the station type
+	 * 
+	 * @param stationType
+	 *            the type of the station
+	 * @return the marker icon from the resources
+	 */
+	private int getMarkerIcon(VehicleTypeEnum stationType) {
+		int markerIcon;
+
+		switch (stationType) {
+		case METRO1:
+		case METRO2:
+			markerIcon = R.drawable.ic_metro_map_marker;
+			break;
+		default:
+			markerIcon = R.drawable.ic_bus_map_marker;
+			break;
+		}
+
+		return markerIcon;
 	}
 
 	/**
