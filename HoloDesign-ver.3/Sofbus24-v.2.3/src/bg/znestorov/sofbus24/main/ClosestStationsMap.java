@@ -783,9 +783,20 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 						.position(stationLocation)
 						.title(String.format(station.getName() + " (%s)",
 								station.getNumber()))
-						.snippet(getStationTypeText(station))
-						.icon(BitmapDescriptorFactory
-								.fromResource(R.drawable.ic_fav_full));
+						.snippet(getStationTypeText(station));
+
+				// Assign an icon to the marker (according to the user choice)
+				if (Constants.PREFERENCE_DEFAULT_VALUE_MARKER_TYPE
+						.equals(markerType)) {
+					stationMarkerOptions = stationMarkerOptions
+							.icon(BitmapDescriptorFactory
+									.fromResource(R.drawable.ic_fav_full));
+				} else {
+					stationMarkerOptions = stationMarkerOptions
+							.icon(BitmapDescriptorFactory
+									.fromResource(R.drawable.ic_map_marker_type_favorites));
+				}
+
 				Marker marker = googleMap.addMarker(stationMarkerOptions);
 
 				// Associate the marker and the station
@@ -1017,10 +1028,10 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		switch (stationType) {
 		case METRO1:
 		case METRO2:
-			markerIcon = R.drawable.ic_metro_map_marker;
+			markerIcon = R.drawable.ic_map_marker_type_metro;
 			break;
 		default:
-			markerIcon = R.drawable.ic_bus_map_marker;
+			markerIcon = R.drawable.ic_map_marker_type_bus;
 			break;
 		}
 

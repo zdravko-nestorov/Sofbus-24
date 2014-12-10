@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -66,7 +64,6 @@ public class History extends SherlockListActivity implements
 		initActionBar();
 		initLayoutFields();
 		setListAdapter();
-		setListScrollListener();
 
 		// Start an asynchrnic task to load the data from the preferences file
 		new RetrieveHistoryOfSearches().execute();
@@ -89,20 +86,6 @@ public class History extends SherlockListActivity implements
 				listView.setSelectionFromTop(0, 0);
 			}
 		}
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		ListView listView = getListView();
-		MenuItem historyTop = menu.findItem(R.id.action_history_top);
-
-		if (isListViewScrolledEnough(listView) || Utils.isPreHoneycomb()) {
-			historyTop.setVisible(true);
-		} else {
-			historyTop.setVisible(false);
-		}
-
-		return true;
 	}
 
 	@Override
@@ -219,32 +202,6 @@ public class History extends SherlockListActivity implements
 		setListAdapter(historyAdapter);
 	}
 
-	/**
-	 * Set onScrollListener over the ListView so show the return to default menu
-	 * item to be visible only if the list is scrolled
-	 */
-	private void setListScrollListener() {
-
-		if (!Utils.isPreHoneycomb()) {
-			getListView().setOnScrollListener(new OnScrollListener() {
-
-				@Override
-				public void onScrollStateChanged(AbsListView view,
-						int scrollState) {
-				}
-
-				@Override
-				public void onScroll(AbsListView view, int firstVisibleItem,
-						int visibleItemCount, final int totalItemCount) {
-					// Declare that the options menu has changed, so should be
-					// recreated (make the system calls the method
-					// onPrepareOptionsMenu)
-					supportInvalidateOptionsMenu();
-				}
-			});
-		}
-	}
-
 	@Override
 	public void onDeleteAllHistoryClicked() {
 		HistoryOfSearches.getInstance(context).clearHistoryOfSearches();
@@ -294,34 +251,5 @@ public class History extends SherlockListActivity implements
 			super.onCancelled();
 			ActivityUtils.unlockScreenOrientation(context);
 		}
-	}
-
-	/**
-	 * Check if the ListView is scrolled enough, so the user will be provided
-	 * with the reset action bar button
-	 * 
-	 * @param listView
-	 *            the ListView of the fragment
-	 * 
-	 * @return if the ListView is scrolled enough, so all of the menu items are
-	 *         visible
-	 */
-	private boolean isListViewScrolledEnough(ListView listView) {
-		boolean isListViewScrolledEnough = false;
-
-		try {
-			if (listView != null && listView.getCount() > 0) {
-				View firstListViewRow = listView.getChildAt(0);
-
-				int firstListViewRowHeight = firstListViewRow.getHeight();
-				int scrollY = listView.getFirstVisiblePosition()
-						* firstListViewRowHeight - firstListViewRow.getTop();
-
-				isListViewScrolledEnough = scrollY >= firstListViewRowHeight / 3;
-			}
-		} catch (Exception e) {
-		}
-
-		return isListViewScrolledEnough;
 	}
 }
