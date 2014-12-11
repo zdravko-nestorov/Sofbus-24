@@ -334,6 +334,7 @@
     <string name="droid_trans_type_metro">Метро</string>
     <string name="droid_trans_type_metro_line_1">Линия 1</string>
     <string name="droid_trans_schedule">Разписание</string>
+    <string name="droid_trans_load_data" formatted="false"><![CDATA[Зареждане на информацията за колите на СКГТ...]]></string>
     <string name="droid_trans_reset_location">Моля изчакайте да бъдете локализирани отново или намерете търсената от вас спирка.</string>
     <string name="droid_trans_no_info">Няма достатъчно информация за избраната линия. Моля опитайте с някой от другите начини за търсене.</string>
 

@@ -16,12 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.droidtrans.DroidTransLoadActivity;
 import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HomeTabEntity;
 import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
-import bg.znestorov.sofbus24.main.DroidTrans;
-import bg.znestorov.sofbus24.main.DroidTransDialog;
 import bg.znestorov.sofbus24.main.EditTabs;
 import bg.znestorov.sofbus24.main.EditTabsDialog;
 import bg.znestorov.sofbus24.main.HomeScreenSelect;
@@ -143,7 +142,7 @@ public class Sofbus24Fragment extends SherlockFragment implements
 
 		switch (item.getItemId()) {
 		case R.id.action_droidtrans:
-			startDroidTrans();
+			new DroidTransLoadActivity(context).execute();
 
 			return true;
 		case R.id.action_closest_stations_map:
@@ -235,20 +234,6 @@ public class Sofbus24Fragment extends SherlockFragment implements
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	/**
-	 * Start the DroidTrans activity
-	 */
-	private void startDroidTrans() {
-		Intent droidTransIntent;
-		if (globalContext.isPhoneDevice()) {
-			droidTransIntent = new Intent(context, DroidTrans.class);
-		} else {
-			droidTransIntent = new Intent(context, DroidTransDialog.class);
-		}
-
-		context.startActivity(droidTransIntent);
 	}
 
 	/**

@@ -323,6 +323,7 @@
     <string name="droid_trans_type_metro">Subway</string>
     <string name="droid_trans_type_metro_line_1">Line 1</string>
     <string name="droid_trans_schedule">Schedule</string>
+    <string name="droid_trans_load_data" formatted="false"><![CDATA[Retrieving the information about the SKGT vehicles...]]></string>
     <string name="droid_trans_reset_location">Please wait to be located again or find the station you look for.</string>
     <string name="droid_trans_no_info">The information is not enough to retrieve the times for the choosen vehicle. Please try with some of the other search options.</string>
 
