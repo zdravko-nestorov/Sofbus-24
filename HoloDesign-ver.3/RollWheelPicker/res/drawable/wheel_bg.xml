@@ -27,7 +27,7 @@
         android:startColor="#40808080" />
 
     <stroke
-        android:width="2dp"
+        android:width="2.7dp"
         android:color="#9933B5E5" />
 
 </shape>
