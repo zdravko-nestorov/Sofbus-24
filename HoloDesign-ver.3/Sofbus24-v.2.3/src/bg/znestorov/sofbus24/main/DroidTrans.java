@@ -103,7 +103,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	private ArrayList<String> navigationItems;
 
 	private LocationManager locationManager;
-	private boolean isUserLocated = false;
+	private Location userLocation;
 
 	private static final long MIN_DISTANCE_FOR_UPDATE = 0;
 	private static final long MIN_TIME_FOR_UPDATE = 1000 * 2;
@@ -111,7 +111,8 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	private static final String GPS_PROVIDER = LocationManager.GPS_PROVIDER;
 	private static final String NETWORK_PROVIDER = LocationManager.NETWORK_PROVIDER;
 
-	private static final String BUNDLE_IS_USER_LOCATED = "BUNDLE IS USER LOCATED";
+	private static final String BUNDLE_USER_LOCATION_LAT = "BUNDLE USER LOCATION LAT";
+	private static final String BUNDLE_USER_LOCATION_LON = "BUNDLE USER LOCATION LON";
 	private static final String BUNDLE_WHEEL_STATE = "BUNDLE WHEEL STATE";
 	public static final String BUNDLE_IS_DROID_TRANS_HOME_SCREEN = "IS DROID TRANS HOME SCREEN";
 
@@ -140,8 +141,18 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		if (savedInstanceState == null) {
 			wheelState = new WheelStateEntity();
 		} else {
-			isUserLocated = savedInstanceState
-					.getBoolean(BUNDLE_IS_USER_LOCATED);
+			Double latitude = savedInstanceState
+					.getDouble(BUNDLE_USER_LOCATION_LAT);
+			Double longitude = savedInstanceState
+					.getDouble(BUNDLE_USER_LOCATION_LON);
+			if (latitude == -1 || longitude == -1) {
+				userLocation = null;
+			} else {
+				userLocation = new Location("");
+				userLocation.setLatitude(latitude);
+				userLocation.setLongitude(longitude);
+			}
+
 			wheelState = (WheelStateEntity) savedInstanceState
 					.getSerializable(BUNDLE_WHEEL_STATE);
 		}
@@ -186,7 +197,11 @@ public class DroidTrans extends SherlockFragmentActivity implements
 
 		setWheelStateEntity(wheelState);
 
-		savedInstanceState.putBoolean(BUNDLE_IS_USER_LOCATED, isUserLocated);
+		savedInstanceState.putDouble(BUNDLE_USER_LOCATION_LAT,
+				userLocation != null ? userLocation.getLatitude() : -1);
+		savedInstanceState.putDouble(BUNDLE_USER_LOCATION_LON,
+				userLocation != null ? userLocation.getLongitude() : -1);
+
 		savedInstanceState.putSerializable(BUNDLE_WHEEL_STATE, wheelState);
 
 		super.onSaveInstanceState(savedInstanceState);
@@ -261,7 +276,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 
 			return true;
 		case R.id.action_droidtrans_reset:
-			isUserLocated = false;
+			userLocation = null;
 			removeLocationListener();
 			initLocationListener();
 
@@ -513,8 +528,8 @@ public class DroidTrans extends SherlockFragmentActivity implements
 
 			// Check if the current state of the wheels is the base position
 			// (all are at the 0 position)
-			if (!isUserLocated) {
-				isUserLocated = true;
+			if (userLocation == null) {
+				userLocation = currentLocation;
 
 				changeWheelsStateValuesByLocation(currentLocation);
 				changeWheelsStateValues();

@@ -610,12 +610,12 @@ public class ActivityUtils {
 		if (!isInvisible) {
 			if (pixelsHeight > pixelsWidth) {
 				// Portrait orientation
-				pixelsWidth = (int) (pixelsHeight * 0.58);
-				pixelsHeight = (int) (pixelsHeight * 0.86);
+				pixelsWidth = (int) (pixelsHeight * 0.50);
+				pixelsHeight = (int) (pixelsHeight * 0.88);
 			} else {
 				// Landscape orientation
-				pixelsWidth = (int) (pixelsWidth * 0.58);
-				pixelsHeight = (int) (pixelsHeight * 0.86);
+				pixelsWidth = (int) (pixelsWidth * 0.50);
+				pixelsHeight = (int) (pixelsHeight * 0.88);
 			}
 		} else {
 			pixelsWidth = 0;
