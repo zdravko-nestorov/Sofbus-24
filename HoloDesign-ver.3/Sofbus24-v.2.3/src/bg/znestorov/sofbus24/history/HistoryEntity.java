@@ -3,6 +3,7 @@ package bg.znestorov.sofbus24.history;
 import java.io.Serializable;
 
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
+import bg.znestorov.sofbus24.utils.Utils;
 
 /**
  * History class representing each station search
@@ -38,6 +39,13 @@ public class HistoryEntity implements Serializable {
 	}
 
 	public String getHistoryDate() {
+
+		String dateToReturn = historyDate;
+
+		if (dateToReturn != null && dateToReturn.split(":").length == 3) {
+			return Utils.getValueBeforeLast(historyDate, ":");
+		}
+
 		return historyDate;
 	}
 

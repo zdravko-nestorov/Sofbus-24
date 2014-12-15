@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Utils;
 
@@ -29,6 +31,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntity> implements
 
 	// Used for optimize performance of the ListView
 	static class ViewHolder {
+		ImageView searchImage;
 		TextView searchText;
 		TextView searchType;
 		TextView searchDate;
@@ -58,6 +61,8 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntity> implements
 
 			// Configure view holder
 			viewHolder = new ViewHolder();
+			viewHolder.searchImage = (ImageView) rowView
+					.findViewById(R.id.history_item_favourite);
 			viewHolder.searchText = (TextView) rowView
 					.findViewById(R.id.history_item_search_text);
 			viewHolder.searchType = (TextView) rowView
@@ -72,18 +77,89 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntity> implements
 		// Fill the data
 		HistoryEntity history = historyList.get(position);
 
+		VehicleTypeEnum historyType = history.getHistoryType();
 		String historyValue = history.getHistoryValue();
-		String stationName = Utils.getValueBefore(historyValue, "(");
-		String stationNumber = Utils.getValueBetween(historyValue, "(", ")");
+		String searchName = Utils.getValueBefore(historyValue, "(");
+		String searchNumber = Utils.getValueBetweenLast(historyValue, "(", ")");
 
-		viewHolder.searchText.setText(stationName);
-		viewHolder.searchType.setText(context.getString(
-				R.string.history_item_station_number, stationNumber));
+		viewHolder.searchImage.setImageResource(getHistoryImage(history));
+		viewHolder.searchText.setText(getHistoryTitle(historyType, searchName,
+				searchNumber));
+		viewHolder.searchType.setText(getHistorySubtitle(historyType,
+				searchName, searchNumber));
 		viewHolder.searchDate.setText(Html.fromHtml(context.getString(
-				R.string.history_item_search_date, history.getHistoryDate(),
-				getHistoryType(history))));
+				R.string.history_item_search_date, getHistoryType(history),
+				history.getHistoryDate())));
 
 		return rowView;
+	}
+
+	/**
+	 * Get the history title according to the type of search
+	 * 
+	 * @param historyType
+	 *            the type of the search
+	 * @param searchName
+	 *            the search name (station or vehicle)
+	 * @param searchNumber
+	 *            the search number (station or vehicle)
+	 * @return the history title
+	 */
+	private String getHistoryTitle(VehicleTypeEnum historyType,
+			String searchName, String searchNumber) {
+
+		String historyTitle;
+
+		switch (historyType) {
+		case BUS:
+			historyTitle = context.getString(R.string.history_title_bus,
+					searchNumber);
+			break;
+		case TROLLEY:
+			historyTitle = context.getString(R.string.history_title_trolley,
+					searchNumber);
+			break;
+		case TRAM:
+			historyTitle = context.getString(R.string.history_title_tram,
+					searchNumber);
+			break;
+		default:
+			historyTitle = searchName;
+			break;
+		}
+
+		return historyTitle;
+	}
+
+	/**
+	 * Get the history subtitle according to the type of search
+	 * 
+	 * @param historyType
+	 *            the type of the search
+	 * @param searchName
+	 *            the search name (station or vehicle)
+	 * @param searchNumber
+	 *            the search number (station or vehicle)
+	 * @return the history subtitle
+	 */
+	private String getHistorySubtitle(VehicleTypeEnum historyType,
+			String searchName, String searchNumber) {
+
+		String historySubtitle;
+
+		switch (historyType) {
+		case BUS:
+		case TROLLEY:
+		case TRAM:
+			historySubtitle = searchName;
+			break;
+		default:
+			historySubtitle = context.getString(
+					R.string.history_item_station_number, searchNumber);
+			break;
+		}
+
+		return historySubtitle;
 	}
 
 	/**
@@ -97,6 +173,15 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntity> implements
 		String historyType;
 
 		switch (history.getHistoryType()) {
+		case BUS:
+			historyType = context.getString(R.string.history_type_bus);
+			break;
+		case TROLLEY:
+			historyType = context.getString(R.string.history_type_trolley);
+			break;
+		case TRAM:
+			historyType = context.getString(R.string.history_type_tram);
+			break;
 		case BTT:
 			historyType = context.getString(R.string.history_type_btt);
 			break;
@@ -106,5 +191,39 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntity> implements
 		}
 
 		return historyType;
+	}
+
+	/**
+	 * Get the image of the history item
+	 * 
+	 * @param history
+	 *            the history object
+	 * @return the image resource of the current row
+	 */
+	private int getHistoryImage(HistoryEntity history) {
+
+		int historyImage;
+
+		switch (history.getHistoryType()) {
+		case BUS:
+			historyImage = R.drawable.ic_history_bus;
+			break;
+		case TROLLEY:
+			historyImage = R.drawable.ic_history_trolley;
+			break;
+		case TRAM:
+			historyImage = R.drawable.ic_history_tram;
+			break;
+		case METRO:
+		case METRO1:
+		case METRO2:
+			historyImage = R.drawable.ic_history_metro;
+			break;
+		default:
+			historyImage = R.drawable.ic_history_station;
+			break;
+		}
+
+		return historyImage;
 	}
 }

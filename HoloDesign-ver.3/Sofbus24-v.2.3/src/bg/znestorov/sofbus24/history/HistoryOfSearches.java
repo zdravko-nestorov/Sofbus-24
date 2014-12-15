@@ -1,13 +1,8 @@
 package bg.znestorov.sofbus24.history;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -97,14 +92,16 @@ public class HistoryOfSearches {
 	 *            The new value for the preference
 	 */
 	public void putFiledInPreferences(Activity context, String preferenceKey,
-			int preferenceNumber, String preferenceValue) {
+			int preferenceNumber, String preferenceValue, boolean hasToTranslate) {
 		if (preferenceNumber > Constants.TOTAL_HISTORY_COUNT) {
 			preferenceNumber = preferenceNumber % Constants.TOTAL_HISTORY_COUNT;
 		}
 
 		Editor editor = historyPreferences.edit();
-		editor.putString(preferenceKey + preferenceNumber,
-				TranslatorLatinToCyrillic.translate(context, preferenceValue));
+		editor.putString(
+				preferenceKey + preferenceNumber,
+				hasToTranslate ? TranslatorLatinToCyrillic.translate(context,
+						preferenceValue) : preferenceValue);
 		editor.commit();
 
 		// Check if the value is not already set (it will be set if a field for
@@ -174,28 +171,7 @@ public class HistoryOfSearches {
 			i++;
 		}
 
-		// Sort the history list via the date of search
-		Collections.sort(historyList, new Comparator<HistoryEntity>() {
-
-			@Override
-			@SuppressLint("SimpleDateFormat")
-			public int compare(HistoryEntity history1, HistoryEntity history2) {
-				SimpleDateFormat formatter = new SimpleDateFormat(
-						"dd.MM.yyyy, kk:mm");
-
-				try {
-					Date vehicle1Date = formatter.parse(history1
-							.getHistoryDate());
-					Date vehicle2Date = formatter.parse(history2
-							.getHistoryDate());
-
-					return vehicle2Date.compareTo(vehicle1Date);
-				} catch (ParseException e) {
-					// This case never has to be reached
-					return 0;
-				}
-			}
-		});
+		Collections.reverse(historyList);
 
 		return historyList;
 	}

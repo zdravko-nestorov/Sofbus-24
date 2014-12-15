@@ -19,6 +19,7 @@ import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.publictransport.PublicTransportFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 
@@ -53,6 +54,9 @@ public class PublicTransport extends SherlockFragmentActivity implements
 		initBundleInfo();
 		initLayoutFields();
 		setActiveFragment();
+
+		// Add the search in the history
+		Utils.addVehicleInHistory(context, ptDirectionsEntity.getVehicle());
 	}
 
 	@Override

@@ -23,12 +23,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.FavouritesDatabaseUtils;
+import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.FragmentLifecycle;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.OrderTypeEnum;
 import bg.znestorov.sofbus24.entity.SortTypeEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.favorites.FavouritesDeleteAllDialog.OnDeleteAllFavouritesListener;
 import bg.znestorov.sofbus24.favorites.FavouritesOrderDialog.OnOrderChoiceListener;
+import bg.znestorov.sofbus24.favorites.FavouritesRemoveDialog.OnRemoveFavouritesListener;
 import bg.znestorov.sofbus24.favorites.FavouritesRenameDialog.OnRenameFavouritesListener;
 import bg.znestorov.sofbus24.favorites.FavouritesSortDialog.OnSortChoiceListener;
 import bg.znestorov.sofbus24.favorites.FavouritesSortTypeDialog.OnSortTypeChoiceListener;
@@ -51,10 +55,15 @@ import com.actionbarsherlock.view.MenuItem;
  */
 public class FavouritesStationFragment extends SherlockListFragment implements
 		FragmentLifecycle, OnDeleteAllFavouritesListener,
-		OnRenameFavouritesListener, OnOrderChoiceListener,
-		OnSortChoiceListener, OnSortTypeChoiceListener {
+		OnRenameFavouritesListener, OnRemoveFavouritesListener,
+		OnOrderChoiceListener, OnSortChoiceListener, OnSortTypeChoiceListener {
 
 	private Activity context;
+	private GlobalEntity globalContext;
+
+	private StationsDataSource stationsDataSource;
+	private FavouritesDataSource favouritesDatasource;
+
 	private boolean isHomeScreenFragment;
 
 	private GridView gridViewFavourites;
@@ -63,7 +72,6 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 	private TextView emptyTextView;
 
 	private List<StationEntity> favouritesStations = new ArrayList<StationEntity>();
-	private FavouritesDataSource favouritesDatasource;
 
 	public static FavouritesStationFragment getInstance(
 			boolean isHomeScreenFragment) {
@@ -86,6 +94,7 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 
 		// Set the context (activity) associated with this fragment
 		context = getActivity();
+		globalContext = (GlobalEntity) context.getApplicationContext();
 
 		// Load the Favorites datasource and fill the list view with the
 		// stations from the DB
@@ -164,6 +173,8 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 		Toast.makeText(context,
 				Html.fromHtml(getString(R.string.fav_menu_remove_all_toast)),
 				Toast.LENGTH_SHORT).show();
+
+		filterSearchEditText();
 	}
 
 	@Override
@@ -180,6 +191,8 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 		favouritesStations.addAll(loadFavouritesList(null));
 
 		getFavouritesStationAdapter().notifyDataSetChanged();
+
+		filterSearchEditText();
 	}
 
 	@Override
@@ -218,14 +231,66 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 		Toast.makeText(context,
 				Html.fromHtml(getString(R.string.fav_menu_sort_success)),
 				Toast.LENGTH_SHORT).show();
+
+		filterSearchEditText();
+	}
+
+	@Override
+	public void onRemoveFavouritesClicked(StationEntity station) {
+
+		ListAdapter listAdapter = getFavouritesListAdapter();
+
+		if (listAdapter != null) {
+			if (favouritesDatasource == null) {
+				favouritesDatasource = new FavouritesDataSource(context);
+			}
+
+			favouritesDatasource.open();
+			favouritesDatasource.deleteStation(station);
+			favouritesDatasource.close();
+
+			favouritesStations.clear();
+			favouritesStations.addAll(loadFavouritesList(null));
+			getFavouritesStationAdapter().notifyDataSetChanged();
+
+			Toast.makeText(
+					context,
+					Html.fromHtml(String.format(context
+							.getString(R.string.app_toast_remove_favourites),
+							station.getName(), station.getNumber())),
+					Toast.LENGTH_SHORT).show();
+
+			// Check which type of station is changed (METRO or OTHER)
+			if (stationsDataSource == null) {
+				stationsDataSource = new StationsDataSource(context);
+			}
+
+			stationsDataSource.open();
+			StationEntity dbStation = stationsDataSource.getStation(station);
+			VehicleTypeEnum stationType = dbStation != null ? dbStation
+					.getType() : VehicleTypeEnum.BTT;
+			stationsDataSource.open();
+
+			if (stationType != VehicleTypeEnum.METRO1
+					&& stationType != VehicleTypeEnum.METRO2) {
+				globalContext.setVbChanged(true);
+			}
+
+			filterSearchEditText();
+		}
 	}
 
 	@Override
 	public void onRenameFavouritesClicked(String stationName,
 			StationEntity station) {
+
 		ListAdapter listAdapter = getFavouritesListAdapter();
 
 		if (listAdapter != null) {
+			if (favouritesDatasource == null) {
+				favouritesDatasource = new FavouritesDataSource(context);
+			}
+
 			String oldStationName = station.getName();
 			String newStationName = stationName;
 
@@ -243,6 +308,8 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 							oldStationName, station.getNumber(),
 							newStationName, station.getNumber())),
 					Toast.LENGTH_LONG).show();
+
+			filterSearchEditText();
 		}
 	}
 
@@ -397,8 +464,7 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				String searchText = searchEditText.getText().toString();
-				getFavouritesStationAdapter().getFilter().filter(searchText);
+				filterSearchEditText();
 			}
 
 			@Override
@@ -430,6 +496,17 @@ public class FavouritesStationFragment extends SherlockListFragment implements
 			}
 
 		});
+	}
+
+	/**
+	 * Filter the favorites list according to the text in the search box
+	 */
+	private void filterSearchEditText() {
+
+		if (searchEditText != null) {
+			String searchText = searchEditText.getText().toString();
+			getFavouritesStationAdapter().getFilter().filter(searchText);
+		}
 	}
 
 	/**

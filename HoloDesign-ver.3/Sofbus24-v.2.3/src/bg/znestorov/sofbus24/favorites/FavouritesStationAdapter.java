@@ -27,9 +27,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
-import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.MetroStationEntity;
@@ -77,7 +75,6 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	private List<StationEntity> originalStations;
 	private List<StationEntity> filteredStations;
 
-	private StationsDataSource stationsDataSource;
 	private FavouritesDataSource favouritesDatasource;
 
 	private Filter stationsFilter;
@@ -123,7 +120,6 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		this.filteredStations = stations;
 
 		this.favouritesDatasource = new FavouritesDataSource(context);
-		this.stationsDataSource = new StationsDataSource(context);
 
 		this.displayImageOptions = ActivityUtils.displayImageOptions();
 		this.imageLoader.init(ActivityUtils.initImageLoader(context));
@@ -794,30 +790,11 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 	 *            the station on the rowView
 	 */
 	private void removeStation(StationEntity station) {
-		favouritesDatasource.open();
-		favouritesDatasource.deleteStation(station);
-		favouritesDatasource.close();
-		remove(station);
-		notifyDataSetChanged();
-
-		Toast.makeText(
-				context,
-				Html.fromHtml(String.format(
-						context.getString(R.string.app_toast_remove_favourites),
-						station.getName(), station.getNumber())),
-				Toast.LENGTH_SHORT).show();
-
-		// Check which type of station is changed (METRO or OTHER)
-		stationsDataSource.open();
-		StationEntity dbStation = stationsDataSource.getStation(station);
-		VehicleTypeEnum stationType = dbStation != null ? dbStation.getType()
-				: VehicleTypeEnum.BTT;
-		stationsDataSource.open();
-
-		if (stationType != VehicleTypeEnum.METRO1
-				&& stationType != VehicleTypeEnum.METRO2) {
-			globalContext.setVbChanged(true);
-		}
+		FavouritesRemoveDialog favouritesRenameDialog = FavouritesRemoveDialog
+				.newInstance(station);
+		favouritesRenameDialog.setTargetFragment(favouritesStationFragment, 0);
+		favouritesRenameDialog.show(
+				favouritesStationFragment.getFragmentManager(), "dialog");
 	}
 
 	/**

@@ -26,6 +26,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.history.HistoryOfSearches;
 import bg.znestorov.sofbus24.main.R;
@@ -183,6 +184,28 @@ public class Utils {
 		if (value.contains(regex1) && value.contains(regex2)) {
 			return value.substring(value.indexOf(regex1) + regex1.length(),
 					value.indexOf(regex2));
+		} else {
+			return value;
+		}
+	}
+
+	/**
+	 * Get a value from a string BETWEEN the last REGEX1 and REGEX2
+	 * 
+	 * @param value
+	 *            the string value
+	 * @param regex1
+	 *            the regex that is looked for (after)
+	 * @param regex2
+	 *            the regex that is looked for (before)
+	 * @return the substring value BETWEEN the REGEX1 and REGEX2, or the value
+	 *         in case of no REGEX found
+	 */
+	public static String getValueBetweenLast(String value, String regex1,
+			String regex2) {
+		if (value.contains(regex1) && value.contains(regex2)) {
+			return value.substring(value.lastIndexOf(regex1) + regex1.length(),
+					value.lastIndexOf(regex2));
 		} else {
 			return value;
 		}
@@ -636,21 +659,19 @@ public class Utils {
 		if (historyType == VehicleTypeEnum.METRO1
 				|| historyType == VehicleTypeEnum.METRO2) {
 			historyType = VehicleTypeEnum.METRO;
-		} else {
-			historyType = VehicleTypeEnum.BTT;
 		}
 
 		int nextSearchNumber = history.getNextSearchNumber();
 		history.putFiledInPreferences(context,
 				Constants.HISTORY_PREFERENCES_SEARCH_VALUE, nextSearchNumber,
-				historyValue);
+				historyValue, true);
 		history.putFiledInPreferences(context,
 				Constants.HISTORY_PREFERENCES_SEARCH_DATE, nextSearchNumber,
-				DateFormat.format("dd.MM.yyyy, kk:mm", new java.util.Date())
-						.toString());
+				DateFormat.format("dd.MM.yyyy, kk:mm:ss", new java.util.Date())
+						.toString(), true);
 		history.putFiledInPreferences(context,
 				Constants.HISTORY_PREFERENCES_SEARCH_TYPE, nextSearchNumber,
-				historyType.name());
+				historyType.name(), false);
 	}
 
 	/**
@@ -684,6 +705,20 @@ public class Utils {
 		while (stationIterator.hasNext()) {
 			addStationInHistory(context, stationIterator.next().getValue());
 		}
+	}
+
+	/**
+	 * Add a search to the history of searches, using the station
+	 * 
+	 * @param context
+	 *            the current Activity context
+	 * @param station
+	 *            the station that has to be added to the history of searches
+	 */
+	public static void addVehicleInHistory(Activity context,
+			VehicleEntity vehicle) {
+		addSearchInHistory(context, vehicle.getType(), vehicle.getDirection(),
+				vehicle.getNumber());
 	}
 
 	/**

@@ -206,7 +206,9 @@
     <string name="fav_item_rename_msg" formatted="false"><![CDATA[Change the station\'s name <b><i>%s (%s)</i></b> to:]]></string>
     <string name="fav_item_rename_hint">Enter a new name</string>
     <string name="fav_item_empty_list" formatted="false"><![CDATA[No <b>Favorites</b> stations found. If you want to add a station, find it in any of the other tabs and highlight the star in front of it.]]></string>
-    <string name="fav_menu_remove_all_confirmation" formatted="false"><![CDATA[Are you sure that you want to remove all <b>Favorites</b> stations?]]></string>
+    <string name="fav_item_remove_title">Remove</string>
+    <string name="fav_item_remove_confirmation" formatted="false"><![CDATA[Are you sure you want to remove <b><i>%s (%s)</i></b> station from your <b>Favorites list?</b>]]></string>
+    <string name="fav_menu_remove_all_confirmation" formatted="false"><![CDATA[Are you sure you want to remove all <b>Favorites</b> stations?]]></string>
     <string name="fav_menu_remove_all_toast" formatted="false"><![CDATA[All <b>Favorites</b> stations were removed.]]></string>
     <string name="fav_menu_remove_all_empty_toast" formatted="false"><![CDATA[There are no <b>Favorites</b> stations added.]]></string>
     <string name="fav_menu_sort_title">Sorting</string>
@@ -312,8 +314,14 @@
     <string name="history_list_empty_text">There are no searches registered by now or they were already deleted from the <b>History</b> section. The new ones are added automatically when looking for some information.</string>
     <string name="history_type_btt">Public Transport</string>
     <string name="history_type_metro">Metro</string>
+    <string name="history_type_bus">Bus</string>
+    <string name="history_type_trolley">Trolley</string>
+    <string name="history_type_tram">Tram</string>
+    <string name="history_title_bus" formatted="false">Bus №%s</string>
+    <string name="history_title_trolley" formatted="false">Trolley №%s</string>
+    <string name="history_title_tram" formatted="false">Tram №%s</string>
     <string name="history_item_station_number" formatted="false">Station number: %s</string>
-    <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Search from %s (%s)</font></i>]]></string>
+    <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">[%s] Search from %s</font></i>]]></string>
 
     <!-- DroidTrans -->
     <string name="droid_trans_title">SKGT cars</string>

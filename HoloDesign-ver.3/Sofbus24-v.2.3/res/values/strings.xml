@@ -217,6 +217,8 @@
     <string name="fav_item_rename_msg" formatted="false"><![CDATA[Промени името на спирка <b><i>%s (%s)</i></b> на:]]></string>
     <string name="fav_item_rename_hint">Въведи ново име</string>
     <string name="fav_item_empty_list" formatted="false"><![CDATA[Няма намерени спирки в секцията <b>Любими</b>. За да добавите спирката, която търсите, намерете я в някой от останалите табове и маркирайте звездата пред нея.]]></string>
+    <string name="fav_item_remove_title">Премахни</string>
+    <string name="fav_item_remove_confirmation" formatted="false"><![CDATA[Сигурни ли сте, че искате да премахнете спирка <b><i>%s (%s)</i></b> от <b>Любими?</b>]]></string>
     <string name="fav_menu_remove_all_confirmation" formatted="false"><![CDATA[Сигурни ли сте, че искате да премахнете всички спирки от <b>Любими?</b>]]></string>
     <string name="fav_menu_remove_all_toast" formatted="false"><![CDATA[Всички спирки бяха премахнати от секцията <b>Любими.</b>]]></string>
     <string name="fav_menu_remove_all_empty_toast" formatted="false"><![CDATA[Няма добавени спирки в секцията <b>Любими.</b>]]></string>
@@ -323,8 +325,14 @@
     <string name="history_list_empty_text">Няма регистрирани търсения до момента или те са били изтрити от секцията История. Появата на нови става автоматично при търсенето на информация.</string>
     <string name="history_type_btt">Градски Транспорт</string>
     <string name="history_type_metro">Метро</string>
+    <string name="history_type_bus">Автобус</string>
+    <string name="history_type_trolley">Тролей</string>
+    <string name="history_type_tram">Трамвай</string>
+    <string name="history_title_bus" formatted="false">Автобус №%s</string>
+    <string name="history_title_trolley" formatted="false">Тролей №%s</string>
+    <string name="history_title_tram" formatted="false">Трамвай №%s</string>
     <string name="history_item_station_number" formatted="false">Спирка номер: %s</string>
-    <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">Търсене от %s (%s)</font></i>]]></string>
+    <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">[%s] Търсене от %s</font></i>]]></string>
 
     <!-- DroidTrans -->
     <string name="droid_trans_title">Коли на СКГТ</string>

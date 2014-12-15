@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -15,12 +16,15 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.history.HistoryAdapter;
 import bg.znestorov.sofbus24.history.HistoryDeleteAllDialog;
 import bg.znestorov.sofbus24.history.HistoryDeleteAllDialog.OnDeleteAllHistoryListener;
 import bg.znestorov.sofbus24.history.HistoryEntity;
 import bg.znestorov.sofbus24.history.HistoryOfSearches;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
+import bg.znestorov.sofbus24.schedule.ScheduleVehicleInfo;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.Utils;
@@ -73,19 +77,7 @@ public class History extends SherlockListActivity implements
 	protected void onResume() {
 		super.onResume();
 
-		// Check if there is the ListView is already created
-		ListView listView = getListView();
-		if (listView != null) {
-
-			// Start an asynchrnic task to refresh the history data
-			new RetrieveHistoryOfSearches().execute();
-
-			// If there are some items in the list after the refresh, scroll the
-			// ListView to the top
-			if (historyList != null && historyList.size() > 0) {
-				listView.setSelectionFromTop(0, 0);
-			}
-		}
+		refreshHistoryList();
 	}
 
 	@Override
@@ -129,49 +121,69 @@ public class History extends SherlockListActivity implements
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
+
 		HistoryEntity history = (HistoryEntity) getListAdapter().getItem(
 				position);
 
 		// Get the station number and station name of the search
-		String stationNumber = Utils.getValueBetween(history.getHistoryValue(),
+		String searchNumber = Utils.getValueBetween(history.getHistoryValue(),
 				"(", ")");
-		String stationName = Utils.getValueBefore(history.getHistoryValue(),
-				"(");
-
-		// Get the corresponding station to the station number via the stations
-		// database
-		StationsDataSource stationDatasource = new StationsDataSource(context);
-		stationDatasource.open();
-		StationEntity station = stationDatasource.getStation(stationNumber);
-		stationDatasource.close();
-
-		// Check if the station is existing in the database
-		if (station == null) {
-			station = new StationEntity();
-			station.setNumber(stationNumber);
-			station.setName(stationName);
-		}
+		String searchName = Utils
+				.getValueBefore(history.getHistoryValue(), "(");
+		VehicleTypeEnum historyType = history.getHistoryType();
 
 		// Check the type of station and retrieve the information accordingly
-		switch (history.getHistoryType()) {
+		switch (historyType) {
+		case METRO:
+		case METRO1:
+		case METRO2:
 		case BTT:
-			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-					context, null, station, HtmlRequestCodesEnum.SINGLE_RESULT);
-			retrieveVirtualBoards.getSumcInformation();
+
+			// Get the corresponding station to the station number via the
+			// stations database
+			StationsDataSource stationDatasource = new StationsDataSource(
+					context);
+			stationDatasource.open();
+			StationEntity station = stationDatasource.getStation(searchNumber);
+			stationDatasource.close();
+
+			// Check if the station is existing in the database
+			if (station == null) {
+				station = new StationEntity();
+				station.setNumber(searchNumber);
+				station.setName(searchName);
+			}
+
+			// Check what action to be taken - to retrieve METRO or PT
+			// information
+			if (historyType == VehicleTypeEnum.BTT) {
+				RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
+						context, null, station,
+						HtmlRequestCodesEnum.SINGLE_RESULT);
+				retrieveVirtualBoards.getSumcInformation();
+			} else {
+
+				// Set the metro station URL address
+				station.setCustomField(String.format(
+						Constants.METRO_STATION_URL, station.getNumber()));
+
+				// Getting the Metro schedule from the station URL address
+				ProgressDialog progressDialog = new ProgressDialog(context);
+				progressDialog.setMessage(Html.fromHtml(String.format(
+						getString(R.string.metro_loading_schedule),
+						station.getName(), station.getNumber())));
+				RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
+						context, progressDialog, station);
+				retrieveMetroSchedule.execute();
+			}
+
 			break;
 		default:
-			// Set the metro station URL address
-			station.setCustomField(String.format(Constants.METRO_STATION_URL,
-					station.getNumber()));
+			VehicleEntity vehicle = new VehicleEntity(searchNumber,
+					history.getHistoryType(), history.getHistoryValue());
+			new ScheduleVehicleInfo(context, this).onListItemClick(vehicle,
+					getVehicleCaption(context, vehicle));
 
-			// Getting the Metro schedule from the station URL address
-			ProgressDialog progressDialog = new ProgressDialog(context);
-			progressDialog.setMessage(Html.fromHtml(String.format(
-					getString(R.string.metro_loading_schedule),
-					station.getName(), station.getNumber())));
-			RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
-					context, progressDialog, station);
-			retrieveMetroSchedule.execute();
 			break;
 		}
 	}
@@ -202,6 +214,25 @@ public class History extends SherlockListActivity implements
 		setListAdapter(historyAdapter);
 	}
 
+	/**
+	 * Refresh the content of the history list
+	 */
+	private void refreshHistoryList() {
+		// Check if there is the ListView is already created
+		ListView listView = getListView();
+		if (listView != null) {
+
+			// Start an asynchrnic task to refresh the history data
+			new RetrieveHistoryOfSearches().execute();
+
+			// If there are some items in the list after the refresh, scroll the
+			// ListView to the top
+			if (historyList != null && historyList.size() > 0) {
+				listView.setSelectionFromTop(0, 0);
+			}
+		}
+	}
+
 	@Override
 	public void onDeleteAllHistoryClicked() {
 		HistoryOfSearches.getInstance(context).clearHistoryOfSearches();
@@ -212,6 +243,44 @@ public class History extends SherlockListActivity implements
 				context,
 				Html.fromHtml(getString(R.string.history_menu_remove_all_toast)),
 				Toast.LENGTH_SHORT).show();
+	}
+
+	/**
+	 * Get the vehicle caption according to the vehicle type
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param vehicle
+	 *            the vehicle on the current row
+	 * @return the vehicle caption in format: <b>Bus ¹xxx</b>
+	 */
+	public String getVehicleCaption(Context context, VehicleEntity vehicle) {
+		String vehicleCaption;
+
+		switch (vehicle.getType()) {
+		case BUS:
+			vehicleCaption = String.format(
+					context.getString(R.string.sch_item_bus),
+					vehicle.getNumber());
+			break;
+		case TROLLEY:
+			vehicleCaption = String.format(
+					context.getString(R.string.sch_item_trolley),
+					vehicle.getNumber());
+			break;
+		case TRAM:
+			vehicleCaption = String.format(
+					context.getString(R.string.sch_item_tram),
+					vehicle.getNumber());
+			break;
+		default:
+			vehicleCaption = String.format(
+					context.getString(R.string.sch_item_bus),
+					vehicle.getNumber());
+			break;
+		}
+
+		return vehicleCaption;
 	}
 
 	private class RetrieveHistoryOfSearches extends

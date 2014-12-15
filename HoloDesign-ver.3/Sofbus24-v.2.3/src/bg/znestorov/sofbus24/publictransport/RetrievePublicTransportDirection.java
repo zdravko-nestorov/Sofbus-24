@@ -17,8 +17,10 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.main.History;
 import bg.znestorov.sofbus24.schedule.ScheduleVehicleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -35,15 +37,15 @@ public class RetrievePublicTransportDirection extends
 		AsyncTask<Void, Void, DirectionsEntity> {
 
 	private Activity context;
-	private ScheduleVehicleFragment scheduleVehicleFragment;
+	private Object callerInstance;
 	private ProgressDialog progressDialog;
 	private VehicleEntity vehicle;
 
 	public RetrievePublicTransportDirection(Activity context,
-			ScheduleVehicleFragment scheduleVehicleFragment,
-			ProgressDialog progressDialog, VehicleEntity vehicle) {
+			Object callerInstance, ProgressDialog progressDialog,
+			VehicleEntity vehicle) {
 		this.context = context;
-		this.scheduleVehicleFragment = scheduleVehicleFragment;
+		this.callerInstance = callerInstance;
 		this.progressDialog = progressDialog;
 		this.vehicle = vehicle;
 	}
@@ -82,11 +84,21 @@ public class RetrievePublicTransportDirection extends
 
 		// Check if the information is correctly retrieved from SKGT site
 		if (ptDirectionsEntity.isDirectionSet()) {
+
+			// Get the fragment manager to start the dialog fragment
+			FragmentManager fragmentManager;
+			if (callerInstance instanceof ScheduleVehicleFragment) {
+				fragmentManager = ((ScheduleVehicleFragment) callerInstance)
+						.getChildFragmentManager();
+			} else {
+				fragmentManager = ((History) callerInstance)
+						.getSupportFragmentManager();
+			}
+
+			// Show the dialog fragment with the directions
 			DialogFragment dialogFragment = ChooseDirectionDialog
 					.newInstance(ptDirectionsEntity);
-			dialogFragment
-					.show(scheduleVehicleFragment.getChildFragmentManager(),
-							"dialog");
+			dialogFragment.show(fragmentManager, "dialog");
 		} else {
 			ActivityUtils.showNoInternetOrInfoToast(context);
 		}
