@@ -42,8 +42,19 @@ public class HistoryEntity implements Serializable {
 
 		String dateToReturn = historyDate;
 
+		if (dateToReturn != null && dateToReturn.split(":").length == 2) {
+			historyDate = historyDate + ":00";
+		}
+
+		return historyDate;
+	}
+
+	public String getHistoryDateWithoutSeconds() {
+
+		String dateToReturn = historyDate;
+
 		if (dateToReturn != null && dateToReturn.split(":").length == 3) {
-			return Utils.getValueBeforeLast(historyDate, ":");
+			historyDate = Utils.getValueBeforeLast(historyDate, ":");
 		}
 
 		return historyDate;

@@ -1,9 +1,9 @@
 <resources>
 
     <!-- ANDROID LIGHT THEME -->
-    <style name="AppBaseTheme" parent="Theme.Sherlock.Light" />
+    <style name="AppBaseThemeLight" parent="Theme.Sherlock.Light" />
 
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="AppThemeLight" parent="AppBaseThemeLight">
         <item name="actionBarStyle">@style/MyTheme.ActionBarStyle</item>
     </style>
 
@@ -17,13 +17,15 @@
     </style>
 
     <!-- ANDROID DARK THEME -->
-    <style name="AppBaseThemeDark" parent="Theme.Sherlock" />
+    <style name="AppBaseThemeDark" parent="Theme.Sherlock.Light" />
 
     <style name="AppThemeDark" parent="AppBaseThemeDark">
         <item name="actionBarStyle">@style/MyTheme.ActionBarStyleDark</item>
+        <item name="android:windowBackground">@color/app_dark_theme_background</item>
     </style>
 
-    <style name="MyTheme.ActionBarStyleDark" parent="Widget.Sherlock.ActionBar">
+    <style name="MyTheme.ActionBarStyleDark" parent="Widget.Sherlock.Light.ActionBar">
+        <item name="android:background">@color/app_dark_theme_action_bar</item>
         <item name="titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
     </style>
 

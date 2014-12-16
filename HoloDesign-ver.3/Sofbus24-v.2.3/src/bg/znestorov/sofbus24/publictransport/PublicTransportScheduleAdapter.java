@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.ScheduleEntity;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.ThemeChange;
 
 /**
  * Array Adapted used to set each hour of the public transport schedule
@@ -72,11 +73,21 @@ public class PublicTransportScheduleAdapter extends ArrayAdapter<String> {
 				&& position == ptScheduleEntity.getCurrentScheduleIndex()) {
 			rowView.setBackgroundColor(Color.parseColor("#80CEEA"));
 		} else {
-			// Set the bacground to each row (even or odd)
+			boolean isLightTheme = ThemeChange.isLightTheme(context);
+
+			// Set the background to each row (even or odd)
 			if (position % 2 == 1) {
-				rowView.setBackgroundColor(Color.parseColor("#F1F1F1"));
+				rowView.setBackgroundColor(isLightTheme ? context
+						.getResources().getColor(
+								R.color.app_light_theme_schedule_odd) : context
+						.getResources().getColor(
+								R.color.app_dark_theme_schedule_odd));
 			} else {
-				rowView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+				rowView.setBackgroundColor(isLightTheme ? context
+						.getResources().getColor(
+								R.color.app_light_theme_schedule_even)
+						: context.getResources().getColor(
+								R.color.app_dark_theme_schedule_even));
 			}
 
 			// Make the rows that the vehicle already passed inactive

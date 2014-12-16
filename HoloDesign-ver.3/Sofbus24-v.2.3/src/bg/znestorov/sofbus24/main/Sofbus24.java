@@ -15,6 +15,7 @@ import bg.znestorov.sofbus24.home.screen.Sofbus24Fragment;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -38,7 +39,9 @@ public class Sofbus24 extends SherlockFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ThemeChange.selectTheme(this);
 		super.onCreate(savedInstanceState);
+
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_sofbus24);
 
@@ -116,6 +119,12 @@ public class Sofbus24 extends SherlockFragmentActivity {
 		mDrawerList.setOnItemClickListener(new NavDrawerHelper(context,
 				mDrawerLayout, mDrawerList, navigationItems)
 				.getDrawerItemClickListener());
+
+		// Check if the theme is DARK
+		if (!ThemeChange.isLightTheme(context)) {
+			mDrawerList
+					.setBackgroundResource(R.color.app_dark_theme_background);
+		}
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon

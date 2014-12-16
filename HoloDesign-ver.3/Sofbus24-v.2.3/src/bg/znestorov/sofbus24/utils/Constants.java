@@ -53,6 +53,9 @@ public class Constants {
 	/**
 	 * Preferences
 	 */
+	public static final String PREFERENCE_KEY_APP_COMMON_CATEGORY = "sofbusCommonCategory";
+	public static final String PREFERENCE_KEY_APP_THEME = "sofbusTheme";
+	public static final String PREFERENCE_DEFAULT_VALUE_APP_THEME = "sofbusThemeLight";
 	public static final String PREFERENCE_KEY_APP_LANGUAGE = "appLanguage";
 	public static final String PREFERENCE_DEFAULT_VALUE_APP_LANGUAGE = "bg";
 	public static final String PREFERENCE_KEY_FAVOURITES_EXPANDED_CATEGORY = "favouritesExpandedCategory";

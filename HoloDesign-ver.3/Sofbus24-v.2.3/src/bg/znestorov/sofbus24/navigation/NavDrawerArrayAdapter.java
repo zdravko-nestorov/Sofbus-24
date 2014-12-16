@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
@@ -150,11 +151,15 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 	 *            the view holder of the current row
 	 */
 	private void initSubTagsBackground(int position, ViewHolder viewHolder) {
+
+		boolean isLightTheme = ThemeChange.isLightTheme(context);
+
 		switch (position) {
 		case 1:
 		case 2:
 		case 3:
-			viewHolder.navDrawerLayout.setBackgroundColor(0x30BBBBBB);
+			viewHolder.navDrawerLayout
+					.setBackgroundColor(isLightTheme ? 0x30BBBBBB : 0x70BBBBBB);
 			viewHolder.navDrawerLayout.setPadding(
 					ActivityUtils.dpToPx(context, 25),
 					ActivityUtils.dpToPx(context, 8),

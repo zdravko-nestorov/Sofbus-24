@@ -19,6 +19,7 @@ import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.publictransport.PublicTransportFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
@@ -44,7 +45,9 @@ public class PublicTransport extends SherlockFragmentActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ThemeChange.selectTheme(this);
 		super.onCreate(savedInstanceState);
+		
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_public_transport);
 

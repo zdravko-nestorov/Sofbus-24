@@ -11,6 +11,7 @@ import bg.znestorov.sofbus24.edit.tabs.EditTabsFragment;
 import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.ThemeChange;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -34,7 +35,9 @@ public class EditTabs extends SherlockFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ThemeChange.selectTheme(this);
 		super.onCreate(savedInstanceState);
+
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_sofbus24_edit_tabs);
 

@@ -1,5 +1,15 @@
 <resources>
 
+    <!-- Application Theme -->
+    <string-array name="sofbusTheme">
+        <item name="sofbusThemeLight">Светла</item>
+        <item name="sofbusThemeDark">Тъмна</item>
+    </string-array>
+    <string-array name="sofbusThemeValues">
+        <item name="sofbusThemeLight">sofbusThemeLight</item>
+        <item name="sofbusThemeDark">sofbusThemeDark</item>
+    </string-array>
+
     <!-- Language -->
     <string-array name="languagenChoice">
         <item name="bg">Български</item>

@@ -684,7 +684,20 @@ public class Utils {
 	 */
 	public static void addStationInHistory(Activity context,
 			StationEntity station) {
-		addSearchInHistory(context, station.getType(), station.getName(),
+
+		VehicleTypeEnum stationType = station.getType();
+		switch (stationType) {
+		case METRO:
+		case METRO1:
+		case METRO2:
+			stationType = VehicleTypeEnum.METRO;
+			break;
+		default:
+			stationType = VehicleTypeEnum.BTT;
+			break;
+		}
+
+		addSearchInHistory(context, stationType, station.getName(),
 				station.getNumber());
 	}
 

@@ -74,7 +74,8 @@ public class PreferencesFragment extends PreferenceFragment implements
 			globalContext.setFavouritesChanged(true);
 		}
 
-		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
+		if (key.equals(Constants.PREFERENCE_KEY_APP_THEME)
+				|| key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
 			globalContext.setHasToRestart(true);
 		}
 

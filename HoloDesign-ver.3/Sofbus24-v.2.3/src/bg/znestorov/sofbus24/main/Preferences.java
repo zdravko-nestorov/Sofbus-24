@@ -15,6 +15,7 @@ import bg.znestorov.sofbus24.preferences.ResetSettingsDialog;
 import bg.znestorov.sofbus24.preferences.ResetSettingsDialog.OnResetSettingsListener;
 import bg.znestorov.sofbus24.preferences.RestartApplicationDialog;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.ThemeChange;
 
 public class Preferences extends FragmentActivity implements
 		OnResetSettingsListener {
@@ -27,7 +28,9 @@ public class Preferences extends FragmentActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ThemeChange.selectTheme(this);
 		super.onCreate(savedInstanceState);
+
 		LanguageChange.selectLocale(this);
 
 		// Get the application and current activity context

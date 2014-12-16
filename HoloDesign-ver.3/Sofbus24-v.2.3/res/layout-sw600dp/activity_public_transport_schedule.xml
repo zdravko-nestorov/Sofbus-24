@@ -5,9 +5,10 @@
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:id="@+id/pt_schedule_station_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#EEEEEE" >
+        android:background="#00EEEEEE" >
 
         <TextView
             android:id="@+id/pt_schedule_station_name"

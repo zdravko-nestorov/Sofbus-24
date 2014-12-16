@@ -22,6 +22,7 @@ import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.publictransport.PublicTransportScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
@@ -44,6 +45,7 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 	private ImageButton leftArrow;
 	private ImageButton rightArrow;
 
+	private View ptStationView;
 	private TextView ptScheduleTime;
 	private TextView ptStationName;
 	private TextView ptDirection;
@@ -63,7 +65,9 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ThemeChange.selectTheme(this);
 		super.onCreate(savedInstanceState);
+		
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_public_transport_schedule);
 
@@ -210,6 +214,7 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 		actionsOverImageButtons();
 
 		// Get the header TextView views and set them labels
+		ptStationView = findViewById(R.id.pt_schedule_station_view);
 		ptScheduleTime = (TextView) findViewById(R.id.pt_schedule_time);
 		ptStationName = (TextView) findViewById(R.id.pt_schedule_station_name);
 		ptDirection = (TextView) findViewById(R.id.pt_schedule_direction);
@@ -397,6 +402,16 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 	 * Set the Fragment schedule hour label and show the needed arrows
 	 */
 	private void actionsOnFragmentChange() {
+
+		// Change the color of the station square
+		if (ThemeChange.isLightTheme(context)) {
+			ptStationView
+					.setBackgroundResource(R.color.app_light_theme_schedule_station);
+		} else {
+			ptStationView
+					.setBackgroundResource(R.color.app_dark_theme_schedule_station);
+		}
+
 		// Set the PublicTransportScheduleTime label
 		String hourRange = getHour(scheduleHourList.get(
 				currentScheduleHourIndex).get(0))

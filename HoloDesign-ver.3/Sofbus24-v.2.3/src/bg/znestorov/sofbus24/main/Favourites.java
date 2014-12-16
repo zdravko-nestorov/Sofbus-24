@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.ThemeChange;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -18,7 +19,9 @@ public class Favourites extends SherlockFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ThemeChange.selectTheme(this);
 		super.onCreate(savedInstanceState);
+
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_favourites);
 

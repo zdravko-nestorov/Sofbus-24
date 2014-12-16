@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.droidtrans.DroidTransLoadActivity;
+import bg.znestorov.sofbus24.entity.AppThemeEnum;
 import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HomeTabEntity;
@@ -29,6 +30,7 @@ import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
@@ -258,6 +260,11 @@ public class Sofbus24Fragment extends SherlockFragment implements
 		// once
 		mPagerSlidingTabs = (PagerSlidingTabStrip) fragmentView
 				.findViewById(R.id.sofbus24_tabs);
+		if (ThemeChange.getAppTheme(context) == AppThemeEnum.DARK) {
+			mPagerSlidingTabs
+					.setTabBackground(R.color.app_dark_theme_tab_background);
+		}
+
 		mViewPager = (ViewPager) fragmentView.findViewById(R.id.sofbus24_pager);
 		mViewPager
 				.setOffscreenPageLimit(Constants.GLOBAL_PARAM_HOME_TABS_COUNT - 1);

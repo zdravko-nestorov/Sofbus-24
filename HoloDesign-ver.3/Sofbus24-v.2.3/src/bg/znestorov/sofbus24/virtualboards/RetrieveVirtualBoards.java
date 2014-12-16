@@ -43,6 +43,10 @@ import android.os.AsyncTask;
 import android.text.Html;
 import android.text.InputType;
 import android.text.Spanned;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -890,7 +894,17 @@ public class RetrieveVirtualBoards {
 		ImageView image = new ImageView(context);
 		image.setId(2);
 		image.setImageBitmap(captchaImage);
-		panel.addView(image);
+
+		// Add the image to the view and fix its size
+		panel.addView(image, LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT);
+		fixImageSize(image);
+
+		// Center the image
+		LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) image
+				.getLayoutParams();
+		layoutParams.gravity = Gravity.CENTER;
+		image.setLayoutParams(layoutParams);
 
 		final EditText input = new EditText(context);
 		input.setId(1);
@@ -930,6 +944,29 @@ public class RetrieveVirtualBoards {
 		} catch (Exception e) {
 			// Workaround used just in case when this activity is destroyed
 			// before the dialog
+		}
+	}
+
+	/**
+	 * Fix the size of the image to match the correct dimensions
+	 * 
+	 * @param image
+	 *            the image view
+	 */
+	private void fixImageSize(ImageView image) {
+		try {
+			Display display = context.getWindowManager().getDefaultDisplay();
+			DisplayMetrics outMetrics = new DisplayMetrics();
+			display.getMetrics(outMetrics);
+			float scWidth = outMetrics.widthPixels * 0.6f;
+			image.getLayoutParams().width = (int) scWidth;
+
+			if (Utils.isInLandscapeMode(context)) {
+				image.getLayoutParams().height = (int) (scWidth / 6f);
+			} else {
+				image.getLayoutParams().height = (int) (scWidth / 3.5f);
+			}
+		} catch (Exception e) {
 		}
 	}
 

@@ -7,6 +7,7 @@ import android.text.Html;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.about.RetrieveAppConfiguration;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -21,7 +22,9 @@ public class About extends SherlockFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ThemeChange.selectTheme(this);
 		super.onCreate(savedInstanceState);
+
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_about);
 

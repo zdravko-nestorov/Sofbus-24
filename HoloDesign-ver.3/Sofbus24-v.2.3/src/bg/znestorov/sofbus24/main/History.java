@@ -27,6 +27,7 @@ import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.schedule.ScheduleVehicleInfo;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.RetrieveVirtualBoards;
@@ -57,7 +58,9 @@ public class History extends SherlockListActivity implements
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
+		ThemeChange.selectTheme(this);
 		super.onCreate(savedInstanceState);
+
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_history);
 
@@ -126,8 +129,8 @@ public class History extends SherlockListActivity implements
 				position);
 
 		// Get the station number and station name of the search
-		String searchNumber = Utils.getValueBetween(history.getHistoryValue(),
-				"(", ")");
+		String searchNumber = Utils.getValueBetweenLast(
+				history.getHistoryValue(), "(", ")").trim();
 		String searchName = Utils
 				.getValueBefore(history.getHistoryValue(), "(");
 		VehicleTypeEnum historyType = history.getHistoryType();
@@ -180,7 +183,8 @@ public class History extends SherlockListActivity implements
 			break;
 		default:
 			VehicleEntity vehicle = new VehicleEntity(searchNumber,
-					history.getHistoryType(), history.getHistoryValue());
+					history.getHistoryType(), Utils.getValueBeforeLast(
+							history.getHistoryValue(), "(").trim());
 			new ScheduleVehicleInfo(context, this).onListItemClick(vehicle,
 					getVehicleCaption(context, vehicle));
 

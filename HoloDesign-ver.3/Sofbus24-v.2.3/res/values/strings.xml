@@ -151,6 +151,8 @@
     <string name="pref_category_common">ОБЩИ</string>
     <string name="pref_category_common_language_title">Език</string>
     <string name="pref_category_common_language_summary">Избор на език</string>
+    <string name="pref_category_common_theme_title">Тема</string>
+    <string name="pref_category_common_theme_summary">Избор на облик на приложението</string>
     <string name="pref_category_visual">ВИЗУАЛНИ</string>
     <string name="pref_category_visual_fav_title">Фаворити</string>
     <string name="pref_category_visual_fav_summary">Визуализиране на фаворитите чрез Google Street View (начален екран)</string>

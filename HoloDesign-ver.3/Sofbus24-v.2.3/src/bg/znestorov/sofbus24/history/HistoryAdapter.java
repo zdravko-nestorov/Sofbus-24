@@ -89,7 +89,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntity> implements
 				searchName, searchNumber));
 		viewHolder.searchDate.setText(Html.fromHtml(context.getString(
 				R.string.history_item_search_date, getHistoryType(history),
-				history.getHistoryDate())));
+				history.getHistoryDateWithoutSeconds())));
 
 		return rowView;
 	}

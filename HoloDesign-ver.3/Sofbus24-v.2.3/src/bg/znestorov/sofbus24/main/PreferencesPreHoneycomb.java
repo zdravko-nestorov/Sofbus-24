@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.ListPreference;
+import android.preference.PreferenceCategory;
 import android.view.KeyEvent;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
@@ -12,6 +14,7 @@ import bg.znestorov.sofbus24.preferences.ResetSettingsDialog;
 import bg.znestorov.sofbus24.preferences.RestartApplicationDialog;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.ThemeChange;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -29,13 +32,20 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		ThemeChange.selectTheme(this);
 		super.onCreate(savedInstanceState);
+
 		LanguageChange.selectLocale(this);
 		addPreferencesFromResource(R.xml.preferences);
 
 		// Get the application and current activity context
 		context = PreferencesPreHoneycomb.this;
 		globalContext = (GlobalEntity) getApplicationContext();
+
+		// Remove the preferences category in case of pre honeycomb devices
+		PreferenceCategory preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_APP_COMMON_CATEGORY);
+		ListPreference listPreference = (ListPreference) findPreference(Constants.PREFERENCE_KEY_APP_THEME);
+		preferencesCategory.removePreference(listPreference);
 
 		// Set up the action bar
 		actionBar = getSupportActionBar();
@@ -113,7 +123,8 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 			globalContext.setFavouritesChanged(true);
 		}
 
-		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
+		if (key.equals(Constants.PREFERENCE_KEY_APP_THEME)
+				|| key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
 			globalContext.setHasToRestart(true);
 		}
 
