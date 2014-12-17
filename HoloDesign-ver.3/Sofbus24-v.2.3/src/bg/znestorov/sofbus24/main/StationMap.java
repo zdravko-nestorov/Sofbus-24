@@ -390,6 +390,7 @@ public class StationMap extends SherlockFragmentActivity {
 		int markerIcon;
 
 		switch (stationType) {
+		case BTT:
 		case BUS:
 			markerIcon = R.drawable.ic_bus_map_marker;
 			break;
@@ -398,9 +399,6 @@ public class StationMap extends SherlockFragmentActivity {
 			break;
 		case TRAM:
 			markerIcon = R.drawable.ic_tram_map_marker;
-			break;
-		case BTT:
-			markerIcon = R.drawable.ic_station_map_marker;
 			break;
 		case METRO1:
 		case METRO2:

@@ -771,6 +771,17 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	 */
 	private void retrieveVehicleSchedule() {
 
+		switch (ThemeChange.getAppTheme(context)) {
+		case LIGHT:
+			vehicleSchedule
+					.setBackgroundResource(R.drawable.btn_droidtrans_light);
+			break;
+		default:
+			vehicleSchedule
+					.setBackgroundResource(R.drawable.btn_droidtrans_dark);
+			break;
+		}
+
 		vehicleSchedule.setOnClickListener(new OnClickListener() {
 
 			@Override
