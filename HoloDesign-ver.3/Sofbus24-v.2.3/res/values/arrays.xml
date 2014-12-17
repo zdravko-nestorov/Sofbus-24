@@ -3,7 +3,7 @@
     <!-- Application Theme -->
     <string-array name="sofbusTheme">
         <item name="sofbusThemeLight">Светла</item>
-        <item name="sofbusThemeDark">Тъмна</item>
+        <item name="sofbusThemeDark">Тъмна (сива)</item>
     </string-array>
     <string-array name="sofbusThemeValues">
         <item name="sofbusThemeLight">sofbusThemeLight</item>

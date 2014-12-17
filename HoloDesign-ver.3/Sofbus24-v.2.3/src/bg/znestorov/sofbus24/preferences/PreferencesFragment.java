@@ -12,6 +12,8 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.ThemeChange;
+import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 
@@ -74,8 +76,13 @@ public class PreferencesFragment extends PreferenceFragment implements
 			globalContext.setFavouritesChanged(true);
 		}
 
-		if (key.equals(Constants.PREFERENCE_KEY_APP_THEME)
-				|| key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
+		if (key.equals(Constants.PREFERENCE_KEY_APP_THEME)) {
+			ActivityTracker.changedApplicationTheme(context,
+					ThemeChange.getAppTheme(context));
+			globalContext.setHasToRestart(true);
+		}
+
+		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
 			globalContext.setHasToRestart(true);
 		}
 

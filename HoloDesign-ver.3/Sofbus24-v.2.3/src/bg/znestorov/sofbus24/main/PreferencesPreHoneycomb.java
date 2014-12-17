@@ -15,6 +15,7 @@ import bg.znestorov.sofbus24.preferences.RestartApplicationDialog;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.ThemeChange;
+import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -123,8 +124,13 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 			globalContext.setFavouritesChanged(true);
 		}
 
-		if (key.equals(Constants.PREFERENCE_KEY_APP_THEME)
-				|| key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
+		if (key.equals(Constants.PREFERENCE_KEY_APP_THEME)) {
+			ActivityTracker.changedApplicationTheme(context,
+					ThemeChange.getAppTheme(context));
+			globalContext.setHasToRestart(true);
+		}
+
+		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
 			globalContext.setHasToRestart(true);
 		}
 

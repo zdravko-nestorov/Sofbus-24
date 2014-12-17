@@ -1,6 +1,7 @@
 package bg.znestorov.sofbus24.utils.activity;
 
 import android.app.Activity;
+import bg.znestorov.sofbus24.entity.AppThemeEnum;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity.TrackerName;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
@@ -192,6 +193,29 @@ public class ActivityTracker {
 				.setCategory("Check For Update")
 				.setAction("queryCheckForUpdate")
 				.setLabel("queryCheckForUpdate").build());
+	}
+
+	/**
+	 * Send an event to GoogleAnalytics on "changing theme" action (from the
+	 * settings screen)
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param appThemeEnum
+	 *            the choosen theme
+	 */
+	public static void changedApplicationTheme(Activity context,
+			AppThemeEnum appThemeEnum) {
+
+		// Get tracker
+		Tracker tracker = ((GlobalEntity) context.getApplicationContext())
+				.getTracker(TrackerName.APP_TRACKER);
+
+		// Build and send an Event
+		tracker.send(new HitBuilders.EventBuilder()
+				.setCategory("Change Theme [" + appThemeEnum + "]")
+				.setAction("changedApplicationTheme")
+				.setLabel("changedApplicationTheme").build());
 	}
 
 }

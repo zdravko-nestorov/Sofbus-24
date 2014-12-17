@@ -556,41 +556,46 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		int vehiclesDirectionWheelPosition;
 		int stationsNumbersWheelPosition;
 
-		// Get the closest station
-		stationsDatasource.open();
-		StationEntity closestStation = stationsDatasource.getClosestStation(
-				context, currentLocation);
-		stationsDatasource.close();
+		try {
+			// Get the closest station
+			stationsDatasource.open();
+			StationEntity closestStation = stationsDatasource
+					.getClosestStation(context, currentLocation);
+			stationsDatasource.close();
 
-		// Get the vehicle passing through the closest station
-		vehiclesDatasource.open();
-		VehicleEntity closestVehicle = vehiclesDatasource
-				.getVehicleViaStation(closestStation);
-		vehiclesTypeWheelPosition = getVehicleTypePosition(closestVehicle
-				.getType());
-		vehiclesDirectionWheelPosition = Integer.parseInt(closestVehicle
-				.getDirection());
-		vehiclesDatasource.close();
+			// Get the vehicle passing through the closest station
+			vehiclesDatasource.open();
+			VehicleEntity closestVehicle = vehiclesDatasource
+					.getVehicleViaStation(closestStation);
+			vehiclesTypeWheelPosition = getVehicleTypePosition(closestVehicle
+					.getType());
+			vehiclesDirectionWheelPosition = Integer.parseInt(closestVehicle
+					.getDirection());
+			vehiclesDatasource.close();
 
-		// Get the position of the wheel views
-		droidtransDatasource.open();
-		vehiclesNumberWheelPosition = droidtransDatasource
-				.getVehicleNumbersPosition(
-						getVehicleType(closestVehicle.getType()),
-						closestVehicle.getNumber());
-		stationsNumbersWheelPosition = droidtransDatasource
-				.getVehicleStationPosition(
-						getVehicleType(closestVehicle.getType()),
-						closestVehicle.getNumber(),
-						vehiclesDirectionWheelPosition,
-						closestStation.getNumber());
-		droidtransDatasource.close();
+			// Get the position of the wheel views
+			droidtransDatasource.open();
+			vehiclesNumberWheelPosition = droidtransDatasource
+					.getVehicleNumbersPosition(
+							getVehicleType(closestVehicle.getType()),
+							closestVehicle.getNumber());
+			stationsNumbersWheelPosition = droidtransDatasource
+					.getVehicleStationPosition(
+							getVehicleType(closestVehicle.getType()),
+							closestVehicle.getNumber(),
+							vehiclesDirectionWheelPosition,
+							closestStation.getNumber());
+			droidtransDatasource.close();
 
-		// Set the values into the WheelState object
-		wheelState = new WheelStateEntity(vehiclesTypeWheelPosition,
-				vehiclesNumberWheelPosition,
-				vehiclesDirectionWheelPosition - 1,
-				stationsNumbersWheelPosition);
+			// Set the values into the WheelState object
+			wheelState = new WheelStateEntity(vehiclesTypeWheelPosition,
+					vehiclesNumberWheelPosition,
+					vehiclesDirectionWheelPosition - 1,
+					stationsNumbersWheelPosition);
+		} catch (Exception e) {
+			// Just in case when no vehicle is passing through this station
+			// (very rare case)
+		}
 	}
 
 	/**
