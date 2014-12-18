@@ -734,7 +734,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 						.snippet(getStationTypeText(station));
 
 				// Assign an icon to the marker (according to the user choice)
-				if (!Constants.PREFERENCE_DEFAULT_VALUE_MARKER_TYPE
+				if (Constants.PREFERENCE_DEFAULT_VALUE_MARKER_TYPE
 						.equals(markerType)) {
 					stationMarkerOptions = stationMarkerOptions
 							.icon(BitmapDescriptorFactory
@@ -783,7 +783,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 						.snippet(getStationTypeText(station));
 
 				// Assign an icon to the marker (according to the user choice)
-				if (Constants.PREFERENCE_DEFAULT_VALUE_MARKER_TYPE
+				if (!Constants.PREFERENCE_DEFAULT_VALUE_MARKER_TYPE
 						.equals(markerType)) {
 					stationMarkerOptions = stationMarkerOptions
 							.icon(BitmapDescriptorFactory

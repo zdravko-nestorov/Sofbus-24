@@ -46,7 +46,7 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_map" >
         <ListPreference
-            android:defaultValue="markerStandard"
+            android:defaultValue="markerSkgtCars"
             android:entries="@array/markerType"
             android:entryValues="@array/markerTypeValues"
             android:key="markerType"

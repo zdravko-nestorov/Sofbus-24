@@ -66,7 +66,7 @@ public class Constants {
 	public static final String PREFERENCE_KEY_TIME_SOURCE = "timeSource";
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_SOURCE = "timeSkgt";
 	public static final String PREFERENCE_KEY_MARKER_TYPE = "markerType";
-	public static final String PREFERENCE_DEFAULT_VALUE_MARKER_TYPE = "markerStandard";
+	public static final String PREFERENCE_DEFAULT_VALUE_MARKER_TYPE = "markerSkgtCars";
 	public static final String PREFERENCE_KEY_MARKER_OPTIONS = "markerOptions";
 	public static final String PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS = "markerInfo";
 	public static final String PREFERENCE_KEY_STATIONS_RADIUS = "stationsRadius";
