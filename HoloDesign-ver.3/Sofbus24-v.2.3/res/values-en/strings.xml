@@ -156,7 +156,7 @@
     <string name="pref_category_stations">STATION INFORMATION</string>
     <string name="pref_category_stations_timeType_title">Extracted information</string>
     <string name="pref_category_stations_timeType_summary">Remaining time or time of arrival</string>
-    <string name="pref_category_stations_timeSource_title">Public trasnport</string>
+    <string name="pref_category_stations_timeSource_title">Public transport</string>
     <string name="pref_category_stations_timeSource_summary">Determine what time to be used for display/calculate the extracted information</string>
     <string name="pref_category_map">GOOGLE MAP</string>
     <string name="pref_category_map_marker_type_title">Google Maps marker type</string>
@@ -203,7 +203,7 @@
     <!-- Favourites Fragment -->
     <string name="fav_search_hint">Search by name or number</string>
     <string name="fav_item_station_number_text" formatted="false">Station number: %s</string>
-    <string name="fav_item_metro_station_number_text" formatted="false">Metro station snumber: %s</string>
+    <string name="fav_item_metro_station_number_text" formatted="false">Metro station number: %s</string>
     <string name="fav_item_rename_title">Rename</string>
     <string name="fav_item_rename_msg" formatted="false"><![CDATA[Change the station\'s name <b><i>%s (%s)</i></b> to:]]></string>
     <string name="fav_item_rename_hint">Enter a new name</string>
@@ -323,6 +323,7 @@
     <string name="history_title_trolley" formatted="false">Trolley №%s</string>
     <string name="history_title_tram" formatted="false">Tram №%s</string>
     <string name="history_item_station_number" formatted="false">Station number: %s</string>
+    <string name="history_item_metro_station_number_text" formatted="false">Metro station number: %s</string>
     <string name="history_item_search_date" formatted="false"><![CDATA[<i><font color="#FF4747">[%s] Search from %s</font></i>]]></string>
 
     <!-- DroidTrans -->
@@ -335,7 +336,7 @@
     <string name="droid_trans_schedule">Schedule</string>
     <string name="droid_trans_load_data" formatted="false"><![CDATA[Retrieving the information about the SKGT vehicles...]]></string>
     <string name="droid_trans_reset_location">Please wait to be located again or find the station you look for.</string>
-    <string name="droid_trans_no_info">The information is not enough to retrieve the times for the choosen vehicle. Please try with some of the other search options.</string>
+    <string name="droid_trans_no_info">The information is not enough to retrieve the times for the chosen vehicle. Please try with some of the other search options.</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_home">Home screen</string>
@@ -349,8 +350,8 @@
     <string name="navigation_drawer_update">Check for update</string>
     <string name="navigation_drawer_exit">Exit</string>
     <string name="navigation_drawer_home_screen_error" formatted="false"><![CDATA[Google Play services, which Sofbus 24 uses to show the Google Maps, are not supported by your device. Please install them so you can choose <b><i>%s</i></b> as a home screen.]]></string>
-    <string name="navigation_drawer_home_screen_remains" formatted="false"><![CDATA[The home screen remains the same - <b><i>%s</i></b>. It will be visualised on every application startup until it is changed again.]]></string>
-    <string name="navigation_drawer_home_screen_changed" formatted="false"><![CDATA[The home screen has been changed to <b><i>%s</i></b>. It will be visualised on every application startup until it is changed again.]]></string>
+    <string name="navigation_drawer_home_screen_remains" formatted="false"><![CDATA[The home screen remains the same - <b><i>%s</i></b>. It will be visualized on every application startup until it is changed again.]]></string>
+    <string name="navigation_drawer_home_screen_changed" formatted="false"><![CDATA[The home screen has been changed to <b><i>%s</i></b>. It will be visualized on every application startup until it is changed again.]]></string>
 
     <!-- Home Screen Select -->
     <string name="home_screen_copyright">Copyright © Sofbus 24 2012. All rights reserved</string>

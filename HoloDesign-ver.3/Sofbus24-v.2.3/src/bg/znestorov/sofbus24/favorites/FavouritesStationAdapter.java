@@ -356,7 +356,9 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 				|| stationType == VehicleTypeEnum.METRO2) {
 
 			if (stationName.startsWith("METR. ")
-					|| stationName.startsWith("Ã≈“–. "))
+					|| stationName.startsWith("METROSTANCIYA ")
+					|| stationName.startsWith("Ã≈“–. ")
+					|| stationName.startsWith("Ã≈“–Œ—“¿Õ÷»ﬂ "))
 				stationName = Utils.getValueAfter(station.getName(), " ")
 						.trim();
 		}

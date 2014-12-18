@@ -183,7 +183,7 @@ public class ActivityUtils {
 	 */
 	public static DisplayImageOptions displayImageOptions() {
 		DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
-				.delayBeforeLoading(100).cacheInMemory(true).cacheOnDisc(true)
+				.delayBeforeLoading(0).cacheInMemory(true).cacheOnDisc(true)
 				.build();
 
 		return displayImageOptions;
