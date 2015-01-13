@@ -287,7 +287,7 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 
 			// Create the database by copying it from the assets folder to the
 			// internal memory
-			Sofbus24DatabaseUtils.createSofbus24Database(context);
+			Sofbus24DatabaseUtils.createOrUpgradeSofbus24Database(context);
 
 			return null;
 		}

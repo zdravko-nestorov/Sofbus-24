@@ -245,6 +245,7 @@ public class PublicTransportAdapter extends ArrayAdapter<StationEntity>
 	 */
 	public void actionsOverFavouritesImageViews(final ViewHolder viewHolder,
 			final StationEntity station) {
+
 		// Add onClickListener over the addToFavourites ImageView
 		viewHolder.addToFavourites.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

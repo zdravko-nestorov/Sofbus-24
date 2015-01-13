@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="bg.znestorov.sofbus24.main"
     android:installLocation="auto"
-    android:versionCode="22"
-    android:versionName="2.3" >
+    android:versionCode="23"
+    android:versionName="2.3.1" >
 
     <!-- Specify the correct minSDK and targetSDK versions. -->
     <uses-sdk
@@ -153,6 +153,12 @@
         <activity android:name="bg.znestorov.sofbus24.main.Favourites" />
         <activity
             android:name="bg.znestorov.sofbus24.main.FavouritesDialog"
+            android:theme="@style/PopupTheme" />
+
+        <!-- WebPage -->
+        <activity android:name="bg.znestorov.sofbus24.main.WebPage" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.WebPageDialog"
             android:theme="@style/PopupTheme" />
     </application>
 

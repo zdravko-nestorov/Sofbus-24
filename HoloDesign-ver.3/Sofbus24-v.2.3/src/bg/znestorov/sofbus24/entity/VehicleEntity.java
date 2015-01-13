@@ -23,6 +23,11 @@ public class VehicleEntity implements Serializable {
 	public VehicleEntity() {
 	}
 
+	public VehicleEntity(VehicleTypeEnum type) {
+		this.type = type;
+		this.arrivalTimes = new ArrayList<String>();
+	}
+
 	public VehicleEntity(String number, VehicleTypeEnum type, String direction) {
 		this.number = number;
 		this.type = type;

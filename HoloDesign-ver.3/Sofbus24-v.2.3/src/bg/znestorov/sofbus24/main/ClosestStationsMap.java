@@ -154,22 +154,29 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 	private final OnMarkerClickListener onMarkerClickListener = new OnMarkerClickListener() {
 		@Override
 		public boolean onMarkerClick(Marker marker) {
-			if (!marker.isInfoWindowShown()) {
-				StationEntity station = markersAndStations.get(marker.getId());
-				selectedMarkerLatLng = new LatLng(Double.parseDouble(station
-						.getLat()), Double.parseDouble(station.getLon()));
-			} else {
-				selectedMarkerLatLng = null;
-			}
 
-			if (!markerOptions
-					.equals(Constants.PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS)) {
+			boolean shouldInfoWindowOpen = markerOptions
+					.equals(Constants.PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS);
+
+			if (shouldInfoWindowOpen) {
+				if (!marker.isInfoWindowShown()) {
+					StationEntity station = markersAndStations.get(marker
+							.getId());
+					selectedMarkerLatLng = new LatLng(
+							Double.parseDouble(station.getLat()),
+							Double.parseDouble(station.getLon()));
+				} else {
+					selectedMarkerLatLng = null;
+				}
+
+				return false;
+			} else {
 				// Get the station associated to this marker
 				StationEntity station = markersAndStations.get(marker.getId());
 				proccessWithStationResult(station);
-			}
 
-			return false;
+				return true;
+			}
 		}
 	};
 
@@ -348,65 +355,81 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 			// Start a new thread - just to wait 3 sec and if no location is
 			// found to display the last known location
 			Handler handler = new Handler();
-			Runnable myrunnable = new Runnable() {
-				public void run() {
-					try {
-						if (previousLocation == null) {
-							// Getting LocationManager object from System
-							// Service LOCATION_SERVICE
-							LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-							// Getting Current Location
-							Location location = locationManager
-									.getLastKnownLocation(GPS_PROVIDER) == null ? locationManager
-									.getLastKnownLocation(NETWORK_PROVIDER) == null ? null
-									: locationManager
-											.getLastKnownLocation(NETWORK_PROVIDER)
-									: locationManager
-											.getLastKnownLocation(GPS_PROVIDER);
+			try {
+				Runnable myrunnable = new Runnable() {
+					public void run() {
+						try {
+							if (previousLocation == null) {
+								// Getting LocationManager object from System
+								// Service LOCATION_SERVICE
+								LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-							// Check if any location is found. If no - just
-							// center the map over the center of Sofia
-							if (location != null) {
-								// Assign a value to the previous location
-								previousLocation = location;
+								// Getting Current Location
+								Location location = locationManager
+										.getLastKnownLocation(GPS_PROVIDER) == null ? locationManager
+										.getLastKnownLocation(NETWORK_PROVIDER) == null ? null
+										: locationManager
+												.getLastKnownLocation(NETWORK_PROVIDER)
+										: locationManager
+												.getLastKnownLocation(GPS_PROVIDER);
 
-								// Showing the current location and zoom it in
-								// GoogleMaps
-								animateMapFocus(location, 16);
+								// Check if any location is found. If no - just
+								// center the map over the center of Sofia
+								if (location != null) {
+									// Assign a value to the previous location
+									previousLocation = location;
 
-								// Visualize the closest stations to the new
-								// location
-								new LoadStationsFromDb(context, location, null)
-										.execute();
-							} else {
-								// Sofia center location
-								Location centerStationLocation = new Location(
-										"no_location");
-								centerStationLocation
-										.setLatitude(Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE);
-								centerStationLocation
-										.setLongitude(Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE);
+									// Showing the current location and zoom it
+									// in
+									// GoogleMaps
+									animateMapFocus(location, 16);
 
-								// Assign a value to the previous location
-								previousLocation = centerStationLocation;
+									// Visualize the closest stations to the new
+									// location
+									new LoadStationsFromDb(context, location,
+											null).execute();
+								} else {
+									// Sofia center location
+									Location centerStationLocation = new Location(
+											"no_location");
+									centerStationLocation
+											.setLatitude(Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE);
+									centerStationLocation
+											.setLongitude(Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE);
 
-								// Showing the Sofia center location and zoom it
-								// in GoogleMaps
-								animateMapFocus(centerStationLocation, 14);
+									// Assign a value to the previous location
+									previousLocation = centerStationLocation;
 
-								// Visualize the closest stations to the Sofia
-								// center location
-								new LoadStationsFromDb(context,
-										centerStationLocation, null).execute();
+									// Showing the Sofia center location and
+									// zoom it
+									// in GoogleMaps
+									animateMapFocus(centerStationLocation, 14);
+
+									// Visualize the closest stations to the
+									// Sofia
+									// center location
+									new LoadStationsFromDb(context,
+											centerStationLocation, null)
+											.execute();
+								}
 							}
+						} catch (Exception e) {
 						}
-					} catch (Exception e) {
 					}
-				}
-			};
+				};
 
-			handler.postDelayed(myrunnable, isCSMapHomeScreen ? 1000 : 3000);
+				handler.postDelayed(myrunnable, isCSMapHomeScreen ? 1000 : 3000);
+			} catch (Exception e) {
+				/*
+				 * Strange bug from GooglePlayConsole (Last reported: 9 Jan
+				 * 15:57):
+				 * 
+				 * java.lang.NullPointerException at
+				 * bg.znestorov.sofbus24.main.ClosestStationsMap
+				 * .onOptionsItemSelected(ClosestStationsMap.java:352)
+				 */
+			}
 
 			// Visualize the favorites stations on the map
 			new LoadStationsFromDb(context, null, null).execute();

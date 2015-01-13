@@ -198,7 +198,26 @@ public class ProcessPublicTransportDirection {
 									stationLat, stationLon, stationType, null),
 							stationId);
 					ptStationsList.add(ptStation);
+
+					// Add the NDK stations in the direction list in the correct
+					// place (([1137, 1138 - НДК-тунел], [1139 - НДК-Графити]))
+					StationEntity ndkTunnelStation = getNDKTunnelStation(ptStation
+							.getNumber());
+					if (ndkTunnelStation != null) {
+						PublicTransportStationEntity ptNDKTunnelStation = new PublicTransportStationEntity(
+								ndkTunnelStation, stationId);
+						ptStationsList.add(ptNDKTunnelStation);
+					}
+
+					StationEntity ndkGrafittiStation = getNDKGrafittiStation(ptStation
+							.getNumber());
+					if (ndkGrafittiStation != null) {
+						PublicTransportStationEntity ptNDKGrafittiStation = new PublicTransportStationEntity(
+								ndkGrafittiStation, stationId);
+						ptStationsList.add(ptNDKGrafittiStation);
+					}
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 
@@ -210,5 +229,66 @@ public class ProcessPublicTransportDirection {
 		stationDatasource.close();
 
 		return ptDirectionsList;
+	}
+
+	/**
+	 * Check if the next station for this vehicle is the NDK Tunnel station, so
+	 * add it manually to the list (the station is not shown in the SUMC site as
+	 * it is in a tunnel and there is no GPS allowed there)
+	 * 
+	 * @param currentStationNumber
+	 *            the current station number
+	 * @return the NDK Tunnel station (if it is the next one), otherwise - null
+	 */
+	private StationEntity getNDKTunnelStation(String currentStationNumber) {
+
+		StationEntity ndkTunnelStation = null;
+
+		VehicleTypeEnum vehicleType = vehicle.getType();
+		String vehicleNumber = vehicle.getNumber();
+
+		if (vehicleType == VehicleTypeEnum.TRAM && "6".equals(vehicleNumber)) {
+
+			if ("0364".equals(currentStationNumber)) {
+				ndkTunnelStation = stationDatasource.getStation("1137");
+			}
+
+			if ("0400".equals(currentStationNumber)) {
+				ndkTunnelStation = stationDatasource.getStation("1138");
+			}
+		}
+
+		return ndkTunnelStation;
+	}
+
+	/**
+	 * Check if the next station for this vehicle is the NDK Grafitti station,
+	 * so add it manually to the list (the station is not shown in the SUMC site
+	 * as it is in a tunnel and there is no GPS allowed there)
+	 * 
+	 * @param currentStationNumber
+	 *            the current station number
+	 * @return the NDK Grafitti station (if it is the next one), otherwise -
+	 *         null
+	 */
+	private StationEntity getNDKGrafittiStation(String currentStationNumber) {
+
+		StationEntity ndkGrafittiStation = null;
+
+		VehicleTypeEnum vehicleType = vehicle.getType();
+		String vehicleNumber = vehicle.getNumber();
+
+		if (vehicleType == VehicleTypeEnum.TROLLEY
+				&& ("1".equals(vehicleNumber) || "2".equals(vehicleNumber)
+						|| "5".equals(vehicleNumber)
+						|| "7".equals(vehicleNumber)
+						|| "8".equals(vehicleNumber) || "9"
+							.equals(vehicleNumber))
+				&& "0363".equals(currentStationNumber)) {
+
+			ndkGrafittiStation = stationDatasource.getStation("1139");
+		}
+
+		return ndkGrafittiStation;
 	}
 }

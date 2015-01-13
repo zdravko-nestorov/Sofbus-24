@@ -46,10 +46,13 @@ import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.main.ClosestStationsMap;
 import bg.znestorov.sofbus24.main.HomeScreenSelect;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.main.WebPage;
 import bg.znestorov.sofbus24.utils.LanguageChange;
+import bg.znestorov.sofbus24.utils.Utils;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -499,7 +502,8 @@ public class ActivityUtils {
 		boolean isCharAllowed = false;
 
 		if (Character.isLetterOrDigit(currentChar)
-				|| Character.isSpaceChar(currentChar) || currentChar == '-') {
+				|| Character.isSpaceChar(currentChar) || currentChar == '-'
+				|| currentChar == '.') {
 			isCharAllowed = true;
 		}
 
@@ -847,6 +851,29 @@ public class ActivityUtils {
 						retrieveCurrentLocation);
 				(new Thread(retrieveCurrentLocationTimeout)).start();
 			}
+		}
+	}
+
+	/**
+	 * Start the WebPage activity and check if there is an Internet connection
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param vehicle
+	 *            the select ed vehicle
+	 */
+	public static void startWebPageActivity(Activity context,
+			VehicleEntity vehicle) {
+
+		if (Utils.haveNetworkConnection(context)) {
+			Bundle bundle = new Bundle();
+			bundle.putSerializable(WebPage.BUNDLE_VEHICLE, vehicle);
+
+			Intent webPageIntent = new Intent(context, WebPage.class);
+			webPageIntent.putExtras(bundle);
+			context.startActivity(webPageIntent);
+		} else {
+			ActivityUtils.showNoInternetOrInfoToast(context);
 		}
 	}
 

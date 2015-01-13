@@ -69,19 +69,19 @@ public class Configuration {
 	 * @throws IOException
 	 */
 	private static void copyConfiguration(Activity context) throws IOException {
-		// Create the folder if it is not already created
-		File prefFolder = new File(CONFIGURATION_PATH);
-		if (!prefFolder.exists()) {
-			prefFolder.mkdirs();
-		}
 
-		// Open the local DB as the input stream
+		// Create the folder and the configuration file (empty one), if it is
+		// not already created
+		context.getSharedPreferences(Constants.CONFIGURATION_PREF_NAME,
+				Context.MODE_PRIVATE);
+
+		// Open the local configuration file as the input stream
 		InputStream myInput = context.getAssets().open(CONFIGURATION_NAME);
 
-		// Path to the just created empty DB
+		// Path to the just created empty configuration file
 		String outFileName = CONFIGURATION_PATH + CONFIGURATION_NAME;
 
-		// Open the empty DB as the output stream
+		// Open the empty configuration file as an output stream
 		OutputStream myOutput = new FileOutputStream(outFileName);
 
 		// Transfer the bytes from the InputFile to the OutputFile

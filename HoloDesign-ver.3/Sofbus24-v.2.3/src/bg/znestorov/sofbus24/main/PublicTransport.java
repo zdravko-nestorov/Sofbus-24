@@ -47,7 +47,7 @@ public class PublicTransport extends SherlockFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		ThemeChange.selectTheme(this);
 		super.onCreate(savedInstanceState);
-		
+
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_public_transport);
 
@@ -73,17 +73,26 @@ public class PublicTransport extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
+		ProgressDialog progressDialog = new ProgressDialog(context);
+
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
+
 			return true;
 		case R.id.action_pt_route_map:
-			ProgressDialog progressDialog = new ProgressDialog(context);
 			progressDialog
 					.setMessage(getString(R.string.pt_menu_map_route_loading));
 			RetrievePTRoute retrievePTRoute = new RetrievePTRoute(context,
 					progressDialog);
 			retrievePTRoute.execute();
+
+			return true;
+		case R.id.action_pt_site:
+			ActivityUtils.startWebPageActivity(context,
+					ptDirectionsEntity.getVehicle());
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

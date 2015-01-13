@@ -177,6 +177,12 @@ public class Constants {
 	public static final String SCHECULE_URL_STATION_SCHEDULE_H_VALUE = "0";
 	public static final String SCHECULE_REGEX_STATION_SCHEDULE = "<td class=\"(schTdBrd|schTdNoBrd)\" align=\"center\">([^^]*?)<\\/td>";
 
+	public static final String SUMC_SITE_SCHEDULE_URL_ADDRESS = "http://schedules.sofiatraffic.bg/%s/%s";
+	public static final String SUMC_SITE_SCHECULE_AUTOBUS = "autobus";
+	public static final String SUMC_SITE_SCHECULE_TROLLEYBUS = "trolleybus";
+	public static final String SUMC_SITE_SCHECULE_TRAMWAY = "tramway";
+	public static final String SUMC_SITE_SCHECULE_METRO = "metro";
+
 	/**
 	 * Metro Schedule
 	 */

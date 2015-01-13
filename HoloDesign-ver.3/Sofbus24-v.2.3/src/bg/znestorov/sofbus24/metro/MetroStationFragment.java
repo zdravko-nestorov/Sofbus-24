@@ -134,14 +134,22 @@ public class MetroStationFragment extends SherlockListFragment implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
+		ProgressDialog progressDialog = new ProgressDialog(context);
+
 		switch (item.getItemId()) {
 		case R.id.action_metro_map_route:
-			ProgressDialog progressDialog = new ProgressDialog(context);
 			progressDialog
 					.setMessage(getString(R.string.metro_menu_map_route_loading));
 			RetrieveMetroRoute retrieveMetroRoute = new RetrieveMetroRoute(
 					context, progressDialog);
 			retrieveMetroRoute.execute();
+
+			break;
+		case R.id.action_metro_schedule_site:
+			ActivityUtils.startWebPageActivity(context, new VehicleEntity(
+					VehicleTypeEnum.METRO));
+
 			break;
 		}
 

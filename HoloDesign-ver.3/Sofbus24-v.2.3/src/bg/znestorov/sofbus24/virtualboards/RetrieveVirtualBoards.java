@@ -54,6 +54,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.HtmlResultCodesEnum;
@@ -90,10 +91,14 @@ public class RetrieveVirtualBoards {
 	private HtmlResultCodesEnum htmlResultCode;
 
 	private DefaultHttpClient httpClient;
+	private StationsDataSource stationsDatasource;
 	private FavouritesDataSource favouriteDatasource;
+
+	private boolean isSpecialCase;
 
 	public RetrieveVirtualBoards(Activity context, Object callerInstance,
 			StationEntity station, HtmlRequestCodesEnum htmlRequestCode) {
+
 		// Set the current activity context and the object that created an
 		// instance of this class
 		this.context = context;
@@ -101,12 +106,7 @@ public class RetrieveVirtualBoards {
 		this.callerInstance = callerInstance;
 
 		// Set the selected station
-		if (station.getCustomField() == null
-				|| "".equals(station.getCustomField())
-				|| "-1".equals(station.getCustomField())
-				|| "null".equals(station.getCustomField())) {
-			station.setCustomField("1");
-		}
+		setCustomField(station);
 		this.station = station;
 
 		// Set the type of call to the class
@@ -115,7 +115,8 @@ public class RetrieveVirtualBoards {
 		// Creating a HTTP Client
 		this.httpClient = new DefaultHttpClient();
 
-		// Create an instance of the favourite database
+		// Create an instance of the stations and the favourite database
+		this.stationsDatasource = new StationsDataSource(context);
 		this.favouriteDatasource = new FavouritesDataSource(context);
 	}
 
@@ -150,6 +151,7 @@ public class RetrieveVirtualBoards {
 	 * internal memory of the device and contains all cookies from the request.
 	 */
 	private void saveCookiesToPreferences() {
+
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.VB_PREFERENCES_NAME_SUMC_COOKIES,
 				Context.MODE_PRIVATE);
@@ -178,6 +180,7 @@ public class RetrieveVirtualBoards {
 	 * request
 	 */
 	private void loadCookiesFromPreferences() {
+
 		CookieStore cookieStore = httpClient.getCookieStore();
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.VB_PREFERENCES_NAME_SUMC_COOKIES,
@@ -211,6 +214,7 @@ public class RetrieveVirtualBoards {
 	 */
 	private ArrayList<BasicNameValuePair> saveHiddenVariablesToPreferences(
 			String htmlSourceCode) {
+
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.VB_PREFERENCES_NAME_SUMC_HIDDEN_VARIABLES,
 				Context.MODE_PRIVATE);
@@ -247,6 +251,7 @@ public class RetrieveVirtualBoards {
 	 * internal memory of the device.
 	 */
 	private ArrayList<BasicNameValuePair> loadHiddenVariableFromPreferences() {
+
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.VB_PREFERENCES_NAME_SUMC_HIDDEN_VARIABLES,
 				Context.MODE_PRIVATE);
@@ -288,6 +293,7 @@ public class RetrieveVirtualBoards {
 	private HttpPost createSumcRequest(StationEntity station,
 			String vehicleTypeId, String captchaText, String captchaId,
 			ArrayList<BasicNameValuePair> hiddenVariablesList) {
+
 		final HttpPost result = new HttpPost(Constants.VB_URL);
 		result.addHeader("User-Agent", Constants.VB_URL_USER_AGENT);
 		result.addHeader("Referer", Constants.VB_URL_REFERER);
@@ -335,6 +341,8 @@ public class RetrieveVirtualBoards {
 	private List<BasicNameValuePair> assignHttpPostParameters(
 			StationEntity station, String vehicleTypeId, String captchaText,
 			String captchaId, ArrayList<BasicNameValuePair> hiddenVariablesList) {
+
+		// Create the BasinNameValuePairs
 		List<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>();
 		result.addAll(Arrays.asList(
 				new BasicNameValuePair(Constants.VB_URL_STOP_CODE,
@@ -345,11 +353,13 @@ public class RetrieveVirtualBoards {
 						Constants.VB_URL_O, station.getCustomField()),
 				new BasicNameValuePair(Constants.VB_URL_SUBMIT, "Провери")));
 
+		// Add the vehicle type into the request (if needed)
 		if (vehicleTypeId != null) {
 			result.add(new BasicNameValuePair(Constants.VB_URL_VEHICLE_TYPE_ID,
 					vehicleTypeId));
 		}
 
+		// Add captcha text and id into the request (if needed)
 		if (captchaText != null && captchaId != null) {
 			result.add(new BasicNameValuePair(Constants.VB_URL_CAPTCHA_ID,
 					captchaId));
@@ -357,6 +367,7 @@ public class RetrieveVirtualBoards {
 					captchaText));
 		}
 
+		// Add the hidden variables into the request (if needed)
 		if (hiddenVariablesList != null && !hiddenVariablesList.isEmpty()) {
 			result.addAll(hiddenVariablesList);
 		}
@@ -374,6 +385,7 @@ public class RetrieveVirtualBoards {
 	 * @return a list with all unique station numbers from the HTML source
 	 */
 	private LinkedHashSet<String> getStationNumbers(String htmlSourceCode) {
+
 		LinkedHashSet<String> stationNumbers = new LinkedHashSet<String>();
 
 		Pattern pattern = Pattern.compile(Constants.VB_REGEX_STATION_INFO);
@@ -403,6 +415,7 @@ public class RetrieveVirtualBoards {
 	 *         the station
 	 */
 	private ArrayList<String> getStationVehicleTypes(String htmlResult) {
+
 		ArrayList<String> stationVehicleTypes = new ArrayList<String>();
 
 		Pattern pattern = Pattern.compile(Constants.VB_REGEX_VEHICLE_TYPES);
@@ -440,6 +453,7 @@ public class RetrieveVirtualBoards {
 	 */
 	private String createHtmlSourceOutput(String htmlSourceCode,
 			String tempHtmlSourceCode) {
+
 		// Check if the global source code is empty or there is no
 		// available information
 		if (htmlSourceCode == null
@@ -478,6 +492,7 @@ public class RetrieveVirtualBoards {
 	 */
 	private String appendArrivals(String htmlSourceCode,
 			String tempHtmlSourceCode) {
+
 		Pattern pattern = Pattern.compile(Constants.VB_REGEX_SCHEDULE_BODY);
 
 		// Find arrivals (from the global source code)
@@ -528,6 +543,10 @@ public class RetrieveVirtualBoards {
 			this.captchaText = captchaText;
 			this.captchaId = captchaId;
 			this.hiddenVariablesList = loadHiddenVariableFromPreferences();
+
+			// Make the changes over the original station values (replace them
+			// with the closest ones)
+			makeSpecialCaseFixes(station);
 		}
 
 		@Override
@@ -1094,6 +1113,10 @@ public class RetrieveVirtualBoards {
 		ProcessVirtualBoards processVirtualBoards = new ProcessVirtualBoards(
 				context, htmlResult);
 
+		// Revert the original station info (if needed) - it should be placed
+		// here (before processing the result), so take effect in all cases
+		revertSpecialCaseFixes(station);
+
 		switch (htmlResultCode) {
 		// In case of an error with the result (captcha needed, no Internet or
 		// no information)
@@ -1120,6 +1143,9 @@ public class RetrieveVirtualBoards {
 		case SINGLE_RESULT:
 			VirtualBoardsStationEntity vbTimeStation = processVirtualBoards
 					.getVBSingleStationFromHtml();
+			revertSpecialCaseFixes(vbTimeStation);
+
+			// Add the search into the history
 			Utils.addStationInHistory(context, vbTimeStation);
 
 			switch (htmlRequestCode) {
@@ -1128,9 +1154,8 @@ public class RetrieveVirtualBoards {
 						.refreshVirtualBoardsTimeFragment(vbTimeStation, null);
 				break;
 			case MULTIPLE_RESULTS:
-				ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>(
-						processVirtualBoards.getMultipleStationsFromHtml()
-								.values());
+				ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>();
+				stationsList.add(vbTimeStation);
 				((VirtualBoardsFragment) callerInstance).setAdapterViaSearch(
 						stationsList, null);
 
@@ -1200,8 +1225,12 @@ public class RetrieveVirtualBoards {
 	 * @return the formatted message
 	 */
 	private Spanned getToastMsg(String msg) {
-		Spanned progressDialogMsg;
 
+		// In case a CAPTCHA was required we need to revert all changes made
+		// on the original station values
+		revertSpecialCaseFixes(station);
+
+		Spanned progressDialogMsg;
 		switch (htmlRequestCode) {
 		case MULTIPLE_RESULTS:
 			progressDialogMsg = Html.fromHtml(String.format(msg,
@@ -1293,5 +1322,80 @@ public class RetrieveVirtualBoards {
 		favouriteDatasource.open();
 		favouriteDatasource.updateStation(stationToUpdate);
 		favouriteDatasource.close();
+	}
+
+	/**
+	 * Make some adjusmtents in the special cases (([1137, 1138 - НДК-тунел],
+	 * [1139 - НДК-Графити])) - replace the original station numbers with the
+	 * closest ones
+	 * 
+	 * @param station
+	 *            the station used for searching
+	 */
+	private void makeSpecialCaseFixes(StationEntity station) {
+		String stationNumber = station.getFormattedNumber();
+
+		if ("1137".equals(stationNumber)) {
+			isSpecialCase = true;
+			station.setNumber("0363");
+		}
+
+		if ("1138".equals(stationNumber)) {
+			isSpecialCase = true;
+			station.setNumber("0400");
+		}
+
+		if ("1139".equals(stationNumber)) {
+			isSpecialCase = true;
+			station.setNumber("0364");
+		}
+	}
+
+	/**
+	 * Revert the adjusmtents in the special cases (([1137, 1138 - НДК-тунел],
+	 * [1139 - НДК-Графити])) - replace the closest station numbers with the
+	 * original ones
+	 * 
+	 * @param station
+	 *            the station used for searching
+	 */
+	private void revertSpecialCaseFixes(StationEntity station) {
+
+		if (isSpecialCase) {
+			String stationNumber = station.getFormattedNumber();
+
+			stationsDatasource.open();
+			if ("0363".equals(stationNumber)) {
+				station.assingStationValues(stationsDatasource.getStation(1137));
+				setCustomField(station);
+			}
+
+			if ("0400".equals(stationNumber)) {
+				station.assingStationValues(stationsDatasource.getStation(1138));
+				setCustomField(station);
+			}
+
+			if ("0364".equals(stationNumber)) {
+				station.assingStationValues(stationsDatasource.getStation(1139));
+				setCustomField(station);
+			}
+			stationsDatasource.close();
+		}
+	}
+
+	/**
+	 * Set a default value of the station custom field (in case of empty string
+	 * - put "1")
+	 * 
+	 * @param station
+	 *            the selected station
+	 */
+	private void setCustomField(StationEntity station) {
+		if (station.getCustomField() == null
+				|| "".equals(station.getCustomField())
+				|| "-1".equals(station.getCustomField())
+				|| "null".equals(station.getCustomField())) {
+			station.setCustomField("1");
+		}
 	}
 }

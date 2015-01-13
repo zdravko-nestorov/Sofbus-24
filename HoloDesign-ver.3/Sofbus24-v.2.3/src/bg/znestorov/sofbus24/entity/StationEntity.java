@@ -153,14 +153,39 @@ public class StationEntity implements Serializable {
 		this.position = position;
 	}
 
+	/**
+	 * Check if the station has cooredinates
+	 * 
+	 * @return true if the station has coordinates, false otherwise
+	 */
 	public boolean hasCoordinates() {
 		return lat != null && lon != null && !"".equals(lat) && !"".equals(lon)
 				&& !"EMPTY".equals(lat) && !"EMPTY".equals(lon);
 	}
 
+	/**
+	 * Check if the station is metro one
+	 * 
+	 * @return true if the station is metro one, false otherwise
+	 */
 	public boolean isMetroStation() {
 		return customField.equals(String.format(Constants.METRO_STATION_URL,
 				number));
+	}
+
+	/**
+	 * Assign the station new values
+	 * 
+	 * @param station
+	 *            the new station values
+	 */
+	public void assingStationValues(StationEntity station) {
+		this.number = Utils.formatNumberOfDigits(station.getNumber(), 4);
+		this.name = station.getName();
+		this.lat = station.getLat();
+		this.lon = station.getLon();
+		this.type = station.getType();
+		this.customField = station.getCustomField();
 	}
 
 	@Override

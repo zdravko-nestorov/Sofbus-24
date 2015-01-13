@@ -100,19 +100,24 @@ public class Sofbus24Fragment extends SherlockFragment implements
 			MenuItem favouritesRemoveAll = menu
 					.findItem(R.id.action_favourites_remove_all);
 			MenuItem metroMapRoute = menu.findItem(R.id.action_metro_map_route);
+			MenuItem metroScheduleSite = menu
+					.findItem(R.id.action_metro_schedule_site);
 
 			if (currentFragment instanceof FavouritesStationFragment) {
 				favouritesSort.setVisible(true);
 				favouritesRemoveAll.setVisible(true);
 				metroMapRoute.setVisible(false);
+				metroScheduleSite.setVisible(false);
 			} else if (currentFragment instanceof MetroFragment) {
 				favouritesSort.setVisible(false);
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(true);
+				metroScheduleSite.setVisible(true);
 			} else {
 				favouritesSort.setVisible(false);
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(false);
+				metroScheduleSite.setVisible(false);
 			}
 		}
 	}

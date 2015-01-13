@@ -10,6 +10,8 @@ import android.app.Activity;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import bg.znestorov.sofbus24.about.Configuration;
+import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 
 /**
@@ -66,12 +68,14 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase database) {
+		// Not needed as the database is copied from the assets folder
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		context.deleteDatabase(DB_NAME);
-		createDataBase(null);
+		// Not needed as the application is taking care of the database update
+		// (to prevent any bugs when the database is updated internally or with
+		// the application update)
 	}
 
 	@Override
@@ -83,10 +87,58 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 	}
 
 	/**
+	 * Create or upgrade (if needed) the database
+	 * 
+	 * @param is
+	 *            the database file input stream (or null if the app will use
+	 *            the internal embeded database)
+	 * @param newDbVersion
+	 *            the new version of the database
+	 */
+	public void createOrUpgradeDabaBase(InputStream is, int newDbVersion) {
+
+		// Update the configuration file only in case the upgrade of the
+		// database is because of a new version of the application (not in case
+		// of application database update)
+		if (is == null) {
+			boolean dbUpgradeNeeded = checkDataBaseForUpgrade(newDbVersion);
+			if (dbUpgradeNeeded) {
+				Configuration.editDbConfigurationVersionField(context,
+						newDbVersion);
+				context.deleteDatabase(DB_NAME);
+			}
+		} else {
+			context.deleteDatabase(DB_NAME);
+		}
+
+		createDataBase(is);
+	}
+
+	/**
+	 * Check if the database need to be upgraded
+	 * 
+	 * @param newDbVersion
+	 *            the new database version
+	 * @return true - if the database needs to be upgraded), false - otherwise
+	 */
+	private boolean checkDataBaseForUpgrade(int newDbVersion) {
+
+		ConfigEntity config = new ConfigEntity(context);
+		int currentDbVersion = config.getSofbus24DbVersion();
+
+		return newDbVersion > currentDbVersion;
+	}
+
+	/**
 	 * Create an empty database on the system and rewrites it with the ready
 	 * database
+	 * 
+	 * @param is
+	 *            the database file input stream (or null if the app will use
+	 *            the internal embeded database)
 	 */
-	public void createDataBase(InputStream is) {
+	private void createDataBase(InputStream is) {
+
 		// Check if the DB already exists
 		boolean dbExist = checkDataBase();
 
@@ -123,6 +175,7 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 	 * @throws IOException
 	 */
 	private void copyDataBase(InputStream is) throws IOException {
+
 		// Open the local DB as the input stream
 		InputStream myInput;
 		if (is != null) {
@@ -131,11 +184,9 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 			myInput = context.getAssets().open(DB_NAME);
 		}
 
-		// Create the folder if it is not already created
-		File dbFolder = new File(DB_PATH);
-		if (!dbFolder.exists()) {
-			dbFolder.mkdirs();
-		}
+		// Create the folder and an empty database if it is not already created
+		context.openOrCreateDatabase(DB_NAME,
+				SQLiteDatabase.CREATE_IF_NECESSARY, null);
 
 		// Path to the just created empty DB
 		String outFileName = DB_PATH + DB_NAME;
@@ -164,6 +215,7 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 	 * @throws SQLException
 	 */
 	public SQLiteDatabase openDataBase() throws SQLException {
+
 		// Open the database
 		String myPath = DB_PATH + DB_NAME;
 		dbSofbus24 = SQLiteDatabase.openDatabase(myPath, null,

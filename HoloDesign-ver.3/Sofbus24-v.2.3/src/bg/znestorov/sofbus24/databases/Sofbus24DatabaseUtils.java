@@ -16,11 +16,23 @@ import android.app.Activity;
  */
 public class Sofbus24DatabaseUtils {
 
-	private static String DB_PATH = "//data//data//bg.znestorov.sofbus24.main//databases//";
-	private static String DB_STATIONS_NAME = "stations.db";
-	private static String DB_STATIONS_JOURNAL_NAME = "stations.db-journal";
-	private static String DB_VEHICLES_NAME = "vehicles.db";
-	private static String DB_VEHICLES_JOURNAL_NAME = "vehicles.db-journal";
+	private static final String DB_PATH = "//data//data//bg.znestorov.sofbus24.main//databases//";
+
+	/**
+	 * The version of the database. When an application update is made, it is
+	 * recomended to use the same version that is used into the ConfigData
+	 * project. This way when the user install it for a first time or update it,
+	 * the version will be the same as in the config file, which won't activate
+	 * the automatic application update (it may be one version up - all is up to
+	 * you)
+	 */
+	private static final Integer DB_STATIONS_VERSION = 3;
+
+	private static final String DB_STATIONS_NAME = "stations.db";
+	private static final String DB_STATIONS_JOURNAL_NAME = "stations.db-journal";
+
+	private static final String DB_VEHICLES_NAME = "vehicles.db";
+	private static final String DB_VEHICLES_JOURNAL_NAME = "vehicles.db-journal";
 
 	/**
 	 * Delete the old databases (stations.db and vehicles.db) and create an
@@ -29,16 +41,15 @@ public class Sofbus24DatabaseUtils {
 	 * @param context
 	 *            the current activity context
 	 */
-	public static void createSofbus24Database(Activity context) {
+	public static void createOrUpgradeSofbus24Database(Activity context) {
 		deleteOldDatabases(context);
 
 		InputStream dbInputStream = getDatabaseInputStream(context);
 		Sofbus24SQLite myDbHelper = new Sofbus24SQLite(context);
-		myDbHelper.createDataBase(dbInputStream);
-		myDbHelper.getWritableDatabase();
-		myDbHelper.close();
+		myDbHelper.createOrUpgradeDabaBase(dbInputStream, DB_STATIONS_VERSION);
 
-		// Delete the new db file after the DB is updated
+		// Delete the new db file after the DB is updated (if the update is done
+		// via the application)
 		if (dbInputStream != null) {
 			context.deleteFile(Sofbus24SQLite.DB_NAME);
 		}
@@ -97,7 +108,6 @@ public class Sofbus24DatabaseUtils {
 		FileInputStream dbInputStream;
 		try {
 			dbInputStream = context.openFileInput(Sofbus24SQLite.DB_NAME);
-			deleteDabatase(context, DB_PATH + Sofbus24SQLite.DB_NAME);
 		} catch (Exception e) {
 			dbInputStream = null;
 		}

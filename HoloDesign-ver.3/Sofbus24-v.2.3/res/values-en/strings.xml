@@ -51,6 +51,7 @@
     <string name="action_favourites_sort">Sort</string>
     <string name="action_favourites_remove_all">Delete all</string>
     <string name="action_metro_map_route">Route</string>
+    <string name="action_metro_schedule_site">SKGT site</string>
     <string name="action_edit_tabs">Home screen</string>
     <string name="action_settints">Settings</string>
     <string name="action_about">Information</string>
@@ -94,6 +95,7 @@
     <string name="action_vb_time_map">Google Maps</string>
     <!-- Public Transport -->
     <string name="action_pt_route_map">Route</string>
+    <string name="action_pt_site">SKGT site</string>
     <string name="action_pt_reset">Reset</string>
     <string name="action_pt_refresh">Refresh</string>
     <string name="action_pt_map">Google Maps</string>
@@ -357,5 +359,9 @@
     <string name="home_screen_copyright">Copyright © Sofbus 24 2012. All rights reserved</string>
     <string name="home_screen_choice">Please choose а start screen (it can be cnaged anytime from the left menu):</string>
     <string name="home_screen_summary">Find your easiest way around Sofia.</string>
+
+    <!-- Web Page -->
+    <string name="web_page_title">SKGT - Schedules</string>
+    <string name="web_page_loading" formatted="false"><![CDATA[Retrieving the schedule of <b><i>%s</b></i>...]]></string>
 
 </resources>
