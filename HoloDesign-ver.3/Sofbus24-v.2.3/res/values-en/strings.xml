@@ -105,6 +105,9 @@
     <!-- DroidTrans -->
     <string name="action_droidtrans_favourites">Favorites</string>
     <string name="action_droidtrans_reset">Locate</string>
+    <!-- WebPage -->
+    <string name="action_web_page_home">Home page</string>
+    <string name="action_web_page_refresh">Refresh</string>
 
     <!-- Context Menu -->
     <!-- Favourites -->
@@ -362,5 +365,6 @@
 
     <!-- Web Page -->
     <string name="web_page_title">SKGT - Schedules</string>
+    <string name="web_page_error" formatted="false"><![CDATA[The Web page at <b><a href="%s">this address</a></b></i> might be temporarily down or it may have moved permanently to a new web address.<br/><b>Here are some suggestions:</b><ul><li>Check to make sure your device has a signal and data connection;</li><li>Reload this web page later;</li></ul>]]></string>
 
 </resources>

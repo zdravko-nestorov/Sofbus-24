@@ -108,6 +108,9 @@
     <!-- DroidTrans -->
     <string name="action_droidtrans_favourites">Фаворити</string>
     <string name="action_droidtrans_reset">Локализирай</string>
+    <!-- WebPage -->
+    <string name="action_web_page_home">Начална страница</string>
+    <string name="action_web_page_refresh">Обнови</string>
 
     <!-- Context Menu -->
     <!-- Favourites -->
@@ -373,5 +376,6 @@
 
     <!-- Web Page -->
     <string name="web_page_title">ЦГМ - Разписания</string>
+    <string name="web_page_error" formatted="false"><![CDATA[Страницата на <b><a href="%s">този адрес</a></b></i> може би е временно недостъпна или преместена на друг адрес.<br/><b>Пробвайте някое от следните предложения:</b><ul><li>Проверете вашата Интернет връзка;</li><li>Презаредете страницата;</li></ul>]]></string>
 
 </resources>
