@@ -362,6 +362,5 @@
 
     <!-- Web Page -->
     <string name="web_page_title">SKGT - Schedules</string>
-    <string name="web_page_loading" formatted="false"><![CDATA[Retrieving the schedule of <b><i>%s</b></i>...]]></string>
 
 </resources>

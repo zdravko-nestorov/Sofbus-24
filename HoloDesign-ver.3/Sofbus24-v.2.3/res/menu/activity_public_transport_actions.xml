@@ -4,7 +4,7 @@
     <!-- SUMC Site -->
     <item
         android:id="@+id/action_pt_site"
-        android:icon="@drawable/ic_menu_mapmode"
+        android:icon="@drawable/ic_menu_webpage"
         android:showAsAction="always"
         android:title="@string/action_pt_site"/>
 

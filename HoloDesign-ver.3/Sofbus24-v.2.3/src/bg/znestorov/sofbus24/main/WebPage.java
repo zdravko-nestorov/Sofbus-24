@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.main;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -10,7 +11,6 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.Utils;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -74,12 +74,14 @@ public class WebPage extends SherlockActivity {
 	/**
 	 * Initialize the Layout fields
 	 */
+	@SuppressLint("SetJavaScriptEnabled")
 	private void initLayoutFields() {
 		webPage = (WebView) findViewById(R.id.web_page);
 		webPageLoading = (ProgressBar) findViewById(R.id.web_page_loading);
 
+		webPage.setWebViewClient(new WebViewSumcClient(webPageLoading));
 		webPage.getSettings().setJavaScriptEnabled(true);
-		webPage.setWebViewClient(new AppWebViewClients(webPageLoading));
+
 		webPage.loadUrl(createStationUrlAddress());
 	}
 
@@ -151,11 +153,11 @@ public class WebPage extends SherlockActivity {
 	 * @author Zdravko Nestorov
 	 * 
 	 */
-	public class AppWebViewClients extends WebViewClient {
+	public class WebViewSumcClient extends WebViewClient {
 
 		private ProgressBar progressBar;
 
-		public AppWebViewClients(ProgressBar progressBar) {
+		public WebViewSumcClient(ProgressBar progressBar) {
 			this.progressBar = progressBar;
 		}
 
@@ -168,6 +170,13 @@ public class WebPage extends SherlockActivity {
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
+
+			view.loadUrl("javascript:document.getElementById(\"wrapper\").style.margin-left=\"0\"");
+			view.loadUrl("javascript:document.getElementById(\"wrapper\").style.width=\"100%\"");
+			view.loadUrl("javascript:document.getElementById(\"wrapper\").style.left=\"100%\"");
+			
+			view.setVisibility(View.VISIBLE);
+
 			progressBar.setVisibility(View.GONE);
 		}
 	}

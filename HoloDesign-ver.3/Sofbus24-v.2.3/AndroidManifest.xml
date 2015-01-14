@@ -156,9 +156,12 @@
             android:theme="@style/PopupTheme" />
 
         <!-- WebPage -->
-        <activity android:name="bg.znestorov.sofbus24.main.WebPage" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.WebPage"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="bg.znestorov.sofbus24.main.WebPageDialog"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/PopupTheme" />
     </application>
 
