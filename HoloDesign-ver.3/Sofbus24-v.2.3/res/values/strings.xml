@@ -54,7 +54,7 @@
     <string name="action_favourites_sort">Сортирай</string>
     <string name="action_favourites_remove_all">Изтрий всички</string>
     <string name="action_metro_map_route">Маршрут</string>
-    <string name="action_metro_schedule_site">Сайт на ЦГМ</string>
+    <string name="action_metro_schedule_site">ЦГМ Разписание</string>
     <string name="action_edit_tabs">Начален екран</string>
     <string name="action_settints">Настройки</string>
     <string name="action_about">Информация</string>
@@ -98,7 +98,7 @@
     <string name="action_vb_time_map">Карта</string>
     <!-- Public Transport -->
     <string name="action_pt_route_map">Маршрут</string>
-    <string name="action_pt_site">Сайт на ЦГМ</string>
+    <string name="action_pt_site">ЦГМ Разписание</string>
     <string name="action_pt_reset">Нулиране</string>
     <string name="action_pt_refresh">Обнови</string>
     <string name="action_pt_map">Карта</string>
@@ -109,7 +109,7 @@
     <string name="action_droidtrans_favourites">Фаворити</string>
     <string name="action_droidtrans_reset">Локализирай</string>
     <!-- WebPage -->
-    <string name="action_web_page_home">Начална страница</string>
+    <string name="action_web_page_home">Началo</string>
     <string name="action_web_page_refresh">Обнови</string>
 
     <!-- Context Menu -->
@@ -376,6 +376,6 @@
 
     <!-- Web Page -->
     <string name="web_page_title">ЦГМ - Разписания</string>
-    <string name="web_page_error" formatted="false"><![CDATA[Страницата на <b><a href="%s">този адрес</a></b></i> може би е временно недостъпна или преместена на друг адрес.<br/><b>Пробвайте някое от следните предложения:</b><ul><li>Проверете вашата Интернет връзка;</li><li>Презаредете страницата;</li></ul>]]></string>
+    <string name="web_page_error" formatted="false"><![CDATA[Страницата, която опитвате да достъпите, може би е временно недостъпна или преместена на друг адрес. Моля <b><i>проверете вашата Интернет връзка</i></b> и/или <b><i>опитайте да презаредете страницата</i></b>.]]></string>
 
 </resources>

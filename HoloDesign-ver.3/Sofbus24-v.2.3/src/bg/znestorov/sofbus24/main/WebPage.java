@@ -36,11 +36,15 @@ public class WebPage extends SherlockActivity {
 	private WebView webPage;
 	private ProgressBar webPageLoading;
 
+	private WebViewSumcClient webViewSumcClient;
+
 	private View webPageError;
 	private TextView webPageErrorText;
 
 	private VehicleEntity vehicle;
 	public static final String BUNDLE_VEHICLE = "VEHICLE";
+
+	private static final String WEB_PAGE_CURRENT_URL = "WEB PAGE CURRENT URL";
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -57,6 +61,21 @@ public class WebPage extends SherlockActivity {
 		// Initialize the ActionBar and the Layout fields
 		initActionBar();
 		initLayoutFields();
+		initWebView();
+
+		// In case of rotation load the currently loaded url address
+		if (savedInstanceState == null) {
+			loadWebPage(createStationUrlAddress());
+		} else {
+			loadWebPage(savedInstanceState.getString(WEB_PAGE_CURRENT_URL));
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		outState.putString(WEB_PAGE_CURRENT_URL, webPage.getUrl());
 	}
 
 	@Override
@@ -76,10 +95,14 @@ public class WebPage extends SherlockActivity {
 
 			return true;
 		case R.id.action_web_page_home:
+			setActiobBarTitles();
+			resetViewsState(webPage, webPageLoading, webPageError);
 			loadWebPage(createStationUrlAddress());
 
 			return true;
 		case R.id.action_web_page_refresh:
+			setActiobBarTitles();
+			resetViewsState(webPage, webPageLoading, webPageError);
 			loadWebPage(webPage.getUrl());
 
 			return true;
@@ -95,6 +118,13 @@ public class WebPage extends SherlockActivity {
 		actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		setActiobBarTitles();
+	}
+
+	/**
+	 * Set the titles of the action bar (title and subtitle)
+	 */
+	private void setActiobBarTitles() {
 		actionBar.setTitle(getString(R.string.web_page_title));
 		actionBar.setSubtitle(Utils.getCurrentDateTime());
 	}
@@ -108,9 +138,6 @@ public class WebPage extends SherlockActivity {
 		webPageLoading = (ProgressBar) findViewById(R.id.web_page_loading);
 		webPageError = findViewById(R.id.web_page_error);
 		webPageErrorText = (TextView) findViewById(R.id.web_page_error_text);
-
-		initWebView();
-		loadWebPage(createStationUrlAddress());
 	}
 
 	/**
@@ -194,19 +221,9 @@ public class WebPage extends SherlockActivity {
 		}
 
 		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url) {
-			view.loadUrl(url);
-			return true;
-		}
-
-		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
-			if (webPageError.getVisibility() == View.VISIBLE) {
-				view.setVisibility(View.GONE);
-				webPageError.setVisibility(View.GONE);
-				progressBar.setVisibility(View.VISIBLE);
-			}
+			resetViewsState(view, progressBar, webPageError);
 		}
 
 		@Override
@@ -215,10 +232,7 @@ public class WebPage extends SherlockActivity {
 
 			hasError = true;
 			initErrorView();
-
-			view.setVisibility(View.GONE);
-			webPageError.setVisibility(View.VISIBLE);
-			progressBar.setVisibility(View.GONE);
+			setErrorViewsState(view, progressBar, webPageError);
 		}
 
 		@Override
@@ -226,12 +240,19 @@ public class WebPage extends SherlockActivity {
 
 			if (!hasError) {
 				editSumcSiteCSS(view);
-				view.setVisibility(View.VISIBLE);
-				webPageError.setVisibility(View.GONE);
-				progressBar.setVisibility(View.GONE);
-			}
+				setSuccessViewsState(view, progressBar, webPageError);
 
-			hasError = false;
+				hasError = false;
+			} else {
+				setErrorViewsState(view, progressBar, webPageError);
+			}
+		}
+
+		/**
+		 * Reset the state of the variable
+		 */
+		private void resetHasError() {
+			this.hasError = false;
 		}
 
 		/**
@@ -239,8 +260,8 @@ public class WebPage extends SherlockActivity {
 		 */
 		private void initErrorView() {
 
-			webPageErrorText.setText(Html.fromHtml(getString(
-					R.string.web_page_error, webPage.getUrl())));
+			webPageErrorText.setText(Html
+					.fromHtml(getString(R.string.web_page_error)));
 		}
 	}
 
@@ -248,23 +269,18 @@ public class WebPage extends SherlockActivity {
 	 * Initialize the web view and set the appropriate options
 	 */
 	private void initWebView() {
-		webPage.setWebViewClient(new WebViewSumcClient(webPageLoading,
-				webPageError));
+
+		webViewSumcClient = new WebViewSumcClient(webPageLoading, webPageError);
+		webPage.setWebViewClient(webViewSumcClient);
 		webPage.getSettings().setJavaScriptEnabled(true);
 		webPage.getSettings().setBuiltInZoomControls(true);
 		webPage.getSettings().setSupportZoom(true);
 		webPage.getSettings().setRenderPriority(RenderPriority.HIGH);
-		webPage.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+		webPage.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 	}
 
 	/**
-	 * Load the web page - it is recomended to clear the cache and clear the
-	 * history of the webview. This way the WebView forced to load the
-	 * javascript after the page is loaded:
-	 * http://stackoverflow.com/questions/6861640/android-webview-javascript-
-	 * only-loads-sometimes
-	 * 
-	 * Also a workaround is to wait some milliseconds (in our case 50ms) before
+	 * The workaround is to wait some milliseconds (in our case 50ms) before
 	 * loading the content:
 	 * http://stackoverflow.com/questions/18112715/webview-must
 	 * -be-loaded-twice-to-load-correctly
@@ -274,15 +290,14 @@ public class WebPage extends SherlockActivity {
 	 */
 	private void loadWebPage(final String urlAddress) {
 
-		webPage.clearCache(true);
-		webPage.clearHistory();
+		webViewSumcClient.resetHasError();
 
 		// Load the page after 50ms, so ensure that there is no problem with
 		// the threads
 		webPage.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				webPage.loadUrl(urlAddress.substring(0, 7));
+				webPage.loadUrl(urlAddress);
 			}
 		}, 50);
 	}
@@ -305,5 +320,56 @@ public class WebPage extends SherlockActivity {
 			view.loadUrl("javascript:document.getElementsByClassName(\"tooltip preview\")["
 					+ i + "].setAttribute(\"style\", \"display:none;\");");
 		}
+	}
+
+	/**
+	 * Reset the state of all views to the default one
+	 * 
+	 * @param view
+	 *            the web view container
+	 * @param progressBar
+	 *            the web view loader
+	 * @param webPageError
+	 *            the view of the web page error
+	 */
+	private void resetViewsState(WebView view, ProgressBar progressBar,
+			View webPageError) {
+		view.setVisibility(View.GONE);
+		webPageError.setVisibility(View.GONE);
+		progressBar.setVisibility(View.VISIBLE);
+	}
+
+	/**
+	 * Set the state of the views in case of error
+	 * 
+	 * @param view
+	 *            the web view container
+	 * @param progressBar
+	 *            the web view loader
+	 * @param webPageError
+	 *            the view of the web page error
+	 */
+	private void setErrorViewsState(WebView view, ProgressBar progressBar,
+			View webPageError) {
+		view.setVisibility(View.GONE);
+		webPageError.setVisibility(View.VISIBLE);
+		progressBar.setVisibility(View.GONE);
+	}
+
+	/**
+	 * Set the state of the views in case of success
+	 * 
+	 * @param view
+	 *            the web view container
+	 * @param progressBar
+	 *            the web view loader
+	 * @param webPageError
+	 *            the view of the web page error
+	 */
+	private void setSuccessViewsState(WebView view, ProgressBar progressBar,
+			View webPageError) {
+		view.setVisibility(View.VISIBLE);
+		webPageError.setVisibility(View.GONE);
+		progressBar.setVisibility(View.GONE);
 	}
 }
