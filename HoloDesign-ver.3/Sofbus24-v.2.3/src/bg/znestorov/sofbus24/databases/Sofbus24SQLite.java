@@ -68,14 +68,35 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase database) {
-		// Not needed as the database is copied from the assets folder
+		/*
+		 * Not needed as the database is copied from the assets folder
+		 */
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// Not needed as the application is taking care of the database update
-		// (to prevent any bugs when the database is updated internally or with
-		// the application update)
+		/*
+		 * Not needed as the application is taking care of the database update
+		 * (to prevent any bugs when the database is updated internally or with
+		 * the application update)
+		 */
+	}
+
+	@Override
+	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		/*
+		 * Not needed anymore, because there was a bug when trying to put a new
+		 * version of the database in the cofigugration data folder. The new
+		 * version of the db was '2'. which is causing the problem 'Can't
+		 * downgrade database from version 2 to 1'. Because of this we need to
+		 * override the method if you want to be able to run the application
+		 * with a database on the device with a higher version than your code
+		 * can handle.
+		 * 
+		 * GooglePlay error: "Caused by:
+		 * android.database.sqlite.SQLiteException: Can't downgrade database
+		 * from version 2 to 1"
+		 */
 	}
 
 	@Override
@@ -150,7 +171,8 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 						"Sofbus24SQLite.createDataBase(...)",
 						"Error copying database", e);
 
-				throw new Error("Error copying database: \n" + e.getMessage());
+				throw new Error("Error copying database: \n"
+						+ e.getStackTrace());
 			}
 		}
 	}

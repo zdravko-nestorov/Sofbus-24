@@ -40,7 +40,7 @@ public class Configuration {
 				copyConfiguration(context);
 			} catch (IOException e) {
 				throw new Error("Error copying configuration: \n"
-						+ e.getMessage());
+						+ e.getStackTrace());
 			}
 		} else if (!isConfigurationCorrect(context)) {
 			editDbConfigurationVersionField(context, 1);
