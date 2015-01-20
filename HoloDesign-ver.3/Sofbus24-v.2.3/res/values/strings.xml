@@ -16,9 +16,13 @@
     <string name="app_button_update">Обнови</string>
     <string name="app_button_install">Инсталирай</string>
     <string name="app_button_later">По-късно</string>
+    <string name="app_button_restart">Рестарт</string>
+    <string name="app_button_email">Имейл</string>
+    <string name="app_button_exit">Изход</string>
     <string name="app_dialog_title_info">Информация</string>
     <string name="app_dialog_title_important">Важно</string>
     <string name="app_dialog_title_error">Грешка</string>
+    <string name="app_database_error" formatted="false"><![CDATA[Възникна неочакван проблем при стартирането на <b><i>Софбус 24</i></b>. Моля опитайте отново като <b><i>рестартирате</i></b> приложението. Ако грешката продължава да се появява, моля свържете се с мен чрез <b><i>имейл бутона</i></b> отдолу.]]></string>
     <string name="app_internet_error">Възникна грешка при извличането на информация. Моля проверете вашата интернет връзка и опитайте отново.</string>
     <string name="app_info_error" formatted="false"><![CDATA[В момента сайта за градска мобилност не предоставя информация за <b>%s</b>. Моля опитайте пак по-късно.]]></string>
     <string name="app_captcha_error" formatted="false"><![CDATA[Трябва да въведете символите от изображението (<b>captcha код</b>), за да преминете теста за сигурност на <b>СКГТ</b> и да извлечете нужната информация.]]></string>
@@ -42,6 +46,10 @@
     <string name="app_google_play_msg">Услугите за Google Play, на които разчита Софбус 24 за показване на картата на Google Maps, не се поддържат от устройството Ви. Моля, инсталирайте ги, за да продължите.</string>
     <string name="app_google_street_view_title">Google Street View</string>
     <string name="app_google_street_view_msg">Услугите за Google Play, на които разчита Софбус 24 за показване на Google Street View, не се поддържат от устройството Ви. Моля, инсталирайте ги, за да продължите.</string>
+    <string name="app_send_email_subject">Проблем при стартирането на Софбус 24</string>
+    <string name="app_send_email_body" formatted="false"><![CDATA[Възникна неочакван проблем при стартирането на Софбус 24...]]></string>
+    <string name="app_send_email_chooser">Изпращане на мейл</string>
+    <string name="app_send_email_chooser_error">Възникна грешка, тъй като няма инсталирани мейл клиенти. Моля добавете, за да може да изпратите мейл.</string>
 
     <!-- Action Bar -->
     <!-- Sofbus24 -->

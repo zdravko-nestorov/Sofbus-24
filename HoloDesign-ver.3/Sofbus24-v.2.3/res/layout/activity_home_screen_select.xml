@@ -23,6 +23,7 @@
     <!-- Main LinearLayout -->
 
     <LinearLayout
+        android:id="@+id/sofbus24_home_screen_box_view"
         android:layout_width="@dimen/home_screen_layout_width"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

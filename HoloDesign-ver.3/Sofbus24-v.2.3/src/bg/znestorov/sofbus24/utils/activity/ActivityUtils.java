@@ -498,7 +498,7 @@ public class ActivityUtils {
 	 *            the entered char
 	 * @return if it is allowed or not
 	 */
-	private static boolean isCharAllowed(char currentChar) {
+	public static boolean isCharAllowed(char currentChar) {
 		boolean isCharAllowed = false;
 
 		if (Character.isLetterOrDigit(currentChar)

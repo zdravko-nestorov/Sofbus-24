@@ -218,4 +218,24 @@ public class ActivityTracker {
 				.setLabel("changedApplicationTheme").build());
 	}
 
+	/**
+	 * Send an event to GoogleAnalytics on "showing database error dialog"
+	 * action (from the home screen)
+	 * 
+	 * @param context
+	 *            the current activity context
+	 */
+	public static void sofbusDatabaseErrorDialog(Activity context) {
+
+		// Get tracker
+		Tracker tracker = ((GlobalEntity) context.getApplicationContext())
+				.getTracker(TrackerName.APP_TRACKER);
+
+		// Build and send an Event
+		tracker.send(new HitBuilders.EventBuilder()
+				.setCategory("Database Error Dialog")
+				.setAction("sofbusDatabaseErrorDialog")
+				.setLabel("sofbusDatabaseErrorDialog").build());
+	}
+
 }

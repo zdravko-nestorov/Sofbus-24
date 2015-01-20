@@ -413,8 +413,7 @@ public class VirtualBoardsFragment extends SherlockListFragment implements
 						char currentChar = source.charAt(i);
 
 						// Check if the charecter has to be removed
-						if (!Character.isLetterOrDigit(currentChar)
-								&& !Character.isSpaceChar(currentChar)) {
+						if (!ActivityUtils.isCharAllowed(currentChar)) {
 							sourceAsSpannableBuilder.delete(i, i + 1);
 						}
 
@@ -431,8 +430,7 @@ public class VirtualBoardsFragment extends SherlockListFragment implements
 						char currentChar = source.charAt(i);
 
 						// Check if the charecter should be appended
-						if (Character.isLetterOrDigit(currentChar)
-								|| Character.isSpaceChar(currentChar)) {
+						if (ActivityUtils.isCharAllowed(currentChar)) {
 							filteredStringBuilder.append(currentChar);
 						}
 

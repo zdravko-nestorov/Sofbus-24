@@ -13,9 +13,13 @@
     <string name="app_button_update">Update</string>
     <string name="app_button_install">Install</string>
     <string name="app_button_later">Later</string>
+    <string name="app_button_restart">Restart</string>
+    <string name="app_button_email">Email</string>
+    <string name="app_button_exit">Exit</string>
     <string name="app_dialog_title_info">Information</string>
     <string name="app_dialog_title_important">Important</string>
     <string name="app_dialog_title_error">Error</string>
+    <string name="app_database_error" formatted="false"><![CDATA[<b><i>Sofbus 24</i></b> experienced an unexpected error on startup. Please <b><i>restart</i></b> the application and if the problem still persists, contact me with the <b><i>email button</i></b> below.]]></string>
     <string name="app_internet_error">An error occurred while retrieving the information. Please check your Internet connection and try again.</string>
     <string name="app_info_error" formatted="false"><![CDATA[Currently, the SKGT site does not provide any information about </b>%s<b>. Please try again later.]]></string>
     <string name="app_captcha_error" formatted="false"><![CDATA[You have to enter the characters from the image (</b>captcha code<b>) to pass the <b>SKGT</b> site security test and retrieve the needed information.]]></string>
@@ -39,6 +43,10 @@
     <string name="app_google_play_msg">Google Play services, which Sofbus 24 uses to show the Google Maps, are not supported by your device. Please install them to move on.</string>
     <string name="app_google_street_view_title">Google Street View</string>
     <string name="app_google_street_view_msg">Google Play services, which Sofbus 24 uses to show the Google Street View, are not supported by your device. Please install them to move on.</string>
+    <string name="app_send_email_subject">Sofbus 24 startup problem</string>
+    <string name="app_send_email_body" formatted="false"><![CDATA[Sofbus 24 experienced an unexpected error on startup...]]></string>
+    <string name="app_send_email_chooser">Send mail</string>
+    <string name="app_send_email_chooser_error">There are no email clients installed. Please add one to send an email.</string>
 
     <!-- Action Bar -->
     <!-- Sofbus24 -->

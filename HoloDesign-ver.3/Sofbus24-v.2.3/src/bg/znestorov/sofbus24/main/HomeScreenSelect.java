@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,9 +13,12 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import bg.znestorov.sofbus24.about.Configuration;
 import bg.znestorov.sofbus24.databases.Sofbus24DatabaseUtils;
+import bg.znestorov.sofbus24.databases.Sofbus24SQLite;
 import bg.znestorov.sofbus24.droidtrans.DroidTransLoadInfo;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
+import bg.znestorov.sofbus24.home.screen.Sofbus24DatabaseErrorDialog;
+import bg.znestorov.sofbus24.home.screen.Sofbus24DatabaseErrorDialog.OnRecreateDatabaseListener;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
 import bg.znestorov.sofbus24.schedule.ScheduleLoadVehicles;
@@ -28,13 +32,20 @@ import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
-public class HomeScreenSelect extends SherlockFragmentActivity {
+public class HomeScreenSelect extends SherlockFragmentActivity implements
+		OnRecreateDatabaseListener {
 
 	private FragmentActivity context;
 	private GlobalEntity globalContext;
 
 	private int userChoice = -1;
 	private static final String BUNDLE_USER_CHOICE = "USER CHOICE";
+
+	private View homeScreenBoxView;
+	private boolean isHomeScreenBoxViewVisible;
+	private static final String BUNDLE_IS_HOME_SCREEN_BOX_VIEW_VISIBLE = "IS HOME SCREEN BOX VIEW VISIBLE";
+
+	private static final Integer MAX_STARTUP_COUNT = 2;
 
 	public static final int REQUEST_CODE_HOME_SCREEN_SELECT = 0;
 	public static final int RESULT_CODE_ACTIVITY_NEW = 1;
@@ -53,6 +64,9 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 		globalContext = (GlobalEntity) getApplicationContext();
 		userChoice = savedInstanceState == null ? -1 : savedInstanceState
 				.getInt(BUNDLE_USER_CHOICE);
+		isHomeScreenBoxViewVisible = savedInstanceState == null ? true
+				: savedInstanceState
+						.getBoolean(BUNDLE_IS_HOME_SCREEN_BOX_VIEW_VISIBLE);
 
 		// Init the layout fields
 		initLayoutFields(savedInstanceState, true);
@@ -65,7 +79,8 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 
 		if (requestCode == REQUEST_CODE_HOME_SCREEN_SELECT) {
@@ -85,7 +100,13 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 
+		isHomeScreenBoxViewVisible = homeScreenBoxView != null ? homeScreenBoxView
+				.getVisibility() == View.VISIBLE : true;
+
 		outState.putInt(BUNDLE_USER_CHOICE, userChoice);
+		outState.putBoolean(BUNDLE_IS_HOME_SCREEN_BOX_VIEW_VISIBLE,
+				isHomeScreenBoxViewVisible);
+
 		super.onSaveInstanceState(outState);
 	}
 
@@ -105,6 +126,15 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	private void initLayoutFields(Bundle savedInstanceState,
 			boolean isFirstTimeStart) {
 
+		// Check if the home screen box view should be visible or not
+		homeScreenBoxView = findViewById(R.id.sofbus24_home_screen_box_view);
+		if (isHomeScreenBoxViewVisible) {
+			showHomeScreenBoxView();
+		} else {
+			hideHomeScreenBoxView();
+		}
+
+		// Check what action to be taken on application startup
 		View homeScreenView = findViewById(R.id.sofbus24_home_screen);
 		View loadingView = findViewById(R.id.sofbus24_loading);
 
@@ -262,9 +292,17 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 			Configuration.createConfiguration(context);
 
 			// Retrieve the information from the DB
-			CreateDatabases createDatabases = new CreateDatabases(context);
-			createDatabases.execute();
+			createDatabase();
 		}
+	}
+
+	/**
+	 * Retrieve the information from the DB
+	 */
+	private void createDatabase() {
+
+		CreateDatabases createDatabases = new CreateDatabases(context, 1);
+		createDatabases.execute();
 	}
 
 	/**
@@ -274,34 +312,61 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 	 * @version 1.0
 	 * 
 	 */
-	public class CreateDatabases extends AsyncTask<Void, Void, Void> {
+	public class CreateDatabases extends AsyncTask<Void, Void, Boolean> {
 
 		private FragmentActivity context;
+		private int startupCount;
 
-		public CreateDatabases(FragmentActivity context) {
+		public CreateDatabases(FragmentActivity context, int startupCount) {
 			this.context = context;
+			this.startupCount = startupCount;
 		}
 
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected Boolean doInBackground(Void... params) {
 
 			// Create the database by copying it from the assets folder to the
 			// internal memory
 			Sofbus24DatabaseUtils.createOrUpgradeSofbus24Database(context);
+			boolean isSofbus24DatabaseValid = Sofbus24DatabaseUtils
+					.isSofbus24DatabaseValid(context);
 
-			return null;
+			return isSofbus24DatabaseValid;
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-			new LoadStartingData(context).execute();
+		protected void onPostExecute(Boolean isSofbus24DatabaseValid) {
+			super.onPostExecute(isSofbus24DatabaseValid);
+
+			if (isSofbus24DatabaseValid) {
+				new LoadStartingData(context).execute();
+			} else {
+				// Delete the database (this way each time you restart the
+				// application, it will automatically try to recreate the DB
+				// copying the one placed in assets)
+				deleteDatabase(Sofbus24SQLite.DB_NAME);
+
+				// If there are more than @MAX_STARTUP_COUNT, alert the user
+				// IMPORTANT: This case should not be rached anytime (very rare
+				// case when the user can't copy the database correctly into the
+				// memory)
+				if (startupCount > MAX_STARTUP_COUNT) {
+					ActivityTracker.sofbusDatabaseErrorDialog(context);
+					hideHomeScreenBoxView();
+
+					DialogFragment dialogFragment = Sofbus24DatabaseErrorDialog
+							.newInstance();
+					dialogFragment.show(getSupportFragmentManager(), "dialog");
+				} else {
+					new CreateDatabases(context, startupCount + 1).execute();
+				}
+			}
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			new CreateDatabases(context).execute();
+			new CreateDatabases(context, startupCount + 1).execute();
 		}
 	}
 
@@ -434,6 +499,28 @@ public class HomeScreenSelect extends SherlockFragmentActivity {
 		// enable/disable automatic tracking)
 		GoogleAnalytics.getInstance(getApplicationContext()).setAppOptOut(
 				!googleAnalytics);
+	}
+
+	@Override
+	public void onRecreateDatabaseClicked() {
+		showHomeScreenBoxView();
+		createDatabase();
+	}
+
+	/**
+	 * Show the Sofbus 24 HomeScreenSelect the box view (this view contains the
+	 * choose home screen and loading parts)
+	 */
+	private void showHomeScreenBoxView() {
+		homeScreenBoxView.setVisibility(View.VISIBLE);
+	}
+
+	/**
+	 * Hide the Sofbus 24 HomeScreenSelect the box view (this view contains the
+	 * choose home screen and loading parts)
+	 */
+	private void hideHomeScreenBoxView() {
+		homeScreenBoxView.setVisibility(View.GONE);
 	}
 
 }

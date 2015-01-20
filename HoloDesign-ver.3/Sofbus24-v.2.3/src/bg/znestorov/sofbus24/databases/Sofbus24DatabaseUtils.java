@@ -56,6 +56,19 @@ public class Sofbus24DatabaseUtils {
 	}
 
 	/**
+	 * Check if the database is valid (if all tables and columns exists)
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @return if the database is valid
+	 */
+	public static boolean isSofbus24DatabaseValid(Activity context) {
+
+		Sofbus24DataSource sofbus24DataSource = new Sofbus24DataSource(context);
+		return sofbus24DataSource.isSofbus24ValidDatabase();
+	}
+
+	/**
 	 * Delete all records from the Station DB (the DB remains empty - it is not
 	 * deleted)
 	 * 
