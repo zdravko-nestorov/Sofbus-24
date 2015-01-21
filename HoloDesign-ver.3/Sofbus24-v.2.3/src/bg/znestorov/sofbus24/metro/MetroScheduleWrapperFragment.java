@@ -261,7 +261,14 @@ public class MetroScheduleWrapperFragment extends SherlockFragment {
 			public void onClick(View v) {
 				savedInstanceState = null;
 				currentScheduleHourIndex--;
-				initFragmentContent();
+
+				// Sometimes if the device is slow, the arrow is still visible
+				// on the first fragment and cause an Exception
+				if (currentScheduleHourIndex > 0) {
+					initFragmentContent();
+				} else {
+					showNeededArrows();
+				}
 			}
 		});
 
@@ -271,7 +278,14 @@ public class MetroScheduleWrapperFragment extends SherlockFragment {
 			public void onClick(View v) {
 				savedInstanceState = null;
 				currentScheduleHourIndex++;
-				initFragmentContent();
+
+				// Sometimes if the device is slow, the arrow is still visible
+				// on the last fragment and cause an Exception
+				if (currentScheduleHourIndex < scheduleHourList.size()) {
+					initFragmentContent();
+				} else {
+					showNeededArrows();
+				}
 			}
 		});
 	}
@@ -432,6 +446,16 @@ public class MetroScheduleWrapperFragment extends SherlockFragment {
 		metroScheduleTime.setText(hourRange);
 
 		// Show needed arrows
+		showNeededArrows();
+
+		metroScheduleFragment.setVisibility(View.VISIBLE);
+		metroScheduleLoading.setVisibility(View.GONE);
+	}
+
+	/**
+	 * Show the needed arrows, according to the visible fragment
+	 */
+	private void showNeededArrows() {
 		if (currentScheduleHourIndex == 0) {
 			leftArrow.setVisibility(View.GONE);
 			rightArrow.setVisibility(View.VISIBLE);
@@ -442,9 +466,6 @@ public class MetroScheduleWrapperFragment extends SherlockFragment {
 			leftArrow.setVisibility(View.VISIBLE);
 			rightArrow.setVisibility(View.VISIBLE);
 		}
-
-		metroScheduleFragment.setVisibility(View.VISIBLE);
-		metroScheduleLoading.setVisibility(View.GONE);
 	}
 
 	/**

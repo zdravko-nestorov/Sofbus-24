@@ -67,7 +67,7 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		ThemeChange.selectTheme(this);
 		super.onCreate(savedInstanceState);
-		
+
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_public_transport_schedule);
 
@@ -249,7 +249,14 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 			public void onClick(View v) {
 				savedInstanceState = null;
 				currentScheduleHourIndex--;
-				initFragmentContent();
+
+				// Sometimes if the device is slow, the arrow is still visible
+				// on the first fragment and cause an Exception
+				if (currentScheduleHourIndex > 0) {
+					initFragmentContent();
+				} else {
+					showNeededArrows();
+				}
 			}
 		});
 
@@ -259,7 +266,14 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 			public void onClick(View v) {
 				savedInstanceState = null;
 				currentScheduleHourIndex++;
-				initFragmentContent();
+
+				// Sometimes if the device is slow, the arrow is still visible
+				// on the last fragment and cause an Exception
+				if (currentScheduleHourIndex < scheduleHourList.size()) {
+					initFragmentContent();
+				} else {
+					showNeededArrows();
+				}
 			}
 		});
 	}
@@ -419,6 +433,16 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 		ptScheduleTime.setText(hourRange);
 
 		// Show needed arrows
+		showNeededArrows();
+
+		ptScheduleFragment.setVisibility(View.VISIBLE);
+		ptScheduleLoading.setVisibility(View.GONE);
+	}
+
+	/**
+	 * Show the needed arrows, according to the visible fragment
+	 */
+	private void showNeededArrows() {
 		if (currentScheduleHourIndex == 0) {
 			leftArrow.setVisibility(View.GONE);
 			rightArrow.setVisibility(View.VISIBLE);
@@ -429,9 +453,6 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 			leftArrow.setVisibility(View.VISIBLE);
 			rightArrow.setVisibility(View.VISIBLE);
 		}
-
-		ptScheduleFragment.setVisibility(View.VISIBLE);
-		ptScheduleLoading.setVisibility(View.GONE);
 	}
 
 	/**

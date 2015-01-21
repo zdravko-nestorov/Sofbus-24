@@ -96,9 +96,21 @@ public class RetrievePublicTransportDirection extends
 			}
 
 			// Show the dialog fragment with the directions
-			DialogFragment dialogFragment = ChooseDirectionDialog
-					.newInstance(ptDirectionsEntity);
-			dialogFragment.show(fragmentManager, "dialog");
+			try {
+				DialogFragment dialogFragment = ChooseDirectionDialog
+						.newInstance(ptDirectionsEntity);
+				dialogFragment.show(fragmentManager, "dialog");
+			} catch (Exception e) {
+				/*
+				 * Strange bug reported in GooglePlay - may be the orientation
+				 * is released before the dialog fragment is shown. In this case
+				 * the app crashes because the dialog tries to show after
+				 * savedInstanceState() method is called.
+				 * 
+				 * GooglePlayError: java.lang.IllegalStateException: Can not
+				 * perform this action after onSaveInstanceState
+				 */
+			}
 		} else {
 			ActivityUtils.showNoInternetOrInfoToast(context);
 		}
