@@ -8,6 +8,8 @@ import bg.znestorov.sofbus24.main.R;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 /**
  * Global class that extends Application and save state across several
@@ -144,7 +146,16 @@ public class GlobalEntity extends Application {
 
 		try {
 			getPackageManager().getApplicationInfo("com.google.android.gms", 0);
-			areServicesAvailable = true;
+
+			// (GooglePlay error on old devices - Android 2.2-3.0) Additional
+			// check that verifies that Google Play services is installed and
+			// enabled on this device, and that the version installed on this
+			// device is no older than the one required by this client
+			if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS) {
+				areServicesAvailable = true;
+			} else {
+				areServicesAvailable = false;
+			}
 		} catch (PackageManager.NameNotFoundException e) {
 			areServicesAvailable = false;
 		}

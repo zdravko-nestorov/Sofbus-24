@@ -423,6 +423,20 @@ public class HomeScreenSelect extends SherlockFragmentActivity implements
 				DroidTransLoadInfo.getInstance(context);
 			}
 
+			/*
+			 * Workaround used to prevent a GooglePlay exception to be thrown
+			 * (the problem is that the instance of the Singleton is not created
+			 * on first application startup)
+			 * 
+			 * android.database.sqlite.SQLiteException: unable to close due to
+			 * unfinalised statements
+			 */
+			if (!ScheduleLoadVehicles.isInstanceCreated()
+					|| !MetroLoadStations.isInstanceCreated()
+					|| !DroidTransLoadInfo.isInstanceCreated()) {
+				cancel(true);
+			}
+
 			return null;
 		}
 

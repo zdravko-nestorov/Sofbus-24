@@ -122,6 +122,20 @@ public class ScheduleLoadVehicles {
 		return getVehiclesList(currentDirection);
 	}
 
+	/**
+	 * Check if the instance is already created
+	 * 
+	 * @return if the instance is already created
+	 */
+	public static boolean isInstanceCreated() {
+
+		if (instance != null) {
+			return true;
+		}
+
+		return false;
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tbusses: " + busses
