@@ -7,8 +7,9 @@ public class WebPageDialog extends WebPage {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		ActivityUtils.showAsPopup(this, false);
+		ActivityUtils.showAsPopup(this, false, false);
 		super.onCreate(savedInstanceState);
+		this.setFinishOnTouchOutside(true);
 	}
 
 }

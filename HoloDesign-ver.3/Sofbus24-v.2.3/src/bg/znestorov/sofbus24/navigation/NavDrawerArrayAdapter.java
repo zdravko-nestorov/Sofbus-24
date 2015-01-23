@@ -70,15 +70,19 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_cs_list);
 				break;
 			case 5:
-				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_history);
+				this.navigationItemsImgs
+						.add(R.drawable.ic_slide_menu_route_changes);
 				break;
 			case 6:
-				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_options);
+				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_history);
 				break;
 			case 7:
-				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_info);
+				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_options);
 				break;
 			case 8:
+				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_info);
+				break;
+			case 9:
 				this.navigationItemsImgs.add(R.drawable.ic_slide_menu_update);
 				break;
 			default:

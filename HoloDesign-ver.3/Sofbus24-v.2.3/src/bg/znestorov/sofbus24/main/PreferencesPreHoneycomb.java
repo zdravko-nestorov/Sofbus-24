@@ -7,7 +7,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceCategory;
-import android.view.KeyEvent;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
 import bg.znestorov.sofbus24.preferences.ResetSettingsDialog;
@@ -107,14 +106,12 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && globalContext.isHasToRestart()) {
+	public void onBackPressed() {
+		if (globalContext.isHasToRestart()) {
 			restartApplication(false);
-
-			return true;
+		} else {
+			finish();
 		}
-
-		return super.onKeyDown(keyCode, event);
 	}
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,

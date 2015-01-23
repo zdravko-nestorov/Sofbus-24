@@ -7,8 +7,9 @@ public class VirtualBoardsTimeDialog extends VirtualBoardsTime {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		ActivityUtils.showAsPopup(this, false);
+		ActivityUtils.showAsPopup(this, false, false);
 		super.onCreate(savedInstanceState);
+		this.setFinishOnTouchOutside(true);
 	}
 
 }

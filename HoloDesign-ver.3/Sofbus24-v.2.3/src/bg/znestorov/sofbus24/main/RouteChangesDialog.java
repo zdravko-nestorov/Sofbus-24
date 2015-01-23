@@ -3,7 +3,7 @@ package bg.znestorov.sofbus24.main;
 import android.os.Bundle;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
-public class ClosestStationsListDialog extends ClosestStationsList {
+public class RouteChangesDialog extends RouteChanges {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

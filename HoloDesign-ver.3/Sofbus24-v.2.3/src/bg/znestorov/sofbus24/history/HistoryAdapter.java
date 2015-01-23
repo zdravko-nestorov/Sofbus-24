@@ -17,7 +17,7 @@ import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Utils;
 
 /**
- * Array Adapted user for set each row a history object from a preference file
+ * Array Adapter user for set each row a history object from a preference file
  * 
  * @author Zdravko Nestorov
  * @version 1.0

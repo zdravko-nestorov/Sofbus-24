@@ -7,8 +7,9 @@ public class MetroScheduleDialog extends MetroSchedule {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		ActivityUtils.showAsPopup(this, false);
+		ActivityUtils.showAsPopup(this, false, false);
 		super.onCreate(savedInstanceState);
+		this.setFinishOnTouchOutside(true);
 
 		ActivityUtils.forceTabs(MetroScheduleDialog.this);
 	}

@@ -219,4 +219,12 @@ public class Constants {
 	public static final String DROIDTRANS_URL_SCHEDULE_VT = "vt";
 	public static final String DROIDTRANS_URL_SCHEDULE_LID = "lid";
 	public static final String DROIDTRANS_URL_SCHEDULE_RID = "rid";
+
+	/**
+	 * Route Changes
+	 */
+	public static final String ROUTE_CHANGES_URL_ADDRESS = "http://forum.sofiatraffic.bg/forum/route_changes_all.php";
+	public static final String ROUTE_CHANGES_REGEX = "<a\\s+href=\\\"routechanges\\S+id=(\\d+)\\\">(.*?)[|](.*?)<\\/a>[^^]*?<span\\s+style=\".*?\">(.*?)<\\/span>";
+	public static final String ROUTE_CHANGES_FROM = "from";
+	public static final String ROUTE_CHANGES_NEWS_URL_ADDRESS = "http://forum.sofiatraffic.bg/forum/routechanges.php?id=%s";
 }

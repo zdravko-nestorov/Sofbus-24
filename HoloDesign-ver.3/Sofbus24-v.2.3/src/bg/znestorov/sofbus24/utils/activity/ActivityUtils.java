@@ -1,7 +1,15 @@
 package bg.znestorov.sofbus24.utils.activity;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.util.EntityUtils;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -598,12 +606,28 @@ public class ActivityUtils {
 	 *            the activity
 	 * @param isInvisible
 	 *            mark if the activity will be invisible or not
+	 * @param shouldAddTouchFlags
+	 *            mark if the dialog activity should process its own touch logic
 	 */
-	public static void showAsPopup(Activity activity, boolean isInvisible) {
+	public static void showAsPopup(Activity activity, boolean isInvisible,
+			boolean shouldAddTouchFlags) {
 		activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
+
 		activity.getWindow().setFlags(
 				WindowManager.LayoutParams.FLAG_DIM_BEHIND,
 				WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+
+		if (shouldAddTouchFlags) {
+
+			// Make us non-modal, so that others can receive touch events.
+			activity.getWindow().setFlags(LayoutParams.FLAG_NOT_TOUCH_MODAL,
+					LayoutParams.FLAG_NOT_TOUCH_MODAL);
+
+			// Notify us that it happened.
+			activity.getWindow().setFlags(
+					LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+					LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
+		}
 
 		Display display = activity.getWindowManager().getDefaultDisplay();
 		DisplayMetrics metrics = new DisplayMetrics();
@@ -909,5 +933,35 @@ public class ActivityUtils {
 				child.setBackgroundColor(Color.TRANSPARENT);
 			}
 		}
+	}
+
+	/**
+	 * Encoding is determined by BasicResponseHandler. If response encoding is
+	 * not specified in Content-Type header, BasicResponseHandler assumes it to
+	 * be ISO-8859-1, and it can't be configured. So a new ResponseHandler
+	 * should be created that falls back to another default encoding (in our
+	 * case UTF-8).
+	 * 
+	 * @return new ResponseHandler that falls back to UTF-8 encoding
+	 */
+	public static ResponseHandler<String> getUtfResponseHandler() {
+
+		return new ResponseHandler<String>() {
+
+			@Override
+			public String handleResponse(final HttpResponse response)
+					throws HttpResponseException, IOException {
+
+				StatusLine statusLine = response.getStatusLine();
+				if (statusLine.getStatusCode() >= 300) {
+					throw new HttpResponseException(statusLine.getStatusCode(),
+							statusLine.getReasonPhrase());
+				}
+
+				HttpEntity entity = response.getEntity();
+				return entity == null ? null : EntityUtils.toString(entity,
+						"UTF-8");
+			}
+		};
 	}
 }

@@ -50,27 +50,27 @@
 
     <!-- Action Bar -->
     <!-- Sofbus24 -->
-    <string name="action_droidtrans">SKGT cars</string>
+    <string name="action_droidtrans">SKGT Cars</string>
     <string name="action_recent_history">History</string>
-    <string name="action_closest_stations">Closest stations</string>
+    <string name="action_closest_stations">Closest Stations</string>
     <string name="action_closest_stations_map">Google Maps</string>
-    <string name="action_closest_stations_list">Closest stations</string>
+    <string name="action_closest_stations_list">Closest Stations</string>
     <string name="action_more">More</string>
     <string name="action_favourites_sort">Sort</string>
-    <string name="action_favourites_remove_all">Delete all</string>
+    <string name="action_favourites_remove_all">Delete All</string>
     <string name="action_metro_map_route">Route</string>
     <string name="action_metro_schedule_site">SKGT Schedule</string>
-    <string name="action_edit_tabs">Home screen</string>
+    <string name="action_edit_tabs">Home Screen</string>
     <string name="action_settints">Settings</string>
     <string name="action_about">Information</string>
     <!-- Google Maps -->
     <string name="action_gm_map_favorites">Favourites</string>
-    <string name="action_gm_map_droidtrans">SKGT cars</string>
+    <string name="action_gm_map_droidtrans">SKGT Cars</string>
     <string name="action_gm_map_clear">Clear</string>
     <string name="action_gm_map_route">Route</string>
     <string name="action_gm_map_gsv">Street View</string>
     <string name="action_gm_map_traffic">Traffic</string>
-    <string name="action_gm_map_mode">Map mode</string>
+    <string name="action_gm_map_mode">Map Mode</string>
     <string name="action_gm_map_mode_normal">Normal</string>
     <string name="action_gm_map_mode_terrain">Terrain</string>
     <string name="action_gm_map_mode_satellite">Satellite</string>
@@ -92,8 +92,8 @@
     <string name="action_pref_reset">Reset</string>
     <string name="action_pref_info_details">Information</string>
     <!-- About -->
-    <string name="action_about_update_db">Update the stations DB</string>
-    <string name="action_about_update_app">Check for a new version</string>
+    <string name="action_about_update_db">Update the Stations DB</string>
+    <string name="action_about_update_app">Check for a New Version</string>
     <!-- Closest Stations -->
     <string name="action_cs_list_refresh">Refresh</string>
     <string name="action_cs_list_map">Google Maps</string>
@@ -109,13 +109,18 @@
     <string name="action_pt_map">Google Maps</string>
     <!-- History -->
     <string name="action_history_top">Top</string>
-    <string name="action_history_delete_all">Delete all</string>
+    <string name="action_history_delete_all">Delete All</string>
     <!-- DroidTrans -->
     <string name="action_droidtrans_favourites">Favorites</string>
     <string name="action_droidtrans_reset">Locate</string>
     <!-- WebPage -->
     <string name="action_web_page_home">Home</string>
     <string name="action_web_page_refresh">Refresh</string>
+    <!-- Route Changes -->
+    <string name="action_route_changes_refresh">Refresh</string>
+    <!-- Route Changes List -->
+    <string name="action_route_changes_copy_link">Copy Link</string>
+    <string name="action_route_changes_open_browser">Open in Browser</string>
 
     <!-- Context Menu -->
     <!-- Favourites -->
@@ -357,6 +362,7 @@
     <string name="navigation_drawer_home_map">Google Map</string>
     <string name="navigation_drawer_home_cars">SKGT vehicles</string>
     <string name="navigation_drawer_cs">Closest stations</string>
+    <string name="navigation_drawer_route_changes">Route changes</string>
     <string name="navigation_drawer_history">History</string>
     <string name="navigation_drawer_options">Settings</string>
     <string name="navigation_drawer_info">Information</string>
@@ -374,5 +380,14 @@
     <!-- Web Page -->
     <string name="web_page_title">SKGT - Schedules</string>
     <string name="web_page_error" formatted="false"><![CDATA[The Web page you tried to access might be temporarily down or it may have moved permanently to a new web address.Please <b><i>check to make sure your device has a signal and data connection</i></b> and/or <b><i>reload this web page later.</i></b>]]></string>
+
+    <!-- Route Changes -->
+    <string name="route_changes_title">Route Changes</string>
+    <string name="route_changes_label_valid_from" formatted="false"><![CDATA[Valid from: %s]]></string>
+    <string name="route_changes_loading" formatted="false"><![CDATA[Looking for a route changes...]]></string>
+    <string name="route_changes_list_empty_text">No changes of the Sofia Public Transport routes are announced.</string>
+    <string name="route_changes_news_loading" formatted="false"><![CDATA[Loading information about <b><i>%s</i></b>...]]></string>
+    <string name="route_changes_news_copy_link">Linked copied</string>
+    <string name="route_changes_news_choose_browser">Choose a browser</string>
 
 </resources>

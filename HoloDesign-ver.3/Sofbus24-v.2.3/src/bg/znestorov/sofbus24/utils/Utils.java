@@ -773,6 +773,8 @@ public class Utils {
 				.getString(R.string.navigation_drawer_home_cars));
 		navigationItems.add(context.getString(R.string.navigation_drawer_cs));
 		navigationItems.add(context
+				.getString(R.string.navigation_drawer_route_changes));
+		navigationItems.add(context
 				.getString(R.string.navigation_drawer_history));
 		navigationItems.add(context
 				.getString(R.string.navigation_drawer_options));

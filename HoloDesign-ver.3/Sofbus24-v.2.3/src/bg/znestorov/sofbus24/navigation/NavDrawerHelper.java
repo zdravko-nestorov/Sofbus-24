@@ -14,6 +14,7 @@ import bg.znestorov.sofbus24.about.RetrieveAppConfiguration;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
+import bg.znestorov.sofbus24.entity.LoadTypeEnum;
 import bg.znestorov.sofbus24.main.About;
 import bg.znestorov.sofbus24.main.AboutDialog;
 import bg.znestorov.sofbus24.main.History;
@@ -24,6 +25,7 @@ import bg.znestorov.sofbus24.main.PreferencesDialog;
 import bg.znestorov.sofbus24.main.PreferencesPreHoneycomb;
 import bg.znestorov.sofbus24.main.PreferencesPreHoneycombDialog;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.route.changes.RetrieveRouteChanges;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 
@@ -99,6 +101,19 @@ public class NavDrawerHelper {
 			startClosestStationsList(progressDialog);
 			break;
 		case 5:
+			if (ActivityUtils.haveNetworkConnection(context)) {
+				progressDialog.setMessage(context
+						.getString(R.string.route_changes_loading));
+
+				RetrieveRouteChanges retrieveRouteChanges;
+				retrieveRouteChanges = new RetrieveRouteChanges(context,
+						progressDialog, LoadTypeEnum.INIT);
+				retrieveRouteChanges.execute();
+			} else {
+				ActivityUtils.showNoInternetToast(context);
+			}
+			break;
+		case 6:
 			Intent historyIntent;
 			if (globalContext.isPhoneDevice()) {
 				historyIntent = new Intent(context, History.class);
@@ -107,7 +122,7 @@ public class NavDrawerHelper {
 			}
 			context.startActivity(historyIntent);
 			break;
-		case 6:
+		case 7:
 			Intent preferencesIntent;
 			if (globalContext.isPhoneDevice()) {
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -127,7 +142,7 @@ public class NavDrawerHelper {
 			}
 			context.startActivity(preferencesIntent);
 			break;
-		case 7:
+		case 8:
 			Intent aboutIntent;
 			if (globalContext.isPhoneDevice()) {
 				aboutIntent = new Intent(context, About.class);
@@ -136,7 +151,7 @@ public class NavDrawerHelper {
 			}
 			context.startActivity(aboutIntent);
 			break;
-		case 8:
+		case 9:
 			if (ActivityUtils.haveNetworkConnection(context)) {
 				progressDialog.setMessage(context
 						.getString(R.string.about_update_app));
@@ -149,7 +164,7 @@ public class NavDrawerHelper {
 				ActivityUtils.showNoInternetToast(context);
 			}
 			break;
-		case 9:
+		case 10:
 			context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_FINISH);
 			context.finish();
 			break;

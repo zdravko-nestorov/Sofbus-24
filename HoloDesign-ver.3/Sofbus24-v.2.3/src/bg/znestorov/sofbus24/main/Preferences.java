@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
@@ -84,14 +83,12 @@ public class Preferences extends FragmentActivity implements
 	}
 
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && globalContext.isHasToRestart()) {
+	public void onBackPressed() {
+		if (globalContext.isHasToRestart()) {
 			restartApplication(false);
-
-			return true;
+		} else {
+			finish();
 		}
-
-		return super.onKeyDown(keyCode, event);
 	}
 
 	/**

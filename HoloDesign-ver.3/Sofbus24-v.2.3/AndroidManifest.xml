@@ -160,6 +160,17 @@
         <activity
             android:name="bg.znestorov.sofbus24.main.WebPageDialog"
             android:theme="@style/PopupTheme" />
+
+        <!-- RouteChanges -->
+        <activity android:name="bg.znestorov.sofbus24.main.RouteChanges" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.RouteChangesDialog"
+            android:theme="@style/PopupTheme" />
+
+        <!-- RouteChangesNews -->
+        <activity
+            android:name="bg.znestorov.sofbus24.main.RouteChangesNews"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
     </application>
 
 </manifest>

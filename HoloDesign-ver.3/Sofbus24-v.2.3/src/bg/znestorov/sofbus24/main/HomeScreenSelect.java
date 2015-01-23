@@ -341,6 +341,13 @@ public class HomeScreenSelect extends SherlockFragmentActivity implements
 			if (isSofbus24DatabaseValid) {
 				new LoadStartingData(context).execute();
 			} else {
+
+				// Reset the version of the DB to the original one. This way,
+				// the application will continue to automatically look for
+				// updates when the time comes
+				Configuration.editDbConfigurationVersionField(context,
+						Sofbus24DatabaseUtils.DB_STATIONS_VERSION);
+
 				// Delete the database (this way each time you restart the
 				// application, it will automatically try to recreate the DB
 				// copying the one placed in assets)
