@@ -34,7 +34,6 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.closest.stations.map.GoogleMapsRoute;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
-import bg.znestorov.sofbus24.droidtrans.DroidTransLoadActivity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.SortTypeEnum;
@@ -495,7 +494,8 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 
 			return true;
 		case R.id.action_gm_map_droidtrans:
-			new DroidTransLoadActivity(context).execute();
+			ActivityUtils.startDroidTrans(context, getSupportFragmentManager(),
+					false);
 
 			return true;
 		case R.id.action_gm_map_clear:

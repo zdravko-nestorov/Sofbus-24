@@ -49,6 +49,8 @@ public class Constants {
 	public static final String BUNDLE_HISTORY_LIST = "HISTORY LIST";
 	// Sofbus24/DroidTrans/ClosestStationsMap --> FavouritesFragmen
 	public static final String BUNDLE_IS_HOME_SCREEN_FRAGMENT = "IS HOME SCREEN FRAGMENT";
+	// Sofbus24 --> DroidTrans
+	public static final String BUNDLE_DROID_TRANS = "DROID TRANS";
 
 	/**
 	 * Preferences

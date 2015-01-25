@@ -53,6 +53,7 @@ import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
+import bg.znestorov.sofbus24.entity.RetrieveCurrentLocationTypeEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.main.ClosestStationsMap;
@@ -866,16 +867,58 @@ public class ActivityUtils {
 			} else {
 				ProgressDialog progressDialog = new ProgressDialog(context);
 				progressDialog.setMessage(context
-						.getString(R.string.cs_list_loading_current_location));
+						.getString(R.string.app_loading_current_location));
 
 				RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-						context, false, progressDialog);
+						context, progressDialog,
+						RetrieveCurrentLocationTypeEnum.CS_MAP_INIT);
 				retrieveCurrentLocation.execute();
 				RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
-						retrieveCurrentLocation);
+						retrieveCurrentLocation,
+						RetrieveCurrentLocationTimeout.TIMEOUT_CS_MAP_INIT);
 				(new Thread(retrieveCurrentLocationTimeout)).start();
 			}
 		}
+	}
+
+	/**
+	 * Start the DroidTrans activity
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param fragmentManager
+	 *            the fragment manager of the activity
+	 * @param isHomeScreen
+	 *            is the DroidTrans home screen or not
+	 */
+	public static void startDroidTrans(FragmentActivity context,
+			FragmentManager fragmentManager, boolean isHomeScreen) {
+
+		int timeout;
+		ProgressDialog progressDialog;
+		RetrieveCurrentLocationTypeEnum retrieveCurrentLocationType;
+
+		if (isHomeScreen) {
+			timeout = RetrieveCurrentLocationTimeout.TIMEOUT_DT_HOME_SCREEN;
+			retrieveCurrentLocationType = RetrieveCurrentLocationTypeEnum.DT_HOME_SCREEN;
+
+			progressDialog = null;
+		} else {
+			timeout = RetrieveCurrentLocationTimeout.TIMEOUT_DT;
+			retrieveCurrentLocationType = RetrieveCurrentLocationTypeEnum.DT_INIT;
+
+			progressDialog = new ProgressDialog(context);
+			progressDialog.setMessage(context
+					.getString(R.string.app_loading_closest_station));
+		}
+
+		RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
+				context, progressDialog, retrieveCurrentLocationType);
+		retrieveCurrentLocation.execute();
+
+		RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
+				retrieveCurrentLocation, timeout);
+		(new Thread(retrieveCurrentLocationTimeout)).start();
 	}
 
 	/**

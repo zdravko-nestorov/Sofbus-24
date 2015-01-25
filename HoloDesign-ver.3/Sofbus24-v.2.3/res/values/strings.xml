@@ -27,6 +27,8 @@
     <string name="app_info_error" formatted="false"><![CDATA[В момента сайта за градска мобилност не предоставя информация за <b>%s</b>. Моля опитайте пак по-късно.]]></string>
     <string name="app_captcha_error" formatted="false"><![CDATA[Трябва да въведете символите от изображението (<b>captcha код</b>), за да преминете теста за сигурност на <b>СКГТ</b> и да извлечете нужната информация.]]></string>
     <string name="app_internet_or_info_error">В момента няма намерена информация. Моля проверете вашата интернет връзка или опитайте по-късно.</string>
+    <string name="app_loading_current_location" formatted="false"><![CDATA[Локализиране на текущото местоположение...]]></string>
+    <string name="app_loading_closest_station" formatted="false"><![CDATA[Локализиране на текущото местоположение и намиране на най-близката до него спирка...]]></string>
     <string name="app_location_modules_error">Моля включете поне едно от устройствата (Network, WiFi или GPS), за да бъде засечено текущото ви местоположение.</string>
     <string name="app_location_timeout_error">Намирането на текущото местоположение продължи твърде дълго. Моля опитайте отново.</string>
     <string name="app_location_timeout_map_error">Намирането на текущото местоположение продължи твърде дълго. Картата ще бъде позиционирана върху центъра на София, докато бъдете локализирани.</string>
@@ -141,7 +143,6 @@
     <!-- Closest Stations List -->
     <string name="cs_list_title">Най-близки спирки</string>
     <string name="cs_list_search_hint">Търсене по име или номер</string>
-    <string name="cs_list_loading_current_location" formatted="false"><![CDATA[Изчисляване на текущите координати...]]></string>
     <string name="cs_list_item_empty_list">Няма намерени спирки в радиус от 100 км. за това търсене. Моля опитайте с други критерии или се приближете до София.</string>
 
     <!-- Closest Stations Map -->
@@ -363,8 +364,6 @@
     <string name="droid_trans_type_metro">Метро</string>
     <string name="droid_trans_type_metro_line_1">Линия 1</string>
     <string name="droid_trans_schedule">Разписание</string>
-    <string name="droid_trans_load_data" formatted="false"><![CDATA[Зареждане на информацията за колите на СКГТ...]]></string>
-    <string name="droid_trans_reset_location">Моля изчакайте да бъдете локализирани отново или намерете търсената от вас спирка.</string>
     <string name="droid_trans_no_info">Няма достатъчно информация за избраната линия. Моля опитайте с някой от другите начини за търсене.</string>
 
     <!-- Navigation Drawer -->

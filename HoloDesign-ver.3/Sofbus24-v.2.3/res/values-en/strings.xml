@@ -24,10 +24,12 @@
     <string name="app_info_error" formatted="false"><![CDATA[Currently, the SKGT site does not provide any information about </b>%s<b>. Please try again later.]]></string>
     <string name="app_captcha_error" formatted="false"><![CDATA[You have to enter the characters from the image (</b>captcha code<b>) to pass the <b>SKGT</b> site security test and retrieve the needed information.]]></string>
     <string name="app_internet_or_info_error">No information is found at the moment. Please check your Internet connection or try again later.</string>
+    <string name="app_loading_current_location" formatted="false"><![CDATA[Localize the current location...]]></string>
+    <string name="app_loading_closest_station" formatted="false"><![CDATA[Localize the current location and find the closest station near it...]]></string>
     <string name="app_location_modules_error">Please turn on at least one of the device\'s modules (Network, WiFi or GPS) to detect your current location.</string>
-    <string name="app_location_timeout_error">Searching for the current location took too long. Please try again.</string>
-    <string name="app_location_timeout_map_error">Searching for the current location took too long. The map will me focused on the Sofia center until you have been localized.</string>
-    <string name="app_location_modules_timeout_error">Searching for the current location took too long or all localization modules are offline (Network, WiFi or GPS). Please try again or turn on any of them.</string>
+    <string name="app_location_timeout_error">Getting the current location took too long. Please try again.</string>
+    <string name="app_location_timeout_map_error">Getting the current location took too long. The map will me focused on the Sofia center until you have been localized.</string>
+    <string name="app_location_modules_timeout_error">Getting the current location took too long or all localization modules are offline (Network, WiFi or GPS). Please try again or turn on any of them.</string>
     <string name="app_coordinates_error">The station could not be visualized (its coordinates are not found in the database).</string>
     <string name="app_no_station_selected_error">Please select a station from the map to be visualized using Google Street View.</string>
     <string name="app_distance" formatted="false">Distance: ~%s</string>
@@ -138,7 +140,6 @@
     <!-- Closest Stations List -->
     <string name="cs_list_title">Closest stations</string>
     <string name="cs_list_search_hint">Search by name or number</string>
-    <string name="cs_list_loading_current_location" formatted="false"><![CDATA[Calculating the current coordinates...]]></string>
     <string name="cs_list_item_empty_list">There are no stations found within 100 km radius for this search. Please try other criteria or be come closer to Sofia.</string>
 
     <!-- Closest Stations Map -->
@@ -352,8 +353,6 @@
     <string name="droid_trans_type_metro">Subway</string>
     <string name="droid_trans_type_metro_line_1">Line 1</string>
     <string name="droid_trans_schedule">Schedule</string>
-    <string name="droid_trans_load_data" formatted="false"><![CDATA[Retrieving the information about the SKGT vehicles...]]></string>
-    <string name="droid_trans_reset_location">Please wait to be located again or find the station you look for.</string>
     <string name="droid_trans_no_info">The information is not enough to retrieve the times for the chosen vehicle. Please try with some of the other search options.</string>
 
     <!-- Navigation Drawer -->

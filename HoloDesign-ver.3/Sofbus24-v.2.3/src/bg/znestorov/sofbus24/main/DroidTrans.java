@@ -10,11 +10,8 @@ import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
 import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
@@ -28,12 +25,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
+import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
 import bg.znestorov.sofbus24.databases.DroidTransDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.droidtrans.DroidTransLoadInfo;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
+import bg.znestorov.sofbus24.entity.RetrieveCurrentLocationTypeEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
@@ -43,6 +43,7 @@ import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.Utils;
@@ -54,6 +55,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Represents the funcionality of the DroidTrans application (not active in the
@@ -68,8 +70,7 @@ import com.actionbarsherlock.view.MenuItem;
  * @version 1.0
  * 
  */
-public class DroidTrans extends SherlockFragmentActivity implements
-		LocationListener {
+public class DroidTrans extends SherlockFragmentActivity {
 
 	private FragmentActivity context;
 	private GlobalEntity globalContext;
@@ -103,14 +104,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	private NavDrawerArrayAdapter mMenuAdapter;
 	private ArrayList<String> navigationItems;
 
-	private LocationManager locationManager;
 	private Location userLocation;
-
-	private static final long MIN_DISTANCE_FOR_UPDATE = 0;
-	private static final long MIN_TIME_FOR_UPDATE = 1000 * 2;
-
-	private static final String GPS_PROVIDER = LocationManager.GPS_PROVIDER;
-	private static final String NETWORK_PROVIDER = LocationManager.NETWORK_PROVIDER;
 
 	private static final String BUNDLE_USER_LOCATION_LAT = "BUNDLE USER LOCATION LAT";
 	private static final String BUNDLE_USER_LOCATION_LON = "BUNDLE USER LOCATION LON";
@@ -125,55 +119,20 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_droidtrans);
 
-		// Get the current activity context and check if this activity is the
-		// home screen
-		context = DroidTrans.this;
-		globalContext = (GlobalEntity) getApplicationContext();
-		droidtransLoadInfo = DroidTransLoadInfo.getInstance(context);
-		stationsDatasource = new StationsDataSource(context);
-		vehiclesDatasource = new VehiclesDataSource(context);
-		droidtransDatasource = new DroidTransDataSource(context);
-		isDroidTransHomeScreen = getIntent().getExtras() != null ? getIntent()
-				.getExtras().getBoolean(BUNDLE_IS_DROID_TRANS_HOME_SCREEN,
-						false) : false;
-
-		ActivityUtils.showHomeActivtyChangedToast(context,
-				getString(R.string.navigation_drawer_home_cars));
-
-		// Get the wheels state
-		if (savedInstanceState == null) {
-			wheelState = new WheelStateEntity();
-		} else {
-			Double latitude = savedInstanceState
-					.getDouble(BUNDLE_USER_LOCATION_LAT);
-			Double longitude = savedInstanceState
-					.getDouble(BUNDLE_USER_LOCATION_LON);
-			if (latitude == -1 || longitude == -1) {
-				userLocation = null;
-			} else {
-				userLocation = new Location("");
-				userLocation.setLatitude(latitude);
-				userLocation.setLongitude(longitude);
-			}
-
-			wheelState = (WheelStateEntity) savedInstanceState
-					.getSerializable(BUNDLE_WHEEL_STATE);
-		}
-
+		initGlobalVariables();
+		initBundleInfo(savedInstanceState);
 		initActionBar();
 		initLayoutFields();
 
 		if (isDroidTransHomeScreen) {
+			initNavigationDrawer();
+
 			if (savedInstanceState == null) {
 				Utils.checkForUpdate(context, UpdateTypeEnum.APP);
 				ActivityTracker.homeScreenUsed(context,
 						"DroidTrans (Home Screen)");
 			}
-
-			initNavigationDrawer();
 		}
-
-		initLocationListener();
 	}
 
 	@Override
@@ -183,16 +142,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		if (globalContext.isHasToRestart()) {
 			context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_RESTART);
 			context.finish();
-		} else if (locationManager != null) {
-			initLocationListener();
 		}
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-
-		removeLocationListener();
 	}
 
 	@Override
@@ -204,7 +154,6 @@ public class DroidTrans extends SherlockFragmentActivity implements
 				userLocation != null ? userLocation.getLatitude() : -1);
 		savedInstanceState.putDouble(BUNDLE_USER_LOCATION_LON,
 				userLocation != null ? userLocation.getLongitude() : -1);
-
 		savedInstanceState.putSerializable(BUNDLE_WHEEL_STATE, wheelState);
 
 		super.onSaveInstanceState(savedInstanceState);
@@ -279,13 +228,7 @@ public class DroidTrans extends SherlockFragmentActivity implements
 
 			return true;
 		case R.id.action_droidtrans_reset:
-			userLocation = null;
-			removeLocationListener();
-			initLocationListener();
-
-			Toast.makeText(context,
-					getString(R.string.droid_trans_reset_location),
-					Toast.LENGTH_LONG).show();
+			refresh();
 
 			return true;
 		default:
@@ -315,74 +258,78 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	}
 
 	/**
+	 * Initialize the global variables (get the current activity context and
+	 * initialize the db datasources)
+	 */
+	private void initGlobalVariables() {
+
+		context = DroidTrans.this;
+		globalContext = (GlobalEntity) getApplicationContext();
+
+		droidtransLoadInfo = DroidTransLoadInfo.getInstance(context);
+		stationsDatasource = new StationsDataSource(context);
+		vehiclesDatasource = new VehiclesDataSource(context);
+		droidtransDatasource = new DroidTransDataSource(context);
+	}
+
+	/**
+	 * Initialize the information from the bundle
+	 * 
+	 * @param savedInstanceState
+	 *            the current bundle
+	 */
+	private void initBundleInfo(Bundle savedInstanceState) {
+
+		Bundle bundle = getIntent().getExtras();
+
+		// Each time check if this is the home screen or not
+		isDroidTransHomeScreen = bundle != null ? bundle.getBoolean(
+				BUNDLE_IS_DROID_TRANS_HOME_SCREEN, false) : false;
+
+		// Show a notification that the home screen is changed (if needed)
+		ActivityUtils.showHomeActivtyChangedToast(context,
+				getString(R.string.navigation_drawer_home_cars));
+
+		// Get the wheels state
+		if (savedInstanceState == null) {
+			LatLng bundleLocation = bundle != null ? (LatLng) bundle
+					.get(Constants.BUNDLE_CLOSEST_STATIONS_LIST) : null;
+
+			if (bundleLocation == null) {
+				userLocation = null;
+			} else {
+				userLocation = new Location("");
+				userLocation.setLatitude(bundleLocation.latitude);
+				userLocation.setLongitude(bundleLocation.longitude);
+			}
+
+			wheelState = new WheelStateEntity();
+		} else {
+			Double latitude = savedInstanceState
+					.getDouble(BUNDLE_USER_LOCATION_LAT);
+			Double longitude = savedInstanceState
+					.getDouble(BUNDLE_USER_LOCATION_LON);
+
+			if (latitude == -1 || longitude == -1) {
+				userLocation = null;
+			} else {
+				userLocation = new Location("");
+				userLocation.setLatitude(latitude);
+				userLocation.setLongitude(longitude);
+			}
+
+			wheelState = (WheelStateEntity) savedInstanceState
+					.getSerializable(BUNDLE_WHEEL_STATE);
+		}
+	}
+
+	/**
 	 * Set up the action bar
 	 */
 	private void initActionBar() {
 		actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(getString(R.string.droid_trans_title));
-	}
-
-	/**
-	 * Get all vehicle types
-	 */
-	private void getVehicleTypes() {
-		vehicleTypes = droidtransLoadInfo.getVehicleTypes();
-	}
-
-	/**
-	 * Get the vehicle numbers for the selected vehicle type
-	 * 
-	 * @param vehicleType
-	 *            the selected vehicle type
-	 */
-	private void getVehicleNumbers(VehicleTypeEnum vehicleType) {
-		vehicleNumbers = droidtransLoadInfo.getVehicleNumbers(vehicleType);
-	}
-
-	/**
-	 * Get the vehicle directions for the selected vehicle type and number
-	 * 
-	 * @param vehicleType
-	 *            the selected vehicle type
-	 * @param vehicleNumber
-	 *            the selected vehicle number
-	 * 
-	 */
-	private void getVehicleDirections(VehicleTypeEnum vehicleType,
-			String vehicleNumber) {
-		droidtransDatasource.open();
-		vehicleDirections = droidtransDatasource.getVehicleDirections(
-				vehicleType, vehicleNumber);
-		droidtransDatasource.close();
-	}
-
-	/**
-	 * Get all stations for the selected vehicle in the desired location
-	 * 
-	 * @param vehicleType
-	 *            the selected vehicle type
-	 * @param vehicleNumber
-	 *            the selected vehicle number
-	 * @param vehicleDirection
-	 *            the desired direction
-	 */
-	private void getStationsList(VehicleTypeEnum vehicleType,
-			String vehicleNumber, Integer vehicleDirection) {
-
-		switch (vehicleType) {
-		case METRO:
-			vehicleStations = MetroLoadStations.getInstance(context)
-					.getMetroDirectionsListFormatted()
-					.get(vehicleDirection - 1);
-			break;
-		default:
-			droidtransDatasource.open();
-			vehicleStations = droidtransDatasource.getVehicleStations(
-					vehicleType, vehicleNumber, vehicleDirection);
-			droidtransDatasource.close();
-			break;
-		}
 	}
 
 	/**
@@ -406,8 +353,148 @@ public class DroidTrans extends SherlockFragmentActivity implements
 
 		updateVehicleWheels();
 		setVehicleWheelsListeners();
-		setVehicleWheelsState(null);
+		setVehicleWheelsState();
 		retrieveVehicleSchedule();
+	}
+
+	/**
+	 * Update all information in the vehicles wheels
+	 */
+	private void updateVehicleWheels() {
+
+		updateVehicleWheelTypes();
+
+		updateVehicleWheel(0);
+		updateVehicleWheel(1);
+		updateVehicleWheel(2);
+	}
+
+	/**
+	 * Update the vehicles wheel type
+	 */
+	private void updateVehicleWheelTypes() {
+
+		getVehicleTypes();
+
+		VehiclesAdapter vehiclesAdapter = new VehiclesAdapter(context,
+				vehicleTypes);
+		vehiclesAdapter.setTextSize(18);
+		vehicleTypesWheel.setViewAdapter(vehiclesAdapter);
+	}
+
+	/**
+	 * Adapter for countries
+	 */
+	private class VehiclesAdapter extends AbstractWheelTextAdapter {
+
+		private ArrayList<VehicleTypeEnum> vehicleTypes;
+		private ArrayList<Integer> vehicleImages;
+
+		/**
+		 * Constructor
+		 */
+		protected VehiclesAdapter(Activity context,
+				ArrayList<VehicleTypeEnum> vehicleTypes) {
+
+			super(context, R.layout.activity_droidtrans_list_item, NO_RESOURCE);
+
+			this.vehicleTypes = new ArrayList<VehicleTypeEnum>(
+					new LinkedHashSet<VehicleTypeEnum>(vehicleTypes));
+			this.vehicleImages = getVehicleImages();
+
+			setItemTextResource(R.id.droidtrans_vehicle_type_text);
+		}
+
+		private ArrayList<Integer> getVehicleImages() {
+
+			ArrayList<Integer> vehicleImages = new ArrayList<Integer>();
+
+			for (int i = 0; i < vehicleTypes.size(); i++) {
+				switch (i) {
+				case 0:
+					vehicleImages.add(R.drawable.ic_droidtrans_bus);
+					break;
+				case 1:
+					vehicleImages.add(R.drawable.ic_droidtrans_trolley);
+					break;
+				case 2:
+					vehicleImages.add(R.drawable.ic_droidtrans_tram);
+					break;
+				default:
+					vehicleImages.add(R.drawable.ic_droidtrans_subway);
+					break;
+				}
+			}
+
+			return vehicleImages;
+		}
+
+		@Override
+		public View getItem(int index, View cachedView, ViewGroup parent) {
+
+			View view = super.getItem(index, cachedView, parent);
+			ImageView img = (ImageView) view
+					.findViewById(R.id.droidtrans_vehicle_type_img);
+			img.setImageResource(vehicleImages.get(index));
+
+			return view;
+		}
+
+		@Override
+		public int getItemsCount() {
+			return vehicleTypes.size();
+		}
+
+		@Override
+		protected CharSequence getItemText(int index) {
+
+			CharSequence vehicleType;
+			switch (vehicleTypes.get(index)) {
+			case BUS:
+				vehicleType = getString(R.string.droid_trans_type_bus);
+				break;
+			case TROLLEY:
+				vehicleType = getString(R.string.droid_trans_type_trolley);
+				break;
+			case TRAM:
+				vehicleType = getString(R.string.droid_trans_type_tram);
+				break;
+			default:
+				vehicleType = getString(R.string.droid_trans_type_metro);
+				break;
+			}
+
+			return vehicleType;
+		}
+	}
+
+	/**
+	 * Update the wheel view according to its position
+	 * 
+	 * @param wheelViewPosition
+	 *            the position of the wheel view<br/>
+	 *            <ul>
+	 *            <li>0 - update vehicle numbers</li>
+	 *            <li>1 - update vehicle directions</li>
+	 *            <li>2 - update vehicle stations</li>
+	 *            </ul>
+	 */
+	private void updateVehicleWheel(int wheelViewPosition) {
+
+		switch (wheelViewPosition) {
+		case 0:
+			updateVehicleWheelNumbers();
+			updateVehicleWheelDirections();
+			updateVehicleWheelStations();
+			break;
+		case 1:
+			updateVehicleWheelDirections();
+			updateVehicleWheelStations();
+			break;
+		default:
+			updateVehicleWheelStations();
+			break;
+		}
 	}
 
 	/**
@@ -463,83 +550,14 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	}
 
 	/**
-	 * Update all information in the vehicles wheels
+	 * Set the state of the wheels (the current items) - in case of a new
+	 * location found change the WheelStateEntity object values
 	 */
-	private void updateVehicleWheels() {
+	private void setVehicleWheelsState() {
 
-		updateVehicleWheelTypes();
-
-		updateVehicleWheel(0);
-		updateVehicleWheel(1);
-		updateVehicleWheel(2);
-	}
-
-	/**
-	 * Update the wheel view according to its position
-	 * 
-	 * @param wheelViewPosition
-	 *            the position of the wheel view<br/>
-	 *            <ul>
-	 *            <li>0 - update vehicle numbers</li>
-	 *            <li>1 - update vehicle directions</li>
-	 *            <li>2 - update vehicle stations</li>
-	 *            </ul>
-	 */
-	private void updateVehicleWheel(int wheelViewPosition) {
-
-		switch (wheelViewPosition) {
-		case 0:
-			updateVehicleWheelNumbers();
-			updateVehicleWheelDirections();
-			updateVehicleWheelStations();
-			break;
-		case 1:
-			updateVehicleWheelDirections();
-			updateVehicleWheelStations();
-			break;
-		default:
-			updateVehicleWheelStations();
-			break;
-		}
-	}
-
-	/**
-	 * Set the state entity values
-	 * 
-	 * @param wheelState
-	 *            the wheel state entity
-	 */
-	private void setWheelStateEntity(WheelStateEntity wheelState) {
-		wheelState.setVehiclesType(vehicleTypesWheel.getCurrentItem());
-		wheelState.setVehiclesNumber(vehicleNumbersWheel.getCurrentItem());
-		wheelState
-				.setVehiclesDirection(vehicleDirectionsWheel.getCurrentItem());
-		wheelState.setStationsNumbers(vehicleStationsWheel.getCurrentItem());
-	}
-
-	/**
-	 * Set the state of the wheels (the current items)
-	 * 
-	 * @param currentLocation
-	 *            the current location of the user
-	 */
-	private void setVehicleWheelsState(Location currentLocation) {
-
-		// In case of a new location found and no wheels state set, change the
-		// WheelStateEntity object values
-		if (currentLocation != null && !wheelState.isWheelStateSet()) {
-
-			// Check if the current state of the wheels is the base position
-			// (all are at the 0 position)
-			if (userLocation == null) {
-				userLocation = currentLocation;
-
-				changeWheelsStateValuesByLocation(currentLocation);
-				changeWheelsStateValues();
-			}
-		} else if (wheelState.isWheelStateSet()) {
-			changeWheelsStateValues();
-			wheelState.reset();
+		if (userLocation != null) {
+			changeWheelsStateEntityValuesByLocation(userLocation);
+			changeWheelsStateItemsValues();
 		}
 	}
 
@@ -549,7 +567,8 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	 * @param currentLocation
 	 *            the current user location
 	 */
-	private void changeWheelsStateValuesByLocation(Location currentLocation) {
+	private void changeWheelsStateEntityValuesByLocation(
+			Location currentLocation) {
 
 		int vehiclesTypeWheelPosition;
 		int vehiclesNumberWheelPosition;
@@ -596,6 +615,18 @@ public class DroidTrans extends SherlockFragmentActivity implements
 			// Just in case when no vehicle is passing through this station
 			// (very rare case)
 		}
+	}
+
+	/**
+	 * In case of a location found or an orientation changes, change the
+	 * WheelStateEntity object values
+	 */
+	private void changeWheelsStateItemsValues() {
+		vehicleTypesWheel.setCurrentItem(wheelState.getVehiclesType());
+		vehicleNumbersWheel.setCurrentItem(wheelState.getVehiclesNumber());
+		vehicleDirectionsWheel
+				.setCurrentItem(wheelState.getVehiclesDirection());
+		vehicleStationsWheel.setCurrentItem(wheelState.getStationsNumbers());
 	}
 
 	/**
@@ -646,31 +677,6 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		}
 
 		return vehicleTypePosition;
-	}
-
-	/**
-	 * In case of a location found or an orientation changes, change the
-	 * WheelStateEntity object values
-	 */
-	private void changeWheelsStateValues() {
-		vehicleTypesWheel.setCurrentItem(wheelState.getVehiclesType());
-		vehicleNumbersWheel.setCurrentItem(wheelState.getVehiclesNumber());
-		vehicleDirectionsWheel
-				.setCurrentItem(wheelState.getVehiclesDirection());
-		vehicleStationsWheel.setCurrentItem(wheelState.getStationsNumbers());
-	}
-
-	/**
-	 * Update the vehicles wheel type
-	 */
-	private void updateVehicleWheelTypes() {
-
-		getVehicleTypes();
-
-		VehiclesAdapter vehiclesAdapter = new VehiclesAdapter(context,
-				vehicleTypes);
-		vehiclesAdapter.setTextSize(18);
-		vehicleTypesWheel.setViewAdapter(vehiclesAdapter);
 	}
 
 	/**
@@ -764,6 +770,68 @@ public class DroidTrans extends SherlockFragmentActivity implements
 		adapter.setTextSize(13);
 		vehicleStationsWheel.setViewAdapter(adapter);
 		vehicleStationsWheel.setCurrentItem(0);
+	}
+
+	/**
+	 * Get all vehicle types
+	 */
+	private void getVehicleTypes() {
+		vehicleTypes = droidtransLoadInfo.getVehicleTypes();
+	}
+
+	/**
+	 * Get the vehicle numbers for the selected vehicle type
+	 * 
+	 * @param vehicleType
+	 *            the selected vehicle type
+	 */
+	private void getVehicleNumbers(VehicleTypeEnum vehicleType) {
+		vehicleNumbers = droidtransLoadInfo.getVehicleNumbers(vehicleType);
+	}
+
+	/**
+	 * Get the vehicle directions for the selected vehicle type and number
+	 * 
+	 * @param vehicleType
+	 *            the selected vehicle type
+	 * @param vehicleNumber
+	 *            the selected vehicle number
+	 * 
+	 */
+	private void getVehicleDirections(VehicleTypeEnum vehicleType,
+			String vehicleNumber) {
+		droidtransDatasource.open();
+		vehicleDirections = droidtransDatasource.getVehicleDirections(
+				vehicleType, vehicleNumber);
+		droidtransDatasource.close();
+	}
+
+	/**
+	 * Get all stations for the selected vehicle in the desired location
+	 * 
+	 * @param vehicleType
+	 *            the selected vehicle type
+	 * @param vehicleNumber
+	 *            the selected vehicle number
+	 * @param vehicleDirection
+	 *            the desired direction
+	 */
+	private void getStationsList(VehicleTypeEnum vehicleType,
+			String vehicleNumber, Integer vehicleDirection) {
+
+		switch (vehicleType) {
+		case METRO:
+			vehicleStations = MetroLoadStations.getInstance(context)
+					.getMetroDirectionsListFormatted()
+					.get(vehicleDirection - 1);
+			break;
+		default:
+			droidtransDatasource.open();
+			vehicleStations = droidtransDatasource.getVehicleStations(
+					vehicleType, vehicleNumber, vehicleDirection);
+			droidtransDatasource.close();
+			break;
+		}
 	}
 
 	/**
@@ -930,163 +998,51 @@ public class DroidTrans extends SherlockFragmentActivity implements
 	}
 
 	/**
-	 * Adapter for countries
+	 * Set the state entity values (used in onSavedInstanceState(...))
+	 * 
+	 * @param wheelState
+	 *            the wheel state entity
 	 */
-	private class VehiclesAdapter extends AbstractWheelTextAdapter {
-
-		private ArrayList<VehicleTypeEnum> vehicleTypes;
-		private ArrayList<Integer> vehicleImages;
-
-		/**
-		 * Constructor
-		 */
-		protected VehiclesAdapter(Activity context,
-				ArrayList<VehicleTypeEnum> vehicleTypes) {
-
-			super(context, R.layout.activity_droidtrans_list_item, NO_RESOURCE);
-
-			this.vehicleTypes = new ArrayList<VehicleTypeEnum>(
-					new LinkedHashSet<VehicleTypeEnum>(vehicleTypes));
-			this.vehicleImages = getVehicleImages();
-
-			setItemTextResource(R.id.droidtrans_vehicle_type_text);
-		}
-
-		private ArrayList<Integer> getVehicleImages() {
-
-			ArrayList<Integer> vehicleImages = new ArrayList<Integer>();
-
-			for (int i = 0; i < vehicleTypes.size(); i++) {
-				switch (i) {
-				case 0:
-					vehicleImages.add(R.drawable.ic_droidtrans_bus);
-					break;
-				case 1:
-					vehicleImages.add(R.drawable.ic_droidtrans_trolley);
-					break;
-				case 2:
-					vehicleImages.add(R.drawable.ic_droidtrans_tram);
-					break;
-				default:
-					vehicleImages.add(R.drawable.ic_droidtrans_subway);
-					break;
-				}
-			}
-
-			return vehicleImages;
-		}
-
-		@Override
-		public View getItem(int index, View cachedView, ViewGroup parent) {
-
-			View view = super.getItem(index, cachedView, parent);
-			ImageView img = (ImageView) view
-					.findViewById(R.id.droidtrans_vehicle_type_img);
-			img.setImageResource(vehicleImages.get(index));
-
-			return view;
-		}
-
-		@Override
-		public int getItemsCount() {
-			return vehicleTypes.size();
-		}
-
-		@Override
-		protected CharSequence getItemText(int index) {
-
-			CharSequence vehicleType;
-			switch (vehicleTypes.get(index)) {
-			case BUS:
-				vehicleType = getString(R.string.droid_trans_type_bus);
-				break;
-			case TROLLEY:
-				vehicleType = getString(R.string.droid_trans_type_trolley);
-				break;
-			case TRAM:
-				vehicleType = getString(R.string.droid_trans_type_tram);
-				break;
-			default:
-				vehicleType = getString(R.string.droid_trans_type_metro);
-				break;
-			}
-
-			return vehicleType;
-		}
+	private void setWheelStateEntity(WheelStateEntity wheelState) {
+		wheelState.setVehiclesType(vehicleTypesWheel.getCurrentItem());
+		wheelState.setVehiclesNumber(vehicleNumbersWheel.getCurrentItem());
+		wheelState
+				.setVehiclesDirection(vehicleDirectionsWheel.getCurrentItem());
+		wheelState.setStationsNumbers(vehicleStationsWheel.getCurrentItem());
 	}
 
 	/**
-	 * Initialize a location listener to find the closest location
+	 * Refresh the DroidTrans activity (start the RetrieveCurrentLocation
+	 * AsyncTask)
 	 */
-	private void initLocationListener() {
+	private void refresh() {
 
-		if (locationManager == null) {
-			locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		}
+		ProgressDialog progressDialog = new ProgressDialog(context);
+		progressDialog
+				.setMessage(getString(R.string.app_loading_closest_station));
 
-		// Check if there is any location manager available
-		if (locationManager != null) {
+		RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
+				context, progressDialog,
+				RetrieveCurrentLocationTypeEnum.DT_REFRESH);
+		retrieveCurrentLocation.execute();
 
-			// Check if NETWORK provider is enabled
-			if (locationManager.isProviderEnabled(NETWORK_PROVIDER)) {
-
-				// Request location updates via the NETWORK provider
-				locationManager.requestLocationUpdates(NETWORK_PROVIDER,
-						MIN_TIME_FOR_UPDATE, MIN_DISTANCE_FOR_UPDATE,
-						DroidTrans.this);
-
-				Location networkLocation = locationManager
-						.getLastKnownLocation(NETWORK_PROVIDER);
-
-				if (networkLocation != null) {
-					setVehicleWheelsState(networkLocation);
-				}
-			}
-
-			// Check if the GPS provider is ebabled
-			if (locationManager.isProviderEnabled(GPS_PROVIDER)) {
-
-				// Request a location update from the GPS provider
-				locationManager.requestLocationUpdates(GPS_PROVIDER,
-						MIN_TIME_FOR_UPDATE, MIN_DISTANCE_FOR_UPDATE, this);
-
-				Location gpsLocation = locationManager
-						.getLastKnownLocation(GPS_PROVIDER);
-				if (gpsLocation != null) {
-					setVehicleWheelsState(gpsLocation);
-				}
-			}
-		}
-	}
-
-	@Override
-	public void onLocationChanged(Location location) {
-		setVehicleWheelsState(location);
-	}
-
-	@Override
-	public void onProviderDisabled(String provider) {
-	}
-
-	@Override
-	public void onProviderEnabled(String provider) {
-	}
-
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
+		RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
+				retrieveCurrentLocation,
+				RetrieveCurrentLocationTimeout.TIMEOUT_DT);
+		(new Thread(retrieveCurrentLocationTimeout)).start();
 	}
 
 	/**
-	 * Remove the location listener
+	 * Refresh the DroidTrans activity information (called from
+	 * RetrieveCurrentLocation AsyncTask)
+	 * 
+	 * @param currentLocation
+	 *            the current user location
 	 */
-	private void removeLocationListener() {
+	public void refreshDroidTransActivity(Location currentLocation) {
 
-		if (locationManager != null) {
-			try {
-				locationManager.removeUpdates(this);
-			} catch (Exception e) {
-			}
-		}
+		userLocation = currentLocation;
+		setVehicleWheelsState();
 	}
 
 }

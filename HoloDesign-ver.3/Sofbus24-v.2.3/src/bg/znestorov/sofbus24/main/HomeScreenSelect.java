@@ -466,19 +466,6 @@ public class HomeScreenSelect extends SherlockFragmentActivity implements
 	}
 
 	/**
-	 * Start the DroidTrans activity
-	 */
-	private void startDroidTrans() {
-		Bundle bundle = new Bundle();
-		bundle.putBoolean(DroidTrans.BUNDLE_IS_DROID_TRANS_HOME_SCREEN, true);
-
-		Intent droidTransIntent = new Intent(context, DroidTrans.class);
-		droidTransIntent.putExtras(bundle);
-		startActivityForResult(droidTransIntent,
-				REQUEST_CODE_HOME_SCREEN_SELECT);
-	}
-
-	/**
 	 * Actions after the AsyncTask is finished
 	 */
 	public void startHomeScreen() {
@@ -502,7 +489,8 @@ public class HomeScreenSelect extends SherlockFragmentActivity implements
 					getSupportFragmentManager(), true);
 			break;
 		case 2:
-			startDroidTrans();
+			ActivityUtils.startDroidTrans(context, getSupportFragmentManager(),
+					true);
 			break;
 		}
 	}

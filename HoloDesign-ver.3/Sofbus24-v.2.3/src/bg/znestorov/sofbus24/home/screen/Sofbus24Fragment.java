@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import bg.znestorov.sofbus24.droidtrans.DroidTransLoadActivity;
 import bg.znestorov.sofbus24.entity.AppThemeEnum;
 import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
@@ -149,7 +148,8 @@ public class Sofbus24Fragment extends SherlockFragment implements
 
 		switch (item.getItemId()) {
 		case R.id.action_droidtrans:
-			new DroidTransLoadActivity(context).execute();
+			ActivityUtils.startDroidTrans(context, getChildFragmentManager(),
+					false);
 
 			return true;
 		case R.id.action_closest_stations_map:

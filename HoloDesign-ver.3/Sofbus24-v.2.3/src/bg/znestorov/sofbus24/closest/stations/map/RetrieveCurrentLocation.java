@@ -13,9 +13,13 @@ import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
+import bg.znestorov.sofbus24.entity.RetrieveCurrentLocationTypeEnum;
 import bg.znestorov.sofbus24.main.ClosestStationsList;
 import bg.znestorov.sofbus24.main.ClosestStationsListDialog;
 import bg.znestorov.sofbus24.main.ClosestStationsMap;
+import bg.znestorov.sofbus24.main.DroidTrans;
+import bg.znestorov.sofbus24.main.DroidTransDialog;
+import bg.znestorov.sofbus24.main.HomeScreenSelect;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -34,8 +38,8 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	private FragmentActivity context;
 	private GlobalEntity globalContext;
 
-	private boolean isClosestStationsList;
 	private ProgressDialog progressDialog;
+	private RetrieveCurrentLocationTypeEnum retrieveCurrentLocationType;
 
 	// Default latitude and longitude
 	private double latitude = 0.0;
@@ -59,17 +63,20 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	private static final long MIN_TIME_BETWEEN_UPDATES = 1000 * 2;
 
 	public RetrieveCurrentLocation(FragmentActivity context,
-			boolean isClosestStationsList, ProgressDialog progressDialog) {
+			ProgressDialog progressDialog,
+			RetrieveCurrentLocationTypeEnum retrieveCurrentLocationType) {
+
 		this.context = context;
 		this.globalContext = (GlobalEntity) context.getApplicationContext();
 
 		this.progressDialog = progressDialog;
-		this.isClosestStationsList = isClosestStationsList;
+		this.retrieveCurrentLocationType = retrieveCurrentLocationType;
 	}
 
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
+		createLoadingView();
 
 		String locationProviders = Settings.Secure.getString(
 				context.getContentResolver(),
@@ -87,8 +94,6 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 		} catch (Exception e) {
 			isAnyProviderEabled = false;
 		}
-
-		createLoadingView();
 	}
 
 	@Override
@@ -111,7 +116,8 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 				cancel(true);
 			}
 
-			// If the async task is cancelled stop the loop
+			// If the async task is cancelled stop the loop (this is needed
+			// because of the RetrieveCurrentLocationTimeout async)
 			if (isCancelled()) {
 				break;
 			}
@@ -132,54 +138,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	protected void onCancelled() {
 		super.onCancelled();
 
-		Location lastKnownLocation = null;
-		if (locationManager != null) {
-			lastKnownLocation = locationManager
-					.getLastKnownLocation(GPS_PROVIDER) == null ? locationManager
-					.getLastKnownLocation(NETWORK_PROVIDER) == null ? null
-					: locationManager.getLastKnownLocation(NETWORK_PROVIDER)
-					: locationManager.getLastKnownLocation(GPS_PROVIDER);
-		}
-
-		// Check if there is any last known location
-		if (lastKnownLocation == null) {
-			// Check if the ClosestStationsList was refreshed
-			if (isClosestStationsList && progressDialog == null) {
-				((ClosestStationsList) context)
-						.refreshClosestStationsListFragmentFailed();
-
-				showLongToast(context
-						.getString(R.string.app_location_modules_timeout_error));
-			} else {
-				if (!isAnyProviderEabled) {
-					showLongToast(context
-							.getString(R.string.app_location_modules_error));
-				} else {
-					if (progressDialog.isShowing()) {
-						// Show different message in case of ClosestStationsList
-						// and ClosestStationsMap
-						if (isClosestStationsList) {
-							showLongToast(context
-									.getString(R.string.app_location_timeout_error));
-						} else {
-							showLongToast(context
-									.getString(R.string.app_location_timeout_map_error));
-						}
-					}
-				}
-
-				// In case of ClosestStationsMap - start the map fragment and it
-				// will take care for the rest (just inform the user)
-				if (progressDialog.isShowing() && !isClosestStationsList) {
-					Intent closestStationsMapIntent = new Intent(context,
-							ClosestStationsMap.class);
-					context.startActivity(closestStationsMapIntent);
-				}
-			}
-		} else {
-			actionsOnLocationFound();
-		}
-
+		actionsOnCancelled();
 		dismissLoadingView();
 	}
 
@@ -319,38 +278,28 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	 * Actions when any location is found
 	 */
 	private void actionsOnLocationFound() {
+
 		// Check if the location is available
 		if (isLocationServicesAvailable) {
 
 			// Check which activity called the async task
-			if (isClosestStationsList) {
-
-				// Check what have to be done - start new activity or update
-				// fragment
-				if (progressDialog != null) {
-					LatLng currentLocation = new LatLng(this.latitude,
-							this.longitude);
-
-					Intent closestStationsListIntent;
-					if (globalContext.isPhoneDevice()) {
-						closestStationsListIntent = new Intent(context,
-								ClosestStationsList.class);
-					} else {
-						closestStationsListIntent = new Intent(context,
-								ClosestStationsListDialog.class);
-					}
-					closestStationsListIntent.putExtra(
-							Constants.BUNDLE_CLOSEST_STATIONS_LIST,
-							currentLocation);
-					context.startActivity(closestStationsListIntent);
-				} else {
-					((ClosestStationsList) context)
-							.refreshClosestStationsListFragment();
-				}
-			} else {
-				Intent closestStationsMapIntent = new Intent(context,
-						ClosestStationsMap.class);
-				context.startActivity(closestStationsMapIntent);
+			switch (retrieveCurrentLocationType) {
+			case CS_MAP_INIT:
+				startClosestStationsMapActivity();
+				break;
+			case CS_LIST_INIT:
+				startClosestStationsListActivity();
+				break;
+			case CS_LIST_REFRESH:
+				refreshClosestStationsListActivity();
+				break;
+			case DT_HOME_SCREEN:
+			case DT_INIT:
+				startDroidTransActivity();
+				break;
+			default:
+				refreshDroidTransActivity();
+				break;
 			}
 		} else {
 			try {
@@ -366,6 +315,176 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 				 * java.lang.IllegalStateException: Activity has been destroyed
 				 */
 			}
+		}
+	}
+
+	/**
+	 * Start the ClosestStationsMap activity with all needed information
+	 */
+	private void startClosestStationsMapActivity() {
+		Intent closestStationsMapIntent = new Intent(context,
+				ClosestStationsMap.class);
+		context.startActivity(closestStationsMapIntent);
+	}
+
+	/**
+	 * Start the ClosestStationsList activity with all needed information
+	 */
+	private void startClosestStationsListActivity() {
+
+		LatLng currentLocation = new LatLng(this.latitude, this.longitude);
+
+		Intent closestStationsListIntent;
+		if (globalContext.isPhoneDevice()) {
+			closestStationsListIntent = new Intent(context,
+					ClosestStationsList.class);
+		} else {
+			closestStationsListIntent = new Intent(context,
+					ClosestStationsListDialog.class);
+		}
+
+		closestStationsListIntent.putExtra(
+				Constants.BUNDLE_CLOSEST_STATIONS_LIST, currentLocation);
+		context.startActivity(closestStationsListIntent);
+	}
+
+	/**
+	 * Refresh the ClosestStationsList activity
+	 */
+	private void refreshClosestStationsListActivity() {
+		((ClosestStationsList) context).refreshClosestStationsListFragment();
+	}
+
+	/**
+	 * Start the DroidTrans activity with all needed information
+	 */
+	private void startDroidTransActivity() {
+
+		LatLng currentLocation = new LatLng(this.latitude, this.longitude);
+
+		Intent droidTransIntent;
+		if (globalContext.isPhoneDevice()) {
+			droidTransIntent = new Intent(context, DroidTrans.class);
+		} else {
+			droidTransIntent = new Intent(context, DroidTransDialog.class);
+		}
+
+		switch (retrieveCurrentLocationType) {
+		case DT_HOME_SCREEN:
+			droidTransIntent.putExtra(
+					DroidTrans.BUNDLE_IS_DROID_TRANS_HOME_SCREEN, true);
+			droidTransIntent.putExtra(Constants.BUNDLE_DROID_TRANS,
+					currentLocation);
+
+			context.startActivityForResult(droidTransIntent,
+					HomeScreenSelect.REQUEST_CODE_HOME_SCREEN_SELECT);
+			break;
+		default:
+			droidTransIntent.putExtra(Constants.BUNDLE_DROID_TRANS,
+					currentLocation);
+
+			context.startActivity(droidTransIntent);
+			break;
+		}
+	}
+
+	/**
+	 * Refresh the DroidTrans activity
+	 */
+	private void refreshDroidTransActivity() {
+
+		Location currentLocation;
+		if (latitude != 0.0 && longitude != 0.0) {
+			currentLocation = new Location("");
+			currentLocation.setLatitude(latitude);
+			currentLocation.setLongitude(longitude);
+		} else {
+			currentLocation = null;
+		}
+
+		((DroidTrans) context).refreshDroidTransActivity(currentLocation);
+	}
+
+	/**
+	 * Actions on cancelled the async task
+	 */
+	private void actionsOnCancelled() {
+
+		Location lastKnownLocation = null;
+		if (locationManager != null) {
+			lastKnownLocation = locationManager
+					.getLastKnownLocation(GPS_PROVIDER) == null ? locationManager
+					.getLastKnownLocation(NETWORK_PROVIDER) == null ? null
+					: locationManager.getLastKnownLocation(NETWORK_PROVIDER)
+					: locationManager.getLastKnownLocation(GPS_PROVIDER);
+		}
+
+		// Check if there is any last known location
+		if (lastKnownLocation == null) {
+
+			switch (retrieveCurrentLocationType) {
+			case CS_MAP_INIT:
+				if (!isAnyProviderEabled) {
+					showLongToast(context
+							.getString(R.string.app_location_modules_error));
+				} else if (progressDialog.isShowing()) {
+					showLongToast(context
+							.getString(R.string.app_location_timeout_map_error));
+				}
+
+				// Timeout has interrupted the ClosestStationMap startup, so
+				// just inform the user and start the map fragment (it will take
+				// care for the rest)
+				if (progressDialog.isShowing()) {
+					Intent closestStationsMapIntent = new Intent(context,
+							ClosestStationsMap.class);
+					context.startActivity(closestStationsMapIntent);
+				}
+				break;
+			case CS_LIST_INIT:
+				if (!isAnyProviderEabled) {
+					showLongToast(context
+							.getString(R.string.app_location_modules_error));
+				} else if (progressDialog.isShowing()) {
+					showLongToast(context
+							.getString(R.string.app_location_timeout_error));
+				}
+
+				break;
+			case CS_LIST_REFRESH:
+				((ClosestStationsList) context)
+						.refreshClosestStationsListFragmentFailed();
+				showLongToast(context
+						.getString(R.string.app_location_modules_timeout_error));
+
+				break;
+			case DT_HOME_SCREEN:
+				startDroidTransActivity();
+				break;
+			case DT_INIT:
+				if (!isAnyProviderEabled) {
+					showLongToast(context
+							.getString(R.string.app_location_modules_error));
+				}
+
+				// Timeout has interrupted the DroidTrans startup, so just
+				// inform the user and start the DroidTrans activity
+				if (progressDialog.isShowing()) {
+					startDroidTransActivity();
+				}
+
+				break;
+			default:
+				if (progressDialog.isShowing()) {
+					showLongToast(context
+							.getString(R.string.app_location_modules_timeout_error));
+					refreshDroidTransActivity();
+				}
+
+				break;
+			}
+		} else {
+			actionsOnLocationFound();
 		}
 	}
 

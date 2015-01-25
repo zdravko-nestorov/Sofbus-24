@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import bg.znestorov.sofbus24.closest.stations.list.ClosestStationsListFragment;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
+import bg.znestorov.sofbus24.entity.RetrieveCurrentLocationTypeEnum;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.ThemeChange;
@@ -109,7 +110,7 @@ public class ClosestStationsList extends SherlockFragmentActivity {
 
 		// Retrieve the current position
 		RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-				context, true, null);
+				context, null, RetrieveCurrentLocationTypeEnum.CS_LIST_REFRESH);
 		retrieveCurrentLocation.execute();
 	}
 

@@ -15,6 +15,7 @@ import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.LoadTypeEnum;
+import bg.znestorov.sofbus24.entity.RetrieveCurrentLocationTypeEnum;
 import bg.znestorov.sofbus24.main.About;
 import bg.znestorov.sofbus24.main.AboutDialog;
 import bg.znestorov.sofbus24.main.History;
@@ -224,13 +225,15 @@ public class NavDrawerHelper {
 	 */
 	private void startClosestStationsList(ProgressDialog progressDialog) {
 		progressDialog.setMessage(String.format(context
-				.getString(R.string.cs_list_loading_current_location)));
+				.getString(R.string.app_loading_current_location)));
 
 		RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-				context, true, progressDialog);
+				context, progressDialog,
+				RetrieveCurrentLocationTypeEnum.CS_LIST_INIT);
 		retrieveCurrentLocation.execute();
 		RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
-				retrieveCurrentLocation);
+				retrieveCurrentLocation,
+				RetrieveCurrentLocationTimeout.TIMEOUT_CS_LIST);
 		(new Thread(retrieveCurrentLocationTimeout)).start();
 	}
 
