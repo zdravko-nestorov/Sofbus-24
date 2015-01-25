@@ -424,60 +424,48 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 			switch (retrieveCurrentLocationType) {
 			case CS_MAP_INIT:
-				if (!isAnyProviderEabled) {
-					showLongToast(context
-							.getString(R.string.app_location_modules_error));
-				} else if (progressDialog.isShowing()) {
-					showLongToast(context
-							.getString(R.string.app_location_timeout_map_error));
-				}
-
-				// Timeout has interrupted the ClosestStationMap startup, so
-				// just inform the user and start the map fragment (it will take
-				// care for the rest)
 				if (progressDialog.isShowing()) {
+					showLocationMapErrorToast();
+
 					Intent closestStationsMapIntent = new Intent(context,
 							ClosestStationsMap.class);
 					context.startActivity(closestStationsMapIntent);
 				}
+
 				break;
 			case CS_LIST_INIT:
-				if (!isAnyProviderEabled) {
-					showLongToast(context
-							.getString(R.string.app_location_modules_error));
-				} else if (progressDialog.isShowing()) {
-					showLongToast(context
-							.getString(R.string.app_location_timeout_error));
+				if (progressDialog.isShowing()) {
+					showLocationErrorToast();
 				}
 
 				break;
 			case CS_LIST_REFRESH:
-				((ClosestStationsList) context)
-						.refreshClosestStationsListFragmentFailed();
 				showLongToast(context
 						.getString(R.string.app_location_modules_timeout_error));
+
+				((ClosestStationsList) context)
+						.refreshClosestStationsListFragmentFailed();
 
 				break;
 			case DT_HOME_SCREEN:
 				startDroidTransActivity();
+
 				break;
 			case DT_INIT:
-				if (!isAnyProviderEabled) {
-					showLongToast(context
-							.getString(R.string.app_location_modules_error));
-				}
-
-				// Timeout has interrupted the DroidTrans startup, so just
-				// inform the user and start the DroidTrans activity
 				if (progressDialog.isShowing()) {
+					showNearestStationErrorToast();
 					startDroidTransActivity();
 				}
 
 				break;
 			default:
+
+				// We should check if the progress dialog is showing, because
+				// the refresh can be stopped
 				if (progressDialog.isShowing()) {
 					showLongToast(context
-							.getString(R.string.app_location_modules_timeout_error));
+							.getString(R.string.app_nearest_station_modules_timeout_error));
+
 					refreshDroidTransActivity();
 				}
 
@@ -485,6 +473,48 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 			}
 		} else {
 			actionsOnLocationFound();
+		}
+	}
+
+	/**
+	 * Show location map modules/timeout error toast
+	 */
+	private void showLocationMapErrorToast() {
+
+		if (!isAnyProviderEabled) {
+			showLongToast(context
+					.getString(R.string.app_location_modules_error));
+		} else {
+			showLongToast(context
+					.getString(R.string.app_location_timeout_map_error));
+		}
+	}
+
+	/**
+	 * Show location modules/timeout error toast
+	 */
+	private void showLocationErrorToast() {
+
+		if (!isAnyProviderEabled) {
+			showLongToast(context
+					.getString(R.string.app_location_modules_error));
+		} else {
+			showLongToast(context
+					.getString(R.string.app_location_timeout_error));
+		}
+	}
+
+	/**
+	 * Show nearest station modules/timeout error toast
+	 */
+	private void showNearestStationErrorToast() {
+
+		if (!isAnyProviderEabled) {
+			showLongToast(context
+					.getString(R.string.app_nearest_station_modules_error));
+		} else {
+			showLongToast(context
+					.getString(R.string.app_nearest_station_timeout_error));
 		}
 	}
 

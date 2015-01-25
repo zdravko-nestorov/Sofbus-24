@@ -18,8 +18,8 @@ public class RetrieveCurrentLocationTimeout implements Runnable {
 
 	public static final Integer TIMEOUT_CS_MAP_INIT = 6000;
 	public static final Integer TIMEOUT_CS_LIST = 6000;
-	public static final Integer TIMEOUT_DT_HOME_SCREEN = 1750;
-	public static final Integer TIMEOUT_DT = 3000;
+	public static final Integer TIMEOUT_DT_HOME_SCREEN = 2000;
+	public static final Integer TIMEOUT_DT = 4000;
 
 	public RetrieveCurrentLocationTimeout(
 			AsyncTask<Void, Void, Void> retrieveCurrentLocation, Integer timeout) {
