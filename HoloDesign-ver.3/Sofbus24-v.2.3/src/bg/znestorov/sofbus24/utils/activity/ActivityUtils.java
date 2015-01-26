@@ -39,13 +39,16 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -607,28 +610,13 @@ public class ActivityUtils {
 	 *            the activity
 	 * @param isInvisible
 	 *            mark if the activity will be invisible or not
-	 * @param shouldAddTouchFlags
-	 *            mark if the dialog activity should process its own touch logic
 	 */
-	public static void showAsPopup(Activity activity, boolean isInvisible,
-			boolean shouldAddTouchFlags) {
+	public static void showAsPopup(Activity activity, boolean isInvisible) {
 		activity.requestWindowFeature(Window.FEATURE_ACTION_BAR);
 
 		activity.getWindow().setFlags(
 				WindowManager.LayoutParams.FLAG_DIM_BEHIND,
 				WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
-		if (shouldAddTouchFlags) {
-
-			// Make us non-modal, so that others can receive touch events.
-			activity.getWindow().setFlags(LayoutParams.FLAG_NOT_TOUCH_MODAL,
-					LayoutParams.FLAG_NOT_TOUCH_MODAL);
-
-			// Notify us that it happened.
-			activity.getWindow().setFlags(
-					LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-					LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
-		}
 
 		Display display = activity.getWindowManager().getDefaultDisplay();
 		DisplayMetrics metrics = new DisplayMetrics();
@@ -659,6 +647,43 @@ public class ActivityUtils {
 
 		activity.getWindow().setAttributes(
 				(android.view.WindowManager.LayoutParams) params);
+	}
+
+	/**
+	 * Set finish on touch outside to be activated only on pre Honecomb devices
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param finish
+	 *            if the activity has to be finished
+	 */
+	public static void setFinishOnTouchOutside(Activity context, boolean finish) {
+
+		int sdkVersion = Build.VERSION.SDK_INT;
+		if (sdkVersion >= Build.VERSION_CODES.HONEYCOMB) {
+			context.setFinishOnTouchOutside(true);
+		}
+	}
+
+	/**
+	 * Check where the touch event is triggered
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param event
+	 *            the motion event that was triggered
+	 * @return if the event was out of the window bounds
+	 */
+	public static boolean isOutOfBounds(Activity context, MotionEvent event) {
+
+		final int x = (int) event.getX();
+		final int y = (int) event.getY();
+		final int slop = ViewConfiguration.get(context)
+				.getScaledWindowTouchSlop();
+		final View decorView = context.getWindow().getDecorView();
+		return (x < -slop) || (y < -slop)
+				|| (x > (decorView.getWidth() + slop))
+				|| (y > (decorView.getHeight() + slop));
 	}
 
 	/**
@@ -1006,5 +1031,21 @@ public class ActivityUtils {
 						"UTF-8");
 			}
 		};
+	}
+
+	/**
+	 * Set a transperant backgroun to a WebView
+	 * 
+	 * @param webView
+	 *            the WebView with a default background
+	 */
+	public static void setWebViewTransperantBackground(WebView webView) {
+
+		// TODO: Check on a tablet
+		if (android.os.Build.VERSION.SDK_INT < 16) {
+			webView.setBackgroundColor(0x00000000);
+		} else {
+			webView.setBackgroundColor(Color.argb(1, 0, 0, 0));
+		}
 	}
 }

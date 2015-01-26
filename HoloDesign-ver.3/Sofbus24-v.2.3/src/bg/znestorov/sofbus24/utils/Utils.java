@@ -24,6 +24,8 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
+import android.util.DisplayMetrics;
+import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
@@ -735,7 +737,7 @@ public class Utils {
 	}
 
 	/**
-	 * Check if the device is in landscape mod
+	 * Check if the device is in landscape mode
 	 * 
 	 * @param context
 	 *            the current activity context
@@ -745,6 +747,27 @@ public class Utils {
 
 		int currentOrientation = context.getResources().getConfiguration().orientation;
 		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Check if the device is tablet in landscape mode
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @return if the device is tablet in landscape mode
+	 */
+	public static boolean isTabletInLandscapeMode(Activity context) {
+
+		GlobalEntity globalContext = (GlobalEntity) context
+				.getApplicationContext();
+		int currentOrientation = context.getResources().getConfiguration().orientation;
+
+		if (!globalContext.isPhoneDevice()
+				&& currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
 			return true;
 		} else {
 			return false;
@@ -1037,5 +1060,28 @@ public class Utils {
 				o2);
 
 		return b;
+	}
+
+	/**
+	 * Get the size of the screen in inches
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @return the screen size in inches
+	 */
+	public static double getScreenSizeInInches(Activity context) {
+
+		DisplayMetrics dm = new DisplayMetrics();
+		context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int width = dm.widthPixels;
+		int height = dm.heightPixels;
+		int dens = dm.densityDpi;
+		double wi = (double) width / (double) dens;
+		double hi = (double) height / (double) dens;
+		double x = Math.pow(wi, 2);
+		double y = Math.pow(hi, 2);
+		double screenInches = Math.sqrt(x + y);
+
+		return screenInches;
 	}
 }

@@ -3,7 +3,6 @@ package bg.znestorov.sofbus24.main;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.WebView;
@@ -142,13 +141,6 @@ public class RouteChangesNews extends SherlockFragmentActivity {
 		// Load the data into the web view container
 		routeChangesWebView.loadData(routeChanges.getHtmlResponse(),
 				"text/html; charset=utf-8", "UTF-8");
-
-		// TODO: Check on a tablet
-		if (android.os.Build.VERSION.SDK_INT < 16) {
-			routeChangesWebView.setBackgroundColor(0x00000000);
-		} else {
-			routeChangesWebView.setBackgroundColor(Color.argb(1, 0, 0, 0));
-		}
 	}
 
 }

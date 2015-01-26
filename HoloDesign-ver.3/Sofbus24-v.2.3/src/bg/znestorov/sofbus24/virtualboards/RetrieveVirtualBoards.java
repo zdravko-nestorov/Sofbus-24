@@ -53,7 +53,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
@@ -1188,17 +1187,12 @@ public class RetrieveVirtualBoards {
 				((VirtualBoardsFragment) callerInstance).setAdapterViaSearch(
 						stationsList, null);
 
-				// Show a toast with the selected station
-				Toast.makeText(
-						context,
-						String.format(vbTimeStation.getName() + " (%s)",
-								vbTimeStation.getNumber()), Toast.LENGTH_SHORT)
-						.show();
-
 				// If removes the break will directly open the VirtualBoards,
 				// because only one station is found
 				break;
 			default:
+
+				// Start the VirtualBoards activity
 				Intent vbTimeIntent;
 				if (globalContext.isPhoneDevice()) {
 					vbTimeIntent = new Intent(context, VirtualBoardsTime.class);
@@ -1209,6 +1203,7 @@ public class RetrieveVirtualBoards {
 				vbTimeIntent.putExtra(Constants.BUNDLE_VIRTUAL_BOARDS_TIME,
 						vbTimeStation);
 				context.startActivity(vbTimeIntent);
+
 				break;
 			}
 

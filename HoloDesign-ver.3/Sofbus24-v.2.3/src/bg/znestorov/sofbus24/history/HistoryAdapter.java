@@ -197,7 +197,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntity> implements
 			historyType = context.getString(R.string.history_type_tram);
 			break;
 		case BTT:
-			historyType = context.getString(R.string.history_type_btt);
+			historyType = context.getString(R.string.history_type_station);
 			break;
 		default:
 			historyType = context.getString(R.string.history_type_metro);

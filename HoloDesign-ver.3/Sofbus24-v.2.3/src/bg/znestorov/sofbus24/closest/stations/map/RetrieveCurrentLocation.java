@@ -360,7 +360,14 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	 */
 	private void startDroidTransActivity() {
 
-		LatLng currentLocation = new LatLng(this.latitude, this.longitude);
+		LatLng currentLocation = null;
+		if (this.latitude != 0.0 || this.longitude != 0.0) {
+			currentLocation = new LatLng(this.latitude, this.longitude);
+		} else {
+			currentLocation = new LatLng(
+					Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE,
+					Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE);
+		}
 
 		Intent droidTransIntent;
 		if (globalContext.isPhoneDevice()) {
@@ -453,6 +460,8 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 				break;
 			case DT_INIT:
 				if (progressDialog.isShowing()) {
+					showLongToast(context
+							.getString(R.string.app_nearest_station_init_error));
 					startDroidTransActivity();
 				}
 

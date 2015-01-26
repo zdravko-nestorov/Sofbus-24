@@ -29,6 +29,7 @@
     <string name="app_location_modules_error">Please turn on at least one of the device\'s modules (Network, WiFi or GPS) to detect your current location.</string>
     <string name="app_location_timeout_error">Finding the current location took too long. Please try again.</string>
     <string name="app_location_modules_timeout_error">Finding the current location took too long or all localization modules are offline (Network, WiFi or GPS). Please turn on any of them and try again.</string>
+    <string name="app_nearest_station_init_error">Finding the nearest station was unsuccessful. The closest to the center of Sofia will be used by default.</string>
     <string name="app_nearest_station_modules_error">Please turn on at least one of the device\'s modules (Network, WiFi or GPS) to find the closest station near you and try again.</string>
     <string name="app_nearest_station_timeout_error">Finding the nearest station took too long. Please try again.</string>
     <string name="app_location_timeout_map_error">Finding the current location took too long. The map will me focused on the Sofia center until you have been localized.</string>
@@ -336,7 +337,7 @@
     <string name="history_menu_remove_all_toast" formatted="false"><![CDATA[All searches were removed from the <b>History</b> section.]]></string>
     <string name="history_menu_remove_all_empty_toast" formatted="false"><![CDATA[There are no searches registered in the <b>History</b> section.]]></string>
     <string name="history_list_empty_text">There are no searches registered by now or they were already deleted from the <b>History</b> section. The new ones are added automatically when looking for some information.</string>
-    <string name="history_type_btt">Public Transport</string>
+    <string name="history_type_station">Station</string>
     <string name="history_type_metro">Metro</string>
     <string name="history_type_bus">Bus</string>
     <string name="history_type_trolley">Trolley</string>

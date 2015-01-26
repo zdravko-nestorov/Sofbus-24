@@ -32,6 +32,7 @@
     <string name="app_location_modules_error">Моля включете поне едно от устройствата (Network, WiFi или GPS), за да бъде засечено текущото ви местоположение.</string>
     <string name="app_location_timeout_error">Намирането на текущото местоположение продължи твърде дълго. Моля опитайте отново.</string>
     <string name="app_location_modules_timeout_error">Намирането на текущото местоположение продължи твърде дълго или всички локализиращи модули са изключени (Network, WiFi или GPS). Моля включете някой от тях и опитайте отново.</string>
+    <string name="app_nearest_station_init_error">Намирането на най-близката до вас спирка беше неуспешно. По подразбиране ще бъде използвана най-близката до центъра на София.</string>
     <string name="app_nearest_station_modules_error">Моля включете поне едно от устройствата (Network, WiFi или GPS), за да бъде намерена най-близката до вас спирка и опитайте отново.</string>
     <string name="app_nearest_station_timeout_error">Намирането на най-близката до вас спирка продължи твърде дълго. Моля опитайте отново.</string>
     <string name="app_location_timeout_map_error">Намирането на текущото местоположение продължи твърде дълго. Картата ще бъде позиционирана върху центъра на София, докато бъдете локализирани.</string>
@@ -347,7 +348,7 @@
     <string name="history_menu_remove_all_toast" formatted="false"><![CDATA[Всички търсения бяха премахнати от секцията <b>История</b>.]]></string>
     <string name="history_menu_remove_all_empty_toast" formatted="false"><![CDATA[Няма регистрирани търсения до момента в секцията <b>История</b>.]]></string>
     <string name="history_list_empty_text">Няма регистрирани търсения до момента или те са били изтрити от секцията История. Появата на нови става автоматично при търсенето на информация.</string>
-    <string name="history_type_btt">Градски Транспорт</string>
+    <string name="history_type_station">Спирка</string>
     <string name="history_type_metro">Метро</string>
     <string name="history_type_bus">Автобус</string>
     <string name="history_type_trolley">Тролей</string>

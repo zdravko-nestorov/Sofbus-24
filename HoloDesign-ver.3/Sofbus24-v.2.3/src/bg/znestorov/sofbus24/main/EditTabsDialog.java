@@ -8,9 +8,8 @@ public class EditTabsDialog extends EditTabs {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		ActivityUtils.showAsPopup(this, false, true);
+		ActivityUtils.showAsPopup(this, false);
 		super.onCreate(savedInstanceState);
-		this.setFinishOnTouchOutside(true);
 	}
 
 	@Override
@@ -18,8 +17,10 @@ public class EditTabsDialog extends EditTabs {
 
 		// If we've received a touch notification that the user has touched
 		// outside the app, finish the activity.
-		if (MotionEvent.ACTION_OUTSIDE == event.getAction()) {
+		if (event.getAction() == MotionEvent.ACTION_DOWN
+				&& ActivityUtils.isOutOfBounds(this, event)) {
 			super.onBackPressed();
+
 			return true;
 		}
 

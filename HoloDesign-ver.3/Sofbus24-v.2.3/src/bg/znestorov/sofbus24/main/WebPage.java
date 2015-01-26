@@ -1,9 +1,11 @@
 package bg.znestorov.sofbus24.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.RenderPriority;
@@ -31,6 +33,7 @@ import com.actionbarsherlock.view.MenuItem;
  */
 public class WebPage extends SherlockActivity {
 
+	private Activity context;
 	private ActionBar actionBar;
 
 	private WebView webPage;
@@ -53,6 +56,8 @@ public class WebPage extends SherlockActivity {
 
 		LanguageChange.selectLocale(this);
 		setContentView(R.layout.activity_web_page);
+
+		context = WebPage.this;
 
 		// Get the values from the Bundle
 		vehicle = (VehicleEntity) getIntent().getExtras().getSerializable(
@@ -277,6 +282,13 @@ public class WebPage extends SherlockActivity {
 		webPage.getSettings().setSupportZoom(true);
 		webPage.getSettings().setRenderPriority(RenderPriority.HIGH);
 		webPage.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+
+		// If the device is in landscape mode and the size of the screen is 4
+		// inch or more - scale the content to fit the whole screen
+		if (Utils.isInLandscapeMode(context)
+				&& Utils.getScreenSizeInInches(context) >= 4.0) {
+			webPage.setInitialScale(getScale());
+		}
 	}
 
 	/**
@@ -299,7 +311,7 @@ public class WebPage extends SherlockActivity {
 			public void run() {
 				webPage.loadUrl(urlAddress);
 			}
-		}, 50);
+		}, 80);
 	}
 
 	/**
@@ -310,9 +322,10 @@ public class WebPage extends SherlockActivity {
 	 *            the web view container
 	 */
 	private void editSumcSiteCSS(WebView view) {
+
 		view.loadUrl("javascript:document.getElementById(\"wrapper\").setAttribute(\"class\", \"sofbus\");");
 		view.loadUrl("javascript:document.getElementById(\"wrapper\").setAttribute(\"id\", \"sofbus\");");
-		view.loadUrl("javascript:document.getElementById(\"sofbus\").setAttribute(\"style\", \"text-align:left;margin:0 auto;margin-top:5px;padding:0 2px;\");");
+		view.loadUrl("javascript:document.getElementById(\"sofbus\").setAttribute(\"style\", \"text-align:left;margin:0 auto;margin-top:5px;margin-left:9px;padding:0 2px;\");");
 		view.loadUrl("javascript:document.getElementsByClassName(\"tooltip\")[1].setAttribute(\"style\", \"display:none;\");");
 		view.loadUrl("javascript:document.getElementsByClassName(\"footer\")[0].setAttribute(\"style\", \"display:none;\");");
 
@@ -371,5 +384,22 @@ public class WebPage extends SherlockActivity {
 		view.setVisibility(View.VISIBLE);
 		webPageError.setVisibility(View.GONE);
 		progressBar.setVisibility(View.GONE);
+	}
+
+	/**
+	 * Get the needed scale of the webview to fit the width of the window
+	 * 
+	 * @return the scale
+	 */
+	private int getScale() {
+
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		int width = displaymetrics.widthPixels;
+
+		Double scale = new Double(width) / new Double(719);
+		scale = scale * 100d;
+
+		return scale.intValue();
 	}
 }

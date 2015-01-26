@@ -4,7 +4,7 @@
     package="bg.znestorov.sofbus24.main"
     android:installLocation="auto"
     android:versionCode="23"
-    android:versionName="2.3.1" >
+    android:versionName="2.4" >
 
     <!-- Specify the correct minSDK and targetSDK versions. -->
     <uses-sdk
@@ -157,9 +157,6 @@
 
         <!-- WebPage -->
         <activity android:name="bg.znestorov.sofbus24.main.WebPage" />
-        <activity
-            android:name="bg.znestorov.sofbus24.main.WebPageDialog"
-            android:theme="@style/PopupTheme" />
 
         <!-- RouteChanges -->
         <activity android:name="bg.znestorov.sofbus24.main.RouteChanges" />
