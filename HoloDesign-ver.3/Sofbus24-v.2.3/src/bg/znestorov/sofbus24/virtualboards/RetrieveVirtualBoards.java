@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -95,6 +96,14 @@ public class RetrieveVirtualBoards {
 	private FavouritesDataSource favouriteDatasource;
 
 	private boolean isSpecialCase;
+	private String originalSearchedText;
+
+	private static final String NDK_TUNNEL = "Õƒ “”Õ≈À";
+	private static final String NDK_GRAFITTI = "Õƒ √–¿‘»“»";
+
+	private static final Set<String> NDK_GRAFITTI_SET = new LinkedHashSet<String>(
+			Arrays.asList("1139", "Õƒ √–¿‘»“»", "Õƒ √–¿‘»“", "Õƒ √–¿‘»",
+					"Õƒ √–¿‘", "Õƒ √–¿", "Õƒ √–", "Õƒ √", "√–¿‘»“", "√–¿‘»“»"));
 
 	public RetrieveVirtualBoards(Activity context, Object callerInstance,
 			StationEntity station, HtmlRequestCodesEnum htmlRequestCode) {
@@ -1113,9 +1122,29 @@ public class RetrieveVirtualBoards {
 		ProcessVirtualBoards processVirtualBoards = new ProcessVirtualBoards(
 				context, htmlResult);
 
-		// Revert the original station info (if needed) - it should be placed
-		// here (before processing the result), so take effect in all cases
-		revertSpecialCaseFixes(station);
+		/*
+		 * Revert the original station info (if needed) - it should be placed
+		 * here (before processing the result), so take effect in all cases
+		 */
+		revertSpecialCaseFixes(station, true);
+
+		/*
+		 * If it is not a special case, but the searched text matches some of
+		 * the special stations ([1137, 1138 - Õƒ -ÚÛÌÂÎ], [1139 - Õƒ -√‡ÙËÚË])
+		 * and there was no problem with the request, we should add them to the
+		 * result (just change the htmlResultCode to MULTIPLE_RESULTS and after
+		 * that add the stations in the list)
+		 */
+		String formattedSearchedText = getFormattedSearchedText();
+		boolean isSpecialStation = NDK_GRAFITTI.contains(formattedSearchedText)
+				|| NDK_TUNNEL.contains(formattedSearchedText);
+		boolean isSuccessfulRequest = htmlResultCode == HtmlResultCodesEnum.NO_INFORMATION
+				|| htmlResultCode == HtmlResultCodesEnum.SINGLE_RESULT
+				|| htmlResultCode == HtmlResultCodesEnum.MULTIPLE_RESULTS;
+
+		if (!isSpecialCase && isSpecialStation && isSuccessfulRequest) {
+			htmlResultCode = HtmlResultCodesEnum.MULTIPLE_RESULTS;
+		}
 
 		switch (htmlResultCode) {
 		// In case of an error with the result (captcha needed, no Internet or
@@ -1143,7 +1172,7 @@ public class RetrieveVirtualBoards {
 		case SINGLE_RESULT:
 			VirtualBoardsStationEntity vbTimeStation = processVirtualBoards
 					.getVBSingleStationFromHtml();
-			revertSpecialCaseFixes(vbTimeStation);
+			revertSpecialCaseFixes(vbTimeStation, false);
 
 			// Add the search into the history
 			Utils.addStationInHistory(context, vbTimeStation);
@@ -1166,8 +1195,9 @@ public class RetrieveVirtualBoards {
 								vbTimeStation.getNumber()), Toast.LENGTH_SHORT)
 						.show();
 
-				// Important - no break here, because if only one station is
-				// found - directly open the VirtualBoards
+				// If removes the break will directly open the VirtualBoards,
+				// because only one station is found
+				break;
 			default:
 				Intent vbTimeIntent;
 				if (globalContext.isPhoneDevice()) {
@@ -1206,6 +1236,29 @@ public class RetrieveVirtualBoards {
 			default:
 				ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>(
 						stationsMap.values());
+
+				/**
+				 * If it is not a special case, but the searched text matches
+				 * some of the special stations ([1137, 1138 - Õƒ -ÚÛÌÂÎ], [1139
+				 * - Õƒ -√‡ÙËÚË]), add them to the list
+				 */
+				if (!isSpecialCase && isSpecialStation) {
+
+					stationsDatasource.open();
+					if (NDK_GRAFITTI.contains(formattedSearchedText)) {
+						stationsList
+								.add(0, stationsDatasource.getStation(1139));
+					}
+
+					if (NDK_TUNNEL.contains(formattedSearchedText)) {
+						stationsList
+								.add(0, stationsDatasource.getStation(1138));
+						stationsList
+								.add(0, stationsDatasource.getStation(1137));
+					}
+					stationsDatasource.close();
+				}
+
 				((VirtualBoardsFragment) callerInstance).setAdapterViaSearch(
 						stationsList, null);
 
@@ -1228,7 +1281,7 @@ public class RetrieveVirtualBoards {
 
 		// In case a CAPTCHA was required we need to revert all changes made
 		// on the original station values
-		revertSpecialCaseFixes(station);
+		revertSpecialCaseFixes(station, true);
 
 		Spanned progressDialogMsg;
 		switch (htmlRequestCode) {
@@ -1333,7 +1386,8 @@ public class RetrieveVirtualBoards {
 	 *            the station used for searching
 	 */
 	private void makeSpecialCaseFixes(StationEntity station) {
-		String stationNumber = station.getFormattedNumber();
+
+		String stationNumber = getFormattedSearchedText();
 
 		if ("1137".equals(stationNumber)) {
 			isSpecialCase = true;
@@ -1345,7 +1399,8 @@ public class RetrieveVirtualBoards {
 			station.setNumber("0400");
 		}
 
-		if ("1139".equals(stationNumber)) {
+		if (NDK_GRAFITTI_SET.contains(stationNumber)) {
+			originalSearchedText = station.getFormattedNumber();
 			isSpecialCase = true;
 			station.setNumber("0364");
 		}
@@ -1358,10 +1413,15 @@ public class RetrieveVirtualBoards {
 	 * 
 	 * @param station
 	 *            the station used for searching
+	 * @param needNumberChange
+	 *            indicates if the station number should be changed (only in
+	 *            case of [1139 - Õƒ -√‡ÙËÚË])
 	 */
-	private void revertSpecialCaseFixes(StationEntity station) {
+	private void revertSpecialCaseFixes(StationEntity station,
+			boolean needNumberChange) {
 
 		if (isSpecialCase) {
+
 			String stationNumber = station.getFormattedNumber();
 
 			stationsDatasource.open();
@@ -1378,9 +1438,31 @@ public class RetrieveVirtualBoards {
 			if ("0364".equals(stationNumber)) {
 				station.assingStationValues(stationsDatasource.getStation(1139));
 				setCustomField(station);
+
+				if (needNumberChange) {
+					station.setNumber(originalSearchedText);
+				}
 			}
 			stationsDatasource.close();
 		}
+	}
+
+	/**
+	 * Format the searched word by converting it in cyrillic and make it with
+	 * captital letters. This is used in cases of search by word.
+	 * 
+	 * @return the formatted station number
+	 */
+	private String getFormattedSearchedText() {
+
+		String stationNumber = station.getFormattedNumber();
+		stationNumber = Utils.removeSpaces(stationNumber);
+		stationNumber = stationNumber.replace("-", "");
+		stationNumber = stationNumber.toUpperCase();
+		stationNumber = TranslatorLatinToCyrillic.translate(context,
+				stationNumber);
+
+		return stationNumber;
 	}
 
 	/**

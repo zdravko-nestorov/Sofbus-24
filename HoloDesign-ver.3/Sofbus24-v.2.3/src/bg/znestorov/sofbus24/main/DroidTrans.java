@@ -293,7 +293,7 @@ public class DroidTrans extends SherlockFragmentActivity {
 		// Get the wheels state
 		if (savedInstanceState == null) {
 			LatLng bundleLocation = bundle != null ? (LatLng) bundle
-					.get(Constants.BUNDLE_CLOSEST_STATIONS_LIST) : null;
+					.get(Constants.BUNDLE_DROID_TRANS) : null;
 
 			if (bundleLocation == null) {
 				userLocation = null;

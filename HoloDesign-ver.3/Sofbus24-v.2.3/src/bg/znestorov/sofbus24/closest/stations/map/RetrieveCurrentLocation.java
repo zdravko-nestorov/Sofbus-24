@@ -453,7 +453,6 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 				break;
 			case DT_INIT:
 				if (progressDialog.isShowing()) {
-					showNearestStationErrorToast();
 					startDroidTransActivity();
 				}
 
@@ -463,9 +462,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 				// We should check if the progress dialog is showing, because
 				// the refresh can be stopped
 				if (progressDialog.isShowing()) {
-					showLongToast(context
-							.getString(R.string.app_nearest_station_modules_timeout_error));
-
+					showNearestStationErrorToast();
 					refreshDroidTransActivity();
 				}
 

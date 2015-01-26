@@ -99,7 +99,7 @@ public class History extends SherlockListActivity implements
 			finish();
 			return true;
 		case R.id.action_history_top:
-			if (searchesCount > 0) {
+			if (getListView() != null && searchesCount > 0) {
 				getListView().setSelectionFromTop(0, 0);
 			}
 

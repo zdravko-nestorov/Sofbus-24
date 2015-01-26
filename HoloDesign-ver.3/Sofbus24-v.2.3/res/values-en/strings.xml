@@ -29,9 +29,8 @@
     <string name="app_location_modules_error">Please turn on at least one of the device\'s modules (Network, WiFi or GPS) to detect your current location.</string>
     <string name="app_location_timeout_error">Finding the current location took too long. Please try again.</string>
     <string name="app_location_modules_timeout_error">Finding the current location took too long or all localization modules are offline (Network, WiFi or GPS). Please turn on any of them and try again.</string>
-    <string name="app_nearest_station_modules_error">Please turn on at least one of the device\'s modules (Network, WiFi or GPS) to find the closest station near you.</string>
+    <string name="app_nearest_station_modules_error">Please turn on at least one of the device\'s modules (Network, WiFi or GPS) to find the closest station near you and try again.</string>
     <string name="app_nearest_station_timeout_error">Finding the nearest station took too long. Please try again.</string>
-    <string name="app_nearest_station_modules_timeout_error">Finding the nearest station took too long or all localization modules are offline (Network, WiFi or GPS). Please turn on any of them and try again.</string>
     <string name="app_location_timeout_map_error">Finding the current location took too long. The map will me focused on the Sofia center until you have been localized.</string>
     <string name="app_coordinates_error">The station could not be visualized (its coordinates are not found in the database).</string>
     <string name="app_no_station_selected_error">Please select a station from the map to be visualized using Google Street View.</string>
@@ -122,6 +121,7 @@
     <string name="action_web_page_home">Home</string>
     <string name="action_web_page_refresh">Refresh</string>
     <!-- Route Changes -->
+    <string name="action_route_changes_top">Top</string>
     <string name="action_route_changes_refresh">Refresh</string>
     <!-- Route Changes List -->
     <string name="action_route_changes_copy_link">Copy Link</string>
