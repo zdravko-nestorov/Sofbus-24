@@ -285,8 +285,9 @@
     <string name="vb_time_captcha_check" formatted="false"><![CDATA[Проверка на CAPTCHA изображението...]]></string>
     <string name="vb_time_sumc_captcha">Тест за сигурност</string>
     <string name="vb_time_sumc_captcha_msg">Моля въведете символите от изображението (на кирилица или латиница):</string>
-    <string name="vb_time_item_time_of_arrival" formatted="false"><![CDATA[<b><font color="#FF2727">Часове на пристигане: %s</font></b>]]></string>
     <string name="vb_time_item_remaining_time" formatted="false"><![CDATA[<b><font color="#FF2727">Оставащо време: %s</font></b>]]></string>
+    <string name="vb_time_item_time_of_arrival" formatted="false"><![CDATA[<b><font color="#FF2727">Часове на пристигане: %s</font></b>]]></string>
+    <string name="vb_time_item_both" formatted="false"><![CDATA[<b><font color="#FF2727">Времена: %s</font></b>]]></string>
 
     <!-- Schedule Fragment -->
     <string name="sch_search_hint">Търсене по име или номер</string>

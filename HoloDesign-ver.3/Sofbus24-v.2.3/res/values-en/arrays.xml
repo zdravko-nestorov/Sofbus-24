@@ -10,6 +10,7 @@
     <string-array name="timeType">
         <item name="timeRemaining">Remaining time</item>
         <item name="timeArrival">Time of arrival</item>
+        <item name="timeBoth">Both times</item>
     </string-array>
     <string-array name="timeSource">
         <item name="timeSkgt">SKGT site time</item>

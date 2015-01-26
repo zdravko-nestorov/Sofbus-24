@@ -221,6 +221,42 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 	}
 
 	/**
+	 * Create a separated string, using the elements from the list
+	 * 
+	 * @param stationVehicle
+	 *            the station vehicle
+	 * @return a separated string with the both times (times of arrival and
+	 *         remaining time)
+	 */
+	private String getBothTimes(VehicleEntity stationVehicle) {
+
+		ArrayList<String> arrivalTimesList = stationVehicle.getArrivalTimes();
+		String currentTime = Utils.getValueAfterLast(
+				vbTimeStation.getTime(context), ",").trim();
+		StringBuilder bothTimes = new StringBuilder("");
+
+		for (int i = 0; i < arrivalTimesList.size(); i++) {
+
+			String timesOfArrival = arrivalTimesList.get(i);
+			String remainingTime = Utils.getTimeDifference(context,
+					arrivalTimesList.get(i), currentTime);
+
+			bothTimes.append(timesOfArrival).append(" (").append(remainingTime)
+					.append("), ");
+		}
+
+		if (bothTimes.length() > 1) {
+			bothTimes.deleteCharAt(bothTimes.length() - 2).trimToSize();
+		}
+
+		if (bothTimes.length() == 0) {
+			bothTimes.append("---");
+		}
+
+		return bothTimes.toString();
+	}
+
+	/**
 	 * Create the text for the last TextView of the row (containing the times of
 	 * arrival or remaining times)
 	 * 
@@ -236,10 +272,15 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 			rowTimeCaption = Html.fromHtml(String.format(
 					context.getString(R.string.vb_time_item_remaining_time),
 					getRemainingTimes(stationVehicle)));
-		} else {
+		} else if (timeType
+				.equals(Constants.PREFERENCE_DEFAULT_VALUE_TIME_TYPE_ARRIVAL)) {
 			rowTimeCaption = Html.fromHtml(String.format(
 					context.getString(R.string.vb_time_item_time_of_arrival),
 					getArrivalTimes(stationVehicle)));
+		} else {
+			rowTimeCaption = Html.fromHtml(String.format(
+					context.getString(R.string.vb_time_item_both),
+					getBothTimes(stationVehicle)));
 		}
 
 		return rowTimeCaption;

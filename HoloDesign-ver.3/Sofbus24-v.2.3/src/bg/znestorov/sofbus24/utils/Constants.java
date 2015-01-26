@@ -65,6 +65,7 @@ public class Constants {
 	public static final boolean PREFERENCE_DEFAULT_VALUE_FAVOURITES_EXPANDED = false;
 	public static final String PREFERENCE_KEY_TIME_TYPE = "timeType";
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_TYPE = "timeRemaining";
+	public static final String PREFERENCE_DEFAULT_VALUE_TIME_TYPE_ARRIVAL = "timeArrival";
 	public static final String PREFERENCE_KEY_TIME_SOURCE = "timeSource";
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_SOURCE = "timeSkgt";
 	public static final String PREFERENCE_KEY_MARKER_TYPE = "markerType";

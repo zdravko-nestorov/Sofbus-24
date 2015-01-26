@@ -24,10 +24,12 @@
     <string-array name="timeType">
         <item name="timeRemaining">Оставащо време</item>
         <item name="timeArrival">Времена на пристигане</item>
+        <item name="timeBoth">Двете времена</item>
     </string-array>
     <string-array name="timeTypeValues">
         <item name="timeRemaining">timeRemaining</item>
         <item name="timeArrival">timeArrival</item>
+        <item name="timeBoth">timeBoth</item>
     </string-array>
     <string-array name="timeSource">
         <item name="timeSkgt">От сайта на СКГТ</item>
