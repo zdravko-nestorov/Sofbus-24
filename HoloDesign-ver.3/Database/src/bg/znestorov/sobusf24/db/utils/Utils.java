@@ -111,17 +111,17 @@ public class Utils {
 		}
 
 		// Special cases
-		directionName = directionName.replaceAll(" - 1 - ", "-1 - ");
+		directionName = directionName.replaceAll(" - 1 - ", "  1 - ");
 		directionName = directionName.replaceAll(" - 1", " 1");
-		directionName = directionName.replaceAll(" - 2 - ", "-2 - ");
+		directionName = directionName.replaceAll(" - 2 - ", " 2 - ");
 		directionName = directionName.replaceAll(" - 2", " 2");
-		directionName = directionName.replaceAll(" - 3 - ", "-3 - ");
+		directionName = directionName.replaceAll(" - 3 - ", " 3 - ");
 		directionName = directionName.replaceAll(" - 3", " 3");
-		directionName = directionName.replaceAll(" - 4 - ", "-4 - ");
+		directionName = directionName.replaceAll(" - 4 - ", " 4 - ");
 		directionName = directionName.replaceAll(" - 4", " 4");
-		directionName = directionName.replaceAll(" - 5 - ", "-5 - ");
+		directionName = directionName.replaceAll(" - 5 - ", " 5 - ");
 		directionName = directionName.replaceAll(" - 5", " 5");
-		directionName = directionName.replaceAll(" - 8 - ", "-8 - ");
+		directionName = directionName.replaceAll(" - 8 - ", " 8 - ");
 		directionName = directionName.replaceAll(" - 8", " 8");
 		directionName = directionName.replaceAll("6 - ", "6-");
 		directionName = directionName.replaceAll(" - Г", " Г");
@@ -184,12 +184,24 @@ public class Utils {
 		directionName = directionName.replaceAll("АП Малашевци Град Бухово", "АП Малашевци - Град Бухово");
 		directionName = directionName.replaceAll("УМБАЛСМ Пирогов Гара Искър", "УМБАЛСМ Пирогов - Гара Искър");
 		directionName = directionName.replaceAll("ЧИТАЛИЩЕ СВЕТЛИНА Гара Искър", "ЧИТАЛИЩЕ СВЕТЛИНА - Гара Искър");
+		directionName = directionName.replaceAll("кв\\. Княжево Гара София север", "кв\\. Княжево - Гара София (север)");
+		directionName = directionName.replaceAll("АВТОСТАНЦИЯ КНЯЖЕВО - село Мърчаево Толумска махала", "кв. Княжево - с. Мърчаево (Толумска махала)");
 		if ("ж.к. Младост 1".equals(directionName)) {
 			directionName = directionName.replaceAll("ж\\.к\\. Младост 1", "ж\\.к\\. Младост 1 - ж\\.к\\. Люлин 1,2");
 		}
 
 		directionName = directionName.trim().replaceAll("-", " - ");
 		directionName = directionName.trim().replaceAll(" +", " ");
+		
+		// Final adjustments
+		directionName = directionName.replaceAll(" - 1", " 1");
+		directionName = directionName.replaceAll(" - 2", " 2");
+		directionName = directionName.replaceAll(" - 3", " 3");
+		directionName = directionName.replaceAll(" - 4", " 4");
+		directionName = directionName.replaceAll(" - 5", " 5");
+		directionName = directionName.replaceAll(" - 6", " 6");
+		directionName = directionName.replaceAll(" - 7", " 7");
+		directionName = directionName.replaceAll(" - 8", " 8");
 
 		return directionName;
 	}

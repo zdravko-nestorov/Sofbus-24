@@ -50,6 +50,10 @@ public class HtmlResult {
 			direction = "Автостанция Хладилника - НДК";
 		}
 
+		if ("44-Б".equals(number)) {
+			direction = "Автостанция Банкя - кв. Градоман - кв. Михайлово";
+		}
+
 		if ("11-А".equals(number)) {
 			direction = "Площад Сточна гара - ж.к. Дружба 1";
 		}
@@ -105,8 +109,34 @@ public class HtmlResult {
 
 			for (int i = 0; i < stationsList.size(); i++) {
 				Station station = stationsList.get(i);
+
 				vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), station.getNumber(), vt, lid, rid, station.getStop(),
 						station.getDirection()));
+
+				// Add NDK-Tunnel and NDK-Grafitti stations to the list of
+				// vehicles
+				VehicleType vehicleType = vehicle.getType();
+				String vehicleNumber = vehicle.getNumber();
+				String stationNumber = station.getNumber();
+
+				if (vehicleType == VehicleType.TROLLEY
+						&& ("1".equals(vehicleNumber) || "2".equals(vehicleNumber) || "5".equals(vehicleNumber) || "7".equals(vehicleNumber)
+								|| "8".equals(vehicleNumber) || "9".equals(vehicleNumber)) && "0363".equals(stationNumber)) {
+
+					vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1139", vt, lid, rid, station.getStop(), station
+							.getDirection()));
+
+				} else if (vehicleType == VehicleType.TRAM && ("0364".equals(stationNumber) || "0400".equals(stationNumber)) && "6".equals(vehicleNumber)) {
+
+					if ("0364".equals(stationNumber)) {
+						vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1137", vt, lid, rid, station.getStop(), station
+								.getDirection()));
+					} else {
+						vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1138", vt, lid, rid, station.getStop(), station
+								.getDirection()));
+					}
+				}
+
 			}
 		}
 
@@ -121,6 +151,10 @@ public class HtmlResult {
 
 		if (vehicle.getType() == VehicleType.BUS && "10-ТМ".equals(vehicle.getNumber())) {
 			vehicleStationsList.addAll(getSpecialVehicleStations10TM(vehicle));
+		}
+
+		if (vehicle.getType() == VehicleType.BUS && "44-Б".equals(vehicle.getNumber())) {
+			vehicleStationsList.addAll(getSpecialVehicleStations44B(vehicle));
 		}
 
 		if (vehicle.getType() == VehicleType.BUS && "66".equals(vehicle.getNumber())) {
@@ -157,6 +191,16 @@ public class HtmlResult {
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "2655", 2));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0912", 2));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0064", 2));
+
+		return vehicleStationsList;
+	}
+
+	// TODO: Finish the method
+	private static ArrayList<VehicleStation> getSpecialVehicleStations44B(Vehicle vehicle) {
+
+		ArrayList<VehicleStation> vehicleStationsList = new ArrayList<VehicleStation>();
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "", 2));
 
 		return vehicleStationsList;
 	}
