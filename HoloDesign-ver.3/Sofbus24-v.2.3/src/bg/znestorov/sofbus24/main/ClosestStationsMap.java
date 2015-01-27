@@ -154,28 +154,22 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		@Override
 		public boolean onMarkerClick(Marker marker) {
 
-			boolean shouldInfoWindowOpen = markerOptions
-					.equals(Constants.PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS);
-
-			if (shouldInfoWindowOpen) {
-				if (!marker.isInfoWindowShown()) {
-					StationEntity station = markersAndStations.get(marker
-							.getId());
-					selectedMarkerLatLng = new LatLng(
-							Double.parseDouble(station.getLat()),
-							Double.parseDouble(station.getLon()));
-				} else {
-					selectedMarkerLatLng = null;
-				}
-
-				return false;
+			if (!marker.isInfoWindowShown()) {
+				StationEntity station = markersAndStations.get(marker.getId());
+				selectedMarkerLatLng = new LatLng(Double.parseDouble(station
+						.getLat()), Double.parseDouble(station.getLon()));
 			} else {
+				selectedMarkerLatLng = null;
+			}
+
+			if (!markerOptions
+					.equals(Constants.PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS)) {
 				// Get the station associated to this marker
 				StationEntity station = markersAndStations.get(marker.getId());
 				proccessWithStationResult(station);
-
-				return true;
 			}
+
+			return false;
 		}
 	};
 

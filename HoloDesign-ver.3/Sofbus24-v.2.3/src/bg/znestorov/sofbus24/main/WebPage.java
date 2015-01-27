@@ -180,7 +180,6 @@ public class WebPage extends SherlockActivity {
 		webPage.getSettings().setAllowFileAccess(true);
 		webPage.getSettings().setAppCacheEnabled(true);
 		webPage.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-		webPage.requestFocus(View.FOCUS_DOWN);
 
 		// If the device is in landscape mode and the size of the screen is 4
 		// inch or more - scale the content to fit the whole screen
