@@ -100,7 +100,8 @@ public class HtmlResult {
 		logger.info("[VehicleStation] Start parsing the information...");
 
 		ArrayList<VehicleStation> vehicleStationsList = new ArrayList<VehicleStation>();
-		if ("10-“Ã".equals(vehicle.getNumber()) || "66".equals(vehicle.getNumber()) || "103".equals(vehicle.getNumber()) || "11-¿".equals(vehicle.getNumber())) {
+		if ("10-“Ã".equals(vehicle.getNumber()) || "44-¡".equals(vehicle.getNumber()) || "66".equals(vehicle.getNumber()) || "103".equals(vehicle.getNumber())
+				|| "11-¿".equals(vehicle.getNumber())) {
 			vehicleStationsList.addAll(getSpecialVehicleStations(logger, htmlResponse, vehicle, stationsList));
 		} else {
 			String vt = getVehicleStationHiddenParam(htmlResponse, "vt");
@@ -195,12 +196,29 @@ public class HtmlResult {
 		return vehicleStationsList;
 	}
 
-	// TODO: Finish the method
 	private static ArrayList<VehicleStation> getSpecialVehicleStations44B(Vehicle vehicle) {
 
 		ArrayList<VehicleStation> vehicleStationsList = new ArrayList<VehicleStation>();
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "", 1));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0050", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0503", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0957", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1595", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0431", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1390", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1120", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6372", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6374", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6351", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6351", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6375", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6373", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1119", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1389", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0432", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1596", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0958", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0502", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0051", 2));
 
 		return vehicleStationsList;
 	}
