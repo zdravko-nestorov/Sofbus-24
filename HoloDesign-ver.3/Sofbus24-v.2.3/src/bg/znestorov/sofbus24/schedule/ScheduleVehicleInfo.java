@@ -447,63 +447,55 @@ public class ScheduleVehicleInfo {
 		// Direction 1
 		vt.add("1");
 		lid.add("204");
-		rid.add("1874");
+		rid.add("2149");
 		directionsNames
-				.add(translateString("Автостанция Банкя - Кв. Градоман"));
+				.add(translateString("Автостанция Банкя - Края на кв. Михайлово"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
 				"0050", translateString("Автостанция Банкя"), "22111"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
 				"0503", translateString("Центъра Банкя"), "21906"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0965", translateString("Ул. Странджа"), "22054"));
+				"0957", translateString("Община Банкя"), "23621"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1433", translateString("Ул. Родина"), "22045"));
+				"1595", translateString("Ул.Тинтява"), "23607"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1425", translateString("Начало кв. Михайлово"), "22039"));
+				"0431", translateString("В.З.Банкя"), "23644"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1674", translateString("Стопанство Михайлово"), "22033"));
+				"1390", translateString("Ул.Венера"), "23654"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0446", translateString("Ул. Алеко Константинов"), "22027"));
+				"1120", translateString("Начало кв.Градоман"), "23663"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1921", translateString("Ул. Даме Груев"), "22019"));
+				"6372", translateString("Ул.Арбанаси"), "28944"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0870", translateString("Ул. Топлика"), "22015"));
+				"6374", translateString("Ул.Топлика"), "28966"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1992", translateString("Ул. Китката"), "22007"));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0982", translateString("Края на с. Михайлово"), "22006"));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0832", translateString("Кв. Градоман"), "23665"));
+				"6351", translateString("Края на кв.Михайлово"), "22013"));
 		directionsList.add(stationsList);
 
 		// Direction 2
 		vt.add("1");
-		lid.add("145");
-		rid.add("1982");
+		lid.add("204");
+		rid.add("2150");
 		directionsNames
-				.add(translateString("Кв. Градоман - Автостанция Банкя"));
+				.add(translateString("Края на кв. Михайлово - Автостанция Банкя"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0832", translateString("Кв. Градоман"), "23665"));
+				"6351", translateString("Края на кв.Михайлово"), "22013"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"6351", translateString("Края на с. Михайлово"), "22013"));
+				"6375", translateString("Ул.Топлика"), "28919"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1991", translateString("Ул.Китката"), "22008"));
+				"6373", translateString("Ул.Арбанаси"), "28942"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0869", translateString("Ул.Топлика"), "22016"));
+				"1119", translateString("Начало кв.Градоман"), "23664"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1920", translateString("Ул.Даме Груев"), "22020"));
+				"1389", translateString("Ул.Венера"), "23655"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0445", translateString("Ул.Алеко Константинов"), "22028"));
+				"0432", translateString("В.З.Банкя"), "23645"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1673", translateString("Стопанство Михайлово"), "22034"));
+				"1596", translateString("Ул.Тинтява"), "23608"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1424", translateString("Начало кв.Михайлово"), "22040"));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1432", translateString("Ул.Родина"), "22046"));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0964", translateString("Ул.Странджа"), "22055"));
+				"0958", translateString("Община Банкя"), "23459"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
 				"0502", translateString("Центъра Банкя"), "21907"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,

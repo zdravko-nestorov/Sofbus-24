@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -57,12 +58,9 @@ public class WebPage extends SherlockActivity {
 
 		context = WebPage.this;
 
-		// Get the values from the Bundle
-		vehicle = (VehicleEntity) getIntent().getExtras().getSerializable(
-				BUNDLE_VEHICLE);
-
 		// Initialize the ActionBar and the Layout fields
 		initActionBar();
+		initBundleInfo();
 		initLayoutFields();
 		initWebView();
 
@@ -77,6 +75,9 @@ public class WebPage extends SherlockActivity {
 		super.onSaveInstanceState(outState);
 
 		// Save the state of the WebView
+		if (webPage == null) {
+			webPage = (WebView) findViewById(R.id.web_page);
+		}
 		webPage.saveState(outState);
 	}
 
@@ -85,6 +86,9 @@ public class WebPage extends SherlockActivity {
 		super.onRestoreInstanceState(savedInstanceState);
 
 		// Restore the state of the WebView
+		if (webPage == null) {
+			webPage = (WebView) findViewById(R.id.web_page);
+		}
 		webPage.restoreState(savedInstanceState);
 	}
 
@@ -106,13 +110,11 @@ public class WebPage extends SherlockActivity {
 			return true;
 		case R.id.action_web_page_home:
 			setActiobBarTitles();
-			resetViewsState(webPage, webPageLoading, webPageError);
 			loadWebPage(createStationUrlAddress());
 
 			return true;
 		case R.id.action_web_page_refresh:
 			setActiobBarTitles();
-			resetViewsState(webPage, webPageLoading, webPageError);
 			loadWebPage(webPage.getUrl());
 
 			return true;
@@ -140,6 +142,14 @@ public class WebPage extends SherlockActivity {
 	}
 
 	/**
+	 * Get the information from the bundle
+	 */
+	private void initBundleInfo() {
+		vehicle = (VehicleEntity) getIntent().getExtras().getSerializable(
+				BUNDLE_VEHICLE);
+	}
+
+	/**
 	 * Initialize the Layout fields
 	 */
 	@SuppressLint("SetJavaScriptEnabled")
@@ -148,6 +158,77 @@ public class WebPage extends SherlockActivity {
 		webPageLoading = (ProgressBar) findViewById(R.id.web_page_loading);
 		webPageError = findViewById(R.id.web_page_error);
 		webPageErrorText = (TextView) findViewById(R.id.web_page_error_text);
+	}
+
+	/**
+	 * Initialize the web view and set the appropriate options
+	 */
+	@SuppressLint("SetJavaScriptEnabled")
+	private void initWebView() {
+
+		webViewSumcClient = new WebViewSumcClient(webPageLoading, webPageError);
+		webPage.setWebViewClient(webViewSumcClient);
+		webPage.getSettings().setJavaScriptEnabled(true);
+		webPage.getSettings().setBuiltInZoomControls(true);
+		webPage.getSettings().setSupportZoom(true);
+		webPage.getSettings().setRenderPriority(RenderPriority.HIGH);
+
+		webPage.getSettings().setAppCacheMaxSize(1024 * 1024 * 8);
+		String appCachePath = getApplicationContext().getCacheDir()
+				.getAbsolutePath();
+		webPage.getSettings().setAppCachePath(appCachePath);
+		webPage.getSettings().setAllowFileAccess(true);
+		webPage.getSettings().setAppCacheEnabled(true);
+		webPage.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+		webPage.requestFocus(View.FOCUS_DOWN);
+
+		// If the device is in landscape mode and the size of the screen is 4
+		// inch or more - scale the content to fit the whole screen
+		if (Utils.isInLandscapeMode(context)
+				&& Utils.getScreenSizeInInches(context) >= 4.0) {
+			webPage.setInitialScale(getScale());
+		}
+	}
+
+	/**
+	 * Get the needed scale of the webview to fit the width of the window
+	 * 
+	 * @return the needed scale that the web page will fit the screen
+	 */
+	private int getScale() {
+
+		DisplayMetrics displaymetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+		int width = displaymetrics.widthPixels;
+
+		Double scale = Double.valueOf(width) / Double.valueOf(719);
+		scale = scale * 100d;
+
+		return scale.intValue();
+	}
+
+	/**
+	 * The workaround is to wait some milliseconds (in our case 50ms) before
+	 * loading the content:
+	 * http://stackoverflow.com/questions/18112715/webview-must
+	 * -be-loaded-twice-to-load-correctly
+	 * 
+	 * @param urlAddress
+	 *            the url address to load
+	 */
+	private void loadWebPage(final String urlAddress) {
+
+		webViewSumcClient.resetHasError();
+
+		// Load the page after 50ms, so ensure that there is no problem with
+		// the threads
+		webPage.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				resetViewsState(webPage, webPageLoading, webPageError);
+				webPage.loadUrl(urlAddress);
+			}
+		}, 350);
 	}
 
 	/**
@@ -203,6 +284,9 @@ public class WebPage extends SherlockActivity {
 		case TROLLEY:
 		case TRAM:
 			vehicleNumber = vehicle.getNumber();
+			if ("22".equals(vehicleNumber)) {
+				vehicleNumber = "21-22";
+			}
 			break;
 		default:
 			vehicleNumber = "1";
@@ -279,50 +363,6 @@ public class WebPage extends SherlockActivity {
 	}
 
 	/**
-	 * Initialize the web view and set the appropriate options
-	 */
-	@SuppressLint("SetJavaScriptEnabled")
-	private void initWebView() {
-
-		webViewSumcClient = new WebViewSumcClient(webPageLoading, webPageError);
-		webPage.setWebViewClient(webViewSumcClient);
-		webPage.getSettings().setJavaScriptEnabled(true);
-		webPage.getSettings().setBuiltInZoomControls(true);
-		webPage.getSettings().setSupportZoom(true);
-		webPage.getSettings().setRenderPriority(RenderPriority.HIGH);
-
-		// If the device is in landscape mode and the size of the screen is 4
-		// inch or more - scale the content to fit the whole screen
-		if (Utils.isInLandscapeMode(context)
-				&& Utils.getScreenSizeInInches(context) >= 4.0) {
-			webPage.setInitialScale(getScale());
-		}
-	}
-
-	/**
-	 * The workaround is to wait some milliseconds (in our case 50ms) before
-	 * loading the content:
-	 * http://stackoverflow.com/questions/18112715/webview-must
-	 * -be-loaded-twice-to-load-correctly
-	 * 
-	 * @param urlAddress
-	 *            the url address to load
-	 */
-	private void loadWebPage(final String urlAddress) {
-
-		webViewSumcClient.resetHasError();
-
-		// Load the page after 50ms, so ensure that there is no problem with
-		// the threads
-		webPage.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				webPage.loadUrl(urlAddress);
-			}
-		}, 80);
-	}
-
-	/**
 	 * Fix the css of the sumc site page (there are a lot of erros with
 	 * scrolling and not needed images)
 	 * 
@@ -340,6 +380,12 @@ public class WebPage extends SherlockActivity {
 		for (int i = 0; i < 10; i++) {
 			view.loadUrl("javascript:document.getElementsByClassName(\"tooltip preview\")["
 					+ i + "].setAttribute(\"style\", \"display:none;\");");
+		}
+
+		// Removing the help button on older devices (not doing good with
+		// JavaScript)
+		if (Utils.isPreHoneycomb()) {
+			view.loadUrl("javascript:document.getElementsByClassName(\"tooltip\")[0].setAttribute(\"style\", \"display:none;\");");
 		}
 	}
 
@@ -394,20 +440,4 @@ public class WebPage extends SherlockActivity {
 		progressBar.setVisibility(View.GONE);
 	}
 
-	/**
-	 * Get the needed scale of the webview to fit the width of the window
-	 * 
-	 * @return the scale
-	 */
-	private int getScale() {
-
-		DisplayMetrics displaymetrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-		int width = displaymetrics.widthPixels;
-
-		Double scale = Double.valueOf(width) / Double.valueOf(719);
-		scale = scale * 100d;
-
-		return scale.intValue();
-	}
 }
