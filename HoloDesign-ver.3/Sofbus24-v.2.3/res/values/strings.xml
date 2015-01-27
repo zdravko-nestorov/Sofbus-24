@@ -122,7 +122,7 @@
     <string name="action_droidtrans_favourites">Фаворити</string>
     <string name="action_droidtrans_reset">Локализирай</string>
     <!-- WebPage -->
-    <string name="action_web_page_home">Началo</string>
+    <string name="action_web_page_home">Начало</string>
     <string name="action_web_page_refresh">Обнови</string>
     <!-- Route Changes -->
     <string name="action_route_changes_top">Най-отгоре</string>
@@ -394,7 +394,7 @@
 
     <!-- Web Page -->
     <string name="web_page_title">ЦГМ - Разписания</string>
-    <string name="web_page_error" formatted="false"><![CDATA[Страницата, която опитвате да достъпите, може би е временно недостъпна или преместена на друг адрес. Моля <b><i>проверете вашата Интернет връзка</i></b> и/или <b><i>опитайте да презаредете страницата</i></b>.]]></string>
+    <string name="web_page_error" formatted="false"><![CDATA[Страницата, която опитвате да достъпите, може би е временно недостъпна или преместена на друг адрес. Моля <b><i>проверете вашата Интернет връзка</i></b> и/или <b><i>опитайте да презаредите страницата</i></b>.]]></string>
 
     <!-- Route Changes -->
     <string name="route_changes_title">Маршрутни промени</string>

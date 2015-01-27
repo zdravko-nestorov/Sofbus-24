@@ -285,9 +285,13 @@ public class StationRouteMap extends SherlockFragmentActivity {
 				.getDirectionsList().get(metroActiveDirection);
 
 		// Create an object consisted of a set of all points of the route
-		PolylineOptions metroRouteOptionsM1 = new PolylineOptions().width(4)
+		PolylineOptions metroRouteOptionsM1 = new PolylineOptions().width(
+				getResources()
+						.getInteger(R.integer.google_map_route_line_width))
 				.color(Color.RED);
-		PolylineOptions metroRouteOptionsM2 = new PolylineOptions().width(4)
+		PolylineOptions metroRouteOptionsM2 = new PolylineOptions().width(
+				getResources()
+						.getInteger(R.integer.google_map_route_line_width))
 				.color(Color.BLUE);
 
 		// Process all stations of the metro route
@@ -385,8 +389,10 @@ public class StationRouteMap extends SherlockFragmentActivity {
 		final HashMap<String, PublicTransportStationEntity> markersAndStations = new HashMap<String, PublicTransportStationEntity>();
 
 		// Create an object consisted of a set of all points of the route
-		PolylineOptions ptRouteOptions = new PolylineOptions().width(4).color(
-				Color.parseColor("#2B8FD9"));
+		PolylineOptions ptRouteOptions = new PolylineOptions().width(
+				getResources()
+						.getInteger(R.integer.google_map_route_line_width))
+				.color(Color.parseColor("#2B8FD9"));
 
 		// Process all stations of the public transport route
 		for (int i = 0; i < ptDirectionStations.size(); i++) {

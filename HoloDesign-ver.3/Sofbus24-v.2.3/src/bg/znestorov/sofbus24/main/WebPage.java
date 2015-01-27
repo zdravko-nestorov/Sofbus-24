@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.webkit.WebSettings;
 import android.webkit.WebSettings.RenderPriority;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -48,8 +47,6 @@ public class WebPage extends SherlockActivity {
 	private VehicleEntity vehicle;
 	public static final String BUNDLE_VEHICLE = "VEHICLE";
 
-	private static final String WEB_PAGE_CURRENT_URL = "WEB PAGE CURRENT URL";
-
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		ThemeChange.selectTheme(this);
@@ -72,8 +69,6 @@ public class WebPage extends SherlockActivity {
 		// In case of rotation load the currently loaded url address
 		if (savedInstanceState == null) {
 			loadWebPage(createStationUrlAddress());
-		} else {
-			loadWebPage(savedInstanceState.getString(WEB_PAGE_CURRENT_URL));
 		}
 	}
 
@@ -81,7 +76,16 @@ public class WebPage extends SherlockActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putString(WEB_PAGE_CURRENT_URL, webPage.getUrl());
+		// Save the state of the WebView
+		webPage.saveState(outState);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+
+		// Restore the state of the WebView
+		webPage.restoreState(savedInstanceState);
 	}
 
 	@Override
@@ -286,7 +290,6 @@ public class WebPage extends SherlockActivity {
 		webPage.getSettings().setBuiltInZoomControls(true);
 		webPage.getSettings().setSupportZoom(true);
 		webPage.getSettings().setRenderPriority(RenderPriority.HIGH);
-		webPage.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
 		// If the device is in landscape mode and the size of the screen is 4
 		// inch or more - scale the content to fit the whole screen

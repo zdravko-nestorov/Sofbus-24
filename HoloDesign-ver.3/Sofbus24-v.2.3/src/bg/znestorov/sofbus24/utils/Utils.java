@@ -511,17 +511,17 @@ public class Utils {
 		}
 
 		// Special cases
-		directionName = directionName.replaceAll(" - 1 - ", "  1 - ");
+		directionName = directionName.replaceAll(" - 1 - ", "-1 - ");
 		directionName = directionName.replaceAll(" - 1", " 1");
-		directionName = directionName.replaceAll(" - 2 - ", " 2 - ");
+		directionName = directionName.replaceAll(" - 2 - ", "-2 - ");
 		directionName = directionName.replaceAll(" - 2", " 2");
-		directionName = directionName.replaceAll(" - 3 - ", " 3 - ");
+		directionName = directionName.replaceAll(" - 3 - ", "-3 - ");
 		directionName = directionName.replaceAll(" - 3", " 3");
-		directionName = directionName.replaceAll(" - 4 - ", " 4 - ");
+		directionName = directionName.replaceAll(" - 4 - ", "-4 - ");
 		directionName = directionName.replaceAll(" - 4", " 4");
-		directionName = directionName.replaceAll(" - 5 - ", " 5 - ");
+		directionName = directionName.replaceAll(" - 5 - ", "-5 - ");
 		directionName = directionName.replaceAll(" - 5", " 5");
-		directionName = directionName.replaceAll(" - 8 - ", " 8 - ");
+		directionName = directionName.replaceAll(" - 8 - ", "-8 - ");
 		directionName = directionName.replaceAll(" - 8", " 8");
 		directionName = directionName.replaceAll("6 - ", "6-");
 		directionName = directionName.replaceAll(" - Г", " Г");
@@ -618,12 +618,6 @@ public class Utils {
 		directionName = directionName.replaceAll(
 				"ЧИТАЛИЩЕ СВЕТЛИНА Гара Искър",
 				"ЧИТАЛИЩЕ СВЕТЛИНА - Гара Искър");
-		directionName = directionName.replaceAll(
-				"кв\\. Княжево Гара София север",
-				"кв\\. Княжево - Гара София (север)");
-		directionName = directionName.replaceAll(
-				"АВТОСТАНЦИЯ КНЯЖЕВО - село Мърчаево Толумска махала",
-				"кв. Княжево - с. Мърчаево (Толумска махала)");
 		if ("ж.к. Младост 1".equals(directionName)) {
 			directionName = directionName.replaceAll("ж\\.к\\. Младост 1",
 					"ж\\.к\\. Младост 1 - ж\\.к\\. Люлин 1,2");
@@ -631,16 +625,6 @@ public class Utils {
 
 		directionName = directionName.trim().replaceAll("-", " - ");
 		directionName = directionName.trim().replaceAll(" +", " ");
-
-		// Final adjustments
-		directionName = directionName.replaceAll(" - 1", " 1");
-		directionName = directionName.replaceAll(" - 2", " 2");
-		directionName = directionName.replaceAll(" - 3", " 3");
-		directionName = directionName.replaceAll(" - 4", " 4");
-		directionName = directionName.replaceAll(" - 5", " 5");
-		directionName = directionName.replaceAll(" - 6", " 6");
-		directionName = directionName.replaceAll(" - 7", " 7");
-		directionName = directionName.replaceAll(" - 8", " 8");
 
 		return directionName;
 	}
@@ -834,13 +818,36 @@ public class Utils {
 	 */
 	public static boolean haveNetworkConnection(Activity context) {
 
+		boolean haveConnectedWifi = false;
+		boolean haveConnectedMobile = false;
+		boolean haveConnected = false;
+
 		ConnectivityManager connectivityManager = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager
-				.getActiveNetworkInfo();
+		NetworkInfo[] allNetworkInfo = connectivityManager.getAllNetworkInfo();
 
-		return activeNetworkInfo != null
-				&& activeNetworkInfo.isConnectedOrConnecting();
+		for (NetworkInfo networkIngo : allNetworkInfo) {
+			if ("WIFI".equalsIgnoreCase(networkIngo.getTypeName())) {
+				if (networkIngo.isConnected()) {
+					haveConnectedWifi = true;
+				}
+			}
+
+			if ("MOBILE".equalsIgnoreCase(networkIngo.getTypeName())) {
+				if (networkIngo.isConnected()) {
+					haveConnectedMobile = true;
+				}
+			}
+		}
+
+		if (!haveConnectedWifi && !haveConnectedMobile) {
+			NetworkInfo networkInfo = connectivityManager
+					.getActiveNetworkInfo();
+			haveConnected = networkInfo != null && networkInfo.isAvailable()
+					&& networkInfo.isConnected();
+		}
+
+		return haveConnectedWifi || haveConnectedMobile || haveConnected;
 	}
 
 	/**

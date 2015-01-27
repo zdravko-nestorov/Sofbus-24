@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -95,14 +94,9 @@ public class RetrieveVirtualBoards {
 	private FavouritesDataSource favouriteDatasource;
 
 	private boolean isSpecialCase;
-	private String originalSearchedText;
 
 	private static final String NDK_TUNNEL = "Õƒ “”Õ≈À";
 	private static final String NDK_GRAFITTI = "Õƒ √–¿‘»“»";
-
-	private static final Set<String> NDK_GRAFITTI_SET = new LinkedHashSet<String>(
-			Arrays.asList("1139", "Õƒ √–¿‘»“»", "Õƒ √–¿‘»“", "Õƒ √–¿‘»",
-					"Õƒ √–¿‘", "Õƒ √–¿", "Õƒ √–", "Õƒ √", "√–¿‘»“", "√–¿‘»“»"));
 
 	public RetrieveVirtualBoards(Activity context, Object callerInstance,
 			StationEntity station, HtmlRequestCodesEnum htmlRequestCode) {
@@ -1125,7 +1119,7 @@ public class RetrieveVirtualBoards {
 		 * Revert the original station info (if needed) - it should be placed
 		 * here (before processing the result), so take effect in all cases
 		 */
-		revertSpecialCaseFixes(station, true);
+		revertSpecialCaseFixes(station);
 
 		/*
 		 * If it is not a special case, but the searched text matches some of
@@ -1171,7 +1165,7 @@ public class RetrieveVirtualBoards {
 		case SINGLE_RESULT:
 			VirtualBoardsStationEntity vbTimeStation = processVirtualBoards
 					.getVBSingleStationFromHtml();
-			revertSpecialCaseFixes(vbTimeStation, false);
+			revertSpecialCaseFixes(vbTimeStation);
 
 			// Add the search into the history
 			Utils.addStationInHistory(context, vbTimeStation);
@@ -1276,7 +1270,7 @@ public class RetrieveVirtualBoards {
 
 		// In case a CAPTCHA was required we need to revert all changes made
 		// on the original station values
-		revertSpecialCaseFixes(station, true);
+		revertSpecialCaseFixes(station);
 
 		Spanned progressDialogMsg;
 		switch (htmlRequestCode) {
@@ -1394,8 +1388,7 @@ public class RetrieveVirtualBoards {
 			station.setNumber("0400");
 		}
 
-		if (NDK_GRAFITTI_SET.contains(stationNumber)) {
-			originalSearchedText = station.getFormattedNumber();
+		if ("1139".equals(stationNumber)) {
 			isSpecialCase = true;
 			station.setNumber("0364");
 		}
@@ -1408,12 +1401,8 @@ public class RetrieveVirtualBoards {
 	 * 
 	 * @param station
 	 *            the station used for searching
-	 * @param needNumberChange
-	 *            indicates if the station number should be changed (only in
-	 *            case of [1139 - Õƒ -√‡ÙËÚË])
 	 */
-	private void revertSpecialCaseFixes(StationEntity station,
-			boolean needNumberChange) {
+	private void revertSpecialCaseFixes(StationEntity station) {
 
 		if (isSpecialCase) {
 
@@ -1433,10 +1422,6 @@ public class RetrieveVirtualBoards {
 			if ("0364".equals(stationNumber)) {
 				station.assingStationValues(stationsDatasource.getStation(1139));
 				setCustomField(station);
-
-				if (needNumberChange) {
-					station.setNumber(originalSearchedText);
-				}
 			}
 			stationsDatasource.close();
 		}

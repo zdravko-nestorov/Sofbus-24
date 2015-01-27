@@ -383,7 +383,7 @@
 
     <!-- Web Page -->
     <string name="web_page_title">SKGT - Schedules</string>
-    <string name="web_page_error" formatted="false"><![CDATA[The Web page you tried to access might be temporarily down or it may have moved permanently to a new web address.Please <b><i>check to make sure your device has a signal and data connection</i></b> and/or <b><i>reload this web page later.</i></b>]]></string>
+    <string name="web_page_error" formatted="false"><![CDATA[The Web page you tried to access might be temporarily down or it may have moved permanently to a new web address. Please <b><i>check to make sure your device has a signal and data connection</i></b> and/or <b><i>reload this web page later.</i></b>]]></string>
 
     <!-- Route Changes -->
     <string name="route_changes_title">Route Changes</string>
