@@ -307,7 +307,7 @@ public class FavouritesStationAdapter extends ArrayAdapter<StationEntity> {
 		StationEntity station = filteredStations.get(position);
 
 		// Add the Station Name and the Station Number
-		viewHolder.stationName.setText(getStationName(station));
+		viewHolder.stationName.setText(Html.fromHtml(getStationName(station)));
 		viewHolder.stationNumber.setText(getStationNumber(station));
 
 		// Add the image of the station from the street view asynchronously

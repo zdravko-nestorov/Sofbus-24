@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -312,8 +313,8 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 
 		actionBar.setTitle(stationNumber);
 		actionBar.setSubtitle(Utils.getCurrentDateTime());
-		ptStationName.setText(stationName);
-		ptDirection.setText(stationDirection);
+		ptStationName.setText(Html.fromHtml(stationName));
+		ptDirection.setText(Html.fromHtml(stationDirection));
 	}
 
 	/**

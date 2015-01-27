@@ -105,7 +105,7 @@ public class PublicTransportAdapter extends ArrayAdapter<StationEntity>
 		// Fill the data
 		StationEntity station = filteredStations.get(position);
 		viewHolder.addToFavourites.setImageResource(getFavouriteImage(station));
-		viewHolder.stationName.setText(station.getName());
+		viewHolder.stationName.setText(Html.fromHtml(station.getName()));
 		viewHolder.stationNumber.setText(String.format(
 				context.getString(R.string.pt_item_station_number_text),
 				station.getNumber()));

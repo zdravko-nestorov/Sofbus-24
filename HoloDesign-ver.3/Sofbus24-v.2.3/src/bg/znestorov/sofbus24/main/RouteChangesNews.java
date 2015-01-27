@@ -5,7 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.webkit.WebView;
+import android.text.Html;
+import android.widget.TextView;
 import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.RouteChangesEntity;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -27,8 +28,6 @@ public class RouteChangesNews extends SherlockFragmentActivity {
 
 	private Activity context;
 	private ActionBar actionBar;
-
-	private WebView routeChangesWebView;
 
 	private RouteChangesEntity routeChanges;
 	public static final String BUNDLE_ROUTE_CHANGES_NEWS = "ROUTE CHANGES NEWS";
@@ -133,14 +132,22 @@ public class RouteChangesNews extends SherlockFragmentActivity {
 	 * Initialize the Layout fields
 	 */
 	private void initLayoutFields() {
-		routeChangesWebView = (WebView) findViewById(R.id.route_changes_news);
-		routeChangesWebView.getSettings().setJavaScriptEnabled(true);
-		routeChangesWebView.getSettings().setSupportZoom(true);
-		routeChangesWebView.getSettings().setBuiltInZoomControls(true);
 
-		// Load the data into the web view container
-		routeChangesWebView.loadData(routeChanges.getHtmlResponse(),
-				"text/html; charset=utf-8", "UTF-8");
+		TextView routeChangesNewsTitle = (TextView) findViewById(R.id.route_changes_news_title);
+		routeChangesNewsTitle.setText(Html.fromHtml(routeChanges.getTitle()));
+
+		TextView routeChangesNewsValidDate = (TextView) findViewById(R.id.route_changes_news_valid_date);
+		routeChangesNewsValidDate.setText(Html.fromHtml(getString(
+				R.string.route_changes_label_valid_from,
+				routeChanges.getValidFromDate())));
+
+		TextView routeChangesNewsCreationDate = (TextView) findViewById(R.id.route_changes_news_creation_date);
+		routeChangesNewsCreationDate.setText(Html.fromHtml(routeChanges
+				.getCreationDate()));
+
+		TextView routeChangesNewsArticleBody = (TextView) findViewById(R.id.route_changes_news_article_body);
+		routeChangesNewsArticleBody.setText(Html.fromHtml(routeChanges
+				.getArticleBody()));
 	}
 
 }

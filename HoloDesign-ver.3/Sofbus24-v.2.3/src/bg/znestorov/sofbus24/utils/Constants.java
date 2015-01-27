@@ -230,4 +230,7 @@ public class Constants {
 	public static final String ROUTE_CHANGES_REGEX = "<a\\s+href=\\\"routechanges\\S+id=(\\d+)\\\">(.*?)[|](.*?)<\\/a>[^^]*?<span\\s+style=\".*?\">(.*?)<\\/span>";
 	public static final String ROUTE_CHANGES_FROM = "from";
 	public static final String ROUTE_CHANGES_NEWS_URL_ADDRESS = "http://forum.sofiatraffic.bg/forum/routechanges.php?id=%s";
+	public static final String ROUTE_CHANGES_NEWS_REGEX_1 = "<div class=\"txtBlockContent\"><p>([^^]*?)<\\/p><br\\s+\\/>";
+	public static final String ROUTE_CHANGES_NEWS_REGEX_2 = "<div class=\"txtBlockContent\"><p>([^^]*?)<\\/p><\\/div>";
+	public static final String ROUTE_CHANGES_NEWS_REGEX_3 = "<div class=\"txtBlockContent\"><h.*?>([^^]*?)<\\/h\\d><\\/div>";
 }

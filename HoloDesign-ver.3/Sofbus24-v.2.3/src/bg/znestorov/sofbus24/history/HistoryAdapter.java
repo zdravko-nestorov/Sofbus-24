@@ -83,10 +83,10 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntity> implements
 		String searchNumber = Utils.getValueBetweenLast(historyValue, "(", ")");
 
 		viewHolder.searchImage.setImageResource(getHistoryImage(history));
-		viewHolder.searchText.setText(getHistoryTitle(historyType, searchName,
-				searchNumber));
-		viewHolder.searchType.setText(getHistorySubtitle(historyType,
-				searchName, searchNumber));
+		viewHolder.searchText.setText(Html.fromHtml(getHistoryTitle(
+				historyType, searchName, searchNumber)));
+		viewHolder.searchType.setText(Html.fromHtml(getHistorySubtitle(
+				historyType, searchName, searchNumber)));
 		viewHolder.searchDate.setText(Html.fromHtml(context.getString(
 				R.string.history_item_search_date, getHistoryType(history),
 				history.getHistoryDateWithoutSeconds())));
@@ -133,6 +133,8 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEntity> implements
 
 			break;
 		}
+
+		historyTitle = historyTitle.replaceAll("[&]\\S{4};", "\"");
 
 		return historyTitle;
 	}

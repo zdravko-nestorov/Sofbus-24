@@ -2,6 +2,8 @@ package bg.znestorov.sofbus24.route.changes;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -15,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import bg.znestorov.sofbus24.entity.RouteChangesEntity;
 import bg.znestorov.sofbus24.main.RouteChangesNews;
+import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
@@ -32,14 +35,6 @@ public class RetrieveRouteChangesNews extends AsyncTask<Void, Void, String> {
 	private RouteChangesEntity routeChanges;
 
 	private ResponseHandler<String> responseHandler;
-
-	private static final String HTML_PRINT_ELEMENT_1 = "<a href=\"#\" onclick=\"window.print\\(\\);\" style=\"margin-right:5px;\" >отпечатай<\\/a>";
-	private static final String HTML_PRINT_ELEMENT_2 = "<a href=\"#\" onclick=\"window.print\\(\\);\" style=\"margin-right:5px; display: none;\" >отпечатай<\\/a>";
-	private static final String HTML_BACK_ELEMENT = "<a href=\"#\" onclick=\"window.history.back\\(\\);\">&lsaquo;&lsaquo;&nbsp;назад<\\/a>";
-	private static final String HTML_IMAGE_ELEMENT_1 = "<\\/a><br.*?\\/><a href=\"..\\/uploaded_images\\/newsimg\\/.*?.jpg\" target=\"_blank\"><div align=\"center\">Вижте в по-голям размер<\\/div><\\/a>";
-	private static final String HTML_IMAGE_ELEMENT_2 = "<br.*?\\/><a href=\"..\\/uploaded_images\\/newsimg\\/.*?.jpg\" target=\"_blank\">";
-	private static final String HTML_IMAGE_ELEMENT_PATH_OLD = "\\.\\.\\/";
-	private static final String HTML_IMAGE_ELEMENT_PATH_NEW = "http://forum.sofiatraffic.bg/";
 
 	public RetrieveRouteChangesNews(Activity context,
 			ProgressDialog progressDialog, RouteChangesEntity routeChanges) {
@@ -77,26 +72,19 @@ public class RetrieveRouteChangesNews extends AsyncTask<Void, Void, String> {
 			cancel(true);
 		}
 
-		return htmlResult;
+		return getArticleBody(htmlResult);
 	}
 
 	@Override
-	protected void onPostExecute(String htmlResult) {
-		super.onPostExecute(htmlResult);
+	protected void onPostExecute(String articleBody) {
+		super.onPostExecute(articleBody);
 
-		if (htmlResult == null) {
+		if (articleBody == null) {
 			ActivityUtils.showNoInternetToast(context);
 		} else {
-			htmlResult = htmlResult.replaceAll(HTML_BACK_ELEMENT, "");
-			htmlResult = htmlResult.replaceAll(HTML_PRINT_ELEMENT_1, "");
-			htmlResult = htmlResult.replaceAll(HTML_PRINT_ELEMENT_2, "");
-			htmlResult = htmlResult.replaceAll(HTML_IMAGE_ELEMENT_1, "");
-			htmlResult = htmlResult.replaceAll(HTML_IMAGE_ELEMENT_2, "");
-			htmlResult = htmlResult.replaceAll(HTML_IMAGE_ELEMENT_PATH_OLD,
-					HTML_IMAGE_ELEMENT_PATH_NEW);
 
 			// Assign the HTML response to the RouteChanges entity
-			routeChanges.setHtmlResponse(htmlResult);
+			routeChanges.setArticleBody(articleBody);
 
 			// Start RouteChangesNews activity
 			Bundle bundle = new Bundle();
@@ -129,6 +117,49 @@ public class RetrieveRouteChangesNews extends AsyncTask<Void, Void, String> {
 		httpGet.setURI(new URI(routeChanges.getUrl()));
 
 		return httpGet;
+	}
+
+	/**
+	 * Get the body of the article
+	 * 
+	 * @param htmlResult
+	 *            the html response
+	 * @return the body of the article
+	 */
+	private String getArticleBody(String htmlResult) {
+
+		String articleBody = null;
+
+		if (htmlResult != null) {
+
+			Pattern pattern = Pattern
+					.compile(Constants.ROUTE_CHANGES_NEWS_REGEX_1);
+			Matcher matcher = pattern.matcher(htmlResult);
+
+			if (matcher.find()) {
+				articleBody = matcher.group(1);
+				articleBody = articleBody.replaceAll("&nbsp;", "");
+			} else {
+				pattern = Pattern.compile(Constants.ROUTE_CHANGES_NEWS_REGEX_2);
+				matcher = pattern.matcher(htmlResult);
+
+				if (matcher.find()) {
+					articleBody = matcher.group(1);
+					articleBody = articleBody.replaceAll("&nbsp;", "");
+				} else {
+					pattern = Pattern
+							.compile(Constants.ROUTE_CHANGES_NEWS_REGEX_3);
+					matcher = pattern.matcher(htmlResult);
+
+					if (matcher.find()) {
+						articleBody = matcher.group(1);
+						articleBody = articleBody.replaceAll("&nbsp;", "");
+					}
+				}
+			}
+		}
+
+		return articleBody;
 	}
 
 	/**

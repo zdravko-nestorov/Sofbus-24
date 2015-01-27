@@ -20,7 +20,7 @@ public class RouteChangesEntity implements Serializable {
 	private String validFromDate;
 	private String creationDate;
 	private String url;
-	private String htmlResponse;
+	private String articleBody;
 
 	public RouteChangesEntity(String id, String title, String validFromDate,
 			String creationDate) {
@@ -71,20 +71,20 @@ public class RouteChangesEntity implements Serializable {
 		this.url = url;
 	}
 
-	public String getHtmlResponse() {
-		return htmlResponse;
+	public String getArticleBody() {
+		return articleBody;
 	}
 
-	public void setHtmlResponse(String htmlResponse) {
-		this.htmlResponse = htmlResponse;
+	public void setArticleBody(String articleBody) {
+		this.articleBody = articleBody;
 	}
 
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tid: " + id + "\n\ttitle: " + title
 				+ "\n\tvalidFromDate: " + validFromDate + "\n\tcreationDate: "
-				+ creationDate + "\n\turl: " + url + "\n\thtmlResponse: "
-				+ htmlResponse + "\n}";
+				+ creationDate + "\n\turl: " + url + "\n\tarticleBody: "
+				+ articleBody + "\n}";
 	}
 
 }

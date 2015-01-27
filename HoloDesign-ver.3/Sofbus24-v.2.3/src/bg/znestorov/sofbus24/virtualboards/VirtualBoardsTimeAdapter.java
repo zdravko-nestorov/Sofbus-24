@@ -97,7 +97,8 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 		viewHolder.vehicleImage
 				.setImageResource(getVehicleImage(stationVehicle));
 		viewHolder.stationCaption.setText(getVehicleCaption(stationVehicle));
-		viewHolder.stationDirection.setText(stationVehicle.getDirection());
+		viewHolder.stationDirection.setText(Html.fromHtml(stationVehicle
+				.getDirection()));
 		viewHolder.stationTime.setText(getRowTimeCaption(stationVehicle));
 
 		rowView.setOnClickListener(null);

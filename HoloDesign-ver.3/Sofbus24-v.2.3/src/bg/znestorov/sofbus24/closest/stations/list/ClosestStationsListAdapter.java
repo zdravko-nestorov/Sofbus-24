@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -80,8 +81,8 @@ public class ClosestStationsListAdapter extends ArrayAdapter<StationEntity> {
 		// Fill the data
 		StationEntity station = stations.get(position);
 		viewHolder.addToFavourites.setImageResource(getFavouriteImage(station));
-		viewHolder.stationCaption.setText(String.format(station.getName()
-				+ " (%s)", station.getNumber()));
+		viewHolder.stationCaption.setText(Html.fromHtml(String.format(
+				station.getName() + " (%s)", station.getNumber())));
 		viewHolder.stationDistance.setText(String.format(
 				context.getString(R.string.app_distance),
 				MapUtils.getMapDistance(context, currentLocation, station)));

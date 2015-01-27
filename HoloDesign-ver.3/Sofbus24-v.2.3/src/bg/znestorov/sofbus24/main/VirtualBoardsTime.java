@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -205,7 +206,7 @@ public class VirtualBoardsTime extends SherlockFragmentActivity {
 	 * GoogleStreetView button
 	 */
 	private void actionsOverStreetViewFileds() {
-		vbTimeStationCaption.setText(getStationCaption());
+		vbTimeStationCaption.setText(Html.fromHtml(getStationCaption()));
 		vbTimeCurrentTime.setText(String.format(
 				getString(R.string.vb_time_current_time),
 				vbTimeStation.getTime(context)));
