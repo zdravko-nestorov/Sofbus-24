@@ -18,6 +18,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -228,6 +229,7 @@ public class WebPage extends SherlockActivity {
 		@Override
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
+			ActivityUtils.lockScreenOrientation(context);
 			resetViewsState(view, progressBar, webPageError);
 		}
 
@@ -251,6 +253,8 @@ public class WebPage extends SherlockActivity {
 			} else {
 				setErrorViewsState(view, progressBar, webPageError);
 			}
+
+			ActivityUtils.unlockScreenOrientation(context);
 		}
 
 		/**
@@ -273,6 +277,7 @@ public class WebPage extends SherlockActivity {
 	/**
 	 * Initialize the web view and set the appropriate options
 	 */
+	@SuppressLint("SetJavaScriptEnabled")
 	private void initWebView() {
 
 		webViewSumcClient = new WebViewSumcClient(webPageLoading, webPageError);
@@ -397,7 +402,7 @@ public class WebPage extends SherlockActivity {
 		getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
 		int width = displaymetrics.widthPixels;
 
-		Double scale = new Double(width) / new Double(719);
+		Double scale = Double.valueOf(width) / Double.valueOf(719);
 		scale = scale * 100d;
 
 		return scale.intValue();
