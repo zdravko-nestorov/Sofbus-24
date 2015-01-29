@@ -575,6 +575,7 @@ public class Utils {
 				"Кулинарен комбинат Пейфил");
 		directionName = directionName.replaceAll("СУ Св\\. Климент Охридски",
 				"СУ Свети Климент Охридски");
+		directionName = directionName.replaceAll(" - ухо - ", " - ");
 		directionName = directionName.replaceAll(" ухо",
 				" ж\\.к\\. Люлин 3 (ухо)");
 		directionName = directionName.replaceAll("ДепоИскър", "Депо Искър");

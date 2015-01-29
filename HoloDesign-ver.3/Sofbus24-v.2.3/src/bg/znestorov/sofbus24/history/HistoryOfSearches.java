@@ -174,6 +174,13 @@ public class HistoryOfSearches {
 				historyType = VehicleTypeEnum.BTT;
 			}
 
+			// Special case - when the vehicle search was added before the last
+			// update and the number of the BUS is recorded as 22
+			if (historyType == VehicleTypeEnum.BUS
+					&& historyName.contains("(22)")) {
+				historyName = historyName.replaceAll("\\(22\\)", "\\(21-22\\)");
+			}
+
 			historyList.add(new HistoryEntity(historyName, historyDate,
 					historyType));
 			i++;

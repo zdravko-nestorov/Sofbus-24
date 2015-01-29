@@ -500,7 +500,19 @@ public class Sofbus24Fragment extends SherlockFragment implements
 		// the current fragment. It doesn't store the real fragment - it will be
 		// taken from the FragmentManager)
 		if (mViewPager != null) {
-			Fragment fakeFragment = fragmentsList.get(tabPosition);
+
+			Fragment fakeFragment;
+
+			// Workaround because of a strange bug in GooglePlay market, where
+			// the FragmentsList is empty. In this case recreate the list and
+			// proceed accordingly
+			try {
+				fakeFragment = fragmentsList.get(tabPosition);
+			} catch (Exception e) {
+				createFragmentsList();
+				fakeFragment = fragmentsList.get(tabPosition);
+			}
+
 			if (fakeFragment instanceof FavouritesStationFragment) {
 				ActivityUtils.setHomeScreenActionBarSubtitle(context,
 						actionBar, getString(R.string.edit_tabs_favourites),

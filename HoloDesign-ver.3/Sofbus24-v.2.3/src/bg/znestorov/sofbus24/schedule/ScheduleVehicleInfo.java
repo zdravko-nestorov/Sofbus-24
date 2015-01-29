@@ -64,9 +64,6 @@ public class ScheduleVehicleInfo {
 			proceedSpecialCase(createDirectionEntity10TM(vehicle));
 		} else if ("11-“Ã".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity11TM(vehicle));
-		} else if ("21-22".equals(vehicleNumber)) {
-			vehicle.setNumber("22");
-			proceedStandardCase(vehicle, vehicleTitle);
 		} else if ("44-¡".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity44B(vehicle));
 		} else {

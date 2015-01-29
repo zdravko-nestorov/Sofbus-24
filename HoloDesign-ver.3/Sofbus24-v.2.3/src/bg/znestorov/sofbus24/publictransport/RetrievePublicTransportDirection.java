@@ -144,13 +144,16 @@ public class RetrievePublicTransportDirection extends
 	 * @return the URL address of the directions for the selected vehicle
 	 */
 	private String createDirectionUrlAddress() {
+
+		String vehicleNumber = "21-22".equals(vehicle.getNumber()) ? "22"
+				: vehicle.getNumber();
 		final List<NameValuePair> result = new ArrayList<NameValuePair>();
 
 		result.add(new BasicNameValuePair(
 				Constants.SCHECULE_URL_DIRECTION_BUS_TYPE,
 				getVehicleType(vehicle)));
 		result.add(new BasicNameValuePair(
-				Constants.SCHECULE_URL_DIRECTION_LINE, vehicle.getNumber()));
+				Constants.SCHECULE_URL_DIRECTION_LINE, vehicleNumber));
 		result.add(new BasicNameValuePair(
 				Constants.SCHECULE_URL_DIRECTION_SEARCH,
 				Constants.SCHECULE_URL_DIRECTION_SEARCH_VALUE));
