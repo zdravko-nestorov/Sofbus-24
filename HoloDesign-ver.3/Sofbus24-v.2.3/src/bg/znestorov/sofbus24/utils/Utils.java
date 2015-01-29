@@ -513,6 +513,7 @@ public class Utils {
 		// Special cases
 		directionName = directionName.replaceAll(" - 1 - ", "-1 - ");
 		directionName = directionName.replaceAll(" - 1", " 1");
+		directionName = directionName.replaceAll("-1", " 1");
 		directionName = directionName.replaceAll(" - 2 - ", "-2 - ");
 		directionName = directionName.replaceAll(" - 2", " 2");
 		directionName = directionName.replaceAll(" - 3 - ", "-3 - ");
@@ -575,9 +576,13 @@ public class Utils {
 				"Кулинарен комбинат Пейфил");
 		directionName = directionName.replaceAll("СУ Св\\. Климент Охридски",
 				"СУ Свети Климент Охридски");
-		directionName = directionName.replaceAll(" - ухо - ", " - ");
-		directionName = directionName.replaceAll(" ухо",
-				" ж\\.к\\. Люлин 3 (ухо)");
+		directionName = directionName.replaceAll(
+				"МБАЛ Св\\.Анна - ухо - Ж\\.к\\. Гоце Делчев",
+				"МБАЛ Св\\.Анна - Ж\\.к\\. Гоце Делчев");
+		directionName = directionName.replaceAll(
+				"Ж\\.к\\. Гоце Делчев - МБАЛ Св\\.Анна - ухо",
+				"Ж\\.к\\. Гоце Делчев - МБАЛ Св\\.Анна");
+		directionName = directionName.replaceAll(" ухо", " ж\\.к\\. Люлин 3");
 		directionName = directionName.replaceAll("ДепоИскър", "Депо Искър");
 		directionName = directionName.replaceAll("Ж\\.к\\.Люлин 1,2",
 				"ж\\.к\\. Люлин 1,2 - бул. Илиянци (подлеза)");
