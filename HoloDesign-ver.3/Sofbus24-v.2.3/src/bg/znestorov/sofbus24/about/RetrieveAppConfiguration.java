@@ -65,7 +65,7 @@ public class RetrieveAppConfiguration extends
 			// Create a configuration object from the Document
 			appConfig = new ConfigEntity(doc);
 		} catch (Exception e) {
-			appConfig = new ConfigEntity();
+			appConfig = new ConfigEntity(context);
 			ActivityTracker.sendCaughtException(context,
 					"RetrieveAppConfiguration.doInBackground(...)",
 					"Problem with retrieving configuration", e);

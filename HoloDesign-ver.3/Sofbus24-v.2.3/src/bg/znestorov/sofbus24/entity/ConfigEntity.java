@@ -30,20 +30,18 @@ public class ConfigEntity implements Serializable {
 	private int versionCode;
 	private String versionName;
 
-	private boolean favouritesVisiblå;
-	private int favouritesPosition;
-	private boolean searchVisible;
-	private int searchPosition;
-	private boolean scheduleVisible;
-	private int schedulePosition;
-	private boolean metroVisible;
-	private int metroPosition;
+	private boolean favouritesVisiblå = true;
+	private int favouritesPosition = 0;
+	private boolean searchVisible = true;
+	private int searchPosition = 1;
+	private boolean scheduleVisible = true;
+	private int schedulePosition = 2;
+	private boolean metroVisible = true;
+	private int metroPosition = 3;
 
-	private int sofbus24DbVersion;
+	private int sofbus24DbVersion = 1;
 
 	public ConfigEntity() {
-		this.versionCode = 0;
-		this.versionName = null;
 
 		this.favouritesVisiblå = true;
 		this.favouritesPosition = 0;
@@ -54,10 +52,11 @@ public class ConfigEntity implements Serializable {
 		this.metroVisible = true;
 		this.metroPosition = 3;
 
-		this.sofbus24DbVersion = 0;
+		this.sofbus24DbVersion = 1;
 	}
 
 	public ConfigEntity(Activity context) {
+
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);
 
@@ -69,74 +68,57 @@ public class ConfigEntity implements Serializable {
 			versionName = context.getPackageManager().getPackageInfo(
 					context.getPackageName(), 0).versionName;
 		} catch (NameNotFoundException e) {
-			versionName = null;
 			versionCode = 0;
+			versionName = null;
 		}
 
 		this.versionCode = versionCode;
 		this.versionName = versionName;
 
 		try {
-			this.favouritesVisiblå = Boolean
-					.parseBoolean(sharedPreferences
-							.getString(
-									Constants.CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY,
-									favouritesVisiblå + ""));
-			this.favouritesPosition = Integer
-					.parseInt(sharedPreferences
-							.getString(
-									Constants.CONFIGURATION_PREF_FAVOURITES_POSITION_KEY,
-									favouritesPosition + ""));
+			this.favouritesVisiblå = sharedPreferences.getBoolean(
+					Constants.CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY,
+					true);
+			this.favouritesPosition = sharedPreferences.getInt(
+					Constants.CONFIGURATION_PREF_FAVOURITES_POSITION_KEY, 0);
 		} catch (Exception e) {
 			this.favouritesVisiblå = true;
 			this.favouritesPosition = 0;
 		}
 
 		try {
-			this.searchVisible = Boolean.parseBoolean(sharedPreferences
-					.getString(
-							Constants.CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY,
-							searchVisible + ""));
-			this.searchPosition = Integer.parseInt(sharedPreferences.getString(
-					Constants.CONFIGURATION_PREF_SEARCH_POSITION_KEY,
-					searchPosition + ""));
+			this.searchVisible = sharedPreferences.getBoolean(
+					Constants.CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY, true);
+			this.searchPosition = sharedPreferences.getInt(
+					Constants.CONFIGURATION_PREF_SEARCH_POSITION_KEY, 1);
 		} catch (Exception e) {
 			this.searchVisible = true;
 			this.searchPosition = 1;
 		}
 
 		try {
-			this.scheduleVisible = Boolean
-					.parseBoolean(sharedPreferences
-							.getString(
-									Constants.CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY,
-									scheduleVisible + ""));
-			this.schedulePosition = Integer.parseInt(sharedPreferences
-					.getString(
-							Constants.CONFIGURATION_PREF_SCHEDULE_POSITION_KEY,
-							schedulePosition + ""));
+			this.scheduleVisible = sharedPreferences.getBoolean(
+					Constants.CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY, true);
+			this.schedulePosition = sharedPreferences.getInt(
+					Constants.CONFIGURATION_PREF_SCHEDULE_POSITION_KEY, 2);
 		} catch (Exception e) {
 			this.scheduleVisible = true;
 			this.schedulePosition = 2;
 		}
 
 		try {
-			this.metroVisible = Boolean.parseBoolean(sharedPreferences
-					.getString(
-							Constants.CONFIGURATION_PREF_METRO_VISIBILITY_KEY,
-							metroVisible + ""));
-			this.metroPosition = Integer.parseInt(sharedPreferences.getString(
-					Constants.CONFIGURATION_PREF_METRO_POSITION_KEY,
-					metroPosition + ""));
+			this.metroVisible = sharedPreferences.getBoolean(
+					Constants.CONFIGURATION_PREF_METRO_VISIBILITY_KEY, true);
+			this.metroPosition = sharedPreferences.getInt(
+					Constants.CONFIGURATION_PREF_METRO_POSITION_KEY, 3);
 		} catch (Exception e) {
 			this.metroVisible = true;
 			this.metroPosition = 3;
 		}
 
 		try {
-			this.sofbus24DbVersion = Integer.parseInt(sharedPreferences
-					.getString(Constants.CONFIGURATION_PREF_SOFBUS24_KEY,
-							sofbus24DbVersion + ""));
+			this.sofbus24DbVersion = sharedPreferences.getInt(
+					Constants.CONFIGURATION_PREF_SOFBUS24_KEY, 0);
 		} catch (Exception e) {
 			this.sofbus24DbVersion = 0;
 		}
@@ -178,6 +160,7 @@ public class ConfigEntity implements Serializable {
 			int favouritesPosition, boolean searchVisibile, int searchPosition,
 			boolean scheduleVisibile, int schedulePosition,
 			boolean metroVisibile, int metroPosition, int vehiclesDbVersion) {
+
 		this.versionCode = versionCode;
 		this.versionName = versionName;
 
@@ -281,8 +264,19 @@ public class ConfigEntity implements Serializable {
 		this.sofbus24DbVersion = stationsDbVersion;
 	}
 
+	/**
+	 * Get the tab according to its position
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param position
+	 *            the position of the tab
+	 * @return the TabEntity object on the selected position
+	 */
 	public HomeTabEntity getTabByPosition(Activity context, int position) {
+
 		if (position >= 0 && position < Constants.GLOBAL_PARAM_HOME_TABS_COUNT) {
+
 			boolean tabVisible;
 			String tabName;
 
@@ -312,6 +306,7 @@ public class ConfigEntity implements Serializable {
 	 * @return if the entity is valid
 	 */
 	public boolean isValidConfig() {
+
 		boolean isValidConfig = false;
 
 		if (versionCode > 0 && versionName != null && sofbus24DbVersion > 0) {
@@ -328,6 +323,7 @@ public class ConfigEntity implements Serializable {
 	 * @return if it is a default configuration
 	 */
 	public boolean isDefaultConfig() {
+
 		boolean isDefaultConfig = favouritesVisiblå && favouritesPosition == 0
 				&& searchVisible && searchPosition == 1 && scheduleVisible
 				&& schedulePosition == 2 && metroVisible && metroPosition == 3;
@@ -343,6 +339,7 @@ public class ConfigEntity implements Serializable {
 	 * @return if the configurations are the same
 	 */
 	public boolean isSameConfig(ConfigEntity config) {
+
 		boolean isSameConfig = this.isFavouritesVisibilå() == config
 				.isFavouritesVisibilå()
 				&& this.getFavouritesPosition() == config

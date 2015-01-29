@@ -65,7 +65,7 @@ public class CheckForUpdatesAsync extends AsyncTask<Void, Void, ConfigEntity> {
 			// Create a configuration object from the Document
 			appConfig = new ConfigEntity(doc);
 		} catch (Exception e) {
-			appConfig = new ConfigEntity();
+			appConfig = new ConfigEntity(context);
 			ActivityTracker.sendCaughtException(context,
 					"CheckForUpdatesAsync.doInBackground(...)",
 					"Problem with retrieving Configuration", e);

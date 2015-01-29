@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="bg.znestorov.sofbus24.main"
     android:installLocation="auto"
-    android:versionCode="24"
-    android:versionName="2.4.1" >
+    android:versionCode="25"
+    android:versionName="2.4.2" >
 
     <!-- Specify the correct minSDK and targetSDK versions. -->
     <uses-sdk
