@@ -154,6 +154,7 @@ public class Utils {
 		directionName = directionName.replaceAll("СЕЛО БАЛША", "Село Балша");
 		directionName = directionName.replaceAll("КУЛИНАРЕН К - Т ПЕЙФИЛ", "Кулинарен комбинат Пейфил");
 		directionName = directionName.replaceAll("СУ Св\\. Климент Охридски", "СУ Свети Климент Охридски");
+		directionName = directionName.replaceAll(" - ухо - ", " - ");
 		directionName = directionName.replaceAll(" ухо", " ж\\.к\\. Люлин 3 (ухо)");
 		directionName = directionName.replaceAll("ДепоИскър", "Депо Искър");
 		directionName = directionName.replaceAll("Ж\\.к\\.Люлин 1,2", "ж\\.к\\. Люлин 1,2 - бул. Илиянци (подлеза)");
@@ -192,7 +193,7 @@ public class Utils {
 
 		directionName = directionName.trim().replaceAll("-", " - ");
 		directionName = directionName.trim().replaceAll(" +", " ");
-		
+
 		// Final adjustments
 		directionName = directionName.replaceAll(" - 1", " 1");
 		directionName = directionName.replaceAll(" - 2", " 2");

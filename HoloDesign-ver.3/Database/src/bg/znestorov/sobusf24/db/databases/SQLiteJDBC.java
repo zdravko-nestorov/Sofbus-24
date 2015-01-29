@@ -91,8 +91,10 @@ public class SQLiteJDBC {
 		c.commit();
 
 		for (Vehicle vehicle : vehiclesList) {
+
 			String vehicleNumber = vehicle.getNumber();
 			VehicleType vehicleType = vehicle.getType();
+			String vehicleDirection = vehicle.getDirection();
 
 			// Do not insert the BUS with number 21 (such vehicle does not
 			// exist)
@@ -101,17 +103,21 @@ public class SQLiteJDBC {
 
 				// Change the number of the vehicle in case of BUS 22 (it has to
 				// became 21-22)
-				if ("22".equals(vehicleNumber) && vehicleType == VehicleType.BUS) {
-					sql = String.format(sql, vehicle.getNumber(), vehicle.getType());
-				} else {
+				if (vehicleType == VehicleType.BUS && "22".equals(vehicleNumber)) {
 					sql = String.format(sql, "21-22", VehicleType.BUS);
+				} else {
+					sql = String.format(sql, vehicle.getNumber(), vehicle.getType());
 				}
 
 				try {
 
 					if (!stmt.executeQuery(sql).next()) {
+						if (vehicleType == VehicleType.BUS && "22".equals(vehicleNumber)) {
+							vehicleNumber = "21-22";
+						}
+
 						sql = "INSERT INTO SOF_VEHI (VEHI_NUMBER, VEHI_TYPE, VEHI_DIRECTION) " + "VALUES ('%s', '%s', '%s');";
-						sql = String.format(sql, vehicle.getNumber(), vehicle.getType(), vehicle.getDirection());
+						sql = String.format(sql, vehicleNumber, vehicleType, vehicleDirection);
 						stmt.executeUpdate(sql);
 						insertedVehicles++;
 					}
