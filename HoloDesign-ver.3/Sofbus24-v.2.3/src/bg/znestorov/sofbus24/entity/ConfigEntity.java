@@ -117,10 +117,15 @@ public class ConfigEntity implements Serializable {
 		}
 
 		try {
-			this.sofbus24DbVersion = sharedPreferences.getInt(
-					Constants.CONFIGURATION_PREF_SOFBUS24_KEY, 0);
+			this.sofbus24DbVersion = Integer.parseInt(sharedPreferences
+					.getString(Constants.CONFIGURATION_PREF_SOFBUS24_KEY, "1"));
 		} catch (Exception e) {
-			this.sofbus24DbVersion = 0;
+			try {
+				this.sofbus24DbVersion = sharedPreferences.getInt(
+						Constants.CONFIGURATION_PREF_SOFBUS24_KEY, 1);
+			} catch (Exception e1) {
+				this.sofbus24DbVersion = 1;
+			}
 		}
 	}
 

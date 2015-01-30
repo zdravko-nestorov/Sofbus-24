@@ -34,30 +34,30 @@ public class Configuration {
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);
 
-		String favouritesVisible = sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY, null);
-		String favouritesPosition = sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_FAVOURITES_POSITION_KEY, null);
-		String searchVisible = sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY, null);
-		String searchPosition = sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_SEARCH_POSITION_KEY, null);
-		String scheduleVisible = sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY, null);
-		String schedulePosition = sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_SCHEDULE_POSITION_KEY, null);
-		String metroVisible = sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_METRO_VISIBILITY_KEY, null);
-		String metroPosition = sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_METRO_POSITION_KEY, null);
-		String sofbus24DbVersion = sharedPreferences.getString(
-				Constants.CONFIGURATION_PREF_SOFBUS24_KEY, null);
+		boolean isFavouritesVisibleExists = sharedPreferences
+				.contains(Constants.CONFIGURATION_PREF_FAVOURITES_VISIBILITY_KEY);
+		boolean isFavouritesPositionExists = sharedPreferences
+				.contains(Constants.CONFIGURATION_PREF_FAVOURITES_POSITION_KEY);
+		boolean isSearchVisibleExists = sharedPreferences
+				.contains(Constants.CONFIGURATION_PREF_SEARCH_VISIBILITY_KEY);
+		boolean isSearchPositionExists = sharedPreferences
+				.contains(Constants.CONFIGURATION_PREF_SEARCH_POSITION_KEY);
+		boolean isScheduleVisibleExists = sharedPreferences
+				.contains(Constants.CONFIGURATION_PREF_SCHEDULE_VISIBILITY_KEY);
+		boolean isSchedulePositionExists = sharedPreferences
+				.contains(Constants.CONFIGURATION_PREF_SCHEDULE_POSITION_KEY);
+		boolean isMetroVisibleExists = sharedPreferences
+				.contains(Constants.CONFIGURATION_PREF_METRO_VISIBILITY_KEY);
+		boolean isMetroPositionExists = sharedPreferences
+				.contains(Constants.CONFIGURATION_PREF_METRO_POSITION_KEY);
+		boolean isSofbus24DbVersionExists = sharedPreferences
+				.contains(Constants.CONFIGURATION_PREF_SOFBUS24_KEY);
 
-		boolean isConfigurationCorrect = favouritesVisible != null
-				&& favouritesPosition != null && searchVisible != null
-				&& searchPosition != null && scheduleVisible != null
-				&& schedulePosition != null && metroVisible != null
-				&& metroPosition != null && sofbus24DbVersion != null;
+		boolean isConfigurationCorrect = isFavouritesVisibleExists
+				&& isFavouritesPositionExists && isSearchVisibleExists
+				&& isSearchPositionExists && isScheduleVisibleExists
+				&& isSchedulePositionExists && isMetroVisibleExists
+				&& isMetroPositionExists && isSofbus24DbVersionExists;
 
 		return isConfigurationCorrect;
 	}
