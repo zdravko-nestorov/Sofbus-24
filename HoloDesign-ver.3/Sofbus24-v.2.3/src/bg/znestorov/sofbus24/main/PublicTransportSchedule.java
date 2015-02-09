@@ -20,6 +20,7 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
 import bg.znestorov.sofbus24.entity.ScheduleEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.publictransport.PublicTransportScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -41,6 +42,7 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 	private FavouritesDataSource favouritesDatasource;
 
 	private ActionBar actionBar;
+	private VehicleEntity vehicle;
 
 	private ImageView addToFavourites;
 	private ImageButton leftArrow;
@@ -182,10 +184,13 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 	 * Get and process the Bundle information
 	 */
 	private void initBundleInfo() {
-		// Get the PublicTransportStation object from Bundle
+
+		// Get the PublicTransportStation and VehicleEntity objects from Bundle
 		Bundle extras = getIntent().getExtras();
 		ptStation = (PublicTransportStationEntity) extras
 				.get(Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE);
+		vehicle = (VehicleEntity) extras
+				.get(Constants.BUNDLE_PUBLIC_TRANSPORT_VEHICLE);
 
 		// Get an ArrayList of ArrayList with all active schedules
 		scheduleHourList = getScheduleHourList(ptStation);
@@ -305,16 +310,47 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 	 * Set labels on the TextViews
 	 */
 	private void actionsOverTextViews() {
-		String stationNumber = getString(
-				R.string.pt_item_station_number_text_sign,
-				ptStation.getNumber());
+
 		String stationName = ptStation.getName();
+		String stationNumber = ptStation.getNumber();
 		String stationDirection = ptStation.getDirection();
 
-		actionBar.setTitle(stationNumber);
+		actionBar.setTitle(getActionBarTitle());
 		actionBar.setSubtitle(Utils.getCurrentDateTime());
-		ptStationName.setText(Html.fromHtml(stationName));
+		ptStationName.setText(Html.fromHtml(stationName + " (" + stationNumber
+				+ ")"));
 		ptDirection.setText(Html.fromHtml(stationDirection));
+	}
+
+	/**
+	 * Create the ActionBar title using the vehicle type and number
+	 * 
+	 * @return the actionBar title in format - [VehicleType] ¹[VehicleNumber]
+	 */
+	private String getActionBarTitle() {
+
+		String title;
+
+		switch (vehicle.getType()) {
+		case BUS:
+			title = String.format(getString(R.string.pt_bus),
+					vehicle.getNumber());
+			break;
+		case TROLLEY:
+			title = String.format(getString(R.string.pt_trolley),
+					vehicle.getNumber());
+			break;
+		case TRAM:
+			title = String.format(getString(R.string.pt_tram),
+					vehicle.getNumber());
+			break;
+		default:
+			title = String.format(getString(R.string.pt_bus),
+					vehicle.getNumber());
+			break;
+		}
+
+		return title;
 	}
 
 	/**

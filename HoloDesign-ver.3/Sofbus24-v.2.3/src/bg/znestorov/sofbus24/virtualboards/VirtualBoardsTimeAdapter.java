@@ -101,10 +101,6 @@ public class VirtualBoardsTimeAdapter extends ArrayAdapter<VehicleEntity>
 				.getDirection()));
 		viewHolder.stationTime.setText(getRowTimeCaption(stationVehicle));
 
-		rowView.setOnClickListener(null);
-		rowView.setOnLongClickListener(null);
-		rowView.setLongClickable(false);
-
 		return rowView;
 	}
 

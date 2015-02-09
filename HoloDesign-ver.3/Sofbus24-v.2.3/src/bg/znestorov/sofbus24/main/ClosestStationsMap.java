@@ -34,6 +34,7 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.closest.stations.map.GoogleMapsRoute;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
+import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.SortTypeEnum;
@@ -86,6 +87,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 	private boolean isCSMapHomeScreen;
 
 	private StationsDataSource stationsDatasource;
+	private VehiclesDataSource vehiclesDatasource;
 	private FavouritesDataSource favouritesDatasource;
 
 	private ActionBar actionBar;
@@ -154,22 +156,39 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		@Override
 		public boolean onMarkerClick(Marker marker) {
 
-			if (!marker.isInfoWindowShown()) {
-				StationEntity station = markersAndStations.get(marker.getId());
-				selectedMarkerLatLng = new LatLng(Double.parseDouble(station
-						.getLat()), Double.parseDouble(station.getLon()));
-			} else {
-				selectedMarkerLatLng = null;
-			}
+			boolean showSnippetOfInformation = !markerOptions
+					.equals(Constants.PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS_SCHEDULE_NO_SNIPPET);
 
-			if (!markerOptions
-					.equals(Constants.PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS)) {
+			// Check if the snippet of information should be shown
+			if (showSnippetOfInformation) {
+
+				if (!marker.isInfoWindowShown()) {
+					StationEntity station = markersAndStations.get(marker
+							.getId());
+					selectedMarkerLatLng = new LatLng(
+							Double.parseDouble(station.getLat()),
+							Double.parseDouble(station.getLon()));
+				} else {
+					selectedMarkerLatLng = null;
+				}
+
+				// Check if we should open the virtual boards activity directly
+				if (markerOptions
+						.equals(Constants.PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS_SCHEDULE)) {
+					// Get the station associated to this marker
+					StationEntity station = markersAndStations.get(marker
+							.getId());
+					proccessWithStationResult(station);
+				}
+
+				return false;
+			} else {
 				// Get the station associated to this marker
 				StationEntity station = markersAndStations.get(marker.getId());
 				proccessWithStationResult(station);
-			}
 
-			return false;
+				return true;
+			}
 		}
 	};
 
@@ -201,6 +220,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 				.getExtras().getBoolean(BUNDLE_IS_CS_MAP_HOME_SCREEN, false)
 				: false;
 		stationsDatasource = new StationsDataSource(context);
+		vehiclesDatasource = new VehiclesDataSource(context);
 		favouritesDatasource = new FavouritesDataSource(context);
 
 		ActivityUtils.showHomeActivtyChangedToast(context,
@@ -380,8 +400,9 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 
 									// Visualize the closest stations to the new
 									// location
-									new LoadStationsFromDb(context, location,
-											null).execute();
+									new LoadStationsFromDb(context,
+											vehiclesDatasource, location, null)
+											.execute();
 								} else {
 									// Sofia center location
 									Location centerStationLocation = new Location(
@@ -403,6 +424,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 									// Sofia
 									// center location
 									new LoadStationsFromDb(context,
+											vehiclesDatasource,
 											centerStationLocation, null)
 											.execute();
 								}
@@ -425,7 +447,8 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 			}
 
 			// Visualize the favorites stations on the map
-			new LoadStationsFromDb(context, null, null).execute();
+			new LoadStationsFromDb(context, vehiclesDatasource, null, null)
+					.execute();
 		}
 	}
 
@@ -599,7 +622,8 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		animateMapFocus(location, false);
 
 		// Visualize the closest stations to the new location
-		new LoadStationsFromDb(context, location, null).execute();
+		new LoadStationsFromDb(context, vehiclesDatasource, location, null)
+				.execute();
 	}
 
 	/**
@@ -621,7 +645,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		animateMapFocus(tapLocation, true);
 
 		// Visualize the closest station to the new location
-		new LoadStationsFromDb(context, tapLocation,
+		new LoadStationsFromDb(context, vehiclesDatasource, tapLocation,
 				getString(R.string.cs_map_closest_stations)).execute();
 	}
 
@@ -733,6 +757,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 	 */
 	private void visualizeClosestStations(Location location,
 			List<StationEntity> closestStations) {
+
 		// Process all stations of the public transport route
 		for (int i = 0; i < closestStations.size(); i++) {
 			StationEntity station = closestStations.get(i);
@@ -755,8 +780,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 						.equals(markerType)) {
 					stationMarkerOptions = stationMarkerOptions
 							.icon(BitmapDescriptorFactory
-									.fromResource(getMarkerIcon(station
-											.getType())));
+									.fromResource(getMarkerIcon(station)));
 				}
 
 				Marker marker = googleMap.addMarker(stationMarkerOptions);
@@ -834,14 +858,20 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 			AsyncTask<Void, Void, List<StationEntity>> {
 
 		private Activity context;
+		private VehiclesDataSource vehiclesDatasource;
+
 		private Location location;
 		private String progressDialogMsg;
 
 		private ProgressDialog progressDialog;
 
-		public LoadStationsFromDb(Activity context, Location location,
+		public LoadStationsFromDb(Activity context,
+				VehiclesDataSource vehiclesDatasource, Location location,
 				String progressDialogMsg) {
+
 			this.context = context;
+			this.vehiclesDatasource = vehiclesDatasource;
+
 			this.location = location;
 			this.progressDialogMsg = progressDialogMsg;
 		}
@@ -865,11 +895,15 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 		protected void onPostExecute(List<StationEntity> stationsList) {
 			super.onPostExecute(stationsList);
 
+			vehiclesDatasource.open();
+
 			if (location != null) {
 				visualizeClosestStations(location, stationsList);
 			} else {
 				visualizeFavouritesStations(stationsList);
 			}
+
+			vehiclesDatasource.close();
 
 			dismissLoadingView();
 		}
@@ -1014,9 +1048,34 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 	 * @return the type of the station
 	 */
 	private String getStationTypeText(StationEntity station) {
-		String historyType;
 
-		switch (station.getType()) {
+		String historyType;
+		VehicleTypeEnum stationType = vehiclesDatasource
+				.getVehicleTypesViaStation(station);
+
+		switch (stationType) {
+		case BUS:
+			historyType = context.getString(R.string.cs_map_type_bus);
+			break;
+		case TROLLEY:
+			historyType = context.getString(R.string.cs_map_type_trolley);
+			break;
+		case TRAM:
+			historyType = context.getString(R.string.cs_map_type_tram);
+			break;
+		case BUS_TROLLEY:
+			historyType = context.getString(R.string.cs_map_type_bus_trolley);
+			break;
+		case BUS_TRAM:
+			historyType = context.getString(R.string.cs_map_type_bus_tram);
+			break;
+		case TRAM_TROLLEY:
+			historyType = context.getString(R.string.cs_map_type_trolley_tram);
+			break;
+		case BUS_TRAM_TROLLEY:
+			historyType = context
+					.getString(R.string.cs_map_type_bus_trolley_tram);
+			break;
 		case METRO1:
 		case METRO2:
 			historyType = context.getString(R.string.cs_map_type_metro);
@@ -1032,14 +1091,38 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 	/**
 	 * Get the appropriate marker icon according to the station type
 	 * 
-	 * @param stationType
-	 *            the type of the station
+	 * @param station
+	 *            the station under the current marker
 	 * @return the marker icon from the resources
 	 */
-	private int getMarkerIcon(VehicleTypeEnum stationType) {
+	private int getMarkerIcon(StationEntity station) {
+
 		int markerIcon;
+		VehicleTypeEnum stationType = vehiclesDatasource
+				.getVehicleTypesViaStation(station);
 
 		switch (stationType) {
+		case BUS:
+			markerIcon = R.drawable.ic_bus_map_marker;
+			break;
+		case TROLLEY:
+			markerIcon = R.drawable.ic_trolley_map_marker;
+			break;
+		case TRAM:
+			markerIcon = R.drawable.ic_tram_map_marker;
+			break;
+		case BUS_TROLLEY:
+			// TODO: Make an icon
+			markerIcon = R.drawable.ic_bus_map_marker;
+			break;
+		case BUS_TRAM:
+			// TODO: Make an icon
+			markerIcon = R.drawable.ic_bus_map_marker;
+			break;
+		case TRAM_TROLLEY:
+			// TODO: Make an icon
+			markerIcon = R.drawable.ic_bus_map_marker;
+			break;
 		case METRO1:
 		case METRO2:
 			markerIcon = R.drawable.ic_metro_map_marker;

@@ -15,7 +15,8 @@ import bg.znestorov.sofbus24.utils.Constants;
  * @version 1.0
  * 
  */
-public class VirtualBoardsStationEntity extends StationEntity implements Serializable {
+public class VirtualBoardsStationEntity extends StationEntity implements
+		Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -67,6 +68,14 @@ public class VirtualBoardsStationEntity extends StationEntity implements Seriali
 		this.systemTime = systemTime;
 	}
 
+	public ArrayList<VehicleEntity> getVehiclesList() {
+		return vehiclesList;
+	}
+
+	public void setVehiclesList(ArrayList<VehicleEntity> vehiclesList) {
+		this.vehiclesList = vehiclesList;
+	}
+
 	/**
 	 * Reset the station with the fields from a new station object
 	 * 
@@ -113,14 +122,6 @@ public class VirtualBoardsStationEntity extends StationEntity implements Seriali
 		} else {
 			return systemTime;
 		}
-	}
-
-	public ArrayList<VehicleEntity> getVehiclesList() {
-		return vehiclesList;
-	}
-
-	public void setVehiclesList(ArrayList<VehicleEntity> vehiclesList) {
-		this.vehiclesList = vehiclesList;
 	}
 
 	@Override

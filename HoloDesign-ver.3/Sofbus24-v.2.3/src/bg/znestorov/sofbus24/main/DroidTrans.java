@@ -1022,7 +1022,7 @@ public class DroidTrans extends SherlockFragmentActivity {
 				.setMessage(getString(R.string.app_loading_closest_station));
 
 		RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-				context, progressDialog,
+				context, context.getSupportFragmentManager(), progressDialog,
 				RetrieveCurrentLocationTypeEnum.DT_REFRESH);
 		retrieveCurrentLocation.execute();
 

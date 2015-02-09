@@ -15,6 +15,7 @@
     <string name="app_button_no">Не</string>
     <string name="app_button_update">Обнови</string>
     <string name="app_button_install">Инсталирай</string>
+    <string name="app_button_activate">Активирай</string>
     <string name="app_button_later">По-късно</string>
     <string name="app_button_restart">Рестарт</string>
     <string name="app_button_email">Имейл</string>
@@ -29,6 +30,7 @@
     <string name="app_internet_or_info_error">В момента няма намерена информация. Моля проверете вашата интернет връзка или опитайте по-късно.</string>
     <string name="app_loading_current_location" formatted="false"><![CDATA[Локализиране на текущото местоположение...]]></string>
     <string name="app_loading_closest_station" formatted="false"><![CDATA[Търсене на най-близката спирка...]]></string>
+    <string name="app_location_access_error" formatted="false"><![CDATA[Моля активирайте опцията <b><i>\"Достъп до местоположението ми\"</i></b>, за да може <b><i>Софбус 24</i></b> да използва информация за вашата локация.]]></string>
     <string name="app_location_modules_error">Моля включете поне едно от устройствата (Network, WiFi или GPS), за да бъде засечено текущото ви местоположение.</string>
     <string name="app_location_timeout_error">Намирането на текущото местоположение продължи твърде дълго. Моля опитайте отново.</string>
     <string name="app_location_modules_timeout_error">Намирането на текущото местоположение продължи твърде дълго или всички локализиращи модули са изключени (Network, WiFi или GPS). Моля включете някой от тях и опитайте отново.</string>
@@ -153,6 +155,13 @@
     <string name="cs_map_title">Google Maps</string>
     <string name="cs_map_subtitle" formatted="false">Спирки в радиус от %s метра: %s</string>
     <string name="cs_map_type_btt">Градски Транспорт</string>
+    <string name="cs_map_type_bus">Автобуси</string>
+    <string name="cs_map_type_trolley">Тролеи</string>
+    <string name="cs_map_type_tram">Трамваи</string>
+    <string name="cs_map_type_bus_trolley">Автобуси и Тролеи</string>
+    <string name="cs_map_type_bus_tram">Автобуси и Трамваи</string>
+    <string name="cs_map_type_trolley_tram">Тролеи и Трамваи</string>
+    <string name="cs_map_type_bus_trolley_tram">Автобуси, Тролеи и Трамваи</string>
     <string name="cs_map_type_metro">Метро</string>
     <string name="cs_map_closest_stations" formatted="false"><![CDATA[Визуализиране на най-близките спирки...]]></string>
     <string name="cs_map_fetch_route" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>

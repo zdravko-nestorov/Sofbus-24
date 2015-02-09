@@ -1,16 +1,22 @@
 package bg.znestorov.sofbus24.virtualboards;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
+import bg.znestorov.sofbus24.entity.DirectionsEntity;
+import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
 import bg.znestorov.sofbus24.entity.RefreshableListFragment;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
 import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.publictransport.RetrievePublicTransportStation;
 import bg.znestorov.sofbus24.utils.Constants;
 
 /**
@@ -85,6 +91,28 @@ public class VirtualBoardsTimeFragment extends ListFragment implements
 
 		savedInstanceState
 				.putString(BUNDLE_VB_TIME_EMPTY_TEXT, vbTimeEmptyText);
+	}
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+
+		VehicleEntity stationVehicle = (VehicleEntity) getListAdapter()
+				.getItem(position);
+
+		// Getting the PublicTransport schedule from the station URL address
+		PublicTransportStationEntity ptStationEntity = new PublicTransportStationEntity(
+				vbTimeStation, stationVehicle);
+		DirectionsEntity directionEntity = new DirectionsEntity(stationVehicle);
+
+		ProgressDialog progressDialog = new ProgressDialog(context);
+		progressDialog.setMessage(Html.fromHtml(String.format(
+				getString(R.string.pt_item_loading_schedule),
+				String.format(vbTimeStation.getName() + " (%s)",
+						vbTimeStation.getNumber()))));
+
+		RetrievePublicTransportStation retrievePublicTransportStation = new RetrievePublicTransportStation(
+				context, progressDialog, ptStationEntity, directionEntity);
+		retrievePublicTransportStation.execute();
 	}
 
 	@Override

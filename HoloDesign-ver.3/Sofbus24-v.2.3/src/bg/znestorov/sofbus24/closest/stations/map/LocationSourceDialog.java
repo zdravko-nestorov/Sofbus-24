@@ -8,6 +8,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
+import android.text.Spanned;
 import bg.znestorov.sofbus24.main.R;
 
 /**
@@ -23,7 +25,7 @@ public class LocationSourceDialog extends DialogFragment {
 	private Activity context;
 	private int icon;
 	private String title;
-	private String message;
+	private Spanned message;
 	private String negativeBtn;
 	private String positiveBtn;
 	private OnClickListener positiveOnClickListener;
@@ -33,9 +35,9 @@ public class LocationSourceDialog extends DialogFragment {
 		context = getActivity();
 		icon = R.drawable.ic_menu_mylocation;
 		title = getString(R.string.app_dialog_title_error);
-		message = getString(R.string.app_location_modules_error);
-		negativeBtn = getString(R.string.app_button_no);
-		positiveBtn = getString(R.string.app_button_yes);
+		message = Html.fromHtml(getString(R.string.app_location_access_error));
+		negativeBtn = getString(R.string.app_button_later);
+		positiveBtn = getString(R.string.app_button_activate);
 
 		positiveOnClickListener = new OnClickListener() {
 			public void onClick(DialogInterface dialog, int i) {

@@ -27,21 +27,51 @@ public class DirectionsEntity implements Serializable {
 	private ArrayList<ArrayList<StationEntity>> directionsList;
 
 	public DirectionsEntity() {
+
 		this.vt = new ArrayList<String>();
 		this.lid = new ArrayList<String>();
 		this.rid = new ArrayList<String>();
+
+		this.directionsNames = new ArrayList<String>();
+		this.directionsList = new ArrayList<ArrayList<StationEntity>>();
+	}
+
+	/**
+	 * Constructor used to create a DirectionEntity object to retrieve the
+	 * schedule from the VirtualBoardsTime activity
+	 * 
+	 * @param vehicle
+	 *            the vehicle on the current row in the VirtualBoardsTime list
+	 *            activity
+	 */
+	public DirectionsEntity(VehicleEntity vehicle) {
+
+		this.vehicle = vehicle;
+
+		this.vt = new ArrayList<String>();
+		this.vt.add(String.valueOf(vehicle.getVt()));
+
+		this.lid = new ArrayList<String>();
+		this.lid.add(String.valueOf(vehicle.getLid()));
+
+		this.rid = new ArrayList<String>();
+		this.rid.add(String.valueOf(vehicle.getRid()));
+
 		this.directionsNames = new ArrayList<String>();
 		this.directionsList = new ArrayList<ArrayList<StationEntity>>();
 	}
 
 	public DirectionsEntity(DirectionsEntity directionsEntity,
 			int activeDirection) {
+
 		this.vehicle = directionsEntity.getVehicle();
 		this.activeDirection = activeDirection;
 		this.activeStation = directionsEntity.getActiveStation();
+
 		this.vt = directionsEntity.getVt();
 		this.lid = directionsEntity.getLid();
 		this.rid = directionsEntity.getRid();
+
 		this.directionsNames = directionsEntity.getDirectionsNames();
 		this.directionsList = directionsEntity.getDirectionsList();
 	}
@@ -49,8 +79,10 @@ public class DirectionsEntity implements Serializable {
 	public DirectionsEntity(VehicleEntity vehicle, int activeDirection,
 			ArrayList<String> directionsNames,
 			ArrayList<ArrayList<StationEntity>> directionsList) {
+
 		this.vehicle = vehicle;
 		this.activeDirection = activeDirection;
+
 		this.directionsNames = directionsNames;
 		this.directionsList = directionsList;
 	}
@@ -59,12 +91,15 @@ public class DirectionsEntity implements Serializable {
 			int activeStation, ArrayList<String> vt, ArrayList<String> lid,
 			ArrayList<String> rid, ArrayList<String> directionsNames,
 			ArrayList<ArrayList<StationEntity>> directionsList) {
+
 		this.vehicle = vehicle;
 		this.activeDirection = activeDirection;
 		this.activeStation = activeStation;
+
 		this.vt = vt;
 		this.lid = lid;
 		this.rid = rid;
+
 		this.directionsNames = directionsNames;
 		this.directionsList = directionsList;
 	}

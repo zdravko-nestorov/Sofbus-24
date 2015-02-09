@@ -12,6 +12,7 @@
     <string name="app_button_no">No</string>
     <string name="app_button_update">Update</string>
     <string name="app_button_install">Install</string>
+    <string name="app_button_activate">Activate</string>
     <string name="app_button_later">Later</string>
     <string name="app_button_restart">Restart</string>
     <string name="app_button_email">Email</string>
@@ -26,6 +27,7 @@
     <string name="app_internet_or_info_error">No information is found at the moment. Please check your Internet connection or try again later.</string>
     <string name="app_loading_current_location" formatted="false"><![CDATA[Localize the current location...]]></string>
     <string name="app_loading_closest_station" formatted="false"><![CDATA[Finding the nearest station...]]></string>
+    <string name="app_location_access_error" formatted="false"><![CDATA[Please activate the option <b><i>\"Access to my location\"</i></b>, so <b><i>Sofbus 24</i></b> can use your location information.]]></string>
     <string name="app_location_modules_error">Please turn on at least one of the device\'s modules (Network, WiFi or GPS) to detect your current location.</string>
     <string name="app_location_timeout_error">Finding the current location took too long. Please try again.</string>
     <string name="app_location_modules_timeout_error">Finding the current location took too long or all localization modules are offline (Network, WiFi or GPS). Please turn on any of them and try again.</string>
@@ -150,6 +152,13 @@
     <string name="cs_map_title">Google Maps</string>
     <string name="cs_map_subtitle" formatted="false">Stations within %s meters radius: %s</string>
     <string name="cs_map_type_btt">Public Transport</string>
+    <string name="cs_map_type_bus">Buses</string>
+    <string name="cs_map_type_trolley">Trolleys</string>
+    <string name="cs_map_type_tram">Trams</string>
+    <string name="cs_map_type_bus_trolley">Buses and Trolleys</string>
+    <string name="cs_map_type_bus_tram">Buses and Trams</string>
+    <string name="cs_map_type_trolley_tram">Trolleys and Trams</string>
+    <string name="cs_map_type_bus_trolley_tram">Buses, Trolleys and Trams</string>
     <string name="cs_map_type_metro">Metro</string>
     <string name="cs_map_closest_stations" formatted="false"><![CDATA[Visualization of the nearest stations...]]></string>
     <string name="cs_map_fetch_route" formatted="false"><![CDATA[Drawing the route...]]></string>

@@ -213,18 +213,48 @@ public class ProcessVirtualBoards {
 		Matcher matcher = pattern.matcher(vehiclesPartHtml);
 
 		while (matcher.find()) {
+
+			// Get the shedule variables
+			int stop;
+			try {
+				stop = Integer.parseInt(matcher.group(1));
+			} catch (Exception e) {
+				stop = -1;
+			}
+
+			int lid;
+			try {
+				lid = Integer.parseInt(matcher.group(2));
+			} catch (Exception e) {
+				lid = -1;
+			}
+
+			int vt;
+			try {
+				vt = Integer.parseInt(matcher.group(3));
+			} catch (Exception e) {
+				vt = -1;
+			}
+
+			int rid;
+			try {
+				rid = Integer.parseInt(matcher.group(4));
+			} catch (Exception e) {
+				rid = -1;
+			}
+
 			// Get and format the vehicle number
-			String vehicleNumber = matcher.group(1);
+			String vehicleNumber = matcher.group(5);
 			vehicleNumber = Utils.removeSpaces(vehicleNumber);
 
 			// Get and format the vehicle times of arrival
-			String vehicleTimes = matcher.group(2);
+			String vehicleTimes = matcher.group(6);
 			vehicleTimes = Utils.removeSpaces(vehicleTimes);
 			ArrayList<String> arrivalTimes = formatArrivalTimes(vehicleTimes
 					.split(","));
 
 			// Get and format the vehicle direction
-			String vehicleDirection = matcher.group(3);
+			String vehicleDirection = matcher.group(7);
 			vehicleDirection = Utils.formatDirectionName(vehicleDirection);
 			if (!"bg".equals(language)) {
 				vehicleDirection = TranslatorCyrillicToLatin.translate(context,
@@ -233,7 +263,8 @@ public class ProcessVirtualBoards {
 
 			// Create the vehicle and add it to the list
 			VehicleEntity vehicle = new VehicleEntity(vehicleNumber,
-					vehicleType, vehicleDirection, arrivalTimes);
+					vehicleType, vehicleDirection, arrivalTimes, stop, lid, vt,
+					rid);
 			vehiclesList.add(vehicle);
 		}
 

@@ -110,7 +110,8 @@ public class ClosestStationsList extends SherlockFragmentActivity {
 
 		// Retrieve the current position
 		RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-				context, null, RetrieveCurrentLocationTypeEnum.CS_LIST_REFRESH);
+				context, context.getSupportFragmentManager(), null,
+				RetrieveCurrentLocationTypeEnum.CS_LIST_REFRESH);
 		retrieveCurrentLocation.execute();
 	}
 

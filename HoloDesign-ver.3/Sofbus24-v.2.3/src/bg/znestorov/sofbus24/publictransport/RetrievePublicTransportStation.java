@@ -107,8 +107,13 @@ public class RetrievePublicTransportStation extends
 				ptScheduleIntent = new Intent(context,
 						PublicTransportScheduleDialog.class);
 			}
+
 			ptScheduleIntent.putExtra(
 					Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE, ptStation);
+			ptScheduleIntent.putExtra(
+					Constants.BUNDLE_PUBLIC_TRANSPORT_VEHICLE,
+					ptDirectionsEntity.getVehicle());
+
 			context.startActivity(ptScheduleIntent);
 		} else {
 			ActivityUtils.showNoInternetOrInfoToast(context);

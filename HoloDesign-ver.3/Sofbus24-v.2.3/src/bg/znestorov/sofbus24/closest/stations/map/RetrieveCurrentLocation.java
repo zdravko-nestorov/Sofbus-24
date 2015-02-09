@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.RetrieveCurrentLocationTypeEnum;
 import bg.znestorov.sofbus24.main.ClosestStationsList;
@@ -37,6 +38,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 	private FragmentActivity context;
 	private GlobalEntity globalContext;
+	private FragmentManager fragmentManager;
 
 	private ProgressDialog progressDialog;
 	private RetrieveCurrentLocationTypeEnum retrieveCurrentLocationType;
@@ -51,7 +53,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	private MyLocationListener myGPSLocationListener;
 
 	// Available Location providers
-	private boolean isLocationServicesAvailable;
+	private boolean areLocationServicesAvailable;
 	private boolean isAnyProviderEabled;
 
 	// Different location providers
@@ -63,11 +65,12 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	private static final long MIN_TIME_BETWEEN_UPDATES = 1000 * 2;
 
 	public RetrieveCurrentLocation(FragmentActivity context,
-			ProgressDialog progressDialog,
+			FragmentManager fragmentManager, ProgressDialog progressDialog,
 			RetrieveCurrentLocationTypeEnum retrieveCurrentLocationType) {
 
 		this.context = context;
 		this.globalContext = (GlobalEntity) context.getApplicationContext();
+		this.fragmentManager = fragmentManager;
 
 		this.progressDialog = progressDialog;
 		this.retrieveCurrentLocationType = retrieveCurrentLocationType;
@@ -81,12 +84,12 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 		String locationProviders = Settings.Secure.getString(
 				context.getContentResolver(),
 				Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-		isLocationServicesAvailable = locationProviders
+		areLocationServicesAvailable = locationProviders
 				.contains(LocationManager.NETWORK_PROVIDER)
 				|| locationProviders.contains(LocationManager.GPS_PROVIDER);
 
 		try {
-			if (isLocationServicesAvailable) {
+			if (areLocationServicesAvailable) {
 				locationManager = (LocationManager) context
 						.getSystemService(Context.LOCATION_SERVICE);
 				registerForLocationUpdates();
@@ -101,13 +104,8 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 		while (latitude == 0.0 && longitude == 0.0) {
 
-			// In case of all providers are disabled - dissmiss the progress
-			// dialog (if any) and cancel the async task
+			// In case of all providers are disabled - cancel the async task
 			if (!isAnyProviderEabled) {
-				if (progressDialog != null && progressDialog.isShowing()) {
-					progressDialog.dismiss();
-				}
-
 				cancel(true);
 			}
 
@@ -280,7 +278,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	private void actionsOnLocationFound() {
 
 		// Check if the location is available
-		if (isLocationServicesAvailable) {
+		if (areLocationServicesAvailable) {
 
 			// Check which activity called the async task
 			switch (retrieveCurrentLocationType) {
@@ -302,19 +300,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 				break;
 			}
 		} else {
-			try {
-				DialogFragment dialogFragment = new LocationSourceDialog();
-				dialogFragment.show(context.getSupportFragmentManager(),
-						"dialogFragment");
-			} catch (Exception e) {
-				/**
-				 * Fixing a strange error that is happening sometimes when the
-				 * dialog is created. I guess sometimes the activity gets
-				 * destroyed before the dialog successfully be shown.
-				 * 
-				 * java.lang.IllegalStateException: Activity has been destroyed
-				 */
-			}
+			showLocationSourceDialog();
 		}
 	}
 
@@ -432,23 +418,41 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 			switch (retrieveCurrentLocationType) {
 			case CS_MAP_INIT:
 				if (progressDialog.isShowing()) {
-					showLocationMapErrorToast();
 
-					Intent closestStationsMapIntent = new Intent(context,
-							ClosestStationsMap.class);
-					context.startActivity(closestStationsMapIntent);
+					// Check if the location is available
+					if (areLocationServicesAvailable) {
+						showLocationMapErrorToast();
+
+						Intent closestStationsMapIntent = new Intent(context,
+								ClosestStationsMap.class);
+						context.startActivity(closestStationsMapIntent);
+					} else {
+						showLocationSourceDialog();
+					}
 				}
 
 				break;
 			case CS_LIST_INIT:
 				if (progressDialog.isShowing()) {
-					showLocationErrorToast();
+
+					// Check if the location is available
+					if (areLocationServicesAvailable) {
+						showLocationErrorToast();
+					} else {
+						showLocationSourceDialog();
+					}
 				}
 
 				break;
 			case CS_LIST_REFRESH:
-				showLongToast(context
-						.getString(R.string.app_location_modules_timeout_error));
+
+				// Check if the location is available
+				if (areLocationServicesAvailable) {
+					showLongToast(context
+							.getString(R.string.app_location_modules_timeout_error));
+				} else {
+					showLocationSourceDialog();
+				}
 
 				((ClosestStationsList) context)
 						.refreshClosestStationsListFragmentFailed();
@@ -460,9 +464,15 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 				break;
 			case DT_INIT:
 				if (progressDialog.isShowing()) {
-					showLongToast(context
-							.getString(R.string.app_nearest_station_init_error));
-					startDroidTransActivity();
+
+					// Check if the location is available
+					if (areLocationServicesAvailable) {
+						showLongToast(context
+								.getString(R.string.app_nearest_station_init_error));
+						startDroidTransActivity();
+					} else {
+						showLocationSourceDialog();
+					}
 				}
 
 				break;
@@ -471,8 +481,14 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 				// We should check if the progress dialog is showing, because
 				// the refresh can be stopped
 				if (progressDialog.isShowing()) {
-					showNearestStationErrorToast();
-					refreshDroidTransActivity();
+
+					// Check if the location is available
+					if (areLocationServicesAvailable) {
+						showNearestStationErrorToast();
+						refreshDroidTransActivity();
+					} else {
+						showLocationSourceDialog();
+					}
 				}
 
 				break;
@@ -521,6 +537,24 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 		} else {
 			showLongToast(context
 					.getString(R.string.app_nearest_station_timeout_error));
+		}
+	}
+
+	/**
+	 * Show a location source erro dialog
+	 */
+	private void showLocationSourceDialog() {
+		try {
+			DialogFragment dialogFragment = new LocationSourceDialog();
+			dialogFragment.show(fragmentManager, "dialogFragment");
+		} catch (Exception e) {
+			/**
+			 * Fixing a strange error that is happening sometimes when the
+			 * dialog is created. I guess sometimes the activity gets destroyed
+			 * before the dialog successfully be shown.
+			 * 
+			 * java.lang.IllegalStateException: Activity has been destroyed
+			 */
 		}
 	}
 

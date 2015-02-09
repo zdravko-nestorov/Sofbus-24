@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +106,18 @@ public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
 
 			// Reuse views
 			if (rowView == null) {
-				LayoutInflater inflater = context.getLayoutInflater();
+
+				/*
+				 * Just a workaround because of a exception in the GooglePlay
+				 * console (java.lang.NullPointerException) - Last reported on 7
+				 * Feb 2015 at 19:15
+				 */
+				LayoutInflater inflater = (LayoutInflater) context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				if (inflater == null) {
+					inflater = context.getLayoutInflater();
+				}
+
 				rowView = inflater.inflate(
 						R.layout.activity_navigation_drawer_list_item, null);
 

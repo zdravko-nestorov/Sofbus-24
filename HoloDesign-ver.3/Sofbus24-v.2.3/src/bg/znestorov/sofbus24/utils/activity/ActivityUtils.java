@@ -895,7 +895,7 @@ public class ActivityUtils {
 						.getString(R.string.app_loading_current_location));
 
 				RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-						context, progressDialog,
+						context, fragmentManager, progressDialog,
 						RetrieveCurrentLocationTypeEnum.CS_MAP_INIT);
 				retrieveCurrentLocation.execute();
 				RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
@@ -938,7 +938,8 @@ public class ActivityUtils {
 		}
 
 		RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-				context, progressDialog, retrieveCurrentLocationType);
+				context, fragmentManager, progressDialog,
+				retrieveCurrentLocationType);
 		retrieveCurrentLocation.execute();
 
 		RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(

@@ -49,6 +49,30 @@ public class PublicTransportStationEntity extends StationEntity implements
 		}
 	}
 
+	/**
+	 * Constructor used from the VirtualBoardsTimeFragment to create a
+	 * PublicTransportStation object from the current station and the selected
+	 * vehicle
+	 * 
+	 * @param station
+	 *            the current station
+	 * @param vehicle
+	 *            the selected vehicle
+	 */
+	public PublicTransportStationEntity(StationEntity station,
+			VehicleEntity vehicle) {
+		super(station.getNumber(), station.getName(), station.getLat(), station
+				.getLon(), station.getType(), station.getCustomField());
+
+		this.id = String.valueOf(vehicle.getStop());
+		this.direction = vehicle.getDirection();
+
+		this.schedule = new LinkedHashMap<Integer, ArrayList<String>>();
+		for (int i = 4; i <= 24; i++) {
+			this.schedule.put(i, new ArrayList<String>());
+		}
+	}
+
 	public String getId() {
 		return id;
 	}

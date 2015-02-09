@@ -37,6 +37,7 @@ public class Constants {
 	public static final String BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST = "VIRTUAL BOARDS TIME EMPTY LIST";
 	// ScheduleFragment --> PublicTransport --> PublicTransportFragment --> ...
 	public static final String BUNDLE_PUBLIC_TRANSPORT_SCHEDULE = "PUBLIC TRANSPORT SCHEDULE";
+	public static final String BUNDLE_PUBLIC_TRANSPORT_VEHICLE = "PUBLIC TRANSPORT VEHICLE";
 	// Sofbus24 --> MetroFragment --> MetroStationFragment --> ...
 	public static final String BUNDLE_METRO_SCHEDULE = "METRO SCHEDULE";
 	// MetroSchedule/PublicTransportSchedule --> StationMap
@@ -72,6 +73,8 @@ public class Constants {
 	public static final String PREFERENCE_DEFAULT_VALUE_MARKER_TYPE = "markerSkgtCars";
 	public static final String PREFERENCE_KEY_MARKER_OPTIONS = "markerOptions";
 	public static final String PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS = "markerInfo";
+	public static final String PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS_SCHEDULE = "markerSchedule";
+	public static final String PREFERENCE_DEFAULT_VALUE_MARKER_OPTIONS_SCHEDULE_NO_SNIPPET = "markerScheduleNoSnippet";
 	public static final String PREFERENCE_KEY_STATIONS_RADIUS = "stationsRadius";
 	public static final String PREFERENCE_DEFAULT_VALUE_STATIONS_RADIUS = "600";
 	public static final String PREFERENCE_KEY_POSITION_FOCUS = "positionFocus";
@@ -149,7 +152,7 @@ public class Constants {
 	public static final String VB_REGEX_MULTIPLE_STATION_INFO = "<input type=\"hidden\" name=\"stopCode\" value=\"([0-9]*)\">\\s+<input type=\"hidden\" name=\"o\" value=\"([0-9]*)\">[^^]*?&nbsp;ÒÔËÍ‡&nbsp;([^^]*?)&nbsp;";
 	public static final String VB_REGEX_VEHICLE_PARTS = "<div class=\"arr_title_[0-9]{1,}\">";
 	public static final String VB_REGEX_VEHICLE_TYPE = "<b>\\n(.*?)<\\/b>";
-	public static final String VB_REGEX_VEHICLE_INFO = "<div class=\"arr_info_.*?\">[^^]*?<a href=\".*?\"><b>(.*?)<\\/b><\\/a>&nbsp;-&nbsp;([^^]*?)<br \\/>([^^]*?)<\\/div>";
+	public static final String VB_REGEX_VEHICLE_INFO = "<div class=\"arr_info_.*?\">[^^]*?<a href=\".*?stop=(\\d+)&lid=(\\d+)&vt=(\\d+)&rid=(\\d+)\"><b>(.*?)<\\/b><\\/a>&nbsp;-&nbsp;([^^]*?)<br \\/>([^^]*?)<\\/div>";
 
 	public static final String VB_REGEX_VEHICLE_TYPES = "<a\\s*?href=\"#\"\\s*?onClick=\"closethisasap\\('submit[0-9]*?'\\)\">([^~]*?&nbsp;[^~]*?&nbsp;){2}([^~]*?)</a>";
 	public static final String VB_VEHICLE_TYPE_BUS = "¿¬“Œ¡”—";

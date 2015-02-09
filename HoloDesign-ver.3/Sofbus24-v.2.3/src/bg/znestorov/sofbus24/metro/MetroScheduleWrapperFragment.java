@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -323,8 +324,9 @@ public class MetroScheduleWrapperFragment extends SherlockFragment {
 		String stationDirection = ms.getDirection(context);
 
 		actionBar.setSubtitle(Utils.getCurrentDateTime());
-		metroStationName.setText(stationName + " (" + stationNumber + ")");
-		metroDirection.setText(stationDirection);
+		metroStationName.setText(Html.fromHtml(stationName + " ("
+				+ stationNumber + ")"));
+		metroDirection.setText(Html.fromHtml(stationDirection));
 	}
 
 	/**

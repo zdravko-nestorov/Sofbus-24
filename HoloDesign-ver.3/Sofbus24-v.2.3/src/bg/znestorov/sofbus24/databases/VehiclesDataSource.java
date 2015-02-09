@@ -14,6 +14,7 @@ import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.Utils;
 
 /**
  * Vehicles data source class, responsible for all interactions with the
@@ -58,6 +59,7 @@ public class VehiclesDataSource {
 	 *         exists
 	 */
 	public VehicleEntity createVehicle(VehicleEntity vehicle) {
+
 		if (getVehicle(vehicle) == null) {
 			// Creating ContentValues object and insert the vehicle data in it
 			ContentValues values = new ContentValues();
@@ -97,6 +99,7 @@ public class VehiclesDataSource {
 	 *            the vehicle that will be deleted
 	 */
 	public void deleteVehicle(VehicleEntity vehicle) {
+
 		String where = Sofbus24SQLite.COLUMN_VEHI_NUMBER + " = ? AND "
 				+ Sofbus24SQLite.COLUMN_VEHI_TYPE + " = ?";
 		String[] whereArgs = new String[] {
@@ -114,6 +117,7 @@ public class VehiclesDataSource {
 	 * @return the vehicle if it is found in the DB and null otherwise
 	 */
 	public VehicleEntity getVehicle(VehicleEntity vehicle) {
+
 		String selection = Sofbus24SQLite.COLUMN_VEHI_NUMBER + " = ? AND "
 				+ Sofbus24SQLite.COLUMN_VEHI_TYPE + " = ?";
 		String[] selectionArgs = new String[] {
@@ -150,6 +154,7 @@ public class VehiclesDataSource {
 	 *         otherwise
 	 */
 	public String getVehicleDirection(VehicleTypeEnum vehicleType) {
+
 		String selection = Sofbus24SQLite.COLUMN_VEHI_TYPE + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(vehicleType) };
 
@@ -185,22 +190,23 @@ public class VehiclesDataSource {
 	 */
 	public List<VehicleEntity> getVehiclesViaSearch(VehicleTypeEnum type,
 			String searchText) {
+
 		List<VehicleEntity> vehicles = new ArrayList<VehicleEntity>();
 		Locale currentLocale = new Locale(language);
 		searchText = searchText.toLowerCase(currentLocale);
 
 		StringBuilder query = new StringBuilder();
-		query.append(" SELECT * 											");
-		query.append(" FROM " + Sofbus24SQLite.TABLE_SOF_VEHI + "			");
-		query.append(" WHERE ( 												");
+		query.append(" SELECT * 												\n");
+		query.append(" FROM " + Sofbus24SQLite.TABLE_SOF_VEHI + "				\n");
+		query.append(" WHERE ( 													\n");
 		query.append(" 		lower(CAST(" + Sofbus24SQLite.COLUMN_VEHI_NUMBER
-				+ " AS TEXT)) LIKE '%" + searchText + "%'					");
-		query.append(" OR 													");
+				+ " AS TEXT)) LIKE '%" + searchText + "%'						\n");
+		query.append(" OR 														\n");
 		query.append(" 		lower(" + Sofbus24SQLite.COLUMN_VEHI_DIRECTION
-				+ ") LIKE '%" + searchText + "%'		 					");
-		query.append(" ) AND												");
+				+ ") LIKE '%" + searchText + "%'		 						\n");
+		query.append(" ) AND													\n");
 		query.append(" 		" + Sofbus24SQLite.COLUMN_VEHI_TYPE + " LIKE '%"
-				+ type.toString() + "%'										");
+				+ type.toString() + "%'											\n");
 
 		Cursor cursor = database.rawQuery(query.toString(), null);
 
@@ -234,6 +240,7 @@ public class VehiclesDataSource {
 	 * @return the vehicle object on the current row
 	 */
 	private VehicleEntity cursorToVehicle(Cursor cursor) {
+
 		VehicleEntity vehicle = new VehicleEntity();
 
 		// Check if have to translate the vehicle direction
@@ -261,19 +268,20 @@ public class VehiclesDataSource {
 	public VehicleEntity getVehicleViaStation(StationEntity station) {
 
 		VehicleEntity vehicle = null;
+		String stationNumber = station.getNumber();
 
 		StringBuilder query = new StringBuilder();
-		query.append(" SELECT SOF_VEHI.VEHI_NUMBER, SOF_VEHI.VEHI_TYPE, SOF_VEST.VEST_DIRECTION								\n");
-		query.append(" FROM SOF_VEHI																						\n");
-		query.append(" 		JOIN SOF_VEST																					\n");
-		query.append(" 			ON SOF_VEST.FK_VEST_VEHI_ID = SOF_VEHI.PK_VEHI_ID											\n");
-		query.append(" 		JOIN SOF_STAT																					\n");
-		query.append(" 			ON SOF_STAT.PK_STAT_ID = SOF_VEST.FK_VEST_STAT_ID											\n");
-		query.append(" 			AND SOF_STAT.STAT_NUMBER = " + station.getNumber()
-				+ "																											\n");
+		query.append(" SELECT SOF_VEHI.VEHI_NUMBER, SOF_VEHI.VEHI_TYPE, SOF_VEST.VEST_DIRECTION		\n");
+		query.append(" FROM SOF_VEHI																\n");
+		query.append(" 		JOIN SOF_VEST															\n");
+		query.append(" 			ON SOF_VEST.FK_VEST_VEHI_ID = SOF_VEHI.PK_VEHI_ID					\n");
+		query.append(" 		JOIN SOF_STAT															\n");
+		query.append(" 			ON SOF_STAT.PK_STAT_ID = SOF_VEST.FK_VEST_STAT_ID					\n");
+		query.append(" 			AND SOF_STAT.STAT_NUMBER = %s										\n");
 
 		// Selecting the row that contains the stations data
-		Cursor cursor = database.rawQuery(query.toString(), null);
+		Cursor cursor = database.rawQuery(
+				String.format(query.toString(), stationNumber), null);
 
 		// Iterating the cursor and fill the empty List<Station>
 		if (cursor.getCount() > 0) {
@@ -308,5 +316,59 @@ public class VehiclesDataSource {
 		vehicle.setDirection(cursor.getString(2));
 
 		return vehicle;
+	}
+
+	/**
+	 * Get the vehicles' types that are passing through the choosen station
+	 * 
+	 * @param station
+	 *            the choosen station
+	 * @return the vehicles' types that are passing through the choosen station
+	 */
+	public VehicleTypeEnum getVehicleTypesViaStation(StationEntity station) {
+
+		StringBuilder vehicleType = new StringBuilder();
+		VehicleTypeEnum vehicleTypeEnum = VehicleTypeEnum.BUS;
+		String stationNumber = Utils.removeLeadingZeroes(station.getNumber());
+
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT DISTINCT VEHI_TYPE 									\n");
+		query.append(" FROM SOF_VEHI												\n");
+		query.append(" WHERE PK_VEHI_ID												\n");
+		query.append(" IN  (SELECT DISTINCT FK_VEST_VEHI_ID							\n");
+		query.append(" 		FROM SOF_VEST											\n");
+		query.append(" 		WHERE FK_VEST_STAT_ID =	(SELECT PK_STAT_ID				\n");
+		query.append(" 								 FROM SOF_STAT					\n");
+		query.append(" 								 WHERE STAT_NUMBER = %s))		\n");
+		query.append(" ORDER BY VEHI_TYPE											\n");
+
+		// Selecting the row that contains the stations data
+		Cursor cursor = database.rawQuery(
+				String.format(query.toString(), stationNumber), null);
+
+		// Iterating the cursor and fill the empty List<Station>
+		cursor.moveToFirst();
+
+		while (!cursor.isAfterLast()) {
+			vehicleType.append(cursor.getString(0)).append("_");
+			cursor.moveToNext();
+		}
+
+		// Closing the cursor
+		cursor.close();
+
+		// Get the vehicles' type passing through the station
+		if (vehicleType.length() > 0) {
+			vehicleType.deleteCharAt(vehicleType.length() - 1);
+
+			try {
+				vehicleTypeEnum = VehicleTypeEnum.valueOf(vehicleType
+						.toString());
+			} catch (Exception e) {
+				vehicleTypeEnum = VehicleTypeEnum.BUS;
+			}
+		}
+
+		return vehicleTypeEnum;
 	}
 }

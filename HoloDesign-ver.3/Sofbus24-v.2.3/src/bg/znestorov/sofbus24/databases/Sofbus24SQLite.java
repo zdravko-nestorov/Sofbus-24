@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.app.Activity;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import bg.znestorov.sofbus24.about.Configuration;
@@ -47,7 +46,6 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 	public static final String COLUMN_VEST_DIRECTION = "VEST_DIRECTION";
 
 	// The Android's default system path of the database
-	private static String DB_PATH = "//data//data//bg.znestorov.sofbus24.main//databases//";
 	public static String DB_NAME = "sofbus24.db";
 	private static final int DATABASE_VERSION = 1;
 
@@ -184,7 +182,7 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 	 * @return if the DB exists or not
 	 */
 	private boolean checkDataBase() {
-		File dbFile = new File(DB_PATH + DB_NAME);
+		File dbFile = context.getDatabasePath(DB_NAME);
 
 		return dbFile.exists();
 	}
@@ -211,7 +209,7 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 				SQLiteDatabase.CREATE_IF_NECESSARY, null);
 
 		// Path to the just created empty DB
-		String outFileName = DB_PATH + DB_NAME;
+		String outFileName = context.getDatabasePath(DB_NAME).getAbsolutePath();
 
 		// Open the empty DB as the output stream
 		OutputStream myOutput = new FileOutputStream(outFileName);
@@ -230,19 +228,4 @@ public class Sofbus24SQLite extends SQLiteOpenHelper {
 		myInput.close();
 	}
 
-	/**
-	 * Open the stations DB in read-only mode
-	 * 
-	 * @return the stations DB
-	 * @throws SQLException
-	 */
-	public SQLiteDatabase openDataBase() throws SQLException {
-
-		// Open the database
-		String myPath = DB_PATH + DB_NAME;
-		dbSofbus24 = SQLiteDatabase.openDatabase(myPath, null,
-				SQLiteDatabase.OPEN_READONLY);
-
-		return dbSofbus24;
-	}
 }

@@ -20,6 +20,11 @@ public class VehicleEntity implements Serializable {
 	private String direction;
 	private ArrayList<String> arrivalTimes;
 
+	private int stop = -1;
+	private int lid = -1;
+	private int vt = -1;
+	private int rid = -1;
+
 	public VehicleEntity() {
 	}
 
@@ -29,6 +34,7 @@ public class VehicleEntity implements Serializable {
 	}
 
 	public VehicleEntity(String number, VehicleTypeEnum type, String direction) {
+
 		this.number = number;
 		this.type = type;
 		this.direction = direction;
@@ -37,10 +43,45 @@ public class VehicleEntity implements Serializable {
 
 	public VehicleEntity(String number, VehicleTypeEnum type, String direction,
 			ArrayList<String> arrivalTimes) {
+
 		this.number = number;
 		this.type = type;
 		this.direction = direction;
 		this.arrivalTimes = arrivalTimes;
+	}
+
+	/**
+	 * Constructor used in VirtualBoardsTime activity to retrieve the schedule
+	 * 
+	 * @param number
+	 *            the vehicle number
+	 * @param type
+	 *            the vehicle type
+	 * @param direction
+	 *            the vehicle direction
+	 * @param arrivalTimes
+	 *            the arrival times
+	 * @param stop
+	 *            the stop unique id
+	 * @param lid
+	 *            the lid unique id
+	 * @param vt
+	 *            the vt unique id
+	 * @param rid
+	 *            the rid unique id
+	 */
+	public VehicleEntity(String number, VehicleTypeEnum type, String direction,
+			ArrayList<String> arrivalTimes, int stop, int lid, int vt, int rid) {
+
+		this.number = number;
+		this.type = type;
+		this.direction = direction;
+		this.arrivalTimes = arrivalTimes;
+
+		this.stop = stop;
+		this.lid = lid;
+		this.vt = vt;
+		this.rid = rid;
 	}
 
 	public String getNumber() {
@@ -75,11 +116,57 @@ public class VehicleEntity implements Serializable {
 		this.arrivalTimes = arrivalTimes;
 	}
 
+	public int getStop() {
+		return stop;
+	}
+
+	public void setStop(int stop) {
+		this.stop = stop;
+	}
+
+	public int getLid() {
+		return lid;
+	}
+
+	public void setLid(int lid) {
+		this.lid = lid;
+	}
+
+	public int getVt() {
+		return vt;
+	}
+
+	public void setVt(int vt) {
+		this.vt = vt;
+	}
+
+	public int getRid() {
+		return rid;
+	}
+
+	public void setRid(int rid) {
+		this.rid = rid;
+	}
+
+	/**
+	 * Indicates if the vehicle entity has a shcedule URL
+	 * 
+	 * @return if the vehicle has scedule url
+	 */
+	public boolean hasVehicleScheduleUrl() {
+
+		boolean hasVehicleScheduleUrl = this.stop > 0 && this.lid > 0
+				&& this.vt > 0 && this.rid > 0;
+
+		return hasVehicleScheduleUrl;
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tnumber: " + number + "\n\ttype: "
 				+ type + "\n\tdirection: " + direction + "\n\tarrivalTimes: "
-				+ arrivalTimes + "\n}";
+				+ arrivalTimes + "\n\tstop: " + stop + "\n\tlid: " + lid
+				+ "\n\tvt: " + vt + "\n\trid: " + rid + "\n}";
 	}
 
 }
