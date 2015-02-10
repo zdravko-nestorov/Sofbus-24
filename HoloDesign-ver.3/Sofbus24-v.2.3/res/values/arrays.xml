@@ -40,6 +40,22 @@
         <item name="timeSystem">timeSystem</item>
     </string-array>
 
+    <!-- Local schedule -->
+    <string-array name="numberOfDays">
+        <item name="15">15 дни</item>
+        <item name="30">30 дни</item>
+        <item name="45">45 дни</item>
+        <item name="60">60 дни</item>
+        <item name="75">75 дни</item>
+    </string-array>
+    <string-array name="numberOfDaysValues">
+        <item name="15">15</item>
+        <item name="30">30</item>
+        <item name="45">45</item>
+        <item name="60">60</item>
+        <item name="75">75</item>
+    </string-array>
+
     <!-- Closest stations -->
     <string-array name="markerType">
         <item name="markerStandard">Стандартен</item>

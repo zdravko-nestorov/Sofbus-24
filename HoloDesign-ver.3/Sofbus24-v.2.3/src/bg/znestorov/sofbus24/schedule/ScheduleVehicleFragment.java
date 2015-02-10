@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -19,11 +19,15 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
+
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.MenuItem;
 
 /**
  * Schedule Vehiles Fragment containing information about the public transport
@@ -33,7 +37,7 @@ import bg.znestorov.sofbus24.utils.activity.SearchEditText;
  * @version 1.0
  * 
  */
-public class ScheduleVehicleFragment extends ListFragment implements
+public class ScheduleVehicleFragment extends SherlockListFragment implements
 		OnItemClickListener {
 
 	private Activity context;
@@ -101,6 +105,21 @@ public class ScheduleVehicleFragment extends ListFragment implements
 		ScheduleVehicleAdapter scheduleStationAdapter = (ScheduleVehicleAdapter) gridViewScheduleVehicles
 				.getAdapter();
 		scheduleVehicleInfo.onListItemClick(scheduleStationAdapter, position);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		case R.id.action_pt_clear_schedule_cache:
+			DialogFragment dialogFragment = ScheduleCacheDeleteDialog
+					.newInstance(VehicleTypeEnum.BTT, "");
+			dialogFragment.show(getChildFragmentManager(), "dialog");
+
+			break;
+		}
+
+		return true;
 	}
 
 	/**

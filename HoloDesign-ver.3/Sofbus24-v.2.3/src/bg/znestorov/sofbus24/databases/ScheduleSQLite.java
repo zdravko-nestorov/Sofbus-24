@@ -30,7 +30,8 @@ public class ScheduleSQLite extends SQLiteOpenHelper {
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
 			+ COLUMN_SCHE_TYPE + " TEXT NOT NULL, " + COLUMN_SCHE_NUMBER
 			+ " TEXT NOT NULL, " + COLUMN_SCHE_HTML + " TEXT, "
-			+ COLUMN_SCHE_TIMESTAMP + " TEXT NOT NULL);";
+			+ COLUMN_SCHE_TIMESTAMP
+			+ " DATETIME NOT NULL DEFAULT CURRENT_DATE);";
 
 	public ScheduleSQLite(Activity context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);

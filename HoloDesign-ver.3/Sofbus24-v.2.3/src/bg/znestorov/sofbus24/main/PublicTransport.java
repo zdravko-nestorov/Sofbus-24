@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
-import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.publictransport.PublicTransportFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -127,10 +126,12 @@ public class PublicTransport extends SherlockFragmentActivity implements
 	 * SectionsPagerAdapter)
 	 */
 	private void initLayoutFields() {
+
 		// Set up the ActionBar
 		actionBar = getSupportActionBar();
 		actionBar.setTitle(getString(R.string.pt_title));
-		actionBar.setSubtitle(getSubtitle());
+		actionBar.setSubtitle(ActivityUtils.getVehicleTitle(context,
+				ptDirectionsEntity.getVehicle()));
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -164,37 +165,6 @@ public class PublicTransport extends SherlockFragmentActivity implements
 					.setText(mSectionsPagerAdapter.getTabName(i))
 					.setTabListener(this));
 		}
-	}
-
-	/**
-	 * Create the ActionBar subtitle using the vehicle type and number
-	 * 
-	 * @return the actionBar subtitle in format - [VehicleType] ¹[VehicleNumber]
-	 */
-	private String getSubtitle() {
-		VehicleEntity vehicle = ptDirectionsEntity.getVehicle();
-		String subtitle;
-
-		switch (vehicle.getType()) {
-		case BUS:
-			subtitle = String.format(getString(R.string.pt_bus),
-					vehicle.getNumber());
-			break;
-		case TROLLEY:
-			subtitle = String.format(getString(R.string.pt_trolley),
-					vehicle.getNumber());
-			break;
-		case TRAM:
-			subtitle = String.format(getString(R.string.pt_tram),
-					vehicle.getNumber());
-			break;
-		default:
-			subtitle = String.format(getString(R.string.pt_bus),
-					vehicle.getNumber());
-			break;
-		}
-
-		return subtitle;
 	}
 
 	/**

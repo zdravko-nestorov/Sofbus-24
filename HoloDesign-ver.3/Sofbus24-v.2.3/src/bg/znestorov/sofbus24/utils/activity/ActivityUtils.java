@@ -59,6 +59,7 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.RetrieveCurrentLocationTypeEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.main.ClosestStationsMap;
 import bg.znestorov.sofbus24.main.HomeScreenSelect;
 import bg.znestorov.sofbus24.main.R;
@@ -1049,4 +1050,74 @@ public class ActivityUtils {
 			webView.setBackgroundColor(Color.argb(1, 0, 0, 0));
 		}
 	}
+
+	/**
+	 * Create a vehicle title in format - [VehicleType] ¹[VehicleNumber]
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param vehicleType
+	 *            the selected vehicle type
+	 * @param vehicleNumber
+	 *            the selected vehicle number
+	 * @return title in format - [VehicleType] ¹[VehicleNumber]
+	 */
+	public static String getVehicleTitle(Activity context,
+			VehicleTypeEnum vehicleType, String vehicleNumber) {
+
+		return getVehicleTitle(context, new VehicleEntity(vehicleNumber,
+				vehicleType, null));
+	}
+
+	/**
+	 * Create a vehicle title in format - [VehicleType] ¹[VehicleNumber]
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param vehicle
+	 *            the selected vehicle
+	 * @return title in format - [VehicleType] ¹[VehicleNumber]
+	 */
+	public static String getVehicleTitle(Activity context, VehicleEntity vehicle) {
+
+		String vehicleTitle;
+
+		switch (vehicle.getType()) {
+		case BUS:
+			vehicleTitle = String.format(context.getString(R.string.pt_bus),
+					vehicle.getNumber());
+			break;
+		case TROLLEY:
+			vehicleTitle = String
+					.format(context.getString(R.string.pt_trolley),
+							vehicle.getNumber());
+			break;
+		case TRAM:
+			vehicleTitle = String.format(context.getString(R.string.pt_tram),
+					vehicle.getNumber());
+			break;
+		default:
+			vehicleTitle = String.format(context.getString(R.string.pt_bus),
+					vehicle.getNumber());
+			break;
+		}
+
+		return vehicleTitle;
+	}
+
+	/**
+	 * Create a station title in format - [Station name] ([Station number])
+	 * 
+	 * @param station
+	 *            the choosen station
+	 * @return title in format - [Station name] ([Station number])
+	 */
+	public static String getStationTitle(StationEntity station) {
+
+		String stationTitle = String.format("%s (%s)", station.getName(),
+				station.getNumber());
+
+		return stationTitle;
+	}
+
 }

@@ -68,8 +68,7 @@
     <string name="action_metro_map_route">Route</string>
     <string name="action_metro_schedule_site">SKGT Schedule</string>
     <string name="action_edit_tabs">Home Screen</string>
-    <string name="action_settints">Settings</string>
-    <string name="action_about">Information</string>
+    <string name="action_clear_schedule_cache">Clear cache</string>
     <!-- Google Maps -->
     <string name="action_gm_map_favorites">Favourites</string>
     <string name="action_gm_map_droidtrans">SKGT Cars</string>
@@ -190,6 +189,13 @@
     <string name="pref_category_stations_timeType_summary">Remaining time or time of arrival</string>
     <string name="pref_category_stations_timeSource_title">Public transport</string>
     <string name="pref_category_stations_timeSource_summary">Determine what time to be used for display/calculate the extracted information</string>
+    <string name="pref_category_schedule_cache">LOCAL SCHEDULE</string>
+    <string name="pref_category_schedule_cache_cacheState_title">Local schedule</string>
+    <string name="pref_category_schedule_cache_cacheState_summary">Use a local schedule for the public transport vehicles (in case of a problem with the information retrieval)</string>
+    <string name="pref_category_schedule_cache_numberOfDays_title">Maximum number of days to keep files in the cache</string>
+    <string name="pref_category_schedule_cache_numberOfDays_summary">Files older than the maximum number of days will be automatically removed from the cache</string>
+    <string name="pref_category_schedule_cache_showCacheToast_title">Show a toast notification</string>
+    <string name="pref_category_schedule_cache_showCacheToast_summary">Show a toast notification when loading the local schedule from the cache</string>
     <string name="pref_category_map">GOOGLE MAP</string>
     <string name="pref_category_map_marker_type_title">Google Maps marker type</string>
     <string name="pref_category_map_marker_type_summary">Determine the marker picture that will be shown on the map</string>
@@ -309,6 +315,14 @@
     <string name="pt_item_station_number_text_sign" formatted="false">Station №%s</string>
     <string name="pt_empty_list" formatted="false"><![CDATA[No stations are found for <b>%s</b> in direction <b>%s</b>. Please try again with another search criteria.]]></string>
     <string name="pt_menu_map_route_loading" formatted="false"><![CDATA[Drawing the route...]]></string>
+    <string name="pt_menu_clear_all_schedule_cache" formatted="false"><![CDATA[Are you sure that you want to remove the local schedule for <b>all</b> public transport lines?]]></string>
+    <string name="pt_menu_clear_all_schedule_cache_toast" formatted="false"><![CDATA[The local schedule for <b>all</b> public transport lines was successfully deleted from the cache.]]></string>
+    <string name="pt_menu_clear_all_pt_schedule_cache_empty_toast" formatted="false"><![CDATA[There is no available local schedule for the Public Transport vehicles. If you want to use the offline schedule you should load the information from the website of SKGT at least once.]]></string>
+    <string name="pt_menu_clear_all_metro_schedule_cache_empty_toast" formatted="false"><![CDATA[There is no available local schedule for the Metro. If you want to use the offline schedule you should load the information from the website of SKGT at least once.]]></string>
+    <string name="pt_menu_clear_schedule_cache" formatted="false"><![CDATA[Are you sure that you want to remove the local schedule for <b>%s</b>?]]></string>
+    <string name="pt_menu_clear_schedule_cache_toast" formatted="false"><![CDATA[The local schedule for <b>%s</b> was successfully deleted from the cache.]]></string>
+    <string name="pt_menu_clear_schedule_cache_empty_toast" formatted="false"><![CDATA[There is no available local schedule for <b>%s</b>. If you want to use the offline schedule you should load the information from the website of SKGT at least once.]]></string>
+    <string name="pt_schedule_cache_loaded" formatted="false"><![CDATA[An error occurred while retrieving the information for <b>%s</b>. The local schedule from <b>%s</b> was used.]]></string>
 
     <!-- Public Transport Schedule -->
     <string name="pt_schedule_first">First car:</string>
@@ -396,6 +410,7 @@
 
     <!-- Route Changes -->
     <string name="route_changes_title">Route Changes</string>
+    <string name="route_changes_label_creation_date" formatted="false"><![CDATA[Uploaded on: %s]]></string>
     <string name="route_changes_label_valid_from" formatted="false"><![CDATA[Valid from: %s]]></string>
     <string name="route_changes_loading" formatted="false"><![CDATA[Looking for a route changes...]]></string>
     <string name="route_changes_list_empty_text">No changes of the Sofia Public Transport routes are announced.</string>

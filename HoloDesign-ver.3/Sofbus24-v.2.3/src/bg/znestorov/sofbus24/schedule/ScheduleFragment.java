@@ -2,6 +2,7 @@ package bg.znestorov.sofbus24.schedule;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.activity.NonSwipeableViewPager;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.MenuItem;
 
 /**
  * Schedule Fragment containing information about the public transport vehicles
@@ -85,6 +87,41 @@ public class ScheduleFragment extends SherlockFragment {
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		// Get all fragments in the ChildFragmentManager - the fragments are for
+		// schedule and metro wrapper fragments
+		List<Fragment> fakeScheduleFragmentsList = getChildFragmentManager()
+				.getFragments();
+
+		// Check if any fragments exist in the ChildFragmentManager. If any -
+		// get the ScheduleVehicleFragments and get the one that corresponds to
+		// the current direction
+		if (fakeScheduleFragmentsList != null) {
+			List<ScheduleVehicleFragment> scheduleVehicleFragment = new ArrayList<ScheduleVehicleFragment>();
+
+			// Fill a list with the MetroStationFragments
+			for (Fragment fragment : fakeScheduleFragmentsList) {
+				if (fragment != null
+						&& fragment instanceof ScheduleVehicleFragment) {
+					scheduleVehicleFragment
+							.add((ScheduleVehicleFragment) fragment);
+				}
+			}
+
+			// Get the MetroStationFragment that corresponds to the current
+			// direction
+			if (!scheduleVehicleFragment.isEmpty()
+					&& scheduleVehicleFragment.size() > currentVehicle) {
+				scheduleVehicleFragment.get(currentVehicle)
+						.onOptionsItemSelected(item);
+			}
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	/**

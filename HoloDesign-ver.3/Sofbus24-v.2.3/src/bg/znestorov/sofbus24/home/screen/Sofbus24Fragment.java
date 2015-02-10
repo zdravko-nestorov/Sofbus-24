@@ -101,22 +101,39 @@ public class Sofbus24Fragment extends SherlockFragment implements
 			MenuItem metroMapRoute = menu.findItem(R.id.action_metro_map_route);
 			MenuItem metroScheduleSite = menu
 					.findItem(R.id.action_metro_schedule_site);
+			MenuItem ptClearScheduleCache = menu
+					.findItem(R.id.action_pt_clear_schedule_cache);
+			MenuItem metroClearScheduleCache = menu
+					.findItem(R.id.action_metro_clear_schedule_cache);
 
 			if (currentFragment instanceof FavouritesStationFragment) {
 				favouritesSort.setVisible(true);
 				favouritesRemoveAll.setVisible(true);
 				metroMapRoute.setVisible(false);
 				metroScheduleSite.setVisible(false);
+				ptClearScheduleCache.setVisible(false);
+				metroClearScheduleCache.setVisible(false);
+			} else if (currentFragment instanceof ScheduleFragment) {
+				favouritesSort.setVisible(false);
+				favouritesRemoveAll.setVisible(false);
+				metroMapRoute.setVisible(false);
+				metroScheduleSite.setVisible(false);
+				ptClearScheduleCache.setVisible(true);
+				metroClearScheduleCache.setVisible(false);
 			} else if (currentFragment instanceof MetroFragment) {
 				favouritesSort.setVisible(false);
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(true);
 				metroScheduleSite.setVisible(true);
+				ptClearScheduleCache.setVisible(false);
+				metroClearScheduleCache.setVisible(true);
 			} else {
 				favouritesSort.setVisible(false);
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(false);
 				metroScheduleSite.setVisible(false);
+				ptClearScheduleCache.setVisible(false);
+				metroClearScheduleCache.setVisible(false);
 			}
 		}
 	}
@@ -187,6 +204,15 @@ public class Sofbus24Fragment extends SherlockFragment implements
 						for (Fragment fragment : sofbus24FragmentsList) {
 							if (fragment != null
 									&& fragment instanceof FavouritesStationFragment) {
+								currentFragment = fragment;
+							}
+						}
+					}
+
+					if (fakeFragment instanceof ScheduleFragment) {
+						for (Fragment fragment : sofbus24FragmentsList) {
+							if (fragment != null
+									&& fragment instanceof ScheduleFragment) {
 								currentFragment = fragment;
 							}
 						}

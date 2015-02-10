@@ -6,8 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import bg.znestorov.sofbus24.entity.ScheduleCacheEntity;
-import bg.znestorov.sofbus24.entity.ScheduleCacheTypeEnum;
-import bg.znestorov.sofbus24.utils.Utils;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 
 /**
  * Schedule cache data source used for DB interactions
@@ -49,7 +48,7 @@ public class ScheduleDataSource {
 	 *            the number of the inserted data
 	 * @return if the data is successfull inserted into the db
 	 */
-	public boolean createScheduleCache(ScheduleCacheTypeEnum dataType,
+	public boolean createScheduleCache(VehicleTypeEnum dataType,
 			String dataNumber, String htmlSchedule) {
 
 		if (htmlSchedule != null && !"".equals(htmlSchedule)) {
@@ -60,8 +59,6 @@ public class ScheduleDataSource {
 					String.valueOf(dataType));
 			values.put(ScheduleSQLite.COLUMN_SCHE_NUMBER, dataNumber);
 			values.put(ScheduleSQLite.COLUMN_SCHE_HTML, htmlSchedule);
-			values.put(ScheduleSQLite.COLUMN_SCHE_TIMESTAMP,
-					Utils.getCurrentDateTime());
 
 			// Insert the ContentValues data into the database
 			long rowId = database.insert(ScheduleSQLite.TABLE_SOF_SCHE, null,
@@ -74,13 +71,6 @@ public class ScheduleDataSource {
 	}
 
 	/**
-	 * Delete all schedule cache from the database;
-	 */
-	public void deleteAllScheduleCache() {
-		database.delete(ScheduleSQLite.TABLE_SOF_SCHE, null, null);
-	}
-
-	/**
 	 * Get a shcedule cache via a cache type and number
 	 * 
 	 * @param dataType
@@ -90,14 +80,14 @@ public class ScheduleDataSource {
 	 * @return a ScheduleCacheEntity object with a data for the searched number
 	 *         and type
 	 */
-	public ScheduleCacheEntity getScheduleCache(ScheduleCacheTypeEnum dataType,
+	public ScheduleCacheEntity getScheduleCache(VehicleTypeEnum dataType,
 			String dataNumber) {
 
 		ScheduleCacheEntity scheduleCache = null;
 
 		String[] dataColumns = new String[] { scheduleColumns[3],
 				scheduleColumns[4] };
-		String selection = ScheduleSQLite.COLUMN_SCHE_TYPE + " = ? OR "
+		String selection = ScheduleSQLite.COLUMN_SCHE_TYPE + " = ? AND "
 				+ ScheduleSQLite.COLUMN_SCHE_NUMBER + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(dataType),
 				dataNumber };
@@ -119,6 +109,51 @@ public class ScheduleDataSource {
 		cursor.close();
 
 		return scheduleCache;
+	}
+
+	/**
+	 * Delete the schedule cache for the selected type
+	 * 
+	 * @param dataType
+	 *            the type of the searched data
+	 * @return if the cache is successfully deleted
+	 */
+	public boolean deleteScheduleCache(VehicleTypeEnum dataType) {
+
+		String where = ScheduleSQLite.COLUMN_SCHE_TYPE + " = ?";
+		String[] whereArgs = new String[] { String.valueOf(dataType) };
+
+		return database.delete(ScheduleSQLite.TABLE_SOF_SCHE, where, whereArgs) > 0;
+	}
+
+	/**
+	 * Delete the schedule cache before a selected number of days
+	 * 
+	 * @param numberOfDays
+	 *            the records beyond these number of days will be deleted
+	 * @return if the cache is successfully deleted
+	 */
+	public boolean deleteScheduleCache(int numberOfDays) {
+
+		if (numberOfDays > 0) {
+			String where = ScheduleSQLite.COLUMN_SCHE_TIMESTAMP + " < ?";
+			String[] whereArgs = new String[] { String.format(
+					"DATE('NOW','-%s DAY')", numberOfDays) };
+
+			return database.delete(ScheduleSQLite.TABLE_SOF_SCHE, where,
+					whereArgs) > 0;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Delete all schedule cache from the database;
+	 * 
+	 * @return if the cache is successfully deleted
+	 */
+	public boolean deleteAllScheduleCache() {
+		return database.delete(ScheduleSQLite.TABLE_SOF_SCHE, null, null) > 0;
 	}
 
 }

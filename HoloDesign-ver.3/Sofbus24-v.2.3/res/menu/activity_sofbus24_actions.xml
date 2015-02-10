@@ -38,6 +38,16 @@
                 android:showAsAction="never"
                 android:title="@string/action_metro_map_route"/>
             <item
+                android:id="@+id/action_pt_clear_schedule_cache"
+                android:icon="@drawable/ic_menu_clear_schedule_cache"
+                android:showAsAction="never"
+                android:title="@string/action_clear_schedule_cache"/>
+            <item
+                android:id="@+id/action_metro_clear_schedule_cache"
+                android:icon="@drawable/ic_menu_clear_schedule_cache"
+                android:showAsAction="never"
+                android:title="@string/action_clear_schedule_cache"/>
+            <item
                 android:id="@+id/action_metro_schedule_site"
                 android:icon="@drawable/ic_menu_webpage"
                 android:showAsAction="never"

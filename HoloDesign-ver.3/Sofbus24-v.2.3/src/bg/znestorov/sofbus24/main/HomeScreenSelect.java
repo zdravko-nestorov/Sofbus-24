@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import bg.znestorov.sofbus24.about.Configuration;
+import bg.znestorov.sofbus24.databases.ScheduleDatabaseUtils;
 import bg.znestorov.sofbus24.databases.Sofbus24DatabaseUtils;
 import bg.znestorov.sofbus24.databases.Sofbus24SQLite;
 import bg.znestorov.sofbus24.droidtrans.DroidTransLoadInfo;
@@ -324,6 +325,10 @@ public class HomeScreenSelect extends SherlockFragmentActivity implements
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
+
+			// Delete the files in the cache after the maximum number of days
+			// have passed
+			ScheduleDatabaseUtils.deleteOldScheduleCache(context);
 
 			// Create the database by copying it from the assets folder to the
 			// internal memory

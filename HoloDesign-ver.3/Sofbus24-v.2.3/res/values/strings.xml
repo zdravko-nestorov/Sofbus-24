@@ -71,8 +71,7 @@
     <string name="action_metro_map_route">Маршрут</string>
     <string name="action_metro_schedule_site">ЦГМ Разписание</string>
     <string name="action_edit_tabs">Начален екран</string>
-    <string name="action_settints">Настройки</string>
-    <string name="action_about">Информация</string>
+    <string name="action_clear_schedule_cache">Изчисти кеша</string>
     <!-- Google Maps -->
     <string name="action_gm_map_favorites">Фаворити</string>
     <string name="action_gm_map_droidtrans">Коли на СКГТ</string>
@@ -193,6 +192,13 @@
     <string name="pref_category_stations_timeType_summary">Оставащо време или времена на пристигане</string>
     <string name="pref_category_stations_timeSource_title">Времена на градския транспорт</string>
     <string name="pref_category_stations_timeSource_summary">Определяне на кое време да се използва за показване/пресмятане на извлечената информация</string>
+    <string name="pref_category_schedule_cache">ЛОКАЛНО РАЗПИСАНИЕ</string>
+    <string name="pref_category_schedule_cache_cacheState_title">Локално разписание</string>
+    <string name="pref_category_schedule_cache_cacheState_summary">Използване на локално разписание за колите на градския транспорт (в случаи на проблем при извличането на информацията)</string>
+    <string name="pref_category_schedule_cache_numberOfDays_title">Максимален брой дни за запазване на разписанието в кеша</string>
+    <string name="pref_category_schedule_cache_numberOfDays_summary">Локалното разписание, което е по-старо от максималния брой дни, ще бъде автоматично премахнато от кеша</string>
+    <string name="pref_category_schedule_cache_showCacheToast_title">Показване на съобщение</string>
+    <string name="pref_category_schedule_cache_showCacheToast_summary">Показване на съобщение при зареждането на локалното разписание</string>
     <string name="pref_category_map">КАРТА</string>
     <string name="pref_category_map_marker_type_title">Вид на маркера върху картата</string>
     <string name="pref_category_map_marker_type_summary">Определяне на вида на картинката на маркера върху картата</string>
@@ -201,7 +207,7 @@
     <string name="pref_category_map_radius_title">Радиус около текущото местоположение</string>
     <string name="pref_category_map_radius_summary">Големина на радиуса около текущото местоположение или избрана точка, в който се визуализират спирки</string>
     <string name="pref_category_map_position_title">Позициониране</string>
-    <string name="pref_category_map_position_summary">Позиционирай картата при промяна на текущото местоположение</string>
+    <string name="pref_category_map_position_summary">Позициониране на картата при промяна на текущото местоположение</string>
     <string name="pref_category_more">ДОПЪЛНИТЕЛНИ НАСТРОЙКИ</string>
     <string name="pref_category_more_automatic_update_title">Автоматично обновление на спирките</string>
     <string name="pref_category_more_automatic_update_summary">Автоматична обновление при наличие на нови спирки и коли на СКГТ (два пъти месечно)</string>
@@ -320,6 +326,14 @@
     <string name="pt_item_station_number_text_sign" formatted="false">Спирка №%s</string>
     <string name="pt_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
     <string name="pt_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
+    <string name="pt_menu_clear_all_schedule_cache" formatted="false"><![CDATA[Сигурни ли сте, че искате да изтриете локалното разписание за <b>всички линии</b> на Градския Транспорт?]]></string>
+    <string name="pt_menu_clear_all_schedule_cache_toast" formatted="false"><![CDATA[Локалното разписание за <b>всички линии</b> на Градския Транспорт беше успешно изтрито.]]></string>
+    <string name="pt_menu_clear_all_pt_schedule_cache_empty_toast" formatted="false"><![CDATA[В момента не е налично локално разписание за колите на Градския Транспорт. За да използвате офлайн разписанието, поне веднъж трябва да сте заредили информацията от сайта на СКГТ.]]></string>
+    <string name="pt_menu_clear_all_metro_schedule_cache_empty_toast" formatted="false"><![CDATA[В момента не е налично локално разписание за Метрото. За да използвате офлайн разписанието, поне веднъж трябва да сте заредили информацията от сайта на СКГТ.]]></string>
+    <string name="pt_menu_clear_schedule_cache" formatted="false"><![CDATA[Сигурни ли сте, че искате да изтриете локалното разписание за <b>%s</b>?]]></string>
+    <string name="pt_menu_clear_schedule_cache_toast" formatted="false"><![CDATA[Локалното разписание за <b>%s</b> беше успешно изтрито.]]></string>
+    <string name="pt_menu_clear_schedule_cache_empty_toast" formatted="false"><![CDATA[В момента не е налично локално разписание за <b>%s</b>. За да използвате офлайн разписанието, поне веднъж трябва да сте заредили информацията от сайта на СКГТ.]]></string>
+    <string name="pt_schedule_cache_loaded" formatted="false"><![CDATA[Възникна грешка при извличането на информацията за <b>%s</b>. Беше заредено локалното разписание от <b>%s</b>.]]></string>
 
     <!-- Public Transport Schedule -->
     <string name="pt_schedule_first">Първа кола:</string>

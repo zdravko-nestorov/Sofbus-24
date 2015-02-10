@@ -44,6 +44,27 @@
             android:summary="@string/pref_category_stations_timeSource_summary"
             android:title="@string/pref_category_stations_timeSource_title" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_schedule_cache" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="cacheState"
+            android:summary="@string/pref_category_schedule_cache_cacheState_summary"
+            android:title="@string/pref_category_schedule_cache_cacheState_title" />
+
+        <ListPreference
+            android:defaultValue="30"
+            android:entries="@array/numberOfDays"
+            android:entryValues="@array/numberOfDaysValues"
+            android:key="numberOfDays"
+            android:summary="@string/pref_category_schedule_cache_numberOfDays_summary"
+            android:title="@string/pref_category_schedule_cache_numberOfDays_title" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="showCacheToast"
+            android:summary="@string/pref_category_schedule_cache_showCacheToast_summary"
+            android:title="@string/pref_category_schedule_cache_showCacheToast_title" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_map" >
         <ListPreference
             android:defaultValue="markerSkgtCars"
