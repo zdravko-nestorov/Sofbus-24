@@ -8,14 +8,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import bg.znestorov.sofbus24.databases.ScheduleDatabaseUtils;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.publictransport.PublicTransportFragment;
+import bg.znestorov.sofbus24.schedule.ScheduleCacheDeleteDialog;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.ThemeChange;
@@ -91,6 +96,26 @@ public class PublicTransport extends SherlockFragmentActivity implements
 		case R.id.action_pt_site:
 			ActivityUtils.startWebPageActivity(context,
 					ptDirectionsEntity.getVehicle());
+
+			return true;
+		case R.id.action_pt_clear_schedule_cache:
+
+			VehicleEntity vehicle = ptDirectionsEntity.getVehicle();
+			VehicleTypeEnum vehicleType = vehicle.getType();
+			String vehicleNumber = vehicle.getNumber();
+
+			if (ScheduleDatabaseUtils.isVehiclesScheduleCacheAvaialble(context,
+					vehicleType, vehicleNumber)) {
+				DialogFragment dialogFragment = ScheduleCacheDeleteDialog
+						.newInstance(vehicleType, vehicleNumber);
+				dialogFragment.show(getSupportFragmentManager(), "dialog");
+			} else {
+				String emptyScheduleCacheMsg = getString(
+						R.string.pt_menu_clear_schedule_cache_empty_toast,
+						ActivityUtils.getVehicleTitle(context, vehicle));
+
+				ActivityUtils.showLongToast(context, emptyScheduleCacheMsg);
+			}
 
 			return true;
 		default:

@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceScreen;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
 import bg.znestorov.sofbus24.preferences.ResetSettingsDialog;
@@ -30,6 +32,10 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 	private GlobalEntity globalContext;
 	private ActionBar actionBar;
 
+	private PreferenceScreen preferencesScreen;
+	private Preference numberOfDays;
+	private Preference showCacheToast;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		ThemeChange.selectTheme(this);
@@ -41,17 +47,11 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 		// Get the application and current activity context
 		context = PreferencesPreHoneycomb.this;
 		globalContext = (GlobalEntity) getApplicationContext();
+		preferencesScreen = getPreferenceScreen();
 
-		// Remove the preferences category in case of pre honeycomb devices
-		PreferenceCategory preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_APP_COMMON_CATEGORY);
-		ListPreference listPreference = (ListPreference) findPreference(Constants.PREFERENCE_KEY_APP_THEME);
-		preferencesCategory.removePreference(listPreference);
-
-		// Set up the action bar
-		actionBar = getSupportActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle(getString(R.string.pref_title));
+		initActionBar();
+		initPreHoneycombPreferences();
+		initScheduleCachePreferences();
 	}
 
 	@Override
@@ -131,6 +131,20 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 			globalContext.setHasToRestart(true);
 		}
 
+		if (key.equals(Constants.PREFERENCE_KEY_CACHE_STATE)) {
+			Boolean isScheduleCacheActive = sharedPreferences.getBoolean(
+					Constants.PREFERENCE_KEY_CACHE_STATE,
+					Constants.PREFERENCE_DEFAULT_VALUE_CACHE_STATE);
+
+			if (isScheduleCacheActive) {
+				numberOfDays.setEnabled(true);
+				showCacheToast.setEnabled(true);
+			} else {
+				numberOfDays.setEnabled(false);
+				showCacheToast.setEnabled(false);
+			}
+		}
+
 		if (NavDrawerHomeScreenPreferences.getUserHomeScreenChoice(context) == 1
 				&& (key.equals(Constants.PREFERENCE_KEY_MARKER_TYPE)
 						|| key.equals(Constants.PREFERENCE_KEY_MARKER_OPTIONS)
@@ -148,6 +162,43 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 											key,
 											Constants.PREFERENCE_DEFAULT_VALUE_GOOGLE_ANALYTICS));
 		}
+	}
+
+	/**
+	 * Initialize the action bar
+	 */
+	private void initActionBar() {
+		actionBar = getSupportActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(getString(R.string.pref_title));
+	}
+
+	/**
+	 * Remove some of the preferences category in case of tablets
+	 */
+	private void initPreHoneycombPreferences() {
+
+		// Remove the preferences category in case of pre honeycomb devices
+		PreferenceCategory preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_APP_COMMON_CATEGORY);
+		ListPreference listPreference = (ListPreference) findPreference(Constants.PREFERENCE_KEY_APP_THEME);
+		preferencesCategory.removePreference(listPreference);
+
+		if (!globalContext.isPhoneDevice()) {
+			preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED_CATEGORY);
+			preferencesScreen.removePreference(preferencesCategory);
+		}
+	}
+
+	/**
+	 * Initialize the schedule cache preferences
+	 */
+	private void initScheduleCachePreferences() {
+
+		numberOfDays = preferencesScreen
+				.findPreference(Constants.PREFERENCE_KEY_NUMBER_OF_DAYS);
+		showCacheToast = preferencesScreen
+				.findPreference(Constants.PREFERENCE_KEY_SHOW_CACHE_TOAST);
 	}
 
 	/**

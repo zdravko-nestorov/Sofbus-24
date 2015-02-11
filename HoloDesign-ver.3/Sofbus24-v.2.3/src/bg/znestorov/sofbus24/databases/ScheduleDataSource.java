@@ -97,33 +97,14 @@ public class ScheduleDataSource {
 				dataColumns, selection, selectionArgs, null, null, null);
 
 		if (cursor.getCount() > 0) {
-
-			// Moving the cursor to the first column of the selected row
 			cursor.moveToFirst();
-
 			scheduleCache = new ScheduleCacheEntity(cursor.getString(0),
 					cursor.getString(1));
 		}
 
-		// Closing the cursor
 		cursor.close();
 
 		return scheduleCache;
-	}
-
-	/**
-	 * Delete the schedule cache for the selected type
-	 * 
-	 * @param dataType
-	 *            the type of the searched data
-	 * @return if the cache is successfully deleted
-	 */
-	public boolean deleteScheduleCache(VehicleTypeEnum dataType) {
-
-		String where = ScheduleSQLite.COLUMN_SCHE_TYPE + " = ?";
-		String[] whereArgs = new String[] { String.valueOf(dataType) };
-
-		return database.delete(ScheduleSQLite.TABLE_SOF_SCHE, where, whereArgs) > 0;
 	}
 
 	/**
@@ -145,6 +126,85 @@ public class ScheduleDataSource {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Check if the schedule cache is available for the selected type and number
+	 * 
+	 * @param dataType
+	 *            the selected schedule cache type
+	 * @param dataNumber
+	 *            the selected schedule cache number
+	 * @return if the schedule cache is available
+	 */
+	public boolean isVehiclesScheduleCacheAvailable(VehicleTypeEnum dataType,
+			String dataNumber) {
+
+		boolean isScheduleAvailable = false;
+
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT COUNT(*)										\n");
+		query.append(" FROM " + ScheduleSQLite.TABLE_SOF_SCHE + "			\n");
+		query.append(" WHERE 												\n");
+		query.append(" " + ScheduleSQLite.COLUMN_SCHE_TYPE + " = %s			\n");
+		query.append(" " + ScheduleSQLite.COLUMN_SCHE_NUMBER + " = %s		\n");
+
+		Cursor cursor = database.rawQuery(
+				String.format(query.toString(), dataType, dataNumber), null);
+
+		if (cursor.getCount() > 0) {
+			cursor.moveToFirst();
+			isScheduleAvailable = cursor.getInt(0) > 0;
+		}
+
+		cursor.close();
+
+		return isScheduleAvailable;
+	}
+
+	/**
+	 * Delete the schedule cache for the selected type and number
+	 * 
+	 * @param dataType
+	 *            the type of the searched data
+	 * @param dataNumber
+	 *            the selected schedule cache number
+	 * @return if the cache is successfully deleted
+	 */
+	public boolean deleteVehiclesScheduleCache(VehicleTypeEnum dataType,
+			String dataNumber) {
+
+		String where = ScheduleSQLite.COLUMN_SCHE_TYPE + " = ? AND "
+				+ ScheduleSQLite.COLUMN_SCHE_NUMBER + " = ?";
+		String[] whereArgs = new String[] { String.valueOf(dataType),
+				dataNumber };
+
+		return database.delete(ScheduleSQLite.TABLE_SOF_SCHE, where, whereArgs) > 0;
+	}
+
+	/**
+	 * Check if any schedule cache is available
+	 * 
+	 * @return if any schedule cache is available
+	 */
+	public boolean isAnyScheduleCacheAvailable() {
+
+		boolean isScheduleAvailable = false;
+
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT COUNT(*)										\n");
+		query.append(" FROM " + ScheduleSQLite.TABLE_SOF_SCHE + "			\n");
+
+		Cursor cursor = database.rawQuery(query.toString(), null);
+
+		if (cursor.getCount() > 0) {
+			cursor.moveToFirst();
+			isScheduleAvailable = cursor.getInt(0) > 0;
+		}
+
+		cursor.close();
+
+		return isScheduleAvailable;
 	}
 
 	/**

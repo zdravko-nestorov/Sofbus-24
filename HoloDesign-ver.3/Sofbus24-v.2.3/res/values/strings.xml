@@ -326,10 +326,9 @@
     <string name="pt_item_station_number_text_sign" formatted="false">Спирка №%s</string>
     <string name="pt_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
     <string name="pt_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
-    <string name="pt_menu_clear_all_schedule_cache" formatted="false"><![CDATA[Сигурни ли сте, че искате да изтриете локалното разписание за <b>всички линии</b> на Градския Транспорт?]]></string>
-    <string name="pt_menu_clear_all_schedule_cache_toast" formatted="false"><![CDATA[Локалното разписание за <b>всички линии</b> на Градския Транспорт беше успешно изтрито.]]></string>
-    <string name="pt_menu_clear_all_pt_schedule_cache_empty_toast" formatted="false"><![CDATA[В момента не е налично локално разписание за колите на Градския Транспорт. За да използвате офлайн разписанието, поне веднъж трябва да сте заредили информацията от сайта на СКГТ.]]></string>
-    <string name="pt_menu_clear_all_metro_schedule_cache_empty_toast" formatted="false"><![CDATA[В момента не е налично локално разписание за Метрото. За да използвате офлайн разписанието, поне веднъж трябва да сте заредили информацията от сайта на СКГТ.]]></string>
+    <string name="pt_menu_clear_all_schedule_cache" formatted="false"><![CDATA[Сигурни ли сте, че искате да изтриете локалното разписание на колите на Градския Транспорт?]]></string>
+    <string name="pt_menu_clear_all_schedule_cache_toast" formatted="false"><![CDATA[Локалното разписание на колите на Градския Транспорт беше успешно изтрито.]]></string>
+    <string name="pt_menu_clear_all_schedule_cache_empty_toast" formatted="false"><![CDATA[В момента не е налично локално разписание на колите на Градския Транспорт. За да използвате офлайн разписанието, поне веднъж трябва да сте заредили информацията от сайта на СКГТ.]]></string>
     <string name="pt_menu_clear_schedule_cache" formatted="false"><![CDATA[Сигурни ли сте, че искате да изтриете локалното разписание за <b>%s</b>?]]></string>
     <string name="pt_menu_clear_schedule_cache_toast" formatted="false"><![CDATA[Локалното разписание за <b>%s</b> беше успешно изтрито.]]></string>
     <string name="pt_menu_clear_schedule_cache_empty_toast" formatted="false"><![CDATA[В момента не е налично локално разписание за <b>%s</b>. За да използвате офлайн разписанието, поне веднъж трябва да сте заредили информацията от сайта на СКГТ.]]></string>

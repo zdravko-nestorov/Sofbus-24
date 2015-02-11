@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
@@ -30,7 +29,6 @@ import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.StationRouteMap;
-import bg.znestorov.sofbus24.schedule.ScheduleCacheDeleteDialog;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
@@ -146,12 +144,6 @@ public class MetroStationFragment extends SherlockListFragment implements
 			RetrieveMetroRoute retrieveMetroRoute = new RetrieveMetroRoute(
 					context, progressDialog);
 			retrieveMetroRoute.execute();
-
-			break;
-		case R.id.action_metro_clear_schedule_cache:
-			DialogFragment dialogFragment = ScheduleCacheDeleteDialog
-					.newInstance(VehicleTypeEnum.METRO, "");
-			dialogFragment.show(getChildFragmentManager(), "dialog");
 
 			break;
 		case R.id.action_metro_schedule_site:

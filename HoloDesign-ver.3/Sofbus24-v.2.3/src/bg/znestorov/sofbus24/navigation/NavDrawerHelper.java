@@ -206,7 +206,7 @@ public class NavDrawerHelper {
 								context,
 								String.format(
 										context.getString(R.string.navigation_drawer_home_screen_remains),
-										homeScreenName), 3000, 1000);
+										homeScreenName));
 
 				isHomeScreenChanged = false;
 			} else {

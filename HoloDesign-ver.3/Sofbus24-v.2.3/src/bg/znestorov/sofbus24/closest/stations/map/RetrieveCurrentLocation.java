@@ -269,7 +269,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	 *            the message of the toast
 	 */
 	private void showLongToast(String message) {
-		ActivityUtils.showLongToast(context, message, 3000, 1000);
+		ActivityUtils.showLongToast(context, message);
 	}
 
 	/**

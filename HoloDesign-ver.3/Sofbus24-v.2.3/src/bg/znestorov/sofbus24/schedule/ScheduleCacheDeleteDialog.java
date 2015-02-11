@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.text.Spanned;
-import bg.znestorov.sofbus24.databases.ScheduleDataSource;
+import bg.znestorov.sofbus24.databases.ScheduleDatabaseUtils;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -24,8 +24,6 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 public class ScheduleCacheDeleteDialog extends DialogFragment {
 
 	private Activity context;
-	private ScheduleDataSource scheduleDatasource;
-
 	private int icon;
 	private String title;
 	private Spanned message;
@@ -35,6 +33,7 @@ public class ScheduleCacheDeleteDialog extends DialogFragment {
 
 	private VehicleTypeEnum scheduleCacheType;
 	private String scheduleCacheNumber;
+	private String vehicleTitle;
 
 	private static final String BUNDLE_SCHEDULE_CACHE_TYPE = "SCHEDULE CACHE TYPE";
 	private static final String BUNDLE_SCHEDULE_CACHE_NUMBER = "SCHEDULE CACHE NUMBER";
@@ -57,7 +56,6 @@ public class ScheduleCacheDeleteDialog extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 		context = getActivity();
-		scheduleDatasource = new ScheduleDataSource(context);
 		icon = R.drawable.ic_menu_delete;
 		title = getString(R.string.app_dialog_title_important);
 		negativeBtn = getString(R.string.app_button_no);
@@ -67,17 +65,17 @@ public class ScheduleCacheDeleteDialog extends DialogFragment {
 				BUNDLE_SCHEDULE_CACHE_TYPE));
 		scheduleCacheNumber = getArguments().getString(
 				BUNDLE_SCHEDULE_CACHE_NUMBER);
+		vehicleTitle = ActivityUtils.getVehicleTitle(context,
+				scheduleCacheType, scheduleCacheNumber);
 
 		switch (scheduleCacheType) {
-		case BTT:
-		case METRO:
+		case BTTM:
 			message = Html
 					.fromHtml(getString(R.string.pt_menu_clear_all_schedule_cache));
 			break;
 		default:
-			message = Html
-					.fromHtml(getString(R.string.pt_menu_clear_schedule_cache,
-							scheduleCacheNumber));
+			message = Html.fromHtml(getString(
+					R.string.pt_menu_clear_schedule_cache, vehicleTitle));
 			break;
 		}
 
@@ -87,30 +85,24 @@ public class ScheduleCacheDeleteDialog extends DialogFragment {
 
 				String deleteMessage;
 
-				// Open the schedule cache database
-				scheduleDatasource.open();
-
-				// Delete the appropriate schedule from the DB
 				switch (scheduleCacheType) {
 				case BTT:
-					scheduleDatasource.deleteAllScheduleCache();
+				case METRO:
+					ScheduleDatabaseUtils.deleteAllScheduleCache(context);
 					deleteMessage = getString(R.string.pt_menu_clear_all_schedule_cache_toast);
 
 					break;
 				default:
-					scheduleDatasource
-							.deleteScheduleCache(ScheduleCachePreferences
-									.getNumberOfDays(context));
-					deleteMessage = getString(R.string.pt_menu_clear_schedule_cache_toast);
+					ScheduleDatabaseUtils.deleteVehiclesScheduleCache(context,
+							scheduleCacheType, scheduleCacheNumber);
+					deleteMessage = getString(
+							R.string.pt_menu_clear_schedule_cache_toast,
+							vehicleTitle);
 
 					break;
 				}
 
-				// Close the schedule cache database
-				scheduleDatasource.close();
-
-				// Show a long toast with the result of the deletion process
-				ActivityUtils.showLongToast(context, deleteMessage, 3000, 1000);
+				ActivityUtils.showLongToast(context, deleteMessage);
 			}
 		};
 

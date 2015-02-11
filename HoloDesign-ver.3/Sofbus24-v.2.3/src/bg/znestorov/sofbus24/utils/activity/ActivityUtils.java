@@ -658,6 +658,7 @@ public class ActivityUtils {
 	 * @param finish
 	 *            if the activity has to be finished
 	 */
+	@SuppressLint("NewApi")
 	public static void setFinishOnTouchOutside(Activity context, boolean finish) {
 
 		int sdkVersion = Build.VERSION.SDK_INT;
@@ -824,6 +825,19 @@ public class ActivityUtils {
 
 		showLongToast(context, Html.fromHtml(message), millisInFuture,
 				countDownInterval);
+	}
+
+	/**
+	 * Show a long toast which is two times Toast.LENGTH_LONG
+	 * 
+	 * @param context
+	 *            the current activity context
+	 * @param message
+	 *            the message
+	 */
+	public static void showLongToast(Activity context, String message) {
+
+		showLongToast(context, Html.fromHtml(message), 3000, 1000);
 	}
 
 	/**

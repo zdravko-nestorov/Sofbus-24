@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -16,16 +17,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.databases.ScheduleDatabaseUtils;
 import bg.znestorov.sofbus24.entity.AppThemeEnum;
 import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HomeTabEntity;
+import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
 import bg.znestorov.sofbus24.main.EditTabs;
 import bg.znestorov.sofbus24.main.EditTabsDialog;
 import bg.znestorov.sofbus24.main.HomeScreenSelect;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.MetroFragment;
+import bg.znestorov.sofbus24.schedule.ScheduleCacheDeleteDialog;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -103,8 +107,6 @@ public class Sofbus24Fragment extends SherlockFragment implements
 					.findItem(R.id.action_metro_schedule_site);
 			MenuItem ptClearScheduleCache = menu
 					.findItem(R.id.action_pt_clear_schedule_cache);
-			MenuItem metroClearScheduleCache = menu
-					.findItem(R.id.action_metro_clear_schedule_cache);
 
 			if (currentFragment instanceof FavouritesStationFragment) {
 				favouritesSort.setVisible(true);
@@ -112,28 +114,24 @@ public class Sofbus24Fragment extends SherlockFragment implements
 				metroMapRoute.setVisible(false);
 				metroScheduleSite.setVisible(false);
 				ptClearScheduleCache.setVisible(false);
-				metroClearScheduleCache.setVisible(false);
 			} else if (currentFragment instanceof ScheduleFragment) {
 				favouritesSort.setVisible(false);
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(false);
 				metroScheduleSite.setVisible(false);
 				ptClearScheduleCache.setVisible(true);
-				metroClearScheduleCache.setVisible(false);
 			} else if (currentFragment instanceof MetroFragment) {
 				favouritesSort.setVisible(false);
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(true);
 				metroScheduleSite.setVisible(true);
 				ptClearScheduleCache.setVisible(false);
-				metroClearScheduleCache.setVisible(true);
 			} else {
 				favouritesSort.setVisible(false);
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(false);
 				metroScheduleSite.setVisible(false);
 				ptClearScheduleCache.setVisible(false);
-				metroClearScheduleCache.setVisible(false);
 			}
 		}
 	}
@@ -172,6 +170,17 @@ public class Sofbus24Fragment extends SherlockFragment implements
 		case R.id.action_closest_stations_map:
 			ActivityUtils.startClosestStationsMap(context,
 					getChildFragmentManager(), false);
+
+			return true;
+		case R.id.action_clear_schedule_cache:
+			if (ScheduleDatabaseUtils.isAnyScheduleCacheAvaialble(context)) {
+				DialogFragment dialogFragment = ScheduleCacheDeleteDialog
+						.newInstance(VehicleTypeEnum.BTTM, "");
+				dialogFragment.show(getChildFragmentManager(), "dialog");
+			} else {
+				String emptyScheduleCacheMsg = getString(R.string.pt_menu_clear_all_schedule_cache_empty_toast);
+				ActivityUtils.showLongToast(context, emptyScheduleCacheMsg);
+			}
 
 			return true;
 		case R.id.action_edit_tabs:

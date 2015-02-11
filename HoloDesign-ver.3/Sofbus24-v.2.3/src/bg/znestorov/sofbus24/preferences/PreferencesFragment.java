@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
@@ -31,6 +32,10 @@ public class PreferencesFragment extends PreferenceFragment implements
 	private Activity context;
 	private GlobalEntity globalContext;
 
+	private PreferenceScreen preferencesScreen;
+	private Preference numberOfDays;
+	private Preference showCacheToast;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,17 +46,14 @@ public class PreferencesFragment extends PreferenceFragment implements
 		// Get the application and current activity context
 		context = getActivity();
 		globalContext = (GlobalEntity) context.getApplicationContext();
+		preferencesScreen = getPreferenceScreen();
 
-		// Remove the preferences category in case of tablets
-		if (!globalContext.isPhoneDevice()) {
-			PreferenceCategory preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED_CATEGORY);
-			PreferenceScreen preferencesScreen = getPreferenceScreen();
-			preferencesScreen.removePreference(preferencesCategory);
-		}
+		initTabletVersionPreferences();
+		initScheduleCachePreferences();
 
 		// Registers a callback to be invoked when a change happens to a
 		// preference
-		getPreferenceScreen().getSharedPreferences()
+		preferencesScreen.getSharedPreferences()
 				.registerOnSharedPreferenceChangeListener(this);
 	}
 
@@ -69,6 +71,7 @@ public class PreferencesFragment extends PreferenceFragment implements
 				.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
+	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 
@@ -84,6 +87,20 @@ public class PreferencesFragment extends PreferenceFragment implements
 
 		if (key.equals(Constants.PREFERENCE_KEY_APP_LANGUAGE)) {
 			globalContext.setHasToRestart(true);
+		}
+
+		if (key.equals(Constants.PREFERENCE_KEY_CACHE_STATE)) {
+			Boolean isScheduleCacheActive = sharedPreferences.getBoolean(
+					Constants.PREFERENCE_KEY_CACHE_STATE,
+					Constants.PREFERENCE_DEFAULT_VALUE_CACHE_STATE);
+
+			if (isScheduleCacheActive) {
+				numberOfDays.setEnabled(true);
+				showCacheToast.setEnabled(true);
+			} else {
+				numberOfDays.setEnabled(false);
+				showCacheToast.setEnabled(false);
+			}
 		}
 
 		if (NavDrawerHomeScreenPreferences.getUserHomeScreenChoice(context) == 1
@@ -103,5 +120,27 @@ public class PreferencesFragment extends PreferenceFragment implements
 											key,
 											Constants.PREFERENCE_DEFAULT_VALUE_GOOGLE_ANALYTICS));
 		}
+	}
+
+	/**
+	 * Remove some of the preferences category in case of tablets
+	 */
+	private void initTabletVersionPreferences() {
+
+		if (!globalContext.isPhoneDevice()) {
+			PreferenceCategory preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED_CATEGORY);
+			preferencesScreen.removePreference(preferencesCategory);
+		}
+	}
+
+	/**
+	 * Initialize the schedule cache preferences
+	 */
+	private void initScheduleCachePreferences() {
+
+		numberOfDays = preferencesScreen
+				.findPreference(Constants.PREFERENCE_KEY_NUMBER_OF_DAYS);
+		showCacheToast = preferencesScreen
+				.findPreference(Constants.PREFERENCE_KEY_SHOW_CACHE_TOAST);
 	}
 }
