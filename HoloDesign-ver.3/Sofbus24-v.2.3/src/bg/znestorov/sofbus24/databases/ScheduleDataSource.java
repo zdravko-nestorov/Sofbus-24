@@ -198,7 +198,7 @@ public class ScheduleDataSource {
 					+ ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER + " = ? AND "
 					+ ScheduleSQLite.COLUMN_SCHE_STATION_NUMBER + " = ?";
 			String[] whereArgs = new String[] { String.valueOf(vehicleType),
-					vehicleNumber };
+					vehicleNumber, stationNumber };
 			long rowId = database.update(ScheduleSQLite.TABLE_SOF_SCHE, values,
 					whereClause, whereArgs);
 
