@@ -24,6 +24,8 @@ public class MetroScheduleEntity implements Serializable {
 	private List<MetroStationEntity> metroStations;
 	private int metroStationsSize;
 
+	private String scheduleCacheTimestamp;
+
 	public MetroScheduleEntity(int choosenDirection,
 			MetroStationEntity metroStation1, MetroStationEntity metroStation2) {
 		this.choosenDirection = choosenDirection;
@@ -58,6 +60,14 @@ public class MetroScheduleEntity implements Serializable {
 
 	public int getMetroStationsSize() {
 		return metroStationsSize;
+	}
+
+	public String getScheduleCacheTimestamp() {
+		return scheduleCacheTimestamp;
+	}
+
+	public void setScheduleCacheTimestamp(String scheduleCacheTimestamp) {
+		this.scheduleCacheTimestamp = scheduleCacheTimestamp;
 	}
 
 	/**
@@ -167,10 +177,22 @@ public class MetroScheduleEntity implements Serializable {
 		getStationEntity(position).setHolidaySchedule(docStationSchedule);
 	}
 
+	/**
+	 * Check if the object is loaded from the schedule cache (in case there is
+	 * no timestamp)
+	 * 
+	 * @return if the object is loaded from the schedule cache
+	 */
+	public boolean isScheduleCacheLoaded() {
+		return scheduleCacheTimestamp != null;
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tchoosenDirection: "
 				+ choosenDirection + "\n\tmetroStations: " + metroStations
+				+ "\n\tmetroStationsSize: " + metroStationsSize
+				+ "\n\tscheduleCacheTimestamp: " + scheduleCacheTimestamp
 				+ "\n}";
 	}
 

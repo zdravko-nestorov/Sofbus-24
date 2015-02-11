@@ -17,11 +17,18 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.text.Html;
+import android.widget.Toast;
+import bg.znestorov.sofbus24.databases.ScheduleDatabaseUtils;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
+import bg.znestorov.sofbus24.entity.ScheduleCacheEntity;
+import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.main.PublicTransportSchedule;
 import bg.znestorov.sofbus24.main.PublicTransportScheduleDialog;
+import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.schedule.ScheduleCachePreferences;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
@@ -72,20 +79,42 @@ public class RetrievePublicTransportStation extends
 
 	@Override
 	protected PublicTransportStationEntity doInBackground(Void... params) {
+
+		String htmlResult = null;
+		VehicleEntity vehicle = ptDirectionsEntity.getVehicle();
 		DefaultHttpClient stationHttpClient = new DefaultHttpClient();
 
 		try {
 			HttpGet stationHttpRequest = createStationRequest();
-			String htmlResult = stationHttpClient.execute(stationHttpRequest,
+			htmlResult = stationHttpClient.execute(stationHttpRequest,
 					new BasicResponseHandler());
 
 			ProcessPublicTransportStation processPtStation = new ProcessPublicTransportStation(
 					context, ptStation, htmlResult);
 			ptStation = processPtStation.getStationFromHtml();
 		} catch (Exception e) {
-			ptStation = new PublicTransportStationEntity();
+			// Do nothing - the schedule is not already set
 		} finally {
 			stationHttpClient.getConnectionManager().shutdown();
+		}
+
+		/**
+		 * Check if there is some problem with loading the schedule from the
+		 * SUMC site and if there is - load the local cache, otherwise - save
+		 * the cache into the dabatase
+		 */
+		if (!ptStation.isScheduleSet()) {
+			ScheduleCacheEntity scheduleCache = ScheduleDatabaseUtils
+					.getStationScheduleCache(context, vehicle, ptStation);
+
+			if (scheduleCache != null) {
+				ptStation = scheduleCache.getPTStationEntity();
+				ptStation.setScheduleCacheTimestamp(scheduleCache
+						.getTimestamp());
+			}
+		} else {
+			ScheduleDatabaseUtils.createOrUpdateStationScheduleCache(context,
+					vehicle, ptStation);
 		}
 
 		return ptStation;
@@ -115,6 +144,23 @@ public class RetrievePublicTransportStation extends
 					ptDirectionsEntity.getVehicle());
 
 			context.startActivity(ptScheduleIntent);
+
+			// In case of loading the schedule from the local cache (and if the
+			// toasts are allowed), alert the user about that
+			if (ptStation.isScheduleCacheLoaded()
+					&& ScheduleCachePreferences
+							.isScheduleCacheToastShown(context)) {
+
+				String stationTitle = ActivityUtils.getStationTitle(ptStation);
+				String timestamp = ptStation.getScheduleCacheTimestamp();
+
+				Toast.makeText(
+						context,
+						Html.fromHtml(context.getString(
+								R.string.pt_schedule_cache_loaded,
+								stationTitle, timestamp)), Toast.LENGTH_LONG)
+						.show();
+			}
 		} else {
 			ActivityUtils.showNoInternetOrInfoToast(context);
 		}

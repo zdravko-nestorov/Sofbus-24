@@ -21,6 +21,7 @@ import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.publictransport.PublicTransportFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleCacheDeleteDialog;
+import bg.znestorov.sofbus24.schedule.ScheduleCachePreferences;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.ThemeChange;
@@ -64,6 +65,23 @@ public class PublicTransport extends SherlockFragmentActivity implements
 
 		// Add the search in the history
 		Utils.addVehicleInHistory(context, ptDirectionsEntity.getVehicle());
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+
+		MenuItem clearScheduleCache = menu
+				.findItem(R.id.action_pt_clear_schedule_cache);
+
+		// Check if the ClearScheduleCache action bar icon should be visible
+		// or not
+		if (ScheduleCachePreferences.isScheduleCacheActive(context)) {
+			clearScheduleCache.setVisible(true);
+		} else {
+			clearScheduleCache.setVisible(false);
+		}
+
+		return true;
 	}
 
 	@Override

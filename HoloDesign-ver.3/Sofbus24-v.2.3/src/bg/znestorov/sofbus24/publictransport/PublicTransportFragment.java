@@ -122,8 +122,20 @@ public class PublicTransportFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		PublicTransportStationEntity ptStation = (PublicTransportStationEntity) ((PublicTransportAdapter) getListAdapter())
-				.getItem(position);
+
+		PublicTransportStationEntity ptStation;
+		Object itemObject = getListAdapter().getItem(position);
+
+		// Check the type of the station (in case of local cache, the station si
+		// standard StationEntity)
+		if (itemObject instanceof PublicTransportStationEntity) {
+			ptStation = (PublicTransportStationEntity) getListAdapter()
+					.getItem(position);
+		} else {
+			ptStation = new PublicTransportStationEntity(
+					(StationEntity) getListAdapter().getItem(position));
+		}
+
 		int activeDirection = ptDirectionsEntity.getActiveDirection();
 		ptStation.setDirection(ptDirectionsEntity.getDirectionsNames().get(
 				activeDirection));

@@ -21,6 +21,8 @@ public class PublicTransportStationEntity extends StationEntity implements
 	private String direction;
 	private HashMap<Integer, ArrayList<String>> schedule;
 
+	private String scheduleCacheTimestamp;
+
 	public PublicTransportStationEntity() {
 		super();
 		this.setScheduleMap();
@@ -95,6 +97,14 @@ public class PublicTransportStationEntity extends StationEntity implements
 
 	public void setSchedule(HashMap<Integer, ArrayList<String>> schedule) {
 		this.schedule = schedule;
+	}
+
+	public String getScheduleCacheTimestamp() {
+		return scheduleCacheTimestamp;
+	}
+
+	public void setScheduleCacheTimestamp(String scheduleCacheTimestamp) {
+		this.scheduleCacheTimestamp = scheduleCacheTimestamp;
 	}
 
 	/**
@@ -190,10 +200,22 @@ public class PublicTransportStationEntity extends StationEntity implements
 		return lastScheduleTime;
 	}
 
+	/**
+	 * Check if the object is loaded from the schedule cache (in case there is
+	 * no timestamp)
+	 * 
+	 * @return if the object is loaded from the schedule cache
+	 */
+	public boolean isScheduleCacheLoaded() {
+		return scheduleCacheTimestamp != null;
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tid: " + id + "\n\tdirection: "
-				+ direction + "\n\tschedule: " + schedule + "\n}";
+				+ direction + "\n\tschedule: " + schedule
+				+ "\n\tscheduleCacheTimestamp: " + scheduleCacheTimestamp
+				+ "\n}";
 	}
 
 }

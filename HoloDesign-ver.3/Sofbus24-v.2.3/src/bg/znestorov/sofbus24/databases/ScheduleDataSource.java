@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import bg.znestorov.sofbus24.entity.ScheduleCacheEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 
+import com.google.gson.Gson;
+
 /**
  * Schedule cache data source used for DB interactions
  * 
@@ -20,9 +22,13 @@ public class ScheduleDataSource {
 	private SQLiteDatabase database;
 	private ScheduleSQLite dbHelper;
 	private String[] scheduleColumns = { ScheduleSQLite.COLUMN_PK_SCHE_ID,
-			ScheduleSQLite.COLUMN_SCHE_TYPE, ScheduleSQLite.COLUMN_SCHE_NUMBER,
-			ScheduleSQLite.COLUMN_SCHE_HTML,
+			ScheduleSQLite.COLUMN_SCHE_TYPE,
+			ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER,
+			ScheduleSQLite.COLUMN_SCHE_STATION_NUMBER,
+			ScheduleSQLite.COLUMN_SCHE_DATA,
 			ScheduleSQLite.COLUMN_SCHE_TIMESTAMP };
+
+	private static final String EMPTY_COLUMN = "-";
 
 	public ScheduleDataSource(Activity context) {
 		this.dbHelper = new ScheduleSQLite(context);
@@ -42,27 +48,159 @@ public class ScheduleDataSource {
 	 * 
 	 * @param dataType
 	 *            the type of the inserted data
-	 * @param station
-	 *            the input station
 	 * @param dataNumber
 	 *            the number of the inserted data
+	 * @param data
+	 *            the data for the current type and number
 	 * @return if the data is successfull inserted into the db
 	 */
-	public boolean createScheduleCache(VehicleTypeEnum dataType,
-			String dataNumber, String htmlSchedule) {
+	public boolean createVehicleScheduleCache(VehicleTypeEnum dataType,
+			String dataNumber, Object data) {
 
-		if (htmlSchedule != null && !"".equals(htmlSchedule)) {
+		if (data != null && !"".equals(data)) {
 
 			// Creating ContentValues object and insert the data in it
 			ContentValues values = new ContentValues();
 			values.put(ScheduleSQLite.COLUMN_SCHE_TYPE,
 					String.valueOf(dataType));
-			values.put(ScheduleSQLite.COLUMN_SCHE_NUMBER, dataNumber);
-			values.put(ScheduleSQLite.COLUMN_SCHE_HTML, htmlSchedule);
+			values.put(ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER, dataNumber);
+			values.put(ScheduleSQLite.COLUMN_SCHE_STATION_NUMBER, EMPTY_COLUMN);
+
+			// Insert the data object into the DB
+			Gson gson = new Gson();
+			values.put(ScheduleSQLite.COLUMN_SCHE_DATA, gson.toJson(data));
 
 			// Insert the ContentValues data into the database
 			long rowId = database.insert(ScheduleSQLite.TABLE_SOF_SCHE, null,
 					values);
+
+			return rowId != -1;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Inserting a schedule cache (the html response for the current schedule)
+	 * into the database
+	 * 
+	 * @param vehicleType
+	 *            the type of the inserted vehicle
+	 * @param vehicleNumber
+	 *            the number of the inserted vehicle
+	 * @param stationNumber
+	 *            the number of the inserted station
+	 * @param data
+	 *            the data for the current type and number
+	 * @return if the data is successfull inserted into the db
+	 */
+	public boolean createStationScheduleCache(VehicleTypeEnum vehicleType,
+			String vehicleNumber, String stationNumber, Object data) {
+
+		if (data != null && !"".equals(data)) {
+
+			// Creating ContentValues object and insert the data in it
+			ContentValues values = new ContentValues();
+			values.put(ScheduleSQLite.COLUMN_SCHE_TYPE,
+					String.valueOf(vehicleType));
+			values.put(ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER, vehicleNumber);
+			values.put(ScheduleSQLite.COLUMN_SCHE_STATION_NUMBER, stationNumber);
+
+			// Insert the data object into the DB
+			Gson gson = new Gson();
+			values.put(ScheduleSQLite.COLUMN_SCHE_DATA, gson.toJson(data));
+
+			// Insert the ContentValues data into the database
+			long rowId = database.insert(ScheduleSQLite.TABLE_SOF_SCHE, null,
+					values);
+
+			return rowId != -1;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Updating a schedule cache (the html response for the current schedule)
+	 * into the database
+	 * 
+	 * @param vehicleType
+	 *            the type of the inserted data
+	 * @param vehicleNumber
+	 *            the number of the inserted data
+	 * @param data
+	 *            the data for the current type and number
+	 * @return if the data is successfull inserted into the db
+	 */
+	public boolean updateVehicleScheduleCache(VehicleTypeEnum vehicleType,
+			String vehicleNumber, Object data) {
+
+		if (data != null && !"".equals(data)) {
+
+			// Creating ContentValues object and update the data in it
+			ContentValues values = new ContentValues();
+			values.put(ScheduleSQLite.COLUMN_SCHE_TYPE,
+					String.valueOf(vehicleType));
+			values.put(ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER, vehicleNumber);
+			values.put(ScheduleSQLite.COLUMN_SCHE_STATION_NUMBER, EMPTY_COLUMN);
+
+			// Insert the data object into the DB
+			Gson gson = new Gson();
+			values.put(ScheduleSQLite.COLUMN_SCHE_DATA, gson.toJson(data));
+
+			// Insert the ContentValues data into the database
+			String whereClause = ScheduleSQLite.COLUMN_SCHE_TYPE + " = ? AND "
+					+ ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER + " = ? AND "
+					+ ScheduleSQLite.COLUMN_SCHE_STATION_NUMBER + " = ?";
+			String[] whereArgs = new String[] { String.valueOf(vehicleType),
+					vehicleNumber, EMPTY_COLUMN };
+			long rowId = database.update(ScheduleSQLite.TABLE_SOF_SCHE, values,
+					whereClause, whereArgs);
+
+			return rowId != -1;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Updating a schedule cache (the html response for the current schedule)
+	 * into the database
+	 * 
+	 * @param vehicleType
+	 *            the type of the inserted data
+	 * @param vehicleNumber
+	 *            the number of the inserted data
+	 * @param stationNumber
+	 *            the number of the inserted station
+	 * @param data
+	 *            the data for the current type and number
+	 * @return if the data is successfull inserted into the db
+	 */
+	public boolean updateStationScheduleCache(VehicleTypeEnum vehicleType,
+			String vehicleNumber, String stationNumber, Object data) {
+
+		if (data != null && !"".equals(data)) {
+
+			// Creating ContentValues object and update the data in it
+			ContentValues values = new ContentValues();
+			values.put(ScheduleSQLite.COLUMN_SCHE_TYPE,
+					String.valueOf(vehicleType));
+			values.put(ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER, vehicleNumber);
+			values.put(ScheduleSQLite.COLUMN_SCHE_STATION_NUMBER, stationNumber);
+
+			// Insert the data object into the DB
+			Gson gson = new Gson();
+			values.put(ScheduleSQLite.COLUMN_SCHE_DATA, gson.toJson(data));
+
+			// Insert the ContentValues data into the database
+			String whereClause = ScheduleSQLite.COLUMN_SCHE_TYPE + " = ? AND "
+					+ ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER + " = ? AND "
+					+ ScheduleSQLite.COLUMN_SCHE_STATION_NUMBER + " = ?";
+			String[] whereArgs = new String[] { String.valueOf(vehicleType),
+					vehicleNumber };
+			long rowId = database.update(ScheduleSQLite.TABLE_SOF_SCHE, values,
+					whereClause, whereArgs);
 
 			return rowId != -1;
 		} else {
@@ -80,17 +218,59 @@ public class ScheduleDataSource {
 	 * @return a ScheduleCacheEntity object with a data for the searched number
 	 *         and type
 	 */
-	public ScheduleCacheEntity getScheduleCache(VehicleTypeEnum dataType,
-			String dataNumber) {
+	public ScheduleCacheEntity getVehicleScheduleCache(
+			VehicleTypeEnum dataType, String dataNumber) {
 
 		ScheduleCacheEntity scheduleCache = null;
 
-		String[] dataColumns = new String[] { scheduleColumns[3],
-				scheduleColumns[4] };
+		String[] dataColumns = new String[] { scheduleColumns[4],
+				scheduleColumns[5] };
 		String selection = ScheduleSQLite.COLUMN_SCHE_TYPE + " = ? AND "
-				+ ScheduleSQLite.COLUMN_SCHE_NUMBER + " = ?";
+				+ ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER + " = ? AND "
+				+ ScheduleSQLite.COLUMN_SCHE_STATION_NUMBER + " = ?";
 		String[] selectionArgs = new String[] { String.valueOf(dataType),
-				dataNumber };
+				dataNumber, EMPTY_COLUMN };
+
+		// Selecting the row that contains the vehicle data
+		Cursor cursor = database.query(ScheduleSQLite.TABLE_SOF_SCHE,
+				dataColumns, selection, selectionArgs, null, null, null);
+
+		if (cursor.getCount() > 0) {
+			cursor.moveToFirst();
+			scheduleCache = new ScheduleCacheEntity(cursor.getString(0),
+					cursor.getString(1));
+		}
+
+		cursor.close();
+
+		return scheduleCache;
+	}
+
+	/**
+	 * Get a shcedule cache via a cache type and number
+	 * 
+	 * @param vehicleType
+	 *            the type of the searched data
+	 * @param vehicleNumber
+	 *            the number of the searched data
+	 * @param stationNumber
+	 *            the number of the inserted station
+	 * @return a ScheduleCacheEntity object with a data for the searched number
+	 *         and type
+	 */
+	public ScheduleCacheEntity getStationScheduleCache(
+			VehicleTypeEnum vehicleType, String vehicleNumber,
+			String stationNumber) {
+
+		ScheduleCacheEntity scheduleCache = null;
+
+		String[] dataColumns = new String[] { scheduleColumns[4],
+				scheduleColumns[5] };
+		String selection = ScheduleSQLite.COLUMN_SCHE_TYPE + " = ? AND "
+				+ ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER + " = ? AND "
+				+ ScheduleSQLite.COLUMN_SCHE_STATION_NUMBER + " = ?";
+		String[] selectionArgs = new String[] { String.valueOf(vehicleType),
+				vehicleNumber, stationNumber };
 
 		// Selecting the row that contains the vehicle data
 		Cursor cursor = database.query(ScheduleSQLite.TABLE_SOF_SCHE,
@@ -117,7 +297,7 @@ public class ScheduleDataSource {
 	public boolean deleteScheduleCache(int numberOfDays) {
 
 		if (numberOfDays > 0) {
-			String where = ScheduleSQLite.COLUMN_SCHE_TIMESTAMP + " < ?";
+			String where = ScheduleSQLite.COLUMN_SCHE_TIMESTAMP + " > ?";
 			String[] whereArgs = new String[] { String.format(
 					"DATE('NOW','-%s DAY')", numberOfDays) };
 
@@ -131,26 +311,28 @@ public class ScheduleDataSource {
 	/**
 	 * Check if the schedule cache is available for the selected type and number
 	 * 
-	 * @param dataType
-	 *            the selected schedule cache type
-	 * @param dataNumber
-	 *            the selected schedule cache number
+	 * @param vehicleType
+	 *            the selected schedule vehicle type
+	 * @param vehicleNumber
+	 *            the selected schedule vehicle number
 	 * @return if the schedule cache is available
 	 */
-	public boolean isVehiclesScheduleCacheAvailable(VehicleTypeEnum dataType,
-			String dataNumber) {
+	public boolean isVehiclesScheduleCacheAvailable(
+			VehicleTypeEnum vehicleType, String vehicleNumber) {
 
 		boolean isScheduleAvailable = false;
 
 		StringBuilder query = new StringBuilder();
-		query.append(" SELECT COUNT(*)										\n");
-		query.append(" FROM " + ScheduleSQLite.TABLE_SOF_SCHE + "			\n");
-		query.append(" WHERE 												\n");
-		query.append(" " + ScheduleSQLite.COLUMN_SCHE_TYPE + " = %s			\n");
-		query.append(" " + ScheduleSQLite.COLUMN_SCHE_NUMBER + " = %s		\n");
+		query.append(" SELECT COUNT(*)											\n");
+		query.append(" FROM " + ScheduleSQLite.TABLE_SOF_SCHE + "				\n");
+		query.append(" WHERE 													\n");
+		query.append(" " + ScheduleSQLite.COLUMN_SCHE_TYPE + " = '%s' AND		\n");
+		query.append(" " + ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER
+				+ " = %s														\n");
 
 		Cursor cursor = database.rawQuery(
-				String.format(query.toString(), dataType, dataNumber), null);
+				String.format(query.toString(), vehicleType, vehicleNumber),
+				null);
 
 		if (cursor.getCount() > 0) {
 			cursor.moveToFirst();
@@ -165,19 +347,19 @@ public class ScheduleDataSource {
 	/**
 	 * Delete the schedule cache for the selected type and number
 	 * 
-	 * @param dataType
-	 *            the type of the searched data
-	 * @param dataNumber
-	 *            the selected schedule cache number
+	 * @param vehicleType
+	 *            the type of the searched vehicle
+	 * @param vehicleNumber
+	 *            the selected schedule vehicle number
 	 * @return if the cache is successfully deleted
 	 */
-	public boolean deleteVehiclesScheduleCache(VehicleTypeEnum dataType,
-			String dataNumber) {
+	public boolean deleteVehiclesScheduleCache(VehicleTypeEnum vehicleType,
+			String vehicleNumber) {
 
 		String where = ScheduleSQLite.COLUMN_SCHE_TYPE + " = ? AND "
-				+ ScheduleSQLite.COLUMN_SCHE_NUMBER + " = ?";
-		String[] whereArgs = new String[] { String.valueOf(dataType),
-				dataNumber };
+				+ ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER + " = ?";
+		String[] whereArgs = new String[] { String.valueOf(vehicleType),
+				vehicleNumber };
 
 		return database.delete(ScheduleSQLite.TABLE_SOF_SCHE, where, whereArgs) > 0;
 	}

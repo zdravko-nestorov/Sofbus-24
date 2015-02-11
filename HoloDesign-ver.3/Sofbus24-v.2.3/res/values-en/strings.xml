@@ -192,7 +192,7 @@
     <string name="pref_category_schedule_cache">LOCAL SCHEDULE</string>
     <string name="pref_category_schedule_cache_cacheState_title">Local schedule</string>
     <string name="pref_category_schedule_cache_cacheState_summary">Use a local schedule for the public transport vehicles (in case of a problem with the information retrieval)</string>
-    <string name="pref_category_schedule_cache_numberOfDays_title">Maximum number of days to keep files in the cache</string>
+    <string name="pref_category_schedule_cache_numberOfDays_title">Maximum number of days to keep the cache</string>
     <string name="pref_category_schedule_cache_numberOfDays_summary">Files older than the maximum number of days will be automatically removed from the cache</string>
     <string name="pref_category_schedule_cache_showCacheToast_title">Show a toast notification</string>
     <string name="pref_category_schedule_cache_showCacheToast_summary">Show a toast notification when loading the local schedule from the cache</string>
@@ -317,10 +317,10 @@
     <string name="pt_menu_map_route_loading" formatted="false"><![CDATA[Drawing the route...]]></string>
     <string name="pt_menu_clear_all_schedule_cache" formatted="false"><![CDATA[Are you sure that you want to remove the local schedule for the Public Transport vehicles?]]></string>
     <string name="pt_menu_clear_all_schedule_cache_toast" formatted="false"><![CDATA[The local schedule for the Public Transport vehicles was successfully deleted from the cache.]]></string>
-    <string name="pt_menu_clear_all_schedule_cache_empty_toast" formatted="false"><![CDATA[There is no available local schedule for the Public Transport vehicles. If you want to use the offline schedule you should load the information from the website of SKGT at least once.]]></string>
+    <string name="pt_menu_clear_all_schedule_cache_empty_toast" formatted="false"><![CDATA[There is no available local schedule for the Public Transport vehicles. If you want to use the offline schedule you should load it from the website of SKGT at least once.]]></string>
     <string name="pt_menu_clear_schedule_cache" formatted="false"><![CDATA[Are you sure that you want to remove the local schedule for <b>%s</b>?]]></string>
     <string name="pt_menu_clear_schedule_cache_toast" formatted="false"><![CDATA[The local schedule for <b>%s</b> was successfully deleted from the cache.]]></string>
-    <string name="pt_menu_clear_schedule_cache_empty_toast" formatted="false"><![CDATA[There is no available local schedule for <b>%s</b>. If you want to use the offline schedule you should load the information from the website of SKGT at least once.]]></string>
+    <string name="pt_menu_clear_schedule_cache_empty_toast" formatted="false"><![CDATA[There is no available local schedule for <b>%s</b>. If you want to use the offline schedule you should load it from the website of SKGT at least once.]]></string>
     <string name="pt_schedule_cache_loaded" formatted="false"><![CDATA[An error occurred while retrieving the information for <b>%s</b>. The local schedule from <b>%s</b> was used.]]></string>
 
     <!-- Public Transport Schedule -->

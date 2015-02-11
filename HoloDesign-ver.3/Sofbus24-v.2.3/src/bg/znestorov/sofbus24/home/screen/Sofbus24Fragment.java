@@ -30,6 +30,7 @@ import bg.znestorov.sofbus24.main.HomeScreenSelect;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.metro.MetroFragment;
 import bg.znestorov.sofbus24.schedule.ScheduleCacheDeleteDialog;
+import bg.znestorov.sofbus24.schedule.ScheduleCachePreferences;
 import bg.znestorov.sofbus24.schedule.ScheduleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -89,6 +90,8 @@ public class Sofbus24Fragment extends SherlockFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
+
+		context.invalidateOptionsMenu();
 		actionsOverHomeScreen(-1);
 	}
 
@@ -105,34 +108,49 @@ public class Sofbus24Fragment extends SherlockFragment implements
 			MenuItem metroMapRoute = menu.findItem(R.id.action_metro_map_route);
 			MenuItem metroScheduleSite = menu
 					.findItem(R.id.action_metro_schedule_site);
-			MenuItem ptClearScheduleCache = menu
-					.findItem(R.id.action_pt_clear_schedule_cache);
+			MenuItem clearScheduleCache = menu
+					.findItem(R.id.action_clear_schedule_cache);
 
 			if (currentFragment instanceof FavouritesStationFragment) {
 				favouritesSort.setVisible(true);
 				favouritesRemoveAll.setVisible(true);
 				metroMapRoute.setVisible(false);
 				metroScheduleSite.setVisible(false);
-				ptClearScheduleCache.setVisible(false);
+				clearScheduleCache.setVisible(false);
 			} else if (currentFragment instanceof ScheduleFragment) {
 				favouritesSort.setVisible(false);
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(false);
 				metroScheduleSite.setVisible(false);
-				ptClearScheduleCache.setVisible(true);
+
+				// Check if the ClearScheduleCache action bar icon should be
+				// visible or not
+				if (ScheduleCachePreferences.isScheduleCacheActive(context)) {
+					clearScheduleCache.setVisible(true);
+				} else {
+					clearScheduleCache.setVisible(false);
+				}
 			} else if (currentFragment instanceof MetroFragment) {
 				favouritesSort.setVisible(false);
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(true);
 				metroScheduleSite.setVisible(true);
-				ptClearScheduleCache.setVisible(false);
+
+				// Check if the ClearScheduleCache action bar icon should be
+				// visible or not
+				if (ScheduleCachePreferences.isScheduleCacheActive(context)) {
+					clearScheduleCache.setVisible(true);
+				} else {
+					clearScheduleCache.setVisible(false);
+				}
 			} else {
 				favouritesSort.setVisible(false);
 				favouritesRemoveAll.setVisible(false);
 				metroMapRoute.setVisible(false);
 				metroScheduleSite.setVisible(false);
-				ptClearScheduleCache.setVisible(false);
+				clearScheduleCache.setVisible(false);
 			}
+
 		}
 	}
 

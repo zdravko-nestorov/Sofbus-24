@@ -1090,4 +1090,26 @@ public class Utils {
 
 		return screenInches;
 	}
+
+	/**
+	 * Format the schedule cache timestamp in format DD.MM.YYY
+	 * 
+	 * @param timestamp
+	 *            the database timestamp
+	 * @return the formatted timestamp
+	 */
+	public static String formatScheduleCacheTimestamp(String timestamp) {
+
+		String formattedTimestamp;
+		try {
+			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(timestamp);
+			formattedTimestamp = DateFormat.format("dd.MM.yyy", date)
+					.toString();
+		} catch (ParseException e) {
+			// This case should not be reached
+			formattedTimestamp = timestamp;
+		}
+
+		return formattedTimestamp;
+	}
 }

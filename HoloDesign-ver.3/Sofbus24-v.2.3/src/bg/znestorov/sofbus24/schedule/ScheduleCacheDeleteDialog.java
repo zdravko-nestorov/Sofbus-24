@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.text.Spanned;
+import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.ScheduleDatabaseUtils;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.main.R;
@@ -86,8 +87,7 @@ public class ScheduleCacheDeleteDialog extends DialogFragment {
 				String deleteMessage;
 
 				switch (scheduleCacheType) {
-				case BTT:
-				case METRO:
+				case BTTM:
 					ScheduleDatabaseUtils.deleteAllScheduleCache(context);
 					deleteMessage = getString(R.string.pt_menu_clear_all_schedule_cache_toast);
 
@@ -102,7 +102,8 @@ public class ScheduleCacheDeleteDialog extends DialogFragment {
 					break;
 				}
 
-				ActivityUtils.showLongToast(context, deleteMessage);
+				Toast.makeText(context, deleteMessage, Toast.LENGTH_LONG)
+						.show();
 			}
 		};
 

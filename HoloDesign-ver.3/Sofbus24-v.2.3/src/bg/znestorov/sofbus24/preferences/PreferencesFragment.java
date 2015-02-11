@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.main.R;
@@ -90,17 +91,7 @@ public class PreferencesFragment extends PreferenceFragment implements
 		}
 
 		if (key.equals(Constants.PREFERENCE_KEY_CACHE_STATE)) {
-			Boolean isScheduleCacheActive = sharedPreferences.getBoolean(
-					Constants.PREFERENCE_KEY_CACHE_STATE,
-					Constants.PREFERENCE_DEFAULT_VALUE_CACHE_STATE);
-
-			if (isScheduleCacheActive) {
-				numberOfDays.setEnabled(true);
-				showCacheToast.setEnabled(true);
-			} else {
-				numberOfDays.setEnabled(false);
-				showCacheToast.setEnabled(false);
-			}
+			actionsOnScheduleCachePreferences(sharedPreferences);
 		}
 
 		if (NavDrawerHomeScreenPreferences.getUserHomeScreenChoice(context) == 1
@@ -142,5 +133,32 @@ public class PreferencesFragment extends PreferenceFragment implements
 				.findPreference(Constants.PREFERENCE_KEY_NUMBER_OF_DAYS);
 		showCacheToast = preferencesScreen
 				.findPreference(Constants.PREFERENCE_KEY_SHOW_CACHE_TOAST);
+
+		// Check the state of each field on startup
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		actionsOnScheduleCachePreferences(sharedPreferences);
+	}
+
+	/**
+	 * Show or hide the schedule cache shared preferences
+	 * 
+	 * @param sharedPreferences
+	 *            the default shared preferences
+	 */
+	private void actionsOnScheduleCachePreferences(
+			SharedPreferences sharedPreferences) {
+
+		Boolean isScheduleCacheActive = sharedPreferences.getBoolean(
+				Constants.PREFERENCE_KEY_CACHE_STATE,
+				Constants.PREFERENCE_DEFAULT_VALUE_CACHE_STATE);
+
+		if (isScheduleCacheActive) {
+			numberOfDays.setEnabled(true);
+			showCacheToast.setEnabled(true);
+		} else {
+			numberOfDays.setEnabled(false);
+			showCacheToast.setEnabled(false);
+		}
 	}
 }

@@ -16,8 +16,9 @@ public class ScheduleSQLite extends SQLiteOpenHelper {
 	public static final String TABLE_SOF_SCHE = "SOF_SCHE";
 	public static final String COLUMN_PK_SCHE_ID = "PK_SCHE_ID";
 	public static final String COLUMN_SCHE_TYPE = "SCHE_TYPE";
-	public static final String COLUMN_SCHE_NUMBER = "SCHE_NUMBER";
-	public static final String COLUMN_SCHE_HTML = "SCHE_HTML";
+	public static final String COLUMN_SCHE_VEHICLE_NUMBER = "SCHE_VEHICLE_NUMBER";
+	public static final String COLUMN_SCHE_STATION_NUMBER = "SCHE_STATION_NUMBER";
+	public static final String COLUMN_SCHE_DATA = "SCHE_DATA";
 	public static final String COLUMN_SCHE_TIMESTAMP = "SCHE_TIMESTAMP";
 
 	// Database name and version
@@ -28,9 +29,10 @@ public class ScheduleSQLite extends SQLiteOpenHelper {
 	private static final String DATABASE_CREATE_SCHEDULE = "CREATE TABLE "
 			+ TABLE_SOF_SCHE + " (" + COLUMN_PK_SCHE_ID
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
-			+ COLUMN_SCHE_TYPE + " TEXT NOT NULL, " + COLUMN_SCHE_NUMBER
-			+ " TEXT NOT NULL, " + COLUMN_SCHE_HTML + " TEXT, "
-			+ COLUMN_SCHE_TIMESTAMP
+			+ COLUMN_SCHE_TYPE + " TEXT NOT NULL, "
+			+ COLUMN_SCHE_VEHICLE_NUMBER + " TEXT NOT NULL, "
+			+ COLUMN_SCHE_STATION_NUMBER + " TEXT NOT NULL, "
+			+ COLUMN_SCHE_DATA + " TEXT, " + COLUMN_SCHE_TIMESTAMP
 			+ " DATETIME NOT NULL DEFAULT CURRENT_DATE);";
 
 	public ScheduleSQLite(Activity context) {

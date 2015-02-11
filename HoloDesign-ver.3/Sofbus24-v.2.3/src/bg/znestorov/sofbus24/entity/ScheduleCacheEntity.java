@@ -1,5 +1,10 @@
 package bg.znestorov.sofbus24.entity;
 
+import bg.znestorov.sofbus24.utils.Utils;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 /**
  * Class used to retrieve data from the Schedule database
  * 
@@ -9,21 +14,20 @@ package bg.znestorov.sofbus24.entity;
  */
 public class ScheduleCacheEntity {
 
-	private String htmlResponse;
+	private String data;
 	private String timestamp;
 
-	public ScheduleCacheEntity(String htmlResponse, String timestamp) {
-		super();
-		this.htmlResponse = htmlResponse;
-		this.timestamp = timestamp;
+	public ScheduleCacheEntity(String data, String timestamp) {
+		this.data = data;
+		this.timestamp = Utils.formatScheduleCacheTimestamp(timestamp);
 	}
 
-	public String getHtmlResponse() {
-		return htmlResponse;
+	public String getData() {
+		return data;
 	}
 
-	public void setHtmlResponse(String htmlResponse) {
-		this.htmlResponse = htmlResponse;
+	public void setData(String data) {
+		this.data = data;
 	}
 
 	public String getTimestamp() {
@@ -34,10 +38,47 @@ public class ScheduleCacheEntity {
 		this.timestamp = timestamp;
 	}
 
+	/**
+	 * Transform the Gson data to a PublicTransportStationEntity object
+	 * 
+	 * @return the PublicTransportStationEntity object
+	 */
+	public PublicTransportStationEntity getPTStationEntity() {
+		Gson gson = new Gson();
+
+		return gson.fromJson(data,
+				new TypeToken<PublicTransportStationEntity>() {
+				}.getType());
+	}
+
+	/**
+	 * Transform the Gson data to a DirectionsEntity object
+	 * 
+	 * @return the DirectionsEntity object
+	 */
+	public DirectionsEntity getDirectionsEntity() {
+		Gson gson = new Gson();
+
+		return gson.fromJson(data, new TypeToken<DirectionsEntity>() {
+		}.getType());
+	}
+
+	/**
+	 * Transform the Gson data to a MetroScheduleEntity object
+	 * 
+	 * @return the MetroScheduleEntity object
+	 */
+	public MetroScheduleEntity getMetroScheduleEntity() {
+		Gson gson = new Gson();
+
+		return gson.fromJson(data, new TypeToken<MetroScheduleEntity>() {
+		}.getType());
+	}
+
 	@Override
 	public String toString() {
-		return getClass().getName() + " {\n\thtmlResponse: " + htmlResponse
-				+ "\n\ttimestamp: " + timestamp + "\n}";
+		return getClass().getName() + " {\n\tdata: " + data + "\n\ttimestamp: "
+				+ timestamp + "\n}";
 	}
 
 }

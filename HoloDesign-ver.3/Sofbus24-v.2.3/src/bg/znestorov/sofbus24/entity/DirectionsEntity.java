@@ -26,6 +26,8 @@ public class DirectionsEntity implements Serializable {
 	private ArrayList<String> directionsNames;
 	private ArrayList<ArrayList<StationEntity>> directionsList;
 
+	private String scheduleCacheTimestamp;
+
 	public DirectionsEntity() {
 
 		this.vt = new ArrayList<String>();
@@ -169,6 +171,14 @@ public class DirectionsEntity implements Serializable {
 		this.rid = rid;
 	}
 
+	public String getScheduleCacheTimestamp() {
+		return scheduleCacheTimestamp;
+	}
+
+	public void setScheduleCacheTimestamp(String scheduleCacheTimestamp) {
+		this.scheduleCacheTimestamp = scheduleCacheTimestamp;
+	}
+
 	/**
 	 * Check if the direction entity is set correctly
 	 * 
@@ -180,6 +190,16 @@ public class DirectionsEntity implements Serializable {
 				&& directionsNames.size() == directionsList.size();
 	}
 
+	/**
+	 * Check if the object is loaded from the schedule cache (in case there is
+	 * no timestamp)
+	 * 
+	 * @return if the object is loaded from the schedule cache
+	 */
+	public boolean isScheduleCacheLoaded() {
+		return scheduleCacheTimestamp != null;
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tvehicle: " + vehicle
@@ -187,7 +207,9 @@ public class DirectionsEntity implements Serializable {
 				+ "\n\tactiveStation: " + activeStation + "\n\tvt: " + vt
 				+ "\n\tlid: " + lid + "\n\trid: " + rid
 				+ "\n\tdirectionsNames: " + directionsNames
-				+ "\n\tdirectionsList: " + directionsList + "\n}";
+				+ "\n\tdirectionsList: " + directionsList
+				+ "\n\tscheduleCacheTimestamp: " + scheduleCacheTimestamp
+				+ "\n}";
 	}
 
 }

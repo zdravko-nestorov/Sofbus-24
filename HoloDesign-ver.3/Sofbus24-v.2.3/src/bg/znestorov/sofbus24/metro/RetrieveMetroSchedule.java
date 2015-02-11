@@ -12,13 +12,19 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.text.Html;
+import android.widget.Toast;
+import bg.znestorov.sofbus24.databases.ScheduleDatabaseUtils;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.MetroScheduleEntity;
 import bg.znestorov.sofbus24.entity.MetroStationEntity;
+import bg.znestorov.sofbus24.entity.ScheduleCacheEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.MetroSchedule;
 import bg.znestorov.sofbus24.main.MetroScheduleDialog;
+import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.schedule.ScheduleCachePreferences;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
@@ -59,6 +65,7 @@ public class RetrieveMetroSchedule extends
 
 	@Override
 	protected MetroScheduleEntity doInBackground(Void... params) {
+
 		MetroScheduleEntity metroSchedule = getMetroScheduleEntity();
 
 		try {
@@ -81,6 +88,25 @@ public class RetrieveMetroSchedule extends
 			}
 		} catch (Exception e) {
 			metroSchedule = null;
+		}
+
+		/**
+		 * Check if there is some problem with loading the schedule from the
+		 * SUMC site and if there is - load the local cache, otherwise - save
+		 * the cache into the dabatase
+		 */
+		if (metroSchedule == null || !metroSchedule.isMetroInformationValid()) {
+			ScheduleCacheEntity scheduleCache = ScheduleDatabaseUtils
+					.getMetroStationScheduleCache(context, station);
+
+			if (scheduleCache != null) {
+				metroSchedule = scheduleCache.getMetroScheduleEntity();
+				metroSchedule.setScheduleCacheTimestamp(scheduleCache
+						.getTimestamp());
+			}
+		} else {
+			ScheduleDatabaseUtils.createOrUpdateMetroStationScheduleCache(
+					context, station, metroSchedule);
 		}
 
 		return metroSchedule;
@@ -106,6 +132,23 @@ public class RetrieveMetroSchedule extends
 			metroScheduleIntent.putExtra(Constants.BUNDLE_METRO_SCHEDULE,
 					metroSchedule);
 			context.startActivity(metroScheduleIntent);
+
+			// In case of loading the schedule from the local cache (and if the
+			// toasts are allowed), alert the user about that
+			if (metroSchedule.isScheduleCacheLoaded()
+					&& ScheduleCachePreferences
+							.isScheduleCacheToastShown(context)) {
+
+				String stationTitle = ActivityUtils.getStationTitle(station);
+				String timestamp = metroSchedule.getScheduleCacheTimestamp();
+
+				Toast.makeText(
+						context,
+						Html.fromHtml(context.getString(
+								R.string.pt_schedule_cache_loaded,
+								stationTitle, timestamp)), Toast.LENGTH_LONG)
+						.show();
+			}
 		} else {
 			ActivityUtils.showNoInternetToast(context);
 		}

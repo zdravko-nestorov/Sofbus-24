@@ -18,9 +18,15 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Html;
+import android.widget.Toast;
+import bg.znestorov.sofbus24.databases.ScheduleDatabaseUtils;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
+import bg.znestorov.sofbus24.entity.ScheduleCacheEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.main.History;
+import bg.znestorov.sofbus24.main.R;
+import bg.znestorov.sofbus24.schedule.ScheduleCachePreferences;
 import bg.znestorov.sofbus24.schedule.ScheduleVehicleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
@@ -58,13 +64,15 @@ public class RetrievePublicTransportDirection extends
 
 	@Override
 	protected DirectionsEntity doInBackground(Void... params) {
-		DirectionsEntity ptDirectionsEntity;
+
+		String htmlResult = null;
 		DefaultHttpClient directionHttpClient = new DefaultHttpClient();
+		DirectionsEntity ptDirectionsEntity;
 
 		try {
 			HttpGet directionHttpRequest = createDirectionRequest();
-			String htmlResult = directionHttpClient.execute(
-					directionHttpRequest, new BasicResponseHandler());
+			htmlResult = directionHttpClient.execute(directionHttpRequest,
+					new BasicResponseHandler());
 
 			ProcessPublicTransportDirection processPtDirection = new ProcessPublicTransportDirection(
 					context, vehicle, htmlResult);
@@ -73,6 +81,27 @@ public class RetrievePublicTransportDirection extends
 			ptDirectionsEntity = new DirectionsEntity();
 		} finally {
 			directionHttpClient.getConnectionManager().shutdown();
+		}
+
+		/**
+		 * Check if there is some problem with loading the schedule from the
+		 * SUMC site and if there is - load the local cache, otherwise - save
+		 * the cache into the dabatase
+		 */
+		if (!ptDirectionsEntity.isDirectionSet()) {
+			ScheduleCacheEntity scheduleCache = ScheduleDatabaseUtils
+					.getVehicleScheduleCache(context, vehicle);
+
+			if (scheduleCache != null) {
+				ptDirectionsEntity = scheduleCache.getDirectionsEntity();
+				ptDirectionsEntity.setScheduleCacheTimestamp(scheduleCache
+						.getTimestamp());
+			} else {
+				ptDirectionsEntity = new DirectionsEntity();
+			}
+		} else {
+			ScheduleDatabaseUtils.createOrUpdateVehicleScheduleCache(context,
+					vehicle, ptDirectionsEntity);
 		}
 
 		return ptDirectionsEntity;
@@ -110,6 +139,25 @@ public class RetrievePublicTransportDirection extends
 				 * GooglePlayError: java.lang.IllegalStateException: Can not
 				 * perform this action after onSaveInstanceState
 				 */
+			}
+
+			// In case of loading the schedule from the local cache (and if the
+			// toasts are allowed), alert the user about that
+			if (ptDirectionsEntity.isScheduleCacheLoaded()
+					&& ScheduleCachePreferences
+							.isScheduleCacheToastShown(context)) {
+
+				String vehicleTitle = ActivityUtils.getVehicleTitle(context,
+						ptDirectionsEntity.getVehicle());
+				String timestamp = ptDirectionsEntity
+						.getScheduleCacheTimestamp();
+
+				Toast.makeText(
+						context,
+						Html.fromHtml(context.getString(
+								R.string.pt_schedule_cache_loaded,
+								vehicleTitle, timestamp)), Toast.LENGTH_LONG)
+						.show();
 			}
 		} else {
 			ActivityUtils.showNoInternetOrInfoToast(context);
