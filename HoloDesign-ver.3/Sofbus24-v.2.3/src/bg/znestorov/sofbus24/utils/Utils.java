@@ -1092,6 +1092,15 @@ public class Utils {
 	}
 
 	/**
+	 * Get the current date in format DD.MM.YYY
+	 * 
+	 * @return the current date in format DD.MM.YYY
+	 */
+	public static String getScheduleCacheTimestamp() {
+		return DateFormat.format("yyyy-MM-dd", new java.util.Date()).toString();
+	}
+
+	/**
 	 * Format the schedule cache timestamp in format DD.MM.YYY
 	 * 
 	 * @param timestamp

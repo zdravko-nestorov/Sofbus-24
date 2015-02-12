@@ -52,7 +52,7 @@
             android:title="@string/pref_category_schedule_cache_cacheState_title" />
 
         <ListPreference
-            android:defaultValue="30"
+            android:defaultValue="20"
             android:entries="@array/numberOfDays"
             android:entryValues="@array/numberOfDaysValues"
             android:key="numberOfDays"

@@ -97,6 +97,9 @@
         <activity
             android:name="bg.znestorov.sofbus24.main.PreferencesPreHoneycombDialog"
             android:theme="@style/PopupTheme" />
+        <activity
+            android:name="bg.znestorov.sofbus24.main.PreferencesHidden"
+            android:theme="@style/TransperantTheme" />
 
         <!-- Edit Tabs -->
         <activity android:name="bg.znestorov.sofbus24.main.EditTabs" />

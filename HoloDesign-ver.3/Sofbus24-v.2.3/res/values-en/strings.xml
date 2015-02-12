@@ -316,6 +316,7 @@
     <string name="pt_empty_list" formatted="false"><![CDATA[No stations are found for <b>%s</b> in direction <b>%s</b>. Please try again with another search criteria.]]></string>
     <string name="pt_menu_map_route_loading" formatted="false"><![CDATA[Drawing the route...]]></string>
     <string name="pt_menu_clear_all_schedule_cache" formatted="false"><![CDATA[Are you sure that you want to remove the local schedule for the Public Transport vehicles?]]></string>
+    <string name="pt_menu_clear_all_schedule_cache_settings" formatted="false"><![CDATA[You have disabled the local schedule for the Public Transport vehicles. Do you want to remove the previously stored information?]]></string>
     <string name="pt_menu_clear_all_schedule_cache_toast" formatted="false"><![CDATA[The local schedule for the Public Transport vehicles was successfully deleted from the cache.]]></string>
     <string name="pt_menu_clear_all_schedule_cache_empty_toast" formatted="false"><![CDATA[There is no available local schedule for the Public Transport vehicles. If you want to use the offline schedule you should load it from the website of SKGT at least once.]]></string>
     <string name="pt_menu_clear_schedule_cache" formatted="false"><![CDATA[Are you sure that you want to remove the local schedule for <b>%s</b>?]]></string>

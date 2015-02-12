@@ -14,8 +14,10 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.navigation.NavDrawerHomeScreenPreferences;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 
@@ -40,6 +42,7 @@ public class PreferencesFragment extends PreferenceFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LanguageChange.selectLocale(getActivity());
 
 		// Load the preferences from an XML resource
 		addPreferencesFromResource(R.xml.preferences);
@@ -61,14 +64,14 @@ public class PreferencesFragment extends PreferenceFragment implements
 	@Override
 	public void onResume() {
 		super.onStop();
-		getPreferenceScreen().getSharedPreferences()
+		preferencesScreen.getSharedPreferences()
 				.registerOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		getPreferenceScreen().getSharedPreferences()
+		preferencesScreen.getSharedPreferences()
 				.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
@@ -91,7 +94,7 @@ public class PreferencesFragment extends PreferenceFragment implements
 		}
 
 		if (key.equals(Constants.PREFERENCE_KEY_CACHE_STATE)) {
-			actionsOnScheduleCachePreferences(sharedPreferences);
+			actionsOnScheduleCachePreferences(sharedPreferences, false);
 		}
 
 		if (NavDrawerHomeScreenPreferences.getUserHomeScreenChoice(context) == 1
@@ -137,7 +140,7 @@ public class PreferencesFragment extends PreferenceFragment implements
 		// Check the state of each field on startup
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(context);
-		actionsOnScheduleCachePreferences(sharedPreferences);
+		actionsOnScheduleCachePreferences(sharedPreferences, true);
 	}
 
 	/**
@@ -145,9 +148,11 @@ public class PreferencesFragment extends PreferenceFragment implements
 	 * 
 	 * @param sharedPreferences
 	 *            the default shared preferences
+	 * @param isCalledOnStartup
+	 *            indicates if the method is called on activity startup
 	 */
 	private void actionsOnScheduleCachePreferences(
-			SharedPreferences sharedPreferences) {
+			SharedPreferences sharedPreferences, boolean isCalledOnStartup) {
 
 		Boolean isScheduleCacheActive = sharedPreferences.getBoolean(
 				Constants.PREFERENCE_KEY_CACHE_STATE,
@@ -159,6 +164,11 @@ public class PreferencesFragment extends PreferenceFragment implements
 		} else {
 			numberOfDays.setEnabled(false);
 			showCacheToast.setEnabled(false);
+
+			// Check if the user wants to remove all schedule cache data
+			if (!isCalledOnStartup) {
+				ActivityUtils.startPreferencesHiddenActivity(context);
+			}
 		}
 	}
 }

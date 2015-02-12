@@ -103,18 +103,21 @@ public class RetrievePublicTransportStation extends
 		 * SUMC site and if there is - load the local cache, otherwise - save
 		 * the cache into the dabatase
 		 */
-		if (!ptStation.isScheduleSet()) {
-			ScheduleCacheEntity scheduleCache = ScheduleDatabaseUtils
-					.getStationScheduleCache(context, vehicle, ptStation);
+		if (ScheduleCachePreferences.isScheduleCacheActive(context)) {
 
-			if (scheduleCache != null) {
-				ptStation = scheduleCache.getPTStationEntity();
-				ptStation.setScheduleCacheTimestamp(scheduleCache
-						.getTimestamp());
+			if (!ptStation.isScheduleSet()) {
+				ScheduleCacheEntity scheduleCache = ScheduleDatabaseUtils
+						.getStationScheduleCache(context, vehicle, ptStation);
+
+				if (scheduleCache != null) {
+					ptStation = scheduleCache.getPTStationEntity();
+					ptStation.setScheduleCacheTimestamp(scheduleCache
+							.getTimestamp());
+				}
+			} else {
+				ScheduleDatabaseUtils.createOrUpdateStationScheduleCache(
+						context, vehicle, ptStation);
 			}
-		} else {
-			ScheduleDatabaseUtils.createOrUpdateStationScheduleCache(context,
-					vehicle, ptStation);
 		}
 
 		return ptStation;
@@ -147,19 +150,22 @@ public class RetrievePublicTransportStation extends
 
 			// In case of loading the schedule from the local cache (and if the
 			// toasts are allowed), alert the user about that
-			if (ptStation.isScheduleCacheLoaded()
-					&& ScheduleCachePreferences
-							.isScheduleCacheToastShown(context)) {
+			if (ptStation.isScheduleCacheLoaded()) {
+				ActivityTracker.queriedLocalScheduleCache(context);
 
-				String stationTitle = ActivityUtils.getStationTitle(ptStation);
-				String timestamp = ptStation.getScheduleCacheTimestamp();
+				if (ScheduleCachePreferences.isScheduleCacheToastShown(context)) {
 
-				Toast.makeText(
-						context,
-						Html.fromHtml(context.getString(
-								R.string.pt_schedule_cache_loaded,
-								stationTitle, timestamp)), Toast.LENGTH_LONG)
-						.show();
+					String stationTitle = ActivityUtils
+							.getStationTitle(ptStation);
+					String timestamp = ptStation.getScheduleCacheTimestamp();
+
+					Toast.makeText(
+							context,
+							Html.fromHtml(context.getString(
+									R.string.pt_schedule_cache_loaded,
+									stationTitle, timestamp)),
+							Toast.LENGTH_LONG).show();
+				}
 			}
 		} else {
 			ActivityUtils.showNoInternetOrInfoToast(context);

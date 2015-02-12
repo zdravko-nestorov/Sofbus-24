@@ -55,6 +55,7 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
+import bg.znestorov.sofbus24.databases.ScheduleDatabaseUtils;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.RetrieveCurrentLocationTypeEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -62,6 +63,7 @@ import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.main.ClosestStationsMap;
 import bg.znestorov.sofbus24.main.HomeScreenSelect;
+import bg.znestorov.sofbus24.main.PreferencesHidden;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.main.WebPage;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -1132,6 +1134,21 @@ public class ActivityUtils {
 				station.getNumber());
 
 		return stationTitle;
+	}
+
+	/**
+	 * Start the PreferencesHidden activity (just to show the info dialog)
+	 * 
+	 * @param context
+	 *            the current activity context
+	 */
+	public static void startPreferencesHiddenActivity(Activity context) {
+
+		if (ScheduleDatabaseUtils.isAnyScheduleCacheAvaialble(context)) {
+			Intent preferencesHiddenIntent = new Intent(context,
+					PreferencesHidden.class);
+			context.startActivity(preferencesHiddenIntent);
+		}
 	}
 
 }

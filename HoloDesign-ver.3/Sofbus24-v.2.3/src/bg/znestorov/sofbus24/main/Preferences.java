@@ -42,8 +42,11 @@ public class Preferences extends FragmentActivity implements
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(getString(R.string.pref_title));
 
-		getFragmentManager().beginTransaction()
-				.replace(android.R.id.content, preferencesFragment).commit();
+		if (savedInstanceState == null) {
+			getFragmentManager().beginTransaction()
+					.replace(android.R.id.content, preferencesFragment)
+					.commit();
+		}
 	}
 
 	@Override

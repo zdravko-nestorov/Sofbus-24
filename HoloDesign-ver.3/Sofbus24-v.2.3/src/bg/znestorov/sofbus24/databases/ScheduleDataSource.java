@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import bg.znestorov.sofbus24.entity.ScheduleCacheEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
+import bg.znestorov.sofbus24.utils.Utils;
 
 import com.google.gson.Gson;
 
@@ -147,6 +148,8 @@ public class ScheduleDataSource {
 			// Insert the data object into the DB
 			Gson gson = new Gson();
 			values.put(ScheduleSQLite.COLUMN_SCHE_DATA, gson.toJson(data));
+			values.put(ScheduleSQLite.COLUMN_SCHE_TIMESTAMP,
+					Utils.getScheduleCacheTimestamp());
 
 			// Insert the ContentValues data into the database
 			String whereClause = ScheduleSQLite.COLUMN_SCHE_TYPE + " = ? AND "
@@ -192,6 +195,8 @@ public class ScheduleDataSource {
 			// Insert the data object into the DB
 			Gson gson = new Gson();
 			values.put(ScheduleSQLite.COLUMN_SCHE_DATA, gson.toJson(data));
+			values.put(ScheduleSQLite.COLUMN_SCHE_TIMESTAMP,
+					Utils.getScheduleCacheTimestamp());
 
 			// Insert the ContentValues data into the database
 			String whereClause = ScheduleSQLite.COLUMN_SCHE_TYPE + " = ? AND "

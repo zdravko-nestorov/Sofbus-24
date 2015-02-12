@@ -29,6 +29,7 @@ import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.schedule.ScheduleCachePreferences;
 import bg.znestorov.sofbus24.schedule.ScheduleVehicleFragment;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
@@ -88,20 +89,23 @@ public class RetrievePublicTransportDirection extends
 		 * SUMC site and if there is - load the local cache, otherwise - save
 		 * the cache into the dabatase
 		 */
-		if (!ptDirectionsEntity.isDirectionSet()) {
-			ScheduleCacheEntity scheduleCache = ScheduleDatabaseUtils
-					.getVehicleScheduleCache(context, vehicle);
+		if (ScheduleCachePreferences.isScheduleCacheActive(context)) {
 
-			if (scheduleCache != null) {
-				ptDirectionsEntity = scheduleCache.getDirectionsEntity();
-				ptDirectionsEntity.setScheduleCacheTimestamp(scheduleCache
-						.getTimestamp());
+			if (!ptDirectionsEntity.isDirectionSet()) {
+				ScheduleCacheEntity scheduleCache = ScheduleDatabaseUtils
+						.getVehicleScheduleCache(context, vehicle);
+
+				if (scheduleCache != null) {
+					ptDirectionsEntity = scheduleCache.getDirectionsEntity();
+					ptDirectionsEntity.setScheduleCacheTimestamp(scheduleCache
+							.getTimestamp());
+				} else {
+					ptDirectionsEntity = new DirectionsEntity();
+				}
 			} else {
-				ptDirectionsEntity = new DirectionsEntity();
+				ScheduleDatabaseUtils.createOrUpdateVehicleScheduleCache(
+						context, vehicle, ptDirectionsEntity);
 			}
-		} else {
-			ScheduleDatabaseUtils.createOrUpdateVehicleScheduleCache(context,
-					vehicle, ptDirectionsEntity);
 		}
 
 		return ptDirectionsEntity;
@@ -143,21 +147,23 @@ public class RetrievePublicTransportDirection extends
 
 			// In case of loading the schedule from the local cache (and if the
 			// toasts are allowed), alert the user about that
-			if (ptDirectionsEntity.isScheduleCacheLoaded()
-					&& ScheduleCachePreferences
-							.isScheduleCacheToastShown(context)) {
+			if (ptDirectionsEntity.isScheduleCacheLoaded()) {
+				ActivityTracker.queriedLocalScheduleCache(context);
 
-				String vehicleTitle = ActivityUtils.getVehicleTitle(context,
-						ptDirectionsEntity.getVehicle());
-				String timestamp = ptDirectionsEntity
-						.getScheduleCacheTimestamp();
+				if (ScheduleCachePreferences.isScheduleCacheToastShown(context)) {
 
-				Toast.makeText(
-						context,
-						Html.fromHtml(context.getString(
-								R.string.pt_schedule_cache_loaded,
-								vehicleTitle, timestamp)), Toast.LENGTH_LONG)
-						.show();
+					String vehicleTitle = ActivityUtils.getVehicleTitle(
+							context, ptDirectionsEntity.getVehicle());
+					String timestamp = ptDirectionsEntity
+							.getScheduleCacheTimestamp();
+
+					Toast.makeText(
+							context,
+							Html.fromHtml(context.getString(
+									R.string.pt_schedule_cache_loaded,
+									vehicleTitle, timestamp)),
+							Toast.LENGTH_LONG).show();
+				}
 			}
 		} else {
 			ActivityUtils.showNoInternetOrInfoToast(context);

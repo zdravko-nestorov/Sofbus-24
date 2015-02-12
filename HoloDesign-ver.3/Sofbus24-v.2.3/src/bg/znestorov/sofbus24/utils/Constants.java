@@ -72,7 +72,7 @@ public class Constants {
 	public static final String PREFERENCE_KEY_CACHE_STATE = "cacheState";
 	public static final boolean PREFERENCE_DEFAULT_VALUE_CACHE_STATE = true;
 	public static final String PREFERENCE_KEY_NUMBER_OF_DAYS = "numberOfDays";
-	public static final String PREFERENCE_DEFAULT_VALUE_NUMBER_OF_DAYS = "30";
+	public static final String PREFERENCE_DEFAULT_VALUE_NUMBER_OF_DAYS = "20";
 	public static final String PREFERENCE_KEY_SHOW_CACHE_TOAST = "showCacheToast";
 	public static final boolean PREFERENCE_DEFAULT_VALUE_SHOW_CACHE_TOAST = true;
 	public static final String PREFERENCE_KEY_MARKER_TYPE = "markerType";

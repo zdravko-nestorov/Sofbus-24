@@ -66,9 +66,11 @@ public class ScheduleCacheDeleteDialog extends DialogFragment {
 				BUNDLE_SCHEDULE_CACHE_TYPE));
 		scheduleCacheNumber = getArguments().getString(
 				BUNDLE_SCHEDULE_CACHE_NUMBER);
+
 		vehicleTitle = ActivityUtils.getVehicleTitle(context,
 				scheduleCacheType, scheduleCacheNumber);
 
+		// Check what cache should be deleted (local or all cache)
 		switch (scheduleCacheType) {
 		case BTTM:
 			message = Html
@@ -84,20 +86,21 @@ public class ScheduleCacheDeleteDialog extends DialogFragment {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 
-				String deleteMessage;
+				Spanned deleteMessage;
 
 				switch (scheduleCacheType) {
 				case BTTM:
 					ScheduleDatabaseUtils.deleteAllScheduleCache(context);
-					deleteMessage = getString(R.string.pt_menu_clear_all_schedule_cache_toast);
+					deleteMessage = Html
+							.fromHtml(getString(R.string.pt_menu_clear_all_schedule_cache_toast));
 
 					break;
 				default:
 					ScheduleDatabaseUtils.deleteVehiclesScheduleCache(context,
 							scheduleCacheType, scheduleCacheNumber);
-					deleteMessage = getString(
+					deleteMessage = Html.fromHtml(getString(
 							R.string.pt_menu_clear_schedule_cache_toast,
-							vehicleTitle);
+							vehicleTitle));
 
 					break;
 				}

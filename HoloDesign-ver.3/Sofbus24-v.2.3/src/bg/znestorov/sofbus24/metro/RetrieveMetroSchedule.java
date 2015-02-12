@@ -95,18 +95,22 @@ public class RetrieveMetroSchedule extends
 		 * SUMC site and if there is - load the local cache, otherwise - save
 		 * the cache into the dabatase
 		 */
-		if (metroSchedule == null || !metroSchedule.isMetroInformationValid()) {
-			ScheduleCacheEntity scheduleCache = ScheduleDatabaseUtils
-					.getMetroStationScheduleCache(context, station);
+		if (ScheduleCachePreferences.isScheduleCacheActive(context)) {
 
-			if (scheduleCache != null) {
-				metroSchedule = scheduleCache.getMetroScheduleEntity();
-				metroSchedule.setScheduleCacheTimestamp(scheduleCache
-						.getTimestamp());
+			if (metroSchedule == null
+					|| !metroSchedule.isMetroInformationValid()) {
+				ScheduleCacheEntity scheduleCache = ScheduleDatabaseUtils
+						.getMetroStationScheduleCache(context, station);
+
+				if (scheduleCache != null) {
+					metroSchedule = scheduleCache.getMetroScheduleEntity();
+					metroSchedule.setScheduleCacheTimestamp(scheduleCache
+							.getTimestamp());
+				}
+			} else {
+				ScheduleDatabaseUtils.createOrUpdateMetroStationScheduleCache(
+						context, station, metroSchedule);
 			}
-		} else {
-			ScheduleDatabaseUtils.createOrUpdateMetroStationScheduleCache(
-					context, station, metroSchedule);
 		}
 
 		return metroSchedule;
@@ -135,19 +139,23 @@ public class RetrieveMetroSchedule extends
 
 			// In case of loading the schedule from the local cache (and if the
 			// toasts are allowed), alert the user about that
-			if (metroSchedule.isScheduleCacheLoaded()
-					&& ScheduleCachePreferences
-							.isScheduleCacheToastShown(context)) {
+			if (metroSchedule.isScheduleCacheLoaded()) {
+				ActivityTracker.queriedLocalScheduleCache(context);
 
-				String stationTitle = ActivityUtils.getStationTitle(station);
-				String timestamp = metroSchedule.getScheduleCacheTimestamp();
+				if (ScheduleCachePreferences.isScheduleCacheToastShown(context)) {
 
-				Toast.makeText(
-						context,
-						Html.fromHtml(context.getString(
-								R.string.pt_schedule_cache_loaded,
-								stationTitle, timestamp)), Toast.LENGTH_LONG)
-						.show();
+					String stationTitle = ActivityUtils
+							.getStationTitle(station);
+					String timestamp = metroSchedule
+							.getScheduleCacheTimestamp();
+
+					Toast.makeText(
+							context,
+							Html.fromHtml(context.getString(
+									R.string.pt_schedule_cache_loaded,
+									stationTitle, timestamp)),
+							Toast.LENGTH_LONG).show();
+				}
 			}
 		} else {
 			ActivityUtils.showNoInternetToast(context);

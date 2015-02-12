@@ -18,6 +18,7 @@ import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.activity.ActivityTracker;
+import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -133,7 +134,7 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 		}
 
 		if (key.equals(Constants.PREFERENCE_KEY_CACHE_STATE)) {
-			actionsOnScheduleCachePreferences(sharedPreferences);
+			actionsOnScheduleCachePreferences(sharedPreferences, false);
 		}
 
 		if (NavDrawerHomeScreenPreferences.getUserHomeScreenChoice(context) == 1
@@ -194,7 +195,7 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 		// Check the state of each field on startup
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(context);
-		actionsOnScheduleCachePreferences(sharedPreferences);
+		actionsOnScheduleCachePreferences(sharedPreferences, true);
 	}
 
 	/**
@@ -202,9 +203,11 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 	 * 
 	 * @param sharedPreferences
 	 *            the default shared preferences
+	 * @param isCalledOnStartup
+	 *            indicates if the method is called on activity startup
 	 */
 	private void actionsOnScheduleCachePreferences(
-			SharedPreferences sharedPreferences) {
+			SharedPreferences sharedPreferences, boolean isCalledOnStartup) {
 
 		Boolean isScheduleCacheActive = sharedPreferences.getBoolean(
 				Constants.PREFERENCE_KEY_CACHE_STATE,
@@ -216,6 +219,11 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 		} else {
 			numberOfDays.setEnabled(false);
 			showCacheToast.setEnabled(false);
+
+			// Check if the user wants to remove all schedule cache data
+			if (!isCalledOnStartup) {
+				ActivityUtils.startPreferencesHiddenActivity(context);
+			}
 		}
 	}
 

@@ -327,6 +327,7 @@
     <string name="pt_empty_list" formatted="false"><![CDATA[Няма намерени спирки за <b>%s</b> в посока <b>%s</b>. Моля опитайте с други критерии за търсене.]]></string>
     <string name="pt_menu_map_route_loading" formatted="false"><![CDATA[Изчертаване на маршрута...]]></string>
     <string name="pt_menu_clear_all_schedule_cache" formatted="false"><![CDATA[Сигурни ли сте, че искате да изтриете локалното разписание на колите на Градския Транспорт?]]></string>
+    <string name="pt_menu_clear_all_schedule_cache_settings" formatted="false"><![CDATA[Вие изключихте използването на локалното разписание на колите на Градския Транспорт. Искате ли да премахнете запазената досега информация?]]></string>
     <string name="pt_menu_clear_all_schedule_cache_toast" formatted="false"><![CDATA[Локалното разписание на колите на Градския Транспорт беше успешно изтрито.]]></string>
     <string name="pt_menu_clear_all_schedule_cache_empty_toast" formatted="false"><![CDATA[В момента не е налично локално разписание на колите на Градския Транспорт. За да използвате офлайн разписанието, поне веднъж трябва да сте го заредили от сайта на СКГТ.]]></string>
     <string name="pt_menu_clear_schedule_cache" formatted="false"><![CDATA[Сигурни ли сте, че искате да изтриете локалното разписание за <b>%s</b>?]]></string>

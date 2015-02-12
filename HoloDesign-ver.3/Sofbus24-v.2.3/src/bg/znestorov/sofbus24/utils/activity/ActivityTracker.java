@@ -196,6 +196,25 @@ public class ActivityTracker {
 	}
 
 	/**
+	 * Send an event to GoogleAnalytics on "loading local schedule cache" action
+	 * 
+	 * @param context
+	 *            the current activity context
+	 */
+	public static void queriedLocalScheduleCache(Activity context) {
+
+		// Get tracker
+		Tracker tracker = ((GlobalEntity) context.getApplicationContext())
+				.getTracker(TrackerName.APP_TRACKER);
+
+		// Build and send an Event
+		tracker.send(new HitBuilders.EventBuilder()
+				.setCategory("Local Schedule Cache")
+				.setAction("queriedLocalScheduleCache")
+				.setLabel("queriedLocalScheduleCache").build());
+	}
+
+	/**
 	 * Send an event to GoogleAnalytics on "changing theme" action (from the
 	 * settings screen)
 	 * 
