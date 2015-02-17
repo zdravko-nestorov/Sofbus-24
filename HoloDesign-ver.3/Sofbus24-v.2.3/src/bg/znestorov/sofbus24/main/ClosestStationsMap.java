@@ -1112,16 +1112,13 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 			markerIcon = R.drawable.ic_tram_map_marker;
 			break;
 		case BUS_TROLLEY:
-			// TODO: Make an icon
-			markerIcon = R.drawable.ic_bus_map_marker;
+			markerIcon = R.drawable.ic_bus_trolley_map_marker;
 			break;
 		case BUS_TRAM:
-			// TODO: Make an icon
-			markerIcon = R.drawable.ic_bus_map_marker;
+			markerIcon = R.drawable.ic_bus_tram_map_marker;
 			break;
 		case TRAM_TROLLEY:
-			// TODO: Make an icon
-			markerIcon = R.drawable.ic_bus_map_marker;
+			markerIcon = R.drawable.ic_trolley_tram_map_marker;
 			break;
 		case METRO1:
 		case METRO2:

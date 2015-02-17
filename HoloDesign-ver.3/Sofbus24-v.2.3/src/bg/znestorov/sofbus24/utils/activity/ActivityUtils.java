@@ -1059,7 +1059,6 @@ public class ActivityUtils {
 	 */
 	public static void setWebViewTransperantBackground(WebView webView) {
 
-		// TODO: Check on a tablet
 		if (android.os.Build.VERSION.SDK_INT < 16) {
 			webView.setBackgroundColor(0x00000000);
 		} else {

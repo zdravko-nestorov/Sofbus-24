@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.widget.Toast;
+import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.MetroStationEntity;
 import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
@@ -37,7 +38,9 @@ public class StationMap extends SherlockFragmentActivity {
 
 	private Activity context;
 	private GlobalEntity globalContext;
+
 	private ActionBar actionBar;
+	private VehiclesDataSource vehiclesDatasource;
 
 	private GoogleMap stationMap;
 	private LatLng centerStationLocation;
@@ -55,6 +58,7 @@ public class StationMap extends SherlockFragmentActivity {
 		// Get the current activity context
 		context = StationMap.this;
 		globalContext = (GlobalEntity) getApplicationContext();
+		vehiclesDatasource = new VehiclesDataSource(context);
 
 		// Set up the action bar
 		actionBar = getSupportActionBar();
@@ -223,7 +227,7 @@ public class StationMap extends SherlockFragmentActivity {
 				.title(String.format(metroStation.getName() + " (%s)",
 						metroStation.getNumber()))
 				.icon(BitmapDescriptorFactory
-						.fromResource(getMarkerIcon(metroStation.getType())));
+						.fromResource(getMarkerIcon(metroStation)));
 
 		// Check if the user is already localized
 		if (currentLocation != null) {
@@ -255,7 +259,7 @@ public class StationMap extends SherlockFragmentActivity {
 				.title(String.format(ptStation.getName() + " (%s)",
 						ptStation.getNumber()))
 				.icon(BitmapDescriptorFactory
-						.fromResource(getMarkerIcon(ptStation.getType())));
+						.fromResource(getMarkerIcon(ptStation)));
 
 		// Check if the user is already localized
 		if (currentLocation != null) {
@@ -288,7 +292,7 @@ public class StationMap extends SherlockFragmentActivity {
 				.title(String.format(vbTimeStation.getName() + " (%s)",
 						vbTimeStation.getNumber()))
 				.icon(BitmapDescriptorFactory
-						.fromResource(getMarkerIcon(vbTimeStation.getType())));
+						.fromResource(getMarkerIcon(vbTimeStation)));
 
 		// Check if the user is already localized
 		if (currentLocation != null) {
@@ -386,11 +390,16 @@ public class StationMap extends SherlockFragmentActivity {
 	 *            the type of the station
 	 * @return the marker icon from the resources
 	 */
-	private int getMarkerIcon(VehicleTypeEnum stationType) {
+	private int getMarkerIcon(StationEntity station) {
+
 		int markerIcon;
 
+		vehiclesDatasource.open();
+		VehicleTypeEnum stationType = vehiclesDatasource
+				.getVehicleTypesViaStation(station);
+		vehiclesDatasource.close();
+
 		switch (stationType) {
-		case BTT:
 		case BUS:
 			markerIcon = R.drawable.ic_bus_map_marker;
 			break;
@@ -400,15 +409,25 @@ public class StationMap extends SherlockFragmentActivity {
 		case TRAM:
 			markerIcon = R.drawable.ic_tram_map_marker;
 			break;
+		case BUS_TROLLEY:
+			markerIcon = R.drawable.ic_bus_trolley_map_marker;
+			break;
+		case BUS_TRAM:
+			markerIcon = R.drawable.ic_bus_tram_map_marker;
+			break;
+		case TRAM_TROLLEY:
+			markerIcon = R.drawable.ic_trolley_tram_map_marker;
+			break;
 		case METRO1:
 		case METRO2:
 			markerIcon = R.drawable.ic_metro_map_marker;
 			break;
 		default:
-			markerIcon = R.drawable.ic_none_map_marker;
+			markerIcon = R.drawable.ic_bus_map_marker;
 			break;
 		}
 
 		return markerIcon;
 	}
+
 }
