@@ -33,6 +33,26 @@ import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.gms.analytics.GoogleAnalytics;
 
+/**
+ * The application startup activity. It is used to fill the DB with information,
+ * to load some data and to check for an uypdate periodically.
+ * 
+ * A strange error occurs sometimes - {java.lang.NullPointerException in
+ * android.app.LoadedApk.initializeJavaContextClassLoader}. This is a verbose
+ * error message raised by underlying framework when dalvik re-install .apk file
+ * and trying to reuse or recycle the previous opened activity/view from the
+ * same package (if you haven't closed the previous installed app yet). It has
+ * nothing to do with your app, moreover, it is very unlikely that your app will
+ * get freezed or crashed cause by this verbose error message on end user's
+ * device.
+ * 
+ * For more information, StackOverflow post:<br/>
+ * {http://stackoverflow.com/questions/10150899/runtimeexception-unable-to-
+ * instantiate-application/10158241#10158241}
+ * 
+ * @author Zdravko Nestorov
+ * 
+ */
 public class HomeScreenSelect extends SherlockFragmentActivity implements
 		OnRecreateDatabaseListener {
 
