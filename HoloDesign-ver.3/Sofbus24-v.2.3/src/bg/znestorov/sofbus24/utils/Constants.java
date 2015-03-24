@@ -105,8 +105,8 @@ public class Constants {
 	/**
 	 * About
 	 */
-	public static final String CONFIGURATION_URL = "https://sofia-stations.googlecode.com/svn/HoloDesign-ver.3/ConfigData/ConfigurationDetails/configuration.xml";
-	public static final String CONFIGURATION_SOFBUS_24_DB_URL = "https://sofia-stations.googlecode.com/svn/HoloDesign-ver.3/ConfigData/Databases/sofbus24.db";
+	public static final String CONFIGURATION_URL = "https://github.com/zdravko-nestorov/Sofbus-24/trunk/HoloDesign-ver.3/ConfigData/ConfigurationDetails/configuration.xml";
+	public static final String CONFIGURATION_SOFBUS_24_DB_URL = "https://github.com/zdravko-nestorov/Sofbus-24/trunk/HoloDesign-ver.3/ConfigData/Databases/sofbus24.db";
 	public static final String CONFIGURATION_PREF_NAME = "configuration";
 	public static final String CONFIGURATION_PREF_SOFBUS24_KEY = "CurrentSofbus24DBVersion";
 
