@@ -153,7 +153,22 @@ public class SQLiteJDBC {
 
 				if (!stmt.executeQuery(sql).next()) {
 					sql = "INSERT INTO SOF_STAT (STAT_NUMBER, STAT_NAME, STAT_LATITUDE, STAT_LONGITUDE, STAT_TYPE) " + "VALUES ('%s', '%s', '%s', '%s', '%s');";
-					sql = String.format(sql, station.getNumber(), station.getName(), station.getLatitude(), station.getLongitude(), station.getType());
+
+					// Fix the bug with the insertion of the STAT_TYPE column in
+					// the SOF_STAT table (if it is even - should be METRO1,
+					// otherwise - METRO2)
+					Integer stationNumber = Integer.parseInt(station.getNumber());
+					VehicleType vehicleType = station.getType();
+
+					if (vehicleType == VehicleType.METRO1 || vehicleType == VehicleType.METRO2) {
+						if (stationNumber % 2 == 1) {
+							vehicleType = VehicleType.METRO1;
+						} else {
+							vehicleType = VehicleType.METRO2;
+						}
+					}
+
+					sql = String.format(sql, stationNumber, station.getName(), station.getLatitude(), station.getLongitude(), vehicleType);
 
 					// Add the station number to the list
 					skgtStationsNumbersList.add(station.getNumber());
