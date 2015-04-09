@@ -1165,6 +1165,7 @@ public class RetrieveVirtualBoards {
 		case SINGLE_RESULT:
 			VirtualBoardsStationEntity vbTimeStation = processVirtualBoards
 					.getVBSingleStationFromHtml();
+			vbTimeStation.removeNotPassingVehicles(isSpecialCase);
 			revertSpecialCaseFixes(vbTimeStation);
 
 			// Add the search into the history
@@ -1380,7 +1381,7 @@ public class RetrieveVirtualBoards {
 
 		if ("1137".equals(stationNumber)) {
 			isSpecialCase = true;
-			station.setNumber("0363");
+			station.setNumber("0364");
 		}
 
 		if ("1138".equals(stationNumber)) {
@@ -1390,7 +1391,7 @@ public class RetrieveVirtualBoards {
 
 		if ("1139".equals(stationNumber)) {
 			isSpecialCase = true;
-			station.setNumber("0364");
+			station.setNumber("0363");
 		}
 	}
 
@@ -1409,7 +1410,7 @@ public class RetrieveVirtualBoards {
 			String stationNumber = station.getFormattedNumber();
 
 			stationsDatasource.open();
-			if ("0363".equals(stationNumber)) {
+			if ("0364".equals(stationNumber)) {
 				station.assingStationValues(stationsDatasource.getStation(1137));
 				setCustomField(station);
 			}
@@ -1419,7 +1420,7 @@ public class RetrieveVirtualBoards {
 				setCustomField(station);
 			}
 
-			if ("0364".equals(stationNumber)) {
+			if ("0363".equals(stationNumber)) {
 				station.assingStationValues(stationsDatasource.getStation(1139));
 				setCustomField(station);
 			}
