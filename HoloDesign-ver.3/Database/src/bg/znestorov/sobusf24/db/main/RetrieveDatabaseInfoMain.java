@@ -146,7 +146,10 @@ public class RetrieveDatabaseInfoMain {
 
 			while (inputBufferedReader.ready()) {
 				Station station = new Station(inputBufferedReader.readLine());
-				metroStations.add(station);
+
+				if (!"XXXX".equals(station.getNumber())) {
+					metroStations.add(station);
+				}
 			}
 		} catch (Exception e) {
 			logger.info("Problem with reading the file with metro stations...");
