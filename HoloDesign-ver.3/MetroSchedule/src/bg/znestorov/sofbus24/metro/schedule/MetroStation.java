@@ -34,7 +34,22 @@ public class MetroStation {
 	}
 
 	public String getName() {
-		return name;
+
+		String formattedName = name.toUpperCase();
+		if ("лерпняр. дпсфаю".equals(formattedName)) {
+			formattedName = "лерпнярюмжхъ дпсфаю";
+		}
+		if ("лерпняр. хяйзпяйн ьняе".equals(formattedName)) {
+			formattedName = "лерпнярюмжхъ хяйзпяйн ьняе";
+		}
+		if ("лерпняр. янтхияйю яберю цнпю".equals(formattedName)) {
+			formattedName = "лерпнярюмжхъ янтхияйю яберю цнпю";
+		}
+		if ("лерпняр. керхые янтхъ".equals(formattedName)) {
+			formattedName = "лерпнярюмжхъ керхые янтхъ";
+		}
+
+		return formattedName;
 	}
 
 	public void setName(String name) {
@@ -53,8 +68,7 @@ public class MetroStation {
 		return holidaySchedule;
 	}
 
-	public void setHolidaySchedule(
-			HashMap<Integer, ArrayList<String>> holidaySchedule) {
+	public void setHolidaySchedule(HashMap<Integer, ArrayList<String>> holidaySchedule) {
 		this.holidaySchedule = holidaySchedule;
 	}
 
@@ -62,8 +76,7 @@ public class MetroStation {
 		return weekdaySchedule;
 	}
 
-	public void setWeekdaySchedule(
-			HashMap<Integer, ArrayList<String>> weekdaySchedule) {
+	public void setWeekdaySchedule(HashMap<Integer, ArrayList<String>> weekdaySchedule) {
 		this.weekdaySchedule = weekdaySchedule;
 	}
 
@@ -71,8 +84,7 @@ public class MetroStation {
 		boolean result = false;
 
 		for (int i = 4; i <= 24; i++) {
-			if (!this.holidaySchedule.get(i).isEmpty()
-					&& !this.weekdaySchedule.get(i).isEmpty()) {
+			if (!this.holidaySchedule.get(i).isEmpty() && !this.weekdaySchedule.get(i).isEmpty()) {
 				result = true;
 				break;
 			}
@@ -83,9 +95,7 @@ public class MetroStation {
 
 	@Override
 	public String toString() {
-		return "MetroStation [number=" + number + ", name=" + name
-				+ ", holidaySchedule=" + holidaySchedule + ", weekdaySchedule="
-				+ weekdaySchedule + "]";
+		return "MetroStation [number=" + number + ", name=" + name + ", holidaySchedule=" + holidaySchedule + ", weekdaySchedule=" + weekdaySchedule + "]";
 	}
 
 }
