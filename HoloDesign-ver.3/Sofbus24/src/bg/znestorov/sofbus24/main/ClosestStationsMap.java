@@ -764,7 +764,7 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 
 			// Create the marker over the map only if the station has
 			// coordinates in the database
-			if (station.hasCoordinates()) {
+			if (station != null && station.hasCoordinates()) {
 				LatLng stationLocation = new LatLng(Double.parseDouble(station
 						.getLat()), Double.parseDouble(station.getLon()));
 

@@ -253,7 +253,10 @@ public class StationsDataSource {
 						Constants.METRO_STATION_URL, foundStation.getNumber()));
 			}
 
-			stations.add(foundStation);
+			if (!"XXXX".equals(foundStation.getNumber())) {
+				stations.add(foundStation);
+			}
+
 			cursor.moveToNext();
 		}
 
@@ -433,6 +436,8 @@ public class StationsDataSource {
 					// Check if the station is not in Favorites
 					if (favouritesDatasource.getStation(foundStation) == null) {
 						stations.add(foundStation);
+					} else {
+						stations.add(null);
 					}
 
 					cursor.moveToNext();
