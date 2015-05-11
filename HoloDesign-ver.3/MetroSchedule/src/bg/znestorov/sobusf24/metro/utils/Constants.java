@@ -26,8 +26,8 @@ public class Constants {
 	/**
 	 * METRO SCHEDULE CONSTANTS
 	 */
-	public static final String STATION_WEEKDAY_SCHEDULE_URL = "http://schedules.sofiatraffic.bg/server/html/schedule_load/5502/%s/%s";
-	public static final String STATION_HOLIDAY_SCHEDULE_URL = "http://schedules.sofiatraffic.bg/server/html/schedule_load/5497/%s/%s";
+	public static final String STATION_WEEKDAY_SCHEDULE_URL = "http://schedules.sofiatraffic.bg/server/html/schedule_load/5590/%s/%s";
+	public static final String STATION_HOLIDAY_SCHEDULE_URL = "http://schedules.sofiatraffic.bg/server/html/schedule_load/5592/%s/%s";
 
 	public static final String METRO_REGEX_TIME = ".*?<a href=\"#\"[^^]*?onclick=\"Raz.exec[^^]*?'show_course',.*?return false;\">(.*?)</a>";
 
