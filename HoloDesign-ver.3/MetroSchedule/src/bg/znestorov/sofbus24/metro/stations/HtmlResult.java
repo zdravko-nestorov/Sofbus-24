@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import bg.znestorov.sobusf24.metro.utils.Constants;
+import bg.znestorov.sobusf24.metro.utils.Utils;
 
 public class HtmlResult {
 
@@ -33,7 +34,7 @@ public class HtmlResult {
 		MetroDirectionTransfer mdt = new MetroDirectionTransfer();
 		String[] htmlSrcParts = htmlSrc.split(Constants.METRO_REGEX_PARTS);
 
-		if (htmlSrcParts.length >= 5) {
+		if (htmlSrcParts.length >= 9) {
 			// Find the ID and the NAME of each direction
 			Pattern directionPattern = Pattern
 					.compile(Constants.METRO_REGEX_DIRECTIONS);
@@ -57,16 +58,8 @@ public class HtmlResult {
 			// Fill each MetroDirection with the stations
 			for (int i = 0; i < mdt.getDirectionsListSize(); i++) {
 
-				// Check in which part to look at
-				int htmlPart;
-				if (i % 2 == 0) {
-					htmlPart = i * 2 + 1;
-				} else {
-					htmlPart = i * 2;
-				}
-
-				if (htmlSrcParts.length >= htmlPart) {
-					String[] htmlSrcStationParts = htmlSrcParts[htmlPart]
+				if (htmlSrcParts.length >= i + 1) {
+					String[] htmlSrcStationParts = htmlSrcParts[i + 1]
 							.split(Constants.METRO_REGEX_STATION_PARTS);
 
 					if (htmlSrcStationParts.length > 0) {
@@ -87,7 +80,7 @@ public class HtmlResult {
 		logger.info("The HTTP response information is processed for "
 				+ ((endTime - startTime) / 1000) + " seconds");
 
-		if (mdt.getDirectionsListSize() >= 2) {
+		if (mdt.getDirectionsListSize() >= 4) {
 			return mdt;
 		} else {
 			return null;
@@ -113,8 +106,11 @@ public class HtmlResult {
 		Matcher stationMatcher = stationPattern.matcher(htmlSrcPart);
 
 		while (stationMatcher.find()) {
-			mdt.getDirectionsList().get(directionNumber).getStations()
-					.put(stationMatcher.group(1), stationMatcher.group(2));
+			mdt.getDirectionsList()
+					.get(directionNumber)
+					.getStations()
+					.put(stationMatcher.group(1),
+							Utils.formatName(stationMatcher.group(2)));
 		}
 	}
 

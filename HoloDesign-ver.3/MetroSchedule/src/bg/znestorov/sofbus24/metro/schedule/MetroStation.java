@@ -1,8 +1,15 @@
 package bg.znestorov.sofbus24.metro.schedule;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+
+import bg.znestorov.sobusf24.metro.utils.Utils;
 
 public class MetroStation {
 
@@ -14,7 +21,7 @@ public class MetroStation {
 
 	public MetroStation(String number, String name, String direction) {
 		this.number = number;
-		this.name = name;
+		this.name = Utils.formatName(name);
 		this.direction = direction;
 
 		this.holidaySchedule = new LinkedHashMap<Integer, ArrayList<String>>();
@@ -34,26 +41,11 @@ public class MetroStation {
 	}
 
 	public String getName() {
-
-		String formattedName = name.toUpperCase();
-		if ("Ã≈“–Œ—“. ƒ–”∆¡¿".equals(formattedName)) {
-			formattedName = "Ã≈“–Œ—“¿Õ÷»ﬂ ƒ–”∆¡¿";
-		}
-		if ("Ã≈“–Œ—“. »— ⁄–— Œ ÿŒ—≈".equals(formattedName)) {
-			formattedName = "Ã≈“–Œ—“¿Õ÷»ﬂ »— ⁄–— Œ ÿŒ—≈";
-		}
-		if ("Ã≈“–Œ—“. —Œ‘»…— ¿ —¬≈“¿ √Œ–¿".equals(formattedName)) {
-			formattedName = "Ã≈“–Œ—“¿Õ÷»ﬂ —Œ‘»…— ¿ —¬≈“¿ √Œ–¿";
-		}
-		if ("Ã≈“–Œ—“. À≈“»Ÿ≈ —Œ‘»ﬂ".equals(formattedName)) {
-			formattedName = "Ã≈“–Œ—“¿Õ÷»ﬂ À≈“»Ÿ≈ —Œ‘»ﬂ";
-		}
-
-		return formattedName;
+		return name;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = Utils.formatName(name);
 	}
 
 	public String getDirection() {
@@ -68,7 +60,8 @@ public class MetroStation {
 		return holidaySchedule;
 	}
 
-	public void setHolidaySchedule(HashMap<Integer, ArrayList<String>> holidaySchedule) {
+	public void setHolidaySchedule(
+			HashMap<Integer, ArrayList<String>> holidaySchedule) {
 		this.holidaySchedule = holidaySchedule;
 	}
 
@@ -76,7 +69,8 @@ public class MetroStation {
 		return weekdaySchedule;
 	}
 
-	public void setWeekdaySchedule(HashMap<Integer, ArrayList<String>> weekdaySchedule) {
+	public void setWeekdaySchedule(
+			HashMap<Integer, ArrayList<String>> weekdaySchedule) {
 		this.weekdaySchedule = weekdaySchedule;
 	}
 
@@ -84,7 +78,8 @@ public class MetroStation {
 		boolean result = false;
 
 		for (int i = 4; i <= 24; i++) {
-			if (!this.holidaySchedule.get(i).isEmpty() && !this.weekdaySchedule.get(i).isEmpty()) {
+			if (!this.holidaySchedule.get(i).isEmpty()
+					&& !this.weekdaySchedule.get(i).isEmpty()) {
 				result = true;
 				break;
 			}
@@ -93,9 +88,38 @@ public class MetroStation {
 		return result;
 	}
 
+	public MetroStation merge(MetroStation ms) {
+
+		Comparator<String> comparator = new Comparator<String>() {
+			DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+
+			@Override
+			public int compare(String time1, String time2) {
+				try {
+					return dateFormat.parse(time1).compareTo(
+							dateFormat.parse(time2));
+				} catch (ParseException e) {
+					throw new IllegalArgumentException(e);
+				}
+			}
+		};
+
+		for (int i = 4; i <= 24; i++) {
+			holidaySchedule.get(i).addAll(ms.getHolidaySchedule().get(i));
+			Collections.sort(holidaySchedule.get(i), comparator);
+
+			weekdaySchedule.get(i).addAll(ms.getWeekdaySchedule().get(i));
+			Collections.sort(weekdaySchedule.get(i), comparator);
+		}
+
+		return this;
+	}
+
 	@Override
 	public String toString() {
-		return "MetroStation [number=" + number + ", name=" + name + ", holidaySchedule=" + holidaySchedule + ", weekdaySchedule=" + weekdaySchedule + "]";
+		return "MetroStation [number=" + number + ", name=" + name
+				+ ", holidaySchedule=" + holidaySchedule + ", weekdaySchedule="
+				+ weekdaySchedule + "]";
 	}
 
 }
