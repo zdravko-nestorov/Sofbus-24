@@ -60,4 +60,20 @@ public class Utils {
 		return formattedName;
 	}
 
+	public static String formatDirection(String name) {
+
+		String formattedName;
+		if ("м.Летище София-м.Обеля-м.Джеймс Баучер".equals(name)
+				|| "м.Бизнес Парк-м.Обеля-м.Джеймс Баучер".equals(name)) {
+			formattedName = "м.Цариградско Шосе-м.Обеля-м.Джеймс Баучер";
+		} else if ("м.Джеймс Баучер-м.Обеля-м.Летище София".equals(name)
+				|| "м.Джеймс Баучер-м.Обеля-м.Бизнес Парк".equals(name)) {
+			formattedName = "м.Цариградско Шосе-м.Обеля-м.Джеймс Баучер";
+		} else {
+			formattedName = name;
+		}
+
+		return formattedName;
+	}
+
 }

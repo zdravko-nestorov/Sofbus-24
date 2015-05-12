@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import bg.znestorov.sobusf24.metro.utils.Constants;
+import bg.znestorov.sobusf24.metro.utils.Utils;
 
 public class MetroStationsScheduleMain {
 
@@ -87,6 +88,12 @@ public class MetroStationsScheduleMain {
 						// station schedule and write it to a file. Otherwise -
 						// write both stations to two separate files
 						if (ms1.getNumber().equals(ms2.getNumber())) {
+
+							// If the station number is the same - change the
+							// direction number (because the train can go to
+							// Bussines Park or Airport)
+							ms1.setDirection(Utils.formatDirection(ms1
+									.getDirection()));
 							WriteScheduleToXMLFile.saveToXMLFile(logger,
 									ms1.merge(ms2), coordinatesProp);
 						} else {
