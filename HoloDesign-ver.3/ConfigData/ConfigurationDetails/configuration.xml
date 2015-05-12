@@ -2,7 +2,7 @@
 <Configuration>
 	<NewVersionCode>25</NewVersionCode>
 	<NewVersionName>2.4.2</NewVersionName>
-	<NewSofbus24DBVersion>5</NewSofbus24DBVersion>
+	<NewSofbus24DBVersion>6</NewSofbus24DBVersion>
 	<!-- Keep them just for the users that use the old versions of Sofbus 24 -->
 	<NewStationsDBVersion>1</NewStationsDBVersion>
 	<NewVehiclesDBVersion>1</NewVehiclesDBVersion>
