@@ -25,7 +25,7 @@
     <string name="app_dialog_title_error">Грешка</string>
     <string name="app_database_error" formatted="false"><![CDATA[Възникна неочакван проблем при стартирането на <b><i>Софбус 24</i></b>. Моля опитайте отново като <b><i>рестартирате</i></b> приложението. Ако грешката продължава да се появява, моля свържете се с мен чрез <b><i>имейл бутона</i></b> отдолу.]]></string>
     <string name="app_internet_error">Възникна грешка при извличането на информацията. Моля проверете вашата интернет връзка и опитайте отново.</string>
-    <string name="app_info_error" formatted="false"><![CDATA[В момента сайта за градска мобилност не предоставя информация за <b>%s</b>. Моля опитайте пак по-късно.]]></string>
+    <string name="app_info_error" formatted="false"><![CDATA[В момента сайтът за градска мобилност не предоставя информация за <b>%s</b>. Моля опитайте пак по-късно.]]></string>
     <string name="app_captcha_error" formatted="false"><![CDATA[Трябва да въведете символите от изображението (<b>captcha код</b>), за да преминете теста за сигурност на <b>СКГТ</b> и да извлечете нужната информация.]]></string>
     <string name="app_internet_or_info_error">В момента няма намерена информация. Моля проверете вашата интернет връзка или опитайте по-късно.</string>
     <string name="app_loading_current_location" formatted="false"><![CDATA[Локализиране на текущото местоположение...]]></string>
