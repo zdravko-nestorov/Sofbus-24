@@ -1121,4 +1121,14 @@ public class Utils {
 
 		return formattedTimestamp;
 	}
+
+	/**
+	 * Get the current day and month in format DDMM (if the current date is
+	 * 01-01-2015, take 0101 as a string)
+	 * 
+	 * @return the current day and month in format DDMM
+	 */
+	public static String getCurrentDayMonth() {
+		return DateFormat.format("ddMM", new java.util.Date()).toString();
+	}
 }

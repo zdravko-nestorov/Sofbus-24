@@ -93,7 +93,19 @@ public class RetrieveVirtualBoards {
 	private StationsDataSource stationsDatasource;
 	private FavouritesDataSource favouriteDatasource;
 
+	/**
+	 * Indicates if the search is one of the special ones ([1137, 1138 -
+	 * Õƒ -ÚÛÌÂÎ], [1139 - Õƒ -√‡ÙËÚË]). In these cases, the procedure of
+	 * retrieving information is changed (uses the previous stations' times)
+	 */
 	private boolean isSpecialCase;
+
+	/**
+	 * Indicates if the first time when the captch is required, the captch hack
+	 * is used - this means that instead of captch we should use the current
+	 * date in format MMDD
+	 */
+	private boolean isCaptchaHackUsed = false;
 
 	private static final String NDK_TUNNEL = "Õƒ “”Õ≈À";
 	private static final String NDK_GRAFITTI = "Õƒ √–¿‘»“»";
@@ -904,67 +916,75 @@ public class RetrieveVirtualBoards {
 	 *            The Bitmap CAPTCHA image
 	 */
 	private void getCaptchaText(final String captchaId, Bitmap captchaImage) {
-		// TODO: Replace the AlertDialog with a DialogFragment
-		Builder dialogBuilder = new AlertDialog.Builder(context);
-		dialogBuilder.setTitle(R.string.vb_time_sumc_captcha);
-		dialogBuilder.setMessage(R.string.vb_time_sumc_captcha_msg);
 
-		LinearLayout panel = new LinearLayout(context);
-		panel.setOrientation(LinearLayout.VERTICAL);
+		if (!isCaptchaHackUsed) {
+			isCaptchaHackUsed = true;
+			processCaptchaText(captchaId, Utils.getCurrentDayMonth());
+		} else {
+			// TODO: Replace the AlertDialog with a DialogFragment
+			Builder dialogBuilder = new AlertDialog.Builder(context);
+			dialogBuilder.setTitle(R.string.vb_time_sumc_captcha);
+			dialogBuilder.setMessage(R.string.vb_time_sumc_captcha_msg);
 
-		ImageView image = new ImageView(context);
-		image.setId(2);
-		image.setImageBitmap(captchaImage);
+			LinearLayout panel = new LinearLayout(context);
+			panel.setOrientation(LinearLayout.VERTICAL);
 
-		// Add the image to the view and fix its size
-		panel.addView(image, LayoutParams.MATCH_PARENT,
-				LayoutParams.MATCH_PARENT);
-		fixImageSize(image);
+			ImageView image = new ImageView(context);
+			image.setId(2);
+			image.setImageBitmap(captchaImage);
 
-		// Center the image
-		LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) image
-				.getLayoutParams();
-		layoutParams.gravity = Gravity.CENTER;
-		image.setLayoutParams(layoutParams);
+			// Add the image to the view and fix its size
+			panel.addView(image, LayoutParams.MATCH_PARENT,
+					LayoutParams.MATCH_PARENT);
+			fixImageSize(image);
 
-		final EditText input = new EditText(context);
-		input.setId(1);
-		input.setSingleLine();
-		input.setInputType(InputType.TYPE_CLASS_TEXT
-				| InputType.TYPE_TEXT_VARIATION_URI
-				| InputType.TYPE_TEXT_VARIATION_PHONETIC);
+			// Center the image
+			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) image
+					.getLayoutParams();
+			layoutParams.gravity = Gravity.CENTER;
+			image.setLayoutParams(layoutParams);
 
-		ScrollView view = new ScrollView(context);
-		panel.addView(input);
-		view.addView(panel);
+			final EditText input = new EditText(context);
+			input.setId(1);
+			input.setSingleLine();
+			input.setInputType(InputType.TYPE_CLASS_TEXT
+					| InputType.TYPE_TEXT_VARIATION_URI
+					| InputType.TYPE_TEXT_VARIATION_PHONETIC);
 
-		dialogBuilder
-				.setCancelable(true)
-				.setPositiveButton(R.string.app_button_ok,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								String captchaText = input.getText().toString();
-								processCaptchaText(captchaId, captchaText);
+			ScrollView view = new ScrollView(context);
+			panel.addView(input);
+			view.addView(panel);
 
-								dialog.dismiss();
-							}
-						}).setView(view);
+			dialogBuilder
+					.setCancelable(true)
+					.setPositiveButton(R.string.app_button_ok,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									String captchaText = input.getText()
+											.toString();
+									processCaptchaText(captchaId, captchaText);
 
-		dialogBuilder.setOnCancelListener(new OnCancelListener() {
-			public void onCancel(DialogInterface arg0) {
-				proccessHtmlResult(null);
+									dialog.dismiss();
+								}
+							}).setView(view);
+
+			dialogBuilder.setOnCancelListener(new OnCancelListener() {
+				public void onCancel(DialogInterface arg0) {
+					proccessHtmlResult(null);
+				}
+			});
+
+			// Workaround to show a keyboard
+			AlertDialog alertDialog = dialogBuilder.create();
+			alertDialog.getWindow().setSoftInputMode(
+					WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+			try {
+				alertDialog.show();
+			} catch (Exception e) {
+				// Workaround used just in case when this activity is destroyed
+				// before the dialog
 			}
-		});
-
-		// Workaround to show a keyboard
-		AlertDialog alertDialog = dialogBuilder.create();
-		alertDialog.getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-		try {
-			alertDialog.show();
-		} catch (Exception e) {
-			// Workaround used just in case when this activity is destroyed
-			// before the dialog
 		}
 	}
 

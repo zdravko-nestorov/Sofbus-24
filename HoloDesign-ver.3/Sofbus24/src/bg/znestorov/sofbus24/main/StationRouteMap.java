@@ -285,7 +285,11 @@ public class StationRouteMap extends SherlockFragmentActivity {
 				.getDirectionsList().get(metroActiveDirection);
 
 		// Create an object consisted of a set of all points of the route
-		PolylineOptions metroRouteOptionsM1 = new PolylineOptions().width(
+		PolylineOptions metroRouteOptionsM11 = new PolylineOptions().width(
+				getResources()
+						.getInteger(R.integer.google_map_route_line_width))
+				.color(Color.RED);
+		PolylineOptions metroRouteOptionsM12 = new PolylineOptions().width(
 				getResources()
 						.getInteger(R.integer.google_map_route_line_width))
 				.color(Color.RED);
@@ -310,9 +314,16 @@ public class StationRouteMap extends SherlockFragmentActivity {
 				if (stationNumber < 2999) {
 					metroRouteOptionsM2.add(msLocation);
 				} else if (stationNumber > 3000) {
-					metroRouteOptionsM1.add(msLocation);
+					if (stationNumber == 3025 || stationNumber == 3026) {
+						metroRouteOptionsM11.add(msLocation);
+						metroRouteOptionsM12.add(msLocation);
+					} else if (stationNumber < 3039) {
+						metroRouteOptionsM11.add(msLocation);
+					} else {
+						metroRouteOptionsM12.add(msLocation);
+					}
 				} else {
-					metroRouteOptionsM1.add(msLocation);
+					metroRouteOptionsM11.add(msLocation);
 					metroRouteOptionsM2.add(msLocation);
 				}
 
@@ -362,7 +373,8 @@ public class StationRouteMap extends SherlockFragmentActivity {
 				});
 
 		// Draw a line between all the markers
-		stationMap.addPolyline(metroRouteOptionsM1);
+		stationMap.addPolyline(metroRouteOptionsM11);
+		stationMap.addPolyline(metroRouteOptionsM12);
 		stationMap.addPolyline(metroRouteOptionsM2);
 	}
 
