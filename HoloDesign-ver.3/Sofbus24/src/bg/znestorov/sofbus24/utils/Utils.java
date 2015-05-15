@@ -315,6 +315,11 @@ public class Utils {
 		int afterTimeMilis = 0;
 		int currTimeMilis = 0;
 
+		// Format the times in case there is additional information (HH:MM|...)
+		// - in case of metro schedule
+		afterTime = getValueBefore(afterTime, "|");
+		currTime = getValueBefore(currTime, "|");
+
 		// In cases when it is after midnight
 		if (afterTime.startsWith("00:") && !currTime.startsWith("00:")) {
 			afterTime = afterTime.replaceAll("00:", "24:");

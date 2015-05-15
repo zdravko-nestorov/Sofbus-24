@@ -353,6 +353,9 @@
     <!-- Metro Schedule -->
     <string name="metro_schedule_first">Първи влак:</string>
     <string name="metro_schedule_last">Последен влак:</string>
+    <string name="metro_schedule_sofia_airport" formatted="false"><![CDATA[<sup><small><small><b><small> </small>ЛС</b></small></small></sup>]]></string>
+    <string name="metro_schedule_bussiness_park" formatted="false"><![CDATA[<sup><small><small><b><small> </small>БП</b></small></small></sup>]]></string>
+    <string name="metro_schedule_legend" formatted="false"><![CDATA[<font color="#FF0017">Червено - непълни курсове</font>, <font color="#006FC0">ЛС - Летище София, БП - Бизнес Парк</font>]]></string>
 
     <!-- Station Map Fragment -->
     <string name="station_map_buses"><![CDATA[Автобуси: ]]></string>
