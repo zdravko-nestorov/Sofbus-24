@@ -60,6 +60,16 @@ public class Utils {
 		return formattedName;
 	}
 
+	/**
+	 * Used to format the name of a direction. It is used to change the
+	 * direction name of stations, which are before the "Ìכאהמסע 1" metro
+	 * station, because the trains passing through these stations can go to the
+	 * Bussiness Park or the Airport
+	 * 
+	 * @param name
+	 *            the name of the direction
+	 * @return the formatted name of the direction
+	 */
 	public static String formatDirection(String name) {
 
 		String formattedName;
@@ -74,6 +84,17 @@ public class Utils {
 		}
 
 		return formattedName;
+	}
+
+	/**
+	 * Tests if the supplied string is NULL or 0-length.
+	 * 
+	 * @param input
+	 *            the input string
+	 * @return TRUE if empty, otherwise FALSE
+	 */
+	public static boolean isEmpty(String input) {
+		return input == null || input.length() == 0;
 	}
 
 }

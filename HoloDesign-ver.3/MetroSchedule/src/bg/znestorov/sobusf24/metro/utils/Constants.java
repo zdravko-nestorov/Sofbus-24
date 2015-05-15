@@ -29,7 +29,7 @@ public class Constants {
 	public static final String STATION_WEEKDAY_SCHEDULE_URL = "http://schedules.sofiatraffic.bg/server/html/schedule_load/5590/%s/%s";
 	public static final String STATION_HOLIDAY_SCHEDULE_URL = "http://schedules.sofiatraffic.bg/server/html/schedule_load/5592/%s/%s";
 
-	public static final String METRO_REGEX_TIME = ".*?<a href=\"#\"[^^]*?onclick=\"Raz.exec[^^]*?'show_course',.*?return false;\">(.*?)</a>";
+	public static final String METRO_REGEX_TIME = ".*?<a href=\"#\"( class=\"incomplete_course)?[^^]*?onclick=\"Raz.exec[^^]*?'show_course',.*?return false;\">(.*?)</a>";
 
 	public static final String METRO_STATION_FILE = "schedule/Station%s.xml";
 

@@ -20,6 +20,7 @@ public class MetroStation {
 	private HashMap<Integer, ArrayList<String>> weekdaySchedule;
 
 	public MetroStation(String number, String name, String direction) {
+
 		this.number = number;
 		this.name = Utils.formatName(name);
 		this.direction = direction;
@@ -117,9 +118,10 @@ public class MetroStation {
 
 	@Override
 	public String toString() {
-		return "MetroStation [number=" + number + ", name=" + name
-				+ ", holidaySchedule=" + holidaySchedule + ", weekdaySchedule="
-				+ weekdaySchedule + "]";
+		return getClass().getName() + " {\n\tnumber: " + number + "\n\tname: "
+				+ name + "\n\tdirection: " + direction
+				+ "\n\tholidaySchedule: " + holidaySchedule
+				+ "\n\tweekdaySchedule: " + weekdaySchedule + "\n}";
 	}
 
 }
