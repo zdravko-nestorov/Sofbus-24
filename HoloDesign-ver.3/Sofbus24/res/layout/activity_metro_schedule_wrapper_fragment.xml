@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -68,6 +69,7 @@
             android:id="@+id/metro_schedule_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="20sp"
             android:visibility="invisible" />
 
         <ProgressBar
@@ -102,13 +104,15 @@
             android:src="@drawable/ic_next" />
 
         <TextView
+            android:id="@+id/metro_schedule_legend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:gravity="center_horizontal"
-            android:text="@string/metro_schedule_legend"
-            android:textSize="8sp"
-            android:textStyle="bold" />
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="3sp"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:ignore="SmallSp" />
     </RelativeLayout>
 
 </LinearLayout>

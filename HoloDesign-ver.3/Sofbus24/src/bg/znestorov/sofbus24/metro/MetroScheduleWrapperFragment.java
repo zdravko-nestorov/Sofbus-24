@@ -59,6 +59,8 @@ public class MetroScheduleWrapperFragment extends SherlockFragment {
 	private View metroScheduleFragment;
 	private ProgressBar metroScheduleLoading;
 
+	private TextView metroScheduleLegend;
+
 	private MetroStationEntity ms;
 	private ArrayList<ArrayList<String>> scheduleHourList;
 	private int currentScheduleHourIndex = 0;
@@ -241,6 +243,12 @@ public class MetroScheduleWrapperFragment extends SherlockFragment {
 		metroScheduleLast = (TextView) fragmentView
 				.findViewById(R.id.metro_schedule_last);
 		actionsOverScheduleTextViews();
+
+		// Get the legend TextView
+		metroScheduleLegend = (TextView) fragmentView
+				.findViewById(R.id.metro_schedule_legend);
+		metroScheduleLegend.setText(Html
+				.fromHtml(getString(R.string.metro_schedule_legend)));
 	}
 
 	/**
