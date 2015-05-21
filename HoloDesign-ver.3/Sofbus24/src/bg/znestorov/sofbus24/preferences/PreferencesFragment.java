@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -83,6 +84,10 @@ public class PreferencesFragment extends PreferenceFragment implements
 			globalContext.setFavouritesChanged(true);
 		}
 
+		if (key.equals(Constants.PREFERENCE_KEY_TABS_TYPE)) {
+			globalContext.setHomeScreenChanged(true);
+		}
+
 		if (key.equals(Constants.PREFERENCE_KEY_APP_THEME)) {
 			ActivityTracker.changedApplicationTheme(context,
 					ThemeChange.getAppTheme(context));
@@ -121,9 +126,19 @@ public class PreferencesFragment extends PreferenceFragment implements
 	 */
 	private void initTabletVersionPreferences() {
 
-		if (!globalContext.isPhoneDevice()) {
-			PreferenceCategory preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED_CATEGORY);
+		PreferenceCategory preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_APP_VISUAL_CATEGORY);
+
+		switch (globalContext.getDeviceType()) {
+		case PHONE:
+			// Do nothing
+			break;
+		case SMALL_TABLET:
+			CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED);
+			preferencesCategory.removePreference(checkBoxPreference);
+			break;
+		case LARGE_TABLET:
 			preferencesScreen.removePreference(preferencesCategory);
+			break;
 		}
 	}
 

@@ -45,6 +45,9 @@
     <dimen name="schedule_image_vehicle_type_height">40sp</dimen>
     <dimen name="schedule_image_vehicle_type_width">40sp</dimen>
 
+    <!-- Metro Schedule -->
+    <dimen name="metro_schedule_legend_size">8sp</dimen>
+
     <!-- Home Screen -->
     <dimen name="home_screen_loading_border_radius">15sp</dimen>
     <dimen name="home_screen_layout_width">320sp</dimen>

@@ -71,6 +71,7 @@ public class FavouritesDataSource {
 	 *         exists
 	 */
 	public StationEntity createStation(StationEntity station) {
+
 		if (getStation(station) == null) {
 
 			// Check if have to translate the station name
@@ -256,8 +257,16 @@ public class FavouritesDataSource {
 	 *            the new station parameters
 	 */
 	public void updateStation(StationEntity station) {
+
+		// Check if have to translate the station name
+		String stationName = station.getName();
+		if (!"bg".equals(language)) {
+			stationName = TranslatorLatinToCyrillic.translate(context,
+					stationName);
+		}
+
 		ContentValues dataToInsert = new ContentValues();
-		dataToInsert.put(FavouritesSQLite.COLUMN_NAME, station.getName());
+		dataToInsert.put(FavouritesSQLite.COLUMN_NAME, stationName);
 		dataToInsert.put(FavouritesSQLite.COLUMN_LAT, station.getLat());
 		dataToInsert.put(FavouritesSQLite.COLUMN_LON, station.getLon());
 		dataToInsert.put(FavouritesSQLite.COLUMN_CUSTOM_FIELD,

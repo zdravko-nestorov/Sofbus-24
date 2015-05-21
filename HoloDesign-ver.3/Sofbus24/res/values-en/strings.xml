@@ -184,6 +184,8 @@
     <string name="pref_category_visual">VISUAL</string>
     <string name="pref_category_visual_fav_title">Favorites</string>
     <string name="pref_category_visual_fav_summary">Visualize the favorites stations with a Google Street View image shown (home screen)</string>
+    <string name="pref_category_visual_hs_tabs_title">Home screen</string>
+    <string name="pref_category_visual_hs_tabs_summary">Preview of the home screen tabs (icon and/or title)</string>
     <string name="pref_category_stations">STATION INFORMATION</string>
     <string name="pref_category_stations_timeType_title">Extracted information</string>
     <string name="pref_category_stations_timeType_summary">Remaining time or time of arrival</string>
@@ -210,6 +212,12 @@
     <string name="pref_category_more_automatic_update_summary">Automatic update when new stations or SKGT cars are available (twice monthly - only if available)</string>
     <string name="pref_category_more_google_analytics_title">Help developing Sofbus 24</string>
     <string name="pref_category_more_google_analytics_summary">Sharing anonymous information about the use of the application</string>
+
+    <!-- Sofbus 24 Fragment -->
+    <string name="sofbus24_favourites_title">Favorites</string>
+    <string name="sofbus24_search_title">Search</string>
+    <string name="sofbus24_schedule_title">Schedule</string>
+    <string name="sofbus24_metro_title">Metro</string>
 
     <!-- Edit Tabs Fragment -->
     <string name="edit_tabs_title">Home screen</string>
@@ -325,8 +333,8 @@
     <string name="pt_schedule_cache_loaded" formatted="false"><![CDATA[An error occurred while retrieving the information for <b>%s</b>. The local schedule from <b>%s</b> was used.]]></string>
 
     <!-- Public Transport Schedule -->
-    <string name="pt_schedule_first">First car:</string>
-    <string name="pt_schedule_last">Last car:</string>
+    <string name="pt_schedule_first">First car</string>
+    <string name="pt_schedule_last">Last car</string>
 
     <!-- Metro Fragment -->
     <string name="metro_search_hint">Search by name or number</string>
@@ -340,8 +348,11 @@
     <string name="metro_schedule_refresh" formatted="false"><![CDATA[Updating the remaining time...]]></string>
 
     <!-- Metro Schedule -->
-    <string name="metro_schedule_first">First train:</string>
-    <string name="metro_schedule_last">Last train:</string>
+    <string name="metro_schedule_first">First train</string>
+    <string name="metro_schedule_last">Last train</string>
+    <string name="metro_schedule_sofia_airport" formatted="false"><![CDATA[<sup><small><small><b><small> </small>SA</b></small></small></sup>]]></string>
+    <string name="metro_schedule_bussiness_park" formatted="false"><![CDATA[<sup><small><small><b><small> </small>BP</b></small></small></sup>]]></string>
+    <string name="metro_schedule_legend" formatted="false"><![CDATA[<font color="#FF0017"><sup>*</sup> Red - Incomplete Courses</font>, <font color="#003366">SA - Sofia Airport</font>, <font color="#003366">BP - Business Park</font>]]></string>
 
     <!-- Station Map Fragment -->
     <string name="station_map_buses"><![CDATA[Buses: ]]></string>

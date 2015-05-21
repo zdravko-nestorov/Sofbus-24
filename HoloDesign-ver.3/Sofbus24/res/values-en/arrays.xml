@@ -6,6 +6,13 @@
         <item name="sofbusThemeDark">Dark (grey)</item>
     </string-array>
 
+    <!-- Home Screen Tabs -->
+    <string-array name="tabsType">
+        <item name="tabsTypeIcon">Icon</item>
+        <item name="tabsTypeTitle">Title</item>
+        <item name="tabsTypeIconTitle">Icon and title</item>
+    </string-array>
+
     <!-- Virtual Boards -->
     <string-array name="timeType">
         <item name="timeRemaining">Remaining time</item>

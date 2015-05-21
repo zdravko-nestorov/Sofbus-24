@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.ScheduleDatabaseUtils;
 import bg.znestorov.sofbus24.entity.AppThemeEnum;
 import bg.znestorov.sofbus24.entity.ConfigEntity;
+import bg.znestorov.sofbus24.entity.DeviceTypeEnum;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HomeTabEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
@@ -40,6 +43,7 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.virtualboards.VirtualBoardsFragment;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -47,7 +51,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.astuetz.PagerSlidingTabStrip;
-import com.astuetz.PagerSlidingTabStrip.IconTabProvider;
+import com.astuetz.PagerSlidingTabStrip.IconTitleProvider;
 
 public class Sofbus24Fragment extends SherlockFragment implements
 		ActionBar.TabListener {
@@ -368,10 +372,27 @@ public class Sofbus24Fragment extends SherlockFragment implements
 			actionBar.removeAllTabs();
 		}
 
+		// Used when the tabs are shown in the action bar (not below) - for
+		// example phone in landscape mode
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-			actionBar.addTab(actionBar.newTab()
-					.setIcon(mSectionsPagerAdapter.getPageIconResId(i))
-					.setTabListener(this));
+
+			Tab actionBarTab = actionBar.newTab();
+
+			// Check the page title that has to be set to the tab
+			CharSequence pageTitle = getPageTitle(mSectionsPagerAdapter
+					.getPageTitle(i));
+			if (pageTitle != null) {
+				actionBarTab.setText(pageTitle);
+			}
+
+			// Check the page icon res id that has to be set to the tab
+			int pageIconResId = getPageIconResId(mSectionsPagerAdapter
+					.getPageIconResId(i));
+			if (pageIconResId > 0) {
+				actionBarTab.setIcon(pageIconResId);
+			}
+
+			actionBar.addTab(actionBarTab.setTabListener(this));
 		}
 	}
 
@@ -427,7 +448,7 @@ public class Sofbus24Fragment extends SherlockFragment implements
 	 * one of the sections/tabs/pages.
 	 */
 	public class SectionsPagerAdapter extends FragmentStatePagerAdapter
-			implements IconTabProvider {
+			implements IconTitleProvider {
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -461,8 +482,41 @@ public class Sofbus24Fragment extends SherlockFragment implements
 		}
 
 		@Override
+		public CharSequence getPageTitle(int position) {
+			return Sofbus24Fragment.this
+					.getPageTitle(getPageTitleByTagName(fragmentsList
+							.get(position)));
+		}
+
+		/**
+		 * Get the current item title according to the fragment type
+		 * 
+		 * @param fragment
+		 *            the fragment set on this tab
+		 * @return the title associated to the given fragment
+		 */
+		private CharSequence getPageTitleByTagName(Fragment fragment) {
+
+			CharSequence pageTitle;
+
+			if (fragment instanceof FavouritesStationFragment) {
+				pageTitle = getString(R.string.sofbus24_favourites_title);
+			} else if (fragment instanceof VirtualBoardsFragment) {
+				pageTitle = getString(R.string.sofbus24_search_title);
+			} else if (fragment instanceof ScheduleFragment) {
+				pageTitle = getString(R.string.sofbus24_schedule_title);
+			} else {
+				pageTitle = getString(R.string.sofbus24_metro_title);
+			}
+
+			return pageTitle;
+		}
+
+		@Override
 		public int getPageIconResId(int position) {
-			return getPageIconByTagName(fragmentsList.get(position));
+			return Sofbus24Fragment.this
+					.getPageIconResId(getPageIconByTagName(fragmentsList
+							.get(position)));
 		}
 
 		/**
@@ -473,6 +527,7 @@ public class Sofbus24Fragment extends SherlockFragment implements
 		 * @return the icon associated to the given fragment
 		 */
 		private int getPageIconByTagName(Fragment fragment) {
+
 			int pageIcon;
 
 			if (fragment instanceof FavouritesStationFragment) {
@@ -487,6 +542,86 @@ public class Sofbus24Fragment extends SherlockFragment implements
 
 			return pageIcon;
 		}
+	}
+
+	/**
+	 * Get the tab title according to the user choice (SharedPreferences file)
+	 * and the type of the device (PHONE, SMALL TABLET or LARGE TABLET)
+	 * 
+	 * @param pageTitle
+	 *            the page title of the tab (according to the type of the tab
+	 *            fragment)
+	 * @return the page title that will be shown
+	 */
+	private CharSequence getPageTitle(CharSequence pageTitle) {
+
+		DeviceTypeEnum deviceType = globalContext.getDeviceType();
+		String tabsType = getTabsType();
+
+		switch (deviceType) {
+		case PHONE:
+		case SMALL_TABLET:
+			if (Constants.PREFERENCE_DEFAULT_VALUE_TABS_TYPE.equals(tabsType)) {
+				pageTitle = null;
+			}
+
+			break;
+		default:
+			// Do nothing (leave the page title to be shown)
+			break;
+		}
+
+		return pageTitle;
+	}
+
+	/**
+	 * Get the tab icon according to the user choice (SharedPreferences file)
+	 * and the type of the device (PHONE, SMALL TABLET or LARGE TABLET)
+	 * 
+	 * @param pageIcon
+	 *            the page icon of the tab (according to the type of the tab
+	 *            fragment)
+	 * @return the page icon that will be shown
+	 */
+	private int getPageIconResId(int pageIcon) {
+
+		DeviceTypeEnum deviceType = globalContext.getDeviceType();
+		String tabsType = getTabsType();
+
+		switch (deviceType) {
+		case PHONE:
+		case SMALL_TABLET:
+			if (Constants.PREFERENCE_DEFAULT_VALUE_TABS_TYPE_TITLE
+					.equals(tabsType)) {
+				pageIcon = 0;
+			}
+
+			break;
+		default:
+			// Do nothing (leave the page icon to be shown)
+			break;
+		}
+
+		return pageIcon;
+	}
+
+	/**
+	 * Get the type of the home screen tabs from the SharedPreferences file
+	 * 
+	 * @return the type of the home screen tabs
+	 */
+	private String getTabsType() {
+
+		// Get SharedPreferences from option menu
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+
+		// Get "tabsType" value from the SharedPreferences file
+		String tabsType = sharedPreferences.getString(
+				Constants.PREFERENCE_KEY_TABS_TYPE,
+				Constants.PREFERENCE_DEFAULT_VALUE_TABS_TYPE);
+
+		return tabsType;
 	}
 
 	/**
@@ -620,4 +755,5 @@ public class Sofbus24Fragment extends SherlockFragment implements
 			}
 		}
 	}
+
 }

@@ -20,13 +20,21 @@
             android:title="@string/pref_category_common_theme_title" />
     </PreferenceCategory>
     <PreferenceCategory
-        android:key="favouritesExpandedCategory"
+        android:key="sofbusVisualCategory"
         android:title="@string/pref_category_visual" >
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="favouritesExpanded"
             android:summary="@string/pref_category_visual_fav_summary"
             android:title="@string/pref_category_visual_fav_title" />
+
+        <ListPreference
+            android:defaultValue="tabsTypeIcon"
+            android:entries="@array/tabsType"
+            android:entryValues="@array/tabsTypeValues"
+            android:key="tabsType"
+            android:summary="@string/pref_category_visual_hs_tabs_summary"
+            android:title="@string/pref_category_visual_hs_tabs_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_category_stations" >
         <ListPreference

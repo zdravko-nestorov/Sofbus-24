@@ -36,6 +36,7 @@ public class GlobalEntity extends Application {
 	}
 
 	private boolean isPhoneDevice;
+	private boolean isLargeTablet;
 	private boolean areServicesAvailable;
 	private boolean isGoogleStreetViewAvailable;
 
@@ -63,6 +64,14 @@ public class GlobalEntity extends Application {
 
 	public void setPhoneDevice(boolean isPhoneDevice) {
 		this.isPhoneDevice = isPhoneDevice;
+	}
+
+	public boolean isLargeTablet() {
+		return isLargeTablet;
+	}
+
+	public void setLargeTablet(boolean isLargeTablet) {
+		this.isLargeTablet = isLargeTablet;
 	}
 
 	public boolean isHasToRestart() {
@@ -121,6 +130,13 @@ public class GlobalEntity extends Application {
 		this.isHomeActivityChanged = isHomeActivityChanged;
 	}
 
+	/**
+	 * Get the tracker, responsible for the GoogleAnalytics statistics
+	 * 
+	 * @param trackerId
+	 *            the tracker id
+	 * @return the tracker
+	 */
 	public synchronized Tracker getTracker(TrackerName trackerId) {
 
 		if (!mTrackers.containsKey(trackerId)) {
@@ -141,8 +157,32 @@ public class GlobalEntity extends Application {
 		return mTrackers.get(trackerId);
 	}
 
+	/**
+	 * Get the type of the device - PHONE, SMALL TABLET or LARGE TABLET
+	 * 
+	 * @return the device type
+	 */
+	public DeviceTypeEnum getDeviceType() {
+
+		DeviceTypeEnum deviceType;
+		if (isPhoneDevice) {
+			deviceType = DeviceTypeEnum.PHONE;
+		} else if (!isLargeTablet) {
+			deviceType = DeviceTypeEnum.SMALL_TABLET;
+		} else {
+			deviceType = DeviceTypeEnum.LARGE_TABLET;
+		}
+
+		return deviceType;
+	}
+
+	/**
+	 * Initialize the main params of the application
+	 */
 	private void initialize() {
+
 		isPhoneDevice = getResources().getBoolean(R.bool.isPhone);
+		isLargeTablet = getResources().getBoolean(R.bool.isLargeTablet);
 
 		try {
 			getPackageManager().getApplicationInfo("com.google.android.gms", 0);
@@ -174,6 +214,7 @@ public class GlobalEntity extends Application {
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tisPhoneDevice: " + isPhoneDevice
+				+ "\n\tisLargeTablet: " + isLargeTablet
 				+ "\n\tareServicesAvailable: " + areServicesAvailable
 				+ "\n\tisGoogleStreetViewAvailable: "
 				+ isGoogleStreetViewAvailable + "\n\thasToRestart: "

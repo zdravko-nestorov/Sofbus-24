@@ -20,6 +20,18 @@
         <item name="en">en</item>
     </string-array>
 
+    <!-- Home Screen Tabs -->
+    <string-array name="tabsType">
+        <item name="tabsTypeIcon">Изображение</item>
+        <item name="tabsTypeTtitle">Текст</item>
+        <item name="tabsTypeIconTitle">Изображение и текст</item>
+    </string-array>
+    <string-array name="tabsTypeValues">
+        <item name="tabsTypeIcon">tabsTypeIcon</item>
+        <item name="tabsTypeTitle">tabsTypeTitle</item>
+        <item name="tabsTypeIconTitle">tabsTypeIconTitle</item>
+    </string-array>
+
     <!-- Virtual Boards -->
     <string-array name="timeType">
         <item name="timeRemaining">Оставащо време</item>

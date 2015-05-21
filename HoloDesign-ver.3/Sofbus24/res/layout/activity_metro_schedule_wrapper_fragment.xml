@@ -69,7 +69,7 @@
             android:id="@+id/metro_schedule_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="20sp"
+            android:layout_above="@+id/metro_schedule_legend"
             android:visibility="invisible" />
 
         <ProgressBar
@@ -105,12 +105,14 @@
 
         <TextView
             android:id="@+id/metro_schedule_legend"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="3sp"
-            android:textSize="10sp"
+            android:background="@drawable/metro_schedule_border"
+            android:gravity="center"
+            android:paddingBottom="3sp"
+            android:paddingTop="3sp"
+            android:textSize="@dimen/metro_schedule_legend_size"
             android:textStyle="bold"
             tools:ignore="SmallSp" />
     </RelativeLayout>

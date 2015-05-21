@@ -2,5 +2,6 @@
 <resources>
 
     <item name="isPhone" format="boolean" type="bool">true</item>
+    <item name="isLargeTablet" format="boolean" type="bool">false</item>
 
 </resources>

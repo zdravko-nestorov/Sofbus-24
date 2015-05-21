@@ -20,6 +20,8 @@ public class Constants {
 	public static final String GLOBAL_PARAM_EMPTY = "EMPTY";
 	public static final Double GLOBAL_PARAM_SOFIA_CENTER_LATITUDE = 42.696492;
 	public static final Double GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE = 23.326011;
+	public static final Double GLOBAL_PARAM_MLADOST_1_LATITUDE = 42.64971443383678;
+	public static final Double GLOBAL_PARAM_MLADOST_1_LONGITUDE = 23.37787427008152;
 	public static final BigDecimal GLOBAL_PARAM_CLOSEST_STATION_DISTANCE = new BigDecimal(
 			100000);
 	public static final int GLOBAL_PARAM_HOME_TABS_COUNT = 4;
@@ -61,9 +63,12 @@ public class Constants {
 	public static final String PREFERENCE_DEFAULT_VALUE_APP_THEME = "sofbusThemeLight";
 	public static final String PREFERENCE_KEY_APP_LANGUAGE = "appLanguage";
 	public static final String PREFERENCE_DEFAULT_VALUE_APP_LANGUAGE = "bg";
-	public static final String PREFERENCE_KEY_FAVOURITES_EXPANDED_CATEGORY = "favouritesExpandedCategory";
+	public static final String PREFERENCE_KEY_APP_VISUAL_CATEGORY = "sofbusVisualCategory";
 	public static final String PREFERENCE_KEY_FAVOURITES_EXPANDED = "favouritesExpanded";
 	public static final boolean PREFERENCE_DEFAULT_VALUE_FAVOURITES_EXPANDED = false;
+	public static final String PREFERENCE_KEY_TABS_TYPE = "tabsType";
+	public static final String PREFERENCE_DEFAULT_VALUE_TABS_TYPE = "tabsTypeIcon";
+	public static final String PREFERENCE_DEFAULT_VALUE_TABS_TYPE_TITLE = "tabsTypeTitle";
 	public static final String PREFERENCE_KEY_TIME_TYPE = "timeType";
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_TYPE = "timeRemaining";
 	public static final String PREFERENCE_DEFAULT_VALUE_TIME_TYPE_ARRIVAL = "timeArrival";

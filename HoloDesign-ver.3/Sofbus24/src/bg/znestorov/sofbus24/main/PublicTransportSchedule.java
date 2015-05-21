@@ -258,7 +258,7 @@ public class PublicTransportSchedule extends SherlockFragmentActivity {
 
 				// Sometimes if the device is slow, the arrow is still visible
 				// on the first fragment and cause an Exception
-				if (currentScheduleHourIndex > 0) {
+				if (currentScheduleHourIndex >= 0) {
 					initFragmentContent();
 				} else {
 					showNeededArrows();

@@ -19,6 +19,7 @@ import org.w3c.dom.NodeList;
 import android.app.Activity;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
+import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.WorkingDaysCalendar;
 
 /**
@@ -214,6 +215,8 @@ public class MetroStationEntity extends StationEntity implements Serializable {
 			ArrayList<String> firstSchedule = currentSchedule.get(i);
 			if (!firstSchedule.isEmpty()) {
 				firstScheduleTime = firstSchedule.get(0);
+				firstScheduleTime = Utils
+						.getValueBefore(firstScheduleTime, "|");
 				if (firstScheduleTime.length() == 4) {
 					firstScheduleTime = "0" + firstScheduleTime;
 				}
@@ -238,6 +241,7 @@ public class MetroStationEntity extends StationEntity implements Serializable {
 			ArrayList<String> lastSchedule = currentSchedule.get(i);
 			if (!lastSchedule.isEmpty()) {
 				lastScheduleTime = lastSchedule.get(lastSchedule.size() - 1);
+				lastScheduleTime = Utils.getValueBefore(lastScheduleTime, "|");
 			}
 		}
 

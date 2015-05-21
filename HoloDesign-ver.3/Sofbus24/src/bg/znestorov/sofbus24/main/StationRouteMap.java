@@ -64,6 +64,9 @@ public class StationRouteMap extends SherlockFragmentActivity {
 	private LatLng centerStationLocation = new LatLng(
 			Constants.GLOBAL_PARAM_SOFIA_CENTER_LATITUDE,
 			Constants.GLOBAL_PARAM_SOFIA_CENTER_LONGITUDE);
+	private LatLng mladostStationLocation = new LatLng(
+			Constants.GLOBAL_PARAM_MLADOST_1_LATITUDE,
+			Constants.GLOBAL_PARAM_MLADOST_1_LONGITUDE);
 
 	private LatLng currentMarkerLatLng;
 
@@ -317,6 +320,7 @@ public class StationRouteMap extends SherlockFragmentActivity {
 					if (stationNumber == 3025 || stationNumber == 3026) {
 						metroRouteOptionsM11.add(msLocation);
 						metroRouteOptionsM12.add(msLocation);
+						metroRouteOptionsM12.add(mladostStationLocation);
 					} else if (stationNumber < 3039) {
 						metroRouteOptionsM11.add(msLocation);
 					} else {
