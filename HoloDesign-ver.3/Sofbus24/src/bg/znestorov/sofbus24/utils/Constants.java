@@ -247,4 +247,17 @@ public class Constants {
 	public static final String ROUTE_CHANGES_NEWS_REGEX_1 = "<div class=\"txtBlockContent\"><p>([^^]*?)<\\/p><br\\s+\\/>";
 	public static final String ROUTE_CHANGES_NEWS_REGEX_2 = "<div class=\"txtBlockContent\"><p>([^^]*?)<\\/p><\\/div>";
 	public static final String ROUTE_CHANGES_NEWS_REGEX_3 = "<div class=\"txtBlockContent\"><h.*?>([^^]*?)<\\/h\\d><\\/div>";
+
+	/**
+	 * Google Cloud Messaging
+	 */
+	public static final String GCM_PROJECT_ID = "968618561001";
+	public static final String GCM_PREFERENCES_NAME = "application_gcm";
+	public static final String GCM_PREFERENCES_REG_ID = "regId";
+	public static final String GCM_PREFERENCES_APP_VERSION = "appVersion";
+	public static final String GCM_PREFERENCES_NOTIFICATION_DATE = "notificationDate";
+	public static final String GCM_PREFERENCES_NOTIFICATION_TYPE = "notificationType";
+	public static final String GCM_TITLE_KEY = "title";
+	public static final String GCM_MESSAGE_KEY = "message";
+
 }

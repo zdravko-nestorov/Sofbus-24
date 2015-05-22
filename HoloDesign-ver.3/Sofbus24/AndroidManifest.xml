@@ -14,10 +14,17 @@
 
     <!-- Google Maps related permissions -->
     <permission
-        android:name="com.ecs.google.maps.v2.actionbarsherlock.permission.MAPS_RECEIVE"
+        android:name="bg.znestorov.sofbus24.main.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="bg.znestorov.sofbus24.main.permission.MAPS_RECEIVE" />
+
+    <!-- Prevent other Android applications from registering and receiving the Android application's messages -->
+    <permission
+        android:name="bg.znestorov.sofbus24.main.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="bg.znestorov.sofbus24.main.permission.C2D_MESSAGE" />
 
     <!-- Maps API needs OpenGL ES 2.0. -->
     <uses-feature
@@ -37,6 +44,16 @@
     <!-- My Location -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- GOOGLE CLOUD MESSAGING PERMISSIONS -->
+    <!-- Android application can register and receive messages -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <!-- Allows using PowerManager WakeLocks to keep processor from sleeping or screen from dimming -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Allows access to the list of accounts in the Accounts Service -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <!-- Allows the APP to be installed (also visible in GooglePlay) on tablets without ACCESS_COARSE_LOCATION and ACCESS_FINE_LOCATION -->
     <uses-feature
@@ -179,6 +196,19 @@
         <activity
             android:name="bg.znestorov.sofbus24.main.RouteChangesNews"
             android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <!-- Google Cloud Messaging -->
+        <receiver
+            android:name="bg.znestorov.sofbus24.main.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="bg.znestorov.sofbus24.main" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="bg.znestorov.sofbus24.main.GcmMessageHandler" />
     </application>
 
 </manifest>

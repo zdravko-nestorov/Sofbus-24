@@ -18,6 +18,8 @@ import bg.znestorov.sofbus24.databases.Sofbus24SQLite;
 import bg.znestorov.sofbus24.droidtrans.DroidTransLoadInfo;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
+import bg.znestorov.sofbus24.gcm.GcmPreferences;
+import bg.znestorov.sofbus24.gcm.RetrieveRegId;
 import bg.znestorov.sofbus24.home.screen.Sofbus24DatabaseErrorDialog;
 import bg.znestorov.sofbus24.home.screen.Sofbus24DatabaseErrorDialog.OnRecreateDatabaseListener;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
@@ -95,6 +97,7 @@ public class HomeScreenSelect extends SherlockFragmentActivity implements
 		// In case of first start, check if the statistics should be
 		// enabled/disabled
 		if (savedInstanceState == null) {
+			registerGCM();
 			enableDisableStatistics();
 		}
 	}
@@ -521,9 +524,24 @@ public class HomeScreenSelect extends SherlockFragmentActivity implements
 	}
 
 	/**
+	 * Register the client app with the Google Cloud Messaging service (if a
+	 * registration key is stored in a SharedPreferences class - continue as
+	 * usual)
+	 */
+	private void registerGCM() {
+
+		String regId = GcmPreferences.getReistrationId(context);
+		if (Utils.isEmpty(regId)) {
+			RetrieveRegId retrieveRegId = new RetrieveRegId(context, 1);
+			retrieveRegId.execute();
+		}
+	}
+
+	/**
 	 * Enable or disable the GoogleAnalytics
 	 */
 	private void enableDisableStatistics() {
+
 		boolean googleAnalytics = PreferenceManager
 				.getDefaultSharedPreferences(context).getBoolean(
 						Constants.PREFERENCE_KEY_GOOGLE_ANALYTICS,

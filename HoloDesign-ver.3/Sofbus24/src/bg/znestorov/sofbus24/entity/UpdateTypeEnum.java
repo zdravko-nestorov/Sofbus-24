@@ -8,5 +8,14 @@ package bg.znestorov.sofbus24.entity;
  * 
  */
 public enum UpdateTypeEnum {
-	APP, DB;
+
+	/**
+	 * Indicates that the application needs to be updated
+	 */
+	APP,
+
+	/**
+	 * Indicates that the database needs to be updated
+	 */
+	DB;
 }

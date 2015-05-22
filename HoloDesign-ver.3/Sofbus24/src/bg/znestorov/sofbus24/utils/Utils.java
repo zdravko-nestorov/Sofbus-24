@@ -62,6 +62,17 @@ public class Utils {
 	}
 
 	/**
+	 * Tests if the supplied string is NULL or 0-length.
+	 * 
+	 * @param String
+	 *            input
+	 * @return boolean TRUE if empty, otherwise FALSE
+	 */
+	public static boolean isEmpty(String input) {
+		return input == null || input.trim().length() == 0;
+	}
+
+	/**
 	 * Function that extracts only digits from a given String. In case of an
 	 * empty string - return "".
 	 * 
