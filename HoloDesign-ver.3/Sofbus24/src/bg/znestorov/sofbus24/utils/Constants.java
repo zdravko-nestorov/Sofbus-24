@@ -257,7 +257,11 @@ public class Constants {
 	public static final String GCM_PREFERENCES_APP_VERSION = "appVersion";
 	public static final String GCM_PREFERENCES_NOTIFICATION_DATE = "notificationDate";
 	public static final String GCM_PREFERENCES_NOTIFICATION_TYPE = "notificationType";
-	public static final String GCM_TITLE_KEY = "title";
-	public static final String GCM_MESSAGE_KEY = "message";
+	public static final String GCM_PREFERENCES_NOTIFICATION_DATA = "notificationData";
+	public static final String GCM_PREFERENCES_IS_RATED = "isRated";
+	public static final String GCM_DATE_KEY = "date";
+	public static final String GCM_TYPE_KEY = "type";
+	public static final String GCM_DATA_KEY = "data";
+	public static final Integer GCM_MAX_DAYS_BETWEEN_NOTIFICATIONS = 3;
 
 }

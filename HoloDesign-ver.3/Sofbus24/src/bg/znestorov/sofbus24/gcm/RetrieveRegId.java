@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.widget.Toast;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.Utils;
@@ -58,9 +57,6 @@ public class RetrieveRegId extends AsyncTask<Void, Void, String> {
 	protected void onPostExecute(String regId) {
 
 		gcmRegistrationAttempt++;
-
-		// TODO: Remove this
-		Toast.makeText(context, regId, Toast.LENGTH_LONG).show();
 
 		// Check if the registration is successful (if the GCM has returned a
 		// registration id), otherwise - try one more time

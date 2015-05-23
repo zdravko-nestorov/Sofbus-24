@@ -1,12 +1,13 @@
 package bg.znestorov.sofbus24.gcm;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import bg.znestorov.sofbus24.entity.NotificationEntity;
 import bg.znestorov.sofbus24.entity.NotificationTypeEnum;
 import bg.znestorov.sofbus24.utils.Constants;
+import bg.znestorov.sofbus24.utils.Utils;
 
 /**
  * Responsible for the iteractions with the SharedPreference file, containing an
@@ -24,25 +25,25 @@ public class GcmPreferences {
 	 * case of a new version deployed on GooglePlayStore)
 	 * 
 	 * @param context
-	 *            the current activity context
+	 *            the current context
 	 * @return the registration id from the SharedPreferences file
 	 */
-	public static String getReistrationId(Activity context) {
+	public static String getReistrationId(Context context) {
 
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.GCM_PREFERENCES_NAME, Context.MODE_PRIVATE);
 
 		String registrationId = sharedPreferences.getString(
 				Constants.GCM_PREFERENCES_REG_ID, "");
-		if (registrationId.isEmpty()) {
-			registrationId = "";
+		if (Utils.isEmpty(registrationId)) {
+			return "";
 		}
 
 		int registeredVersion = sharedPreferences.getInt(
 				Constants.GCM_PREFERENCES_APP_VERSION, Integer.MIN_VALUE);
 		int currentVersion = getAppVersion(context);
 		if (registeredVersion != currentVersion) {
-			registrationId = "";
+			return "";
 		}
 
 		return registrationId;
@@ -55,11 +56,11 @@ public class GcmPreferences {
 	 * the GooglePlay store, a new registration of the app is needed)
 	 * 
 	 * @param context
-	 *            the current activity context
+	 *            the current context
 	 * @param regId
 	 *            the registration id received from GCM service
 	 */
-	public static void storeRegistrationId(Activity context, String regId) {
+	public static void storeRegistrationId(Context context, String regId) {
 
 		SharedPreferences prefs = context.getSharedPreferences(
 				Constants.GCM_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -72,88 +73,14 @@ public class GcmPreferences {
 	}
 
 	/**
-	 * Get the date of the last received push notification in the
-	 * SharedPreference file. The date in the file will be changed only if a
-	 * period of 3 days is passed before the last saved notification
-	 * 
-	 * @param context
-	 *            the current activity context
-	 * @return the date of last saved push notification
-	 */
-	public static String getNotificationDate(Activity context) {
-
-		SharedPreferences sharedPreferences = context.getSharedPreferences(
-				Constants.GCM_PREFERENCES_NAME, Context.MODE_PRIVATE);
-
-		String notificationDate = sharedPreferences.getString(
-				Constants.GCM_PREFERENCES_NOTIFICATION_DATE, "");
-		if (notificationDate.isEmpty()) {
-			notificationDate = "";
-		}
-
-		return notificationDate;
-	}
-
-	/**
-	 * Get the type of the last received push notification in the
-	 * SharedPreferences file. The notification type in the file will be changed
-	 * only if a period of 3 days is passed before the last saved notification
-	 * 
-	 * @param context
-	 *            the current activity context
-	 * @return the date of last saved push notification
-	 */
-	public static String getNotificationType(Activity context) {
-
-		SharedPreferences sharedPreferences = context.getSharedPreferences(
-				Constants.GCM_PREFERENCES_NAME, Context.MODE_PRIVATE);
-
-		String notificationType = sharedPreferences.getString(
-				Constants.GCM_PREFERENCES_NOTIFICATION_TYPE, "");
-		if (notificationType.isEmpty()) {
-			notificationType = "";
-		}
-
-		return notificationType;
-	}
-
-	/**
-	 * Store the date and type of the received notification, if satisfies the
-	 * conditions - if 3 days past since the last notification, change the date
-	 * in the SharedPreferences file and set the notification type accordingly.
-	 * Otherwise, do not edit the file
-	 * 
-	 * @param context
-	 *            the current activity context
-	 * @param notificationDate
-	 *            the date of the received notification
-	 * @param notificationType
-	 *            the type of the received notification
-	 */
-	public static void storeNotificationData(Activity context,
-			String notificationDate, NotificationTypeEnum notificationType) {
-
-		SharedPreferences prefs = context.getSharedPreferences(
-				Constants.GCM_PREFERENCES_NAME, Context.MODE_PRIVATE);
-
-		// TODO: Check if 3 days are past since the last update
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(Constants.GCM_PREFERENCES_NOTIFICATION_DATE,
-				notificationDate);
-		editor.putString(Constants.GCM_PREFERENCES_NOTIFICATION_TYPE,
-				notificationType.toString());
-		editor.commit();
-	}
-
-	/**
 	 * Get the application version code (in case of a problem, set '0' as a
 	 * version code)
 	 * 
 	 * @param context
-	 *            the current activity context
+	 *            the current context
 	 * @return the version code of the application
 	 */
-	private static int getAppVersion(Activity context) {
+	private static int getAppVersion(Context context) {
 
 		int versionCode;
 		try {
@@ -165,6 +92,134 @@ public class GcmPreferences {
 		}
 
 		return versionCode;
+	}
+
+	/**
+	 * Get the last received push notification in the SharedPreference file. The
+	 * data in the file will be changed only if a period of 3 days is passed
+	 * before the last saved notification
+	 * 
+	 * @param context
+	 *            the current context
+	 * @return the notification saved in the SharedPreferences file
+	 */
+	public static NotificationEntity getNotification(Context context) {
+
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				Constants.GCM_PREFERENCES_NAME, Context.MODE_PRIVATE);
+		NotificationEntity notification = new NotificationEntity(
+				sharedPreferences);
+
+		return notification;
+	}
+
+	/**
+	 * Store the date and type of the received notification, if satisfies the
+	 * conditions - if 3 days past since the last notification, change the date
+	 * in the SharedPreferences file and set the notification type accordingly.
+	 * Otherwise, do not edit the file
+	 * 
+	 * @param context
+	 *            the current context
+	 * @param notificationDate
+	 *            the received notification
+	 */
+	public static void storeNotification(Context context,
+			NotificationEntity notification) {
+
+		SharedPreferences prefs = context.getSharedPreferences(
+				Constants.GCM_PREFERENCES_NAME, Context.MODE_PRIVATE);
+
+		// Get the notification saved into the SharedPreferences file
+		NotificationEntity prefsNotification = getNotification(context);
+		String prefsNotificationDate = prefsNotification.getDate();
+
+		// Check if there is any saved date in the SharedPreferences file
+		if (!Utils.isEmpty(prefsNotificationDate)) {
+
+			// Check the elapsed days since the last received notification. If
+			// "GCM_MAX_DAYS_BETWEEN_NOTIFICATIONS" aren't passed - do not save
+			// anything
+			int daysDifference = Utils.getDateDifferenceInDays(
+					prefsNotificationDate, Utils.getCurrentDate());
+			if (daysDifference < Constants.GCM_MAX_DAYS_BETWEEN_NOTIFICATIONS) {
+				return;
+			}
+		}
+
+		NotificationTypeEnum notificationType = notification.getType();
+
+		// If the type of the notification is RATE_APP and the user already
+		// rated it - do not save anything
+		if (notificationType == NotificationTypeEnum.RATE_APP
+				&& isRated(context)) {
+			return;
+		}
+
+		// Save the values in the SharedPreferences file
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(Constants.GCM_PREFERENCES_NOTIFICATION_DATE,
+				notification.getDate());
+		editor.putString(Constants.GCM_PREFERENCES_NOTIFICATION_TYPE,
+				notificationType.toString());
+		editor.putString(Constants.GCM_PREFERENCES_NOTIFICATION_DATA,
+				notification.getData());
+		editor.commit();
+	}
+
+	/**
+	 * Once the notification is processed, than remove the notification data
+	 * from the SharedPreferences file
+	 * 
+	 * @param context
+	 *            the current context
+	 */
+	public static void clearNotification(Context context) {
+
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				Constants.GCM_PREFERENCES_NAME, Context.MODE_PRIVATE);
+
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString(Constants.GCM_PREFERENCES_NOTIFICATION_TYPE, "");
+		editor.putString(Constants.GCM_PREFERENCES_NOTIFICATION_DATA, "");
+		editor.commit();
+	}
+
+	/**
+	 * Check if the user already rated the application or not
+	 * 
+	 * @param context
+	 *            the current context
+	 * @return the isRated param from the SharedPreferences file (if the user
+	 *         already rated the application)
+	 */
+	public static Boolean isRated(Context context) {
+
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				Constants.GCM_PREFERENCES_NAME, Context.MODE_PRIVATE);
+		Boolean isRated = sharedPreferences.getBoolean(
+				Constants.GCM_PREFERENCES_IS_RATED, false);
+
+		return isRated;
+	}
+
+	/**
+	 * Store the user's choice when a rate dialog appears. If the user choose
+	 * LATER - false will be saved, NO THANKS or RATE IT - true will be saved
+	 * 
+	 * @param context
+	 *            the current context
+	 * @param isRated
+	 *            indicates the user's choice
+	 */
+	public static void storeRated(Context context, Boolean isRated) {
+
+		SharedPreferences prefs = context.getSharedPreferences(
+				Constants.GCM_PREFERENCES_NAME, Context.MODE_PRIVATE);
+
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putBoolean(Constants.GCM_PREFERENCES_IS_RATED, isRated);
+		editor.commit();
 	}
 
 }

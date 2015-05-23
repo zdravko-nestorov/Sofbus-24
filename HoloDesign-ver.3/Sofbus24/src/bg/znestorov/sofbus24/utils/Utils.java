@@ -62,6 +62,23 @@ public class Utils {
 	}
 
 	/**
+	 * Check if the input is an Integer
+	 * 
+	 * @param input
+	 *            the input string
+	 * @return if the input is an Integer
+	 */
+	public static boolean isInteger(String input) {
+		try {
+			Integer.parseInt(input);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Tests if the supplied string is NULL or 0-length.
 	 * 
 	 * @param String
@@ -894,7 +911,7 @@ public class Utils {
 			int daysDifference = (int) (difference / (1000 * 60 * 60 * 24));
 
 			return daysDifference;
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			return 0;
 		}
 	}
@@ -1123,6 +1140,7 @@ public class Utils {
 	 *            the database timestamp
 	 * @return the formatted timestamp
 	 */
+	@SuppressLint("SimpleDateFormat")
 	public static String formatScheduleCacheTimestamp(String timestamp) {
 
 		String formattedTimestamp;
