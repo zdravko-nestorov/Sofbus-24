@@ -180,8 +180,8 @@ public class GcmPreferences {
 				Constants.GCM_PREFERENCES_NAME, Context.MODE_PRIVATE);
 
 		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString(Constants.GCM_PREFERENCES_NOTIFICATION_TYPE, "");
-		editor.putString(Constants.GCM_PREFERENCES_NOTIFICATION_DATA, "");
+		editor.remove(Constants.GCM_PREFERENCES_NOTIFICATION_TYPE);
+		editor.remove(Constants.GCM_PREFERENCES_NOTIFICATION_DATA);
 		editor.commit();
 	}
 

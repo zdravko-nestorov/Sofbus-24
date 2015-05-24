@@ -5,18 +5,12 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.ListView;
-import bg.znestorov.sofbus24.about.UpdateApplicationDialog;
-import bg.znestorov.sofbus24.about.UpdateDatabaseDialog;
-import bg.znestorov.sofbus24.entity.ConfigEntity;
-import bg.znestorov.sofbus24.entity.NotificationEntity;
-import bg.znestorov.sofbus24.entity.NotificationTypeEnum;
-import bg.znestorov.sofbus24.gcm.GcmPreferences;
+import bg.znestorov.sofbus24.gcm.GcmUtils;
 import bg.znestorov.sofbus24.home.screen.Sofbus24Fragment;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
@@ -67,7 +61,7 @@ public class Sofbus24 extends SherlockFragmentActivity {
 			// Not needed anymore - only the GCM notifications can inform the
 			// user about any actions
 			// Utils.checkForUpdate(context, UpdateTypeEnum.APP);
-			processGCM();
+			GcmUtils.processGcmNotification(context);
 			ActivityTracker.homeScreenUsed(context, "Sofbus 24 (Home Screen)");
 		}
 	}
@@ -199,54 +193,4 @@ public class Sofbus24 extends SherlockFragmentActivity {
 						TAG_SOFBUS_24_FRAGMENT).addToBackStack(null).commit();
 	}
 
-	/**
-	 * Checks if any GCM notification was previously received. If so, inform the
-	 * user accordingly
-	 */
-	private void processGCM() {
-
-		NotificationEntity notification = GcmPreferences
-				.getNotification(context);
-
-		// Check if any notification is previously received
-		if (notification.isValid()) {
-
-			DialogFragment dialogFragment;
-			NotificationTypeEnum notificationType = notification.getType();
-			String notificationData = notification.getData();
-
-			switch (notificationType) {
-			case UPDATE_APP:
-
-				// Inform the user that a new version of Sofbus 24 is available
-				dialogFragment = UpdateApplicationDialog.newInstance(String
-						.format(context
-								.getString(R.string.about_update_app_new),
-								notificationData));
-				dialogFragment.show(context.getSupportFragmentManager(),
-						"dialogFragment");
-				break;
-			case UPDATE_DB:
-
-				// Create the updated configuration
-				ConfigEntity config = new ConfigEntity(context);
-				if (Utils.isInteger(notificationData)) {
-					config.setSofbus24DbVersion(Integer
-							.parseInt(notificationData));
-				}
-
-				// Inform the user that a new database is available
-				dialogFragment = UpdateDatabaseDialog.newInstance(config);
-				dialogFragment.show(context.getSupportFragmentManager(),
-						"dialogFragment");
-				break;
-			case RATE_APP:
-				// TODO: Create a rate app dialog
-				break;
-			default:
-				// Do nothing - may be the notification is incorrect
-				break;
-			}
-		}
-	}
 }

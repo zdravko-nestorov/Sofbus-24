@@ -10,16 +10,20 @@
     <string name="app_button_cancel">Cancel</string>
     <string name="app_button_yes">Yes</string>
     <string name="app_button_no">No</string>
+    <string name="app_button_no_thanks">No, thanks</string>
     <string name="app_button_update">Update</string>
     <string name="app_button_install">Install</string>
     <string name="app_button_activate">Activate</string>
     <string name="app_button_later">Later</string>
+    <string name="app_button_remind_later">Remind later</string>
     <string name="app_button_restart">Restart</string>
     <string name="app_button_email">Email</string>
     <string name="app_button_exit">Exit</string>
+    <string name="app_button_rate">Rate now</string>
     <string name="app_dialog_title_info">Information</string>
     <string name="app_dialog_title_important">Important</string>
     <string name="app_dialog_title_error">Error</string>
+    <string name="app_dialog_title_rate">Rate this app</string>
     <string name="app_database_error" formatted="false"><![CDATA[<b><i>Sofbus 24</i></b> experienced an unexpected error on startup. Please <b><i>restart</i></b> the application and if the problem still persists, contact me with the <b><i>email button</i></b> below.]]></string>
     <string name="app_internet_error">An error occurred while retrieving the information. Please check your Internet connection and try again.</string>
     <string name="app_info_error" formatted="false"><![CDATA[Currently, the SKGT site does not provide any information about </b>%s<b>. Please try again later.]]></string>
@@ -428,5 +432,8 @@
     <string name="route_changes_news_loading" formatted="false"><![CDATA[Loading information about <b><i>%s</i></b>...]]></string>
     <string name="route_changes_news_copy_link">Linked copied</string>
     <string name="route_changes_news_choose_browser">Choose a browser</string>
+
+    <!-- Google Cloud Messages -->
+    <string name="gcm_dialog_message_rate">If you enjoy using this app, would you mind taking a moment to rate it? It won\'t take more than a minute. Thank you for your support!</string>
 
 </resources>

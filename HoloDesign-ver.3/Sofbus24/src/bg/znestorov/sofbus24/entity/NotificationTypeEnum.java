@@ -27,6 +27,12 @@ public enum NotificationTypeEnum {
 	RATE_APP,
 
 	/**
+	 * Notification alerting the user about the occurrence of an unforeseen
+	 * situation
+	 */
+	INFO,
+
+	/**
 	 * In case of wrong notification sent
 	 */
 	NONE;
