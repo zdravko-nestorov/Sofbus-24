@@ -252,6 +252,8 @@ public class Constants {
 	 * Google Cloud Messaging
 	 */
 	public static final String GCM_PROJECT_ID = "968618561001";
+	// TODO: Create external server URL address
+	public static final String GCM_EXTERNAL_SERVER_URL = "";
 	public static final String GCM_PREFERENCES_NAME = "application_gcm";
 	public static final String GCM_PREFERENCES_REG_ID = "regId";
 	public static final String GCM_PREFERENCES_APP_VERSION = "appVersion";

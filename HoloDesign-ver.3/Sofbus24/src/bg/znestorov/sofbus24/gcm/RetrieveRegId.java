@@ -62,6 +62,14 @@ public class RetrieveRegId extends AsyncTask<Void, Void, String> {
 		// registration id), otherwise - try one more time
 		if (!Utils.isEmpty(regId)) {
 			GcmPreferences.storeRegistrationId(context, regId);
+
+			// Try to register the regId on the ExternalServer. If the first
+			// attempt is unsuccessful - try one more time
+			Boolean isSharedSuccessful = GcmShareExternalServer
+					.shareRegIdWithAppServer(context, regId);
+			if (!isSharedSuccessful) {
+				GcmShareExternalServer.shareRegIdWithAppServer(context, regId);
+			}
 		} else if (gcmRegistrationAttempt < MAX_REGISTRATION_ATTEMPTS) {
 			RetrieveRegId retrieveRegId = new RetrieveRegId(context,
 					gcmRegistrationAttempt + 1);
