@@ -55,7 +55,7 @@ public class ConfigEntity implements Serializable {
 		this.sofbus24DbVersion = 1;
 	}
 
-	public ConfigEntity(Activity context) {
+	public ConfigEntity(Context context) {
 
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
 				Constants.CONFIGURATION_PREF_NAME, Context.MODE_PRIVATE);

@@ -27,6 +27,7 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HomeTabEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.favorites.FavouritesStationFragment;
+import bg.znestorov.sofbus24.gcm.GcmUtils;
 import bg.znestorov.sofbus24.main.EditTabs;
 import bg.znestorov.sofbus24.main.EditTabsDialog;
 import bg.znestorov.sofbus24.main.HomeScreenSelect;
@@ -80,6 +81,10 @@ public class Sofbus24Fragment extends SherlockFragment implements
 
 		// Activate the option menu
 		setHasOptionsMenu(true);
+
+		// Checks if any GCM notification was previously received. If so, inform
+		// the user accordingly
+		GcmUtils.processGcmNotification(context, getChildFragmentManager());
 
 		return fragmentView;
 	}

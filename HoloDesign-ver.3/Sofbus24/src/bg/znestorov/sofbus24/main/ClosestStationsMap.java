@@ -39,8 +39,8 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.SortTypeEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
-import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
+import bg.znestorov.sofbus24.gcm.GcmUtils;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
 import bg.znestorov.sofbus24.navigation.NavDrawerHelper;
@@ -232,7 +232,11 @@ public class ClosestStationsMap extends SherlockFragmentActivity {
 
 		if (isCSMapHomeScreen) {
 			if (savedInstanceState == null) {
-				Utils.checkForUpdate(context, UpdateTypeEnum.APP);
+				// Not needed anymore - only the GCM notifications can inform
+				// the user about any actions
+				// Utils.checkForUpdate(context, UpdateTypeEnum.APP);
+				GcmUtils.processGcmNotification(context,
+						getSupportFragmentManager());
 				ActivityTracker.homeScreenUsed(context,
 						"Closest Stations Map (Home Screen)");
 			}

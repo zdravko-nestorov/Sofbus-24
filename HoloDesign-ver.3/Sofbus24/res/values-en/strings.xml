@@ -434,6 +434,6 @@
     <string name="route_changes_news_choose_browser">Choose a browser</string>
 
     <!-- Google Cloud Messages -->
-    <string name="gcm_dialog_message_rate">If you enjoy using this app, would you mind taking a moment to rate it? It won\'t take more than a minute. Thank you for your support!</string>
+    <string name="gcm_dialog_message_rate">If you enjoy using this app, would you mind taking a moment to rate it (sorry if you already did it)? It won\'t take more than a minute. Thank you for your support!</string>
 
 </resources>

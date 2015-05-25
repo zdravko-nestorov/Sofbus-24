@@ -921,7 +921,10 @@ public class RetrieveVirtualBoards {
 			isCaptchaHackUsed = true;
 			processCaptchaText(captchaId, Utils.getCurrentDayMonth());
 		} else {
-			// TODO: Replace the AlertDialog with a DialogFragment
+			// It should not never enter here - a captch hack should be user all
+			// the time
+
+			// Replace the AlertDialog with a DialogFragment
 			Builder dialogBuilder = new AlertDialog.Builder(context);
 			dialogBuilder.setTitle(R.string.vb_time_sumc_captcha);
 			dialogBuilder.setMessage(R.string.vb_time_sumc_captcha_msg);

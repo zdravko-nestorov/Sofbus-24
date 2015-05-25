@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -128,17 +129,31 @@ public class PreferencesFragment extends PreferenceFragment implements
 
 		PreferenceCategory preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_APP_VISUAL_CATEGORY);
 
-		switch (globalContext.getDeviceType()) {
-		case PHONE:
-			// Do nothing
-			break;
-		case SMALL_TABLET:
-			CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED);
-			preferencesCategory.removePreference(checkBoxPreference);
-			break;
-		case LARGE_TABLET:
-			preferencesScreen.removePreference(preferencesCategory);
-			break;
+		// If the HomeScreen is not standard, do not show this option
+		if (NavDrawerHomeScreenPreferences.getUserHomeScreenChoice(context) != 0) {
+			switch (globalContext.getDeviceType()) {
+			case PHONE:
+				ListPreference listPreference = (ListPreference) findPreference(Constants.PREFERENCE_KEY_TABS_TYPE);
+				preferencesCategory.removePreference(listPreference);
+				break;
+			case SMALL_TABLET:
+			case LARGE_TABLET:
+				preferencesScreen.removePreference(preferencesCategory);
+				break;
+			}
+		} else {
+			switch (globalContext.getDeviceType()) {
+			case PHONE:
+				// Do nothing
+				break;
+			case SMALL_TABLET:
+				CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED);
+				preferencesCategory.removePreference(checkBoxPreference);
+				break;
+			case LARGE_TABLET:
+				preferencesScreen.removePreference(preferencesCategory);
+				break;
+			}
 		}
 	}
 

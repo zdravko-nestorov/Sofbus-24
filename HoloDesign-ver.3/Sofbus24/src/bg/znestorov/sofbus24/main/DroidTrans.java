@@ -35,10 +35,10 @@ import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.RetrieveCurrentLocationTypeEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
-import bg.znestorov.sofbus24.entity.UpdateTypeEnum;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.entity.WheelStateEntity;
+import bg.znestorov.sofbus24.gcm.GcmUtils;
 import bg.znestorov.sofbus24.metro.MetroLoadStations;
 import bg.znestorov.sofbus24.metro.RetrieveMetroSchedule;
 import bg.znestorov.sofbus24.navigation.NavDrawerArrayAdapter;
@@ -128,7 +128,11 @@ public class DroidTrans extends SherlockFragmentActivity {
 			initNavigationDrawer();
 
 			if (savedInstanceState == null) {
-				Utils.checkForUpdate(context, UpdateTypeEnum.APP);
+				// Not needed anymore - only the GCM notifications can inform
+				// the user about any actions
+				// Utils.checkForUpdate(context, UpdateTypeEnum.APP);
+				GcmUtils.processGcmNotification(context,
+						getSupportFragmentManager());
 				ActivityTracker.homeScreenUsed(context,
 						"DroidTrans (Home Screen)");
 			}

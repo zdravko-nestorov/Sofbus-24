@@ -181,18 +181,33 @@ public class PreferencesPreHoneycomb extends SherlockPreferenceActivity
 		ListPreference listPreference = (ListPreference) findPreference(Constants.PREFERENCE_KEY_APP_THEME);
 		preferencesCategory.removePreference(listPreference);
 
-		switch (globalContext.getDeviceType()) {
-		case PHONE:
-			// Do nothing
-			break;
-		case SMALL_TABLET:
-			CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED);
-			preferencesCategory.removePreference(checkBoxPreference);
-			break;
-		case LARGE_TABLET:
-			preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_APP_VISUAL_CATEGORY);
-			preferencesScreen.removePreference(preferencesCategory);
-			break;
+		// If the HomeScreen is not standard, do not show this option
+		if (NavDrawerHomeScreenPreferences.getUserHomeScreenChoice(context) != 0) {
+			switch (globalContext.getDeviceType()) {
+			case PHONE:
+				listPreference = (ListPreference) findPreference(Constants.PREFERENCE_KEY_TABS_TYPE);
+				preferencesCategory.removePreference(listPreference);
+				break;
+			case SMALL_TABLET:
+			case LARGE_TABLET:
+				preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_APP_VISUAL_CATEGORY);
+				preferencesScreen.removePreference(preferencesCategory);
+				break;
+			}
+		} else {
+			switch (globalContext.getDeviceType()) {
+			case PHONE:
+				// Do nothing
+				break;
+			case SMALL_TABLET:
+				CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(Constants.PREFERENCE_KEY_FAVOURITES_EXPANDED);
+				preferencesCategory.removePreference(checkBoxPreference);
+				break;
+			case LARGE_TABLET:
+				preferencesCategory = (PreferenceCategory) findPreference(Constants.PREFERENCE_KEY_APP_VISUAL_CATEGORY);
+				preferencesScreen.removePreference(preferencesCategory);
+				break;
+			}
 		}
 	}
 

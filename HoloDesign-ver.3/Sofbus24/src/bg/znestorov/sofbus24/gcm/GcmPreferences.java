@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import bg.znestorov.sofbus24.entity.ConfigEntity;
 import bg.znestorov.sofbus24.entity.NotificationEntity;
 import bg.znestorov.sofbus24.entity.NotificationTypeEnum;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -147,23 +148,66 @@ public class GcmPreferences {
 			}
 		}
 
+		// Get the values of the received notification
+		String notificationDate = notification.getDate();
 		NotificationTypeEnum notificationType = notification.getType();
+		String notificationData = notification.getData();
 
-		// If the type of the notification is RATE_APP and the user already
-		// rated it - do not save anything
-		if (notificationType == NotificationTypeEnum.RATE_APP
-				&& isRated(context)) {
-			return;
+		// Get the current app configuration
+		ConfigEntity currentConfig = new ConfigEntity(context);
+
+		// According to the type of the notification, check if we should proceed
+		// with informing the user or the notification is incorrect
+		switch (notificationType) {
+		case UPDATE_APP:
+
+			String appVersion = Utils.getValueBetween(notificationData, "(",
+					")");
+
+			// If the type of the notification is UPDATE_APP and the current
+			// application version is the same or higher than the one from the
+			// notification - do not save anything in the SharedPreferences file
+			if (!Utils.isInteger(appVersion)
+					|| currentConfig.getVersionCode() >= Integer
+							.parseInt(appVersion)) {
+				return;
+			}
+
+			break;
+		case UPDATE_DB:
+
+			// If the type of the notification is UPDATE_DB and the current
+			// dabatase version is the same or higher than the one from the
+			// notification - do not save anything in the SharedPreferences file
+			if (!Utils.isInteger(notificationData)
+					|| currentConfig.getSofbus24DbVersion() >= Integer
+							.parseInt(notificationData)) {
+				return;
+			}
+
+			break;
+		case RATE_APP:
+
+			// If the type of the notification is RATE_APP and the user already
+			// rated it - do not save anything in the SharedPreferences file
+			if (isRated(context)) {
+				return;
+			}
+
+			break;
+		default:
+			// Do nothing - just inform the user with the correct message
+			break;
 		}
 
 		// Save the values in the SharedPreferences file
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putString(Constants.GCM_PREFERENCES_NOTIFICATION_DATE,
-				notification.getDate());
+				notificationDate);
 		editor.putString(Constants.GCM_PREFERENCES_NOTIFICATION_TYPE,
 				notificationType.toString());
 		editor.putString(Constants.GCM_PREFERENCES_NOTIFICATION_DATA,
-				notification.getData());
+				notificationData);
 		editor.commit();
 	}
 

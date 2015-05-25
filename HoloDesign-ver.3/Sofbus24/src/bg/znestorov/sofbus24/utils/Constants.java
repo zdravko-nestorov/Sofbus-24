@@ -262,6 +262,6 @@ public class Constants {
 	public static final String GCM_DATE_KEY = "date";
 	public static final String GCM_TYPE_KEY = "type";
 	public static final String GCM_DATA_KEY = "data";
-	public static final Integer GCM_MAX_DAYS_BETWEEN_NOTIFICATIONS = 3;
+	public static final Integer GCM_MAX_DAYS_BETWEEN_NOTIFICATIONS = 0;
 
 }

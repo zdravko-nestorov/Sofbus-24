@@ -258,6 +258,12 @@ public class DroidTransDataSource {
 				vehicleDirection = vehicleDirection.replaceAll("-.*-", "-");
 			}
 
+			// Translate to Latin if the language is different from BG
+			if (!"bg".equals(language)) {
+				vehicleDirection = TranslatorCyrillicToLatin.translate(context,
+						vehicleDirection);
+			}
+
 			vehiclesDirections.add(vehicleDirection.replace("-", " - ")
 					.replaceAll(" +", " "));
 			vehiclesDirections.add(getOppositeDirection(vehicleDirection)

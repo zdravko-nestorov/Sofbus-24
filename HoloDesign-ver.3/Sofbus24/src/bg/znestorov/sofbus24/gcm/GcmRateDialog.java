@@ -21,7 +21,6 @@ import bg.znestorov.sofbus24.main.R;
 public class GcmRateDialog extends DialogFragment {
 
 	private Activity context;
-	private int icon;
 	private String title;
 	private String message;
 	private String negativeBtn;
@@ -39,7 +38,6 @@ public class GcmRateDialog extends DialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 		context = getActivity();
-		icon = R.drawable.ic_menu_star;
 		title = getString(R.string.app_dialog_title_rate);
 		message = getString(R.string.gcm_dialog_message_rate);
 		negativeBtn = getString(R.string.app_button_no_thanks);
@@ -82,7 +80,7 @@ public class GcmRateDialog extends DialogFragment {
 		};
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setIcon(icon).setTitle(title).setMessage(message)
+		builder.setTitle(title).setMessage(message)
 				.setNegativeButton(negativeBtn, negativeOnClickListener)
 				.setPositiveButton(positiveBtn, positiveOnClickListener)
 				.setNeutralButton(neutralBtn, neutralOnClickListener);

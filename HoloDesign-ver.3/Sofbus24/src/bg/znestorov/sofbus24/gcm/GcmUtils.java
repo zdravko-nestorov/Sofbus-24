@@ -1,11 +1,13 @@
 package bg.znestorov.sofbus24.gcm;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import bg.znestorov.sofbus24.about.UpdateApplicationDialog;
 import bg.znestorov.sofbus24.about.UpdateDatabaseDialog;
 import bg.znestorov.sofbus24.entity.ConfigEntity;
@@ -23,8 +25,11 @@ public class GcmUtils {
 	 * 
 	 * @param context
 	 *            current Activity context
+	 * @param fragmentManager
+	 *            the fragment manager of the activity/fragment
 	 */
-	public static void processGcmNotification(FragmentActivity context) {
+	public static void processGcmNotification(FragmentActivity context,
+			FragmentManager fragmentManager) {
 
 		NotificationEntity notification = GcmPreferences
 				.getNotification(context);
@@ -38,16 +43,17 @@ public class GcmUtils {
 
 			switch (notificationType) {
 			case UPDATE_APP:
+
 				// Inform the user that a new version of Sofbus 24 is available
-				dialogFragment = UpdateApplicationDialog.newInstance(String
-						.format(context
-								.getString(R.string.about_update_app_new),
-								notificationData));
-				dialogFragment.show(context.getSupportFragmentManager(),
-						"dialogFragment");
+				dialogFragment = UpdateApplicationDialog
+						.newInstance(String.format(
+								context.getString(R.string.about_update_app_new),
+								getGcmUpdateAppNotificationData(notificationData)));
+				dialogFragment.show(fragmentManager, "dialogFragment");
 
 				break;
 			case UPDATE_DB:
+
 				// Create the updated configuration
 				ConfigEntity config = new ConfigEntity(context);
 				if (Utils.isInteger(notificationData)) {
@@ -57,18 +63,18 @@ public class GcmUtils {
 
 				// Inform the user that a new database is available
 				dialogFragment = UpdateDatabaseDialog.newInstance(config);
-				dialogFragment.show(context.getSupportFragmentManager(),
-						"dialogFragment");
+				dialogFragment.show(fragmentManager, "dialogFragment");
 
 				break;
 			case RATE_APP:
+
 				// Inform the user that he/she can rate the application if wants
 				dialogFragment = GcmRateDialog.newInstance();
-				dialogFragment.show(context.getSupportFragmentManager(),
-						"dialogFragment");
+				dialogFragment.show(fragmentManager, "dialogFragment");
 
 				break;
 			case INFO:
+
 				// Get the notification data in the correct language
 				notificationData = getGcmInfoNotificationData(context,
 						notificationData);
@@ -78,8 +84,7 @@ public class GcmUtils {
 				if (!Utils.isEmpty(notificationData)) {
 					dialogFragment = GcmInfoDialog
 							.newInstance(notificationData);
-					dialogFragment.show(context.getSupportFragmentManager(),
-							"dialogFragment");
+					dialogFragment.show(fragmentManager, "dialogFragment");
 				}
 
 				break;
@@ -112,7 +117,8 @@ public class GcmUtils {
 
 			// Format the notification data as a JSON object and get the value
 			// in the correct language
-			JSONObject notificationJson = new JSONObject(notificationData);
+			JSONObject notificationJson = new JSONArray(notificationData)
+					.getJSONObject(0);
 			notificationData = notificationJson.getString(language);
 		} catch (JSONException e) {
 			notificationData = "";
@@ -121,4 +127,20 @@ public class GcmUtils {
 		return notificationData;
 	}
 
+	/**
+	 * Get the update app notification data in the correct format
+	 * 
+	 * @param notificationData
+	 *            the received notification data
+	 * @return the notification data in the correct format
+	 */
+	public static String getGcmUpdateAppNotificationData(String notificationData) {
+
+		if (!Utils.isEmpty(notificationData)) {
+			notificationData = Utils.getValueBefore(notificationData, "(")
+					.trim();
+		}
+
+		return notificationData;
+	}
 }
