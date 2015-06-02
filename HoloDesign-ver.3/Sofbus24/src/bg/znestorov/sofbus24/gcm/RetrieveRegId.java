@@ -1,7 +1,5 @@
 package bg.znestorov.sofbus24.gcm;
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.os.AsyncTask;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
@@ -39,7 +37,7 @@ public class RetrieveRegId extends AsyncTask<Void, Void, String> {
 	@Override
 	protected String doInBackground(Void... params) {
 
-		String regId;
+		String regId = GcmPreferences.getReistrationId(context);
 		try {
 			if (gcm == null) {
 				gcm = GoogleCloudMessaging.getInstance(globalContext);
@@ -54,9 +52,16 @@ public class RetrieveRegId extends AsyncTask<Void, Void, String> {
 			Boolean isSharedSuccessful = GcmShareExternalServer
 					.shareRegIdWithAppServer(context, regId);
 			if (!isSharedSuccessful) {
-				GcmShareExternalServer.shareRegIdWithAppServer(context, regId);
+				isSharedSuccessful = GcmShareExternalServer
+						.shareRegIdWithAppServer(context, regId);
 			}
-		} catch (IOException ex) {
+
+			// If the sharing is unsuccessful - reset the regId (it will try to
+			// register again)
+			if (!isSharedSuccessful) {
+				regId = "";
+			}
+		} catch (Exception ex) {
 			regId = "";
 		}
 

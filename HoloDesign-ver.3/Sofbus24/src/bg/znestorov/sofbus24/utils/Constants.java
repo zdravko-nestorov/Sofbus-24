@@ -252,11 +252,14 @@ public class Constants {
 	 * Google Cloud Messaging
 	 */
 	public static final String GCM_PROJECT_ID = "968618561001";
+
 	// TODO: Create external server URL address
-	public static final String GCM_EXTERNAL_SERVER_URL = "";
+	public static final String GCM_EXTERNAL_SERVER_URL = "http://192.168.2.44:5001/Sofbus24/gcm-register";
 	public static final String GCM_EXTERNAL_SERVER_URL_REG_ID_ATT = "regId";
 	public static final String GCM_EXTERNAL_SERVER_URL_SECRET_ATT = "sec";
 	public static final String GCM_EXTERNAL_SERVER_URL_SECRET_VALUE = "fa1c9f79de2cabc59d9bddb9f8d5794d8406702b";
+	public static final String GCM_EXTERNAL_SERVER_URL_RESPONSE_IS_SUCCESSFUL_KEY = "isSuccessful";
+
 	public static final String GCM_PREFERENCES_NAME = "application_gcm";
 	public static final String GCM_PREFERENCES_REG_ID = "regId";
 	public static final String GCM_PREFERENCES_APP_VERSION = "appVersion";
@@ -264,9 +267,10 @@ public class Constants {
 	public static final String GCM_PREFERENCES_NOTIFICATION_TYPE = "notificationType";
 	public static final String GCM_PREFERENCES_NOTIFICATION_DATA = "notificationData";
 	public static final String GCM_PREFERENCES_IS_RATED = "isRated";
-	public static final String GCM_DATE_KEY = "date";
-	public static final String GCM_TYPE_KEY = "type";
-	public static final String GCM_DATA_KEY = "data";
+
+	public static final String GCM_NOTIFICATION_RESPONSE_DATE_KEY = "date";
+	public static final String GCM_NOTIFICATION_RESPONSE_TYPE_KEY = "type";
+	public static final String GCM_NOTIFICATION_RESPONSE_DATA_KEY = "data";
 	public static final Integer GCM_MAX_DAYS_BETWEEN_NOTIFICATIONS = 0;
 
 }

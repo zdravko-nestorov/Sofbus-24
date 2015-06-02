@@ -1,6 +1,8 @@
 package bg.znestorov.sofbus24.gcm;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -10,6 +12,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.json.JSONObject;
 
 import android.app.Activity;
 import bg.znestorov.sofbus24.utils.Constants;
@@ -69,20 +73,26 @@ public class GcmShareExternalServer {
 			httpConnection.setUseCaches(false);
 			httpConnection.setFixedLengthStreamingMode(bytes.length);
 			httpConnection.setRequestMethod("POST");
-			httpConnection.setRequestProperty("Content-Type",
-					"application/x-www-form-urlencoded;charset=UTF-8");
+			httpConnection.setRequestProperty("Accept", "application/json");
 			OutputStream out = httpConnection.getOutputStream();
 			out.write(bytes);
 			out.close();
 
+			// Check if the status of the HTTP request is successful
 			int status = httpConnection.getResponseCode();
 			if (status == 200) {
 				isSharedSuccessful = true;
+
+				// Check if the registration is successful
+				String httpResult = getHttpResult(httpConnection);
+				JSONObject httpResultJson = new JSONObject(httpResult);
+				isSharedSuccessful = httpResultJson
+						.getBoolean(Constants.GCM_EXTERNAL_SERVER_URL_RESPONSE_IS_SUCCESSFUL_KEY);
 			} else {
 				isSharedSuccessful = false;
 			}
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			isSharedSuccessful = false;
 		} finally {
 			if (httpConnection != null) {
@@ -149,6 +159,34 @@ public class GcmShareExternalServer {
 		}
 
 		return sha1Digest;
+	}
+
+	/**
+	 * Get the result of the HTTP POST request in string format
+	 * 
+	 * @param httpConnection
+	 *            the HTTP connection
+	 * @return the result of the HTTP connection
+	 */
+	private static String getHttpResult(HttpURLConnection httpConnection) {
+
+		StringBuilder httpResult = null;
+		BufferedReader bufferedReader = null;
+
+		try {
+			bufferedReader = new BufferedReader(new InputStreamReader(
+					httpConnection.getInputStream()));
+			httpResult = new StringBuilder();
+
+			String line = null;
+			while ((line = bufferedReader.readLine()) != null) {
+				httpResult.append(line + "\n");
+			}
+		} catch (IOException e) {
+			httpResult = new StringBuilder("");
+		}
+
+		return httpResult.toString();
 	}
 
 }

@@ -141,8 +141,8 @@ public class GcmPreferences {
 			// Check the elapsed days since the last received notification. If
 			// "GCM_MAX_DAYS_BETWEEN_NOTIFICATIONS" aren't passed - do not save
 			// anything
-			int daysDifference = Utils.getDateDifferenceInDays(
-					prefsNotificationDate, Utils.getCurrentDate());
+			int daysDifference = Math.abs(Utils.getDateDifferenceInDays(
+					prefsNotificationDate, Utils.getCurrentDate()));
 			if (daysDifference < Constants.GCM_MAX_DAYS_BETWEEN_NOTIFICATIONS) {
 				return;
 			}

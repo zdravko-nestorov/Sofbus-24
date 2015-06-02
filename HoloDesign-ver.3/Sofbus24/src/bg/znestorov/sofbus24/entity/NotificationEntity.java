@@ -27,14 +27,17 @@ public class NotificationEntity {
 	public NotificationEntity(Bundle extras) {
 
 		if (extras != null && !extras.isEmpty()) {
-			this.date = extras.getString(Constants.GCM_DATE_KEY);
+			this.date = extras
+					.getString(Constants.GCM_NOTIFICATION_RESPONSE_DATE_KEY);
 			try {
-				this.type = NotificationTypeEnum.valueOf(extras
-						.getString(Constants.GCM_TYPE_KEY));
+				this.type = NotificationTypeEnum
+						.valueOf(extras
+								.getString(Constants.GCM_NOTIFICATION_RESPONSE_TYPE_KEY));
 			} catch (Exception e) {
 				this.type = NotificationTypeEnum.NONE;
 			}
-			this.data = extras.getString(Constants.GCM_DATA_KEY);
+			this.data = extras
+					.getString(Constants.GCM_NOTIFICATION_RESPONSE_DATA_KEY);
 		}
 	}
 
