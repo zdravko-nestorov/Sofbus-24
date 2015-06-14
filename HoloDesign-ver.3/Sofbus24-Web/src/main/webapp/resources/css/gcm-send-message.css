@@ -1,0 +1,64 @@
+div#gcmdiv {
+	position: fixed;
+	padding: 0;
+	margin: 0;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background-color: #F3F5F7;
+}
+
+form {
+	margin-bottom: 10px;
+	text-align: center;
+	padding: 10px;
+	font-size: 25px;
+	font-weight: bold;
+}
+
+label {
+	margin-top: 5px;
+	width: 100px;
+	display: inline-block;
+}
+
+input, select {
+	background-color: #D7EBF9;
+	border: 2px solid #AED0EA;
+	margin-top: 10px;
+	padding: 10px;
+	cursor: pointer;
+	color: #2779AA;
+	font-weight: bold;
+	border-radius: 6px;
+	box-shadow: 0 0 10px #AACCE5 inset;
+	width: 276px;
+}
+
+input#reset {
+	margin-left: 107px;
+	margin-top: 15px;
+	margin-right: 3px;
+	padding: 10px;
+	width: 145px;
+	padding: 10px;
+}
+
+input#submit {
+	margin-top: 15px;
+	padding: 10px;
+	width: 145px;
+}
+
+select {
+	width: 300px;
+}
+
+#notif-msg-failed, #notif-msg-success {
+	color: darkred;
+	font-weight: bold;
+	margin-left: 90px;
+	font-size: 14px;
+}

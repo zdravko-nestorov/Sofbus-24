@@ -1,0 +1,55 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!-- Automatically register the HTTPMessageConverter that gives certain 
+		3-d party libraries in the classpath -->
+	<mvc:annotation-driven />
+
+	<!-- Scans the classpath for annotated components that will be auto-registered 
+		as Spring beans. For example "@Controller", "@Service" and so on. -->
+	<context:component-scan base-package="bg.znestorov.android" />
+
+	<!--Loading the resources into the project. For example the "images", "css", 
+		"images" and so on -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Loads the Spring MVC view resolver, which is providing JSP views -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- Resolve text messages from properties file, base on the selected locale 
+		(can't change the language - it is blocked by <mvc:annotation-driven/> -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="WEB-INF/messages/messages" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	<bean id="localeChangeInterceptor"
+		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="language" />
+	</bean>
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="defaultLocale" value="en" />
+	</bean>
+	<bean id="handlerMapping"
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="interceptors">
+			<list>
+				<ref bean="localeChangeInterceptor" />
+			</list>
+		</property>
+	</bean>
+
+</beans>

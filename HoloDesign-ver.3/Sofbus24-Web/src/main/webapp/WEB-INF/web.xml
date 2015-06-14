@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+
+	<!-- The Web application display name -->
+	<display-name>Sofbus 24 - Google Cloud Messaging (GCM)</display-name>
+
+	<!-- List with welcome pages for the web application -->
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<!-- Error page - in case there is a request to non-existing page on this 
+		address - "http://.../Sofbus24/non-existing page" -->
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/views/errors/error404.jsp</location>
+	</error-page>
+
+	<!-- Spring MVC -->
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/configuration/dispatcher-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<!-- Loads the spring configuration files -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/configuration/dispatcher-servlet.xml</param-value>
+	</context-param>
+
+	<!-- Create the ApplicationContext and tie it to the life cycle of the ServletContext -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- UTF Encoding -->
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>*.jsp</url-pattern>
+			<page-encoding>UTF-8</page-encoding>
+		</jsp-property-group>
+	</jsp-config>
+
+</web-app>
