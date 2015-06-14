@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,27 +23,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import bg.znestorov.android.jpa.Dao;
-import bg.znestorov.android.model.Notification;
-import bg.znestorov.android.model.NotificationWrapper;
-import bg.znestorov.android.model.RegistrationError;
-import bg.znestorov.android.model.RegistrationSuccess;
-import bg.znestorov.android.model.WebServiceResult;
+import bg.znestorov.android.entity.PhoneUser;
+import bg.znestorov.android.jpa.PhoneUserRegistry;
+import bg.znestorov.android.pojo.Notification;
+import bg.znestorov.android.pojo.NotificationStatus;
+import bg.znestorov.android.pojo.NotificationWrapper;
+import bg.znestorov.android.pojo.RegistrationServiceResult;
 import bg.znestorov.android.utils.Constants;
 import bg.znestorov.android.utils.Utils;
 
 import com.google.gson.Gson;
 
 @Controller
-@RequestMapping(value = "/Sofbus24/gcm")
-public class SofbusGcmController {
+@RequestMapping(value = "/gcm")
+public class GcmController {
+
+	@Autowired
+	private PhoneUserRegistry phoneUserRegistry;
 
 	private static final Logger log = Logger
-			.getLogger(SofbusGcmController.class.getName());
+			.getLogger(GcmController.class.getName());
 
 	@RequestMapping(value = "/register", headers = "Accept=application/json", method = {
 			RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody WebServiceResult registerGcm(
+	public @ResponseBody RegistrationServiceResult registerGcm(
 			HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(value = "sec", required = false, defaultValue = "") String sec,
@@ -66,21 +70,24 @@ public class SofbusGcmController {
 				+ deviceModel + deviceOsVersion
 				+ Constants.GCM_REGISTRATION_SECRET_VALUE);
 
-		WebServiceResult serviceResult;
+		RegistrationServiceResult serviceResult;
 		if (sec.equals(urlAddressSecretValue)) {
-			boolean isSuccessfullyAdded = Dao.INSTANCE.addRegistration(regId,
-					deviceModel, deviceOsVersion);
+			boolean isSuccessfullyAdded = phoneUserRegistry
+					.registerPhoneUser(new PhoneUser(regId, deviceModel,
+							deviceOsVersion));
 
 			if (isSuccessfullyAdded) {
-				serviceResult = new RegistrationSuccess(regId);
+				serviceResult = new RegistrationServiceResult("0",
+						Constants.GCM_REGISTRATION_SUCCESS, regId, deviceModel,
+						deviceOsVersion);
 			} else {
 				log.warning(Constants.GCM_REGISTRATION_DUPLICATE_ERROR);
-				serviceResult = new RegistrationError(
+				serviceResult = new RegistrationServiceResult("1",
 						Constants.GCM_REGISTRATION_DUPLICATE_ERROR);
 			}
 		} else {
 			log.warning(Constants.GCM_REGISTRATION_UNAUTHORIZED_ERROR);
-			serviceResult = new RegistrationError(
+			serviceResult = new RegistrationServiceResult("1",
 					Constants.GCM_REGISTRATION_UNAUTHORIZED_ERROR);
 		}
 
@@ -93,7 +100,7 @@ public class SofbusGcmController {
 		ModelAndView modelView = new ModelAndView("gcm-send-message");
 		modelView.addObject("notification", new Notification());
 		modelView.addObject("notificationTypes", getNotificationTypes());
-		modelView.addObject("sharedStatus", SharedStatus.INIT);
+		modelView.addObject("NotificationStatus", NotificationStatus.INIT);
 
 		return modelView;
 	}
@@ -123,7 +130,8 @@ public class SofbusGcmController {
 					Constants.GCM_NOTIFICATION_URL_AUTHORIZATION_VALUE);
 			httpConnection.connect();
 
-			List<String> registrationIds = Dao.INSTANCE.listRegistrationIds();
+			List<String> registrationIds = phoneUserRegistry
+					.findAllPhoneUserRegistrationIds();
 			OutputStream os = httpConnection.getOutputStream();
 			OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
 			osw.write(new Gson()
@@ -152,10 +160,9 @@ public class SofbusGcmController {
 		modelView.setViewName("gcm-send-message");
 		modelView.addObject("notification", new Notification());
 		modelView.addObject("notificationTypes", getNotificationTypes());
-		modelView
-				.addObject("sharedStatus",
-						isSharedSuccessful ? SharedStatus.SUCCESS
-								: SharedStatus.FAILED);
+		modelView.addObject("NotificationStatus",
+				isSharedSuccessful ? NotificationStatus.SUCCESS
+						: NotificationStatus.FAILED);
 
 		return modelView;
 	}
@@ -174,26 +181,6 @@ public class SofbusGcmController {
 		notificationTypes.add("INFO");
 
 		return notificationTypes;
-	}
-
-	/**
-	 * Initialize the status of the push notification
-	 */
-	private enum SharedStatus {
-		/**
-		 * Initial status (only the gcm/send page is opened)
-		 */
-		INIT,
-
-		/**
-		 * The notification is successfully sent
-		 */
-		SUCCESS,
-
-		/**
-		 * There is a problem with sending the notification
-		 */
-		FAILED;
 	}
 
 }
