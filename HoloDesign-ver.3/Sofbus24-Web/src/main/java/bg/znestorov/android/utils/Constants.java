@@ -2,6 +2,7 @@ package bg.znestorov.android.utils;
 
 public class Constants {
 
+	public static final String GCM_REGISTRATION_SUCCESS = "Success!";
 	public static final String GCM_REGISTRATION_UNAUTHORIZED_ERROR = "Unauthorized request could not be made!";
 	public static final String GCM_REGISTRATION_DUPLICATE_ERROR = "Duplicate registration id!";
 	public static final String GCM_REGISTRATION_SECRET_VALUE = "fa1c9f79de2cabc59d9bddb9f8d5794d8406702b";

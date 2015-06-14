@@ -6,7 +6,6 @@
 
 	<persistence-unit name="gae-sofbus">
 		<provider>org.datanucleus.api.jpa.PersistenceProviderImpl</provider>
-        <class>bg.znestorov.android.entity.Registration</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes> 
 		<properties>
 			<property name="datanucleus.NontransactionalRead" value="true" />
