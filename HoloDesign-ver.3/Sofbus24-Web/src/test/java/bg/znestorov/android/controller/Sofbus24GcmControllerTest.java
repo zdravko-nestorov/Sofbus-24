@@ -1,5 +1,5 @@
 package bg.znestorov.android.controller;
 
-public class TestSofbusGcmController {
+public class Sofbus24GcmControllerTest {
 
 }

@@ -38,7 +38,7 @@ import com.google.gson.Gson;
 public class SofbusGcmController {
 
 	private static final Logger log = Logger
-			.getLogger(TestSofbusGcmController.class.getName());
+			.getLogger(SofbusGcmController.class.getName());
 
 	@RequestMapping(value = "/register", headers = "Accept=application/json", method = {
 			RequestMethod.GET, RequestMethod.POST })
@@ -88,7 +88,7 @@ public class SofbusGcmController {
 	}
 
 	@RequestMapping(value = "/send", method = RequestMethod.GET)
-	public ModelAndView showGcmMessage() {
+	public ModelAndView sendGcmMessage() {
 
 		ModelAndView modelView = new ModelAndView("gcm-send-message");
 		modelView.addObject("notification", new Notification());
@@ -99,7 +99,7 @@ public class SofbusGcmController {
 	}
 
 	@RequestMapping(value = "/send", method = RequestMethod.POST)
-	public ModelAndView showGcmMessage(
+	public ModelAndView sendGcmMessage(
 			@ModelAttribute("notification") Notification notification,
 			ModelAndView modelView) {
 
