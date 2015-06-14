@@ -13,6 +13,7 @@
 	<properties>
 		<java-version>1.7</java-version>
 		<spring.version>4.1.6.RELEASE</spring.version>
+		<spring.security>3.1.0.RELEASE</spring.security>
 
 		<app.id>sofbus-24</app.id>
 		<app.version>1</app.version>
@@ -86,6 +87,7 @@
 				<artifactId>appengine-maven-plugin</artifactId>
 				<version>${appengine.version}</version>
 				<configuration>
+					<version>${app.version}</version>
 					<enableJarClasses>false</enableJarClasses>
 					<!-- Comment in the below snippet to bind to all IPs instead of just 
 						localhost -->
@@ -196,6 +198,23 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- Spring security dependencies -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring.security}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring.security}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring.security}</version>
 		</dependency>
 
 		<!-- Jackson dependencies -->
