@@ -1,10 +1,10 @@
 $(document).ready(function() { 
 	
-	var sharedStatus = '${sharedStatus}';
+	var notificationStatus = '${notificationStatus}';
 	var msgSuccess = document.getElementById('notif-msg-success'); 
 	var msgFailed = document.getElementById('notif-msg-failed');
 	
-	switch (sharedStatus) {
+	switch (notificationStatus) {
 	case 'INIT':
 		msgSuccess.setAttribute("style", "display:none");
 		msgFailed.setAttribute("style", "display:none");

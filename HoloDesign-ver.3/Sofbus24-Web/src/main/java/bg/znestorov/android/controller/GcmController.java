@@ -41,8 +41,8 @@ public class GcmController {
 	@Autowired
 	private PhoneUserRegistry phoneUserRegistry;
 
-	private static final Logger log = Logger
-			.getLogger(GcmController.class.getName());
+	private static final Logger log = Logger.getLogger(GcmController.class
+			.getName());
 
 	@RequestMapping(value = "/register", headers = "Accept=application/json", method = {
 			RequestMethod.GET, RequestMethod.POST })
@@ -100,7 +100,7 @@ public class GcmController {
 		ModelAndView modelView = new ModelAndView("gcm-send-message");
 		modelView.addObject("notification", new Notification());
 		modelView.addObject("notificationTypes", getNotificationTypes());
-		modelView.addObject("NotificationStatus", NotificationStatus.INIT);
+		modelView.addObject("notificationStatus", NotificationStatus.INIT);
 
 		return modelView;
 	}
@@ -160,7 +160,7 @@ public class GcmController {
 		modelView.setViewName("gcm-send-message");
 		modelView.addObject("notification", new Notification());
 		modelView.addObject("notificationTypes", getNotificationTypes());
-		modelView.addObject("NotificationStatus",
+		modelView.addObject("notificationStatus",
 				isSharedSuccessful ? NotificationStatus.SUCCESS
 						: NotificationStatus.FAILED);
 
