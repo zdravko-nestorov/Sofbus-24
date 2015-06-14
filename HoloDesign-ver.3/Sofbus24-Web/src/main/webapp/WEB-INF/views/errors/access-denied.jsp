@@ -8,12 +8,12 @@
 			<spring:message code="gcm-send-message.title" />
 		</title>
 		<style type="text/css">
-			<%@ include file="/resources/css/error404.css" %>
+			<%@ include file="/resources/css/access-denied.css" %>
 		</style>
 	</head>
 	
 	<body>
-		<img id="error404" src="<c:url value="/resources/images/error404.png" />" alt="" />
+		<img id="access-denied" src="<c:url value="/resources/images/access-denied.png" />" alt="" />
 	</body>
 	
 </html>
