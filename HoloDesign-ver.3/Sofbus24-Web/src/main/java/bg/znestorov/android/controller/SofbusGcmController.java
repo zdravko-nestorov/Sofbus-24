@@ -38,7 +38,7 @@ import com.google.gson.Gson;
 public class SofbusGcmController {
 
 	private static final Logger log = Logger
-			.getLogger(SofbusGcmController.class.getName());
+			.getLogger(TestSofbusGcmController.class.getName());
 
 	@RequestMapping(value = "/register", headers = "Accept=application/json", method = {
 			RequestMethod.GET, RequestMethod.POST })
