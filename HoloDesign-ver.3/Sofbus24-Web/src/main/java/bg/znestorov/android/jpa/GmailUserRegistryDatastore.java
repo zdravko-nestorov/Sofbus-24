@@ -70,11 +70,15 @@ public class GmailUserRegistryDatastore implements GmailUserRegistry {
 		user.setUnindexedProperty(GMAIL_USER_AUTHORITIES, binaryAuthorities);
 
 		try {
-			DatastoreService datastore = DatastoreServiceFactory
-					.getDatastoreService();
-			datastore.put(user);
+			if (findGmailUser(newUser.getGmailId()) == null) {
+				DatastoreService datastore = DatastoreServiceFactory
+						.getDatastoreService();
+				datastore.put(user);
 
-			return true;
+				return true;
+			} else {
+				return false;
+			}
 		} catch (Exception e) {
 			return false;
 		}

@@ -53,6 +53,7 @@ public class GcmController {
 			@RequestBody(required = false) String params) {
 
 		try {
+			params = params == null ? "" : params;
 			params = URLDecoder.decode(params, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// Should not go here (UTF-8 is supported encoding)
@@ -87,7 +88,7 @@ public class GcmController {
 			}
 		} else {
 			log.warning(Constants.GCM_REGISTRATION_UNAUTHORIZED_ERROR);
-			serviceResult = new RegistrationServiceResult("1",
+			serviceResult = new RegistrationServiceResult("2",
 					Constants.GCM_REGISTRATION_UNAUTHORIZED_ERROR);
 		}
 

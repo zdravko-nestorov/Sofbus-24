@@ -35,6 +35,8 @@ public class GaeAuthenticationFilter extends GenericFilterBean {
 	private AuthenticationDetailsSource аuthenticationDetailsSource = new WebAuthenticationDetailsSource();
 	private AuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
 
+	private static final String URL_ACCESS_DENIED = "/access-denied";
+
 	@SuppressWarnings("unchecked")
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
@@ -50,6 +52,9 @@ public class GaeAuthenticationFilter extends GenericFilterBean {
 			// User has returned after authenticating through GAE. Need to
 			// authenticate to Spring Security.
 			if (googleUser != null) {
+
+				// Packages the user up in a suitable authentication token
+				// object
 				PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(
 						googleUser, null);
 				token.setDetails(аuthenticationDetailsSource
@@ -62,9 +67,10 @@ public class GaeAuthenticationFilter extends GenericFilterBean {
 					SecurityContextHolder.getContext().setAuthentication(
 							authentication);
 
-					if (authentication.getAuthorities().contains(AppRole.USER)) {
+					// Check if the user is authorized to view the web pages
+					if (isUser(authentication)) {
 						((HttpServletResponse) response)
-								.sendRedirect("/access-denied");
+								.sendRedirect(URL_ACCESS_DENIED);
 						return;
 					}
 				} catch (AuthenticationException e) {
@@ -88,6 +94,18 @@ public class GaeAuthenticationFilter extends GenericFilterBean {
 
 	public void setFailureHandler(AuthenticationFailureHandler failureHandler) {
 		this.failureHandler = failureHandler;
+	}
+
+	/**
+	 * Check if the logged in user is with a USER role
+	 * 
+	 * @param authentication
+	 *            represents the token for an authentication request or for an
+	 *            authenticated principal
+	 * @return if the user is with a USER role
+	 */
+	private boolean isUser(Authentication authentication) {
+		return authentication.getAuthorities().contains(AppRole.USER);
 	}
 
 }

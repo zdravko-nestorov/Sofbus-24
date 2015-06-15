@@ -7,11 +7,17 @@
 	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 	<http use-expressions="true" entry-point-ref="gaeEntryPoint">
+		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/_ah/**" access="permitAll" />
-		<intercept-url pattern="/gcm/register*" access="permitAll" />
-		<intercept-url pattern="/access-denied" access="hasRole('USER')" />
+		<intercept-url pattern="/gcm/register**" access="permitAll" />
+		<intercept-url pattern="/resources/images/**" access="permitAll" />
+		<intercept-url pattern="/favicon.ico" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/access-denied" access="hasAnyRole('USER', 'ADMIN')" />
 		<intercept-url pattern="/**" access="hasRole('ADMIN')" />
+
 		<custom-filter position="PRE_AUTH_FILTER" ref="gaeAuthenticationFilter" />
+
+		<access-denied-handler error-page="/access-denied" />
 	</http>
 
 	<beans:bean id="gaeEntryPoint"

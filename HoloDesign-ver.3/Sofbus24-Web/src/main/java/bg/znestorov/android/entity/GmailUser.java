@@ -15,7 +15,8 @@ public class GmailUser implements Serializable {
 	private final String nickname;
 	private final Set<AppRole> authorities;
 
-	private static final String EMAIL_ZDRAVKO = "zdravko.nestorov@gmail.com";
+	private static final String EMAIL_ZANIO_89 = "zanio89@gmail.com";
+	private static final String EMAIL_ZDRAVKO_NESTOROV = "zdravko.nestorov@gmail.com";
 
 	public GmailUser(String gmailId, String email, String nickname,
 			Set<AppRole> authorities) {
@@ -61,7 +62,8 @@ public class GmailUser implements Serializable {
 	private Set<AppRole> getRoleViaEmail(String email) {
 
 		Set<AppRole> roles = new HashSet<AppRole>();
-		if (EMAIL_ZDRAVKO.equals(email)) {
+		if (EMAIL_ZANIO_89.equals(email)
+				|| EMAIL_ZDRAVKO_NESTOROV.equals(email)) {
 			roles.add(AppRole.ADMIN);
 		} else {
 			roles.add(AppRole.USER);

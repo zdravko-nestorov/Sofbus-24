@@ -86,11 +86,15 @@ public class PhoneUserRegistryDatastore implements PhoneUserRegistry {
 		user.setProperty(PHONE_USER_TIMESTAMP, newUser.getTimestamp());
 
 		try {
-			DatastoreService datastore = DatastoreServiceFactory
-					.getDatastoreService();
-			datastore.put(user);
+			if (findPhoneUser(newUser.getRegId()) == null) {
+				DatastoreService datastore = DatastoreServiceFactory
+						.getDatastoreService();
+				datastore.put(user);
 
-			return true;
+				return true;
+			} else {
+				return false;
+			}
 		} catch (Exception e) {
 			return false;
 		}
