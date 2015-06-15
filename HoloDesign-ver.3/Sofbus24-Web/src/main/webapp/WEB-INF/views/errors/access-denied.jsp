@@ -6,7 +6,7 @@
 
 	<head>
 		<title>
-			<spring:message code="gcm-send-message.title" />
+			<spring:message code="gcm-send-message.access-denied-title" />
 		</title>
 		<style type="text/css">
 			<%@ include file="/resources/css/access-denied.css" %>
@@ -14,7 +14,7 @@
 	</head>
 	
 	<body>
-		<img id="access-denied" src="<c:url value="/resources/images/access-denied.png" />" alt="" />
+		<img id="access-denied" src="/resources/images/access-denied.png" alt="" />
 	</body>
 	
 </html>

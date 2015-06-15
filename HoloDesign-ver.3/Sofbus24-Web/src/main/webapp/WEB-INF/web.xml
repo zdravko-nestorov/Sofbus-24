@@ -6,18 +6,6 @@
 	<!-- The Web application display name -->
 	<display-name>Sofbus 24 - Google Cloud Messaging (GCM)</display-name>
 
-	<!-- List with welcome pages for the web application -->
-	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
-	</welcome-file-list>
-
-	<!-- Error page - in case there is a request to non-existing page on this 
-		address - "http://.../Sofbus24/non-existing page" -->
-	<error-page>
-		<error-code>404</error-code>
-		<location>/WEB-INF/views/errors/error404.jsp</location>
-	</error-page>
-
 	<!-- Spring MVC -->
 	<servlet>
 		<servlet-name>dispatcher</servlet-name>
