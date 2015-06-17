@@ -16,7 +16,7 @@
 		<spring.security>3.1.0.RELEASE</spring.security>
 
 		<app.id>sofbus-24</app.id>
-		<app.version>1</app.version>
+		<app.version>5</app.version>
 		<appengine.version>1.9.21</appengine.version>
 		<gcloud.plugin.version>1.9.17a</gcloud.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -215,6 +215,18 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
 			<version>${spring.security}</version>
+		</dependency>
+
+		<!-- Spring Mail dependencies -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
 		</dependency>
 
 		<!-- Jackson dependencies -->

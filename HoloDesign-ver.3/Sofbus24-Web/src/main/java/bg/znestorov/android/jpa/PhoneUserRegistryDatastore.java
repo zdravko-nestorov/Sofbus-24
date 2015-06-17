@@ -18,7 +18,8 @@ public class PhoneUserRegistryDatastore implements PhoneUserRegistry {
 	private static final String PHONE_USER_ENTITY = "Smartphone Users";
 	private static final String PHONE_USER_DEVICE_MODEL = "Smartphone Model";
 	private static final String PHONE_USER_DEVICE_OS_VERSION = "Android Version";
-	private static final String PHONE_USER_TIMESTAMP = "Timestamp";
+	private static final String PHONE_USER_REGISTRATION_DATE = "Registration Date";
+	private static final String PHONE_USER_LAST_PUSH_NOTIFICATION_DATE = "Last Push Notification Date";
 
 	@Override
 	public PhoneUser findPhoneUser(String regId) {
@@ -29,12 +30,8 @@ public class PhoneUserRegistryDatastore implements PhoneUserRegistry {
 
 		try {
 			Entity user = datastore.get(key);
-			PhoneUser phoneUser = new PhoneUser(user.getKey().getName(),
-					(String) user.getProperty(PHONE_USER_DEVICE_MODEL),
-					(String) user.getProperty(PHONE_USER_DEVICE_OS_VERSION),
-					(String) user.getProperty(PHONE_USER_TIMESTAMP));
 
-			return phoneUser;
+			return getPhoneUserFromEntity(user);
 		} catch (EntityNotFoundException e) {
 			return null;
 		}
@@ -49,10 +46,7 @@ public class PhoneUserRegistryDatastore implements PhoneUserRegistry {
 
 		Query query = new Query(PHONE_USER_ENTITY);
 		for (Entity user : datastore.prepare(query).asIterable()) {
-			PhoneUser phoneUser = new PhoneUser(user.getKey().getName(),
-					(String) user.getProperty(PHONE_USER_DEVICE_MODEL),
-					(String) user.getProperty(PHONE_USER_DEVICE_OS_VERSION),
-					(String) user.getProperty(PHONE_USER_TIMESTAMP));
+			PhoneUser phoneUser = getPhoneUserFromEntity(user);
 			phoneUsers.add(phoneUser);
 		}
 
@@ -77,13 +71,23 @@ public class PhoneUserRegistryDatastore implements PhoneUserRegistry {
 	@Override
 	public Boolean registerPhoneUser(PhoneUser newUser) {
 
+		return updatePhoneUser(newUser, newUser.getLastPushNotificationDate());
+	}
+
+	@Override
+	public Boolean updatePhoneUser(PhoneUser newUser,
+			String lastPushNotificationDate) {
+
 		Key key = KeyFactory.createKey(PHONE_USER_ENTITY, newUser.getRegId());
 
 		Entity user = new Entity(key);
 		user.setProperty(PHONE_USER_DEVICE_MODEL, newUser.getDeviceModel());
 		user.setProperty(PHONE_USER_DEVICE_OS_VERSION,
 				newUser.getDeviceOsVersion());
-		user.setProperty(PHONE_USER_TIMESTAMP, newUser.getTimestamp());
+		user.setProperty(PHONE_USER_REGISTRATION_DATE,
+				newUser.getRegistrationDate());
+		user.setProperty(PHONE_USER_LAST_PUSH_NOTIFICATION_DATE,
+				newUser.getLastPushNotificationDate());
 
 		try {
 			if (findPhoneUser(newUser.getRegId()) == null) {
@@ -114,6 +118,25 @@ public class PhoneUserRegistryDatastore implements PhoneUserRegistry {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	/**
+	 * Get a phone user from a datastore entity object
+	 * 
+	 * @param user
+	 *            the datastore entity object
+	 * @return the PhoneUser object
+	 */
+	private PhoneUser getPhoneUserFromEntity(Entity user) {
+
+		PhoneUser phoneUser = new PhoneUser(user.getKey().getName(),
+				(String) user.getProperty(PHONE_USER_DEVICE_MODEL),
+				(String) user.getProperty(PHONE_USER_DEVICE_OS_VERSION),
+				(String) user.getProperty(PHONE_USER_REGISTRATION_DATE),
+				(String) user
+						.getProperty(PHONE_USER_LAST_PUSH_NOTIFICATION_DATE));
+
+		return phoneUser;
 	}
 
 }

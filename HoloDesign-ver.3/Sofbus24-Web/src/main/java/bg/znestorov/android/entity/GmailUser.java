@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import bg.znestorov.android.pojo.AppRole;
+import bg.znestorov.android.utils.Utils;
 
 public class GmailUser implements Serializable {
 
@@ -14,17 +15,22 @@ public class GmailUser implements Serializable {
 	private final String email;
 	private final String nickname;
 	private final Set<AppRole> authorities;
+	private final String registrationDate;
+	private final String lastOnlineDate;
 
 	private static final String EMAIL_ZANIO_89 = "zanio89@gmail.com";
 	private static final String EMAIL_ZDRAVKO_NESTOROV = "zdravko.nestorov@gmail.com";
 
 	public GmailUser(String gmailId, String email, String nickname,
-			Set<AppRole> authorities) {
+			Set<AppRole> authorities, String registrationDate,
+			String lastOnlineDate) {
 		super();
 		this.gmailId = gmailId;
 		this.email = email;
 		this.nickname = nickname;
 		this.authorities = authorities;
+		this.registrationDate = registrationDate;
+		this.lastOnlineDate = lastOnlineDate;
 	}
 
 	public GmailUser(String gmailId, String email, String nickname) {
@@ -33,6 +39,8 @@ public class GmailUser implements Serializable {
 		this.email = email;
 		this.nickname = nickname;
 		this.authorities = getRoleViaEmail(email);
+		this.registrationDate = Utils.getCurrentDateTime();
+		this.lastOnlineDate = Utils.getCurrentDateTime();
 	}
 
 	public String getGmailId() {
@@ -49,6 +57,14 @@ public class GmailUser implements Serializable {
 
 	public Set<AppRole> getAuthorities() {
 		return authorities;
+	}
+
+	public String getRegistrationDate() {
+		return registrationDate;
+	}
+
+	public String getLastOnlineDate() {
+		return lastOnlineDate;
 	}
 
 	/**
@@ -76,7 +92,8 @@ public class GmailUser implements Serializable {
 	public String toString() {
 		return "GmailUser [gmailId=" + gmailId + ", email=" + email
 				+ ", nickname=" + nickname + ", authorities=" + authorities
-				+ "]";
+				+ ", registrationDate=" + registrationDate
+				+ ", lastOnlineDate=" + lastOnlineDate + "]";
 	}
 
 }

@@ -1,64 +1,71 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-    <head>
-        <title>
-        	<spring:message code="gcm-send-message.title" />
-        </title>
+<head>
 
-		<script type="text/javascript">
-			<%@ include file="/resources/js/jquery-1.10.1.min.js" %>
-			<%@ include file="/resources/js/gcm-send-message.js" %>
-		</script>
+    <title>
+    	<spring:message code="gcm-send-message.title" />
+    </title>
+
+	<script type="text/javascript">
+		<%@ include file="/resources/js/jquery-1.10.1.min.js" %>
+		<%@ include file="/resources/js/gcm-send-message.js" %>
+	</script>
+
+	<style type="text/css">
+		<%@ include file="/resources/css/gcm-send-message.css" %>
+	</style>
 	
-		<style>
-			<%@ include file="/resources/css/gcm-send-message.css" %>
-		</style>
-    </head>
+</head>
     
-	<body>
-		<div id="gcmdiv">
-			<h1>
+<t:mainpage-template>
+
+	<jsp:body>
+		<div id="container">
+			<div id="top">
 				<spring:message code="gcm-send-message.title" />
-			</h1>
-			
-			<form:form method="POST" modelAttribute="notification" action="send">
-				<form:label path="date">
-					<spring:message code="gcm-send-message.label-date" />
-				</form:label>
-				<form:input path="date" value="${notification.date}" disabled="true" /><br/>
-				
-				<form:label path="type">
-					<spring:message code="gcm-send-message.label-type" />
-				</form:label>
-				<form:select path="type" id="gcmType">
-					<spring:message code="gcm-send-message.label-select-type" var="selectTtype"/>
-					<form:option value="NONE" label="${selectTtype}" />
-    				<form:options items="${notificationTypes}" />
-				</form:select><br/>
-				
-				<form:label path="data">
-					<spring:message code="gcm-send-message.label-data" />
-				</form:label>
-				<form:input path="data" id="gcmData" /><br/>
-				
-				<spring:message code="gcm-send-message.label-reset" var="resetGcm" />
-				<spring:message code="gcm-send-message.label-send" var="sendGcm" />
-				<input id="reset" type="reset" align="right" value="${resetGcm}" />
-				<input id="submit" type="submit" align="right" value="${sendGcm}" />
-			</form:form>
-			
-			<span id="notif-msg-success">
-				<spring:message code="gcm-send-message.notif-success"/>
-			</span>
-			<span id="notif-msg-failed">
-				<spring:message code="gcm-send-message.notif-failed"/>
-			</span>
+			</div>
+	
+			<div id="leftSide">
+				<fieldset>
+					<form id="gcm-send-message" class="form" method='POST' action="send" >
+						<label for="date">
+							<spring:message code="gcm-send-message.label-date" />
+						</label>
+						<div class="div_texbox">
+							<input path="date" value="${notification.date}" disabled="true" />
+						</div>
+	
+						<label for="type">
+							<spring:message code="gcm-send-message.label-type" />
+						</label>
+						<div class="div_texbox">
+							<select path="type" id="gcmType">
+								<spring:message code="gcm-send-message.label-select-type" var="selectType"/>
+								<option value="NONE" label="${selectType}" />
+				   				<options items="${notificationTypes}" />
+							</select>
+						</div>
+						
+						<label for="data">
+							<spring:message code="gcm-send-message.label-data" />
+						</label>
+						<div class="div_texbox">
+							<input path="data" id="gcmData" />
+						</div>
+	
+						<div class="button_div">
+							<input name="submit" type="submit" class="buttons" value="<spring:message code="gcm-send-message.label-reset"/>" />
+							<span></span>
+							<input name="reset" type="reset" class="buttons" value="<spring:message code="gcm-send-message.label-send"/>" />
+						</div>
+					</form>
+				</fieldset>
+			</div>
 		</div>
-    </body>
-    
-</html>
+	</jsp:body>
+	
+</t:mainpage-template>

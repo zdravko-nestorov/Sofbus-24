@@ -27,7 +27,8 @@
 		<param-value>
 			/WEB-INF/configuration/spring-servlet.xml,
 			/WEB-INF/configuration/spring-security.xml,
-			/WEB-INF/configuration/spring-datasource.xml
+			/WEB-INF/configuration/spring-datasource.xml,
+			/WEB-INF/configuration/spring-mail.xml
 		</param-value>
 	</context-param>
 

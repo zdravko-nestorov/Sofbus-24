@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +40,7 @@ import com.google.gson.Gson;
 public class GcmController {
 
 	@Autowired
-	private PhoneUserRegistry phoneUserRegistry;
+	private PhoneUserRegistry userRegistry;
 
 	private static final Logger log = Logger.getLogger(GcmController.class
 			.getName());
@@ -73,7 +74,7 @@ public class GcmController {
 
 		RegistrationServiceResult serviceResult;
 		if (sec.equals(urlAddressSecretValue)) {
-			boolean isSuccessfullyAdded = phoneUserRegistry
+			boolean isSuccessfullyAdded = userRegistry
 					.registerPhoneUser(new PhoneUser(regId, deviceModel,
 							deviceOsVersion));
 
@@ -131,7 +132,7 @@ public class GcmController {
 					Constants.GCM_NOTIFICATION_URL_AUTHORIZATION_VALUE);
 			httpConnection.connect();
 
-			List<String> registrationIds = phoneUserRegistry
+			List<String> registrationIds = userRegistry
 					.findAllPhoneUserRegistrationIds();
 			OutputStream os = httpConnection.getOutputStream();
 			OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
@@ -164,6 +165,15 @@ public class GcmController {
 		modelView.addObject("notificationStatus",
 				isSharedSuccessful ? NotificationStatus.SUCCESS
 						: NotificationStatus.FAILED);
+
+		return modelView;
+	}
+
+	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	public ModelAndView registerContact(ModelMap model) {
+
+		ModelAndView modelView = new ModelAndView("gcm-registered-users");
+		modelView.addObject("phoneUsersList", userRegistry.findAllPhoneUsers());
 
 		return modelView;
 	}

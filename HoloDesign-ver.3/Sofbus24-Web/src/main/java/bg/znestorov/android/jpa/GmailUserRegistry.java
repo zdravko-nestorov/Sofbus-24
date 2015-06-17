@@ -1,5 +1,7 @@
 package bg.znestorov.android.jpa;
 
+import java.util.List;
+
 import bg.znestorov.android.entity.GmailUser;
 
 public interface GmailUserRegistry {
@@ -14,6 +16,14 @@ public interface GmailUserRegistry {
 	GmailUser findGmailUser(String gmailId);
 
 	/**
+	 * Get all Gmail users that has tried to open the GCM system for
+	 * notifications
+	 * 
+	 * @return a list with all GmailUser with all their properties inside
+	 */
+	List<GmailUser> findAllGmailUsers();
+
+	/**
 	 * Register the Gmail user that has tried to open the GCM system for
 	 * notifications
 	 * 
@@ -22,6 +32,16 @@ public interface GmailUserRegistry {
 	 * @return if the user is successfully registered
 	 */
 	Boolean registerGmailUser(GmailUser newUser);
+
+	/**
+	 * Update the Gmail user that has tried to open the GCM system for
+	 * notifications with his/her last visit date
+	 * 
+	 * @param newUser
+	 *            a Gmail user with all properties inside
+	 * @return if the user is successfully registered
+	 */
+	Boolean updateGmailUser(GmailUser newUser, String lastOnlineDate);
 
 	/**
 	 * Remove a Gmail user that has tried to open the GCM system for

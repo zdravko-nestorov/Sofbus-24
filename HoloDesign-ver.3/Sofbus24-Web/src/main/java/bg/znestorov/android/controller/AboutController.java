@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class HomeConroller {
+public class AboutController {
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView accessDenied() {
+	@RequestMapping(value = "/about", method = RequestMethod.GET)
+	public ModelAndView registerContact() {
 
-		ModelAndView modelView = new ModelAndView("index");
+		ModelAndView modelView = new ModelAndView("about");
+
 		return modelView;
 	}
-
 }

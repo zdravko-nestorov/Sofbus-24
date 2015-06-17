@@ -10,15 +10,17 @@ public class PhoneUser implements Serializable {
 	private final String regId;
 	private final String deviceModel;
 	private final String deviceOsVersion;
-	private final String timestamp;
+	private final String registrationDate;
+	private final String lastPushNotificationDate;
 
 	public PhoneUser(String regId, String deviceModel, String deviceOsVersion,
-			String timestamp) {
+			String registrationDate, String lastPushNotificationDate) {
 		super();
 		this.regId = regId;
 		this.deviceModel = deviceModel;
 		this.deviceOsVersion = deviceOsVersion;
-		this.timestamp = timestamp;
+		this.registrationDate = registrationDate;
+		this.lastPushNotificationDate = lastPushNotificationDate;
 	}
 
 	public PhoneUser(String regId, String deviceModel, String deviceOsVersion) {
@@ -26,7 +28,8 @@ public class PhoneUser implements Serializable {
 		this.regId = regId;
 		this.deviceModel = deviceModel;
 		this.deviceOsVersion = deviceOsVersion;
-		this.timestamp = new Date().toString();
+		this.registrationDate = new Date().toString();
+		this.lastPushNotificationDate = null;
 	}
 
 	public String getRegId() {
@@ -41,15 +44,21 @@ public class PhoneUser implements Serializable {
 		return deviceOsVersion;
 	}
 
-	public String getTimestamp() {
-		return timestamp;
+	public String getRegistrationDate() {
+		return registrationDate;
+	}
+
+	public String getLastPushNotificationDate() {
+		return lastPushNotificationDate;
 	}
 
 	@Override
 	public String toString() {
 		return "PhoneUser [regId=" + regId + ", deviceModel=" + deviceModel
-				+ ", deviceOsVersion=" + deviceOsVersion + ", timestamp="
-				+ timestamp + "]";
+				+ ", deviceOsVersion=" + deviceOsVersion
+				+ ", registrationDate=" + registrationDate
+				+ ", lastPushNotificationDate=" + lastPushNotificationDate
+				+ "]";
 	}
 
 }

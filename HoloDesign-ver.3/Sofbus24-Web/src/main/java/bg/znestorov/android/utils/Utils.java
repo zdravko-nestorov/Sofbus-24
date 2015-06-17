@@ -129,4 +129,17 @@ public class Utils {
 		return dateFormat.format(date);
 	}
 
+	/**
+	 * Get the current date and time in format DD.MM.YYY HH:MM:SS
+	 * 
+	 * @return the current date and time in format DD.MM.YYY HH:MM:SS
+	 */
+	public static String getCurrentDateTime() {
+
+		DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+		Date date = new Date();
+
+		return dateFormat.format(date);
+	}
+
 }

@@ -44,6 +44,16 @@ public interface PhoneUserRegistry {
 	Boolean registerPhoneUser(PhoneUser newUser);
 
 	/**
+	 * Update the user that has already registered his/her device to receive GCM
+	 * notifications with his/her last push notification date
+	 * 
+	 * @param newUser
+	 *            a Gmail user with all properties inside
+	 * @return if the user is successfully registered
+	 */
+	Boolean updatePhoneUser(PhoneUser newUser, String lastPushNotificationDate);
+
+	/**
 	 * Remove a user from the datastore that has already registered his/her
 	 * device to receive GCM notifications via its registration ID
 	 * 
