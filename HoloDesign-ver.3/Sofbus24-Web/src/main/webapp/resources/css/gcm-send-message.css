@@ -1,22 +1,24 @@
-body {
-	background-color: #F7F7F7;
-}
-
 fieldset {
 	border: 1px dashed #CCCCCC;
+	margin: 25px auto 20px auto;
 	margin-bottom: 20px;
-	margin-top: 70px;
+	margin-top: 25px;
 	padding: 10px;
 	width: 710px;
+	height: 210px;
 }
 
-h1 {
-	color: #333333;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 175%;
-	font-weight: normal;
-	letter-spacing: -1px;
-	line-height: 1.1;
+#top {
+	margin: -2% auto 1.5%;
+	text-align: center;
+	font: 23px/25px "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 90%;
+}
+
+#content {
+	width: 100%;
+	max-width: 100%;
+	margin: 6% auto 0;
 }
 
 label {
@@ -25,111 +27,14 @@ label {
 	display: block;
 	float: left;
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 115%;
+	font-size: 130%;
 	font-weight: normal;
 	height: 32px;
-	letter-spacing: -1px;
-	line-height: 1.1;
 	margin-right: 2px;
 	margin-top: 3px;
 	padding-left: 6px;
 	padding-top: 11px;
-	width: 150px;
-}
-
-#confirmation {
-	color: #FF0000;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 70%;
-	margin-left: 170px;
-	margin-bottom: 5px;
-	margin-top: -12px;
-	font-weight: bold;
-}
-
-#ajax_loading {
-	background: #95C715;
-	background: -moz-linear-gradient(top, #95C715 0%, #7BA60D 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #95C715),
-		color-stop(100%, #7BA60D));
-	background: linear-gradient(top, #95C715 0%, #7BA60D 100%);
-	border: 1px solid #7BA60D;
-	color: #fff;
-	text-align: center;
-	padding: 5px 0 8px;
-	width: 8%;
-	top: 0px;
-	left: 44%;
-	-moz-border-radius: 0 0 5px 5px;
-	-webkit-border-bottom-right-radius: 5px;
-	-webkit-border-bottom-left-radius: 5px;
-	border-radius: 0 0 5px 5px;
-	z-index: 10000;
-	position: fixed;
-	-moz-box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2), inset 0px -1px 0px
-		rgba(255, 255, 255, 0.2);
-	-webkit-box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2), inset 0px -1px 0px
-		rgba(255, 255, 255, 0.2);
-	box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2), inset 0px -1px 0px
-		rgba(255, 255, 255, 0.2);
-}
-
-#login_details, #registration_details {
-	background: none repeat scroll 0 0 #666666;
-	border: 1px solid #333333;
-	color: #FFFFFF;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 90%;
-	font-weight: bold;
-	letter-spacing: -1px;
-	line-height: 1.1;
-	padding: 2px 6px;
-	cursor: pointer;
-}
-
-#login_details {
-	margin-right: 5px;
-}
-
-.form {
-	margin: 0;
-	padding: 0;
-}
-
-#container {
-	margin: auto;
-	padding: 10px;
-	width: 750px;
-}
-
-#top {
-	height: 25px;
-	width: 680px;
-}
-
-#leftSide {
-	float: left;
-	padding-top: 30px;
-	width: 530px;
-}
-
-#rightSide {
-	background-color: #FFFFFF;
-	border: 1px solid #CCCCCC;
-	color: #666666;
-	float: right;
-	font: 12px Arial;
-	margin-top: 40px;
-	padding: 5px;
-	width: 200px;
-}
-
-.clear {
-	clear: both;
-}
-
-.holder {
-	background-color: #FFFFFF;
+	width: 153px;
 }
 
 .div_texbox {
@@ -143,48 +48,17 @@ label {
 	width: 540px;
 }
 
-.textbox {
+select, .textbox {
 	background-color: #FFFFFF;
-	background-image: url(/Homer/resources/images/registration_icon.png);
 	background-position: left center;
 	background-repeat: no-repeat;
 	color: #999999;
 	font: 18px Arial;
-	padding: 3px 5px 3px 19px;
+	padding: 3px 6px 3px 6px;
 	width: 315px;
 }
 
-.textbox:focus, .textbox:hover {
-	background-color: #F0FFE6;
-}
-
-.username {
-	background-color: #FFFFFF;
-	background-image: url(/Homer/resources/images/username_icon.png);
-	background-position: left center;
-	background-repeat: no-repeat;
-	color: #999999;
-	font: 18px Arial;
-	padding: 3px 5px 3px 19px;
-	width: 315px;
-}
-
-.username:focus, .username:hover {
-	background-color: #F0FFE6;
-}
-
-.password {
-	background-color: #FFFFFF;
-	background-image: url(/Homer/resources/images/password_icon.png);
-	background-position: left center;
-	background-repeat: no-repeat;
-	color: #999999;
-	font: 18px Arial;
-	padding: 3px 5px 3px 19px;
-	width: 315px;
-}
-
-.password:focus, .password:hover {
+.textbox:focus, .textbox:hover, select:focus, select:hover {
 	background-color: #F0FFE6;
 }
 
@@ -195,7 +69,7 @@ label {
 	height: 35px;
 	margin-top: 3px;
 	margin-left: 165px;
-	padding: 5px 32px 3px;
+	padding: 6px 32px 3px;
 	text-align: center;
 	width: 255px;
 }
@@ -208,24 +82,13 @@ label {
 	color: #989070;
 	font-size: 12px;
 	font-weight: bold;
-	padding: 6px 14px;
+	padding: 6px 0px 5px;
 	text-decoration: none;
 	text-transform: uppercase;
-	margin-right: 19px;
-	margin-left: 19px;
+	margin-right: 7px;
+	margin-left: 7px;
 	cursor: pointer;
-}
-
-.gender, .span_gender {
-	color: #666666;
-	font: 18px Arial;
-	background-color: #E6E6E6;
-	margin-top: 9px;
-	margin-right: 3px;
-}
-
-.span_gender {
-	margin-right: 10px;
+	width: 105px;
 }
 
 .star {
@@ -237,6 +100,22 @@ label {
 	font-weight: bold;
 }
 
+#notif-msg-failed, #notif-msg-success {
+	color: darkred;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+#notif-msg-success {
+	color: darkgreen;
+}
+
+#notif-msg-status {
+	text-align: center;
+	padding-top: 25%;
+	padding-right: 5%;
+}
+
 .info, .error, .success {
 	color: #FFFFFF;
 	font-size: 0.8em;
@@ -246,11 +125,7 @@ label {
 	-webkit-border-radius: 4px;
 	padding: 3px 8px;
 	font: normal 11px helvetica, arial, sans-serif;
-	margin-left: 3px;
-}
-
-#span_gender {
-	margin-left: 153px;
+	margin-left: 6px;
 }
 
 .info {

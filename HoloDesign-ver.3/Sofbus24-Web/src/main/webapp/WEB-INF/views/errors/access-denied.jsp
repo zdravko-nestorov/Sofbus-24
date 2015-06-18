@@ -14,7 +14,11 @@
 	</head>
 	
 	<body>
-		<img id="access-denied" src="/resources/images/access-denied.png" alt="" />
+		<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+		
+		<a href="${contextPath}/log-out">
+			<img id="access-denied" src="/resources/images/access-denied.png" alt="" />
+			</a>
 	</body>
 	
 </html>

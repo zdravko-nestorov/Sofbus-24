@@ -19,7 +19,7 @@
 <t:mainpage-template>
 
 	<jsp:body>
-		<form action="send-email" method="post" id="contact-form">
+		<form action="contact-us" method="post" id="contact-form">
 			<fieldset>
 				<label for="name">
 					<spring:message code="contact-us.name"/>
@@ -43,7 +43,7 @@
 			</fieldset>
 			
 			<fieldset>
-				<input type="submit" value="<spring:message code="contact-us.button"/>" />
+				<input class="buttons" type="submit" value="<spring:message code="contact-us.button"/>" />
 			</fieldset>
 		</form>
 	</jsp:body>

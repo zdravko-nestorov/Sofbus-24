@@ -45,7 +45,7 @@
 						</a>
 					</li>
 				</ul>
-			</li>	
+			</li>
 			<li id="about">
 				<a href="${contextPath}/about">
 					<spring:message code="menu.about"/>
@@ -57,7 +57,7 @@
 				</a>
 			</li>
 			<li id="logout">
-				<a href="<c:url value="/j_spring_security_logout" />">
+				<a href="${contextPath}/log-out">
 					<spring:message code="menu.logout"/>
 				</a>
 			</li>

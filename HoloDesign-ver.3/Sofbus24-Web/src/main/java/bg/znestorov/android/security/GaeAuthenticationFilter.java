@@ -35,6 +35,7 @@ public class GaeAuthenticationFilter extends GenericFilterBean {
 	private AuthenticationDetailsSource аuthenticationDetailsSource = new WebAuthenticationDetailsSource();
 	private AuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
 
+	private static final String URL_LOGOUT = "logout";
 	private static final String URL_ACCESS_DENIED = "/access-denied";
 
 	@SuppressWarnings("unchecked")
@@ -43,9 +44,11 @@ public class GaeAuthenticationFilter extends GenericFilterBean {
 
 		Authentication authentication = SecurityContextHolder.getContext()
 				.getAuthentication();
+		boolean isLogout = ((HttpServletRequest) request).getRequestURI()
+				.contains(URL_LOGOUT);
 
 		// User isn't authenticated. Check if there is a Google Accounts user
-		if (authentication == null) {
+		if (authentication == null && !isLogout) {
 			User googleUser = UserServiceFactory.getUserService()
 					.getCurrentUser();
 

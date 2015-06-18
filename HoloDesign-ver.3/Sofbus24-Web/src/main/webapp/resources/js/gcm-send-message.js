@@ -1,24 +1,6 @@
-$(document).ready(function() { 
-	
-	var notificationStatus = '${notificationStatus}';
-	var msgSuccess = document.getElementById('notif-msg-success'); 
-	var msgFailed = document.getElementById('notif-msg-failed');
-	
-	switch (notificationStatus) {
-	case 'INIT':
-		msgSuccess.setAttribute("style", "display:none");
-		msgFailed.setAttribute("style", "display:none");
-		break;
-	case 'SUCCESS':
-		msgSuccess.removeAttribute("style");
-		msgFailed.setAttribute("style", "display:none");
-		break;
-	case 'FAILED':
-		msgSuccess.setAttribute("style", "display:none");
-		msgFailed.removeAttribute("style");
-		break;
-	}
-	
+$(document).ready(function() {
+
+	// On change the type of the push notification
 	$("#gcmType").change(function() {
 
 		var gcmType = document.getElementById("gcmType").value;
@@ -43,4 +25,30 @@ $(document).ready(function() {
 
 		document.getElementById("gcmData").value = gcmData;
 	})
+	
+	// On click the send button (show the appropriate notification)
+	var notificationStatus = '${notificationStatus}';
+	var msgSuccess = document.getElementById('notif-msg-success'); 
+	var msgFailed = document.getElementById('notif-msg-failed');
+	
+	switch (notificationStatus) {
+	case 'INIT':
+		msgSuccess.setAttribute("style", "display:none");
+		msgFailed.setAttribute("style", "display:none");
+		break;
+	case 'SUCCESS':
+		msgSuccess.removeAttribute("style");
+		msgFailed.setAttribute("style", "display:none");
+		break;
+	case 'FAILED':
+		msgSuccess.setAttribute("style", "display:none");
+		msgFailed.removeAttribute("style");
+		break;
+	}
+	
+	$("#reset").click(function() {
+		msgSuccess.setAttribute("style", "display:none");
+		msgFailed.setAttribute("style", "display:none");
+	});
+
 })

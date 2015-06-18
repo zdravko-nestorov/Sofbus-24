@@ -2,6 +2,8 @@ package bg.znestorov.android.utils;
 
 public class Constants {
 
+	public static final String GCM_IS_ADMIN = "isAdminUser";
+
 	public static final String GCM_REGISTRATION_SUCCESS = "Success!";
 	public static final String GCM_REGISTRATION_UNAUTHORIZED_ERROR = "Unauthorized request could not be made!";
 	public static final String GCM_REGISTRATION_DUPLICATE_ERROR = "Duplicate registration id!";

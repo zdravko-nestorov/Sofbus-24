@@ -2,9 +2,9 @@ textarea {
 	overflow: auto;
 	resize: none;
 	font-size: 14px;
-	width: 99%;
+	width: 97.5%;
 	height: 300px;
-	margin: 0.5%;
+	margin: 1% 1% 2.3% 1%;
 }
 
 #about-content {

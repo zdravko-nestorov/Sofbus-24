@@ -35,12 +35,14 @@ public class ContactUsController {
 		return modelView;
 	}
 
-	@RequestMapping(value = "/send-email", method = RequestMethod.POST)
+	@RequestMapping(value = "/contact-us", method = RequestMethod.POST)
 	public ModelAndView sendMail(
 			@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "email", required = true) String email,
 			@RequestParam(value = "subject", required = true) String subject,
 			@RequestParam(value = "msg", required = true) String msg) {
+
+		GmailUser user = SecurityUtils.getCurrentUser(userRegistry);
 
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom(email);
@@ -50,6 +52,7 @@ public class ContactUsController {
 		mailSender.send(message);
 
 		ModelAndView modelView = new ModelAndView("contact-us");
+		modelView.addObject("user", user);
 
 		return modelView;
 	}

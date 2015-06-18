@@ -11,13 +11,14 @@
 		<intercept-url pattern="/_ah/**" access="permitAll" />
 		<intercept-url pattern="/gcm/register**" access="permitAll" />
 		<intercept-url pattern="/resources/images/**" access="permitAll" />
+		<intercept-url pattern="/log-out**" access="permitAll" />
+		<intercept-url pattern="/access-denied" access="permitAll" />
 		<intercept-url pattern="/favicon.ico" access="hasRole('ROLE_ANONYMOUS')" />
-		<intercept-url pattern="/access-denied" access="hasAnyRole('USER', 'ADMIN')" />
 		<intercept-url pattern="/**" access="hasRole('ADMIN')" />
 
 		<custom-filter position="PRE_AUTH_FILTER" ref="gaeAuthenticationFilter" />
-
 		<access-denied-handler error-page="/access-denied" />
+		<logout logout-success-url="/log-out" />
 	</http>
 
 	<beans:bean id="gaeEntryPoint"
