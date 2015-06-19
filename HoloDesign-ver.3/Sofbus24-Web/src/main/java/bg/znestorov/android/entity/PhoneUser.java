@@ -1,7 +1,8 @@
 package bg.znestorov.android.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+
+import bg.znestorov.android.utils.Utils;
 
 public class PhoneUser implements Serializable {
 
@@ -28,8 +29,8 @@ public class PhoneUser implements Serializable {
 		this.regId = regId;
 		this.deviceModel = deviceModel;
 		this.deviceOsVersion = deviceOsVersion;
-		this.registrationDate = new Date().toString();
-		this.lastPushNotificationDate = null;
+		this.registrationDate = Utils.getCurrentDateTime();
+		this.lastPushNotificationDate = "---";
 	}
 
 	public String getRegId() {

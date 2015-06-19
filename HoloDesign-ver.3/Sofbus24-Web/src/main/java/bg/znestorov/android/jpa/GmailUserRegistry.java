@@ -41,6 +41,18 @@ public interface GmailUserRegistry {
 	 *            a Gmail user with all properties inside
 	 * @return if the user is successfully registered
 	 */
+	Boolean updateGmailUser(GmailUser newUser);
+
+	/**
+	 * Update the Gmail user that has tried to open the GCM system for
+	 * notifications with his/her last visit date
+	 * 
+	 * @param newUser
+	 *            a Gmail user with all properties inside
+	 * @param lastOnlineDate
+	 *            the last online date
+	 * @return if the user is successfully registered
+	 */
 	Boolean updateGmailUser(GmailUser newUser, String lastOnlineDate);
 
 	/**

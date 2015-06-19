@@ -29,6 +29,8 @@ public class GoogleAccountsAuthenticationProvider implements
 			user = new GmailUser(googleUser.getUserId(), googleUser.getEmail(),
 					googleUser.getNickname());
 			userRegistry.registerGmailUser(user);
+		} else {
+			userRegistry.updateGmailUser(user);
 		}
 
 		return new GaeUserAuthentication(user, authentication.getDetails());

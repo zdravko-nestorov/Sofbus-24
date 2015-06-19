@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import bg.znestorov.android.entity.GmailUser;
 import bg.znestorov.android.pojo.AppRole;
+import bg.znestorov.android.utils.Utils;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -18,6 +19,7 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 
 public class GmailUserRegistryDatastore implements GmailUserRegistry {
 
@@ -51,7 +53,8 @@ public class GmailUserRegistryDatastore implements GmailUserRegistry {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 
-		Query query = new Query(GMAIL_USER_ENTITY);
+		Query query = new Query(GMAIL_USER_ENTITY).addSort(
+				GMAIL_USER_REGISTRATION_DATE, SortDirection.ASCENDING);
 		for (Entity user : datastore.prepare(query).asIterable()) {
 			gmailUsers.add(getGmailUserFromEntity(user));
 		}
@@ -66,6 +69,12 @@ public class GmailUserRegistryDatastore implements GmailUserRegistry {
 	}
 
 	@Override
+	public Boolean updateGmailUser(GmailUser newUser) {
+
+		return updateGmailUser(newUser, Utils.getCurrentDateTime());
+	}
+
+	@Override
 	public Boolean updateGmailUser(GmailUser newUser, String lastOnlineDate) {
 
 		Key key = KeyFactory.createKey(GMAIL_USER_ENTITY, newUser.getGmailId());
@@ -75,8 +84,7 @@ public class GmailUserRegistryDatastore implements GmailUserRegistry {
 		user.setProperty(GMAIL_USER_EMAIL, newUser.getEmail());
 		user.setProperty(GMAIL_USER_REGISTRATION_DATE,
 				newUser.getRegistrationDate());
-		user.setProperty(GMAIL_USER_LAST_ONLINE_DATE,
-				newUser.getLastOnlineDate());
+		user.setProperty(GMAIL_USER_LAST_ONLINE_DATE, lastOnlineDate);
 
 		Collection<? extends GrantedAuthority> roles = newUser.getAuthorities();
 		long binaryAuthorities = 0;
@@ -87,15 +95,11 @@ public class GmailUserRegistryDatastore implements GmailUserRegistry {
 		user.setUnindexedProperty(GMAIL_USER_AUTHORITIES, binaryAuthorities);
 
 		try {
-			if (findGmailUser(newUser.getGmailId()) == null) {
-				DatastoreService datastore = DatastoreServiceFactory
-						.getDatastoreService();
-				datastore.put(user);
+			DatastoreService datastore = DatastoreServiceFactory
+					.getDatastoreService();
+			datastore.put(user);
 
-				return true;
-			} else {
-				return false;
-			}
+			return true;
 		} catch (Exception e) {
 			return false;
 		}

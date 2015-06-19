@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bg.znestorov.android.entity.PhoneUser;
+import bg.znestorov.android.utils.Utils;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 
 public class PhoneUserRegistryDatastore implements PhoneUserRegistry {
 
@@ -38,13 +41,31 @@ public class PhoneUserRegistryDatastore implements PhoneUserRegistry {
 	}
 
 	@Override
+	public PhoneUser findFirstPhoneUser() {
+
+		PhoneUser phoneUser = null;
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+
+		Query query = new Query(PHONE_USER_ENTITY).addSort(
+				PHONE_USER_REGISTRATION_DATE, SortDirection.ASCENDING);
+		for (Entity user : datastore.prepare(query).asIterable(
+				FetchOptions.Builder.withLimit(1))) {
+			phoneUser = getPhoneUserFromEntity(user);
+		}
+
+		return phoneUser;
+	}
+
+	@Override
 	public List<PhoneUser> findAllPhoneUsers() {
 
 		List<PhoneUser> phoneUsers = new ArrayList<PhoneUser>();
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 
-		Query query = new Query(PHONE_USER_ENTITY);
+		Query query = new Query(PHONE_USER_ENTITY).addSort(
+				PHONE_USER_REGISTRATION_DATE, SortDirection.ASCENDING);
 		for (Entity user : datastore.prepare(query).asIterable()) {
 			PhoneUser phoneUser = getPhoneUserFromEntity(user);
 			phoneUsers.add(phoneUser);
@@ -57,12 +78,13 @@ public class PhoneUserRegistryDatastore implements PhoneUserRegistry {
 	public List<String> findAllPhoneUserRegistrationIds() {
 
 		List<String> registrationIds = new ArrayList<String>();
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
 
-		List<PhoneUser> phoneUsers = findAllPhoneUsers();
-		if (phoneUsers.size() > 0) {
-			for (PhoneUser phoneUser : phoneUsers) {
-				registrationIds.add(phoneUser.getRegId());
-			}
+		Query query = new Query(PHONE_USER_ENTITY).setKeysOnly().addSort(
+				PHONE_USER_REGISTRATION_DATE, SortDirection.ASCENDING);
+		for (Entity user : datastore.prepare(query).asIterable()) {
+			registrationIds.add(user.getKey().getName());
 		}
 
 		return registrationIds;
@@ -72,6 +94,12 @@ public class PhoneUserRegistryDatastore implements PhoneUserRegistry {
 	public Boolean registerPhoneUser(PhoneUser newUser) {
 
 		return updatePhoneUser(newUser, newUser.getLastPushNotificationDate());
+	}
+
+	@Override
+	public Boolean updatePhoneUser(PhoneUser newUser) {
+
+		return updatePhoneUser(newUser, Utils.getCurrentDateTime());
 	}
 
 	@Override
@@ -87,18 +115,14 @@ public class PhoneUserRegistryDatastore implements PhoneUserRegistry {
 		user.setProperty(PHONE_USER_REGISTRATION_DATE,
 				newUser.getRegistrationDate());
 		user.setProperty(PHONE_USER_LAST_PUSH_NOTIFICATION_DATE,
-				newUser.getLastPushNotificationDate());
+				lastPushNotificationDate);
 
 		try {
-			if (findPhoneUser(newUser.getRegId()) == null) {
-				DatastoreService datastore = DatastoreServiceFactory
-						.getDatastoreService();
-				datastore.put(user);
+			DatastoreService datastore = DatastoreServiceFactory
+					.getDatastoreService();
+			datastore.put(user);
 
-				return true;
-			} else {
-				return false;
-			}
+			return true;
 		} catch (Exception e) {
 			return false;
 		}

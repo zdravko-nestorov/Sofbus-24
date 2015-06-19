@@ -18,6 +18,14 @@ public interface PhoneUserRegistry {
 	PhoneUser findPhoneUser(String regId);
 
 	/**
+	 * Finds the first phone user that has registered his/her device to receive
+	 * GCM notifications
+	 * 
+	 * @return the first registered PhoneUser with all properties inside
+	 */
+	PhoneUser findFirstPhoneUser();
+
+	/**
 	 * Get all users that has registered their devices to receive GCM
 	 * notifications
 	 * 
@@ -49,6 +57,18 @@ public interface PhoneUserRegistry {
 	 * 
 	 * @param newUser
 	 *            a Gmail user with all properties inside
+	 * @return if the user is successfully registered
+	 */
+	Boolean updatePhoneUser(PhoneUser newUser);
+
+	/**
+	 * Update the user that has already registered his/her device to receive GCM
+	 * notifications with his/her last push notification date
+	 * 
+	 * @param newUser
+	 *            a Gmail user with all properties inside
+	 * @param lastPushNotificationDate
+	 *            the date of last sent push notification
 	 * @return if the user is successfully registered
 	 */
 	Boolean updatePhoneUser(PhoneUser newUser, String lastPushNotificationDate);

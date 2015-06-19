@@ -33,7 +33,7 @@ import bg.znestorov.android.pojo.RegistrationServiceResult;
 import bg.znestorov.android.utils.Constants;
 import bg.znestorov.android.utils.Utils;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @Controller
 @RequestMapping(value = "/gcm")
@@ -114,6 +114,7 @@ public class GcmController {
 
 		Boolean isSharedSuccessful;
 		HttpURLConnection httpConnection = null;
+		String notificationJson = null;
 
 		try {
 			URL serverUrl = new URL(Constants.GCM_NOTIFICATION_URL);
@@ -134,12 +135,15 @@ public class GcmController {
 
 			List<String> registrationIds = userRegistry
 					.findAllPhoneUserRegistrationIds();
-			OutputStream os = httpConnection.getOutputStream();
-			OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
-			osw.write(new Gson()
+			notificationJson = new GsonBuilder()
+					.setPrettyPrinting()
+					.create()
 					.toJson(new NotificationWrapper(notification,
 							registrationIds.toArray(new String[registrationIds
-									.size()]))));
+									.size()])));
+			OutputStream os = httpConnection.getOutputStream();
+			OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+			osw.write(notificationJson);
 			osw.flush();
 			osw.close();
 
@@ -159,8 +163,16 @@ public class GcmController {
 			}
 		}
 
+		// Check if the datastore should be updated
+		if (isSharedSuccessful) {
+			PhoneUser firstPhoneUser = userRegistry.findFirstPhoneUser();
+			userRegistry.updatePhoneUser(firstPhoneUser);
+		}
+
 		modelView.setViewName("gcm-send-message");
 		modelView.addObject("notification", new Notification());
+		modelView.addObject("notificationJson",
+				notificationJson == null ? "---" : notificationJson);
 		modelView.addObject("notificationTypes", getNotificationTypes());
 		modelView.addObject("notificationStatus",
 				isSharedSuccessful ? NotificationStatus.SUCCESS

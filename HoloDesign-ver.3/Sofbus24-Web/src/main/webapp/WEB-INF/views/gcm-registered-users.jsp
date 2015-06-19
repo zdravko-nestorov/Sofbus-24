@@ -1,5 +1,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -60,7 +61,7 @@
 		    <c:if test="${not empty phoneUsersList}">
 			    <c:forEach items="${phoneUsersList}" var="phoneUser">
 				    <tr>
-				    	<td>${phoneUser.regId}</td>
+				    	<td title="${phoneUser.regId}">${fn:substring(phoneUser.regId, 0, 50)}...</td>
 				    	<td>${phoneUser.deviceModel}</td>
 				    	<td>${phoneUser.deviceOsVersion}</td>
 				    	<td>${phoneUser.registrationDate}</td>

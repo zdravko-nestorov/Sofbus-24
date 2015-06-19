@@ -21,13 +21,18 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.web.filter.GenericFilterBean;
 
+import bg.znestorov.android.jpa.GmailUserRegistry;
 import bg.znestorov.android.pojo.AppRole;
+import bg.znestorov.android.utils.SecurityUtils;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 
 @SuppressWarnings("rawtypes")
 public class GaeAuthenticationFilter extends GenericFilterBean {
+
+	@Autowired
+	private GmailUserRegistry userRegistry;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -85,6 +90,9 @@ public class GaeAuthenticationFilter extends GenericFilterBean {
 					return;
 				}
 			}
+		} else if (authentication != null) {
+			userRegistry.updateGmailUser(SecurityUtils
+					.getCurrentUser(userRegistry));
 		}
 
 		chain.doFilter(request, response);
