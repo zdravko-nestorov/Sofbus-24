@@ -37,10 +37,8 @@
 					<span class="star"> *</span>
 				</form:label>
 				<div class="div_texbox">
-					<form:input class="textbox" path="date" value="${notification.date}" disabled="true" />
-					<span class="info">
-						<spring:message code="gcm-send-message.date-info" />
-					</span>
+					<form:input id="gcmDate" class="textbox" path="date" value="${notification.date}" disabled="true" />
+					<span id="span_gcmDate"></span>
 				</div>
 
 				<form:label path="type">
@@ -53,9 +51,7 @@
 						<form:option value="NONE" label="${selectType}" />
 		   				<form:options items="${notificationTypes}" />
 					</form:select>
-					<span class="info">
-						<spring:message code="gcm-send-message.type-info" />
-					</span>
+					<span id="span_gcmType"></span>
 				</div>
 				
 				<form:label path="data">
@@ -64,9 +60,7 @@
 				</form:label>
 				<div class="div_texbox">
 					<form:input id="gcmData" class="textbox" path="data" />
-					<span class="info">
-						<spring:message code="gcm-send-message.data-info" />
-					</span>
+					<span id="span_gcmData"></span>
 				</div>
 
 				<div class="button_div">

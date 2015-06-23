@@ -14,6 +14,11 @@
 		<%@ include file="/resources/css/contact-us.css" %>
 	</style>
 
+	<script type="text/javascript">
+		<%@ include file="/resources/js/jquery-1.10.1.min.js" %>
+		<%@ include file="/resources/js/contact-us.js" %>
+	</script>
+
 </head>
 
 <t:mainpage-template>
@@ -27,10 +32,10 @@
 				</label>
 		    	<label for="email">
 		    		<spring:message code="contact-us.email"/>
-		    		<input type="text" name="email" id="email" value="${user.email}" />
+		    		<input type="text" name="email" id="email" value="${user.email}" disabled="true" />
 		    	</label>
 		    	<label for="subject">
-		    		<spring:message code="contact-us.subjct"/> 
+		    		<spring:message code="contact-us.subjct"/>
 		    		<input type="text" name="subject" id="subject" />
 		    	</label>    
 			</fieldset>
@@ -43,7 +48,7 @@
 			</fieldset>
 			
 			<fieldset>
-				<input class="buttons" type="submit" value="<spring:message code="contact-us.button"/>" />
+				<input id="submit" class="buttons" type="submit" value="<spring:message code="contact-us.button"/>" />
 			</fieldset>
 		</form>
 	</jsp:body>

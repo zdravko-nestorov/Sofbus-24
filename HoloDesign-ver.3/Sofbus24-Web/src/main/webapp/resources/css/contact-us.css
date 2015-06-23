@@ -61,6 +61,15 @@
 	resize: none;
 }
 
+.star {
+	background-color: #CCCCCC;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 115%;
+	font-weight: normal;
+	color: #AB1F39;
+	font-weight: bold;
+}
+
 .buttons {
 	background: none repeat scroll 0 0 #E3E3DB;
 	border-color: #FFFFFF #D8D8D0 #D8D8D0 #FFFFFF;

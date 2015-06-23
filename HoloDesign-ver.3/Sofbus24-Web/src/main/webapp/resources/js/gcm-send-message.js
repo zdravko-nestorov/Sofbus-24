@@ -47,8 +47,111 @@ $(document).ready(function() {
 	}
 	
 	$("#reset").click(function() {
+		setDefaultState();
 		msgSuccess.setAttribute("style", "display:none");
 		msgFailed.setAttribute("style", "display:none");
 	});
+	
+	// Validations on over the send button
+	var gcmDateInfo = "<spring:message code='gcm-send-message.date-info' javaScriptEscape='true' />";
+	var gcmDateError = "<spring:message code='gcm-send-message.date-error' javaScriptEscape='true' />";
+	var gcmTypeInfo = "<spring:message code='gcm-send-message.type-info' javaScriptEscape='true' />";
+	var gcmTypeError = "<spring:message code='gcm-send-message.type-error' javaScriptEscape='true' />";
+	var gcmDataInfo = "<spring:message code='gcm-send-message.data-info' javaScriptEscape='true' />";
+	var gcmDataError = "<spring:message code='gcm-send-message.data-error' javaScriptEscape='true' />";
+	var gcmSuccess = "<spring:message code='gcm-send-message.success' javaScriptEscape='true' />";
+	
+	$("#submit").hover(function() {
+		validate();
+	}, function() {});
+	
+	// Set the form to the default state
+	setDefaultState();
+	
+	// Actions over the input and hint fields
+	function cssActions(inputId, hintText, returnState) {
+		var hintId = "span_" + inputId;
+		document.getElementById(hintId).innerHTML = hintText;
+		
+		$("#" + inputId).css("background-color", "");
+		$("#" + hintId).show().removeClass("info").removeClass("error").removeClass("success");
+		
+		switch (returnState) {
+		case 0:
+			$("#" + hintId).addClass("info");
+			break;
+		case 1: 
+			$("#" + inputId).css("background-color", "#F0FFE6");
+			$("#" + hintId).addClass("success");
+			break;
+		case 2:
+			$("#" + inputId).css("background-color", "#F3DDDD");
+			$("#" + hintId).addClass("error");
+			break;
+		}
+	}
+	
+	// Validation functions
+	function checkIfEmpty(input) {
+		if (input == null || input.trim().length == 0) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	function checkIfTypeValid(input) {
+		if (input == "NONE") {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	// Validate all fields one by one
+	function validate() {
+		var date = document.getElementById("gcmDate").value;
+		var type = document.getElementById("gcmType").value;
+		var data = document.getElementById("gcmData").value;
+		
+		var dateCheck = checkIfEmpty(date);
+		if (dateCheck) {
+			cssActions("gcmDate", gcmSuccess, 1);	
+		} else {
+			cssActions("gcmDate", gcmDateError, 2);
+		}
+		
+		var typeCheck = checkIfTypeValid(type);
+		if (typeCheck) {
+			cssActions("gcmType", gcmSuccess, 1);
+		} else {
+			cssActions("gcmType", gcmTypeError, 2);			
+		}
+		
+		var dataCheck = checkIfEmpty(data);
+		if (dataCheck) {
+			cssActions("gcmData", gcmSuccess, 1);			
+		} else {
+			cssActions("gcmData", gcmDataError, 2);
+		}
+		
+		if (dateCheck && typeCheck && dataCheck) {
+			$("#submit").css("cursor", "pointer");
+			$("#submit").unbind("click");
+			$("#gcm-send-message").unbind("submit");
+		} else {
+			$("#submit").css("cursor", "not-allowed");
+			$("#submit").click(function(event) {
+			    event.preventDefault();
+			});
+		}
+	}
+	
+	// Set the form in default state
+	function setDefaultState() {
+		cssActions("gcmDate", gcmDateInfo, 0);
+		cssActions("gcmType", gcmTypeInfo, 0);
+		cssActions("gcmData", gcmDataInfo, 0);
+	}
 
 })

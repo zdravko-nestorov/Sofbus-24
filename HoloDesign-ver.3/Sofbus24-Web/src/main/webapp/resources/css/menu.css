@@ -10,25 +10,33 @@ a {
 	color: #333;
 }
 
-#nav {
-	margin: 0;
-	padding: 7px 6px 0;
+#menu-outer {
 	background: #7d7d7d url(/resources/images/gradient.png) repeat-x 0
 		-110px;
-	line-height: 100%;
 	border-radius: 2em;
 	-webkit-border-radius: 2em;
 	-moz-border-radius: 2em;
 	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
 	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
-	width: 67%;
-	padding-left: 33%;
+	height: 51px;
+}
+
+.table {
+	display: table;
+	margin: 0 auto;
+}
+
+#nav {
+	margin-top: 7px;
+	list-style: none;
+	padding-left: 0px;
+	min-width: 568px;
 }
 
 #nav li {
 	*display: inline; /*IE7*/
 	*zoom: 1; /*IE7*/
-	margin: 0 5px;
+	margin: 0 6px;
 	padding: 0 0 8px;
 	float: left;
 	position: relative;

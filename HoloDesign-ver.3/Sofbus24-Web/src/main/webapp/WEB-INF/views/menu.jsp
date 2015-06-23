@@ -21,47 +21,51 @@
 	</head>
 
 	<body>
-		<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
-		
-		<ul id="nav">
-			<li id="home" class="current">
-				<a href="${contextPath}/index">
-					<spring:message code="menu.home"/>
-				</a>
-			</li>
-			<li id="gcm_push_notifications">
-				<a href="#">
-					<spring:message code="menu.gcm-notifications"/>
-				</a>
-				<ul>
-					<li>
-						<a href="${contextPath}/gcm/send">
-							<spring:message code="menu.gcm-send-notification"/>
+		<div id="menu-outer">
+			<div class="table">
+				<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+				
+				<ul id="nav">
+					<li id="home" class="current">
+						<a href="${contextPath}/index">
+							<spring:message code="menu.home"/>
 						</a>
 					</li>
-					<li>
-						<a href="${contextPath}/gcm/users">
-							<spring:message code="menu.gcm-registered-users"/>
+					<li id="gcm_push_notifications">
+						<a href="#">
+							<spring:message code="menu.gcm-notifications"/>
+						</a>
+						<ul>
+							<li>
+								<a href="${contextPath}/gcm/send">
+									<spring:message code="menu.gcm-send-notification"/>
+								</a>
+							</li>
+							<li>
+								<a href="${contextPath}/gcm/users">
+									<spring:message code="menu.gcm-registered-users"/>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li id="about">
+						<a href="${contextPath}/about">
+							<spring:message code="menu.about"/>
+						</a>
+					</li>
+					<li id="contact_us">
+						<a href="${contextPath}/contact-us">
+							<spring:message code="menu.contact-us"/>
+						</a>
+					</li>
+					<li id="logout">
+						<a href="${contextPath}/log-out">
+							<spring:message code="menu.logout"/>
 						</a>
 					</li>
 				</ul>
-			</li>
-			<li id="about">
-				<a href="${contextPath}/about">
-					<spring:message code="menu.about"/>
-				</a>
-			</li>
-			<li id="contact_us">
-				<a href="${contextPath}/contact-us">
-					<spring:message code="menu.contact-us"/>
-				</a>
-			</li>
-			<li id="logout">
-				<a href="${contextPath}/log-out">
-					<spring:message code="menu.logout"/>
-				</a>
-			</li>
-		</ul>
+			</div>
+		</div>
 	</body>
 
 </html>

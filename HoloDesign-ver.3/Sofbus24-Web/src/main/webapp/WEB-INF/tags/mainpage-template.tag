@@ -6,7 +6,7 @@
 
 <html>
 
-	<body class="main_page">
+	<body class="main_page" style="margin-bottom: 0px">
 		<div id="menu">
 			<jsp:include page="/WEB-INF/views/menu.jsp" />
 		</div>
