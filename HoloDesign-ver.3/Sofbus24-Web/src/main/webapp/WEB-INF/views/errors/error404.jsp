@@ -14,7 +14,11 @@
 	</head>
 	
 	<body>
-		<img id="error404" src="/resources/images/error404.png" alt="" />
+		<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+		
+		<a href="${contextPath}/">
+			<img id="error404" src="/resources/images/error404.png" alt="" />
+		</a>
 	</body>
 	
 </html>

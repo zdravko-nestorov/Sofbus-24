@@ -246,6 +246,18 @@
 			<version>1.1.1</version>
 		</dependency>
 
+		<!-- Display Tag dependencies -->
+		<dependency>
+			<groupId>displaytag</groupId>
+			<artifactId>displaytag</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>displaytag</groupId>
+			<artifactId>displaytag-export-poi</artifactId>
+			<version>1.2</version>
+		</dependency>
+
 		<!-- Jackson dependencies -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>

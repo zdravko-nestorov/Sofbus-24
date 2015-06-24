@@ -1,5 +1,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="display" uri="http://displaytag.sf.net" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
@@ -18,6 +19,7 @@
 
 	<style type="text/css">
 		<%@ include file="/resources/css/gcm-registered-users.css" %>
+		<%@ include file="/resources/css/display-table.css" %>
 	</style>
 
 </head>
@@ -30,46 +32,15 @@
 				<spring:message code="gcm-registered-users.title"/>
 			</h1>
 		</div>
-			
-		<table>
-		    <tr>
-		    	<th>
-		    		<spring:message code="gcm-registered-users.reg-id"/>
-		    	</th>
-		    	<th>
-		    		<spring:message code="gcm-registered-users.device-model"/>
-		    	</th>
-		    	<th>
-		    		<spring:message code="gcm-registered-users.device-os-version"/>
-		    	</th>
-		    	<th>
-		    		<spring:message code="gcm-registered-users.registration-date"/>
-		    	</th>
-		    	<th>
-		    		<spring:message code="gcm-registered-users.last-push-notification-date"/>
-		    	</th>
-		    </tr>
-		    
-		    <c:if test="${empty phoneUsersList}">
-			    <tr>
-			    	<td colspan="5">
-			    		<spring:message code="gcm-registered-users.empty-list"/>
-			    	</td>
-			    </tr>
-		    </c:if>
-		    
-		    <c:if test="${not empty phoneUsersList}">
-			    <c:forEach items="${phoneUsersList}" var="phoneUser">
-				    <tr>
-				    	<td title="${phoneUser.regId}">${fn:substring(phoneUser.regId, 0, 50)}...</td>
-				    	<td>${phoneUser.deviceModel}</td>
-				    	<td>${phoneUser.deviceOsVersion}</td>
-				    	<td>${phoneUser.registrationDate}</td>
-				    	<td>${phoneUser.lastPushNotificationDate}</td>
-				    </tr>
-		    	</c:forEach>
-		    </c:if>
-    	</table>
+	    
+	    <display:table name="phoneUsersList" requestURI="/gcm/users" pagesize="8">
+	   	 	<display:setProperty name="basic.msg.empty_list" value="gcm-registered-users.empty-list" />
+		    <display:column property="regId" title="regId" titleKey="gcm-registered-users.reg-id" sortable="true" />
+		    <display:column property="deviceModel" titleKey="gcm-registered-users.device-model" sortable="true" />
+		    <display:column property="deviceOsVersion" titleKey="gcm-registered-users.device-os-version" sortable="true" />
+		    <display:column property="registrationDate" titleKey="gcm-registered-users.registration-date" sortable="true" />
+		    <display:column property="lastPushNotificationDate" titleKey="gcm-registered-users.last-push-notification-date" sortable="true" />
+		</display:table>
 	</jsp:body>
 	
 </t:mainpage-template>

@@ -1,6 +1,7 @@
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="display" uri="http://displaytag.sf.net" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
@@ -17,6 +18,7 @@
 
 	<style type="text/css">
 		<%@ include file="/resources/css/index.css" %>
+		<%@ include file="/resources/css/display-table.css" %>
 	</style>
 
 </head>
@@ -29,50 +31,17 @@
 				<spring:message code="index.title"/>
 			</h1>
 		</div>
-			
-		<table>
-		    <tr>
-		    	<th>
-		    		<spring:message code="index.gmail-id"/>
-		    	</th>
-		    	<th>
-		    		<spring:message code="index.nickname"/>
-		    	</th>
-		    	<th>
-		    		<spring:message code="index.email"/>
-		    	</th>
-		    	<th>
-		    		<spring:message code="index.authorities"/>
-		    	</th>
-		    	<th>
-		    		<spring:message code="index.registration-date"/>
-		    	</th>
-		    	<th>
-		    		<spring:message code="index.last-online-date"/>
-		    	</th>
-		    </tr>
-		    
-		    <c:if test="${empty gmailUsersList}">
-			    <tr>
-			    	<td colspan="6">
-			    		<spring:message code="index.empty-list"/>
-			    	</td>
-			    </tr>
-		    </c:if>
-		    
-		    <c:if test="${not empty gmailUsersList}">
-			    <c:forEach items="${gmailUsersList}" var="gmailUser">
-				    <tr>
-				    	<td>${gmailUser.gmailId}</td>
-				    	<td>${gmailUser.nickname}</td>
-				    	<td>${gmailUser.nickname}</td>
-				    	<td>${gmailUser.authorities}</td>
-				    	<td>${gmailUser.registrationDate}</td>
-				    	<td>${gmailUser.lastOnlineDate}</td>
-				    </tr>
-		    	</c:forEach>
-		    </c:if>
-    	</table>
+	    
+	    <display:table name="gmailUsersList" requestURI="/index" pagesize="8">
+	    	<display:setProperty name="sort.amount" value="list" />
+	   	 	<display:setProperty name="basic.msg.empty_list" value="index.empty-list" />
+		    <display:column property="gmailId" titleKey="index.gmail-id" sortable="true" />
+		    <display:column property="nickname" titleKey="index.nickname" sortable="true" />
+		    <display:column property="nickname" titleKey="index.email" sortable="true" />
+		    <display:column property="authorities" titleKey="index.authorities" sortable="true" />
+		    <display:column property="registrationDate" titleKey="index.registration-date" sortable="true" />
+		    <display:column property="lastOnlineDate" titleKey="index.last-online-date" sortable="true" />
+		</display:table>
 	</jsp:body>
 	
 </t:mainpage-template>
