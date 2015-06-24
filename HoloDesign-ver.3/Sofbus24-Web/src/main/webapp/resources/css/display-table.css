@@ -2,7 +2,6 @@ table {
 	overflow: hidden;
 	border: 1px solid #D3D3D3;
 	background: #FEFEFE;
-	width: 85%;
 	margin: 0 auto 0;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -11,6 +10,7 @@ table {
 	-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 	border-spacing: 0;
 	border-collapse: collapse;
+	width: 100%;
 }
 
 th, td {
@@ -83,7 +83,6 @@ tr:last-child td.last {
 .pagination {
 	height: 36px;
 	margin: 18px auto;
-	width: 85%;
 }
 
 .pagination ul {
@@ -126,13 +125,8 @@ tr:last-child td.last {
 	color: #bfbfbf;
 }
 
-.pagination .next a {
-	border: 0;
-}
-
 .pagebanner {
 	margin: 0 auto -46px;
-	width: 85%;
 }
 
 .well {

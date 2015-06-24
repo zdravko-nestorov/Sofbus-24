@@ -32,16 +32,48 @@
 			</h1>
 		</div>
 	    
-	    <display:table name="gmailUsersList" requestURI="/index" pagesize="8">
-	    	<display:setProperty name="sort.amount" value="list" />
-	   	 	<display:setProperty name="basic.msg.empty_list" value="index.empty-list" />
-		    <display:column property="gmailId" titleKey="index.gmail-id" sortable="true" />
-		    <display:column property="nickname" titleKey="index.nickname" sortable="true" />
-		    <display:column property="nickname" titleKey="index.email" sortable="true" />
-		    <display:column property="authorities" titleKey="index.authorities" sortable="true" />
-		    <display:column property="registrationDate" titleKey="index.registration-date" sortable="true" />
-		    <display:column property="lastOnlineDate" titleKey="index.last-online-date" sortable="true" />
-		</display:table>
+		<c:if test="${empty gmailUsersList}">
+		    <table>
+			    <tr>
+			    	<th>
+			    		<spring:message code="index.gmail-id"/>
+			    	</th>
+			    	<th>
+			    		<spring:message code="index.nickname"/>
+			    	</th>
+			    	<th>
+			    		<spring:message code="index.email"/>
+			    	</th>
+			    	<th>
+			    		<spring:message code="index.authorities"/>
+			    	</th>
+			    	<th>
+			    		<spring:message code="index.registration-date"/>
+			    	</th>
+			    	<th>
+			    		<spring:message code="index.last-online-date"/>
+			    	</th>
+			    </tr>
+			    <tr>
+			    	<td colspan="6">
+			    		<spring:message code="index.empty-list"/>
+			    	</td>
+			    </tr>
+		    </table>
+	    </c:if>
+	    
+	    <c:if test="${not empty gmailUsersList}">
+		    <display:table name="gmailUsersList" requestURI="/index" pagesize="8">
+		    	<display:setProperty name="sort.amount" value="list" />
+		   	 	<display:setProperty name="basic.msg.empty_list" value="index.empty-list" />
+			    <display:column property="gmailId" titleKey="index.gmail-id" sortable="true" />
+			    <display:column property="nickname" titleKey="index.nickname" sortable="true" />
+			    <display:column property="nickname" titleKey="index.email" sortable="true" />
+			    <display:column property="authorities" titleKey="index.authorities" sortable="true" />
+			    <display:column property="registrationDate" titleKey="index.registration-date" sortable="true" />
+			    <display:column property="lastOnlineDate" titleKey="index.last-online-date" sortable="true" />
+			</display:table>
+		</c:if>
 	</jsp:body>
 	
 </t:mainpage-template>

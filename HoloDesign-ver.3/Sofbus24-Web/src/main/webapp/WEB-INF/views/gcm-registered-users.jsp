@@ -32,15 +32,45 @@
 				<spring:message code="gcm-registered-users.title"/>
 			</h1>
 		</div>
+		    
+	    <c:if test="${empty phoneUsersList}">
+			<table>
+			    <tr>
+			    	<th>
+			    		<spring:message code="gcm-registered-users.reg-id"/>
+			    	</th>
+			    	<th>
+			    		<spring:message code="gcm-registered-users.device-model"/>
+			    	</th>
+			    	<th>
+			    		<spring:message code="gcm-registered-users.device-os-version"/>
+			    	</th>
+			    	<th>
+			    		<spring:message code="gcm-registered-users.registration-date"/>
+			    	</th>
+			    	<th>
+			    		<spring:message code="gcm-registered-users.last-push-notification-date"/>
+			    	</th>
+			    </tr>
+			    <tr>
+			    	<td colspan="5">
+			    		<spring:message code="gcm-registered-users.empty-list"/>
+			    	</td>
+			    </tr>
+			</table>
+	    </c:if>
 	    
-	    <display:table name="phoneUsersList" requestURI="/gcm/users" pagesize="8">
-	   	 	<display:setProperty name="basic.msg.empty_list" value="gcm-registered-users.empty-list" />
-		    <display:column property="regId" title="regId" titleKey="gcm-registered-users.reg-id" sortable="true" />
-		    <display:column property="deviceModel" titleKey="gcm-registered-users.device-model" sortable="true" />
-		    <display:column property="deviceOsVersion" titleKey="gcm-registered-users.device-os-version" sortable="true" />
-		    <display:column property="registrationDate" titleKey="gcm-registered-users.registration-date" sortable="true" />
-		    <display:column property="lastPushNotificationDate" titleKey="gcm-registered-users.last-push-notification-date" sortable="true" />
-		</display:table>
+	    <c:if test="${not empty phoneUsersList}">
+		    <display:table name="phoneUsersList" requestURI="/gcm/users" pagesize="8">
+			    <display:column titleKey="gcm-registered-users.reg-id" sortable="true">
+			    	<c:out value="${fn:substring(regId, 0, 15)}..."/>
+			    </display:column>
+			    <display:column property="deviceModel" titleKey="gcm-registered-users.device-model" sortable="true" />
+			    <display:column property="deviceOsVersion" titleKey="gcm-registered-users.device-os-version" sortable="true" />
+			    <display:column property="registrationDate" titleKey="gcm-registered-users.registration-date" sortable="true" />
+			    <display:column property="lastPushNotificationDate" titleKey="gcm-registered-users.last-push-notification-date" sortable="true" />
+			</display:table>
+		</c:if>
 	</jsp:body>
 	
 </t:mainpage-template>

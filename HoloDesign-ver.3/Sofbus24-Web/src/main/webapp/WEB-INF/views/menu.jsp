@@ -22,6 +22,12 @@
 	</head>
 
 	<body>
+		<div id="site-title">
+			<h1>
+				<spring:message code="sofbus.title" />
+			</h1>
+		</div>
+	
 		<div id="menu-outer">
 			<div class="table">
 				<c:set var="contextPath" value="${pageContext.request.contextPath}"/>

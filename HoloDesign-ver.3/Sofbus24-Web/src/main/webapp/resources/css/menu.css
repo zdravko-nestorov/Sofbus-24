@@ -2,12 +2,17 @@ body {
 	font: normal .85em/1.5em Arial, Helvetica, sans-serif;
 	background: #F7F7F7;
 	width: 90%;
-	margin: 100px auto;
+	margin: 15px auto;
 	color: #666;
 }
 
 a {
 	color: #333;
+}
+
+#site-title {
+	font: normal 2.3em/1.6em Arial, Helvetica, sans-serif;
+	text-align: center;
 }
 
 #menu-outer {

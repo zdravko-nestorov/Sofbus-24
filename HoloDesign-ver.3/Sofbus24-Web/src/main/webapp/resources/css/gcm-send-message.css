@@ -1,3 +1,11 @@
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p,
+	blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd,
+	q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li,
+	fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr,
+	th, td {
+	font-size: 100%;
+}
+
 fieldset {
 	border: 1px dashed #CCCCCC;
 	margin: 25px auto 20px auto;
@@ -12,7 +20,6 @@ fieldset {
 	margin: -2% auto 1.5%;
 	text-align: center;
 	font: 23px/25px "Helvetica Neue", Arial, Helvetica, sans-serif;
-	font-size: 90%;
 }
 
 #content {
