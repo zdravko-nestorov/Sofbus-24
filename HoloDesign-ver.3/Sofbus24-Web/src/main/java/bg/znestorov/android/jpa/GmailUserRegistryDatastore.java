@@ -24,8 +24,8 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 public class GmailUserRegistryDatastore implements GmailUserRegistry {
 
 	private static final String GMAIL_USER_ENTITY = "Gmail Users";
-	private static final String GMAIL_USER_NICKNAME = "Nickname";
 	private static final String GMAIL_USER_EMAIL = "Email";
+	private static final String GMAIL_USER_NICKNAME = "Nickname";
 	private static final String GMAIL_USER_AUTHORITIES = "Authorities";
 	private static final String GMAIL_USER_REGISTRATION_DATE = "Registration Date";
 	private static final String GMAIL_USER_LAST_ONLINE_DATE = "Last Online";
@@ -80,8 +80,8 @@ public class GmailUserRegistryDatastore implements GmailUserRegistry {
 		Key key = KeyFactory.createKey(GMAIL_USER_ENTITY, newUser.getGmailId());
 
 		Entity user = new Entity(key);
-		user.setProperty(GMAIL_USER_NICKNAME, newUser.getNickname());
 		user.setProperty(GMAIL_USER_EMAIL, newUser.getEmail());
+		user.setProperty(GMAIL_USER_NICKNAME, newUser.getNickname());
 		user.setProperty(GMAIL_USER_REGISTRATION_DATE,
 				newUser.getRegistrationDate());
 		user.setProperty(GMAIL_USER_LAST_ONLINE_DATE, lastOnlineDate);
@@ -141,8 +141,8 @@ public class GmailUserRegistryDatastore implements GmailUserRegistry {
 		}
 
 		GmailUser gmailUser = new GmailUser(user.getKey().getName(),
-				(String) user.getProperty(GMAIL_USER_NICKNAME),
-				(String) user.getProperty(GMAIL_USER_EMAIL), roles,
+				(String) user.getProperty(GMAIL_USER_EMAIL),
+				(String) user.getProperty(GMAIL_USER_NICKNAME), roles,
 				(String) user.getProperty(GMAIL_USER_REGISTRATION_DATE),
 				(String) user.getProperty(GMAIL_USER_LAST_ONLINE_DATE));
 

@@ -10,9 +10,11 @@
 		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/_ah/**" access="permitAll" />
 		<intercept-url pattern="/gcm/register**" access="permitAll" />
-		<intercept-url pattern="/resources/images/**" access="permitAll" />
+		<intercept-url pattern="/about" access="permitAll" />
+		<intercept-url pattern="/contact-us" access="permitAll" />
 		<intercept-url pattern="/log-out**" access="permitAll" />
 		<intercept-url pattern="/access-denied" access="permitAll" />
+		<intercept-url pattern="/resources/images/**" access="permitAll" />
 		<intercept-url pattern="/favicon.ico" access="hasRole('ROLE_ANONYMOUS')" />
 		<intercept-url pattern="/**" access="hasRole('ADMIN')" />
 

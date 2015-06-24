@@ -32,7 +32,7 @@
 				</label>
 		    	<label for="email">
 		    		<spring:message code="contact-us.email"/>
-		    		<input type="text" name="email" id="email" value="${user.email}" disabled="true" />
+		    		<input type="text" name="email" id="email" value="${user.email}" readonly="readonly" />
 		    	</label>
 		    	<label for="subject">
 		    		<spring:message code="contact-us.subjct"/>

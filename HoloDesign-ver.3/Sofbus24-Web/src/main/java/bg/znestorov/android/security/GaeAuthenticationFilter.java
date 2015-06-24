@@ -41,7 +41,7 @@ public class GaeAuthenticationFilter extends GenericFilterBean {
 	private AuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
 
 	private static final String URL_LOGOUT = "logout";
-	private static final String URL_ACCESS_DENIED = "/access-denied";
+	private static final String URL_ABOUT = "/about";
 
 	@SuppressWarnings("unchecked")
 	public void doFilter(ServletRequest request, ServletResponse response,
@@ -75,10 +75,10 @@ public class GaeAuthenticationFilter extends GenericFilterBean {
 					SecurityContextHolder.getContext().setAuthentication(
 							authentication);
 
-					// Check if the user is authorized to view the web pages
+					// If the current user is 'USER', redirect to the About page
 					if (isUser(authentication)) {
 						((HttpServletResponse) response)
-								.sendRedirect(URL_ACCESS_DENIED);
+								.sendRedirect(URL_ABOUT);
 						return;
 					}
 				} catch (AuthenticationException e) {

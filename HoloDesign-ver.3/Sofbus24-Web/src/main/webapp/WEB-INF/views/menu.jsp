@@ -1,5 +1,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
@@ -26,28 +27,30 @@
 				<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 				
 				<ul id="nav">
-					<li id="home" class="current">
-						<a href="${contextPath}/index">
-							<spring:message code="menu.home"/>
-						</a>
-					</li>
-					<li id="gcm_push_notifications">
-						<a href="#">
-							<spring:message code="menu.gcm-notifications"/>
-						</a>
-						<ul>
-							<li>
-								<a href="${contextPath}/gcm/send">
-									<spring:message code="menu.gcm-send-notification"/>
-								</a>
-							</li>
-							<li>
-								<a href="${contextPath}/gcm/users">
-									<spring:message code="menu.gcm-registered-users"/>
-								</a>
-							</li>
-						</ul>
-					</li>
+					<sec:authorize access="hasRole('ADMIN') and isAuthenticated()">
+						<li id="home" class="current">
+							<a href="${contextPath}/index">
+								<spring:message code="menu.home"/>
+							</a>
+						</li>
+						<li id="gcm_push_notifications">
+							<a href="#">
+								<spring:message code="menu.gcm-notifications"/>
+							</a>
+							<ul>
+								<li>
+									<a href="${contextPath}/gcm/send">
+										<spring:message code="menu.gcm-send-notification"/>
+									</a>
+								</li>
+								<li>
+									<a href="${contextPath}/gcm/users">
+										<spring:message code="menu.gcm-registered-users"/>
+									</a>
+								</li>
+							</ul>
+						</li>
+					</sec:authorize>
 					<li id="about">
 						<a href="${contextPath}/about">
 							<spring:message code="menu.about"/>

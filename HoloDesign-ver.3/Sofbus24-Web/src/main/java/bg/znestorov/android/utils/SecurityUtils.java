@@ -13,13 +13,20 @@ public class SecurityUtils {
 	 * 
 	 * @param userRegistry
 	 *            the user registry (autowired by Spring)
-	 * @return the gmail user
+	 * @return the Gmail user
 	 */
 	public static GmailUser getCurrentUser(GmailUserRegistry userRegistry) {
 
 		Authentication authentication = SecurityContextHolder.getContext()
 				.getAuthentication();
-		GmailUser user = (GmailUser) authentication.getPrincipal();
+
+		GmailUser user;
+		try {
+			user = (GmailUser) authentication.getPrincipal();
+		} catch (Exception e) {
+			// In case the user is still not logged in -> ROLE_ANONYMOUS
+			user = null;
+		}
 
 		return user;
 	}
