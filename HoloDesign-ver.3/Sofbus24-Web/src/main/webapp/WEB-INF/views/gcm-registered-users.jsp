@@ -35,24 +35,34 @@
 		    
 	    <c:if test="${empty phoneUsersList}">
 	    	<div class="pagebanner">
-	    		<span class="pagebanner well">No items found.</span>
+	    		<span class="pagebanner well">
+	    			<spring:message code="display-table.no-items-found" />
+	    		</span>
 	    	</div>
 	    	<div class="pagination">
 	    		<ul>
 	    			<li class="prev disabled">
-	    				<a href="#">← First</a>
+	    				<a href="#">
+	    					<spring:message code="display-table.first" />
+	    				</a>
 	    			</li>
 	    			<li class="prev disabled">
-	    				<a href="#">← Previous</a>
+	    				<a href="#">
+	    					<spring:message code="display-table.previous" />
+	    				</a>
 	    			</li>
 	    			<li class="active">
 	    				<a href="#" title="Go to page 1">1</a>
 	    			</li>
 	    			<li class="next disabled">
-	    				<a href="#">Next →</a>
+	    				<a href="#">
+	    					<spring:message code="display-table.next" />
+	    				</a>
 	    			</li>
 	    			<li class="disabled">
-	    				<a href="#">Last →</a>
+	    				<a href="#">
+	    					<spring:message code="display-table.last" />
+	    				</a>
 	    			</li>
 	    		</ul>
 	    	</div>
@@ -84,6 +94,149 @@
 	    
 	    <c:if test="${not empty phoneUsersList}">
 		    <display:table name="phoneUsersList" id="phoneUser" requestURI="/gcm/users" pagesize="8">
+		    	<display:setProperty name="paging.banner.no_items_found">
+		    		<div class="pagebanner">
+		    			<span class="pagebanner well">
+							<spring:message code="display-table.no-found" />
+						</span>
+		    		</div>
+		    	</display:setProperty>
+		    	<display:setProperty name="paging.banner.one_item_found">
+		    		<div class="pagebanner">
+		    			<span class="pagebanner well">
+		    				<spring:message code="display-table.one-found" />
+		    			</span>
+		    		</div>
+		    	</display:setProperty>
+		    	<display:setProperty name="paging.banner.all_items_found">
+		    		<div class="pagebanner">
+		    			<span class="pagebanner well">
+		    				<spring:message code="display-table.many-found-all" />
+		    			</span>
+		    		</div>
+		    	</display:setProperty>
+		    	<display:setProperty name="paging.banner.some_items_found">
+		    		<div class="pagebanner">
+		    			<span class="pagebanner well">
+		    				<spring:message code="display-table.many-found-some" />
+		    			</span>
+		    		</div>
+		    	</display:setProperty>
+		    	<display:setProperty name="paging.banner.full">
+		    		<div class="pagination">
+		    			<ul>
+		    				<li class="prev">
+		    					<a href="{1}">
+									<spring:message code="display-table.first" />
+								</a>
+		    				</li>
+		    				<li class="prev">
+		    					<a href="{2}">
+		    						<spring:message code="display-table.previous" />
+		    					</a>
+		    				</li>{0}
+		    				<li class="next">
+		    					<a href="{3}">
+		    						<spring:message code="display-table.next" />
+		    					</a>
+		    				</li>
+		    				<li class="next">
+		    					<a href="{4}">
+		    						<spring:message code="display-table.last" />
+		    					</a>
+		    				</li>
+		    			</ul>
+		    		</div>
+		    	</display:setProperty>
+		    	<display:setProperty name="paging.banner.first">
+		    		<div class="pagination">
+		    			<ul>
+		    				<li class="prev disabled">
+		    					<a href="{1}">
+									<spring:message code="display-table.first" />
+								</a>
+		    				</li>
+		    				<li class="prev disabled">
+		    					<a href="{2}">
+		    						<spring:message code="display-table.previous" />
+		    					</a>
+		    				</li>{0}
+		    				<li class="next">
+		    					<a href="{3}">
+		    						<spring:message code="display-table.next" />
+		    					</a>
+		    				</li>
+		    				<li class="next">
+		    					<a href="{4}">
+		    						<spring:message code="display-table.last" />
+		    					</a>
+		    				</li>
+		    			</ul>
+		    		</div>
+		    	</display:setProperty>
+		    	<display:setProperty name="paging.banner.last">
+		    		<div class="pagination">
+		    			<ul>
+		    				<li class="prev">
+		    					<a href="{1}">
+									<spring:message code="display-table.first" />
+								</a>
+		    				</li>
+		    				<li class="prev">
+		    					<a href="{2}">
+		    						<spring:message code="display-table.previous" />
+		    					</a>
+		    				</li>{0}
+		    				<li class="next disabled">
+		    					<a href="{3}">
+		    						<spring:message code="display-table.next" />
+		    					</a>
+		    				</li>
+		    				<li class="disabled">
+		    					<a href="{4}">
+		    						<spring:message code="display-table.last" />
+		    					</a>
+		    				</li>
+		    			</ul>
+		    		</div>
+		    	</display:setProperty>
+		    	<display:setProperty name="paging.banner.onepage">
+		    		<div class="pagination">
+		    			<ul>
+		    				<li class="prev disabled">
+		    					<a href="{1}">
+									<spring:message code="display-table.first" />
+								</a>
+		    				</li>
+		    				<li class="prev disabled">
+		    					<a href="{2}">
+		    						<spring:message code="display-table.previous" />
+		    					</a>
+		    				</li>{0}
+		    				<li class="next disabled">
+		    					<a href="{3}">
+		    						<spring:message code="display-table.next" />
+		    					</a>
+		    				</li>
+		    				<li class="disabled">
+		    					<a href="{4}">
+		    						<spring:message code="display-table.last" />
+		    					</a>
+		    				</li>
+		    			</ul>
+		    		</div>
+		    	</display:setProperty>
+		    	<display:setProperty name="paging.banner.page.selected">
+		    		<li class="active">
+		    			<a href="{1}" title="<spring:message code="display-table.go-to-page" />">{0}</a>
+		    		</li>
+		    	</display:setProperty>
+		    	<display:setProperty name="paging.banner.page.link">
+		    		<li>
+		    			<a href="{1}" title="<spring:message code="display-table.go-to-page" />">{0}</a>
+		    		</li>
+		    	</display:setProperty>
+		    	<display:setProperty name="paging.banner.page.separator" value="" />
 			    <display:column titleKey="gcm-registered-users.reg-id" sortable="true">
 			    	<c:out value="${fn:substring(phoneUser.regId, 0, 30)}..."/>
 			    </display:column>
