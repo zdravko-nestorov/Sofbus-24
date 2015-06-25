@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.utils;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1165,4 +1166,39 @@ public class Utils {
 	public static String getCurrentDayMonth() {
 		return DateFormat.format("ddMM", new java.util.Date()).toString();
 	}
+
+	/**
+	 * Get the Android version of the device (Android xx.xx (XX), SDK=xx)
+	 * 
+	 * @return the android version of the device
+	 */
+	public static String getDeviceOsVersion() {
+
+		StringBuilder deviceOsVersion = new StringBuilder();
+		deviceOsVersion.append("Android ").append(Build.VERSION.RELEASE);
+
+		Field[] fields = Build.VERSION_CODES.class.getFields();
+		for (Field field : fields) {
+			String fieldName = field.getName();
+			int fieldValue = -1;
+
+			try {
+				fieldValue = field.getInt(new Object());
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+			}
+
+			if (fieldValue == Build.VERSION.SDK_INT) {
+				deviceOsVersion.append(" (").append(fieldName).append("), ");
+				deviceOsVersion.append("SDK=").append(fieldValue);
+			}
+		}
+
+		return deviceOsVersion.toString();
+	}
+
 }

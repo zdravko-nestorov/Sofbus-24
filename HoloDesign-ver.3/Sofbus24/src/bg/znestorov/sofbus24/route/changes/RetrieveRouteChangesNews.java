@@ -185,8 +185,19 @@ public class RetrieveRouteChangesNews extends AsyncTask<Void, Void, String> {
 	 * Dismiss the loading view and unlock the screen
 	 */
 	private void dismissLoadingView() {
-		if (progressDialog != null) {
-			progressDialog.dismiss();
+		try {
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
+		} catch (Exception e) {
+			/**
+			 * Fixing a strange error that is happening sometimes when the
+			 * dialog is dismissed. I guess sometimes activity gets finished
+			 * before the dialog successfully dismisses.
+			 * 
+			 * java.lang.IllegalArgumentException: View not attached to window
+			 * manager
+			 */
 		}
 
 		ActivityUtils.unlockScreenOrientation(context);

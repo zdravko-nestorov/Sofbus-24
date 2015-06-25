@@ -36,19 +36,30 @@ public class GcmShareExternalServer {
 	 *            the current Activity context
 	 * @param regId
 	 *            the registration id
+	 * @param deviceModel
+	 *            the model of the device
+	 * @param deviceOsVersion
+	 *            the android version of the device
 	 * @return if the reg id is successfully shared with the server
 	 */
-	public static Boolean shareRegIdWithAppServer(Activity context, String regId) {
+	public static Boolean registerWithAppServer(Activity context, String regId,
+			String deviceModel, String deviceOsVersion) {
 
 		Boolean isSharedSuccessful;
 		HttpURLConnection httpConnection = null;
 
 		try {
-			URL serverUrl = new URL(createUrlAddress(regId));
+			URL serverUrl = new URL(createUrlAddress(regId, deviceModel,
+					deviceOsVersion));
 
 			// Map containing the params of the HTTP POST request
 			Map<String, String> paramsMap = new HashMap<String, String>();
 			paramsMap.put(Constants.GCM_EXTERNAL_SERVER_URL_REG_ID_ATT, regId);
+			paramsMap.put(Constants.GCM_EXTERNAL_SERVER_URL_DEVICE_MODEL_ATT,
+					deviceModel);
+			paramsMap.put(
+					Constants.GCM_EXTERNAL_SERVER_URL_DEVICE_OS_VERSION_ATT,
+					deviceOsVersion);
 			Iterator<Entry<String, String>> iterator = paramsMap.entrySet()
 					.iterator();
 
@@ -86,8 +97,9 @@ public class GcmShareExternalServer {
 				// Check if the registration is successful
 				String httpResult = getHttpResult(httpConnection);
 				JSONObject httpResultJson = new JSONObject(httpResult);
-				isSharedSuccessful = httpResultJson
-						.getBoolean(Constants.GCM_EXTERNAL_SERVER_URL_RESPONSE_IS_SUCCESSFUL_KEY);
+				isSharedSuccessful = "0"
+						.equals(httpResultJson
+								.getString(Constants.GCM_EXTERNAL_SERVER_URL_RESPONSE_ERROR_CODE_KEY));
 			} else {
 				isSharedSuccessful = false;
 			}
@@ -113,17 +125,23 @@ public class GcmShareExternalServer {
 	 * 
 	 * @param regId
 	 *            the registration id of the device/user
+	 * @param deviceModel
+	 *            the model of the device
+	 * @param deviceOsVersion
+	 *            the android version of the device
 	 * 
 	 * @return the url address, used to sed to share the registration id with
 	 *         the external server
 	 */
-	private static String createUrlAddress(String regId) {
+	private static String createUrlAddress(String regId, String deviceModel,
+			String deviceOsVersion) {
 
 		String urlAddress = Constants.GCM_EXTERNAL_SERVER_URL
 				+ "?"
 				+ Constants.GCM_EXTERNAL_SERVER_URL_SECRET_ATT
 				+ "="
 				+ getSha1Digest(Constants.GCM_EXTERNAL_SERVER_URL + regId
+						+ deviceModel + deviceOsVersion
 						+ Constants.GCM_EXTERNAL_SERVER_URL_SECRET_VALUE);
 
 		return urlAddress;

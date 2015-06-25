@@ -253,12 +253,13 @@ public class Constants {
 	 */
 	public static final String GCM_PROJECT_ID = "968618561001";
 
-	// TODO: Create external server URL address
-	public static final String GCM_EXTERNAL_SERVER_URL = "http://192.168.2.44:5001/Sofbus24/gcm-register";
+	public static final String GCM_EXTERNAL_SERVER_URL = "http://sofbus-24.appspot.com/gcm/register";
 	public static final String GCM_EXTERNAL_SERVER_URL_REG_ID_ATT = "regId";
+	public static final String GCM_EXTERNAL_SERVER_URL_DEVICE_MODEL_ATT = "deviceModel";
+	public static final String GCM_EXTERNAL_SERVER_URL_DEVICE_OS_VERSION_ATT = "deviceOsVersion";
 	public static final String GCM_EXTERNAL_SERVER_URL_SECRET_ATT = "sec";
 	public static final String GCM_EXTERNAL_SERVER_URL_SECRET_VALUE = "fa1c9f79de2cabc59d9bddb9f8d5794d8406702b";
-	public static final String GCM_EXTERNAL_SERVER_URL_RESPONSE_IS_SUCCESSFUL_KEY = "isSuccessful";
+	public static final String GCM_EXTERNAL_SERVER_URL_RESPONSE_ERROR_CODE_KEY = "errorCode";
 
 	public static final String GCM_PREFERENCES_NAME = "application_gcm";
 	public static final String GCM_PREFERENCES_REG_ID = "regId";
