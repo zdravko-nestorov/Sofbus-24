@@ -1,6 +1,5 @@
 package bg.znestorov.sofbus24.gcm;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -117,8 +116,7 @@ public class GcmUtils {
 
 			// Format the notification data as a JSON object and get the value
 			// in the correct language
-			JSONObject notificationJson = new JSONArray(notificationData)
-					.getJSONObject(0);
+			JSONObject notificationJson = new JSONObject(notificationData);
 			notificationData = notificationJson.getString(language);
 		} catch (JSONException e) {
 			notificationData = "";
