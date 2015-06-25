@@ -119,7 +119,7 @@ select, .textbox {
 
 #notif-msg-status {
 	text-align: center;
-	padding-top: 25%;
+	margin-top: 27%;
 	padding-right: 5%;
 }
 
@@ -145,4 +145,33 @@ select, .textbox {
 
 .success {
 	background-color: #6F8F52;
+}
+
+.tooltip {
+	position: relative;
+}
+
+.tooltip:hover:after {
+	background: #909090;
+	background: rgba(0, 0, 0, .6);
+	border-radius: 5px;
+	bottom: 26px;
+	color: #fff;
+	content: attr(title);
+	left: 20%;
+	padding: 5px 15px;
+	position: absolute;
+	z-index: 98;
+	width: 220px;
+}
+
+.tooltip:hover:before {
+	border: solid;
+	border-color: #606060 transparent;
+	border-width: 6px 6px 0 6px;
+	bottom: 20px;
+	content: "";
+	left: 50%;
+	position: absolute;
+	z-index: 99;
 }

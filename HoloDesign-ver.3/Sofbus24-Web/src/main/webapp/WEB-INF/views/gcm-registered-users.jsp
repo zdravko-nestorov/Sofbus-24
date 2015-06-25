@@ -34,6 +34,28 @@
 		</div>
 		    
 	    <c:if test="${empty phoneUsersList}">
+	    	<div class="pagebanner">
+	    		<span class="pagebanner well">No items found.</span>
+	    	</div>
+	    	<div class="pagination">
+	    		<ul>
+	    			<li class="prev disabled">
+	    				<a href="#">← First</a>
+	    			</li>
+	    			<li class="prev disabled">
+	    				<a href="#">← Previous</a>
+	    			</li>
+	    			<li class="active">
+	    				<a href="#" title="Go to page 1">1</a>
+	    			</li>
+	    			<li class="next disabled">
+	    				<a href="#">Next →</a>
+	    			</li>
+	    			<li class="disabled">
+	    				<a href="#">Last →</a>
+	    			</li>
+	    		</ul>
+	    	</div>
 			<table>
 			    <tr>
 			    	<th>
@@ -61,9 +83,9 @@
 	    </c:if>
 	    
 	    <c:if test="${not empty phoneUsersList}">
-		    <display:table name="phoneUsersList" requestURI="/gcm/users" pagesize="8">
+		    <display:table name="phoneUsersList" id="phoneUser" requestURI="/gcm/users" pagesize="8">
 			    <display:column titleKey="gcm-registered-users.reg-id" sortable="true">
-			    	<c:out value="${fn:substring(regId, 0, 15)}..."/>
+			    	<c:out value="${fn:substring(phoneUser.regId, 0, 30)}..."/>
 			    </display:column>
 			    <display:column property="deviceModel" titleKey="gcm-registered-users.device-model" sortable="true" />
 			    <display:column property="deviceOsVersion" titleKey="gcm-registered-users.device-os-version" sortable="true" />

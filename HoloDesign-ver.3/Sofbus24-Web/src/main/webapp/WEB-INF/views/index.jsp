@@ -33,6 +33,28 @@
 		</div>
 	    
 		<c:if test="${empty gmailUsersList}">
+	    	<div class="pagebanner">
+	    		<span class="pagebanner well">No items found.</span>
+	    	</div>
+	    	<div class="pagination">
+	    		<ul>
+	    			<li class="prev disabled">
+	    				<a href="#">← First</a>
+	    			</li>
+	    			<li class="prev disabled">
+	    				<a href="#">← Previous</a>
+	    			</li>
+	    			<li class="active">
+	    				<a href="#" title="Go to page 1">1</a>
+	    			</li>
+	    			<li class="next disabled">
+	    				<a href="#">Next →</a>
+	    			</li>
+	    			<li class="disabled">
+	    				<a href="#">Last →</a>
+	    			</li>
+	    		</ul>
+	    	</div>
 		    <table>
 			    <tr>
 			    	<th>
@@ -68,7 +90,7 @@
 		   	 	<display:setProperty name="basic.msg.empty_list" value="index.empty-list" />
 			    <display:column property="gmailId" titleKey="index.gmail-id" sortable="true" />
 			    <display:column property="nickname" titleKey="index.nickname" sortable="true" />
-			    <display:column property="nickname" titleKey="index.email" sortable="true" />
+			    <display:column property="email" titleKey="index.email" sortable="true" />
 			    <display:column property="authorities" titleKey="index.authorities" sortable="true" />
 			    <display:column property="registrationDate" titleKey="index.registration-date" sortable="true" />
 			    <display:column property="lastOnlineDate" titleKey="index.last-online-date" sortable="true" />

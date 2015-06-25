@@ -169,10 +169,18 @@ public class GcmController {
 			userRegistry.updatePhoneUser(firstPhoneUser);
 		}
 
+		String notificationData;
+		try {
+			notificationData = new GsonBuilder().setPrettyPrinting().create()
+					.toJson(notification).replaceAll("\"", "")
+					.replaceAll("\n", "&#13;");
+		} catch (Exception e) {
+			notificationData = "---";
+		}
+
 		modelView.setViewName("gcm-send-message");
 		modelView.addObject("notification", new Notification());
-		modelView.addObject("notificationJson",
-				notificationJson == null ? "---" : notificationJson);
+		modelView.addObject("notificationJson", notificationData);
 		modelView.addObject("notificationTypes", getNotificationTypes());
 		modelView.addObject("notificationStatus",
 				isSharedSuccessful ? NotificationStatus.SUCCESS

@@ -72,11 +72,11 @@
 				</div>
 			</form:form>
 				
-			<div id="notif-msg-status">
-				<span id="notif-msg-success">
+			<div id="notif-msg-status" class="tooltip" title="${notificationJson}">
+				<span id="notif-msg-success" title="">
 					<spring:message code="gcm-send-message.notif-success"/>
 				</span>
-				<span id="notif-msg-failed">
+				<span id="notif-msg-failed" title="">
 					<spring:message code="gcm-send-message.notif-failed"/>
 				</span>
 			</div>
