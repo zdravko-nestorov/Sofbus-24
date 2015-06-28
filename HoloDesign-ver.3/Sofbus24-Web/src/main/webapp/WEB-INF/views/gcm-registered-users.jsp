@@ -18,6 +18,7 @@
 	</script>
 
 	<style type="text/css">
+		<%@ include file="/resources/css/tooltip.css" %>
 		<%@ include file="/resources/css/gcm-registered-users.css" %>
 		<%@ include file="/resources/css/display-table.css" %>
 	</style>
@@ -238,7 +239,11 @@
 		    	</display:setProperty>
 		    	<display:setProperty name="paging.banner.page.separator" value="" />
 			    <display:column titleKey="gcm-registered-users.reg-id" sortable="true">
-			    	<c:out value="${fn:substring(phoneUser.regId, 0, 30)}..."/>
+			    	<div class="tooltip" title="${phoneUser.regId}">
+			    		<span title="">
+			    			<c:out value="${fn:substring(phoneUser.regId, 0, 30)}..."/>
+			    		</span>
+			    	</div>
 			    </display:column>
 			    <display:column property="deviceModel" titleKey="gcm-registered-users.device-model" sortable="true" />
 			    <display:column property="deviceOsVersion" titleKey="gcm-registered-users.device-os-version" sortable="true" />

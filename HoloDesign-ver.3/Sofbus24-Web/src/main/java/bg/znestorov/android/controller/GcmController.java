@@ -28,12 +28,9 @@ import bg.znestorov.android.entity.PhoneUser;
 import bg.znestorov.android.jpa.PhoneUserRegistry;
 import bg.znestorov.android.pojo.Notification;
 import bg.znestorov.android.pojo.NotificationStatus;
-import bg.znestorov.android.pojo.NotificationWrapper;
 import bg.znestorov.android.pojo.RegistrationServiceResult;
 import bg.znestorov.android.utils.Constants;
 import bg.znestorov.android.utils.Utils;
-
-import com.google.gson.GsonBuilder;
 
 @Controller
 @RequestMapping(value = "/gcm")
@@ -113,8 +110,8 @@ public class GcmController {
 			ModelAndView modelView) {
 
 		Boolean isSharedSuccessful;
+		Boolean isTestPushNotification = false;
 		HttpURLConnection httpConnection = null;
-		String notificationJson = null;
 
 		try {
 			URL serverUrl = new URL(Constants.GCM_NOTIFICATION_URL);
@@ -133,17 +130,19 @@ public class GcmController {
 					Constants.GCM_NOTIFICATION_URL_AUTHORIZATION_VALUE);
 			httpConnection.connect();
 
-			List<String> registrationIds = userRegistry
-					.findAllPhoneUserRegistrationIds();
-			notificationJson = new GsonBuilder()
-					.setPrettyPrinting()
-					.create()
-					.toJson(new NotificationWrapper(notification,
-							registrationIds.toArray(new String[registrationIds
-									.size()])));
+			// Check if the user wants to send GCM only to some devices
+			String[] registrationIds = notification.getRegistration_ids();
+			if (registrationIds != null && !Utils.isEmpty(registrationIds[0])) {
+				isTestPushNotification = true;
+				notification.setRegistration_ids(registrationIds[0]);
+			} else {
+				notification.setRegistration_ids(userRegistry
+						.findAllPhoneUserRegistrationIds());
+			}
+
 			OutputStream os = httpConnection.getOutputStream();
 			OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
-			osw.write(notificationJson);
+			osw.write(notification.toJson());
 			osw.flush();
 			osw.close();
 
@@ -164,23 +163,14 @@ public class GcmController {
 		}
 
 		// Check if the datastore should be updated
-		if (isSharedSuccessful) {
+		if (!isTestPushNotification && isSharedSuccessful) {
 			PhoneUser firstPhoneUser = userRegistry.findFirstPhoneUser();
 			userRegistry.updatePhoneUser(firstPhoneUser);
 		}
 
-		String notificationData;
-		try {
-			notificationData = new GsonBuilder().setPrettyPrinting().create()
-					.toJson(notification).replaceAll("\"", "")
-					.replaceAll("\n", "&#13;");
-		} catch (Exception e) {
-			notificationData = "---";
-		}
-
 		modelView.setViewName("gcm-send-message");
 		modelView.addObject("notification", new Notification());
-		modelView.addObject("notificationJson", notificationData);
+		modelView.addObject("notificationData", notification.toTooltip());
 		modelView.addObject("notificationTypes", getNotificationTypes());
 		modelView.addObject("notificationStatus",
 				isSharedSuccessful ? NotificationStatus.SUCCESS

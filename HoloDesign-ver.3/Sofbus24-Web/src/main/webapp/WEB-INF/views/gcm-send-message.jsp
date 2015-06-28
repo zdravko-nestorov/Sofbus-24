@@ -16,6 +16,7 @@
 	</script>
 
 	<style type="text/css">
+		<%@ include file="/resources/css/tooltip.css" %>
 		<%@ include file="/resources/css/gcm-send-message.css" %>
 	</style>
 	
@@ -62,6 +63,14 @@
 					<form:input id="gcmData" class="textbox" path="data" />
 					<span id="span_gcmData"></span>
 				</div>
+				
+				<form:label path="registration_ids[0]">
+					<spring:message code="gcm-send-message.label-ids" />
+				</form:label>
+				<div class="div_texbox">
+					<form:input id="gcmIds" class="textbox" path="registration_ids[0]" />
+					<span id="span_gcmIds"></span>
+				</div>
 
 				<div class="button_div">
 					<spring:message code="gcm-send-message.label-reset" var="resetGcm" />
@@ -72,7 +81,7 @@
 				</div>
 			</form:form>
 				
-			<div id="notif-msg-status" class="tooltip" title="${notificationJson}">
+			<div id="notif-msg-status" class="tooltip" title="${notificationData}">
 				<span id="notif-msg-success" title="">
 					<spring:message code="gcm-send-message.notif-success"/>
 				</span>

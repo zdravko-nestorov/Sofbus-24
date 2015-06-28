@@ -30,3 +30,7 @@ a {
 	font: 23px/25px "Helvetica Neue", Arial, Helvetica, sans-serif;
 	font-size: 150%;
 }
+
+.tooltip:hover:after {
+	width: 700px;
+}

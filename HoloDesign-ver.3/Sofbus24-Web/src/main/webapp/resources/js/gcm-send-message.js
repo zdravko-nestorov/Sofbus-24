@@ -58,6 +58,7 @@ $(document).ready(function() {
 	var gcmTypeInfo = "<spring:message code='gcm-send-message.type-info' javaScriptEscape='true' />";
 	var gcmTypeError = "<spring:message code='gcm-send-message.type-error' javaScriptEscape='true' />";
 	var gcmDataInfo = "<spring:message code='gcm-send-message.data-info' javaScriptEscape='true' />";
+	var gcmIdsInfo = "<spring:message code='gcm-send-message.ids-info' javaScriptEscape='true' />";
 	var gcmDataError = "<spring:message code='gcm-send-message.data-error' javaScriptEscape='true' />";
 	var gcmSuccess = "<spring:message code='gcm-send-message.success' javaScriptEscape='true' />";
 	
@@ -113,6 +114,7 @@ $(document).ready(function() {
 		var date = document.getElementById("gcmDate").value;
 		var type = document.getElementById("gcmType").value;
 		var data = document.getElementById("gcmData").value;
+		var ids = document.getElementById("gcmIds").value;
 		
 		var dateCheck = checkIfEmpty(date);
 		if (dateCheck) {
@@ -135,6 +137,8 @@ $(document).ready(function() {
 			cssActions("gcmData", gcmDataError, 2);
 		}
 		
+		cssActions("gcmIds", gcmSuccess, 1);
+		
 		if (dateCheck && typeCheck && dataCheck) {
 			$("#submit").css("cursor", "pointer");
 			$("#submit").unbind("click");
@@ -152,6 +156,7 @@ $(document).ready(function() {
 		cssActions("gcmDate", gcmDateInfo, 0);
 		cssActions("gcmType", gcmTypeInfo, 0);
 		cssActions("gcmData", gcmDataInfo, 0);
+		cssActions("gcmIds", gcmIdsInfo, 0);
 	}
 
 })
