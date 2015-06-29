@@ -15,5 +15,6 @@ public enum NotificationStatus {
 	/**
 	 * There is a problem with sending the notification
 	 */
-	FAILED;
+	FAILED_NO_IDS, FAILED_CONNECTION, FAILED_UNKNOWN;
+
 }

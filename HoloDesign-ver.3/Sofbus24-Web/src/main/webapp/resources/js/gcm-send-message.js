@@ -40,7 +40,9 @@ $(document).ready(function() {
 		msgSuccess.removeAttribute("style");
 		msgFailed.setAttribute("style", "display:none");
 		break;
-	case 'FAILED':
+	case 'FAILED_NO_IDS':
+	case 'FAILED_CONNECTION':
+	case 'FAILED_UNKNOWN':
 		msgSuccess.setAttribute("style", "display:none");
 		msgFailed.removeAttribute("style");
 		break;

@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,6 +39,9 @@ public class GcmController {
 	@Autowired
 	private PhoneUserRegistry userRegistry;
 
+	@Autowired
+	private MessageSource messageSource;
+
 	private static final Logger log = Logger.getLogger(GcmController.class
 			.getName());
 
@@ -46,7 +49,6 @@ public class GcmController {
 			RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody RegistrationServiceResult registerGcm(
 			HttpServletRequest request,
-			HttpServletResponse response,
 			@RequestParam(value = "sec", required = false, defaultValue = "") String sec,
 			@RequestBody(required = false) String params) {
 
@@ -105,13 +107,14 @@ public class GcmController {
 	}
 
 	@RequestMapping(value = "/send", method = RequestMethod.POST)
-	public ModelAndView sendGcmMessage(
+	public ModelAndView sendGcmMessage(HttpServletRequest request,
 			@ModelAttribute("notification") Notification notification,
 			ModelAndView modelView) {
 
-		Boolean isSharedSuccessful;
-		Boolean isTestPushNotification = false;
 		HttpURLConnection httpConnection = null;
+
+		Boolean isTestPushNotification = false;
+		NotificationStatus notificationStatus;
 
 		try {
 			URL serverUrl = new URL(Constants.GCM_NOTIFICATION_URL);
@@ -140,41 +143,45 @@ public class GcmController {
 						.findAllPhoneUserRegistrationIds());
 			}
 
-			OutputStream os = httpConnection.getOutputStream();
-			OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
-			osw.write(notification.toJson());
-			osw.flush();
-			osw.close();
-
-			// Check if the status of the HTTP request is successful
-			int status = httpConnection.getResponseCode();
-			if (status == 200) {
-				isSharedSuccessful = true;
+			// Check if there are any registered IDs in the datastore
+			if (Utils.isEmpty(notification.getRegistration_ids())) {
+				notificationStatus = NotificationStatus.FAILED_NO_IDS;
 			} else {
-				isSharedSuccessful = false;
-			}
+				OutputStream os = httpConnection.getOutputStream();
+				OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+				osw.write(notification.toJson());
+				osw.flush();
+				osw.close();
 
+				// Check if the status of the HTTP request is successful
+				int status = httpConnection.getResponseCode();
+				if (status == 200) {
+					notificationStatus = NotificationStatus.SUCCESS;
+				} else {
+					notificationStatus = NotificationStatus.FAILED_CONNECTION;
+				}
+			}
 		} catch (Exception e) {
-			isSharedSuccessful = false;
+			notificationStatus = NotificationStatus.FAILED_UNKNOWN;
 		} finally {
 			if (httpConnection != null) {
 				httpConnection.disconnect();
 			}
 		}
 
-		// Check if the datastore should be updated
-		if (!isTestPushNotification && isSharedSuccessful) {
+		// Check if the datastore should be updated (only if the notification is
+		// sent to all users)
+		if (!isTestPushNotification && isSharedSuccessful(notificationStatus)) {
 			PhoneUser firstPhoneUser = userRegistry.findFirstPhoneUser();
 			userRegistry.updatePhoneUser(firstPhoneUser);
 		}
 
 		modelView.setViewName("gcm-send-message");
 		modelView.addObject("notification", new Notification());
-		modelView.addObject("notificationData", notification.toTooltip());
+		modelView.addObject("notificationData",
+				getNotificationData(request, notification, notificationStatus));
 		modelView.addObject("notificationTypes", getNotificationTypes());
-		modelView.addObject("notificationStatus",
-				isSharedSuccessful ? NotificationStatus.SUCCESS
-						: NotificationStatus.FAILED);
+		modelView.addObject("notificationStatus", notificationStatus);
 
 		return modelView;
 	}
@@ -186,6 +193,72 @@ public class GcmController {
 		modelView.addObject("phoneUsersList", userRegistry.findAllPhoneUsers());
 
 		return modelView;
+	}
+
+	/**
+	 * Check if the notification is successfully sent
+	 * 
+	 * @param notificationStatus
+	 *            the notification status
+	 * @return if the notification is successfully sent
+	 */
+	private boolean isSharedSuccessful(NotificationStatus notificationStatus) {
+
+		boolean isSharedSuccessful;
+
+		switch (notificationStatus) {
+		case FAILED_CONNECTION:
+		case FAILED_NO_IDS:
+		case FAILED_UNKNOWN:
+			isSharedSuccessful = false;
+			break;
+		default:
+			isSharedSuccessful = true;
+			break;
+		}
+
+		return isSharedSuccessful;
+	}
+
+	/**
+	 * Get the notification data that will be shown as a tooltip in the JSP
+	 * (notification data or error message)
+	 * 
+	 * @param request
+	 *            the http servlet request
+	 * @param notification
+	 *            the notification
+	 * @param notificationStatus
+	 *            the status of the notification
+	 * @return the notification data
+	 */
+	private String getNotificationData(HttpServletRequest request,
+			Notification notification, NotificationStatus notificationStatus) {
+
+		String notificationData;
+
+		switch (notificationStatus) {
+		case FAILED_CONNECTION:
+			notificationData = messageSource.getMessage(
+					"gcm-send-message.notif-failed-connection", null,
+					request.getLocale());
+			break;
+		case FAILED_NO_IDS:
+			notificationData = messageSource.getMessage(
+					"gcm-send-message.notif-failed-no-ids", null,
+					request.getLocale());
+			break;
+		case FAILED_UNKNOWN:
+			notificationData = messageSource.getMessage(
+					"gcm-send-message.notif-failed-unknown", null,
+					request.getLocale());
+			break;
+		default:
+			notificationData = notification.toTooltip();
+			break;
+		}
+
+		return notificationData;
 	}
 
 	/**

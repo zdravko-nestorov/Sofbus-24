@@ -11,12 +11,23 @@ public class Utils {
 	/**
 	 * Tests if the supplied string is NULL or 0-length.
 	 * 
-	 * @param String
+	 * @param input
 	 *            input
 	 * @return boolean TRUE if empty, otherwise FALSE
 	 */
 	public static boolean isEmpty(String input) {
 		return input == null || input.trim().length() == 0;
+	}
+
+	/**
+	 * Tests if the supplied string array is NULL or 0-length.
+	 * 
+	 * @param input
+	 *            input
+	 * @return boolean TRUE if empty, otherwise FALSE
+	 */
+	public static boolean isEmpty(String[] input) {
+		return input == null || input.length == 0;
 	}
 
 	/**
