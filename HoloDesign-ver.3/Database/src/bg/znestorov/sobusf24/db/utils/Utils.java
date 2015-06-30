@@ -205,6 +205,11 @@ public class Utils {
 		directionName = directionName.replaceAll(" - 7", " 7");
 		directionName = directionName.replaceAll(" - 8", " 8");
 
+		// Unknown problems (Trolley #1)
+		if ("ж.к. Левски Г".equals(directionName)) {
+			directionName = "ВМА - ж.к. Левски Г";
+		}
+
 		return directionName;
 	}
 

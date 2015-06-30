@@ -34,6 +34,22 @@ public class HtmlResult {
 
 	private static String proceedSpecialTypeOfDirection(String number, String direction) {
 
+		if ("1-ТБ".equals(number)) {
+			direction = "Пета градска болница - бул. Прага";
+		}
+
+		if ("5-ТМ".equals(number)) {
+			direction = "Автостанция Княжево - ж.к. Бъкстон";
+		}
+
+		if ("10-ТМ".equals(number)) {
+			direction = "Автостанция Хладилника - НДК";
+		}
+
+		if ("44-Б".equals(number)) {
+			direction = "Кв. Градоман - кв. Михайлово(Стопанство Михайлово)";
+		}
+
 		if ("66".equals(number)) {
 			direction = "Автостанция Хладилника - хотел Морени";
 		}
@@ -44,18 +60,6 @@ public class HtmlResult {
 
 		if ("505".equals(number)) {
 			direction = "Площад Орлов мост - парк музей Врана";
-		}
-
-		if ("8-ТМ".equals(number)) {
-			direction = "ж.к. Западен парк - ул. Димитър Петков";
-		}
-
-		if ("10-ТМ".equals(number)) {
-			direction = "Автостанция Хладилника - НДК";
-		}
-
-		if ("44-Б".equals(number)) {
-			direction = "Автостанция Банкя - кв. Градоман - кв. Михайлово";
 		}
 
 		if ("11-А".equals(number)) {
@@ -104,7 +108,8 @@ public class HtmlResult {
 		logger.info("[VehicleStation] Start parsing the information...");
 
 		ArrayList<VehicleStation> vehicleStationsList = new ArrayList<VehicleStation>();
-		if ("10-ТМ".equals(vehicle.getNumber()) || "44-Б".equals(vehicle.getNumber()) || "66".equals(vehicle.getNumber()) || "103".equals(vehicle.getNumber())
+		if ("1-ТБ".equals(vehicle.getNumber()) || "5-ТМ".equals(vehicle.getNumber()) || "10-ТМ".equals(vehicle.getNumber())
+				|| "44-Б".equals(vehicle.getNumber()) || "66".equals(vehicle.getNumber()) || "103".equals(vehicle.getNumber())
 				|| "505".equals(vehicle.getNumber()) || "11-А".equals(vehicle.getNumber())) {
 			vehicleStationsList.addAll(getSpecialVehicleStations(logger, htmlResponse, vehicle, stationsList));
 		} else {
@@ -154,6 +159,14 @@ public class HtmlResult {
 
 		ArrayList<VehicleStation> vehicleStationsList = new ArrayList<VehicleStation>();
 
+		if (vehicle.getType() == VehicleType.BUS && "1-ТБ".equals(vehicle.getNumber())) {
+			vehicleStationsList.addAll(getSpecialVehicleStations1TB(vehicle));
+		}
+
+		if (vehicle.getType() == VehicleType.BUS && "5-ТМ".equals(vehicle.getNumber())) {
+			vehicleStationsList.addAll(getSpecialVehicleStations5TM(vehicle));
+		}
+
 		if (vehicle.getType() == VehicleType.BUS && "10-ТМ".equals(vehicle.getNumber())) {
 			vehicleStationsList.addAll(getSpecialVehicleStations10TM(vehicle));
 		}
@@ -177,6 +190,53 @@ public class HtmlResult {
 		if (vehicle.getType() == VehicleType.TROLLEY && "11-А".equals(vehicle.getNumber())) {
 			vehicleStationsList.addAll(getSpecialVehicleStations11A(vehicle));
 		}
+
+		return vehicleStationsList;
+	}
+
+	private static ArrayList<VehicleStation> getSpecialVehicleStations1TB(Vehicle vehicle) {
+
+		ArrayList<VehicleStation> vehicleStationsList = new ArrayList<VehicleStation>();
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1256", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0324", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "2105", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "2171", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "2111", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0283", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1295", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1296", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0366", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0366", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0355", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6300", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1300", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0284", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "2114", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "2170", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "2102", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0339", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "2596", 2));
+
+		return vehicleStationsList;
+	}
+
+	private static ArrayList<VehicleStation> getSpecialVehicleStations5TM(Vehicle vehicle) {
+
+		ArrayList<VehicleStation> vehicleStationsList = new ArrayList<VehicleStation>();
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0853", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6129", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6125", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0391", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0891", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0876", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0289", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0289", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0875", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0888", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6126", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6127", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6128", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0853", 2));
 
 		return vehicleStationsList;
 	}
@@ -207,26 +267,22 @@ public class HtmlResult {
 	private static ArrayList<VehicleStation> getSpecialVehicleStations44B(Vehicle vehicle) {
 
 		ArrayList<VehicleStation> vehicleStationsList = new ArrayList<VehicleStation>();
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0050", 1));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0503", 1));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0957", 1));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1595", 1));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0431", 1));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1390", 1));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1120", 1));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6372", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0832", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6374", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6351", 1));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6351", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1991", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0869", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1920", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0445", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1673", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1674", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0446", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1921", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0870", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1992", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0982", 2));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6375", 2));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "6373", 2));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1119", 2));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1389", 2));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0432", 2));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "1596", 2));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0958", 2));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0502", 2));
-		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0051", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle.getNumber(), "0832", 2));
 
 		return vehicleStationsList;
 	}
