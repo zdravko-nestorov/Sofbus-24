@@ -97,8 +97,8 @@ public class SQLiteJDBC {
 			String vehicleDirection = vehicle.getDirection();
 
 			// Do not insert the BUS with number 21 (such vehicle does not
-			// exist)
-			if (!"8-“Ã".equals(vehicleNumber) && !"21".equals(vehicleNumber)) {
+			// exist). Busses 5-TM and 8-TM are in the site, but not real
+			if (!"5-“Ã".equals(vehicleNumber) && !"8-“Ã".equals(vehicleNumber) && !"21".equals(vehicleNumber)) {
 				String sql = "SELECT * FROM SOF_VEHI WHERE VEHI_NUMBER = '%s' AND VEHI_TYPE = '%s';";
 
 				// Change the number of the vehicle in case of BUS 22 (it has to
