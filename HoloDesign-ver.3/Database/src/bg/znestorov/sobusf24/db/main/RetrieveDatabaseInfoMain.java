@@ -174,13 +174,28 @@ public class RetrieveDatabaseInfoMain {
 
 		for (int i = 0; i < metroStations.size(); i++) {
 			Station metroStation = metroStations.get(i);
-			VehicleType metroType = metroStation.getType();
-			String metroNumber = metroType == VehicleType.METRO1 ? "1033" : "1034";
-			Integer metroDirection = metroType == VehicleType.METRO1 ? 1 : 2;
 
-			vehicleStationsList.add(new VehicleStation(metroType, metroNumber, metroStation.getNumber(), "-1", "-1", "-1", metroStation.getNumber(),
-					metroDirection));
+			Integer metroStationNumber = Integer.parseInt(metroStation.getNumber());
+			VehicleType metroVenicleType = metroStation.getType();
+
+			// Fix the bug with the insertion of the STAT_TYPE column in the
+			// SOF_STAT table (if it is even - should be METRO1, otherwise -
+			// METRO2)
+			if (metroVenicleType == VehicleType.METRO1 || metroVenicleType == VehicleType.METRO2) {
+				if (metroStationNumber % 2 == 1) {
+					metroVenicleType = VehicleType.METRO1;
+				} else {
+					metroVenicleType = VehicleType.METRO2;
+				}
+			}
+
+			String metroVehicleNumber = metroVenicleType == VehicleType.METRO1 ? "1033" : "1034";
+			Integer metroDirectionNumber = metroVenicleType == VehicleType.METRO1 ? 1 : 2;
+
+			vehicleStationsList.add(new VehicleStation(metroVenicleType, metroVehicleNumber, metroStation.getNumber(), "-1", "-1", "-1", metroStation
+					.getNumber(), metroDirectionNumber));
 		}
 
 	}
+
 }
