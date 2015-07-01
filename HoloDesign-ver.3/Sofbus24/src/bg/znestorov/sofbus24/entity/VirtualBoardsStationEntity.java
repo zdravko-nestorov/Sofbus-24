@@ -133,28 +133,32 @@ public class VirtualBoardsStationEntity extends StationEntity implements
 	 */
 	public void removeNotPassingVehicles(boolean isSpecialCase) {
 
-		// Check if the list is empty or not
-		if (vehiclesList != null && !vehiclesList.isEmpty()) {
-			VehicleEntity vehicle = null;
+		// Only in special case check if the list is empty or not
+		if (isSpecialCase) {
 
-			// Iterate over all elements of the list and found the special case
-			// - TRAM #6
-			for (int i = 0; i < vehiclesList.size(); i++) {
-				VehicleEntity currVehicle = vehiclesList.get(i);
+			if (vehiclesList != null && !vehiclesList.isEmpty()) {
+				VehicleEntity vehicle = null;
 
-				if (currVehicle != null
-						&& currVehicle.getType() == VehicleTypeEnum.TRAM
-						&& "6".equals(currVehicle.getNumber())) {
-					vehicle = currVehicle;
-					break;
+				// Iterate over all elements of the list and found the special
+				// case
+				// - TRAM #6
+				for (int i = 0; i < vehiclesList.size(); i++) {
+					VehicleEntity currVehicle = vehiclesList.get(i);
+
+					if (currVehicle != null
+							&& currVehicle.getType() == VehicleTypeEnum.TRAM
+							&& "6".equals(currVehicle.getNumber())) {
+						vehicle = currVehicle;
+						break;
+					}
 				}
-			}
 
-			// Check if TRAM #6 is found. If so - clear the list and add the
-			// found vehicle
-			if (vehicle != null) {
-				vehiclesList.clear();
-				vehiclesList.add(vehicle);
+				// Check if TRAM #6 is found. If so - clear the list and add the
+				// found vehicle
+				if (vehicle != null) {
+					vehiclesList.clear();
+					vehiclesList.add(vehicle);
+				}
 			}
 		}
 	}

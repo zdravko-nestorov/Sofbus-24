@@ -666,6 +666,11 @@ public class Utils {
 		directionName = directionName.trim().replaceAll("-", " - ");
 		directionName = directionName.trim().replaceAll(" +", " ");
 
+		// Special case (TRAM #19)
+		if ("кв. Княжево Гара София север".equals(directionName)) {
+			directionName = "кв. Княжево - Гара София север";
+		}
+
 		return directionName;
 	}
 
