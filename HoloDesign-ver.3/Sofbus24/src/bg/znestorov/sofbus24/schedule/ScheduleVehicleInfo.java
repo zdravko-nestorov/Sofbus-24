@@ -191,46 +191,20 @@ public class ScheduleVehicleInfo {
 		vt.add("");
 		lid.add("");
 		rid.add("");
-		directionsNames
-				.add(translateString("Автостанция Княжево - ж.к. Бъкстон"));
+		directionsNames.add(translateString(""));
 		stationsList = new ArrayList<StationEntity>();
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0853", translateString("Автостанция Княжево"), ""));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"6129", translateString("Ул. Райска Градина - временна"), ""));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"6125", translateString("Ул. Планинец - временна"), ""));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0391", translateString("Бул. Цар Борис ІІІ"), ""));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0891", translateString("Кв. Павлово"), ""));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0876", translateString("Кв. Овча Купел"), ""));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0289", translateString("Бул. Братя Бъкстон"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS, "",
+				translateString(""), ""));
 		directionsList.add(stationsList);
 
 		// Direction 2
 		vt.add("");
 		lid.add("");
 		rid.add("");
-		directionsNames
-				.add(translateString("Ж.к. Бъкстон - автостанция Княжево"));
+		directionsNames.add(translateString(""));
 		stationsList = new ArrayList<StationEntity>();
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0289", translateString("Бул. Братя Бъкстон"), ""));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0875", translateString("Кв. Овча Купел"), ""));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0888", translateString("Кв. Павлово"), ""));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"6126", translateString("Бул. Цар Борис ІІІ - временна"), ""));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"6127", translateString("Ул. Планинец - временна"), ""));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"6128", translateString("Ул. Райска Градина - временна"), ""));
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0853", translateString("Автостанция Княжево"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS, "",
+				translateString(""), ""));
 		directionsList.add(stationsList);
 
 		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,

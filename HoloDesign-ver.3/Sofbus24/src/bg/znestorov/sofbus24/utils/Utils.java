@@ -666,7 +666,23 @@ public class Utils {
 		directionName = directionName.trim().replaceAll("-", " - ");
 		directionName = directionName.trim().replaceAll(" +", " ");
 
-		// Special case (TRAM #19)
+		// Special cases
+		if (directionName.contains(" - временна")) {
+			directionName = directionName
+					.replaceAll(" - временна", "-временна");
+		}
+
+		// BUS #309
+		if ("бул. Илиянци - подлеза".equals(directionName)) {
+			directionName = "бул. Илиянци (подлеза) - ж.к. Люлин 1,2";
+		}
+
+		// TROLLEY #1
+		if ("ж.к. Левски Г".equals(directionName)) {
+			directionName = "ж.к. Левски Г - ВМА";
+		}
+
+		// TRAM #19
 		if ("кв. Княжево Гара София север".equals(directionName)) {
 			directionName = "кв. Княжево - Гара София север";
 		}

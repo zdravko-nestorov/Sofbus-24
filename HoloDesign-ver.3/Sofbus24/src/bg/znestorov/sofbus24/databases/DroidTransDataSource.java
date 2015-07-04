@@ -340,8 +340,8 @@ public class DroidTransDataSource {
 				+ "																											\n");
 		query.append(" 		JOIN SOF_VEHI																					\n");
 		query.append(" 			ON SOF_VEHI.PK_VEHI_ID = SOF_VEST.FK_VEST_VEHI_ID											\n");
-		query.append(" 			AND SOF_VEHI.VEHI_NUMBER LIKE '%" + vehicleNumber
-				+ "%'																										\n");
+		query.append(" 			AND SOF_VEHI.VEHI_NUMBER LIKE '" + vehicleNumber
+				+ "'																										\n");
 		query.append(" 			AND SOF_VEHI.VEHI_TYPE LIKE '%"
 				+ String.valueOf(vehicleType) + "%'																			\n");
 
@@ -392,8 +392,8 @@ public class DroidTransDataSource {
 				+ "																											\n");
 		query.append(" 		JOIN SOF_VEHI																					\n");
 		query.append(" 			ON SOF_VEHI.PK_VEHI_ID = SOF_VEST.FK_VEST_VEHI_ID											\n");
-		query.append(" 			AND SOF_VEHI.VEHI_NUMBER LIKE '%" + vehicleNumber
-				+ "%'																										\n");
+		query.append(" 			AND SOF_VEHI.VEHI_NUMBER LIKE '" + vehicleNumber
+				+ "'																										\n");
 		query.append(" 			AND SOF_VEHI.VEHI_TYPE LIKE '%"
 				+ String.valueOf(vehicleType) + "%'																			\n");
 
