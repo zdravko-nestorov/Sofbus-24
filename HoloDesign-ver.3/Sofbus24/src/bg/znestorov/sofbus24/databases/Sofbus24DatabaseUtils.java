@@ -26,7 +26,7 @@ public class Sofbus24DatabaseUtils {
 	 * the automatic application update (it may be one version up - all is up to
 	 * you)
 	 */
-	public static final Integer DB_STATIONS_VERSION = 8;
+	public static final Integer DB_STATIONS_VERSION = 9;
 
 	private static final String DB_STATIONS_NAME = "stations.db";
 	private static final String DB_STATIONS_JOURNAL_NAME = "stations.db-journal";
