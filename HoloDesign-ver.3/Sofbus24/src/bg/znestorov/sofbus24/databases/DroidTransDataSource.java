@@ -66,10 +66,14 @@ public class DroidTransDataSource {
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			VehicleTypeEnum vehicleType = cursorToVehicleType(cursor);
-			vehicleTypes.add(vehicleType);
+			try {
+				VehicleTypeEnum vehicleType = cursorToVehicleType(cursor);
+				vehicleTypes.add(vehicleType);
 
-			cursor.moveToNext();
+				cursor.moveToNext();
+			} catch (Exception e) {
+				break;
+			}
 		}
 
 		// Closing the cursor

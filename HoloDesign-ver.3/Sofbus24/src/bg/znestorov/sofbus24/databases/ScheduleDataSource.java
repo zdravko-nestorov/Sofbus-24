@@ -333,7 +333,7 @@ public class ScheduleDataSource {
 		query.append(" WHERE 													\n");
 		query.append(" " + ScheduleSQLite.COLUMN_SCHE_TYPE + " = '%s' AND		\n");
 		query.append(" " + ScheduleSQLite.COLUMN_SCHE_VEHICLE_NUMBER
-				+ " = %s														\n");
+				+ " = '%s'														\n");
 
 		Cursor cursor = database.rawQuery(
 				String.format(query.toString(), vehicleType, vehicleNumber),
