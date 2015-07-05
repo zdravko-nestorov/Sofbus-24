@@ -21,7 +21,7 @@ public class HtmlRequest {
 			long startTime = System.currentTimeMillis();
 
 			URL url = new URL(String.format(Constants.DB_VEHICLES_URL, type,
-					!"21-22".equals(number) ? number : "22"));
+					number));
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
 			con.setRequestMethod("GET");
