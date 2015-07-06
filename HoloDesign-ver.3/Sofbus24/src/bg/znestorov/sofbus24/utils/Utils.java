@@ -672,6 +672,12 @@ public class Utils {
 					.replaceAll(" - временна", "-временна");
 		}
 
+		// BUS #280 and #306
+		if (directionName.contains("СУ Света Климент Охридски")) {
+			directionName = directionName.replaceAll(
+					"СУ Света Климент Охридски", "СУ Свети Климент Охридски");
+		}
+
 		// BUS #309
 		if ("бул. Илиянци - подлеза".equals(directionName)) {
 			directionName = "бул. Илиянци (подлеза) - ж.к. Люлин 1,2";
