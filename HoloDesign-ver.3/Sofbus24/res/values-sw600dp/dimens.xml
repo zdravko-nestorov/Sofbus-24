@@ -17,6 +17,6 @@
     <dimen name="home_screen_subtitle_txt_size">16sp</dimen>
 
     <!-- Metro Schedule -->
-    <dimen name="metro_schedule_legend_size">9sp</dimen>
+    <dimen name="metro_schedule_legend_size">10sp</dimen>
 
 </resources>

@@ -47,9 +47,9 @@ public class MetroLoadStations {
 
 		stationsDatasource.open();
 		List<StationEntity> metroDirection1 = stationsDatasource
-				.getStationsViaType(VehicleTypeEnum.METRO1);
+				.getMetroStationsViaDirection(VehicleTypeEnum.METRO1);
 		List<StationEntity> metroDirection2 = stationsDatasource
-				.getStationsViaType(VehicleTypeEnum.METRO2);
+				.getMetroStationsViaDirection(VehicleTypeEnum.METRO2);
 		Collections.reverse(metroDirection2);
 		stationsDatasource.close();
 

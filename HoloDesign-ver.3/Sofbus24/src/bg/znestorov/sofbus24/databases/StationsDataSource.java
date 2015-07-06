@@ -230,18 +230,34 @@ public class StationsDataSource {
 	 *            type of the station
 	 * @return a list with all stations matching the input type from the DB
 	 */
-	public List<StationEntity> getStationsViaType(VehicleTypeEnum vehicleType) {
+	public List<StationEntity> getMetroStationsViaDirection(
+			VehicleTypeEnum vehicleType) {
+
 		List<StationEntity> stations = new ArrayList<StationEntity>();
 
-		String selection = Sofbus24SQLite.COLUMN_STAT_TYPE + " = ?";
-		String[] selectionArgs = new String[] { String.valueOf(vehicleType) };
+		// Indicates the residue modulo according to the metro station number
+		// (METRO1 --> '1', METRO2 --> '0')
+		int vehicleTypeIntValue;
+		switch (vehicleType) {
+		case METRO1:
+			vehicleTypeIntValue = 1;
+			break;
+		default:
+			vehicleTypeIntValue = 0;
+			break;
+		}
 
-		database.query(Sofbus24SQLite.TABLE_SOF_STAT, allColumns, selection,
-				selectionArgs, null, null, null);
+		StringBuilder query = new StringBuilder();
+		query.append(" SELECT * 					%n");
+		query.append(" FROM %s						%n");
+		query.append(" WHERE %s %% 2 = %s			%n");
+		query.append(" AND %s LIKE '%%%s%%'			%n");
 
-		// Selecting all fields of the TABLE_STATIONS
-		Cursor cursor = database.query(Sofbus24SQLite.TABLE_SOF_STAT,
-				allColumns, selection, selectionArgs, null, null, null);
+		String quertyString = String.format(query.toString(),
+				Sofbus24SQLite.TABLE_SOF_STAT,
+				Sofbus24SQLite.COLUMN_STAT_NUMBER, vehicleTypeIntValue,
+				Sofbus24SQLite.COLUMN_STAT_TYPE, VehicleTypeEnum.METRO);
+		Cursor cursor = database.rawQuery(quertyString, null);
 
 		// Iterating the cursor and fill the empty List<Station>
 		cursor.moveToFirst();
