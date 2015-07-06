@@ -1,6 +1,5 @@
 package bg.znestorov.sobusf24.db.utils;
 
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;

@@ -12,7 +12,8 @@ public class Station {
 	// Used to make a relation between the vehicle and the station
 	private String stop;
 
-	public Station(VehicleType type, String number, String name, String stop, int direction) {
+	public Station(VehicleType type, String number, String name, String stop,
+			int direction) {
 		this.type = type;
 		this.number = number;
 		this.name = name;
@@ -108,8 +109,10 @@ public class Station {
 
 	@Override
 	public String toString() {
-		return getClass().getName() + " {\n\ttype: " + type + "\n\tnumber: " + number + "\n\tname: " + name + "\n\tlatitude: " + latitude + "\n\tlongitude: "
-				+ longitude + "\n\tdirection: " + direction + "\n\tstop: " + stop + "\n}";
+		return getClass().getName() + " {\n\ttype: " + type + "\n\tnumber: "
+				+ number + "\n\tname: " + name + "\n\tlatitude: " + latitude
+				+ "\n\tlongitude: " + longitude + "\n\tdirection: " + direction
+				+ "\n\tstop: " + stop + "\n}";
 	}
 
 }

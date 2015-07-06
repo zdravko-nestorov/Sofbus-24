@@ -11,7 +11,9 @@ public class VehicleStation {
 	private String stop;
 	private Integer direction;
 
-	public VehicleStation(VehicleType vehicleType, String vehicleNumber, String stationNumber, String vt, String lid, String rid, String stop, Integer direction) {
+	public VehicleStation(VehicleType vehicleType, String vehicleNumber,
+			String stationNumber, String vt, String lid, String rid,
+			String stop, Integer direction) {
 		this.vehicleType = vehicleType;
 		this.vehicleNumber = vehicleNumber;
 		this.stationNumber = stationNumber;
@@ -22,7 +24,8 @@ public class VehicleStation {
 		this.direction = direction;
 	}
 
-	public VehicleStation(VehicleType vehicleType, String vehicleNumber, String stationNumber, Integer direction) {
+	public VehicleStation(VehicleType vehicleType, String vehicleNumber,
+			String stationNumber, Integer direction) {
 		this.vehicleType = vehicleType;
 		this.vehicleNumber = vehicleNumber;
 		this.stationNumber = stationNumber;
@@ -95,7 +98,10 @@ public class VehicleStation {
 
 	@Override
 	public String toString() {
-		return getClass().getName() + " {\n\tvehicleType: " + vehicleType + "\n\tvehicleNumber: " + vehicleNumber + "\n\tstationNumber: " + stationNumber
-				+ "\n\tvt: " + vt + "\n\tlid: " + lid + "\n\trid: " + rid + "\n\tstop: " + stop + "\n\tdirection: " + direction + "\n}";
+		return getClass().getName() + " {\n\tvehicleType: " + vehicleType
+				+ "\n\tvehicleNumber: " + vehicleNumber + "\n\tstationNumber: "
+				+ stationNumber + "\n\tvt: " + vt + "\n\tlid: " + lid
+				+ "\n\trid: " + rid + "\n\tstop: " + stop + "\n\tdirection: "
+				+ direction + "\n}";
 	}
 }

@@ -47,7 +47,8 @@ public class Utils {
 	}
 
 	public static String formatNumberOfDigits(String input, int outputLength) {
-		String formatType = String.format(Locale.getDefault(), "%%0%dd", outputLength);
+		String formatType = String.format(Locale.getDefault(), "%%0%dd",
+				outputLength);
 
 		try {
 			input = String.format(formatType, Integer.parseInt(input));
@@ -69,13 +70,17 @@ public class Utils {
 			case 2:
 			case 4:
 				directionNameParts[0] = directionNameParts[0].trim();
-				directionNameParts[0] = directionNameParts[0].replaceAll("\\(", " (");
+				directionNameParts[0] = directionNameParts[0].replaceAll("\\(",
+						" (");
 
 				directionNameParts[1] = directionNameParts[1].trim();
-				directionNameParts[1] = getValueBeforeLast(directionNameParts[1], "(");
-				directionNameParts[1] = getValueBefore(directionNameParts[1], "/");
+				directionNameParts[1] = getValueBeforeLast(
+						directionNameParts[1], "(");
+				directionNameParts[1] = getValueBefore(directionNameParts[1],
+						"/");
 
-				directionName = directionNameParts[0] + " - " + directionNameParts[1];
+				directionName = directionNameParts[0] + " - "
+						+ directionNameParts[1];
 				directionName = directionName.replaceAll(" +", " ");
 
 				break;
@@ -87,18 +92,24 @@ public class Utils {
 				}
 
 				directionNameParts[0] = directionNameParts[0].trim();
-				directionNameParts[0] = directionNameParts[0].replaceAll("\\(", " (");
+				directionNameParts[0] = directionNameParts[0].replaceAll("\\(",
+						" (");
 
 				directionNameParts[1] = directionNameParts[1].trim();
 
 				directionNameParts[2] = directionNameParts[2].trim();
-				directionNameParts[2] = getValueBeforeLast(directionNameParts[2], "(");
-				directionNameParts[2] = getValueBefore(directionNameParts[2], "/");
+				directionNameParts[2] = getValueBeforeLast(
+						directionNameParts[2], "(");
+				directionNameParts[2] = getValueBefore(directionNameParts[2],
+						"/");
 
 				if (isDirectionThreeParts) {
-					directionName = directionNameParts[0] + " - " + directionNameParts[1] + " - " + directionNameParts[2];
+					directionName = directionNameParts[0] + " - "
+							+ directionNameParts[1] + " - "
+							+ directionNameParts[2];
 				} else {
-					directionName = directionNameParts[0] + " - " + directionNameParts[1];
+					directionName = directionNameParts[0] + " - "
+							+ directionNameParts[1];
 				}
 				directionName = directionName.replaceAll(" +", " ");
 
@@ -135,30 +146,56 @@ public class Utils {
 		directionName = directionName.replaceAll("Ц\\.гара", "Централна гара");
 		directionName = directionName.replaceAll("Ц\\. Гара", "Централна гара");
 		directionName = directionName.replaceAll("Ц\\.Гара", "Централна гара");
-		directionName = directionName.replaceAll("Ст\\.Град", "Студентски Град");
-		directionName = directionName.replaceAll("БУЛ\\. НИКОЛА ПЕТКОВ", "бул\\. Никола Петков");
-		directionName = directionName.replaceAll("УЛ\\. ДОБРОТИЧ", "ул\\. Добротич");
-		directionName = directionName.replaceAll("СЕЛО ДОЛНИ ПАСАРЕЛ", "Село Долни Пасарел");
-		directionName = directionName.replaceAll("АВТОБАЗА ИСКЪР - УЛ\\. ГЕН\\. ГУРКО", "Автобаза Искър - ул\\. Генерал Гурко");
-		directionName = directionName.replaceAll("Кв\\. Д\\.Миленков - Кв\\. Бусманци", "кв\\. Д\\. Миленков - кв\\. Бусманци");
-		directionName = directionName.replaceAll("МАНАСТИР СВ\\. МИНА", "Манастир Света Мина");
-		directionName = directionName.replaceAll("Ж\\.К\\.ГОЦЕ ДЕЛЧЕВ", "ж\\.к\\. Гоце Делчев");
-		directionName = directionName.replaceAll("ПЛ\\. ОРЛОВ МОСТ", "Площад Орлов Мост");
-		directionName = directionName.replaceAll("ЛИФТА - ДРАГАЛЕВЦИ", "Лифта Драгалевци");
-		directionName = directionName.replaceAll("СУ СВ\\.КЛИМЕНТ ОХРИДСКИ - СТУДЕНТСКИ ГРАД", "СУ Свети Климент Охридски - Студентски Град");
-		directionName = directionName.replaceAll("СУ Св\\. Климент Охридски - СТУДЕНТСКИ ГРАД", "СУ Свети Климент Охридски - Студентски Град");
-		directionName = directionName.replaceAll("ФОНДОВИ ЖИЛИЩА", "Фондови Жилища");
-		directionName = directionName.replaceAll("СТУДЕНТСКИ ГРАД", "Студентски Град");
-		directionName = directionName.replaceAll("В\\.З\\.Бонсови поляни", "в.з. Бонсови поляни");
+		directionName = directionName
+				.replaceAll("Ст\\.Град", "Студентски Град");
+		directionName = directionName.replaceAll("БУЛ\\. НИКОЛА ПЕТКОВ",
+				"бул\\. Никола Петков");
+		directionName = directionName.replaceAll("УЛ\\. ДОБРОТИЧ",
+				"ул\\. Добротич");
+		directionName = directionName.replaceAll("СЕЛО ДОЛНИ ПАСАРЕЛ",
+				"Село Долни Пасарел");
+		directionName = directionName.replaceAll(
+				"АВТОБАЗА ИСКЪР - УЛ\\. ГЕН\\. ГУРКО",
+				"Автобаза Искър - ул\\. Генерал Гурко");
+		directionName = directionName.replaceAll(
+				"Кв\\. Д\\.Миленков - Кв\\. Бусманци",
+				"кв\\. Д\\. Миленков - кв\\. Бусманци");
+		directionName = directionName.replaceAll("МАНАСТИР СВ\\. МИНА",
+				"Манастир Света Мина");
+		directionName = directionName.replaceAll("Ж\\.К\\.ГОЦЕ ДЕЛЧЕВ",
+				"ж\\.к\\. Гоце Делчев");
+		directionName = directionName.replaceAll("ПЛ\\. ОРЛОВ МОСТ",
+				"Площад Орлов Мост");
+		directionName = directionName.replaceAll("ЛИФТА - ДРАГАЛЕВЦИ",
+				"Лифта Драгалевци");
+		directionName = directionName.replaceAll(
+				"СУ СВ\\.КЛИМЕНТ ОХРИДСКИ - СТУДЕНТСКИ ГРАД",
+				"СУ Свети Климент Охридски - Студентски Град");
+		directionName = directionName.replaceAll(
+				"СУ Св\\. Климент Охридски - СТУДЕНТСКИ ГРАД",
+				"СУ Свети Климент Охридски - Студентски Град");
+		directionName = directionName.replaceAll("ФОНДОВИ ЖИЛИЩА",
+				"Фондови Жилища");
+		directionName = directionName.replaceAll("СТУДЕНТСКИ ГРАД",
+				"Студентски Град");
+		directionName = directionName.replaceAll("В\\.З\\.Бонсови поляни",
+				"в.з. Бонсови поляни");
 		directionName = directionName.replaceAll("СЕЛО ЖЕЛЯВА", "село Желява");
 		directionName = directionName.replaceAll("СЕЛО БАЛША", "Село Балша");
-		directionName = directionName.replaceAll("КУЛИНАРЕН К - Т ПЕЙФИЛ", "Кулинарен комбинат Пейфил");
-		directionName = directionName.replaceAll("СУ Св\\. Климент Охридски", "СУ Свети Климент Охридски");
-		directionName = directionName.replaceAll("МБАЛ Св\\.Анна - ухо - Ж\\.к\\. Гоце Делчев", "МБАЛ Св\\.Анна - Ж\\.к\\. Гоце Делчев");
-		directionName = directionName.replaceAll("Ж\\.к\\. Гоце Делчев - МБАЛ Св\\.Анна - ухо", "Ж\\.к\\. Гоце Делчев - МБАЛ Св\\.Анна");
+		directionName = directionName.replaceAll("КУЛИНАРЕН К - Т ПЕЙФИЛ",
+				"Кулинарен комбинат Пейфил");
+		directionName = directionName.replaceAll("СУ Св\\. Климент Охридски",
+				"СУ Свети Климент Охридски");
+		directionName = directionName.replaceAll(
+				"МБАЛ Св\\.Анна - ухо - Ж\\.к\\. Гоце Делчев",
+				"МБАЛ Св\\.Анна - Ж\\.к\\. Гоце Делчев");
+		directionName = directionName.replaceAll(
+				"Ж\\.к\\. Гоце Делчев - МБАЛ Св\\.Анна - ухо",
+				"Ж\\.к\\. Гоце Делчев - МБАЛ Св\\.Анна");
 		directionName = directionName.replaceAll(" ухо", " ж\\.к\\. Люлин 3");
 		directionName = directionName.replaceAll("ДепоИскър", "Депо Искър");
-		directionName = directionName.replaceAll("Ж\\.к\\.Люлин 1,2", "ж\\.к\\. Люлин 1,2 - бул. Илиянци (подлеза)");
+		directionName = directionName.replaceAll("Ж\\.к\\.Люлин 1,2",
+				"ж\\.к\\. Люлин 1,2 - бул. Илиянци (подлеза)");
 		directionName = directionName.replaceAll("Ж\\.К\\.", "Ж\\.к\\.");
 		directionName = directionName.replaceAll("Ж\\.К\\. ", "Ж\\.к\\.");
 		directionName = directionName.replaceAll("Ж\\.к\\. ", "Ж\\.к\\.");
@@ -179,17 +216,33 @@ public class Utils {
 		directionName = directionName.replaceAll("Св\\.", "Света ");
 
 		// Special cases
-		directionName = directionName.replaceAll("кв\\. Орландовци Гара Захарна фабрика", "кв\\. Орландовци - Гара Захарна фабрика");
-		directionName = directionName.replaceAll("ул\\. Кораб планина Гара Захарна фабрика", "ул\\. Кораб планина - Гара Захарна фабрика");
-		directionName = directionName.replaceAll("Автостанция Орландовци ГАРА КУРИЛО", "Автостанция Орландовци - ГАРА КУРИЛО");
-		directionName = directionName.replaceAll("кв\\. Иваняне Гара Обеля", "кв\\. Иваняне - Гара Обеля");
-		directionName = directionName.replaceAll("АП Малашевци Град Бухово", "АП Малашевци - Град Бухово");
-		directionName = directionName.replaceAll("УМБАЛСМ Пирогов Гара Искър", "УМБАЛСМ Пирогов - Гара Искър");
-		directionName = directionName.replaceAll("ЧИТАЛИЩЕ СВЕТЛИНА Гара Искър", "ЧИТАЛИЩЕ СВЕТЛИНА - Гара Искър");
-		directionName = directionName.replaceAll("кв\\. Княжево Гара София север", "кв\\. Княжево - Гара София (север)");
-		directionName = directionName.replaceAll("АВТОСТАНЦИЯ КНЯЖЕВО - село Мърчаево Толумска махала", "кв. Княжево - с. Мърчаево (Толумска махала)");
+		directionName = directionName.replaceAll(
+				"кв\\. Орландовци Гара Захарна фабрика",
+				"кв\\. Орландовци - Гара Захарна фабрика");
+		directionName = directionName.replaceAll(
+				"ул\\. Кораб планина Гара Захарна фабрика",
+				"ул\\. Кораб планина - Гара Захарна фабрика");
+		directionName = directionName.replaceAll(
+				"Автостанция Орландовци ГАРА КУРИЛО",
+				"Автостанция Орландовци - ГАРА КУРИЛО");
+		directionName = directionName.replaceAll("кв\\. Иваняне Гара Обеля",
+				"кв\\. Иваняне - Гара Обеля");
+		directionName = directionName.replaceAll("АП Малашевци Град Бухово",
+				"АП Малашевци - Град Бухово");
+		directionName = directionName.replaceAll("УМБАЛСМ Пирогов Гара Искър",
+				"УМБАЛСМ Пирогов - Гара Искър");
+		directionName = directionName.replaceAll(
+				"ЧИТАЛИЩЕ СВЕТЛИНА Гара Искър",
+				"ЧИТАЛИЩЕ СВЕТЛИНА - Гара Искър");
+		directionName = directionName.replaceAll(
+				"кв\\. Княжево Гара София север",
+				"кв\\. Княжево - Гара София (север)");
+		directionName = directionName.replaceAll(
+				"АВТОСТАНЦИЯ КНЯЖЕВО - село Мърчаево Толумска махала",
+				"кв. Княжево - с. Мърчаево (Толумска махала)");
 		if ("ж.к. Младост 1".equals(directionName)) {
-			directionName = directionName.replaceAll("ж\\.к\\. Младост 1", "ж\\.к\\. Младост 1 - ж\\.к\\. Люлин 1,2");
+			directionName = directionName.replaceAll("ж\\.к\\. Младост 1",
+					"ж\\.к\\. Младост 1 - ж\\.к\\. Люлин 1,2");
 		}
 
 		directionName = directionName.trim().replaceAll("-", " - ");
