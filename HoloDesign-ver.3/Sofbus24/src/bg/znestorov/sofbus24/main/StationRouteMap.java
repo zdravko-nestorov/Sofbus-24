@@ -321,10 +321,10 @@ public class StationRouteMap extends SherlockFragmentActivity {
 						metroRouteOptionsM11.add(msLocation);
 						metroRouteOptionsM12.add(msLocation);
 						metroRouteOptionsM12.add(mladostStationLocation);
-					} else if (stationNumber < 3039) {
-						metroRouteOptionsM11.add(msLocation);
-					} else {
+					} else if (stationNumber >= 3039) {
 						metroRouteOptionsM12.add(msLocation);
+					} else {
+						metroRouteOptionsM11.add(msLocation);
 					}
 				} else {
 					metroRouteOptionsM11.add(msLocation);
