@@ -149,7 +149,7 @@ public class ScheduleVehicleInfo {
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
 				"0355", translateString("Бул. Пенчо Славейков"), "22668"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"22680", translateString("УМБАЛСМ Пирогов"), "6300"));
+				"6300", translateString("УМБАЛСМ Пирогов"), "22680"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
 				"1300", translateString("Пл. Руски паметник"), "14649"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
