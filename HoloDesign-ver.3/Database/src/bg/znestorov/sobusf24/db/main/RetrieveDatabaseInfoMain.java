@@ -95,9 +95,12 @@ public class RetrieveDatabaseInfoMain {
 					ArrayList<VehicleStation> vehicleStations = (ArrayList<VehicleStation>) info
 							.get("vehice_stations");
 
-					vehiclesList.add(vehicle);
-					stationsSet.addAll(stations);
-					vehicleStationsList.addAll(vehicleStations);
+					// Bus 20-TM is only a temporary station
+					if (!"20-“Ã".equals(vehicle.getNumber())) {
+						vehiclesList.add(vehicle);
+						stationsSet.addAll(stations);
+						vehicleStationsList.addAll(vehicleStations);
+					}
 				}
 
 			}

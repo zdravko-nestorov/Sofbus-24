@@ -46,15 +46,15 @@ public class HtmlResult {
 		}
 
 		if ("10-ТМ".equals(number)) {
-			direction = "Автостанция Хладилника - НДК";
+			direction = "НДК (хотел Хилтън) - Зоопарка";
 		}
 
 		if ("44-Б".equals(number)) {
-			direction = "Кв. Градоман - кв. Михайлово(Стопанство Михайлово)";
+			direction = "Автостанция Банкя - метростанция Сливница";
 		}
 
 		if ("66".equals(number)) {
-			direction = "Автостанция Хладилника - хотел Морени";
+			direction = "Хотел Морени - Зоопарка";
 		}
 
 		if ("103".equals(number)) {
@@ -321,9 +321,11 @@ public class HtmlResult {
 
 		ArrayList<VehicleStation> vehicleStationsList = new ArrayList<VehicleStation>();
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "0064", 1));
+				.getNumber(), "0749", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "0909", 1));
+				.getNumber(), "0977", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "2314", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
 				.getNumber(), "2654", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
@@ -351,7 +353,11 @@ public class HtmlResult {
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
 				.getNumber(), "0912", 2));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "0064", 2));
+				.getNumber(), "2313", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "0976", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "0749", 2));
 
 		return vehicleStationsList;
 	}
@@ -361,37 +367,75 @@ public class HtmlResult {
 
 		ArrayList<VehicleStation> vehicleStationsList = new ArrayList<VehicleStation>();
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "0832", 1));
+				.getNumber(), "0050", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "6374", 1));
+				.getNumber(), "1618", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "6351", 1));
+				.getNumber(), "0107", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "1991", 1));
+				.getNumber(), "0454", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "0869", 1));
+				.getNumber(), "0996", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "1920", 1));
+				.getNumber(), "1024", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "0445", 1));
+				.getNumber(), "0790", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "1673", 1));
+				.getNumber(), "2307", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "1674", 2));
+				.getNumber(), "1430", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "0446", 2));
+				.getNumber(), "2520", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "1921", 2));
+				.getNumber(), "1685", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "0870", 2));
+				.getNumber(), "0771", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "1992", 2));
+				.getNumber(), "0895", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "0982", 2));
+				.getNumber(), "1751", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "6375", 2));
+				.getNumber(), "1140", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "0832", 2));
+				.getNumber(), "1061", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "1063", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "1141", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "1752", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "0896", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "0772", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "1686", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "2521", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "1431", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "2308", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "0789", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "1027", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "0997", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "0453", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "0106", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "1617", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "1403", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "0503", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "0502", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "0051", 2));
 
 		return vehicleStationsList;
 	}
@@ -401,7 +445,9 @@ public class HtmlResult {
 
 		ArrayList<VehicleStation> vehicleStationsList = new ArrayList<VehicleStation>();
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "0064", 1));
+				.getNumber(), "0749", 1));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "2756", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
 				.getNumber(), "0834", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
@@ -415,7 +461,9 @@ public class HtmlResult {
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
 				.getNumber(), "0837", 2));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
-				.getNumber(), "0064", 2));
+				.getNumber(), "0912", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(), vehicle
+				.getNumber(), "0749", 2));
 
 		return vehicleStationsList;
 	}
