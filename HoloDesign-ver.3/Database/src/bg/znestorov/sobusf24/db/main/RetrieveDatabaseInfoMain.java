@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import bg.znestorov.sobusf24.db.databases.SQLiteJDBC;
 import bg.znestorov.sobusf24.db.information.InformationMain;
+import bg.znestorov.sobusf24.db.utils.VehicleAlphanumComparator;
 import bg.znestorov.sobusf24.db.utils.Constants;
 import bg.znestorov.sobusf24.db.utils.LogFormatter;
 import bg.znestorov.sobusf24.db.utils.Utils;
@@ -106,6 +107,9 @@ public class RetrieveDatabaseInfoMain {
 			}
 		}
 
+		// Sort the vehicles list
+		Collections.sort(vehiclesList, new VehicleAlphanumComparator());
+
 		// Add the metro stations to the vehicles list
 		addMetroVehicles(vehiclesList);
 
@@ -115,12 +119,13 @@ public class RetrieveDatabaseInfoMain {
 		addMetroStations(stationsList, metroStations);
 
 		Comparator<Station> stationsComparator = new Comparator<Station>() {
+
 			@Override
 			public int compare(Station station1, Station station2) {
-				long value1Long = Long.parseLong(station1.getNumber());
-				long value2Long = Long.parseLong(station2.getNumber());
+				long station1Number = Long.parseLong(station1.getNumber());
+				long station2Number = Long.parseLong(station2.getNumber());
 
-				return compare(value1Long, value2Long);
+				return compare(station1Number, station2Number);
 			}
 
 			private int compare(long a, long b) {

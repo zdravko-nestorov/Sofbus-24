@@ -46,6 +46,16 @@ public class Utils {
 		}
 	}
 
+	public static String getOnlyDigits(String value) {
+		if (value != null && !"".equals(value)) {
+			value = value.replaceAll("\\D+", "");
+		} else {
+			value = "";
+		}
+
+		return value;
+	}
+
 	public static String formatNumberOfDigits(String input, int outputLength) {
 		String formatType = String.format(Locale.getDefault(), "%%0%dd",
 				outputLength);
@@ -247,6 +257,42 @@ public class Utils {
 		if (directionName.contains(" - временна")) {
 			directionName = directionName
 					.replaceAll(" - временна", "-временна");
+		}
+
+		// BUS #4
+		if (directionName.contains("ж.к. Младост 1/бл.70/ - Кокалянско ханче")) {
+			directionName = directionName.replaceAll(
+					"ж.к. Младост 1/бл.70/ - Кокалянско ханче",
+					"ж.к. Младост 1 /бл.70/ - Кокалянско ханче");
+		}
+
+		// BUS #9
+		if (directionName.contains("кв. Д.Миленков - кв. Бусманци")) {
+			directionName = directionName.replaceAll(
+					"кв. Д.Миленков - кв. Бусманци",
+					"кв. Д. Миленков - кв. Бусманци");
+		}
+
+		// BUS #23
+		if (directionName.contains("Автостанция Орландовци - ГАРА КУРИЛО")) {
+			directionName = directionName.replaceAll(
+					"Автостанция Орландовци - ГАРА КУРИЛО",
+					"Автостанция Орландовци - Гара Курило");
+		}
+
+		// BUS #48
+		if (directionName.contains("ж.к. Гоце Делчев - жк.Младост 4")) {
+			directionName = directionName.replaceAll(
+					"ж.к. Гоце Делчев - жк.Младост 4",
+					"ж.к. Гоце Делчев - ж.к. Младост 4");
+		}
+
+		// BUS #59
+		if (directionName
+				.contains("АВТОСТАНЦИЯ КНЯЖЕВО - село Мърчаево Толумска махала")) {
+			directionName = directionName.replaceAll(
+					"АВТОСТАНЦИЯ КНЯЖЕВО - село Мърчаево Толумска махала",
+					"Автостанция Княжево - село Мърчаево Толумска махала");
 		}
 
 		// BUS #280 and #306
