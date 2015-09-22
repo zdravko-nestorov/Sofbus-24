@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.PublicTransportStationEntity;
 import bg.znestorov.sofbus24.entity.RefreshableListFragment;
@@ -22,130 +23,127 @@ import bg.znestorov.sofbus24.utils.Constants;
 /**
  * Virtual Boards Time Fragment containing information about the vehicles in
  * real time for a chosen station
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class VirtualBoardsTimeFragment extends ListFragment implements
-		RefreshableListFragment {
+        RefreshableListFragment {
 
-	private Activity context;
-	private VirtualBoardsStationEntity vbTimeStation;
+    private static final String BUNDLE_VB_TIME_EMPTY_TEXT = "BUNDLE VB TIME EMPTY TEXT";
+    private Activity context;
+    private VirtualBoardsStationEntity vbTimeStation;
+    private String vbTimeEmptyText;
+    private TextView vbListEmptyTextView;
 
-	private String vbTimeEmptyText;
-	private TextView vbListEmptyTextView;
+    public static VirtualBoardsTimeFragment newInstance(
+            VirtualBoardsStationEntity vbTimeStation, String vbTimeEmptyText) {
+        VirtualBoardsTimeFragment vbTimeFragment = new VirtualBoardsTimeFragment();
 
-	private static final String BUNDLE_VB_TIME_EMPTY_TEXT = "BUNDLE VB TIME EMPTY TEXT";
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.BUNDLE_VIRTUAL_BOARDS_TIME,
+                vbTimeStation);
+        bundle.putString(Constants.BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST,
+                vbTimeEmptyText);
+        vbTimeFragment.setArguments(bundle);
 
-	public static VirtualBoardsTimeFragment newInstance(
-			VirtualBoardsStationEntity vbTimeStation, String vbTimeEmptyText) {
-		VirtualBoardsTimeFragment vbTimeFragment = new VirtualBoardsTimeFragment();
+        return vbTimeFragment;
+    }
 
-		Bundle bundle = new Bundle();
-		bundle.putSerializable(Constants.BUNDLE_VIRTUAL_BOARDS_TIME,
-				vbTimeStation);
-		bundle.putString(Constants.BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST,
-				vbTimeEmptyText);
-		vbTimeFragment.setArguments(bundle);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View myFragmentView = inflater.inflate(
+                R.layout.activity_virtual_boards_time_fragment, container,
+                false);
 
-		return vbTimeFragment;
-	}
+        // Set the context (activity) associated with this fragment
+        context = getActivity();
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View myFragmentView = inflater.inflate(
-				R.layout.activity_virtual_boards_time_fragment, container,
-				false);
+        // Get the empty list TextView
+        vbListEmptyTextView = (TextView) myFragmentView
+                .findViewById(R.id.vb_list_empty_text);
 
-		// Set the context (activity) associated with this fragment
-		context = getActivity();
+        // Get the VirtualBoardsStation object and the empty list text from the
+        // Bundle
+        vbTimeStation = (VirtualBoardsStationEntity) getArguments()
+                .getSerializable(Constants.BUNDLE_VIRTUAL_BOARDS_TIME);
 
-		// Get the empty list TextView
-		vbListEmptyTextView = (TextView) myFragmentView
-				.findViewById(R.id.vb_list_empty_text);
+        if (savedInstanceState == null) {
+            vbTimeEmptyText = getArguments().getString(
+                    Constants.BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST);
+        } else {
+            vbTimeEmptyText = savedInstanceState
+                    .getString(BUNDLE_VB_TIME_EMPTY_TEXT);
+        }
 
-		// Get the VirtualBoardsStation object and the empty list text from the
-		// Bundle
-		vbTimeStation = (VirtualBoardsStationEntity) getArguments()
-				.getSerializable(Constants.BUNDLE_VIRTUAL_BOARDS_TIME);
+        // Set the ListAdapter
+        setListAdapter(vbTimeEmptyText);
 
-		if (savedInstanceState == null) {
-			vbTimeEmptyText = getArguments().getString(
-					Constants.BUNDLE_VIRTUAL_BOARDS_TIME_EMPTY_LIST);
-		} else {
-			vbTimeEmptyText = savedInstanceState
-					.getString(BUNDLE_VB_TIME_EMPTY_TEXT);
-		}
+        return myFragmentView;
+    }
 
-		// Set the ListAdapter
-		setListAdapter(vbTimeEmptyText);
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
 
-		return myFragmentView;
-	}
+        savedInstanceState
+                .putString(BUNDLE_VB_TIME_EMPTY_TEXT, vbTimeEmptyText);
+    }
 
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
 
-		savedInstanceState
-				.putString(BUNDLE_VB_TIME_EMPTY_TEXT, vbTimeEmptyText);
-	}
+        VehicleEntity stationVehicle = (VehicleEntity) getListAdapter()
+                .getItem(position);
 
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
+        // Getting the PublicTransport schedule from the station URL address
+        PublicTransportStationEntity ptStationEntity = new PublicTransportStationEntity(
+                vbTimeStation, stationVehicle);
+        DirectionsEntity directionEntity = new DirectionsEntity(stationVehicle);
 
-		VehicleEntity stationVehicle = (VehicleEntity) getListAdapter()
-				.getItem(position);
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage(Html.fromHtml(String.format(
+                getString(R.string.pt_item_loading_schedule),
+                String.format(vbTimeStation.getName() + " (%s)",
+                        vbTimeStation.getNumber()))));
 
-		// Getting the PublicTransport schedule from the station URL address
-		PublicTransportStationEntity ptStationEntity = new PublicTransportStationEntity(
-				vbTimeStation, stationVehicle);
-		DirectionsEntity directionEntity = new DirectionsEntity(stationVehicle);
+        RetrievePublicTransportStation retrievePublicTransportStation = new RetrievePublicTransportStation(
+                context, progressDialog, ptStationEntity, directionEntity);
+        retrievePublicTransportStation.execute();
+    }
 
-		ProgressDialog progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage(Html.fromHtml(String.format(
-				getString(R.string.pt_item_loading_schedule),
-				String.format(vbTimeStation.getName() + " (%s)",
-						vbTimeStation.getNumber()))));
+    @Override
+    public void onFragmentRefresh(Object obj, String vbTimeEmptyText) {
+        VirtualBoardsStationEntity newVBTimeStation = (VirtualBoardsStationEntity) obj;
+        vbTimeStation.setVirtualBoardsTimeStation(newVBTimeStation);
 
-		RetrievePublicTransportStation retrievePublicTransportStation = new RetrievePublicTransportStation(
-				context, progressDialog, ptStationEntity, directionEntity);
-		retrievePublicTransportStation.execute();
-	}
+        setListAdapter(vbTimeEmptyText);
+    }
 
-	@Override
-	public void onFragmentRefresh(Object obj, String vbTimeEmptyText) {
-		VirtualBoardsStationEntity newVBTimeStation = (VirtualBoardsStationEntity) obj;
-		vbTimeStation.setVirtualBoardsTimeStation(newVBTimeStation);
+    /**
+     * Set list adapter and the appropriate text message to it
+     */
+    private void setListAdapter(String vbTimeEmptyText) {
 
-		setListAdapter(vbTimeEmptyText);
-	}
+        VirtualBoardsTimeAdapter vbTimeAdapter = (VirtualBoardsTimeAdapter) getListAdapter();
+        if (vbTimeAdapter == null) {
+            vbTimeAdapter = new VirtualBoardsTimeAdapter(context, vbTimeStation);
+            setListAdapter(vbTimeAdapter);
+        } else {
+            vbTimeAdapter.notifyDataSetChanged();
 
-	/**
-	 * Set list adapter and the appropriate text message to it
-	 */
-	private void setListAdapter(String vbTimeEmptyText) {
+            if (vbTimeStation.getVehiclesList().size() > 0) {
+                getListView().setSelectionFromTop(0, 0);
+            }
+        }
 
-		VirtualBoardsTimeAdapter vbTimeAdapter = (VirtualBoardsTimeAdapter) getListAdapter();
-		if (vbTimeAdapter == null) {
-			vbTimeAdapter = new VirtualBoardsTimeAdapter(context, vbTimeStation);
-			setListAdapter(vbTimeAdapter);
-		} else {
-			vbTimeAdapter.notifyDataSetChanged();
+        // Check if the list adapter is empty, so show a text message with the
+        // problem
+        if (vbTimeAdapter.isEmpty()) {
+            vbListEmptyTextView.setText(Html.fromHtml(vbTimeEmptyText));
+        }
 
-			if (vbTimeStation.getVehiclesList().size() > 0) {
-				getListView().setSelectionFromTop(0, 0);
-			}
-		}
-
-		// Check if the list adapter is empty, so show a text message with the
-		// problem
-		if (vbTimeAdapter.isEmpty()) {
-			vbListEmptyTextView.setText(Html.fromHtml(vbTimeEmptyText));
-		}
-
-		this.vbTimeEmptyText = vbTimeEmptyText;
-	}
+        this.vbTimeEmptyText = vbTimeEmptyText;
+    }
 }

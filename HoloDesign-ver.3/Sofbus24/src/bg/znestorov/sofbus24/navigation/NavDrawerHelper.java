@@ -1,7 +1,5 @@
 package bg.znestorov.sofbus24.navigation;
 
-import java.util.ArrayList;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -10,6 +8,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+
 import bg.znestorov.sofbus24.about.RetrieveAppConfiguration;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocation;
 import bg.znestorov.sofbus24.closest.stations.map.RetrieveCurrentLocationTimeout;
@@ -32,213 +33,208 @@ import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 
 public class NavDrawerHelper {
 
-	private FragmentActivity context;
-	private GlobalEntity globalContext;
+    private FragmentActivity context;
+    private GlobalEntity globalContext;
 
-	private DrawerLayout mDrawerLayout;
-	private ListView mDrawerList;
-	private ArrayList<String> navigationItems;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ArrayList<String> navigationItems;
 
-	private DrawerItemClickListener drawerItemClickListener;
+    private DrawerItemClickListener drawerItemClickListener;
 
-	/**
-	 * Class responsible for registring user clicks over the navigation drawer
-	 */
-	public class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
+    public NavDrawerHelper(FragmentActivity context,
+                           DrawerLayout mDrawerLayout, ListView mDrawerList,
+                           ArrayList<String> navigationItems) {
 
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			selectNavigationDrawerItem(position);
-		}
-	}
+        this.context = context;
+        this.globalContext = (GlobalEntity) context.getApplicationContext();
 
-	public NavDrawerHelper(FragmentActivity context,
-			DrawerLayout mDrawerLayout, ListView mDrawerList,
-			ArrayList<String> navigationItems) {
+        this.mDrawerLayout = mDrawerLayout;
+        this.mDrawerList = mDrawerList;
+        this.navigationItems = navigationItems;
 
-		this.context = context;
-		this.globalContext = (GlobalEntity) context.getApplicationContext();
+        this.drawerItemClickListener = new DrawerItemClickListener();
+    }
 
-		this.mDrawerLayout = mDrawerLayout;
-		this.mDrawerList = mDrawerList;
-		this.navigationItems = navigationItems;
+    /**
+     * Define the user actions on navigation drawer item click
+     *
+     * @param position the position of the click
+     */
+    private void selectNavigationDrawerItem(int position) {
 
-		this.drawerItemClickListener = new DrawerItemClickListener();
-	}
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        int userHomeScreen = NavDrawerHomeScreenPreferences
+                .getUserHomeScreenChoice(context);
 
-	/**
-	 * Define the user actions on navigation drawer item click
-	 * 
-	 * @param position
-	 *            the position of the click
-	 */
-	private void selectNavigationDrawerItem(int position) {
+        mDrawerList.setItemChecked(position, true);
+        mDrawerLayout.closeDrawer(mDrawerList);
 
-		ProgressDialog progressDialog = new ProgressDialog(context);
-		int userHomeScreen = NavDrawerHomeScreenPreferences
-				.getUserHomeScreenChoice(context);
+        switch (position) {
+            case 0:
+                break;
+            case 1:
+            case 2:
+            case 3:
+                if (isHomeScreenChanged(userHomeScreen, position)) {
+                    NavDrawerHomeScreenPreferences.setUserChoice(context,
+                            position - 1);
 
-		mDrawerList.setItemChecked(position, true);
-		mDrawerLayout.closeDrawer(mDrawerList);
+                    context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_NEW);
+                    context.finish();
+                }
 
-		switch (position) {
-		case 0:
-			break;
-		case 1:
-		case 2:
-		case 3:
-			if (isHomeScreenChanged(userHomeScreen, position)) {
-				NavDrawerHomeScreenPreferences.setUserChoice(context,
-						position - 1);
+                break;
+            case 4:
+                startClosestStationsList(progressDialog);
+                break;
+            case 5:
+                if (ActivityUtils.haveNetworkConnection(context)) {
+                    progressDialog.setMessage(context
+                            .getString(R.string.route_changes_loading));
 
-				context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_NEW);
-				context.finish();
-			}
+                    RetrieveRouteChanges retrieveRouteChanges;
+                    retrieveRouteChanges = new RetrieveRouteChanges(context,
+                            progressDialog, LoadTypeEnum.INIT);
+                    retrieveRouteChanges.execute();
+                } else {
+                    ActivityUtils.showNoInternetToast(context);
+                }
+                break;
+            case 6:
+                Intent historyIntent;
+                if (globalContext.isPhoneDevice()) {
+                    historyIntent = new Intent(context, History.class);
+                } else {
+                    historyIntent = new Intent(context, HistoryDialog.class);
+                }
+                context.startActivity(historyIntent);
+                break;
+            case 7:
+                Intent preferencesIntent;
+                if (globalContext.isPhoneDevice()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        preferencesIntent = new Intent(context, Preferences.class);
+                    } else {
+                        preferencesIntent = new Intent(context,
+                                PreferencesPreHoneycomb.class);
+                    }
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        preferencesIntent = new Intent(context,
+                                PreferencesDialog.class);
+                    } else {
+                        preferencesIntent = new Intent(context,
+                                PreferencesPreHoneycombDialog.class);
+                    }
+                }
+                context.startActivity(preferencesIntent);
+                break;
+            case 8:
+                Intent aboutIntent;
+                if (globalContext.isPhoneDevice()) {
+                    aboutIntent = new Intent(context, About.class);
+                } else {
+                    aboutIntent = new Intent(context, AboutDialog.class);
+                }
+                context.startActivity(aboutIntent);
+                break;
+            case 9:
+                if (ActivityUtils.haveNetworkConnection(context)) {
+                    progressDialog.setMessage(context
+                            .getString(R.string.about_update_app));
 
-			break;
-		case 4:
-			startClosestStationsList(progressDialog);
-			break;
-		case 5:
-			if (ActivityUtils.haveNetworkConnection(context)) {
-				progressDialog.setMessage(context
-						.getString(R.string.route_changes_loading));
+                    RetrieveAppConfiguration retrieveAppConfiguration;
+                    retrieveAppConfiguration = new RetrieveAppConfiguration(
+                            context, progressDialog, true);
+                    retrieveAppConfiguration.execute();
+                } else {
+                    ActivityUtils.showNoInternetToast(context);
+                }
+                break;
+            case 10:
+                context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_FINISH);
+                context.finish();
+                break;
+        }
+    }
 
-				RetrieveRouteChanges retrieveRouteChanges;
-				retrieveRouteChanges = new RetrieveRouteChanges(context,
-						progressDialog, LoadTypeEnum.INIT);
-				retrieveRouteChanges.execute();
-			} else {
-				ActivityUtils.showNoInternetToast(context);
-			}
-			break;
-		case 6:
-			Intent historyIntent;
-			if (globalContext.isPhoneDevice()) {
-				historyIntent = new Intent(context, History.class);
-			} else {
-				historyIntent = new Intent(context, HistoryDialog.class);
-			}
-			context.startActivity(historyIntent);
-			break;
-		case 7:
-			Intent preferencesIntent;
-			if (globalContext.isPhoneDevice()) {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					preferencesIntent = new Intent(context, Preferences.class);
-				} else {
-					preferencesIntent = new Intent(context,
-							PreferencesPreHoneycomb.class);
-				}
-			} else {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					preferencesIntent = new Intent(context,
-							PreferencesDialog.class);
-				} else {
-					preferencesIntent = new Intent(context,
-							PreferencesPreHoneycombDialog.class);
-				}
-			}
-			context.startActivity(preferencesIntent);
-			break;
-		case 8:
-			Intent aboutIntent;
-			if (globalContext.isPhoneDevice()) {
-				aboutIntent = new Intent(context, About.class);
-			} else {
-				aboutIntent = new Intent(context, AboutDialog.class);
-			}
-			context.startActivity(aboutIntent);
-			break;
-		case 9:
-			if (ActivityUtils.haveNetworkConnection(context)) {
-				progressDialog.setMessage(context
-						.getString(R.string.about_update_app));
+    /**
+     * Show a long toast about the changed home screen and set the change in the
+     * preference file
+     *
+     * @param userHomeScreen the current home screen
+     * @param userChoice     the user choice
+     * @return if the home screen can be changed
+     */
+    private boolean isHomeScreenChanged(int userHomeScreen, int userChoice) {
 
-				RetrieveAppConfiguration retrieveAppConfiguration;
-				retrieveAppConfiguration = new RetrieveAppConfiguration(
-						context, progressDialog, true);
-				retrieveAppConfiguration.execute();
-			} else {
-				ActivityUtils.showNoInternetToast(context);
-			}
-			break;
-		case 10:
-			context.setResult(HomeScreenSelect.RESULT_CODE_ACTIVITY_FINISH);
-			context.finish();
-			break;
-		}
-	}
+        boolean isHomeScreenChanged = true;
+        String homeScreenName = navigationItems.get(userChoice);
 
-	/**
-	 * Show a long toast about the changed home screen and set the change in the
-	 * preference file
-	 * 
-	 * @param userHomeScreen
-	 *            the current home screen
-	 * @param userChoice
-	 *            the user choice
-	 * 
-	 * @return if the home screen can be changed
-	 */
-	private boolean isHomeScreenChanged(int userHomeScreen, int userChoice) {
+        if (userChoice == 2 && !globalContext.areServicesAvailable()) {
+            GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
+                    .newInstance(context
+                            .getString(
+                                    R.string.navigation_drawer_home_screen_error,
+                                    context.getString(R.string.navigation_drawer_home_map)));
+            googlePlayServicesErrorDialog.show(
+                    context.getSupportFragmentManager(),
+                    "GooglePlayServicesHomeScreenErrorDialog");
 
-		boolean isHomeScreenChanged = true;
-		String homeScreenName = navigationItems.get(userChoice);
+            isHomeScreenChanged = false;
+        } else {
+            if (userHomeScreen == userChoice - 1) {
+                ActivityUtils
+                        .showLongToast(
+                                context,
+                                String.format(
+                                        context.getString(R.string.navigation_drawer_home_screen_remains),
+                                        homeScreenName));
 
-		if (userChoice == 2 && !globalContext.areServicesAvailable()) {
-			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
-					.newInstance(context
-							.getString(
-									R.string.navigation_drawer_home_screen_error,
-									context.getString(R.string.navigation_drawer_home_map)));
-			googlePlayServicesErrorDialog.show(
-					context.getSupportFragmentManager(),
-					"GooglePlayServicesHomeScreenErrorDialog");
+                isHomeScreenChanged = false;
+            } else {
+                globalContext.setHomeActivityChanged(true);
+            }
+        }
 
-			isHomeScreenChanged = false;
-		} else {
-			if (userHomeScreen == userChoice - 1) {
-				ActivityUtils
-						.showLongToast(
-								context,
-								String.format(
-										context.getString(R.string.navigation_drawer_home_screen_remains),
-										homeScreenName));
+        return isHomeScreenChanged;
+    }
 
-				isHomeScreenChanged = false;
-			} else {
-				globalContext.setHomeActivityChanged(true);
-			}
-		}
+    /**
+     * Start the ClosestStationsList activity
+     *
+     * @param progressDialog the progress dialog
+     */
+    private void startClosestStationsList(ProgressDialog progressDialog) {
+        progressDialog.setMessage(String.format(context
+                .getString(R.string.app_loading_current_location)));
 
-		return isHomeScreenChanged;
-	}
+        RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
+                context, context.getSupportFragmentManager(), progressDialog,
+                RetrieveCurrentLocationTypeEnum.CS_LIST_INIT);
+        retrieveCurrentLocation.execute();
+        RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
+                retrieveCurrentLocation,
+                RetrieveCurrentLocationTimeout.TIMEOUT_CS_LIST);
+        (new Thread(retrieveCurrentLocationTimeout)).start();
+    }
 
-	/**
-	 * Start the ClosestStationsList activity
-	 * 
-	 * @param progressDialog
-	 *            the progress dialog
-	 */
-	private void startClosestStationsList(ProgressDialog progressDialog) {
-		progressDialog.setMessage(String.format(context
-				.getString(R.string.app_loading_current_location)));
+    public DrawerItemClickListener getDrawerItemClickListener() {
+        return drawerItemClickListener;
+    }
 
-		RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
-				context, context.getSupportFragmentManager(), progressDialog,
-				RetrieveCurrentLocationTypeEnum.CS_LIST_INIT);
-		retrieveCurrentLocation.execute();
-		RetrieveCurrentLocationTimeout retrieveCurrentLocationTimeout = new RetrieveCurrentLocationTimeout(
-				retrieveCurrentLocation,
-				RetrieveCurrentLocationTimeout.TIMEOUT_CS_LIST);
-		(new Thread(retrieveCurrentLocationTimeout)).start();
-	}
+    /**
+     * Class responsible for registring user clicks over the navigation drawer
+     */
+    public class DrawerItemClickListener implements
+            ListView.OnItemClickListener {
 
-	public DrawerItemClickListener getDrawerItemClickListener() {
-		return drawerItemClickListener;
-	}
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            selectNavigationDrawerItem(position);
+        }
+    }
 
 }

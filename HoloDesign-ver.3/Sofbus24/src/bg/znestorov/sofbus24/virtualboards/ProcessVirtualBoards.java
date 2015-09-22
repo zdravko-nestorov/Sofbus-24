@@ -17,6 +17,7 @@ import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 import bg.znestorov.sofbus24.entity.VirtualBoardsStationEntity;
+import bg.znestorov.sofbus24.utils.AlphanumComparator;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.TranslatorCyrillicToLatin;
@@ -25,10 +26,9 @@ import bg.znestorov.sofbus24.utils.Utils;
 /**
  * Process the html result, retrieved from the SKGT site in an appropriate
  * object according to the activity called it
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 @SuppressLint("DefaultLocale")
 public class ProcessVirtualBoards {
@@ -72,7 +72,7 @@ public class ProcessVirtualBoards {
 	/**
 	 * Get the station info from the html and format it in a
 	 * VirtualBoardsStation object
-	 * 
+	 *
 	 * @return a VirtualBoardsStation object, containing all information about
 	 *         the station
 	 */
@@ -87,7 +87,7 @@ public class ProcessVirtualBoards {
 	/**
 	 * Get all information about the station from the html result (name, number
 	 * and coordinates)
-	 * 
+	 *
 	 * @return the station with all information from the skgt site
 	 */
 	private StationEntity getStationFromHtml() {
@@ -133,7 +133,7 @@ public class ProcessVirtualBoards {
 	/**
 	 * Get time of the skgt site (when the information is extracted according to
 	 * their system)
-	 * 
+	 *
 	 * @return the skgt time
 	 */
 	private String getSkgtTimeFromHtml() {
@@ -154,7 +154,7 @@ public class ProcessVirtualBoards {
 	/**
 	 * Get a list with all vehicles, passing through this station as well as
 	 * their times of arrival
-	 * 
+	 *
 	 * @return a list with all vehicles through this station
 	 */
 	private ArrayList<VehicleEntity> getVehiclesListFromHtml() {
@@ -169,10 +169,8 @@ public class ProcessVirtualBoards {
 			// Used to order the vehicles (BUS, TROLLEY, TRAM)
 			switch (vehicleType) {
 			case BUS:
-				vehiclesList.addAll(
-						0,
-						getVehiclesByTypeFromHtml(vehicleType,
-								vehiclesPartsHtml[i]));
+				vehiclesList.addAll(0, getVehiclesByTypeFromHtml(vehicleType,
+						vehiclesPartsHtml[i]));
 				break;
 			case TRAM:
 				vehiclesList.addAll(getVehiclesByTypeFromHtml(vehicleType,
@@ -183,10 +181,8 @@ public class ProcessVirtualBoards {
 					vehiclesList.addAll(getVehiclesByTypeFromHtml(vehicleType,
 							vehiclesPartsHtml[i]));
 				} else {
-					vehiclesList.addAll(
-							1,
-							getVehiclesByTypeFromHtml(vehicleType,
-									vehiclesPartsHtml[i]));
+					vehiclesList.addAll(1, getVehiclesByTypeFromHtml(
+							vehicleType, vehiclesPartsHtml[i]));
 				}
 				break;
 			}
@@ -197,7 +193,7 @@ public class ProcessVirtualBoards {
 
 	/**
 	 * Get a list with all vehicles for the corresponding type
-	 * 
+	 *
 	 * @param vehicleType
 	 *            the type of the current vehicle
 	 * @param vehiclesPartHtml
@@ -250,8 +246,11 @@ public class ProcessVirtualBoards {
 			// Get and format the vehicle times of arrival
 			String vehicleTimes = matcher.group(6);
 			vehicleTimes = Utils.removeSpaces(vehicleTimes);
-			ArrayList<String> arrivalTimes = formatArrivalTimes(vehicleTimes
-					.split(","));
+			ArrayList<String> arrivalTimes = formatArrivalTimes(
+					vehicleTimes.split(","));
+
+			// Sort the arrival times (sometimes the times are not ordered)
+			Collections.sort(arrivalTimes, new AlphanumComparator());
 
 			// Get and format the vehicle direction
 			String vehicleDirection = matcher.group(7);
@@ -272,10 +271,10 @@ public class ProcessVirtualBoards {
 		Collections.sort(vehiclesList, new Comparator<VehicleEntity>() {
 			@Override
 			public int compare(VehicleEntity vehicle1, VehicleEntity vehicle2) {
-				int vehicle1Number = Integer.parseInt(Utils
-						.getOnlyDigits(vehicle1.getNumber()));
-				int vehicle2Number = Integer.parseInt(Utils
-						.getOnlyDigits(vehicle2.getNumber()));
+				int vehicle1Number = Integer
+						.parseInt(Utils.getOnlyDigits(vehicle1.getNumber()));
+				int vehicle2Number = Integer
+						.parseInt(Utils.getOnlyDigits(vehicle2.getNumber()));
 
 				return vehicle1Number < vehicle2Number ? -1
 						: vehicle1Number > vehicle2Number ? 1 : 0;
@@ -288,7 +287,7 @@ public class ProcessVirtualBoards {
 	/**
 	 * Transform the arrivalTimes array into a list. It is also checking for
 	 * each time of arrival if it is after the current hour
-	 * 
+	 *
 	 * @param arrivalTimes
 	 *            an array with the arrival times
 	 * @return an array list, containing all times after the current hour
@@ -310,9 +309,9 @@ public class ProcessVirtualBoards {
 	}
 
 	/**
-	 * Get the vehicle type according to its name (¿‚ÚÓ·ÛÒ, “ÓÎÂÈ·ÛÒ or
-	 * “‡Ï‚‡È)
-	 * 
+	 * Get the vehicle type according to its name (–ê–≤—Ç–æ–±—É—Å, –¢—Ä–æ–ª–µ–π–±—É—Å or
+	 * –¢—Ä–∞–º–≤–∞–π)
+	 *
 	 * @param vehiclesPartHtml
 	 *            the part of the html code (representing one vehicle type)
 	 * @return the vehicle type
@@ -343,7 +342,7 @@ public class ProcessVirtualBoards {
 
 	/**
 	 * Get all stations from the html result and add it to an array list
-	 * 
+	 *
 	 * @return a list with all stations from the skgt site
 	 */
 	public HashMap<String, StationEntity> getMultipleStationsFromHtml() {

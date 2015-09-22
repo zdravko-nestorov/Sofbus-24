@@ -1,9 +1,10 @@
 package bg.znestorov.sofbus24.schedule;
 
+import android.app.Activity;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import bg.znestorov.sofbus24.databases.VehiclesDataSource;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
@@ -11,135 +12,155 @@ import bg.znestorov.sofbus24.entity.VehicleTypeEnum;
 /**
  * Singleton used for loading the vehicles on the first creation and used them
  * lately
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class ScheduleLoadVehicles {
 
-	private static ScheduleLoadVehicles instance = null;
+    private static ScheduleLoadVehicles instance = null;
 
-	private List<VehicleEntity> busses;
-	private List<VehicleEntity> trolleys;
-	private List<VehicleEntity> trams;
+    private List<VehicleEntity> busses;
+    private List<VehicleEntity> trolleys;
+    private List<VehicleEntity> trams;
 
-	protected ScheduleLoadVehicles(Activity context) {
-		VehiclesDataSource vehiclesDatasource = new VehiclesDataSource(context);
-		vehiclesDatasource.open();
+    protected ScheduleLoadVehicles(Activity context) {
+        VehiclesDataSource vehiclesDatasource = new VehiclesDataSource(context);
+        vehiclesDatasource.open();
 
-		busses = vehiclesDatasource.getVehiclesViaSearch(VehicleTypeEnum.BUS,
-				"");
-		trolleys = vehiclesDatasource.getVehiclesViaSearch(
-				VehicleTypeEnum.TROLLEY, "");
-		trams = vehiclesDatasource.getVehiclesViaSearch(VehicleTypeEnum.TRAM,
-				"");
+        busses = vehiclesDatasource.getVehiclesViaSearch(VehicleTypeEnum.BUS,
+                "");
+        trolleys = vehiclesDatasource.getVehiclesViaSearch(
+                VehicleTypeEnum.TROLLEY, "");
+        trams = vehiclesDatasource.getVehiclesViaSearch(VehicleTypeEnum.TRAM,
+                "");
 
-		vehiclesDatasource.close();
-	}
+        vehiclesDatasource.close();
+    }
 
-	public static ScheduleLoadVehicles getInstance(Activity context) {
-		if (instance == null) {
-			instance = new ScheduleLoadVehicles(context);
-		}
+    public static ScheduleLoadVehicles getInstance(Activity context) {
+        if (instance == null) {
+            instance = newInstance(context);
+        }
 
-		return instance;
-	}
+        return instance;
+    }
 
-	public static void resetInstance(Activity context) {
-		instance = new ScheduleLoadVehicles(context);
-	}
+    public static void resetInstance(Activity context) {
+        instance = newInstance(context);
+    }
 
-	public List<VehicleEntity> getBusses() {
-		return busses;
-	}
+    /**
+     * This method is created because of a problem, reported by a user in the
+     * GooglePlay developer console<br/>
+     * <p/>
+     * Exception: android.database.sqlite.SQLiteDatabaseCorruptException
+     * Last reported: 15 Jul 18:46
+     *
+     * @param context the current activity context
+     * @return an instance of the current class (if successfully created,
+     * otherwise - null)
+     */
+    private static ScheduleLoadVehicles newInstance(Activity context) {
 
-	public void setBusses(List<VehicleEntity> busses) {
-		this.busses = busses;
-	}
+        ScheduleLoadVehicles instance;
+        try {
+            instance = new ScheduleLoadVehicles(context);
+        } catch (Exception e) {
+            instance = null;
+        }
 
-	public List<VehicleEntity> getTrolleys() {
-		return trolleys;
-	}
+        return instance;
+    }
 
-	public void setTrolleys(List<VehicleEntity> trolleys) {
-		this.trolleys = trolleys;
-	}
+    public List<VehicleEntity> getBusses() {
+        return busses;
+    }
 
-	public List<VehicleEntity> getTrams() {
-		return trams;
-	}
+    public void setBusses(List<VehicleEntity> busses) {
+        this.busses = busses;
+    }
 
-	public void setTrams(List<VehicleEntity> trams) {
-		this.trams = trams;
-	}
+    public List<VehicleEntity> getTrolleys() {
+        return trolleys;
+    }
 
-	/**
-	 * Get a list with the vehicles for the current vehicle type (integer code)
-	 * 
-	 * @param vehicleType
-	 *            the vehicle type (integer code)
-	 * @return a list with the vehicles for the current vehicle type
-	 */
-	public ArrayList<VehicleEntity> getVehiclesList(int vehicleType) {
-		ArrayList<VehicleEntity> vehiclesList = new ArrayList<VehicleEntity>();
-		switch (vehicleType) {
-		case 0:
-			vehiclesList.addAll(busses);
-			break;
-		case 1:
-			vehiclesList.addAll(trolleys);
-			break;
-		default:
-			vehiclesList.addAll(trams);
-			break;
-		}
+    public void setTrolleys(List<VehicleEntity> trolleys) {
+        this.trolleys = trolleys;
+    }
 
-		return vehiclesList;
-	}
+    public List<VehicleEntity> getTrams() {
+        return trams;
+    }
 
-	/**
-	 * Get a list with the stations for the current vehicle type
-	 * 
-	 * @param vehicleType
-	 *            the vehicle type
-	 * @return a list with the vehicles for the current vehicle type
-	 */
-	public ArrayList<VehicleEntity> getDirectionList(VehicleTypeEnum vehicleType) {
-		int currentDirection;
-		switch (vehicleType) {
-		case BUS:
-			currentDirection = 0;
-			break;
-		case TROLLEY:
-			currentDirection = 1;
-			break;
-		default:
-			currentDirection = 2;
-			break;
-		}
+    public void setTrams(List<VehicleEntity> trams) {
+        this.trams = trams;
+    }
 
-		return getVehiclesList(currentDirection);
-	}
+    /**
+     * Get a list with the vehicles for the current vehicle type (integer code)
+     *
+     * @param vehicleType the vehicle type (integer code)
+     * @return a list with the vehicles for the current vehicle type
+     */
+    public ArrayList<VehicleEntity> getVehiclesList(int vehicleType) {
+        ArrayList<VehicleEntity> vehiclesList = new ArrayList<VehicleEntity>();
+        switch (vehicleType) {
+            case 0:
+                vehiclesList.addAll(busses);
+                break;
+            case 1:
+                vehiclesList.addAll(trolleys);
+                break;
+            default:
+                vehiclesList.addAll(trams);
+                break;
+        }
 
-	/**
-	 * Check if the instance is already created
-	 * 
-	 * @return if the instance is already created
-	 */
-	public static boolean isInstanceCreated() {
+        return vehiclesList;
+    }
 
-		if (instance != null) {
-			return true;
-		}
+    /**
+     * Get a list with the stations for the current vehicle type
+     *
+     * @param vehicleType the vehicle type
+     * @return a list with the vehicles for the current vehicle type
+     */
+    public ArrayList<VehicleEntity> getDirectionList(VehicleTypeEnum vehicleType) {
+        int currentDirection;
+        switch (vehicleType) {
+            case BUS:
+                currentDirection = 0;
+                break;
+            case TROLLEY:
+                currentDirection = 1;
+                break;
+            default:
+                currentDirection = 2;
+                break;
+        }
 
-		return false;
-	}
+        return getVehiclesList(currentDirection);
+    }
 
-	@Override
-	public String toString() {
-		return getClass().getName() + " {\n\tbusses: " + busses
-				+ "\n\ttrolleys: " + trolleys + "\n\ttrams: " + trams + "\n}";
-	}
+    /**
+     * Check if the instance is already created
+     *
+     * @return if the instance is already created
+     */
+    public static boolean isInstanceCreated() {
+
+        if (instance != null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + " {\n\tbusses: " + busses
+                + "\n\ttrolleys: " + trolleys + "\n\ttrams: " + trams + "\n}";
+    }
 
 }

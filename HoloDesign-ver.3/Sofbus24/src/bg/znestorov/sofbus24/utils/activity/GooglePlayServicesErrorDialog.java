@@ -17,23 +17,21 @@ import bg.znestorov.sofbus24.main.R;
 /**
  * Class used to show the user an alert dialog, because no Google Play services
  * are installed on its device
- * 
+ * <p/>
  * {@link https://code.google.com/p/android/issues/detail?id=42543}
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class GooglePlayServicesErrorDialog extends DialogFragment {
 
+	public static final String BUNDLE_GOOGLE_PLAY_SERVICES_MESSAGE = "GOOGLE PLAY SERVICES MESSAGE";
 	private Activity context;
 	private String title;
 	private Spanned message;
 	private String negativeBtn;
 	private String positiveBtn;
 	private OnClickListener positiveOnClickListener;
-
-	public static final String BUNDLE_GOOGLE_PLAY_SERVICES_MESSAGE = "GOOGLE PLAY SERVICES MESSAGE";
 
 	public static GooglePlayServicesErrorDialog newInstance(String message) {
 
@@ -51,36 +49,36 @@ public class GooglePlayServicesErrorDialog extends DialogFragment {
 
 		context = getActivity();
 		title = getString(R.string.app_google_play_titlte);
-		message = Html.fromHtml(getArguments().getString(
-				BUNDLE_GOOGLE_PLAY_SERVICES_MESSAGE));
+		message = Html.fromHtml(
+				getArguments().getString(BUNDLE_GOOGLE_PLAY_SERVICES_MESSAGE));
 		negativeBtn = getString(R.string.app_button_later);
 		positiveBtn = getString(R.string.app_button_install);
 
 		positiveOnClickListener = new OnClickListener() {
+			@SuppressWarnings("deprecation")
 			public void onClick(DialogInterface dialog, int i) {
 				// Try the new HTTP method
 				try {
-					Intent intent = new Intent(
-							Intent.ACTION_VIEW,
-							Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(
+							"http://play.google.com/store/apps/details?id=com.google.android.gms"));
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 					intent.setPackage("com.android.vending");
 					startActivity(intent);
 				} catch (ActivityNotFoundException e) {
 					// Try the market method
 					try {
-						Intent intent = new Intent(
-								Intent.ACTION_VIEW,
-								Uri.parse("market://details?id=com.google.android.gms"));
-						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+						Intent intent = new Intent(Intent.ACTION_VIEW, Uri
+								.parse("market://details?id=com.google.android.gms"));
+						intent.addFlags(
+								Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 						intent.setPackage("com.android.vending");
 						startActivity(intent);
 					} catch (ActivityNotFoundException f) {
 						// Show the website
-						Intent intent = new Intent(
-								Intent.ACTION_VIEW,
-								Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
-						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+						Intent intent = new Intent(Intent.ACTION_VIEW, Uri
+								.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+						intent.addFlags(
+								Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 						startActivity(intent);
 					}
 				}

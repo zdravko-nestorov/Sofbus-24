@@ -1,197 +1,193 @@
 package bg.znestorov.sofbus24.utils;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import android.content.Context;
-
 /**
  * Class which is used to transcode the <b>Cyrillic</b> text to a <b>Latin</b>
  * one using a table with the symbol translations
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class TranslatorCyrillicToLatin {
 
-	private static final Map<String, String> translatorMap;
-	static {
-		translatorMap = new HashMap<String, String>();
-		translatorMap.put("‡", "a");
-		translatorMap.put("·", "b");
-		translatorMap.put("‚", "v");
-		translatorMap.put("„", "g");
-		translatorMap.put("‰", "d");
-		translatorMap.put("Â", "e");
-		translatorMap.put("Ê", "zh");
-		translatorMap.put("Á", "z");
-		translatorMap.put("Ë", "i");
-		translatorMap.put("È", "j");
-		translatorMap.put("Í", "k");
-		translatorMap.put("Î", "l");
-		translatorMap.put("Ï", "m");
-		translatorMap.put("Ì", "n");
-		translatorMap.put("Ó", "o");
-		translatorMap.put("Ô", "p");
-		translatorMap.put("", "r");
-		translatorMap.put("Ò", "s");
-		translatorMap.put("Ú", "t");
-		translatorMap.put("Û", "u");
-		translatorMap.put("Ù", "f");
-		translatorMap.put("ı", "h");
-		translatorMap.put("ˆ", "c");
-		translatorMap.put("˜", "ch");
-		translatorMap.put("¯", "sh");
-		translatorMap.put("˘", "sht");
-		translatorMap.put("˙", "y");
-		translatorMap.put("¸", "j");
-		translatorMap.put("˛", "yu");
-		translatorMap.put("ˇ", "ya");
-		translatorMap.put("¿", "A");
-		translatorMap.put("¡", "B");
-		translatorMap.put("¬", "V");
-		translatorMap.put("√", "G");
-		translatorMap.put("ƒ", "D");
-		translatorMap.put("≈", "E");
-		translatorMap.put("∆", "Zh");
-		translatorMap.put("«", "Z");
-		translatorMap.put("»", "I");
-		translatorMap.put("…", "J");
-		translatorMap.put(" ", "K");
-		translatorMap.put("À", "L");
-		translatorMap.put("Ã", "M");
-		translatorMap.put("Õ", "N");
-		translatorMap.put("Œ", "O");
-		translatorMap.put("œ", "P");
-		translatorMap.put("–", "R");
-		translatorMap.put("—", "S");
-		translatorMap.put("“", "T");
-		translatorMap.put("”", "U");
-		translatorMap.put("‘", "F");
-		translatorMap.put("’", "H");
-		translatorMap.put("÷", "C");
-		translatorMap.put("◊", "Ch");
-		translatorMap.put("ÿ", "Sh");
-		translatorMap.put("Ÿ", "Sht");
-		translatorMap.put("⁄", "Y");
-		translatorMap.put("‹", "J");
-		translatorMap.put("ﬁ", "Yu");
-		translatorMap.put("ﬂ", "Ya");
-	}
+    private static final Map<String, String> translatorMap;
 
-	private TranslatorCyrillicToLatin() {
-	}
+    static {
+        translatorMap = new HashMap<String, String>();
+        translatorMap.put("–∞", "a");
+        translatorMap.put("–±", "b");
+        translatorMap.put("–≤", "v");
+        translatorMap.put("–≥", "g");
+        translatorMap.put("–¥", "d");
+        translatorMap.put("–µ", "e");
+        translatorMap.put("–∂", "zh");
+        translatorMap.put("–∑", "z");
+        translatorMap.put("–∏", "i");
+        translatorMap.put("–π", "j");
+        translatorMap.put("–∫", "k");
+        translatorMap.put("–ª", "l");
+        translatorMap.put("–º", "m");
+        translatorMap.put("–Ω", "n");
+        translatorMap.put("–æ", "o");
+        translatorMap.put("–ø", "p");
+        translatorMap.put("—Ä", "r");
+        translatorMap.put("—Å", "s");
+        translatorMap.put("—Ç", "t");
+        translatorMap.put("—É", "u");
+        translatorMap.put("—Ñ", "f");
+        translatorMap.put("—Ö", "h");
+        translatorMap.put("—Ü", "c");
+        translatorMap.put("—á", "ch");
+        translatorMap.put("—à", "sh");
+        translatorMap.put("—â", "sht");
+        translatorMap.put("—ä", "y");
+        translatorMap.put("—å", "j");
+        translatorMap.put("—é", "yu");
+        translatorMap.put("—è", "ya");
+        translatorMap.put("–ê", "A");
+        translatorMap.put("–ë", "B");
+        translatorMap.put("–í", "V");
+        translatorMap.put("–ì", "G");
+        translatorMap.put("–î", "D");
+        translatorMap.put("–ï", "E");
+        translatorMap.put("–ñ", "Zh");
+        translatorMap.put("–ó", "Z");
+        translatorMap.put("–ò", "I");
+        translatorMap.put("–ô", "J");
+        translatorMap.put("–ö", "K");
+        translatorMap.put("–õ", "L");
+        translatorMap.put("–ú", "M");
+        translatorMap.put("–ù", "N");
+        translatorMap.put("–û", "O");
+        translatorMap.put("–ü", "P");
+        translatorMap.put("–†", "R");
+        translatorMap.put("–°", "S");
+        translatorMap.put("–¢", "T");
+        translatorMap.put("–£", "U");
+        translatorMap.put("–§", "F");
+        translatorMap.put("–•", "H");
+        translatorMap.put("–¶", "C");
+        translatorMap.put("–ß", "Ch");
+        translatorMap.put("–®", "Sh");
+        translatorMap.put("–©", "Sht");
+        translatorMap.put("–™", "Y");
+        translatorMap.put("–¨", "J");
+        translatorMap.put("–Æ", "Yu");
+        translatorMap.put("–Ø", "Ya");
+    }
 
-	/**
-	 * Translate the input Cyrillic text to a Latin one using a table with the
-	 * translation
-	 * 
-	 * @param context
-	 *            the current activity context
-	 * @param input
-	 *            the input text in Latin
-	 * @return the transcoded Cyrillic text in a Latin format
-	 */
-	public static String translate(Context context, String input) {
-		StringBuilder output = new StringBuilder("");
-		Locale currentLocale = new Locale(LanguageChange.getUserLocale(context));
+    private TranslatorCyrillicToLatin() {
+    }
 
-		if (input != null && !"".equals(input)) {
-			boolean capitalFlag = false;
+    /**
+     * Translate the input Cyrillic text to a Latin one using a table with the
+     * translation
+     *
+     * @param context the current activity context
+     * @param input   the input text in Latin
+     * @return the transcoded Cyrillic text in a Latin format
+     */
+    public static String translate(Context context, String input) {
+        StringBuilder output = new StringBuilder("");
+        Locale currentLocale = new Locale(LanguageChange.getUserLocale(context));
 
-			for (int i = 0; i < input.length(); i++) {
-				// Check if the first letter (but not last) is a Capital one
-				if (i == 0 && i < input.length() - 1) {
-					if (Character.isUpperCase(input.charAt(i + 1))) {
-						capitalFlag = true;
-					} else {
-						capitalFlag = false;
-					}
-				}
+        if (input != null && !"".equals(input)) {
+            boolean capitalFlag = false;
 
-				// Check if a letter between the first and last is a Capital one
-				if (i > 0 && i < input.length() - 1) {
-					if ((Character.isUpperCase(input.charAt(i - 1)) || input
-							.charAt(i - 1) == ' ')
-							&& (Character.isUpperCase(input.charAt(i + 1)) || input
-									.charAt(i + 1) == ' ')
-							&& !(input.charAt(i - 1) == ' ' && input
-									.charAt(i + 1) == ' ')) {
-						capitalFlag = true;
-					} else {
-						capitalFlag = false;
-					}
-				}
+            for (int i = 0; i < input.length(); i++) {
+                // Check if the first letter (but not last) is a Capital one
+                if (i == 0 && i < input.length() - 1) {
+                    if (Character.isUpperCase(input.charAt(i + 1))) {
+                        capitalFlag = true;
+                    } else {
+                        capitalFlag = false;
+                    }
+                }
 
-				// Check if the last letter (but not first) is a Capital one
-				if (i > 0 && i == input.length() - 1) {
-					if (Character.isUpperCase(input.charAt(i - 1))) {
-						capitalFlag = true;
-					} else {
-						capitalFlag = false;
-					}
-				}
+                // Check if a letter between the first and last is a Capital one
+                if (i > 0 && i < input.length() - 1) {
+                    if ((Character.isUpperCase(input.charAt(i - 1)) || input
+                            .charAt(i - 1) == ' ')
+                            && (Character.isUpperCase(input.charAt(i + 1)) || input
+                            .charAt(i + 1) == ' ')
+                            && !(input.charAt(i - 1) == ' ' && input
+                            .charAt(i + 1) == ' ')) {
+                        capitalFlag = true;
+                    } else {
+                        capitalFlag = false;
+                    }
+                }
 
-				String cyrillicSymbol = input.charAt(i) + "";
-				String latinSymbol = translatorMap.get(cyrillicSymbol);
+                // Check if the last letter (but not first) is a Capital one
+                if (i > 0 && i == input.length() - 1) {
+                    if (Character.isUpperCase(input.charAt(i - 1))) {
+                        capitalFlag = true;
+                    } else {
+                        capitalFlag = false;
+                    }
+                }
 
-				if (latinSymbol == null) {
-					output.append(cyrillicSymbol);
-				} else {
-					if (capitalFlag) {
-						latinSymbol = latinSymbol.toUpperCase(currentLocale);
-					}
-					output.append(latinSymbol);
-				}
-			}
-		}
+                String cyrillicSymbol = input.charAt(i) + "";
+                String latinSymbol = translatorMap.get(cyrillicSymbol);
 
-		return output.toString();
-	}
+                if (latinSymbol == null) {
+                    output.append(cyrillicSymbol);
+                } else {
+                    if (capitalFlag) {
+                        latinSymbol = latinSymbol.toUpperCase(currentLocale);
+                    }
+                    output.append(latinSymbol);
+                }
+            }
+        }
 
-	/**
-	 * Translate an array of String from Cyrillic to Latin
-	 * 
-	 * @param arrayToTranslate
-	 *            the input array
-	 * @return the translated array
-	 */
-	public static String[] translate(Context context, String[] arrayToTranslate) {
-		String[] output = null;
+        return output.toString();
+    }
 
-		if (arrayToTranslate != null && arrayToTranslate.length != 0) {
-			output = new String[arrayToTranslate.length];
+    /**
+     * Translate an array of String from Cyrillic to Latin
+     *
+     * @param arrayToTranslate the input array
+     * @return the translated array
+     */
+    public static String[] translate(Context context, String[] arrayToTranslate) {
+        String[] output = null;
 
-			for (int i = 0; i < arrayToTranslate.length; i++) {
-				output[i] = translate(context, arrayToTranslate[i]);
-			}
-		}
+        if (arrayToTranslate != null && arrayToTranslate.length != 0) {
+            output = new String[arrayToTranslate.length];
 
-		return output;
-	}
+            for (int i = 0; i < arrayToTranslate.length; i++) {
+                output[i] = translate(context, arrayToTranslate[i]);
+            }
+        }
 
-	/**
-	 * Translate a list of String from Cyrillic to Latin
-	 * 
-	 * @param listToTranslate
-	 *            the input list
-	 * @return the translated list
-	 */
-	public static ArrayList<String> translate(Context context,
-			ArrayList<String> listToTranslate) {
-		ArrayList<String> output = null;
+        return output;
+    }
 
-		if (listToTranslate != null && listToTranslate.size() != 0) {
-			output = new ArrayList<String>();
+    /**
+     * Translate a list of String from Cyrillic to Latin
+     *
+     * @param listToTranslate the input list
+     * @return the translated list
+     */
+    public static ArrayList<String> translate(Context context,
+                                              ArrayList<String> listToTranslate) {
+        ArrayList<String> output = null;
 
-			for (int i = 0; i < listToTranslate.size(); i++) {
-				output.add(translate(context, listToTranslate.get(i)));
-			}
-		}
+        if (listToTranslate != null && listToTranslate.size() != 0) {
+            output = new ArrayList<String>();
 
-		return output;
-	}
+            for (int i = 0; i < listToTranslate.size(); i++) {
+                output.add(translate(context, listToTranslate.get(i)));
+            }
+        }
+
+        return output;
+    }
 }

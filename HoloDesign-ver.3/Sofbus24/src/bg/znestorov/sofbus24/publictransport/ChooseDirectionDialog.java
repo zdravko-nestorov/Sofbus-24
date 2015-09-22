@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.ArrayAdapter;
+
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.main.PublicTransport;
@@ -17,67 +18,64 @@ import bg.znestorov.sofbus24.utils.Constants;
 
 /**
  * Dialog informing the user about the public transport directions
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class ChooseDirectionDialog extends DialogFragment {
 
-	private Activity context;
-	private GlobalEntity globalContext;
+    public static final String BUNDLE_PT_DIRECTION_ENTITY = "PT DIRECTION ENTITY";
+    private Activity context;
+    private GlobalEntity globalContext;
+    private String title;
+    private DialogInterface.OnClickListener onListItemClickListener;
+    private DirectionsEntity ptDirectionsEntity;
 
-	private String title;
-	private DialogInterface.OnClickListener onListItemClickListener;
-	private DirectionsEntity ptDirectionsEntity;
+    public static ChooseDirectionDialog newInstance(
+            DirectionsEntity ptDirectionsEntity) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(BUNDLE_PT_DIRECTION_ENTITY, ptDirectionsEntity);
 
-	public static final String BUNDLE_PT_DIRECTION_ENTITY = "PT DIRECTION ENTITY";
+        ChooseDirectionDialog updateApplicationDialog = new ChooseDirectionDialog();
+        updateApplicationDialog.setArguments(bundle);
 
-	public static ChooseDirectionDialog newInstance(
-			DirectionsEntity ptDirectionsEntity) {
-		Bundle bundle = new Bundle();
-		bundle.putSerializable(BUNDLE_PT_DIRECTION_ENTITY, ptDirectionsEntity);
+        return updateApplicationDialog;
+    }
 
-		ChooseDirectionDialog updateApplicationDialog = new ChooseDirectionDialog();
-		updateApplicationDialog.setArguments(bundle);
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        context = getActivity();
+        globalContext = (GlobalEntity) context.getApplicationContext();
 
-		return updateApplicationDialog;
-	}
+        title = getString(R.string.sch_item_direction_choice);
+        ptDirectionsEntity = (DirectionsEntity) getArguments().getSerializable(
+                BUNDLE_PT_DIRECTION_ENTITY);
 
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		context = getActivity();
-		globalContext = (GlobalEntity) context.getApplicationContext();
+        ArrayAdapter<String> ptDirectionsAdapter = new ArrayAdapter<String>(
+                context, R.layout.activity_public_transport_directions_item,
+                ptDirectionsEntity.getDirectionsNames());
 
-		title = getString(R.string.sch_item_direction_choice);
-		ptDirectionsEntity = (DirectionsEntity) getArguments().getSerializable(
-				BUNDLE_PT_DIRECTION_ENTITY);
+        onListItemClickListener = new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialoginterface, int i) {
+                ptDirectionsEntity.setActiveDirection(i);
+                Intent publicTransport;
+                if (globalContext.isPhoneDevice()) {
+                    publicTransport = new Intent(context, PublicTransport.class);
+                } else {
+                    publicTransport = new Intent(context,
+                            PublicTransportDialog.class);
+                }
+                publicTransport.putExtra(
+                        Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE,
+                        ptDirectionsEntity);
+                context.startActivity(publicTransport);
+            }
+        };
 
-		ArrayAdapter<String> ptDirectionsAdapter = new ArrayAdapter<String>(
-				context, R.layout.activity_public_transport_directions_item,
-				ptDirectionsEntity.getDirectionsNames());
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title).setAdapter(ptDirectionsAdapter,
+                onListItemClickListener);
 
-		onListItemClickListener = new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialoginterface, int i) {
-				ptDirectionsEntity.setActiveDirection(i);
-				Intent publicTransport;
-				if (globalContext.isPhoneDevice()) {
-					publicTransport = new Intent(context, PublicTransport.class);
-				} else {
-					publicTransport = new Intent(context,
-							PublicTransportDialog.class);
-				}
-				publicTransport.putExtra(
-						Constants.BUNDLE_PUBLIC_TRANSPORT_SCHEDULE,
-						ptDirectionsEntity);
-				context.startActivity(publicTransport);
-			}
-		};
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(title).setAdapter(ptDirectionsAdapter,
-				onListItemClickListener);
-
-		return builder.create();
-	}
+        return builder.create();
+    }
 }

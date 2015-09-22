@@ -1,224 +1,222 @@
 package bg.znestorov.sofbus24.utils;
 
+import android.content.Context;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import android.content.Context;
-
 /**
  * Class which is used to transcode the <b>Latin</b> text to a <b>Cyrillic</b>
  * one using a table with the symbol translations
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class TranslatorLatinToCyrillic {
 
-	private static final Map<String, String> translatorMap;
-	static {
-		translatorMap = new HashMap<String, String>();
-		translatorMap.put("a", "‡");
-		translatorMap.put("b", "·");
-		translatorMap.put("v", "‚");
-		translatorMap.put("g", "„");
-		translatorMap.put("d", "‰");
-		translatorMap.put("e", "Â");
-		translatorMap.put("zh", "Ê");
-		translatorMap.put("z", "Á");
-		translatorMap.put("i", "Ë");
-		translatorMap.put("j", "È");
-		translatorMap.put("k", "Í");
-		translatorMap.put("l", "Î");
-		translatorMap.put("m", "Ï");
-		translatorMap.put("n", "Ì");
-		translatorMap.put("o", "Ó");
-		translatorMap.put("p", "Ô");
-		translatorMap.put("r", "");
-		translatorMap.put("s", "Ò");
-		translatorMap.put("t", "Ú");
-		translatorMap.put("u", "Û");
-		translatorMap.put("f", "Ù");
-		translatorMap.put("h", "ı");
-		translatorMap.put("c", "ˆ");
-		translatorMap.put("ch", "˜");
-		translatorMap.put("sh", "¯");
-		translatorMap.put("sht", "˘");
-		translatorMap.put("y", "˙");
-		translatorMap.put("yu", "˛");
-		translatorMap.put("ya", "ˇ");
-		translatorMap.put("A", "¿");
-		translatorMap.put("B", "¡");
-		translatorMap.put("V", "¬");
-		translatorMap.put("G", "√");
-		translatorMap.put("D", "ƒ");
-		translatorMap.put("E", "≈");
-		translatorMap.put("ZH", "∆");
-		translatorMap.put("Z", "«");
-		translatorMap.put("I", "»");
-		translatorMap.put("J", "…");
-		translatorMap.put("K", " ");
-		translatorMap.put("L", "À");
-		translatorMap.put("M", "Ã");
-		translatorMap.put("N", "Õ");
-		translatorMap.put("O", "Œ");
-		translatorMap.put("P", "œ");
-		translatorMap.put("R", "–");
-		translatorMap.put("S", "—");
-		translatorMap.put("T", "“");
-		translatorMap.put("U", "”");
-		translatorMap.put("F", "‘");
-		translatorMap.put("H", "’");
-		translatorMap.put("C", "÷");
-		translatorMap.put("CH", "◊");
-		translatorMap.put("SH", "ÿ");
-		translatorMap.put("SHT", "Ÿ");
-		translatorMap.put("Y", "⁄");
-		translatorMap.put("YU", "ﬁ");
-		translatorMap.put("YA", "ﬂ");
-	}
+    private static final Map<String, String> translatorMap;
 
-	private TranslatorLatinToCyrillic() {
-	}
+    static {
+        translatorMap = new HashMap<String, String>();
+        translatorMap.put("a", "–∞");
+        translatorMap.put("b", "–±");
+        translatorMap.put("v", "–≤");
+        translatorMap.put("g", "–≥");
+        translatorMap.put("d", "–¥");
+        translatorMap.put("e", "–µ");
+        translatorMap.put("zh", "–∂");
+        translatorMap.put("z", "–∑");
+        translatorMap.put("i", "–∏");
+        translatorMap.put("j", "–π");
+        translatorMap.put("k", "–∫");
+        translatorMap.put("l", "–ª");
+        translatorMap.put("m", "–º");
+        translatorMap.put("n", "–Ω");
+        translatorMap.put("o", "–æ");
+        translatorMap.put("p", "–ø");
+        translatorMap.put("r", "—Ä");
+        translatorMap.put("s", "—Å");
+        translatorMap.put("t", "—Ç");
+        translatorMap.put("u", "—É");
+        translatorMap.put("f", "—Ñ");
+        translatorMap.put("h", "—Ö");
+        translatorMap.put("c", "—Ü");
+        translatorMap.put("ch", "—á");
+        translatorMap.put("sh", "—à");
+        translatorMap.put("sht", "—â");
+        translatorMap.put("y", "—ä");
+        translatorMap.put("yu", "—é");
+        translatorMap.put("ya", "—è");
+        translatorMap.put("A", "–ê");
+        translatorMap.put("B", "–ë");
+        translatorMap.put("V", "–í");
+        translatorMap.put("G", "–ì");
+        translatorMap.put("D", "–î");
+        translatorMap.put("E", "–ï");
+        translatorMap.put("ZH", "–ñ");
+        translatorMap.put("Z", "–ó");
+        translatorMap.put("I", "–ò");
+        translatorMap.put("J", "–ô");
+        translatorMap.put("K", "–ö");
+        translatorMap.put("L", "–õ");
+        translatorMap.put("M", "–ú");
+        translatorMap.put("N", "–ù");
+        translatorMap.put("O", "–û");
+        translatorMap.put("P", "–ü");
+        translatorMap.put("R", "–†");
+        translatorMap.put("S", "–°");
+        translatorMap.put("T", "–¢");
+        translatorMap.put("U", "–£");
+        translatorMap.put("F", "–§");
+        translatorMap.put("H", "–•");
+        translatorMap.put("C", "–¶");
+        translatorMap.put("CH", "–ß");
+        translatorMap.put("SH", "–®");
+        translatorMap.put("SHT", "–©");
+        translatorMap.put("Y", "–™");
+        translatorMap.put("YU", "–Æ");
+        translatorMap.put("YA", "–Ø");
+    }
 
-	/**
-	 * Translate the input Latin text to a Cyrillic one using a table with the
-	 * translation
-	 * 
-	 * @param context
-	 *            the current activity context
-	 * @param input
-	 *            the input text in Latin
-	 * @return the transcoded Latin text in a Cyrillic format
-	 */
-	public static String translate(Context context, String input) {
-		StringBuilder output = new StringBuilder("");
-		Locale currentLocale = new Locale(LanguageChange.getUserLocale(context));
+    private TranslatorLatinToCyrillic() {
+    }
 
-		if (input != null && !"".equals(input)) {
-			int j = 1;
-			boolean capitalFlag = false;
+    /**
+     * Translate the input Latin text to a Cyrillic one using a table with the
+     * translation
+     *
+     * @param context the current activity context
+     * @param input   the input text in Latin
+     * @return the transcoded Latin text in a Cyrillic format
+     */
+    public static String translate(Context context, String input) {
+        StringBuilder output = new StringBuilder("");
+        Locale currentLocale = new Locale(LanguageChange.getUserLocale(context));
 
-			for (int i = 0; i < input.length(); i = i + j) {
+        if (input != null && !"".equals(input)) {
+            int j = 1;
+            boolean capitalFlag = false;
 
-				// Case there are at least 3 more symbols
-				if (input.substring(i).length() > 2) {
-					if (Character.isUpperCase(input.charAt(i))
-							|| Character.isUpperCase(input.charAt(i + 1))
-							|| Character.isUpperCase(input.charAt(i + 2))) {
-						capitalFlag = true;
-					} else {
-						capitalFlag = false;
-					}
+            for (int i = 0; i < input.length(); i = i + j) {
 
-					String latinSymbol = "" + input.charAt(i)
-							+ input.charAt(i + 1) + input.charAt(i + 2);
-					latinSymbol = latinSymbol.toLowerCase(currentLocale);
-					String cyrillicSymbol = translatorMap.get(latinSymbol);
+                // Case there are at least 3 more symbols
+                if (input.substring(i).length() > 2) {
+                    if (Character.isUpperCase(input.charAt(i))
+                            || Character.isUpperCase(input.charAt(i + 1))
+                            || Character.isUpperCase(input.charAt(i + 2))) {
+                        capitalFlag = true;
+                    } else {
+                        capitalFlag = false;
+                    }
 
-					if (cyrillicSymbol == null) {
-						if (Character.isUpperCase(input.charAt(i))
-								|| Character.isUpperCase(input.charAt(i + 1))) {
-							capitalFlag = true;
-						} else {
-							capitalFlag = false;
-						}
+                    String latinSymbol = "" + input.charAt(i)
+                            + input.charAt(i + 1) + input.charAt(i + 2);
+                    latinSymbol = latinSymbol.toLowerCase(currentLocale);
+                    String cyrillicSymbol = translatorMap.get(latinSymbol);
 
-						latinSymbol = "" + input.charAt(i)
-								+ input.charAt(i + 1);
-						latinSymbol = latinSymbol.toLowerCase(currentLocale);
-						cyrillicSymbol = translatorMap.get(latinSymbol);
+                    if (cyrillicSymbol == null) {
+                        if (Character.isUpperCase(input.charAt(i))
+                                || Character.isUpperCase(input.charAt(i + 1))) {
+                            capitalFlag = true;
+                        } else {
+                            capitalFlag = false;
+                        }
 
-						if (cyrillicSymbol == null) {
-							latinSymbol = "" + input.charAt(i);
-							cyrillicSymbol = translatorMap.get(latinSymbol);
+                        latinSymbol = "" + input.charAt(i)
+                                + input.charAt(i + 1);
+                        latinSymbol = latinSymbol.toLowerCase(currentLocale);
+                        cyrillicSymbol = translatorMap.get(latinSymbol);
 
-							if (cyrillicSymbol == null) {
-								output.append(latinSymbol);
-								j = 1;
-								continue;
-							} else {
-								output.append(cyrillicSymbol);
-								j = 1;
-								continue;
-							}
-						} else {
-							if (capitalFlag) {
-								output.append(cyrillicSymbol
-										.toUpperCase(currentLocale));
-							} else {
-								output.append(cyrillicSymbol);
-							}
-							j = 2;
-							continue;
-						}
-					} else {
-						if (capitalFlag) {
-							output.append(cyrillicSymbol
-									.toUpperCase(currentLocale));
-						} else {
-							output.append(cyrillicSymbol);
-						}
-						j = 3;
-						continue;
-					}
-					// Case there are 2 more symbols
-				} else if (input.substring(i).length() == 2) {
-					if (Character.isUpperCase(input.charAt(i))
-							|| Character.isUpperCase(input.charAt(i + 1))) {
-						capitalFlag = true;
-					} else {
-						capitalFlag = false;
-					}
+                        if (cyrillicSymbol == null) {
+                            latinSymbol = "" + input.charAt(i);
+                            cyrillicSymbol = translatorMap.get(latinSymbol);
 
-					String latinSymbol = "" + input.charAt(i)
-							+ input.charAt(i + 1);
-					latinSymbol = latinSymbol.toLowerCase(currentLocale);
-					String cyrillicSymbol = translatorMap.get(latinSymbol);
+                            if (cyrillicSymbol == null) {
+                                output.append(latinSymbol);
+                                j = 1;
+                                continue;
+                            } else {
+                                output.append(cyrillicSymbol);
+                                j = 1;
+                                continue;
+                            }
+                        } else {
+                            if (capitalFlag) {
+                                output.append(cyrillicSymbol
+                                        .toUpperCase(currentLocale));
+                            } else {
+                                output.append(cyrillicSymbol);
+                            }
+                            j = 2;
+                            continue;
+                        }
+                    } else {
+                        if (capitalFlag) {
+                            output.append(cyrillicSymbol
+                                    .toUpperCase(currentLocale));
+                        } else {
+                            output.append(cyrillicSymbol);
+                        }
+                        j = 3;
+                        continue;
+                    }
+                    // Case there are 2 more symbols
+                } else if (input.substring(i).length() == 2) {
+                    if (Character.isUpperCase(input.charAt(i))
+                            || Character.isUpperCase(input.charAt(i + 1))) {
+                        capitalFlag = true;
+                    } else {
+                        capitalFlag = false;
+                    }
 
-					if (cyrillicSymbol == null) {
-						latinSymbol = "" + input.charAt(i);
-						cyrillicSymbol = translatorMap.get(latinSymbol);
+                    String latinSymbol = "" + input.charAt(i)
+                            + input.charAt(i + 1);
+                    latinSymbol = latinSymbol.toLowerCase(currentLocale);
+                    String cyrillicSymbol = translatorMap.get(latinSymbol);
 
-						if (cyrillicSymbol == null) {
-							output.append(latinSymbol);
-							j = 1;
-							continue;
-						} else {
-							output.append(cyrillicSymbol);
-							j = 1;
-							continue;
-						}
-					} else {
-						if (capitalFlag) {
-							output.append(cyrillicSymbol
-									.toUpperCase(currentLocale));
-						} else {
-							output.append(cyrillicSymbol);
-						}
-						j = 2;
-						continue;
-					}
-					// Case there is 1 more symbol
-				} else if (input.substring(i).length() == 1) {
-					String latinSymbol = "" + input.charAt(i);
-					String cyrillicSymbol = translatorMap.get(latinSymbol);
+                    if (cyrillicSymbol == null) {
+                        latinSymbol = "" + input.charAt(i);
+                        cyrillicSymbol = translatorMap.get(latinSymbol);
 
-					if (cyrillicSymbol == null) {
-						output.append(latinSymbol);
-						j = 1;
-						continue;
-					} else {
-						output.append(cyrillicSymbol);
-						j = 1;
-						continue;
-					}
-				}
-			}
-		}
+                        if (cyrillicSymbol == null) {
+                            output.append(latinSymbol);
+                            j = 1;
+                            continue;
+                        } else {
+                            output.append(cyrillicSymbol);
+                            j = 1;
+                            continue;
+                        }
+                    } else {
+                        if (capitalFlag) {
+                            output.append(cyrillicSymbol
+                                    .toUpperCase(currentLocale));
+                        } else {
+                            output.append(cyrillicSymbol);
+                        }
+                        j = 2;
+                        continue;
+                    }
+                    // Case there is 1 more symbol
+                } else if (input.substring(i).length() == 1) {
+                    String latinSymbol = "" + input.charAt(i);
+                    String cyrillicSymbol = translatorMap.get(latinSymbol);
 
-		return output.toString();
-	}
+                    if (cyrillicSymbol == null) {
+                        output.append(latinSymbol);
+                        j = 1;
+                        continue;
+                    } else {
+                        output.append(cyrillicSymbol);
+                        j = 1;
+                        continue;
+                    }
+                }
+            }
+        }
+
+        return output.toString();
+    }
 
 }

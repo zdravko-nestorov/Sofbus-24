@@ -13,6 +13,9 @@ import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.RetrieveCurrentLocationTypeEnum;
 import bg.znestorov.sofbus24.main.ClosestStationsList;
@@ -25,44 +28,35 @@ import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
-import com.google.android.gms.maps.model.LatLng;
-
 /**
  * Class responsible for AsyncLoad of the current location
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
-
-	private FragmentActivity context;
-	private GlobalEntity globalContext;
-	private FragmentManager fragmentManager;
-
-	private ProgressDialog progressDialog;
-	private RetrieveCurrentLocationTypeEnum retrieveCurrentLocationType;
-
-	// Default latitude and longitude
-	private double latitude = 0.0;
-	private double longitude = 0.0;
-
-	// Location Managers responsible for the current location
-	private LocationManager locationManager;
-	private MyLocationListener myNetworkLocationListener;
-	private MyLocationListener myGPSLocationListener;
-
-	// Available Location providers
-	private boolean areLocationServicesAvailable;
-	private boolean isAnyProviderEabled;
 
 	// Different location providers
 	private static final String GPS_PROVIDER = LocationManager.GPS_PROVIDER;
 	private static final String NETWORK_PROVIDER = LocationManager.NETWORK_PROVIDER;
-
 	// The minimum distance and time to for the location updates
 	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
 	private static final long MIN_TIME_BETWEEN_UPDATES = 1000 * 2;
+	private FragmentActivity context;
+	private GlobalEntity globalContext;
+	private FragmentManager fragmentManager;
+	private ProgressDialog progressDialog;
+	private RetrieveCurrentLocationTypeEnum retrieveCurrentLocationType;
+	// Default latitude and longitude
+	private double latitude = 0.0;
+	private double longitude = 0.0;
+	// Location Managers responsible for the current location
+	private LocationManager locationManager;
+	private MyLocationListener myNetworkLocationListener;
+	private MyLocationListener myGPSLocationListener;
+	// Available Location providers
+	private boolean areLocationServicesAvailable;
+	private boolean isAnyProviderEabled;
 
 	public RetrieveCurrentLocation(FragmentActivity context,
 			FragmentManager fragmentManager, ProgressDialog progressDialog,
@@ -76,6 +70,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 		this.retrieveCurrentLocationType = retrieveCurrentLocationType;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
@@ -140,32 +135,6 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 		dismissLoadingView();
 	}
 
-	public class MyLocationListener implements LocationListener {
-
-		@Override
-		public void onLocationChanged(Location location) {
-			if (location != null) {
-				latitude = location.getLatitude();
-				longitude = location.getLongitude();
-			}
-		}
-
-		@Override
-		public void onProviderDisabled(String provider) {
-			registerForLocationUpdates();
-		}
-
-		@Override
-		public void onProviderEnabled(String provider) {
-			registerForLocationUpdates();
-		}
-
-		@Override
-		public void onStatusChanged(String provider, int status, Bundle extras) {
-			registerForLocationUpdates();
-		}
-	}
-
 	/**
 	 * Create the loading view and lock the screen
 	 */
@@ -175,8 +144,8 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 		if (progressDialog != null) {
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(true);
-			progressDialog
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+			progressDialog.setOnCancelListener(
+					new DialogInterface.OnCancelListener() {
 						public void onCancel(DialogInterface dialog) {
 							cancel(true);
 						}
@@ -198,7 +167,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 			 * Fixing a strange error that is happening sometimes when the
 			 * dialog is dismissed. I guess sometimes activity gets finished
 			 * before the dialog successfully dismisses.
-			 * 
+			 *
 			 * java.lang.IllegalArgumentException: View not attached to window
 			 * manager
 			 */
@@ -219,7 +188,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 	/**
 	 * Check if any of the providers is enabled
-	 * 
+	 *
 	 * @return if any provider is ebanled
 	 */
 	private void registerForLocationUpdates() {
@@ -241,8 +210,8 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 					if (myNetworkLocationListener == null) {
 						myNetworkLocationListener = new MyLocationListener();
 
-						locationManager.requestLocationUpdates(
-								NETWORK_PROVIDER, MIN_TIME_BETWEEN_UPDATES,
+						locationManager.requestLocationUpdates(NETWORK_PROVIDER,
+								MIN_TIME_BETWEEN_UPDATES,
 								MIN_DISTANCE_CHANGE_FOR_UPDATES,
 								myNetworkLocationListener);
 					}
@@ -275,7 +244,7 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 	/**
 	 * Show a toast for a long period of time
-	 * 
+	 *
 	 * @param message
 	 *            the message of the toast
 	 */
@@ -416,11 +385,14 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 		Location lastKnownLocation = null;
 		if (locationManager != null) {
-			lastKnownLocation = locationManager
-					.getLastKnownLocation(GPS_PROVIDER) == null ? locationManager
-					.getLastKnownLocation(NETWORK_PROVIDER) == null ? null
-					: locationManager.getLastKnownLocation(NETWORK_PROVIDER)
-					: locationManager.getLastKnownLocation(GPS_PROVIDER);
+			lastKnownLocation = locationManager.getLastKnownLocation(
+					GPS_PROVIDER) == null ? locationManager
+							.getLastKnownLocation(NETWORK_PROVIDER) == null
+									? null
+									: locationManager.getLastKnownLocation(
+											NETWORK_PROVIDER)
+							: locationManager
+									.getLastKnownLocation(GPS_PROVIDER);
 		}
 
 		// Check if there is any last known location
@@ -459,8 +431,8 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 				// Check if the location is available
 				if (areLocationServicesAvailable) {
-					showLongToast(context
-							.getString(R.string.app_location_modules_timeout_error));
+					showLongToast(context.getString(
+							R.string.app_location_modules_timeout_error));
 				} else {
 					showLocationSourceDialog();
 				}
@@ -478,8 +450,8 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 
 					// Check if the location is available
 					if (areLocationServicesAvailable) {
-						showLongToast(context
-								.getString(R.string.app_nearest_station_init_error));
+						showLongToast(context.getString(
+								R.string.app_nearest_station_init_error));
 						startDroidTransActivity();
 					} else {
 						showLocationSourceDialog();
@@ -515,11 +487,11 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	private void showLocationMapErrorToast() {
 
 		if (!isAnyProviderEabled) {
-			showLongToast(context
-					.getString(R.string.app_location_modules_error));
+			showLongToast(
+					context.getString(R.string.app_location_modules_error));
 		} else {
-			showLongToast(context
-					.getString(R.string.app_location_timeout_map_error));
+			showLongToast(
+					context.getString(R.string.app_location_timeout_map_error));
 		}
 	}
 
@@ -529,11 +501,11 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 	private void showLocationErrorToast() {
 
 		if (!isAnyProviderEabled) {
-			showLongToast(context
-					.getString(R.string.app_location_modules_error));
+			showLongToast(
+					context.getString(R.string.app_location_modules_error));
 		} else {
-			showLongToast(context
-					.getString(R.string.app_location_timeout_error));
+			showLongToast(
+					context.getString(R.string.app_location_timeout_error));
 		}
 	}
 
@@ -563,9 +535,36 @@ public class RetrieveCurrentLocation extends AsyncTask<Void, Void, Void> {
 			 * Fixing a strange error that is happening sometimes when the
 			 * dialog is created. I guess sometimes the activity gets destroyed
 			 * before the dialog successfully be shown.
-			 * 
+			 *
 			 * java.lang.IllegalStateException: Activity has been destroyed
 			 */
+		}
+	}
+
+	public class MyLocationListener implements LocationListener {
+
+		@Override
+		public void onLocationChanged(Location location) {
+			if (location != null) {
+				latitude = location.getLatitude();
+				longitude = location.getLongitude();
+			}
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+			registerForLocationUpdates();
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+			registerForLocationUpdates();
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status,
+				Bundle extras) {
+			registerForLocationUpdates();
 		}
 	}
 

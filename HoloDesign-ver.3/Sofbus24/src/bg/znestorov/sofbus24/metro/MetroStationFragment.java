@@ -1,7 +1,5 @@
 package bg.znestorov.sofbus24.metro;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -22,6 +20,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.MenuItem;
+
+import java.util.ArrayList;
+
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -35,371 +39,360 @@ import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.GooglePlayServicesErrorDialog;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.MenuItem;
-
 /**
  * Metro Station Fragment containing information about the metro stations
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class MetroStationFragment extends SherlockListFragment implements
-		OnItemClickListener {
+        OnItemClickListener {
 
-	private Activity context;
+    private static final String BUNDLE_SEARCH_TEXT = "SEARCH TEXT";
+    private Activity context;
+    private SearchEditText searchEditText;
+    private GridView gridViewMetroStation;
+    private View emptyView;
+    private TextView emptyTextView;
+    private int currentDirection;
+    private MetroLoadStations mls;
+    private MetroStationAdapter metroStationAdapter;
+    private ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>();
+    private String searchText;
 
-	private SearchEditText searchEditText;
-	private GridView gridViewMetroStation;
-	private View emptyView;
-	private TextView emptyTextView;
+    public static MetroStationFragment newInstance(int currentDirection) {
+        MetroStationFragment metroStationFragment = new MetroStationFragment();
 
-	private int currentDirection;
-	private MetroLoadStations mls;
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.BUNDLE_METRO_SCHEDULE, currentDirection);
+        metroStationFragment.setArguments(bundle);
 
-	private MetroStationAdapter metroStationAdapter;
-	private ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>();
+        return metroStationFragment;
+    }
 
-	private String searchText;
-	private static final String BUNDLE_SEARCH_TEXT = "SEARCH TEXT";
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View fragmentView = inflater.inflate(
+                R.layout.activity_metro_station_fragment, container, false);
 
-	public static MetroStationFragment newInstance(int currentDirection) {
-		MetroStationFragment metroStationFragment = new MetroStationFragment();
+        // Set the context (activity) associated with this fragment
+        context = getActivity();
 
-		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.BUNDLE_METRO_SCHEDULE, currentDirection);
-		metroStationFragment.setArguments(bundle);
+        // Get the needed fragment information
+        initInformation(savedInstanceState);
 
-		return metroStationFragment;
-	}
+        // Find all of TextView and SearchEditText tabs in the layout
+        initLayoutFields(fragmentView);
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View fragmentView = inflater.inflate(
-				R.layout.activity_metro_station_fragment, container, false);
+        // Activate the option menu
+        setHasOptionsMenu(true);
 
-		// Set the context (activity) associated with this fragment
-		context = getActivity();
+        return fragmentView;
+    }
 
-		// Get the needed fragment information
-		initInformation(savedInstanceState);
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
 
-		// Find all of TextView and SearchEditText tabs in the layout
-		initLayoutFields(fragmentView);
+        savedInstanceState.putString(BUNDLE_SEARCH_TEXT, searchText);
+    }
 
-		// Activate the option menu
-		setHasOptionsMenu(true);
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        StationEntity station = (StationEntity) ((MetroStationAdapter) getListAdapter())
+                .getItem(position);
+        onListItemClick(station);
+    }
 
-		return fragmentView;
-	}
+    @Override
+    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+        StationEntity station = (StationEntity) ((MetroStationAdapter) gridViewMetroStation
+                .getAdapter()).getItem(position);
+        onListItemClick(station);
+    }
 
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
+    /**
+     * Retieve an information about the selected metro station
+     *
+     * @param station the selected station
+     */
+    private void onListItemClick(StationEntity station) {
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage(Html.fromHtml(String.format(
+                getString(R.string.metro_loading_schedule), station.getName(),
+                station.getNumber())));
+        RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
+                context, progressDialog, station);
+        retrieveMetroSchedule.execute();
+    }
 
-		savedInstanceState.putString(BUNDLE_SEARCH_TEXT, searchText);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		StationEntity station = (StationEntity) ((MetroStationAdapter) getListAdapter())
-				.getItem(position);
-		onListItemClick(station);
-	}
+        ProgressDialog progressDialog = new ProgressDialog(context);
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-		StationEntity station = (StationEntity) ((MetroStationAdapter) gridViewMetroStation
-				.getAdapter()).getItem(position);
-		onListItemClick(station);
-	}
+        switch (item.getItemId()) {
+            case R.id.action_metro_map_route:
+                progressDialog
+                        .setMessage(getString(R.string.metro_menu_map_route_loading));
+                RetrieveMetroRoute retrieveMetroRoute = new RetrieveMetroRoute(
+                        context, progressDialog);
+                retrieveMetroRoute.execute();
 
-	/**
-	 * Retieve an information about the selected metro station
-	 * 
-	 * @param station
-	 *            the selected station
-	 */
-	private void onListItemClick(StationEntity station) {
-		ProgressDialog progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage(Html.fromHtml(String.format(
-				getString(R.string.metro_loading_schedule), station.getName(),
-				station.getNumber())));
-		RetrieveMetroSchedule retrieveMetroSchedule = new RetrieveMetroSchedule(
-				context, progressDialog, station);
-		retrieveMetroSchedule.execute();
-	}
+                break;
+            case R.id.action_metro_schedule_site:
+                ActivityUtils.startWebPageActivity(context, new VehicleEntity(
+                        VehicleTypeEnum.METRO));
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+                break;
+        }
 
-		ProgressDialog progressDialog = new ProgressDialog(context);
+        return true;
+    }
 
-		switch (item.getItemId()) {
-		case R.id.action_metro_map_route:
-			progressDialog
-					.setMessage(getString(R.string.metro_menu_map_route_loading));
-			RetrieveMetroRoute retrieveMetroRoute = new RetrieveMetroRoute(
-					context, progressDialog);
-			retrieveMetroRoute.execute();
+    /**
+     * Initialize the MetroLoadStation object and all the data from the
+     * SavedInstanceState object
+     *
+     * @param savedInstanceState object containing the state of the saved values
+     */
+    private void initInformation(Bundle savedInstanceState) {
+        // Get the values from the Bundle
+        if (savedInstanceState != null) {
+            searchText = savedInstanceState.getString(BUNDLE_SEARCH_TEXT);
+        } else {
+            searchText = "";
+        }
 
-			break;
-		case R.id.action_metro_schedule_site:
-			ActivityUtils.startWebPageActivity(context, new VehicleEntity(
-					VehicleTypeEnum.METRO));
+        // Get the current direction from the Bundle
+        currentDirection = getArguments().getInt(
+                Constants.BUNDLE_METRO_SCHEDULE);
 
-			break;
-		}
+        // Get the information about the current direction
+        mls = MetroLoadStations.getInstance(context);
+        stationsList = mls.getDirectionList(currentDirection);
+    }
 
-		return true;
-	}
+    /**
+     * Initialize the layout fields and assign the appropriate listeners over
+     * them (directions tabs (TextViews), SerachEditText and EmptyList
+     * (TextView))
+     *
+     * @param fragmentView the current view of the fragment
+     */
+    private void initLayoutFields(View fragmentView) {
+        searchEditText = (SearchEditText) fragmentView
+                .findViewById(R.id.metro_station_search);
+        emptyView = fragmentView
+                .findViewById(R.id.metro_station_list_empty_view);
+        emptyTextView = (TextView) fragmentView
+                .findViewById(R.id.metro_station_list_empty_text);
 
-	/**
-	 * Initialize the MetroLoadStation object and all the data from the
-	 * SavedInstanceState object
-	 * 
-	 * @param savedInstanceState
-	 *            object containing the state of the saved values
-	 */
-	private void initInformation(Bundle savedInstanceState) {
-		// Get the values from the Bundle
-		if (savedInstanceState != null) {
-			searchText = savedInstanceState.getString(BUNDLE_SEARCH_TEXT);
-		} else {
-			searchText = "";
-		}
+        // Set on click listener over the grid view and hide the empty view in
+        // the bgining (if the ListFragment uses a GridView)
+        gridViewMetroStation = (GridView) fragmentView
+                .findViewById(R.id.metro_station_list_grid_view);
+        if (gridViewMetroStation != null) {
+            gridViewMetroStation.setOnItemClickListener(this);
+            emptyView.setVisibility(View.GONE);
+        }
 
-		// Get the current direction from the Bundle
-		currentDirection = getArguments().getInt(
-				Constants.BUNDLE_METRO_SCHEDULE);
+        // Use custom ArrayAdapter to show the elements in the ListView
+        setAdapter();
 
-		// Get the information about the current direction
-		mls = MetroLoadStations.getInstance(context);
-		stationsList = mls.getDirectionList(currentDirection);
-	}
+        // Set the actions over the SearchEditText
+        actionsOverSearchEditText();
+    }
 
-	/**
-	 * Initialize the layout fields and assign the appropriate listeners over
-	 * them (directions tabs (TextViews), SerachEditText and EmptyList
-	 * (TextView))
-	 * 
-	 * @param fragmentView
-	 *            the current view of the fragment
-	 */
-	private void initLayoutFields(View fragmentView) {
-		searchEditText = (SearchEditText) fragmentView
-				.findViewById(R.id.metro_station_search);
-		emptyView = fragmentView
-				.findViewById(R.id.metro_station_list_empty_view);
-		emptyTextView = (TextView) fragmentView
-				.findViewById(R.id.metro_station_list_empty_text);
+    /**
+     * According to the current direction assign the appropriate adapter to the
+     * list fragment
+     */
+    private void setAdapter() {
+        metroStationAdapter = new MetroStationAdapter(context, this, emptyView,
+                emptyTextView, mls.getDirectionName(currentDirection, false,
+                false), stationsList);
 
-		// Set on click listener over the grid view and hide the empty view in
-		// the bgining (if the ListFragment uses a GridView)
-		gridViewMetroStation = (GridView) fragmentView
-				.findViewById(R.id.metro_station_list_grid_view);
-		if (gridViewMetroStation != null) {
-			gridViewMetroStation.setOnItemClickListener(this);
-			emptyView.setVisibility(View.GONE);
-		}
+        if (gridViewMetroStation == null) {
+            setListAdapter(metroStationAdapter);
+        } else {
+            gridViewMetroStation.setAdapter(metroStationAdapter);
+        }
+    }
 
-		// Use custom ArrayAdapter to show the elements in the ListView
-		setAdapter();
+    /**
+     * Modify the Search EditText field and activate the listeners
+     */
+    private void actionsOverSearchEditText() {
+        // TODO: Find a way to set an alphanumeric keyboard with numeric as
+        // default
+        searchEditText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        searchEditText.setFilters(new InputFilter[]{ActivityUtils
+                .createInputFilter()});
+        searchEditText.setText(searchText);
 
-		// Set the actions over the SearchEditText
-		actionsOverSearchEditText();
-	}
+        // Add on focus listener
+        searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    ActivityUtils.hideKeyboard(context, searchEditText);
+                }
+            }
+        });
 
-	/**
-	 * According to the current direction assign the appropriate adapter to the
-	 * list fragment
-	 */
-	private void setAdapter() {
-		metroStationAdapter = new MetroStationAdapter(context, this, emptyView,
-				emptyTextView, mls.getDirectionName(currentDirection, false,
-						false), stationsList);
+        // Add on text changes listener
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                searchText = searchEditText.getText().toString();
+                metroStationAdapter.getFilter().filter(searchText);
+            }
 
-		if (gridViewMetroStation == null) {
-			setListAdapter(metroStationAdapter);
-		} else {
-			gridViewMetroStation.setAdapter(metroStationAdapter);
-		}
-	}
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
 
-	/**
-	 * Modify the Search EditText field and activate the listeners
-	 */
-	private void actionsOverSearchEditText() {
-		// TODO: Find a way to set an alphanumeric keyboard with numeric as
-		// default
-		searchEditText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-				| InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-		searchEditText.setFilters(new InputFilter[] { ActivityUtils
-				.createInputFilter() });
-		searchEditText.setText(searchText);
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+        });
 
-		// Add on focus listener
-		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (!hasFocus) {
-					ActivityUtils.hideKeyboard(context, searchEditText);
-				}
-			}
-		});
+        // Add a drawable listeners (search and clear icons)
+        searchEditText.setDrawableClickListener(new DrawableClickListener() {
+            @Override
+            public void onClick(DrawablePosition target) {
+                switch (target) {
+                    case LEFT:
+                        searchEditText.requestFocus();
+                        searchEditText.setSelection(searchEditText.getText()
+                                .length());
+                        ActivityUtils.showKeyboard(context, searchEditText);
+                        break;
+                    case RIGHT:
+                        searchEditText.setText("");
+                        break;
+                    default:
+                        break;
+                }
+            }
 
-		// Add on text changes listener
-		searchEditText.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				searchText = searchEditText.getText().toString();
-				metroStationAdapter.getFilter().filter(searchText);
-			}
+        });
+    }
 
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
+    /**
+     * Asynchronous class used for retrieving the Metro route
+     *
+     * @author Zdravko Nestorov
+     */
+    public class RetrieveMetroRoute extends AsyncTask<Void, Void, Intent> {
 
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-		});
+        private Activity context;
+        private GlobalEntity globalContext;
+        private ProgressDialog progressDialog;
 
-		// Add a drawable listeners (search and clear icons)
-		searchEditText.setDrawableClickListener(new DrawableClickListener() {
-			@Override
-			public void onClick(DrawablePosition target) {
-				switch (target) {
-				case LEFT:
-					searchEditText.requestFocus();
-					searchEditText.setSelection(searchEditText.getText()
-							.length());
-					ActivityUtils.showKeyboard(context, searchEditText);
-					break;
-				case RIGHT:
-					searchEditText.setText("");
-					break;
-				default:
-					break;
-				}
-			}
+        public RetrieveMetroRoute(Activity context,
+                                  ProgressDialog progressDialog) {
+            this.context = context;
+            this.globalContext = (GlobalEntity) context.getApplicationContext();
+            this.progressDialog = progressDialog;
+        }
 
-		});
-	}
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            createLoadingView();
+        }
 
-	/**
-	 * Asynchronous class used for retrieving the Metro route
-	 * 
-	 * @author Zdravko Nestorov
-	 */
-	public class RetrieveMetroRoute extends AsyncTask<Void, Void, Intent> {
+        @Override
+        protected Intent doInBackground(Void... params) {
+            Intent metroMapRouteIntent = new Intent(context,
+                    StationRouteMap.class);
 
-		private Activity context;
-		private GlobalEntity globalContext;
-		private ProgressDialog progressDialog;
+            VehicleEntity metroVehicle;
+            switch (currentDirection) {
+                case 0:
+                    metroVehicle = new VehicleEntity("1", VehicleTypeEnum.METRO1,
+                            mls.getDirectionName(currentDirection, false, true));
+                    break;
+                default:
+                    metroVehicle = new VehicleEntity("1", VehicleTypeEnum.METRO2,
+                            mls.getDirectionName(currentDirection, false, true));
+                    break;
+            }
 
-		public RetrieveMetroRoute(Activity context,
-				ProgressDialog progressDialog) {
-			this.context = context;
-			this.globalContext = (GlobalEntity) context.getApplicationContext();
-			this.progressDialog = progressDialog;
-		}
+            DirectionsEntity metroDirectionsEntity = new DirectionsEntity(
+                    metroVehicle, currentDirection,
+                    mls.getMetroDirectionsNames(), mls.getMetroDirectionsList());
+            metroMapRouteIntent.putExtra(Constants.BUNDLE_STATION_ROUTE_MAP,
+                    metroDirectionsEntity);
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			createLoadingView();
-		}
+            return metroMapRouteIntent;
+        }
 
-		@Override
-		protected Intent doInBackground(Void... params) {
-			Intent metroMapRouteIntent = new Intent(context,
-					StationRouteMap.class);
+        @Override
+        protected void onPostExecute(Intent metroMapRouteIntent) {
+            super.onPostExecute(metroMapRouteIntent);
 
-			VehicleEntity metroVehicle;
-			switch (currentDirection) {
-			case 0:
-				metroVehicle = new VehicleEntity("1", VehicleTypeEnum.METRO1,
-						mls.getDirectionName(currentDirection, false, true));
-				break;
-			default:
-				metroVehicle = new VehicleEntity("1", VehicleTypeEnum.METRO2,
-						mls.getDirectionName(currentDirection, false, true));
-				break;
-			}
+            if (!globalContext.areServicesAvailable()) {
+                GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
+                        .newInstance(getString(R.string.app_google_play_msg));
+                googlePlayServicesErrorDialog.show(getFragmentManager(),
+                        "GooglePlayServicesErrorDialog");
+            } else {
+                context.startActivity(metroMapRouteIntent);
+            }
 
-			DirectionsEntity metroDirectionsEntity = new DirectionsEntity(
-					metroVehicle, currentDirection,
-					mls.getMetroDirectionsNames(), mls.getMetroDirectionsList());
-			metroMapRouteIntent.putExtra(Constants.BUNDLE_STATION_ROUTE_MAP,
-					metroDirectionsEntity);
+            dismissLoadingView();
+        }
 
-			return metroMapRouteIntent;
-		}
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            dismissLoadingView();
+        }
 
-		@Override
-		protected void onPostExecute(Intent metroMapRouteIntent) {
-			super.onPostExecute(metroMapRouteIntent);
+        /**
+         * Create the loading view and lock the screen
+         */
+        private void createLoadingView() {
+            ActivityUtils.lockScreenOrientation(context);
 
-			if (!globalContext.areServicesAvailable()) {
-				GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
-						.newInstance(getString(R.string.app_google_play_msg));
-				googlePlayServicesErrorDialog.show(getFragmentManager(),
-						"GooglePlayServicesErrorDialog");
-			} else {
-				context.startActivity(metroMapRouteIntent);
-			}
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(true);
+            progressDialog
+                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        public void onCancel(DialogInterface dialog) {
+                            cancel(true);
+                        }
+                    });
+            progressDialog.show();
+        }
 
-			dismissLoadingView();
-		}
+        /**
+         * Dismiss the loading view and unlock the screen
+         */
+        private void dismissLoadingView() {
+            try {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+            } catch (Exception e) {
+                /**
+                 * Fixing a strange error that is happening sometimes when the
+                 * dialog is dismissed. I guess sometimes activity gets finished
+                 * before the dialog successfully dismisses.
+                 *
+                 * java.lang.IllegalArgumentException: View not attached to
+                 * window manager
+                 */
+            }
 
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-			dismissLoadingView();
-		}
-
-		/**
-		 * Create the loading view and lock the screen
-		 */
-		private void createLoadingView() {
-			ActivityUtils.lockScreenOrientation(context);
-
-			progressDialog.setIndeterminate(true);
-			progressDialog.setCancelable(true);
-			progressDialog
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						public void onCancel(DialogInterface dialog) {
-							cancel(true);
-						}
-					});
-			progressDialog.show();
-		}
-
-		/**
-		 * Dismiss the loading view and unlock the screen
-		 */
-		private void dismissLoadingView() {
-			try {
-				if (progressDialog != null) {
-					progressDialog.dismiss();
-				}
-			} catch (Exception e) {
-				/**
-				 * Fixing a strange error that is happening sometimes when the
-				 * dialog is dismissed. I guess sometimes activity gets finished
-				 * before the dialog successfully dismisses.
-				 * 
-				 * java.lang.IllegalArgumentException: View not attached to
-				 * window manager
-				 */
-			}
-
-			ActivityUtils.unlockScreenOrientation(context);
-		}
-	}
+            ActivityUtils.unlockScreenOrientation(context);
+        }
+    }
 
 }

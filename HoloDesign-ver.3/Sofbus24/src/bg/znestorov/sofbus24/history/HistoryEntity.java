@@ -7,76 +7,75 @@ import bg.znestorov.sofbus24.utils.Utils;
 
 /**
  * History class representing each station search
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class HistoryEntity implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String historyValue;
-	private String historyDate;
-	private VehicleTypeEnum historyType;
+    private String historyValue;
+    private String historyDate;
+    private VehicleTypeEnum historyType;
 
-	public HistoryEntity() {
-	}
+    public HistoryEntity() {
+    }
 
-	public HistoryEntity(String historyValue, String historyDate,
-			VehicleTypeEnum historyType) {
-		this.historyValue = historyValue;
-		this.historyDate = historyDate;
-		this.historyType = historyType;
-	}
+    public HistoryEntity(String historyValue, String historyDate,
+                         VehicleTypeEnum historyType) {
+        this.historyValue = historyValue;
+        this.historyDate = historyDate;
+        this.historyType = historyType;
+    }
 
-	public String getHistoryValue() {
-		return historyValue;
-	}
+    public String getHistoryValue() {
+        return historyValue;
+    }
 
-	public void setHistoryValue(String historyValue) {
-		this.historyValue = historyValue;
-	}
+    public void setHistoryValue(String historyValue) {
+        this.historyValue = historyValue;
+    }
 
-	public String getHistoryDate() {
+    public String getHistoryDate() {
 
-		String dateToReturn = historyDate;
+        String dateToReturn = historyDate;
 
-		if (dateToReturn != null && dateToReturn.split(":").length == 2) {
-			historyDate = historyDate + ":00";
-		}
+        if (dateToReturn != null && dateToReturn.split(":").length == 2) {
+            historyDate = historyDate + ":00";
+        }
 
-		return historyDate;
-	}
+        return historyDate;
+    }
 
-	public String getHistoryDateWithoutSeconds() {
+    public void setHistoryDate(String historyDate) {
+        this.historyDate = historyDate;
+    }
 
-		String dateToReturn = historyDate;
+    public String getHistoryDateWithoutSeconds() {
 
-		if (dateToReturn != null && dateToReturn.split(":").length == 3) {
-			historyDate = Utils.getValueBeforeLast(historyDate, ":");
-		}
+        String dateToReturn = historyDate;
 
-		return historyDate;
-	}
+        if (dateToReturn != null && dateToReturn.split(":").length == 3) {
+            historyDate = Utils.getValueBeforeLast(historyDate, ":");
+        }
 
-	public void setHistoryDate(String historyDate) {
-		this.historyDate = historyDate;
-	}
+        return historyDate;
+    }
 
-	public VehicleTypeEnum getHistoryType() {
-		return historyType;
-	}
+    public VehicleTypeEnum getHistoryType() {
+        return historyType;
+    }
 
-	public void setHistoryType(VehicleTypeEnum historyType) {
-		this.historyType = historyType;
-	}
+    public void setHistoryType(VehicleTypeEnum historyType) {
+        this.historyType = historyType;
+    }
 
-	@Override
-	public String toString() {
-		return getClass().getName() + " {\n\thistoryValue: " + historyValue
-				+ "\n\thistoryDate: " + historyDate + "\n\thistoryType: "
-				+ historyType + "\n}";
-	}
+    @Override
+    public String toString() {
+        return getClass().getName() + " {\n\thistoryValue: " + historyValue
+                + "\n\thistoryDate: " + historyDate + "\n\thistoryType: "
+                + historyType + "\n}";
+    }
 
 }

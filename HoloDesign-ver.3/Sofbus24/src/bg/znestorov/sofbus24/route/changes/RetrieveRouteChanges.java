@@ -1,15 +1,5 @@
 package bg.znestorov.sofbus24.route.changes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +7,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
+
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.LoadTypeEnum;
 import bg.znestorov.sofbus24.entity.RouteChangesEntity;
@@ -29,13 +30,13 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 /**
  * Retrieving the information about the route changes of the public transport
  * and starting/refreshing the RouteChanges activity
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
-public class RetrieveRouteChanges extends
-		AsyncTask<Void, Void, ArrayList<RouteChangesEntity>> {
+@SuppressWarnings("deprecation")
+public class RetrieveRouteChanges
+		extends AsyncTask<Void, Void, ArrayList<RouteChangesEntity>> {
 
 	private FragmentActivity context;
 	private GlobalEntity globalContext;
@@ -72,9 +73,10 @@ public class RetrieveRouteChanges extends
 		try {
 			StringBuilder htmlResult = new StringBuilder("");
 			for (int page = 0; page < 5; page++) {
-				HttpPost routeChangesHttpRequest = createRouteChangesRequest(page);
-				htmlResult.append(routeChangesHttpClient.execute(
-						routeChangesHttpRequest, responseHandler));
+				HttpPost routeChangesHttpRequest = createRouteChangesRequest(
+						page);
+				htmlResult.append(routeChangesHttpClient
+						.execute(routeChangesHttpRequest, responseHandler));
 			}
 
 			ProcessRouteChanges processRouteChanges = new ProcessRouteChanges(
@@ -95,7 +97,8 @@ public class RetrieveRouteChanges extends
 	}
 
 	@Override
-	protected void onPostExecute(ArrayList<RouteChangesEntity> routeChangesList) {
+	protected void onPostExecute(
+			ArrayList<RouteChangesEntity> routeChangesList) {
 		super.onPostExecute(routeChangesList);
 
 		if (routeChangesList == null) {
@@ -114,7 +117,8 @@ public class RetrieveRouteChanges extends
 
 				Intent routeChangesIntent;
 				if (globalContext.isPhoneDevice()) {
-					routeChangesIntent = new Intent(context, RouteChanges.class);
+					routeChangesIntent = new Intent(context,
+							RouteChanges.class);
 				} else {
 					routeChangesIntent = new Intent(context,
 							RouteChangesDialog.class);
@@ -141,7 +145,7 @@ public class RetrieveRouteChanges extends
 
 	/**
 	 * Create HttpGet request to retrieve the route changes
-	 * 
+	 *
 	 * @param page
 	 *            the number of the page (it should be multiplied by 20, to get
 	 *            the FROM param for the POST request)
@@ -173,8 +177,8 @@ public class RetrieveRouteChanges extends
 		if (loadType == LoadTypeEnum.INIT) {
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(true);
-			progressDialog
-					.setOnCancelListener(new DialogInterface.OnCancelListener() {
+			progressDialog.setOnCancelListener(
+					new DialogInterface.OnCancelListener() {
 						public void onCancel(DialogInterface dialog) {
 							cancel(true);
 						}
@@ -196,7 +200,7 @@ public class RetrieveRouteChanges extends
 			 * Fixing a strange error that is happening sometimes when the
 			 * dialog is dismissed. I guess sometimes activity gets finished
 			 * before the dialog successfully dismisses.
-			 * 
+			 *
 			 * java.lang.IllegalArgumentException: View not attached to window
 			 * manager
 			 */

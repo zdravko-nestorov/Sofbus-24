@@ -1,8 +1,5 @@
 package bg.znestorov.sofbus24.schedule;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import bg.znestorov.sofbus24.entity.GlobalEntity;
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.main.R;
@@ -24,281 +25,273 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
 /**
  * Array Adapted user for set each row a station from the Vehicles DB
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class ScheduleVehicleAdapter extends ArrayAdapter<VehicleEntity> {
 
-	private final Activity context;
+    private final Activity context;
+    private final List<VehicleEntity> originalVehicles;
+    private View emptyView;
+    private TextView emptyTextView;
+    private String vehicleName;
+    private List<VehicleEntity> filteredVehicles;
 
-	private View emptyView;
-	private TextView emptyTextView;
-	private String vehicleName;
+    private boolean isPhoneDevice;
+    private Filter stationsFilter;
+    private String language;
 
-	private final List<VehicleEntity> originalVehicles;
-	private List<VehicleEntity> filteredVehicles;
+    public ScheduleVehicleAdapter(Activity context, View emptyView,
+                                  TextView emptyTextView, String vehicleName,
+                                  List<VehicleEntity> vehicles) {
+        super(context, R.layout.activity_schedule_vehicle_list_item, vehicles);
 
-	private boolean isPhoneDevice;
-	private Filter stationsFilter;
-	private String language;
+        this.context = context;
+        this.isPhoneDevice = ((GlobalEntity) context.getApplicationContext())
+                .isPhoneDevice();
+        this.language = LanguageChange.getUserLocale(context);
 
-	// Used for optimize performance of the ListView
-	static class ViewHolder {
-		ImageView vehicleType;
-		TextView vehicleCaption;
-		TextView vehicleDirection;
-	}
+        this.emptyView = emptyView;
+        this.emptyTextView = emptyTextView;
+        this.vehicleName = vehicleName;
 
-	public ScheduleVehicleAdapter(Activity context, View emptyView,
-			TextView emptyTextView, String vehicleName,
-			List<VehicleEntity> vehicles) {
-		super(context, R.layout.activity_schedule_vehicle_list_item, vehicles);
+        this.originalVehicles = vehicles;
+        this.filteredVehicles = vehicles;
 
-		this.context = context;
-		this.isPhoneDevice = ((GlobalEntity) context.getApplicationContext())
-				.isPhoneDevice();
-		this.language = LanguageChange.getUserLocale(context);
+        this.stationsFilter = createFilter();
+    }
 
-		this.emptyView = emptyView;
-		this.emptyTextView = emptyTextView;
-		this.vehicleName = vehicleName;
+    /**
+     * Creating the elements of the ListView
+     */
+    @Override
+    @SuppressLint("InflateParams")
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View rowView = convertView;
+        ViewHolder viewHolder;
 
-		this.originalVehicles = vehicles;
-		this.filteredVehicles = vehicles;
+        // Reuse views
+        if (rowView == null) {
+            LayoutInflater inflater = context.getLayoutInflater();
+            rowView = inflater.inflate(
+                    R.layout.activity_schedule_vehicle_list_item, null);
 
-		this.stationsFilter = createFilter();
-	}
+            // Configure view holder
+            viewHolder = new ViewHolder();
+            viewHolder.vehicleType = (ImageView) rowView
+                    .findViewById(R.id.schedule_item_vehicle_type);
+            viewHolder.vehicleCaption = (TextView) rowView
+                    .findViewById(R.id.schedule_item_vehicle_caption);
+            viewHolder.vehicleDirection = (TextView) rowView
+                    .findViewById(R.id.schedule_item_vehicle_direction);
+            rowView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) rowView.getTag();
+        }
 
-	/**
-	 * Creating the elements of the ListView
-	 */
-	@Override
-	@SuppressLint("InflateParams")
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View rowView = convertView;
-		ViewHolder viewHolder;
+        // In case of a tablet - put border between GridView items
+        if (!isPhoneDevice) {
+            rowView.setBackgroundResource(R.drawable.grid_border);
+            int pixels = ActivityUtils.dpToPx(context, 8);
+            rowView.setPadding(pixels, pixels, pixels, pixels);
+        }
 
-		// Reuse views
-		if (rowView == null) {
-			LayoutInflater inflater = context.getLayoutInflater();
-			rowView = inflater.inflate(
-					R.layout.activity_schedule_vehicle_list_item, null);
+        VehicleEntity vehicle = filteredVehicles.get(position);
+        int vehicleImage = getVehicleImage(context, vehicle);
+        String vehicleCaptionText = getVehicleCaption(context, vehicle);
+        String vehicleDirectionText = vehicle.getDirection();
 
-			// Configure view holder
-			viewHolder = new ViewHolder();
-			viewHolder.vehicleType = (ImageView) rowView
-					.findViewById(R.id.schedule_item_vehicle_type);
-			viewHolder.vehicleCaption = (TextView) rowView
-					.findViewById(R.id.schedule_item_vehicle_caption);
-			viewHolder.vehicleDirection = (TextView) rowView
-					.findViewById(R.id.schedule_item_vehicle_direction);
-			rowView.setTag(viewHolder);
-		} else {
-			viewHolder = (ViewHolder) rowView.getTag();
-		}
+        viewHolder.vehicleType.setImageResource(vehicleImage);
+        viewHolder.vehicleCaption.setText(vehicleCaptionText);
+        viewHolder.vehicleDirection.setText(vehicleDirectionText);
 
-		// In case of a tablet - put border between GridView items
-		if (!isPhoneDevice) {
-			rowView.setBackgroundResource(R.drawable.grid_border);
-			int pixels = ActivityUtils.dpToPx(context, 8);
-			rowView.setPadding(pixels, pixels, pixels, pixels);
-		}
+        return rowView;
+    }
 
-		VehicleEntity vehicle = filteredVehicles.get(position);
-		int vehicleImage = getVehicleImage(context, vehicle);
-		String vehicleCaptionText = getVehicleCaption(context, vehicle);
-		String vehicleDirectionText = vehicle.getDirection();
+    @Override
+    public VehicleEntity getItem(int position) {
+        return filteredVehicles.get(position);
+    }
 
-		viewHolder.vehicleType.setImageResource(vehicleImage);
-		viewHolder.vehicleCaption.setText(vehicleCaptionText);
-		viewHolder.vehicleDirection.setText(vehicleDirectionText);
+    @Override
+    public int getCount() {
+        return filteredVehicles != null ? filteredVehicles.size() : 0;
+    }
 
-		return rowView;
-	}
+    @Override
+    public boolean isEmpty() {
+        return filteredVehicles.isEmpty();
+    }
 
-	@Override
-	public VehicleEntity getItem(int position) {
-		return filteredVehicles.get(position);
-	}
+    /**
+     * Filter the ListView according some criteria (filter)
+     *
+     * @return a filter constrains data with a filtering pattern
+     */
+    @Override
+    public Filter getFilter() {
+        if (stationsFilter == null) {
+            stationsFilter = createFilter();
+        }
 
-	@Override
-	public int getCount() {
-		return filteredVehicles != null ? filteredVehicles.size() : 0;
-	}
+        return stationsFilter;
+    }
 
-	@Override
-	public boolean isEmpty() {
-		return filteredVehicles.isEmpty();
-	}
+    /**
+     * Create a custom filter, so process the list on searching
+     *
+     * @return a custom filter
+     */
+    @SuppressLint("DefaultLocale")
+    private Filter createFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
 
-	/**
-	 * Filter the ListView according some criteria (filter)
-	 * 
-	 * @return a filter constrains data with a filtering pattern
-	 */
-	@Override
-	public Filter getFilter() {
-		if (stationsFilter == null) {
-			stationsFilter = createFilter();
-		}
+                // If there's nothing to filter on, return the original data for
+                // your list
+                if (constraint == null || constraint.length() == 0) {
+                    results.values = originalVehicles;
+                    results.count = originalVehicles.size();
+                } else {
+                    List<VehicleEntity> filterResultsData = new ArrayList<VehicleEntity>();
 
-		return stationsFilter;
-	}
+                    String filterString = constraint.toString().trim()
+                            .toUpperCase();
+                    if ("bg".equals(language)) {
+                        filterString = TranslatorLatinToCyrillic.translate(
+                                context, filterString);
+                    } else {
+                        filterString = TranslatorCyrillicToLatin.translate(
+                                context, filterString);
+                    }
 
-	/**
-	 * Create a custom filter, so process the list on searching
-	 * 
-	 * @return a custom filter
-	 */
-	@SuppressLint("DefaultLocale")
-	private Filter createFilter() {
-		return new Filter() {
-			@Override
-			protected FilterResults performFiltering(CharSequence constraint) {
-				FilterResults results = new FilterResults();
+                    String filterebleNumber;
+                    String filterableDirection;
 
-				// If there's nothing to filter on, return the original data for
-				// your list
-				if (constraint == null || constraint.length() == 0) {
-					results.values = originalVehicles;
-					results.count = originalVehicles.size();
-				} else {
-					List<VehicleEntity> filterResultsData = new ArrayList<VehicleEntity>();
+                    // Itterate over all stations and search which ones match
+                    // the filter
+                    for (VehicleEntity vehicle : originalVehicles) {
+                        filterebleNumber = vehicle.getNumber().toUpperCase();
+                        filterableDirection = vehicle.getDirection()
+                                .toUpperCase();
 
-					String filterString = constraint.toString().trim()
-							.toUpperCase();
-					if ("bg".equals(language)) {
-						filterString = TranslatorLatinToCyrillic.translate(
-								context, filterString);
-					} else {
-						filterString = TranslatorCyrillicToLatin.translate(
-								context, filterString);
-					}
+                        if (filterebleNumber.contains(filterString)
+                                || filterableDirection.contains(filterString)) {
+                            filterResultsData.add(vehicle);
+                        }
+                    }
 
-					String filterebleNumber;
-					String filterableDirection;
+                    results.values = filterResultsData;
+                    results.count = filterResultsData.size();
+                }
 
-					// Itterate over all stations and search which ones match
-					// the filter
-					for (VehicleEntity vehicle : originalVehicles) {
-						filterebleNumber = vehicle.getNumber().toUpperCase();
-						filterableDirection = vehicle.getDirection()
-								.toUpperCase();
+                return results;
+            }
 
-						if (filterebleNumber.contains(filterString)
-								|| filterableDirection.contains(filterString)) {
-							filterResultsData.add(vehicle);
-						}
-					}
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint,
+                                          FilterResults filterResults) {
+                filteredVehicles = (ArrayList<VehicleEntity>) filterResults.values;
 
-					results.values = filterResultsData;
-					results.count = filterResultsData.size();
-				}
+                notifyDataSetChanged();
+                setEmptyListView(constraint);
+            }
+        };
+    }
 
-				return results;
-			}
+    /**
+     * Get the vehicle image according to the vehicle type
+     *
+     * @param context the current activity context
+     * @param vehicle the vehicle on the current row
+     * @return the vehicle image id
+     */
+    private Integer getVehicleImage(Context context, VehicleEntity vehicle) {
+        Integer vehicleImage;
 
-			@SuppressWarnings("unchecked")
-			@Override
-			protected void publishResults(CharSequence constraint,
-					FilterResults filterResults) {
-				filteredVehicles = (ArrayList<VehicleEntity>) filterResults.values;
+        switch (vehicle.getType()) {
+            case BUS:
+                vehicleImage = R.drawable.ic_bus;
+                break;
+            case TROLLEY:
+                vehicleImage = R.drawable.ic_trolley;
+                break;
+            case TRAM:
+                vehicleImage = R.drawable.ic_tram;
+                break;
+            default:
+                vehicleImage = R.drawable.ic_bus;
+                break;
+        }
 
-				notifyDataSetChanged();
-				setEmptyListView(constraint);
-			}
-		};
-	}
+        return vehicleImage;
+    }
 
-	/**
-	 * Get the vehicle image according to the vehicle type
-	 * 
-	 * @param context
-	 *            the current activity context
-	 * @param vehicle
-	 *            the vehicle on the current row
-	 * @return the vehicle image id
-	 */
-	private Integer getVehicleImage(Context context, VehicleEntity vehicle) {
-		Integer vehicleImage;
+    /**
+     * Get the vehicle caption according to the vehicle type
+     *
+     * @param context the current activity context
+     * @param vehicle the vehicle on the current row
+     * @return the vehicle caption in format: <b>Bus â„–xxx</b>
+     */
+    public String getVehicleCaption(Context context, VehicleEntity vehicle) {
+        String vehicleCaption;
 
-		switch (vehicle.getType()) {
-		case BUS:
-			vehicleImage = R.drawable.ic_bus;
-			break;
-		case TROLLEY:
-			vehicleImage = R.drawable.ic_trolley;
-			break;
-		case TRAM:
-			vehicleImage = R.drawable.ic_tram;
-			break;
-		default:
-			vehicleImage = R.drawable.ic_bus;
-			break;
-		}
+        switch (vehicle.getType()) {
+            case BUS:
+                vehicleCaption = String.format(
+                        context.getString(R.string.sch_item_bus),
+                        vehicle.getNumber());
+                break;
+            case TROLLEY:
+                vehicleCaption = String.format(
+                        context.getString(R.string.sch_item_trolley),
+                        vehicle.getNumber());
+                break;
+            case TRAM:
+                vehicleCaption = String.format(
+                        context.getString(R.string.sch_item_tram),
+                        vehicle.getNumber());
+                break;
+            default:
+                vehicleCaption = String.format(
+                        context.getString(R.string.sch_item_bus),
+                        vehicle.getNumber());
+                break;
+        }
 
-		return vehicleImage;
-	}
+        return vehicleCaption;
+    }
 
-	/**
-	 * Get the vehicle caption according to the vehicle type
-	 * 
-	 * @param context
-	 *            the current activity context
-	 * @param vehicle
-	 *            the vehicle on the current row
-	 * @return the vehicle caption in format: <b>Bus ¹xxx</b>
-	 */
-	public String getVehicleCaption(Context context, VehicleEntity vehicle) {
-		String vehicleCaption;
+    /**
+     * Set the empty list text
+     *
+     * @param constraint the constraint entered by the user
+     */
+    private void setEmptyListView(CharSequence constraint) {
+        if (isEmpty()) {
+            if (emptyView != null) {
+                emptyView.setVisibility(View.VISIBLE);
+            }
 
-		switch (vehicle.getType()) {
-		case BUS:
-			vehicleCaption = String.format(
-					context.getString(R.string.sch_item_bus),
-					vehicle.getNumber());
-			break;
-		case TROLLEY:
-			vehicleCaption = String.format(
-					context.getString(R.string.sch_item_trolley),
-					vehicle.getNumber());
-			break;
-		case TRAM:
-			vehicleCaption = String.format(
-					context.getString(R.string.sch_item_tram),
-					vehicle.getNumber());
-			break;
-		default:
-			vehicleCaption = String.format(
-					context.getString(R.string.sch_item_bus),
-					vehicle.getNumber());
-			break;
-		}
+            emptyTextView.setText(Html.fromHtml(String.format(
+                    context.getString(R.string.sch_item_empty_list),
+                    constraint, vehicleName)));
+        } else {
+            if (emptyView != null) {
+                emptyView.setVisibility(View.GONE);
+            }
+        }
+    }
 
-		return vehicleCaption;
-	}
-
-	/**
-	 * Set the empty list text
-	 * 
-	 * @param constraint
-	 *            the constraint entered by the user
-	 */
-	private void setEmptyListView(CharSequence constraint) {
-		if (isEmpty()) {
-			if (emptyView != null) {
-				emptyView.setVisibility(View.VISIBLE);
-			}
-
-			emptyTextView.setText(Html.fromHtml(String.format(
-					context.getString(R.string.sch_item_empty_list),
-					constraint, vehicleName)));
-		} else {
-			if (emptyView != null) {
-				emptyView.setVisibility(View.GONE);
-			}
-		}
-	}
+    // Used for optimize performance of the ListView
+    static class ViewHolder {
+        ImageView vehicleType;
+        TextView vehicleCaption;
+        TextView vehicleDirection;
+    }
 }

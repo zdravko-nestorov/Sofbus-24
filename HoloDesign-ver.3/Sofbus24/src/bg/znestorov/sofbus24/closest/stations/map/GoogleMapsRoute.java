@@ -1,35 +1,36 @@
 package bg.znestorov.sofbus24.closest.stations.map;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import bg.znestorov.sofbus24.main.ClosestStationsMap;
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.MapUtils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
-import com.google.android.gms.maps.model.LatLng;
-
 /**
  * Asynchronic class used to retrieve the route between a map location and a
  * station
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
+@SuppressWarnings("deprecation")
 public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 
 	private Activity context;
@@ -45,10 +46,12 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 		this.callerInstance = callerInstance;
 
 		this.routeUrl = createRouteUrl(currentLocation, latLng);
-		this.distance = String.format(context.getString(R.string.app_distance),
-				MapUtils.getMapDistance(context,
-						new LatLng(currentLocation.getLatitude(),
-								currentLocation.getLongitude()), latLng));
+		this.distance = String
+				.format(context.getString(R.string.app_distance),
+						MapUtils.getMapDistance(context,
+								new LatLng(currentLocation.getLatitude(),
+										currentLocation.getLongitude()),
+								latLng));
 	}
 
 	@Override
@@ -88,7 +91,7 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 	/**
 	 * Create google apis route url containing the points between the current
 	 * location and the selected station
-	 * 
+	 *
 	 * @param currentLocation
 	 *            the current location
 	 * @param latLng
@@ -114,7 +117,7 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 	/**
 	 * Get the JSON object from the Google apis root url address and transform
 	 * it to a string object
-	 * 
+	 *
 	 * @param routeUrl
 	 *            the google apis route url
 	 * @return string representation of the JSON result
@@ -133,8 +136,8 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 			is = httpEntity.getContent();
 
 			// Converting the result to a string object
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					is, "ISO-8859-1"), 8);
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(is, "ISO-8859-1"), 8);
 			StringBuilder sb = new StringBuilder();
 			String line = null;
 
@@ -162,8 +165,8 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 		ActivityUtils.lockScreenOrientation(context);
 
 		progressDialog = new ProgressDialog(context);
-		progressDialog.setMessage(context
-				.getString(R.string.cs_map_fetch_route));
+		progressDialog
+				.setMessage(context.getString(R.string.cs_map_fetch_route));
 		progressDialog.setIndeterminate(true);
 		progressDialog.setCancelable(true);
 		progressDialog
@@ -188,7 +191,7 @@ public class GoogleMapsRoute extends AsyncTask<Void, Void, String> {
 			 * Fixing a strange error that is happening sometimes when the
 			 * dialog is dismissed. I guess sometimes activity gets finished
 			 * before the dialog successfully dismisses.
-			 * 
+			 *
 			 * java.lang.IllegalArgumentException: View not attached to window
 			 * manager
 			 */

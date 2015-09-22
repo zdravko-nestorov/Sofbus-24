@@ -1,7 +1,5 @@
 package bg.znestorov.sofbus24.virtualboards;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,6 +22,11 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import com.actionbarsherlock.app.SherlockListFragment;
+
+import java.util.ArrayList;
+
 import bg.znestorov.sofbus24.entity.FragmentLifecycle;
 import bg.znestorov.sofbus24.entity.HtmlRequestCodesEnum;
 import bg.znestorov.sofbus24.entity.StationEntity;
@@ -33,419 +36,405 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 import bg.znestorov.sofbus24.utils.activity.DrawableClickListener;
 import bg.znestorov.sofbus24.utils.activity.SearchEditText;
 
-import com.actionbarsherlock.app.SherlockListFragment;
-
 /**
  * Fragment used to show the information in VirtualBoards section
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class VirtualBoardsFragment extends SherlockListFragment implements
-		FragmentLifecycle, OnItemClickListener {
+        FragmentLifecycle, OnItemClickListener {
 
-	private Activity context;
+    private static final String BUNDLE_VB_SEARCH_TEXT = "VB SEARCH TEXT";
+    private static final String BUNDLE_VB_STATIONS_LIST = "VB STATION LIST";
+    private static final String BUNDLE_VB_EMPTY_LIST_MSG = "VB EMPTY LIST MESSAGE";
+    private Activity context;
+    private GridView gridViewVirtualBoards;
+    private View emptyView;
+    private TextView emptyTextView;
+    private SearchEditText searchEditText;
+    private String vbSearchText;
+    private ArrayList<StationEntity> vbList = new ArrayList<StationEntity>();
+    private String emptyListMsg;
 
-	private GridView gridViewVirtualBoards;
-	private View emptyView;
-	private TextView emptyTextView;
-	private SearchEditText searchEditText;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        LanguageChange.selectLocale(getActivity());
 
-	private String vbSearchText;
-	private ArrayList<StationEntity> vbList = new ArrayList<StationEntity>();
+        View myFragmentView = inflater.inflate(
+                R.layout.activity_virtual_boards_fragment, container, false);
 
-	private String emptyListMsg;
+        // Set the context (activity) associated with this fragment
+        context = getSherlockActivity();
 
-	private static final String BUNDLE_VB_SEARCH_TEXT = "VB SEARCH TEXT";
-	private static final String BUNDLE_VB_STATIONS_LIST = "VB STATION LIST";
-	private static final String BUNDLE_VB_EMPTY_LIST_MSG = "VB EMPTY LIST MESSAGE";
+        // Actions over the layout fields
+        initBundleInfo(savedInstanceState);
+        initLayoutFields(myFragmentView);
+        actionsOverSearchEditText();
+        setAdapter();
+        setEmptyListView();
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		LanguageChange.selectLocale(getActivity());
+        return myFragmentView;
+    }
 
-		View myFragmentView = inflater.inflate(
-				R.layout.activity_virtual_boards_fragment, container, false);
+    @Override
+    public void onResumeFragment(Activity context) {
+        setAdapterViaSearch();
+    }
 
-		// Set the context (activity) associated with this fragment
-		context = getSherlockActivity();
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
 
-		// Actions over the layout fields
-		initBundleInfo(savedInstanceState);
-		initLayoutFields(myFragmentView);
-		actionsOverSearchEditText();
-		setAdapter();
-		setEmptyListView();
+        savedInstanceState.putString(BUNDLE_VB_SEARCH_TEXT, vbSearchText);
+        savedInstanceState.putSerializable(BUNDLE_VB_STATIONS_LIST, vbList);
+        savedInstanceState.putString(BUNDLE_VB_EMPTY_LIST_MSG, emptyListMsg);
+    }
 
-		return myFragmentView;
-	}
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        StationEntity station = (StationEntity) getListAdapter().getItem(
+                position);
+        onListItemClick(station);
+    }
 
-	@Override
-	public void onResumeFragment(Activity context) {
-		setAdapterViaSearch();
-	}
+    @Override
+    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+        StationEntity station = (StationEntity) gridViewVirtualBoards
+                .getAdapter().getItem(position);
+        onListItemClick(station);
+    }
 
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
+    /**
+     * Retieve an information about the selected station
+     *
+     * @param station selected station
+     */
+    private void onListItemClick(StationEntity station) {
+        RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
+                context, this, station, HtmlRequestCodesEnum.SINGLE_RESULT);
+        retrieveVirtualBoards.getSumcInformation();
+    }
 
-		savedInstanceState.putString(BUNDLE_VB_SEARCH_TEXT, vbSearchText);
-		savedInstanceState.putSerializable(BUNDLE_VB_STATIONS_LIST, vbList);
-		savedInstanceState.putString(BUNDLE_VB_EMPTY_LIST_MSG, emptyListMsg);
-	}
+    /**
+     * Retrieved the bundle saved information
+     *
+     * @param savedInstanceState the fragment bundle
+     */
+    @SuppressWarnings("unchecked")
+    private void initBundleInfo(Bundle savedInstanceState) {
+        if (savedInstanceState != null
+                && savedInstanceState.getSerializable(BUNDLE_VB_STATIONS_LIST) != null) {
+            vbSearchText = savedInstanceState.getString(BUNDLE_VB_SEARCH_TEXT);
+            vbList.clear();
+            vbList.addAll((ArrayList<StationEntity>) savedInstanceState
+                    .getSerializable(BUNDLE_VB_STATIONS_LIST));
+            emptyListMsg = savedInstanceState
+                    .getString(BUNDLE_VB_EMPTY_LIST_MSG);
+        } else {
+            vbSearchText = "";
+            emptyListMsg = "";
+        }
+    }
 
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		StationEntity station = (StationEntity) getListAdapter().getItem(
-				position);
-		onListItemClick(station);
-	}
+    /**
+     * Initialize the layout fields
+     *
+     * @param myFragmentView the layout view of the current fragment
+     */
+    private void initLayoutFields(View myFragmentView) {
+        searchEditText = (SearchEditText) myFragmentView
+                .findViewById(R.id.vb_search);
+        emptyView = myFragmentView.findViewById(R.id.vb_list_empty_view);
+        emptyTextView = (TextView) myFragmentView
+                .findViewById(R.id.vb_list_empty_text);
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-		StationEntity station = (StationEntity) gridViewVirtualBoards
-				.getAdapter().getItem(position);
-		onListItemClick(station);
-	}
+        // Set on click listener over the grid view (if exists)
+        gridViewVirtualBoards = (GridView) myFragmentView
+                .findViewById(R.id.vb_list_grid_view);
+        if (gridViewVirtualBoards != null) {
+            gridViewVirtualBoards.setOnItemClickListener(this);
+        }
 
-	/**
-	 * Retieve an information about the selected station
-	 * 
-	 * @param station
-	 *            selected station
-	 */
-	private void onListItemClick(StationEntity station) {
-		RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-				context, this, station, HtmlRequestCodesEnum.SINGLE_RESULT);
-		retrieveVirtualBoards.getSumcInformation();
-	}
+        // In case of screen rotation (recreate screen)
+        searchEditText.setText(vbSearchText);
+    }
 
-	/**
-	 * Retrieved the bundle saved information
-	 * 
-	 * @param savedInstanceState
-	 *            the fragment bundle
-	 */
-	@SuppressWarnings("unchecked")
-	private void initBundleInfo(Bundle savedInstanceState) {
-		if (savedInstanceState != null
-				&& savedInstanceState.getSerializable(BUNDLE_VB_STATIONS_LIST) != null) {
-			vbSearchText = savedInstanceState.getString(BUNDLE_VB_SEARCH_TEXT);
-			vbList.clear();
-			vbList.addAll((ArrayList<StationEntity>) savedInstanceState
-					.getSerializable(BUNDLE_VB_STATIONS_LIST));
-			emptyListMsg = savedInstanceState
-					.getString(BUNDLE_VB_EMPTY_LIST_MSG);
-		} else {
-			vbSearchText = "";
-			emptyListMsg = "";
-		}
-	}
+    /**
+     * Modify the Search EditText field and activate the listeners
+     *
+     * @param searchEditText the search EditText
+     */
+    private void actionsOverSearchEditText() {
+        // TODO: Find a way to set an alphanumeric keyboard with numeric as
+        // default
+        searchEditText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        searchEditText.setFilters(new InputFilter[]{createInputFilter()});
 
-	/**
-	 * Initialize the layout fields
-	 * 
-	 * @param myFragmentView
-	 *            the layout view of the current fragment
-	 */
-	private void initLayoutFields(View myFragmentView) {
-		searchEditText = (SearchEditText) myFragmentView
-				.findViewById(R.id.vb_search);
-		emptyView = myFragmentView.findViewById(R.id.vb_list_empty_view);
-		emptyTextView = (TextView) myFragmentView
-				.findViewById(R.id.vb_list_empty_text);
+        // Add on focus listener
+        searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    ActivityUtils.hideKeyboard(context, searchEditText);
+                }
+            }
+        });
 
-		// Set on click listener over the grid view (if exists)
-		gridViewVirtualBoards = (GridView) myFragmentView
-				.findViewById(R.id.vb_list_grid_view);
-		if (gridViewVirtualBoards != null) {
-			gridViewVirtualBoards.setOnItemClickListener(this);
-		}
+        // Add on text changes listener
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                vbSearchText = searchEditText.getText().toString();
+            }
 
-		// In case of screen rotation (recreate screen)
-		searchEditText.setText(vbSearchText);
-	}
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
 
-	/**
-	 * Modify the Search EditText field and activate the listeners
-	 * 
-	 * @param searchEditText
-	 *            the search EditText
-	 */
-	private void actionsOverSearchEditText() {
-		// TODO: Find a way to set an alphanumeric keyboard with numeric as
-		// default
-		searchEditText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-				| InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-		searchEditText.setFilters(new InputFilter[] { createInputFilter() });
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
 
-		// Add on focus listener
-		searchEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (!hasFocus) {
-					ActivityUtils.hideKeyboard(context, searchEditText);
-				}
-			}
-		});
+            }
+        });
 
-		// Add on text changes listener
-		searchEditText.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				vbSearchText = searchEditText.getText().toString();
-			}
+        // Add the editor action listener
+        searchEditText.setOnEditorActionListener(new OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId,
+                                          KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    performSearch();
 
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
+                    return true;
+                }
 
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
+                return false;
+            }
+        });
 
-			}
-		});
+        // Add a drawable listeners (search and clear icons)
+        searchEditText.setDrawableClickListener(new DrawableClickListener() {
+            @Override
+            public void onClick(DrawablePosition target) {
+                switch (target) {
+                    case LEFT:
+                        performSearch();
 
-		// Add the editor action listener
-		searchEditText.setOnEditorActionListener(new OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView v, int actionId,
-					KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-					performSearch();
+                        break;
+                    case RIGHT:
+                        searchEditText.setText("");
+                        emptyListMsg = null;
+                        performSearch();
 
-					return true;
-				}
+                        break;
+                    default:
+                        break;
+                }
+            }
 
-				return false;
-			}
-		});
+        });
+    }
 
-		// Add a drawable listeners (search and clear icons)
-		searchEditText.setDrawableClickListener(new DrawableClickListener() {
-			@Override
-			public void onClick(DrawablePosition target) {
-				switch (target) {
-				case LEFT:
-					performSearch();
+    /**
+     * Set the adapter with the found stations (on the GridView or the ListView)
+     */
+    private void setAdapter() {
+        ArrayAdapter<StationEntity> virtualBoardsAdapter = new VirtualBoardsAdapter(
+                context, vbList);
+        if (gridViewVirtualBoards == null) {
+            setListAdapter(virtualBoardsAdapter);
+        } else {
+            gridViewVirtualBoards.setAdapter(virtualBoardsAdapter);
+        }
+    }
 
-					break;
-				case RIGHT:
-					searchEditText.setText("");
-					emptyListMsg = null;
-					performSearch();
+    /**
+     * Set list adapter and the appropriate text message to it (using a list as
+     * a parameter)
+     *
+     * @param stationsList the stationList that need to be set to the listView
+     * @param emptyListMsg the text that will show if the list is empty
+     */
+    public void setAdapterViaSearch(ArrayList<StationEntity> stationsList,
+                                    String emptyListMsg) {
+        ActivityUtils.hideKeyboard(context, searchEditText);
 
-					break;
-				default:
-					break;
-				}
-			}
+        vbList.clear();
+        vbList.addAll(stationsList);
 
-		});
-	}
+        this.emptyListMsg = emptyListMsg;
 
-	/**
-	 * Set the adapter with the found stations (on the GridView or the ListView)
-	 */
-	private void setAdapter() {
-		ArrayAdapter<StationEntity> virtualBoardsAdapter = new VirtualBoardsAdapter(
-				context, vbList);
-		if (gridViewVirtualBoards == null) {
-			setListAdapter(virtualBoardsAdapter);
-		} else {
-			gridViewVirtualBoards.setAdapter(virtualBoardsAdapter);
-		}
-	}
+        setAdapterViaSearch();
+    }
 
-	/**
-	 * Set list adapter and the appropriate text message to it (using a list as
-	 * a parameter)
-	 * 
-	 * @param stationsList
-	 *            the stationList that need to be set to the listView
-	 * @param emptyListMsg
-	 *            the text that will show if the list is empty
-	 */
-	public void setAdapterViaSearch(ArrayList<StationEntity> stationsList,
-			String emptyListMsg) {
-		ActivityUtils.hideKeyboard(context, searchEditText);
+    /**
+     * Set list adapter and the appropriate text message to it, using the
+     * default fragment list (vbList)
+     */
+    private void setAdapterViaSearch() {
+        ArrayAdapter<StationEntity> virtualBoardsAdapter = getAdapter();
+        if (virtualBoardsAdapter != null) {
+            virtualBoardsAdapter.notifyDataSetChanged();
+            setEmptyListView();
+        }
+    }
 
-		vbList.clear();
-		vbList.addAll(stationsList);
+    /**
+     * Set a message to the empty list according to the search text view:
+     * <ul>
+     * <li>If contains <b>no</b> text - set the default search message</li>
+     * <li>If contains <b>some</b> text - set that there are no results</li>
+     * </ul>
+     */
+    private void setEmptyListView() {
+        // Check if the fragment is currently added to its activity
+        if (isAdded() && (getAdapter() == null || getAdapter().isEmpty())) {
+            if (emptyView != null) {
+                emptyView.setVisibility(View.VISIBLE);
+            }
 
-		this.emptyListMsg = emptyListMsg;
+            if (emptyListMsg != null && !"".equals(emptyListMsg)) {
+                emptyTextView.setText(Html.fromHtml(emptyListMsg));
+            } else {
+                if (vbSearchText == null || "".equals(vbSearchText)) {
+                    emptyTextView.setText(Html
+                            .fromHtml(getString(R.string.vb_item_search_list)));
+                } else {
+                    emptyTextView.setText(Html.fromHtml(String.format(
+                            getString(R.string.vb_item_empty_list),
+                            vbSearchText)));
+                }
+            }
+        } else {
+            if (emptyView != null) {
+                emptyView.setVisibility(View.GONE);
+            }
+        }
+    }
 
-		setAdapterViaSearch();
-	}
+    /**
+     * Perform a search via the search text from the SearchEditText
+     */
+    private void performSearch() {
+        if (checkSearchText(vbSearchText)) {
+            StationEntity station = new StationEntity();
+            station.setNumberUnformatted(vbSearchText);
 
-	/**
-	 * Set list adapter and the appropriate text message to it, using the
-	 * default fragment list (vbList)
-	 */
-	private void setAdapterViaSearch() {
-		ArrayAdapter<StationEntity> virtualBoardsAdapter = getAdapter();
-		if (virtualBoardsAdapter != null) {
-			virtualBoardsAdapter.notifyDataSetChanged();
-			setEmptyListView();
-		}
-	}
+            RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
+                    context, this, station,
+                    HtmlRequestCodesEnum.MULTIPLE_RESULTS);
+            retrieveVirtualBoards.getSumcInformation();
+        } else {
+            vbSearchText = "";
+            if (vbList != null) {
+                vbList.clear();
+            }
 
-	/**
-	 * Set a message to the empty list according to the search text view:
-	 * <ul>
-	 * <li>If contains <b>no</b> text - set the default search message</li>
-	 * <li>If contains <b>some</b> text - set that there are no results</li>
-	 * </ul>
-	 */
-	private void setEmptyListView() {
-		// Check if the fragment is currently added to its activity
-		if (isAdded() && (getAdapter() == null || getAdapter().isEmpty())) {
-			if (emptyView != null) {
-				emptyView.setVisibility(View.VISIBLE);
-			}
+            setAdapterViaSearch();
+        }
+    }
 
-			if (emptyListMsg != null && !"".equals(emptyListMsg)) {
-				emptyTextView.setText(Html.fromHtml(emptyListMsg));
-			} else {
-				if (vbSearchText == null || "".equals(vbSearchText)) {
-					emptyTextView.setText(Html
-							.fromHtml(getString(R.string.vb_item_search_list)));
-				} else {
-					emptyTextView.setText(Html.fromHtml(String.format(
-							getString(R.string.vb_item_empty_list),
-							vbSearchText)));
-				}
-			}
-		} else {
-			if (emptyView != null) {
-				emptyView.setVisibility(View.GONE);
-			}
-		}
-	}
+    /**
+     * Check the searched text is containing only digits and if not - if its
+     * size is more than 3 characters
+     *
+     * @param searchText the searched text
+     * @return if the searched text fulfill the criteria
+     */
+    private boolean checkSearchText(String searchText) {
+        boolean result = false;
 
-	/**
-	 * Perform a search via the search text from the SearchEditText
-	 */
-	private void performSearch() {
-		if (checkSearchText(vbSearchText)) {
-			StationEntity station = new StationEntity();
-			station.setNumberUnformatted(vbSearchText);
+        if (searchText != null && !"".equals(searchText)) {
+            String searchTextNoDigits = searchText.replaceAll("\\d+", "");
 
-			RetrieveVirtualBoards retrieveVirtualBoards = new RetrieveVirtualBoards(
-					context, this, station,
-					HtmlRequestCodesEnum.MULTIPLE_RESULTS);
-			retrieveVirtualBoards.getSumcInformation();
-		} else {
-			vbSearchText = "";
-			if (vbList != null) {
-				vbList.clear();
-			}
+            if ("".equals(searchTextNoDigits)) {
+                result = true;
+            } else {
+                if (searchText.length() > 2) {
+                    result = true;
+                }
+            }
+        }
 
-			setAdapterViaSearch();
-		}
-	}
+        return result;
+    }
 
-	/**
-	 * Check the searched text is containing only digits and if not - if its
-	 * size is more than 3 characters
-	 * 
-	 * @param searchText
-	 *            the searched text
-	 * @return if the searched text fulfill the criteria
-	 */
-	private boolean checkSearchText(String searchText) {
-		boolean result = false;
+    /**
+     * Get the adapter of the list fragment
+     *
+     * @return the VirtualBoardsAdapter
+     */
+    private ArrayAdapter<StationEntity> getAdapter() {
+        ArrayAdapter<StationEntity> virtualBoardsAdapter;
+        if (gridViewVirtualBoards == null) {
+            virtualBoardsAdapter = (VirtualBoardsAdapter) getListAdapter();
+        } else {
+            virtualBoardsAdapter = (VirtualBoardsAdapter) gridViewVirtualBoards
+                    .getAdapter();
+        }
 
-		if (searchText != null && !"".equals(searchText)) {
-			String searchTextNoDigits = searchText.replaceAll("\\d+", "");
+        return virtualBoardsAdapter;
+    }
 
-			if ("".equals(searchTextNoDigits)) {
-				result = true;
-			} else {
-				if (searchText.length() > 2) {
-					result = true;
-				}
-			}
-		}
+    /**
+     * Create an input filter to limit characters in an EditText (letters,
+     * digits, spaces and enter)
+     *
+     * @return an input filter
+     */
+    private InputFilter createInputFilter() {
+        InputFilter inputFilter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end,
+                                       Spanned dest, int dstart, int dend) {
 
-		return result;
-	}
+                // InputFilters are a little complicated in Android versions
+                // that display dictionary suggestions. You sometimes get a
+                // SpannableStringBuilder, sometimes a plain String in the
+                // source parameter
+                if (source instanceof SpannableStringBuilder) {
+                    SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder) source;
+                    for (int i = end - 1; i >= start; i--) {
+                        char currentChar = source.charAt(i);
 
-	/**
-	 * Get the adapter of the list fragment
-	 * 
-	 * @return the VirtualBoardsAdapter
-	 */
-	private ArrayAdapter<StationEntity> getAdapter() {
-		ArrayAdapter<StationEntity> virtualBoardsAdapter;
-		if (gridViewVirtualBoards == null) {
-			virtualBoardsAdapter = (VirtualBoardsAdapter) getListAdapter();
-		} else {
-			virtualBoardsAdapter = (VirtualBoardsAdapter) gridViewVirtualBoards
-					.getAdapter();
-		}
+                        // Check if the charecter has to be removed
+                        if (!ActivityUtils.isCharAllowed(currentChar)) {
+                            sourceAsSpannableBuilder.delete(i, i + 1);
+                        }
 
-		return virtualBoardsAdapter;
-	}
+                        // Check if a search should be performed
+                        if (currentChar == '\n') {
+                            performSearch();
+                        }
+                    }
 
-	/**
-	 * Create an input filter to limit characters in an EditText (letters,
-	 * digits, spaces and enter)
-	 * 
-	 * @return an input filter
-	 */
-	private InputFilter createInputFilter() {
-		InputFilter inputFilter = new InputFilter() {
-			@Override
-			public CharSequence filter(CharSequence source, int start, int end,
-					Spanned dest, int dstart, int dend) {
+                    return source;
+                } else {
+                    StringBuilder filteredStringBuilder = new StringBuilder();
+                    for (int i = start; i < end; i++) {
+                        char currentChar = source.charAt(i);
 
-				// InputFilters are a little complicated in Android versions
-				// that display dictionary suggestions. You sometimes get a
-				// SpannableStringBuilder, sometimes a plain String in the
-				// source parameter
-				if (source instanceof SpannableStringBuilder) {
-					SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder) source;
-					for (int i = end - 1; i >= start; i--) {
-						char currentChar = source.charAt(i);
+                        // Check if the charecter should be appended
+                        if (ActivityUtils.isCharAllowed(currentChar)) {
+                            filteredStringBuilder.append(currentChar);
+                        }
 
-						// Check if the charecter has to be removed
-						if (!ActivityUtils.isCharAllowed(currentChar)) {
-							sourceAsSpannableBuilder.delete(i, i + 1);
-						}
+                        // Check if a search should be performed
+                        if (currentChar == '\n') {
+                            performSearch();
+                        }
+                    }
 
-						// Check if a search should be performed
-						if (currentChar == '\n') {
-							performSearch();
-						}
-					}
+                    return filteredStringBuilder.toString();
+                }
+            }
+        };
 
-					return source;
-				} else {
-					StringBuilder filteredStringBuilder = new StringBuilder();
-					for (int i = start; i < end; i++) {
-						char currentChar = source.charAt(i);
-
-						// Check if the charecter should be appended
-						if (ActivityUtils.isCharAllowed(currentChar)) {
-							filteredStringBuilder.append(currentChar);
-						}
-
-						// Check if a search should be performed
-						if (currentChar == '\n') {
-							performSearch();
-						}
-					}
-
-					return filteredStringBuilder.toString();
-				}
-			}
-		};
-
-		return inputFilter;
-	}
+        return inputFilter;
+    }
 
 }

@@ -13,6 +13,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import bg.znestorov.sofbus24.entity.VehicleEntity;
 import bg.znestorov.sofbus24.utils.Constants;
 import bg.znestorov.sofbus24.utils.LanguageChange;
@@ -20,33 +26,23 @@ import bg.znestorov.sofbus24.utils.ThemeChange;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
 /**
  * WebView activity used to show some information from the real site
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class WebPage extends SherlockActivity {
 
+	public static final String BUNDLE_VEHICLE = "VEHICLE";
 	private Activity context;
 	private ActionBar actionBar;
-
 	private WebView webPage;
 	private ProgressBar webPageLoading;
-
 	private WebViewSumcClient webViewSumcClient;
-
 	private View webPageError;
 	private TextView webPageErrorText;
-
 	private VehicleEntity vehicle;
-	public static final String BUNDLE_VEHICLE = "VEHICLE";
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -95,8 +91,8 @@ public class WebPage extends SherlockActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present
-		getSupportMenuInflater()
-				.inflate(R.menu.activity_web_page_actions, menu);
+		getSupportMenuInflater().inflate(R.menu.activity_web_page_actions,
+				menu);
 
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -145,8 +141,8 @@ public class WebPage extends SherlockActivity {
 	 * Get the information from the bundle
 	 */
 	private void initBundleInfo() {
-		vehicle = (VehicleEntity) getIntent().getExtras().getSerializable(
-				BUNDLE_VEHICLE);
+		vehicle = (VehicleEntity) getIntent().getExtras()
+				.getSerializable(BUNDLE_VEHICLE);
 	}
 
 	/**
@@ -163,6 +159,7 @@ public class WebPage extends SherlockActivity {
 	/**
 	 * Initialize the web view and set the appropriate options
 	 */
+	@SuppressWarnings("deprecation")
 	@SuppressLint("SetJavaScriptEnabled")
 	private void initWebView() {
 
@@ -191,7 +188,7 @@ public class WebPage extends SherlockActivity {
 
 	/**
 	 * Get the needed scale of the webview to fit the width of the window
-	 * 
+	 *
 	 * @return the needed scale that the web page will fit the screen
 	 */
 	private int getScale() {
@@ -211,7 +208,7 @@ public class WebPage extends SherlockActivity {
 	 * loading the content:
 	 * http://stackoverflow.com/questions/18112715/webview-must
 	 * -be-loaded-twice-to-load-correctly
-	 * 
+	 *
 	 * @param urlAddress
 	 *            the url address to load
 	 */
@@ -232,7 +229,7 @@ public class WebPage extends SherlockActivity {
 
 	/**
 	 * Create the public transport site URL address
-	 * 
+	 *
 	 * @return the URL address of the selected station
 	 */
 	private String createStationUrlAddress() {
@@ -246,7 +243,7 @@ public class WebPage extends SherlockActivity {
 
 	/**
 	 * Get the vehicle type in text format
-	 * 
+	 *
 	 * @return the vehicle type in text format
 	 */
 	private String getVehicleType() {
@@ -272,7 +269,7 @@ public class WebPage extends SherlockActivity {
 
 	/**
 	 * Get the vehicle number according to its type
-	 * 
+	 *
 	 * @return the vehicle number
 	 */
 	private String getVehicleNumber() {
@@ -296,10 +293,95 @@ public class WebPage extends SherlockActivity {
 	}
 
 	/**
+	 * Fix the css of the sumc site page (there are a lot of erros with
+	 * scrolling and not needed images)
+	 *
+	 * @param view
+	 *            the web view container
+	 */
+	private void editSumcSiteCSS(WebView view) {
+
+		view.loadUrl(
+				"javascript:document.getElementById(\"wrapper\").setAttribute(\"class\", \"sofbus\");");
+		view.loadUrl(
+				"javascript:document.getElementById(\"wrapper\").setAttribute(\"id\", \"sofbus\");");
+		view.loadUrl(
+				"javascript:document.getElementById(\"sofbus\").setAttribute(\"style\", \"text-align:left;margin:0 auto;margin-top:5px;margin-left:9px;padding:0 2px;\");");
+		view.loadUrl(
+				"javascript:document.getElementsByClassName(\"tooltip\")[1].setAttribute(\"style\", \"display:none;\");");
+		view.loadUrl(
+				"javascript:document.getElementsByClassName(\"footer\")[0].setAttribute(\"style\", \"display:none;\");");
+
+		for (int i = 0; i < 10; i++) {
+			view.loadUrl(
+					"javascript:document.getElementsByClassName(\"tooltip preview\")["
+							+ i
+							+ "].setAttribute(\"style\", \"display:none;\");");
+		}
+
+		// Removing the help button on older devices (not doing good with
+		// JavaScript)
+		if (Utils.isPreHoneycomb()) {
+			view.loadUrl(
+					"javascript:document.getElementsByClassName(\"tooltip\")[0].setAttribute(\"style\", \"display:none;\");");
+		}
+	}
+
+	/**
+	 * Reset the state of all views to the default one
+	 *
+	 * @param view
+	 *            the web view container
+	 * @param progressBar
+	 *            the web view loader
+	 * @param webPageError
+	 *            the view of the web page error
+	 */
+	private void resetViewsState(WebView view, ProgressBar progressBar,
+			View webPageError) {
+		view.setVisibility(View.GONE);
+		webPageError.setVisibility(View.GONE);
+		progressBar.setVisibility(View.VISIBLE);
+	}
+
+	/**
+	 * Set the state of the views in case of error
+	 *
+	 * @param view
+	 *            the web view container
+	 * @param progressBar
+	 *            the web view loader
+	 * @param webPageError
+	 *            the view of the web page error
+	 */
+	private void setErrorViewsState(WebView view, ProgressBar progressBar,
+			View webPageError) {
+		view.setVisibility(View.GONE);
+		webPageError.setVisibility(View.VISIBLE);
+		progressBar.setVisibility(View.GONE);
+	}
+
+	/**
+	 * Set the state of the views in case of success
+	 *
+	 * @param view
+	 *            the web view container
+	 * @param progressBar
+	 *            the web view loader
+	 * @param webPageError
+	 *            the view of the web page error
+	 */
+	private void setSuccessViewsState(WebView view, ProgressBar progressBar,
+			View webPageError) {
+		view.setVisibility(View.VISIBLE);
+		webPageError.setVisibility(View.GONE);
+		progressBar.setVisibility(View.GONE);
+	}
+
+	/**
 	 * Class used to manage the WebView states
-	 * 
+	 *
 	 * @author Zdravko Nestorov
-	 * 
 	 */
 	public class WebViewSumcClient extends WebViewClient {
 
@@ -356,87 +438,9 @@ public class WebPage extends SherlockActivity {
 		 */
 		private void initErrorView() {
 
-			webPageErrorText.setText(Html
-					.fromHtml(getString(R.string.web_page_error)));
+			webPageErrorText
+					.setText(Html.fromHtml(getString(R.string.web_page_error)));
 		}
-	}
-
-	/**
-	 * Fix the css of the sumc site page (there are a lot of erros with
-	 * scrolling and not needed images)
-	 * 
-	 * @param view
-	 *            the web view container
-	 */
-	private void editSumcSiteCSS(WebView view) {
-
-		view.loadUrl("javascript:document.getElementById(\"wrapper\").setAttribute(\"class\", \"sofbus\");");
-		view.loadUrl("javascript:document.getElementById(\"wrapper\").setAttribute(\"id\", \"sofbus\");");
-		view.loadUrl("javascript:document.getElementById(\"sofbus\").setAttribute(\"style\", \"text-align:left;margin:0 auto;margin-top:5px;margin-left:9px;padding:0 2px;\");");
-		view.loadUrl("javascript:document.getElementsByClassName(\"tooltip\")[1].setAttribute(\"style\", \"display:none;\");");
-		view.loadUrl("javascript:document.getElementsByClassName(\"footer\")[0].setAttribute(\"style\", \"display:none;\");");
-
-		for (int i = 0; i < 10; i++) {
-			view.loadUrl("javascript:document.getElementsByClassName(\"tooltip preview\")["
-					+ i + "].setAttribute(\"style\", \"display:none;\");");
-		}
-
-		// Removing the help button on older devices (not doing good with
-		// JavaScript)
-		if (Utils.isPreHoneycomb()) {
-			view.loadUrl("javascript:document.getElementsByClassName(\"tooltip\")[0].setAttribute(\"style\", \"display:none;\");");
-		}
-	}
-
-	/**
-	 * Reset the state of all views to the default one
-	 * 
-	 * @param view
-	 *            the web view container
-	 * @param progressBar
-	 *            the web view loader
-	 * @param webPageError
-	 *            the view of the web page error
-	 */
-	private void resetViewsState(WebView view, ProgressBar progressBar,
-			View webPageError) {
-		view.setVisibility(View.GONE);
-		webPageError.setVisibility(View.GONE);
-		progressBar.setVisibility(View.VISIBLE);
-	}
-
-	/**
-	 * Set the state of the views in case of error
-	 * 
-	 * @param view
-	 *            the web view container
-	 * @param progressBar
-	 *            the web view loader
-	 * @param webPageError
-	 *            the view of the web page error
-	 */
-	private void setErrorViewsState(WebView view, ProgressBar progressBar,
-			View webPageError) {
-		view.setVisibility(View.GONE);
-		webPageError.setVisibility(View.VISIBLE);
-		progressBar.setVisibility(View.GONE);
-	}
-
-	/**
-	 * Set the state of the views in case of success
-	 * 
-	 * @param view
-	 *            the web view container
-	 * @param progressBar
-	 *            the web view loader
-	 * @param webPageError
-	 *            the view of the web page error
-	 */
-	private void setSuccessViewsState(WebView view, ProgressBar progressBar,
-			View webPageError) {
-		view.setVisibility(View.VISIBLE);
-		webPageError.setVisibility(View.GONE);
-		progressBar.setVisibility(View.GONE);
 	}
 
 }

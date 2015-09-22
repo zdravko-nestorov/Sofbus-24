@@ -18,154 +18,151 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+
 import bg.znestorov.sofbus24.main.R;
 import bg.znestorov.sofbus24.utils.Utils;
 import bg.znestorov.sofbus24.utils.activity.SerialBitmap;
 
 /**
  * Dialog alerting the user about the captcha image
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class VirtualBoardsCaptchaDialog extends DialogFragment {
 
-	public interface OnCaptchaActionsListener {
+    public static final String BUNDLE_CAPTCHA_ID = "CAPTCHA ID";
+    public static final String BUNDLE_CAPTCHA_IMAGE = "CAPTCHA IMAGE";
+    private static final String BUNDLE_INPUT_TEXT = "INPUT TEXT";
+    private Activity context;
+    private String captchaId;
+    private Bitmap captchaImage;
+    private EditText input;
+    private String inputText;
 
-		public void onCaptchaCompleted(String captchaId, String captchaText);
+    public static VirtualBoardsCaptchaDialog newInstance(String captchaId,
+                                                         Bitmap captchaImage) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BUNDLE_CAPTCHA_ID, captchaId);
+        bundle.putSerializable(BUNDLE_CAPTCHA_IMAGE, new SerialBitmap(
+                captchaImage));
 
-		public void onCaptchaCancelled();
-	}
+        VirtualBoardsCaptchaDialog vbCaptchaDialog = new VirtualBoardsCaptchaDialog();
+        vbCaptchaDialog.setArguments(bundle);
 
-	private Activity context;
-	private String captchaId;
-	private Bitmap captchaImage;
+        return vbCaptchaDialog;
+    }
 
-	private EditText input;
-	private String inputText;
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        context = getActivity();
+        captchaId = getArguments().getString(BUNDLE_CAPTCHA_ID);
+        captchaImage = ((SerialBitmap) getArguments().getSerializable(
+                BUNDLE_CAPTCHA_IMAGE)).getBitmap();
 
-	public static final String BUNDLE_CAPTCHA_ID = "CAPTCHA ID";
-	public static final String BUNDLE_CAPTCHA_IMAGE = "CAPTCHA IMAGE";
-	private static final String BUNDLE_INPUT_TEXT = "INPUT TEXT";
+        if (savedInstanceState != null) {
+            inputText = savedInstanceState.getString(BUNDLE_INPUT_TEXT);
+        } else {
+            inputText = "";
+        }
 
-	public static VirtualBoardsCaptchaDialog newInstance(String captchaId,
-			Bitmap captchaImage) {
-		Bundle bundle = new Bundle();
-		bundle.putString(BUNDLE_CAPTCHA_ID, captchaId);
-		bundle.putSerializable(BUNDLE_CAPTCHA_IMAGE, new SerialBitmap(
-				captchaImage));
+        Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.vb_time_sumc_captcha);
+        builder.setMessage(R.string.vb_time_sumc_captcha_msg);
 
-		VirtualBoardsCaptchaDialog vbCaptchaDialog = new VirtualBoardsCaptchaDialog();
-		vbCaptchaDialog.setArguments(bundle);
+        LinearLayout panel = new LinearLayout(context);
+        panel.setOrientation(LinearLayout.VERTICAL);
 
-		return vbCaptchaDialog;
-	}
+        ImageView image = new ImageView(context);
+        image.setId(2);
+        image.setImageBitmap(captchaImage);
 
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		context = getActivity();
-		captchaId = getArguments().getString(BUNDLE_CAPTCHA_ID);
-		captchaImage = ((SerialBitmap) getArguments().getSerializable(
-				BUNDLE_CAPTCHA_IMAGE)).getBitmap();
+        // Add the image to the view and fix its size
+        panel.addView(image, LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT);
+        fixImageSize(image);
 
-		if (savedInstanceState != null) {
-			inputText = savedInstanceState.getString(BUNDLE_INPUT_TEXT);
-		} else {
-			inputText = "";
-		}
+        // Center the image
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) image
+                .getLayoutParams();
+        layoutParams.gravity = Gravity.CENTER;
+        image.setLayoutParams(layoutParams);
 
-		Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(R.string.vb_time_sumc_captcha);
-		builder.setMessage(R.string.vb_time_sumc_captcha_msg);
+        input = new EditText(context);
+        input.setId(1);
+        input.setSingleLine();
+        input.setInputType(InputType.TYPE_CLASS_TEXT
+                | InputType.TYPE_TEXT_VARIATION_URI
+                | InputType.TYPE_TEXT_VARIATION_PHONETIC);
+        input.setText(inputText);
+        input.setSelection(inputText.length());
 
-		LinearLayout panel = new LinearLayout(context);
-		panel.setOrientation(LinearLayout.VERTICAL);
+        ScrollView view = new ScrollView(context);
+        panel.addView(input);
+        view.addView(panel);
 
-		ImageView image = new ImageView(context);
-		image.setId(2);
-		image.setImageBitmap(captchaImage);
+        builder.setCancelable(true)
+                .setPositiveButton(R.string.app_button_ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String captchaText = input.getText().toString();
 
-		// Add the image to the view and fix its size
-		panel.addView(image, LayoutParams.MATCH_PARENT,
-				LayoutParams.MATCH_PARENT);
-		fixImageSize(image);
+                                ((OnCaptchaActionsListener) getTargetFragment())
+                                        .onCaptchaCompleted(captchaId,
+                                                captchaText);
+                            }
+                        }).setView(view);
 
-		// Center the image
-		LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) image
-				.getLayoutParams();
-		layoutParams.gravity = Gravity.CENTER;
-		image.setLayoutParams(layoutParams);
+        builder.setOnCancelListener(new OnCancelListener() {
+            public void onCancel(DialogInterface arg0) {
+                ((OnCaptchaActionsListener) getTargetFragment())
+                        .onCaptchaCancelled();
+            }
+        });
 
-		input = new EditText(context);
-		input.setId(1);
-		input.setSingleLine();
-		input.setInputType(InputType.TYPE_CLASS_TEXT
-				| InputType.TYPE_TEXT_VARIATION_URI
-				| InputType.TYPE_TEXT_VARIATION_PHONETIC);
-		input.setText(inputText);
-		input.setSelection(inputText.length());
+        return builder.create();
+    }
 
-		ScrollView view = new ScrollView(context);
-		panel.addView(input);
-		view.addView(panel);
+    /**
+     * Fix the size of the image to match the correct dimensions
+     *
+     * @param image the image view
+     */
+    private void fixImageSize(ImageView image) {
+        try {
+            Display display = context.getWindowManager().getDefaultDisplay();
+            DisplayMetrics outMetrics = new DisplayMetrics();
+            display.getMetrics(outMetrics);
+            float scWidth = outMetrics.widthPixels * 0.6f;
+            image.getLayoutParams().width = (int) scWidth;
 
-		builder.setCancelable(true)
-				.setPositiveButton(R.string.app_button_ok,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								String captchaText = input.getText().toString();
+            if (Utils.isInLandscapeMode(context)) {
+                image.getLayoutParams().height = (int) (scWidth / 6f);
+            } else {
+                image.getLayoutParams().height = (int) (scWidth / 3.5f);
+            }
+        } catch (Exception e) {
+        }
+    }
 
-								((OnCaptchaActionsListener) getTargetFragment())
-										.onCaptchaCompleted(captchaId,
-												captchaText);
-							}
-						}).setView(view);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getDialog().getWindow().setSoftInputMode(
+                LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    }
 
-		builder.setOnCancelListener(new OnCancelListener() {
-			public void onCancel(DialogInterface arg0) {
-				((OnCaptchaActionsListener) getTargetFragment())
-						.onCaptchaCancelled();
-			}
-		});
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString(BUNDLE_INPUT_TEXT, input != null ? input
+                .getText().toString() : "");
+    }
 
-		return builder.create();
-	}
+    public interface OnCaptchaActionsListener {
 
-	/**
-	 * Fix the size of the image to match the correct dimensions
-	 * 
-	 * @param image
-	 *            the image view
-	 */
-	private void fixImageSize(ImageView image) {
-		try {
-			Display display = context.getWindowManager().getDefaultDisplay();
-			DisplayMetrics outMetrics = new DisplayMetrics();
-			display.getMetrics(outMetrics);
-			float scWidth = outMetrics.widthPixels * 0.6f;
-			image.getLayoutParams().width = (int) scWidth;
+        public void onCaptchaCompleted(String captchaId, String captchaText);
 
-			if (Utils.isInLandscapeMode(context)) {
-				image.getLayoutParams().height = (int) (scWidth / 6f);
-			} else {
-				image.getLayoutParams().height = (int) (scWidth / 3.5f);
-			}
-		} catch (Exception e) {
-		}
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		getDialog().getWindow().setSoftInputMode(
-				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
-		savedInstanceState.putString(BUNDLE_INPUT_TEXT, input != null ? input
-				.getText().toString() : "");
-	}
+        public void onCaptchaCancelled();
+    }
 }

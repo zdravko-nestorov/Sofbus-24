@@ -15,155 +15,153 @@ import android.view.View.OnKeyListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
+
 import bg.znestorov.sofbus24.entity.StationEntity;
 import bg.znestorov.sofbus24.main.R;
 
 /**
  * Dialog giving an option to the user to rename a favorite station
- * 
+ *
  * @author Zdravko Nestorov
  * @version 1.0
- * 
  */
 public class FavouritesRenameDialog extends DialogFragment {
 
-	public interface OnRenameFavouritesListener {
-		public void onRenameFavouritesClicked(String stationName,
-				StationEntity station);
-	}
+    private static final String BUNDLE_STATION = "STATION";
+    private static final String BUNDLE_INPUT_TEXT = "INPUT TEXT";
+    private Activity context;
+    private StationEntity station;
+    private EditText input;
+    private String inputText;
 
-	private Activity context;
+    public static FavouritesRenameDialog newInstance(StationEntity station) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(BUNDLE_STATION, station);
 
-	private StationEntity station;
-	private EditText input;
-	private String inputText;
+        FavouritesRenameDialog favouritesRenameDialog = new FavouritesRenameDialog();
+        favouritesRenameDialog.setArguments(bundle);
 
-	private static final String BUNDLE_STATION = "STATION";
-	private static final String BUNDLE_INPUT_TEXT = "INPUT TEXT";
+        return favouritesRenameDialog;
+    }
 
-	public static FavouritesRenameDialog newInstance(StationEntity station) {
-		Bundle bundle = new Bundle();
-		bundle.putSerializable(BUNDLE_STATION, station);
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        context = getActivity();
+        station = (StationEntity) getArguments()
+                .getSerializable(BUNDLE_STATION);
 
-		FavouritesRenameDialog favouritesRenameDialog = new FavouritesRenameDialog();
-		favouritesRenameDialog.setArguments(bundle);
+        if (savedInstanceState != null) {
+            inputText = savedInstanceState.getString(BUNDLE_INPUT_TEXT);
+        } else {
+            inputText = station.getName();
+            inputText = inputText.trim();
+        }
 
-		return favouritesRenameDialog;
-	}
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.fav_item_rename_title);
+        builder.setIcon(R.drawable.ic_menu_edit);
+        builder.setMessage(Html.fromHtml(String.format(
+                context.getString(R.string.fav_item_rename_msg),
+                station.getName(), station.getNumber())));
 
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		context = getActivity();
-		station = (StationEntity) getArguments()
-				.getSerializable(BUNDLE_STATION);
+        // Set an EditText view to get user input
+        input = new EditText(context);
+        input.setHint(context.getString(R.string.fav_item_rename_hint));
+        input.setMaxLines(1);
+        input.setText(inputText);
+        input.setSelection(inputText.length());
+        builder.setView(input);
 
-		if (savedInstanceState != null) {
-			inputText = savedInstanceState.getString(BUNDLE_INPUT_TEXT);
-		} else {
-			inputText = station.getName();
-			inputText = inputText.trim();
-		}
+        builder.setPositiveButton(context.getString(R.string.app_button_ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        ((OnRenameFavouritesListener) getTargetFragment())
+                                .onRenameFavouritesClicked(input.getText()
+                                        .toString(), station);
+                    }
+                });
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(R.string.fav_item_rename_title);
-		builder.setIcon(R.drawable.ic_menu_edit);
-		builder.setMessage(Html.fromHtml(String.format(
-				context.getString(R.string.fav_item_rename_msg),
-				station.getName(), station.getNumber())));
+        builder.setNegativeButton(
+                context.getString(R.string.app_button_cancel), null);
 
-		// Set an EditText view to get user input
-		input = new EditText(context);
-		input.setHint(context.getString(R.string.fav_item_rename_hint));
-		input.setMaxLines(1);
-		input.setText(inputText);
-		input.setSelection(inputText.length());
-		builder.setView(input);
+        return builder.create();
+    }
 
-		builder.setPositiveButton(context.getString(R.string.app_button_ok),
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						((OnRenameFavouritesListener) getTargetFragment())
-								.onRenameFavouritesClicked(input.getText()
-										.toString(), station);
-					}
-				});
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getDialog().getWindow().setSoftInputMode(
+                LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    }
 
-		builder.setNegativeButton(
-				context.getString(R.string.app_button_cancel), null);
+    @Override
+    public void onStart() {
+        super.onStart();
 
-		return builder.create();
-	}
+        final AlertDialog dialog = (AlertDialog) getDialog();
+        if (dialog != null) {
+            final Button positiveBtn = dialog.getButton(Dialog.BUTTON_POSITIVE);
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		getDialog().getWindow().setSoftInputMode(
-				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-	}
+            if ("".equals(inputText)) {
+                positiveBtn.setEnabled(false);
+            } else {
+                positiveBtn.setEnabled(true);
+            }
 
-	@Override
-	public void onStart() {
-		super.onStart();
+            // Add a click listener when ENTER key is pressed
+            input.setOnKeyListener(new OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (event.getAction() == KeyEvent.ACTION_DOWN
+                            && keyCode == KeyEvent.KEYCODE_ENTER) {
+                        String editTextInput = input.getText().toString();
 
-		final AlertDialog dialog = (AlertDialog) getDialog();
-		if (dialog != null) {
-			final Button positiveBtn = dialog.getButton(Dialog.BUTTON_POSITIVE);
+                        if (editTextInput != null && !"".equals(editTextInput)) {
+                            ((OnRenameFavouritesListener) getTargetFragment())
+                                    .onRenameFavouritesClicked(input.getText()
+                                            .toString(), station);
+                            dismiss();
+                        }
 
-			if ("".equals(inputText)) {
-				positiveBtn.setEnabled(false);
-			} else {
-				positiveBtn.setEnabled(true);
-			}
+                        return true;
+                    }
 
-			// Add a click listener when ENTER key is pressed
-			input.setOnKeyListener(new OnKeyListener() {
-				@Override
-				public boolean onKey(View v, int keyCode, KeyEvent event) {
-					if (event.getAction() == KeyEvent.ACTION_DOWN
-							&& keyCode == KeyEvent.KEYCODE_ENTER) {
-						String editTextInput = input.getText().toString();
+                    return false;
+                }
+            });
 
-						if (editTextInput != null && !"".equals(editTextInput)) {
-							((OnRenameFavouritesListener) getTargetFragment())
-									.onRenameFavouritesClicked(input.getText()
-											.toString(), station);
-							dismiss();
-						}
+            // Add on change text listener on the input field
+            input.addTextChangedListener(new TextWatcher() {
+                public void afterTextChanged(Editable s) {
+                }
 
-						return true;
-					}
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
 
-					return false;
-				}
-			});
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+                    String inputText = input.getText().toString();
 
-			// Add on change text listener on the input field
-			input.addTextChangedListener(new TextWatcher() {
-				public void afterTextChanged(Editable s) {
-				}
+                    if (inputText.length() == 0) {
+                        positiveBtn.setEnabled(false);
+                    } else {
+                        positiveBtn.setEnabled(true);
+                    }
+                }
+            });
+        }
+    }
 
-				public void beforeTextChanged(CharSequence s, int start,
-						int count, int after) {
-				}
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString(BUNDLE_INPUT_TEXT, input != null ? input
+                .getText().toString() : "");
+    }
 
-				public void onTextChanged(CharSequence s, int start,
-						int before, int count) {
-					String inputText = input.getText().toString();
-
-					if (inputText.length() == 0) {
-						positiveBtn.setEnabled(false);
-					} else {
-						positiveBtn.setEnabled(true);
-					}
-				}
-			});
-		}
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
-		savedInstanceState.putString(BUNDLE_INPUT_TEXT, input != null ? input
-				.getText().toString() : "");
-	}
+    public interface OnRenameFavouritesListener {
+        public void onRenameFavouritesClicked(String stationName,
+                                              StationEntity station);
+    }
 }

@@ -51,24 +51,24 @@ public class ScheduleVehicleInfo {
 	 * @param vehicle
 	 *            the selected vehicle
 	 * @param vehicleTitle
-	 *            the vehicle title in format: "xxxxx №xxx"
+	 *            the vehicle title in format: "xxxxx в„–xxx"
 	 */
 	public void onListItemClick(VehicleEntity vehicle, String vehicleTitle) {
 
 		String vehicleNumber = vehicle.getNumber();
-		if ("1-ТБ".equals(vehicleNumber)) {
+		if ("1-РўР‘".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity1TB(vehicle));
-		} else if ("6-А".equals(vehicleNumber)) {
+		} else if ("6-Рђ".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity6A(vehicle));
-		} else if ("10-ТМ".equals(vehicleNumber)) {
+		} else if ("10-РўРњ".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity10TM(vehicle));
-		} else if ("11-А".equals(vehicleNumber)) {
+		} else if ("11-Рђ".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity11A(vehicle));
-		} else if ("11-ТМ".equals(vehicleNumber)) {
+		} else if ("11-РўРњ".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity11TM(vehicle));
-		} else if ("12-А".equals(vehicleNumber)) {
+		} else if ("12-Рђ".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity12A(vehicle));
-		} else if ("44-Б".equals(vehicleNumber)) {
+		} else if ("44-Р‘".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity44B(vehicle));
 		} else {
 			proceedStandardCase(vehicle, vehicleTitle);
@@ -115,26 +115,26 @@ public class ScheduleVehicleInfo {
 		lid.add("190");
 		rid.add("2238");
 		directionsNames
-				.add(translateString("Пета градска болница - Бул. Прага"));
+				.add(translateString("РџРµС‚Р° РіСЂР°РґСЃРєР° Р±РѕР»РЅРёС†Р° - Р‘СѓР». РџСЂР°РіР°"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1256", translateString("Пета градска болница"), "28584"));
+				"1256", translateString("РџРµС‚Р° РіСЂР°РґСЃРєР° Р±РѕР»РЅРёС†Р°"), "28584"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0324", translateString("Бул. Княгиня Мария Луиза"), "3531"));
+				"0324", translateString("Р‘СѓР». РљРЅСЏРіРёРЅСЏ РњР°СЂРёСЏ Р›СѓРёР·Р°"), "3531"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2105", translateString("Ул. Охрид"), "3536"));
+				"2105", translateString("РЈР». РћС…СЂРёРґ"), "3536"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2171", translateString("Ул.Св.Св.Кирил и Методий"), "11885"));
+				"2171", translateString("РЈР».РЎРІ.РЎРІ.РљРёСЂРёР» Рё РњРµС‚РѕРґРёР№"), "11885"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2111", translateString("Ул. Пиротска"), "11895"));
+				"2111", translateString("РЈР». РџРёСЂРѕС‚СЃРєР°"), "11895"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0283", translateString("Бул. Ал. Стамболийски"), "14666"));
+				"0283", translateString("Р‘СѓР». РђР». РЎС‚Р°РјР±РѕР»РёР№СЃРєРё"), "14666"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1295", translateString("Пл.Руски паметник"), "14648"));
+				"1295", translateString("РџР».Р СѓСЃРєРё РїР°РјРµС‚РЅРёРє"), "14648"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1296", translateString("Пл.Руски паметник"), "22636"));
+				"1296", translateString("РџР».Р СѓСЃРєРё РїР°РјРµС‚РЅРёРє"), "22636"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0366", translateString("Бул. Прага"), "22656"));
+				"0366", translateString("Р‘СѓР». РџСЂР°РіР°"), "22656"));
 		directionsList.add(stationsList);
 
 		// Direction 2
@@ -142,28 +142,28 @@ public class ScheduleVehicleInfo {
 		lid.add("190");
 		rid.add("2237");
 		directionsNames
-				.add(translateString("Бул. Прага - Пета градска болница"));
+				.add(translateString("Р‘СѓР». РџСЂР°РіР° - РџРµС‚Р° РіСЂР°РґСЃРєР° Р±РѕР»РЅРёС†Р°"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0366", translateString("Бул. Прага"), "22656"));
+				"0366", translateString("Р‘СѓР». РџСЂР°РіР°"), "22656"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0355", translateString("Бул. Пенчо Славейков"), "22668"));
+				"0355", translateString("Р‘СѓР». РџРµРЅС‡Рѕ РЎР»Р°РІРµР№РєРѕРІ"), "22668"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"6300", translateString("УМБАЛСМ Пирогов"), "22680"));
+				"6300", translateString("РЈРњР‘РђР›РЎРњ РџРёСЂРѕРіРѕРІ"), "22680"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1300", translateString("Пл. Руски паметник"), "14649"));
+				"1300", translateString("РџР». Р СѓСЃРєРё РїР°РјРµС‚РЅРёРє"), "14649"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0284", translateString("Бул. Ал. Стамболийски"), "14667"));
+				"0284", translateString("Р‘СѓР». РђР». РЎС‚Р°РјР±РѕР»РёР№СЃРєРё"), "14667"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2114", translateString("Ул. Пиротска"), "11892"));
+				"2114", translateString("РЈР». РџРёСЂРѕС‚СЃРєР°"), "11892"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2170", translateString("Ул.Св.Св. Кирил и Методий"), "11882"));
+				"2170", translateString("РЈР».РЎРІ.РЎРІ. РљРёСЂРёР» Рё РњРµС‚РѕРґРёР№"), "11882"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2102", translateString("Ул. Охрид"), "28563"));
+				"2102", translateString("РЈР». РћС…СЂРёРґ"), "28563"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0339", translateString("Бул. Ген. Н.Столетов"), "28580"));
+				"0339", translateString("Р‘СѓР». Р“РµРЅ. Рќ.РЎС‚РѕР»РµС‚РѕРІ"), "28580"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2596", translateString("Пета градска болница"), "28583"));
+				"2596", translateString("РџРµС‚Р° РіСЂР°РґСЃРєР° Р±РѕР»РЅРёС†Р°"), "28583"));
 		directionsList.add(stationsList);
 
 		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
@@ -191,78 +191,78 @@ public class ScheduleVehicleInfo {
 		lid.add("49");
 		rid.add("1316");
 		directionsNames
-				.add(translateString("ж. к. Обеля-2 - Гара София север"));
+				.add(translateString("Р¶. Рє. РћР±РµР»СЏ-2 - Р“Р°СЂР° РЎРѕС„РёСЏ СЃРµРІРµСЂ"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0679", translateString("ж. к. Обеля-2"), "4405"));
+				"0679", translateString("Р¶. Рє. РћР±РµР»СЏ-2"), "4405"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0013", translateString("140 СОУ"), "4479"));
+				"0013", translateString("140 РЎРћРЈ"), "4479"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0872", translateString("кв. Обеля"), "4467"));
+				"0872", translateString("РєРІ. РћР±РµР»СЏ"), "4467"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0059", translateString("Автостанция Обеля"), "4902"));
+				"0059", translateString("РђРІС‚РѕСЃС‚Р°РЅС†РёСЏ РћР±РµР»СЏ"), "4902"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"1710", translateString("Търговски к-с Обеля"), "4447"));
+				"1710", translateString("РўСЉСЂРіРѕРІСЃРєРё Рє-СЃ РћР±РµР»СЏ"), "4447"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0593", translateString("ж. к. Връбница-1"), "4356"));
+				"0593", translateString("Р¶. Рє. Р’СЂСЉР±РЅРёС†Р°-1"), "4356"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"1838", translateString("ул. Бели Дунав"), "4346"));
+				"1838", translateString("СѓР». Р‘РµР»Рё Р”СѓРЅР°РІ"), "4346"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0334", translateString("Бул. Ломско шосе"), "5379"));
+				"0334", translateString("Р‘СѓР». Р›РѕРјСЃРєРѕ С€РѕСЃРµ"), "5379"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0222", translateString("Бул. 458 ж.к. Надежда 4"), "5397"));
+				"0222", translateString("Р‘СѓР». 458 Р¶.Рє. РќР°РґРµР¶РґР° 4"), "5397"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0019", translateString("24-ти ДКЦ"), "5385"));
+				"0019", translateString("24-С‚Рё Р”РљР¦"), "5385"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0002", translateString("102-ро ОУ"), "5398"));
+				"0002", translateString("102-СЂРѕ РћРЈ"), "5398"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"1901", translateString("Ул. Ген. Никола Жеков"), "5391"));
+				"1901", translateString("РЈР». Р“РµРЅ. РќРёРєРѕР»Р° Р–РµРєРѕРІ"), "5391"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"2575", translateString("бул. Рожен"), "5400"));
+				"2575", translateString("Р±СѓР». Р РѕР¶РµРЅ"), "5400"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0540", translateString("Модна къща Агресия"), "3996"));
+				"0540", translateString("РњРѕРґРЅР° РєСЉС‰Р° РђРіСЂРµСЃРёСЏ"), "3996"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0374", translateString("Модна къща Агресия"), "3993"));
+				"0374", translateString("РњРѕРґРЅР° РєСЉС‰Р° РђРіСЂРµСЃРёСЏ"), "3993"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0477", translateString("Гара София север"), "3982"));
+				"0477", translateString("Р“Р°СЂР° РЎРѕС„РёСЏ СЃРµРІРµСЂ"), "3982"));
 		directionsList.add(stationsList);
 
 		// Direction 2
 		vt.add("0");
 		lid.add("49");
 		rid.add("1317");
-		directionsNames.add(translateString("Гара София север - Ж.к.Обеля 2"));
+		directionsNames.add(translateString("Р“Р°СЂР° РЎРѕС„РёСЏ СЃРµРІРµСЂ - Р–.Рє.РћР±РµР»СЏ 2"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0476", translateString("Гара София север"), "3986"));
+				"0476", translateString("Р“Р°СЂР° РЎРѕС„РёСЏ СЃРµРІРµСЂ"), "3986"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0375", translateString("Модна къща Агресия"), "4088"));
+				"0375", translateString("РњРѕРґРЅР° РєСЉС‰Р° РђРіСЂРµСЃРёСЏ"), "4088"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0547", translateString("Бул.Рожен"), "4005"));
+				"0547", translateString("Р‘СѓР».Р РѕР¶РµРЅ"), "4005"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"2574", translateString("Бул.ген.Никола Жеков"), "5358"));
+				"2574", translateString("Р‘СѓР».РіРµРЅ.РќРёРєРѕР»Р° Р–РµРєРѕРІ"), "5358"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"2578", translateString("102-ро ОУ"), "5399"));
+				"2578", translateString("102-СЂРѕ РћРЈ"), "5399"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0018", translateString("24-ти ДКЦ"), "5364"));
+				"0018", translateString("24-С‚Рё Р”РљР¦"), "5364"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0221", translateString("Бл. 458 ж.к. Надежда 4"), "5396"));
+				"0221", translateString("Р‘Р». 458 Р¶.Рє. РќР°РґРµР¶РґР° 4"), "5396"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"2576", translateString("Бул.Ломско шосе"), "5371"));
+				"2576", translateString("Р‘СѓР».Р›РѕРјСЃРєРѕ С€РѕСЃРµ"), "5371"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"2577", translateString("Ул.Бели Дунав"), "4349"));
+				"2577", translateString("РЈР».Р‘РµР»Рё Р”СѓРЅР°РІ"), "4349"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0592", translateString("ж.к. Връбница"), "4416"));
+				"0592", translateString("Р¶.Рє. Р’СЂСЉР±РЅРёС†Р°"), "4416"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"1709", translateString("Търговски комплекс Обеля"), "4448"));
+				"1709", translateString("РўСЉСЂРіРѕРІСЃРєРё РєРѕРјРїР»РµРєСЃ РћР±РµР»СЏ"), "4448"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0060", translateString("Автостанция Обеля"), "4458"));
+				"0060", translateString("РђРІС‚РѕСЃС‚Р°РЅС†РёСЏ РћР±РµР»СЏ"), "4458"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0873", translateString("Кв.Обеля"), "4468"));
+				"0873", translateString("РљРІ.РћР±РµР»СЏ"), "4468"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0012", translateString("140 СОУ"), "4478"));
+				"0012", translateString("140 РЎРћРЈ"), "4478"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0680", translateString("Ж.к.Обеля 2"), "4403"));
+				"0680", translateString("Р–.Рє.РћР±РµР»СЏ 2"), "4403"));
 		directionsList.add(stationsList);
 
 		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
@@ -289,26 +289,26 @@ public class ScheduleVehicleInfo {
 		vt.add("1");
 		lid.add("145");
 		rid.add("2346");
-		directionsNames.add(translateString("Зоопарка - Хотел Хилтън"));
+		directionsNames.add(translateString("Р—РѕРѕРїР°СЂРєР° - РҐРѕС‚РµР» РҐРёР»С‚СЉРЅ"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0749", translateString("Зоопарка"), "16359"));
+				"0749", translateString("Р—РѕРѕРїР°СЂРєР°"), "16359"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0977", translateString("КП Бенакс"), "16353"));
+				"0977", translateString("РљРџ Р‘РµРЅР°РєСЃ"), "16353"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2314", translateString("Хлебозавода"), "16335"));
+				"2314", translateString("РҐР»РµР±РѕР·Р°РІРѕРґР°"), "16335"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2654", translateString("Кв.Хладилника"), "17308"));
+				"2654", translateString("РљРІ.РҐР»Р°РґРёР»РЅРёРєР°"), "17308"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0342", translateString("Бул.Никола Вапцаров"), "17294"));
+				"0342", translateString("Р‘СѓР».РќРёРєРѕР»Р° Р’Р°РїС†Р°СЂРѕРІ"), "17294"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2039", translateString("Ул.Люботрън"), "25748"));
+				"2039", translateString("РЈР».Р›СЋР±РѕС‚СЂСЉРЅ"), "25748"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0923", translateString("Кемпински хотел Зографски"), "26999"));
+				"0923", translateString("РљРµРјРїРёРЅСЃРєРё С…РѕС‚РµР» Р—РѕРіСЂР°С„СЃРєРё"), "26999"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2330", translateString("Хотел Хемус"), "18120"));
+				"2330", translateString("РҐРѕС‚РµР» РҐРµРјСѓСЃ"), "18120"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0397", translateString("Хотел Хилтън"), "18115"));
+				"0397", translateString("РҐРѕС‚РµР» РҐРёР»С‚СЉРЅ"), "18115"));
 		directionsList.add(stationsList);
 
 		// Direction 2
@@ -316,28 +316,28 @@ public class ScheduleVehicleInfo {
 		lid.add("145");
 		rid.add("2345");
 		directionsNames
-				.add(translateString("Хотел Хилтън - Автостанция Хладилника"));
+				.add(translateString("РҐРѕС‚РµР» РҐРёР»С‚СЉРЅ - РђРІС‚РѕСЃС‚Р°РЅС†РёСЏ РҐР»Р°РґРёР»РЅРёРєР°"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0397", translateString("Хотел Хилтън"), "18115"));
+				"0397", translateString("РҐРѕС‚РµР» РҐРёР»С‚СЉРЅ"), "18115"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1322", translateString("Хотел Хемус"), "25739"));
+				"1322", translateString("РҐРѕС‚РµР» РҐРµРјСѓСЃ"), "25739"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0922", translateString("Кемпински хотел Зографски"), "25756"));
+				"0922", translateString("РљРµРјРїРёРЅСЃРєРё С…РѕС‚РµР» Р—РѕРіСЂР°С„СЃРєРё"), "25756"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2038", translateString("Ул.Люботрън"), "25747"));
+				"2038", translateString("РЈР».Р›СЋР±РѕС‚СЂСЉРЅ"), "25747"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0343", translateString("Бул.Никола Вапцаров"), "25751"));
+				"0343", translateString("Р‘СѓР».РќРёРєРѕР»Р° Р’Р°РїС†Р°СЂРѕРІ"), "25751"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2655", translateString("Кв.Хладилника"), "17311"));
+				"2655", translateString("РљРІ.РҐР»Р°РґРёР»РЅРёРєР°"), "17311"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0912", translateString("Кв.Хладилника"), "13084"));
+				"0912", translateString("РљРІ.РҐР»Р°РґРёР»РЅРёРєР°"), "13084"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2313", translateString("Хлебозавода"), "16336"));
+				"2313", translateString("РҐР»РµР±РѕР·Р°РІРѕРґР°"), "16336"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0976", translateString("КП Бенакс"), "16352"));
+				"0976", translateString("РљРџ Р‘РµРЅР°РєСЃ"), "16352"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0749", translateString("Зоопарка"), "16359"));
+				"0749", translateString("Р—РѕРѕРїР°СЂРєР°"), "16359"));
 		directionsList.add(stationsList);
 
 		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
@@ -365,20 +365,112 @@ public class ScheduleVehicleInfo {
 		vt.add("");
 		lid.add("");
 		rid.add("");
-		directionsNames.add(translateString(""));
+		directionsNames
+				.add(translateString("РџР»РѕС‰Р°Рґ РЎС‚РѕС‡РЅР° РіР°СЂР° - Р¶.Рє. Р”СЂСѓР¶Р±Р° 1"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
-				"", translateString(""), ""));
+				"1319", translateString("РїР». РЎС‚РѕС‡РЅР° Р“Р°СЂР°"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1964", translateString("СѓР». РСЃРєСЉСЂ"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1242", translateString("РїР». Р’Р°СЃРёР» Р›РµРІСЃРєРё"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1698", translateString("РЎРЈ РЎРІ. РљР»РёРјРµРЅС‚ РћС…СЂРёРґСЃРєРё"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1287", translateString("РїР». РћСЂР»РѕРІ РњРѕСЃС‚"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1394", translateString("РџРѕР»РёРіСЂР°С„РёС‡РµСЃРєРё РљРѕРјР±РёРЅР°С‚"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0074", translateString("Р±СѓР». РџРµР№Рѕ РЇРІРѕСЂРѕРІ"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1820", translateString("СѓР». РђР»РµРєСЃР°РЅРґСЉСЂ Р–РµРЅРґРѕРІ"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"2326", translateString("РҐРѕС‚РµР» РџР»РёСЃРєР°"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1696", translateString("Р¶.Рє. РР·С‚РѕРє"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1257", translateString("РџР»РѕС‰Р°Рґ РЅР° РђРІРёР°С†РёСЏС‚Р°"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1260", translateString("РџР»РѕС‰Р°Рґ РЅР° РђРІРёР°С†РёСЏС‚Р°"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"2615", translateString("РЎРїРѕСЂС‚РЅР° Р—Р°Р»Р° РђСЂРµРЅР° РђСЂРјРµРµС†"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1152", translateString("РЎРљ Р¦РЎРљРђ"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0370", translateString("Р±СѓР». РїСЂРѕС„. Р¦РІ.Р›Р°Р·Р°СЂРѕРІ"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1986", translateString("СѓР». РєР°Рї. Р”.РЎРїРёСЃР°СЂРµРІСЃРєРё"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0256", translateString("Р±Р».98 Р¶.Рє. Р”СЂСѓР¶Р±Р°-1"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0578", translateString("Р±СѓР». РҐСЂРёСЃС‚РѕС„РѕСЂ РљРѕР»СѓРјР±"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0235", translateString("РњРµС‚СЂРѕСЃС‚Р°РЅС†РёСЏ Р”СЂСѓР¶Р±Р°"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0142", translateString("Р±Р».155 Р¶.Рє. Р”СЂСѓР¶Р±Р°-1"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0144", translateString("Р±Р».162 Р¶.Рє. Р”СЂСѓР¶Р±Р°-1"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0146", translateString("Р±Р».170 Р¶.Рє. Р”СЂСѓР¶Р±Р°-1"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0516", translateString("Р”РµРїРѕ РСЃРєСЉСЂ"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0605", translateString("Р¶.Рє. Р”СЂСѓР¶Р±Р°-1"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"2424", translateString("Р¶.Рє. Р”СЂСѓР¶Р±Р°-1"), ""));
 		directionsList.add(stationsList);
 
 		// Direction 2
 		vt.add("");
 		lid.add("");
 		rid.add("");
-		directionsNames.add(translateString(""));
+		directionsNames
+				.add(translateString("Р¶.Рє. Р”СЂСѓР¶Р±Р° 1 - РџР»РѕС‰Р°Рґ РЎС‚РѕС‡РЅР° РіР°СЂР°"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
-				"", translateString(""), ""));
+				"0517", translateString("Р”РµРїРѕ РСЃРєСЉСЂ"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0147", translateString("Р±Р».170 Р¶.Рє. Р”СЂСѓР¶Р±Р°-1"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0143", translateString("Р±Р».162 Р¶.Рє. Р”СЂСѓР¶Р±Р°-1"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0141", translateString("Р±Р».155 Р¶.Рє. Р”СЂСѓР¶Р±Р°-1"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0236", translateString("РњРµС‚СЂРѕСЃС‚Р°РЅС†РёСЏ Р”СЂСѓР¶Р±Р°"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0577", translateString("Р±СѓР». РҐСЂРёСЃС‚РѕС„РѕСЂ РљРѕР»СѓРјР±"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0257", translateString("Р±Р».98 Р¶.Рє. Р”СЂСѓР¶Р±Р°-1"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0255", translateString("Р±Р».89 Р¶.Рє. Р”СЂСѓР¶Р±Р°-1"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1983", translateString("СѓР». РєР°Рї. Р”.РЎРїРёСЃР°СЂРµРІСЃРєРё"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0371", translateString("Р±СѓР». РїСЂРѕС„. Р¦РІ.Р›Р°Р·Р°СЂРѕРІ"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1151", translateString("РЎРљ Р¦РЎРљРђ"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"2616", translateString("РЎРїРѕСЂС‚РЅР° Р—Р°Р»Р° РђСЂРµРЅР° РђСЂРјРµРµС†"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1695", translateString("Р¶.Рє. РР·С‚РѕРє"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"2397", translateString("РҐРѕС‚РµР» РџР»РёСЃРєР°"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1819", translateString("СѓР». РђР»РµРєСЃР°РЅРґСЉСЂ Р–РµРЅРґРѕРІ"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"0073", translateString("Р±СѓР». РџРµР№Рѕ РЇРІРѕСЂРѕРІ"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1395", translateString("РџРѕР»РёРіСЂР°С„РёС‡РµСЃРєРё РљРѕРјР±РёРЅР°С‚"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1288", translateString("РїР». РћСЂР»РѕРІ РњРѕСЃС‚"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1699", translateString("РЎРЈ РЎРІ. РљР»РёРјРµРЅС‚ РћС…СЂРёРґСЃРєРё"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1241", translateString("РїР». Р’Р°СЃРёР» Р›РµРІСЃРєРё"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1965", translateString("СѓР». РСЃРєСЉСЂ"), ""));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"1313", translateString("РїР». РЎС‚РѕС‡РЅР° Р“Р°СЂР°"), ""));
 		directionsList.add(stationsList);
 
 		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
@@ -406,38 +498,38 @@ public class ScheduleVehicleInfo {
 		lid.add("208");
 		rid.add("1149");
 		directionsNames.add(
-				translateString("Площад Централна гара - Автостанция Илиянци"));
+				translateString("РџР»РѕС‰Р°Рґ Р¦РµРЅС‚СЂР°Р»РЅР° РіР°СЂР° - РђРІС‚РѕСЃС‚Р°РЅС†РёСЏ РР»РёСЏРЅС†Рё"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1328", translateString("Площад Централна гара"), "15026"));
+				"1328", translateString("РџР»РѕС‰Р°Рґ Р¦РµРЅС‚СЂР°Р»РЅР° РіР°СЂР°"), "15026"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1326", translateString("Ул.Клокотница"), "15029"));
+				"1326", translateString("РЈР».РљР»РѕРєРѕС‚РЅРёС†Р°"), "15029"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0382", translateString("Бул.Христо Ботев"), "2844"));
+				"0382", translateString("Р‘СѓР».РҐСЂРёСЃС‚Рѕ Р‘РѕС‚РµРІ"), "2844"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2081", translateString("Ул. Опълченска"), "2854"));
+				"2081", translateString("РЈР». РћРїСЉР»С‡РµРЅСЃРєР°"), "2854"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2101", translateString("Ул. Охрид"), "16896"));
+				"2101", translateString("РЈР». РћС…СЂРёРґ"), "16896"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0323", translateString("Бул. Княгиня Мария Луиза"), "16899"));
+				"0323", translateString("Р‘СѓР». РљРЅСЏРіРёРЅСЏ РњР°СЂРёСЏ Р›СѓРёР·Р°"), "16899"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1114", translateString("Надлез Надежда"), "6463"));
+				"1114", translateString("РќР°РґР»РµР· РќР°РґРµР¶РґР°"), "6463"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0539", translateString("Модна къща Агресия"), "16545"));
+				"0539", translateString("РњРѕРґРЅР° РєСЉС‰Р° РђРіСЂРµСЃРёСЏ"), "16545"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2674", translateString("Бул.Рожен"), "16110"));
+				"2674", translateString("Р‘СѓР».Р РѕР¶РµРЅ"), "16110"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0727", translateString("ЗАГ Динамик"), "16104"));
+				"0727", translateString("Р—РђР“ Р”РёРЅР°РјРёРє"), "16104"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0745", translateString("Софарма АД"), "16098"));
+				"0745", translateString("РЎРѕС„Р°СЂРјР° РђР”"), "16098"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0754", translateString("Стоков базар Илиянци"), "16090"));
+				"0754", translateString("РЎС‚РѕРєРѕРІ Р±Р°Р·Р°СЂ РР»РёСЏРЅС†Рё"), "16090"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1634", translateString("Хюндай България"), "16993"));
+				"1634", translateString("РҐСЋРЅРґР°Р№ Р‘СЉР»РіР°СЂРёСЏ"), "16993"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0938", translateString("Центъра кв. Илиянци"), "17011"));
+				"0938", translateString("Р¦РµРЅС‚СЉСЂР° РєРІ. РР»РёСЏРЅС†Рё"), "17011"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0058", translateString("Автостанция Илиянци"), "7868"));
+				"0058", translateString("РђРІС‚РѕСЃС‚Р°РЅС†РёСЏ РР»РёСЏРЅС†Рё"), "7868"));
 		directionsList.add(stationsList);
 
 		// Direction 2
@@ -445,28 +537,28 @@ public class ScheduleVehicleInfo {
 		lid.add("208");
 		rid.add("1150");
 		directionsNames.add(
-				translateString("Автостанция Илиянци - Площад Централна гара"));
+				translateString("РђРІС‚РѕСЃС‚Р°РЅС†РёСЏ РР»РёСЏРЅС†Рё - РџР»РѕС‰Р°Рґ Р¦РµРЅС‚СЂР°Р»РЅР° РіР°СЂР°"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0058", translateString("Автостанция Илиянци"), "7868"));
+				"0058", translateString("РђРІС‚РѕСЃС‚Р°РЅС†РёСЏ РР»РёСЏРЅС†Рё"), "7868"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0939", translateString("Автостанция Илиянци"), "17008"));
+				"0939", translateString("РђРІС‚РѕСЃС‚Р°РЅС†РёСЏ РР»РёСЏРЅС†Рё"), "17008"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1633", translateString("Хюндай България"), "16992"));
+				"1633", translateString("РҐСЋРЅРґР°Р№ Р‘СЉР»РіР°СЂРёСЏ"), "16992"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0755", translateString("Стоков базар Илиянци"), "16091"));
+				"0755", translateString("РЎС‚РѕРєРѕРІ Р±Р°Р·Р°СЂ РР»РёСЏРЅС†Рё"), "16091"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0744", translateString("Софарма АД"), "16099"));
+				"0744", translateString("РЎРѕС„Р°СЂРјР° РђР”"), "16099"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0728", translateString("ЗАГ Динамик"), "16105"));
+				"0728", translateString("Р—РђР“ Р”РёРЅР°РјРёРє"), "16105"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0546", translateString("Бул.Рожен"), "28841"));
+				"0546", translateString("Р‘СѓР».Р РѕР¶РµРЅ"), "28841"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0542", translateString("Модна къща Агресия"), "16542"));
+				"0542", translateString("РњРѕРґРЅР° РєСЉС‰Р° РђРіСЂРµСЃРёСЏ"), "16542"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2079", translateString("Ул. Опълченска"), "6608"));
+				"2079", translateString("РЈР». РћРїСЉР»С‡РµРЅСЃРєР°"), "6608"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1328", translateString("Площад Централна гара"), "15026"));
+				"1328", translateString("РџР»РѕС‰Р°Рґ Р¦РµРЅС‚СЂР°Р»РЅР° РіР°СЂР°"), "15026"));
 		directionsList.add(stationsList);
 
 		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
@@ -493,58 +585,58 @@ public class ScheduleVehicleInfo {
 		vt.add("0");
 		lid.add("52");
 		rid.add("607");
-		directionsNames.add(translateString("Кв.Илиянци - Гара София север"));
+		directionsNames.add(translateString("РљРІ.РР»РёСЏРЅС†Рё - Р“Р°СЂР° РЎРѕС„РёСЏ СЃРµРІРµСЂ"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0848", translateString("Кв.Илиянци"), "4145"));
+				"0848", translateString("РљРІ.РР»РёСЏРЅС†Рё"), "4145"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"1988", translateString("Ул.Кирил Благоев"), "4135"));
+				"1988", translateString("РЈР».РљРёСЂРёР» Р‘Р»Р°РіРѕРµРІ"), "4135"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"1916", translateString("Ул.Грозден"), "4123"));
+				"1916", translateString("РЈР».Р“СЂРѕР·РґРµРЅ"), "4123"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"1635", translateString("Хюндай България"), "4101"));
+				"1635", translateString("РҐСЋРЅРґР°Р№ Р‘СЉР»РіР°СЂРёСЏ"), "4101"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0755", translateString("Стоков базар Илиянци"), "4036"));
+				"0755", translateString("РЎС‚РѕРєРѕРІ Р±Р°Р·Р°СЂ РР»РёСЏРЅС†Рё"), "4036"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0744", translateString("Софарма АД"), "4030"));
+				"0744", translateString("РЎРѕС„Р°СЂРјР° РђР”"), "4030"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0728", translateString("ЗАГ Динамик"), "4022"));
+				"0728", translateString("Р—РђР“ Р”РёРЅР°РјРёРє"), "4022"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0546", translateString("Бул.Рожен"), "4008"));
+				"0546", translateString("Р‘СѓР».Р РѕР¶РµРЅ"), "4008"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0540", translateString("Модна къща Агресия"), "3996"));
+				"0540", translateString("РњРѕРґРЅР° РєСЉС‰Р° РђРіСЂРµСЃРёСЏ"), "3996"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0374", translateString("Модна къща Агресия"), "3993"));
+				"0374", translateString("РњРѕРґРЅР° РєСЉС‰Р° РђРіСЂРµСЃРёСЏ"), "3993"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0477", translateString("Гара София север"), "3982"));
+				"0477", translateString("Р“Р°СЂР° РЎРѕС„РёСЏ СЃРµРІРµСЂ"), "3982"));
 		directionsList.add(stationsList);
 
 		// Direction 2
 		vt.add("0");
 		lid.add("52");
 		rid.add("608");
-		directionsNames.add(translateString("Гара София север - Кв.Илиянци"));
+		directionsNames.add(translateString("Р“Р°СЂР° РЎРѕС„РёСЏ СЃРµРІРµСЂ - РљРІ.РР»РёСЏРЅС†Рё"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0476", translateString("Гара София север"), "3986"));
+				"0476", translateString("Р“Р°СЂР° РЎРѕС„РёСЏ СЃРµРІРµСЂ"), "3986"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0375", translateString("Модна къща Агресия"), "4088"));
+				"0375", translateString("РњРѕРґРЅР° РєСЉС‰Р° РђРіСЂРµСЃРёСЏ"), "4088"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0547", translateString("Бул.Рожен"), "4005"));
+				"0547", translateString("Р‘СѓР».Р РѕР¶РµРЅ"), "4005"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0727", translateString("ЗАГ Динамик"), "4025"));
+				"0727", translateString("Р—РђР“ Р”РёРЅР°РјРёРє"), "4025"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0745", translateString("Софарма АД"), "4031"));
+				"0745", translateString("РЎРѕС„Р°СЂРјР° РђР”"), "4031"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0754", translateString("Стоков базар Илиянци"), "4039"));
+				"0754", translateString("РЎС‚РѕРєРѕРІ Р±Р°Р·Р°СЂ РР»РёСЏРЅС†Рё"), "4039"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"1636", translateString("Хюндай България"), "4104"));
+				"1636", translateString("РҐСЋРЅРґР°Р№ Р‘СЉР»РіР°СЂРёСЏ"), "4104"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"1915", translateString("Ул.Грозден"), "4124"));
+				"1915", translateString("РЈР».Р“СЂРѕР·РґРµРЅ"), "4124"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"1987", translateString("Ул.Кирил Благоев"), "4136"));
+				"1987", translateString("РЈР».РљРёСЂРёР» Р‘Р»Р°РіРѕРµРІ"), "4136"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TRAM,
-				"0847", translateString("Кв.Илиянци"), "4150"));
+				"0847", translateString("РљРІ.РР»РёСЏРЅС†Рё"), "4150"));
 		directionsList.add(stationsList);
 
 		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
@@ -572,40 +664,40 @@ public class ScheduleVehicleInfo {
 		lid.add("204");
 		rid.add("1698");
 		directionsNames.add(
-				translateString("Автостанция Банкя - Метростанция Сливница"));
+				translateString("РђРІС‚РѕСЃС‚Р°РЅС†РёСЏ Р‘Р°РЅРєСЏ - РњРµС‚СЂРѕСЃС‚Р°РЅС†РёСЏ РЎР»РёРІРЅРёС†Р°"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0050", translateString("Автостанция Банкя"), "22111"));
+				"0050", translateString("РђРІС‚РѕСЃС‚Р°РЅС†РёСЏ Р‘Р°РЅРєСЏ"), "22111"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1618", translateString("Стадиона Банкя"), "21910"));
+				"1618", translateString("РЎС‚Р°РґРёРѕРЅР° Р‘Р°РЅРєСЏ"), "21910"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0107", translateString("Гробищен парк Банкя"), "19928"));
+				"0107", translateString("Р“СЂРѕР±РёС‰РµРЅ РїР°СЂРє Р‘Р°РЅРєСЏ"), "19928"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0454", translateString("Гара Иваняне"), "19942"));
+				"0454", translateString("Р“Р°СЂР° РРІР°РЅСЏРЅРµ"), "19942"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0996", translateString("Къмпинга"), "21945"));
+				"0996", translateString("РљСЉРјРїРёРЅРіР°"), "21945"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1024", translateString("Махала Иваняне"), "21949"));
+				"1024", translateString("РњР°С…Р°Р»Р° РРІР°РЅСЏРЅРµ"), "21949"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0790", translateString("Кантона"), "21957"));
+				"0790", translateString("РљР°РЅС‚РѕРЅР°"), "21957"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2307", translateString("Хиподрума Банкя"), "21928"));
+				"2307", translateString("РҐРёРїРѕРґСЂСѓРјР° Р‘Р°РЅРєСЏ"), "21928"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2307", translateString("Разклона за с. Гурмазово"), "21973"));
+				"2307", translateString("Р Р°Р·РєР»РѕРЅР° Р·Р° СЃ. Р“СѓСЂРјР°Р·РѕРІРѕ"), "21973"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2520", translateString("Екобулсорт"), "21981"));
+				"2520", translateString("Р•РєРѕР±СѓР»СЃРѕСЂС‚"), "21981"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1685", translateString("Промишлена зона"), "21985"));
+				"1685", translateString("РџСЂРѕРјРёС€Р»РµРЅР° Р·РѕРЅР°"), "21985"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0771", translateString("Институт Пушкаров"), "21993"));
+				"0771", translateString("РРЅСЃС‚РёС‚СѓС‚ РџСѓС€РєР°СЂРѕРІ"), "21993"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0895", translateString("Кв. Република"), "10864"));
+				"0895", translateString("РљРІ. Р РµРїСѓР±Р»РёРєР°"), "10864"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1751", translateString("ПП Успех"), "10583"));
+				"1751", translateString("РџРџ РЈСЃРїРµС…"), "10583"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1140", translateString("НЕСТЛЕ София"), "10595"));
+				"1140", translateString("РќР•РЎРўР›Р• РЎРѕС„РёСЏ"), "10595"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1061", translateString("Метростанция Сливница"), "21873"));
+				"1061", translateString("РњРµС‚СЂРѕСЃС‚Р°РЅС†РёСЏ РЎР»РёРІРЅРёС†Р°"), "21873"));
 		directionsList.add(stationsList);
 
 		// Direction 2
@@ -613,46 +705,46 @@ public class ScheduleVehicleInfo {
 		lid.add("204");
 		rid.add("1705");
 		directionsNames.add(
-				translateString("Метростанция Сливница - Автостанция Банкя"));
+				translateString("РњРµС‚СЂРѕСЃС‚Р°РЅС†РёСЏ РЎР»РёРІРЅРёС†Р° - РђРІС‚РѕСЃС‚Р°РЅС†РёСЏ Р‘Р°РЅРєСЏ"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1063", translateString("Метростанция Сливница"), "10770"));
+				"1063", translateString("РњРµС‚СЂРѕСЃС‚Р°РЅС†РёСЏ РЎР»РёРІРЅРёС†Р°"), "10770"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1141", translateString("Нестле София"), "10590"));
+				"1141", translateString("РќРµСЃС‚Р»Рµ РЎРѕС„РёСЏ"), "10590"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1752", translateString("ПП Успех"), "10580"));
+				"1752", translateString("РџРџ РЈСЃРїРµС…"), "10580"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0896", translateString("Кв. Република"), "22002"));
+				"0896", translateString("РљРІ. Р РµРїСѓР±Р»РёРєР°"), "22002"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0772", translateString("Институт Пушкаров"), "21992"));
+				"0772", translateString("РРЅСЃС‚РёС‚СѓС‚ РџСѓС€РєР°СЂРѕРІ"), "21992"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1686", translateString("Промишлена зона"), "21984"));
+				"1686", translateString("РџСЂРѕРјРёС€Р»РµРЅР° Р·РѕРЅР°"), "21984"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2521", translateString("Екобулсорт"), "21980"));
+				"2521", translateString("Р•РєРѕР±СѓР»СЃРѕСЂС‚"), "21980"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1431", translateString("Разклона за с. Гурмазово"), "21972"));
+				"1431", translateString("Р Р°Р·РєР»РѕРЅР° Р·Р° СЃ. Р“СѓСЂРјР°Р·РѕРІРѕ"), "21972"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"2308", translateString("Хиподрума Банкя"), "21874"));
+				"2308", translateString("РҐРёРїРѕРґСЂСѓРјР° Р‘Р°РЅРєСЏ"), "21874"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0789", translateString("Кантона"), "21956"));
+				"0789", translateString("РљР°РЅС‚РѕРЅР°"), "21956"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1027", translateString("Махала Иваняне"), "21948"));
+				"1027", translateString("РњР°С…Р°Р»Р° РРІР°РЅСЏРЅРµ"), "21948"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0997", translateString("Къмпинга"), "21944"));
+				"0997", translateString("РљСЉРјРїРёРЅРіР°"), "21944"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0453", translateString("Гара Иваняне"), "19939"));
+				"0453", translateString("Р“Р°СЂР° РРІР°РЅСЏРЅРµ"), "19939"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0106", translateString("Гробищен парк Банкя"), "19925"));
+				"0106", translateString("Р“СЂРѕР±РёС‰РµРЅ РїР°СЂРє Р‘Р°РЅРєСЏ"), "19925"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1617", translateString("Стадиона Банкя"), "21911"));
+				"1617", translateString("РЎС‚Р°РґРёРѕРЅР° Р‘Р°РЅРєСЏ"), "21911"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1403", translateString("Ул. Хисаря"), "21908"));
+				"1403", translateString("РЈР». РҐРёСЃР°СЂСЏ"), "21908"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0503", translateString("Центъра Банкя"), "21906"));
+				"0503", translateString("Р¦РµРЅС‚СЉСЂР° Р‘Р°РЅРєСЏ"), "21906"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0502", translateString("Центъра Банкя"), "21907"));
+				"0502", translateString("Р¦РµРЅС‚СЉСЂР° Р‘Р°РЅРєСЏ"), "21907"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0051", translateString("Автостанция Банкя"), "22109"));
+				"0051", translateString("РђРІС‚РѕСЃС‚Р°РЅС†РёСЏ Р‘Р°РЅРєСЏ"), "22109"));
 		directionsList.add(stationsList);
 
 		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
