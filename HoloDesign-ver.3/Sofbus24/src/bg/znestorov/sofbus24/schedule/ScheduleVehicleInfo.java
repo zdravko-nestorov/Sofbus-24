@@ -58,12 +58,12 @@ public class ScheduleVehicleInfo {
 		String vehicleNumber = vehicle.getNumber();
 		if ("1-ТБ".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity1TB(vehicle));
-		} else if ("5-ТМ".equals(vehicleNumber)) {
-			proceedSpecialCase(createDirectionEntity5TM(vehicle));
 		} else if ("6-А".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity6A(vehicle));
 		} else if ("10-ТМ".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity10TM(vehicle));
+		} else if ("11-А".equals(vehicleNumber)) {
+			proceedSpecialCase(createDirectionEntity11A(vehicle));
 		} else if ("11-ТМ".equals(vehicleNumber)) {
 			proceedSpecialCase(createDirectionEntity11TM(vehicle));
 		} else if ("12-А".equals(vehicleNumber)) {
@@ -164,47 +164,6 @@ public class ScheduleVehicleInfo {
 				"0339", translateString("Бул. Ген. Н.Столетов"), "28580"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
 				"2596", translateString("Пета градска болница"), "28583"));
-		directionsList.add(stationsList);
-
-		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
-				directionsNames, directionsList);
-	}
-
-	/**
-	 * TODO: Create a direction entity in case the vehicle is a bus with number
-	 * 5-TM
-	 * 
-	 * @param vehicle
-	 *            the selected vehicle with number 5-TM
-	 * @return a direction entity for this tram
-	 */
-	private DirectionsEntity createDirectionEntity5TM(VehicleEntity vehicle) {
-		ArrayList<String> vt = new ArrayList<String>();
-		ArrayList<String> lid = new ArrayList<String>();
-		ArrayList<String> rid = new ArrayList<String>();
-
-		ArrayList<String> directionsNames = new ArrayList<String>();
-		ArrayList<StationEntity> stationsList;
-		ArrayList<ArrayList<StationEntity>> directionsList = new ArrayList<ArrayList<StationEntity>>();
-
-		// Direction 1
-		vt.add("");
-		lid.add("");
-		rid.add("");
-		directionsNames.add(translateString(""));
-		stationsList = new ArrayList<StationEntity>();
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS, "",
-				translateString(""), ""));
-		directionsList.add(stationsList);
-
-		// Direction 2
-		vt.add("");
-		lid.add("");
-		rid.add("");
-		directionsNames.add(translateString(""));
-		stationsList = new ArrayList<StationEntity>();
-		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS, "",
-				translateString(""), ""));
 		directionsList.add(stationsList);
 
 		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
@@ -329,14 +288,15 @@ public class ScheduleVehicleInfo {
 		// Direction 1
 		vt.add("1");
 		lid.add("145");
-		rid.add("1910");
-		directionsNames
-				.add(translateString("Автостанция Хладилника - Хотел Хилтън"));
+		rid.add("2346");
+		directionsNames.add(translateString("Зоопарка - Хотел Хилтън"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0064", translateString("Автостанция Хладилника"), "13095"));
+				"0749", translateString("Зоопарка"), "16359"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0909", translateString("Кв.Хладилника"), "13085"));
+				"0977", translateString("КП Бенакс"), "16353"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"2314", translateString("Хлебозавода"), "16335"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
 				"2654", translateString("Кв.Хладилника"), "17308"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
@@ -354,7 +314,7 @@ public class ScheduleVehicleInfo {
 		// Direction 2
 		vt.add("1");
 		lid.add("145");
-		rid.add("1032");
+		rid.add("2345");
 		directionsNames
 				.add(translateString("Хотел Хилтън - Автостанция Хладилника"));
 		stationsList = new ArrayList<StationEntity>();
@@ -373,7 +333,52 @@ public class ScheduleVehicleInfo {
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
 				"0912", translateString("Кв.Хладилника"), "13084"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0064", translateString("Автостанция Хладилника"), "13095"));
+				"2313", translateString("Хлебозавода"), "16336"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"0976", translateString("КП Бенакс"), "16352"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"0749", translateString("Зоопарка"), "16359"));
+		directionsList.add(stationsList);
+
+		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
+				directionsNames, directionsList);
+	}
+
+	/**
+	 * TODO: Create a direction entity in case the vehicle is a trolley with
+	 * number 11-A
+	 * 
+	 * @param vehicle
+	 *            the selected vehicle with number 11-A
+	 * @return a direction entity for this tram
+	 */
+	private DirectionsEntity createDirectionEntity11A(VehicleEntity vehicle) {
+		ArrayList<String> vt = new ArrayList<String>();
+		ArrayList<String> lid = new ArrayList<String>();
+		ArrayList<String> rid = new ArrayList<String>();
+
+		ArrayList<String> directionsNames = new ArrayList<String>();
+		ArrayList<StationEntity> stationsList;
+		ArrayList<ArrayList<StationEntity>> directionsList = new ArrayList<ArrayList<StationEntity>>();
+
+		// Direction 1
+		vt.add("");
+		lid.add("");
+		rid.add("");
+		directionsNames.add(translateString(""));
+		stationsList = new ArrayList<StationEntity>();
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"", translateString(""), ""));
+		directionsList.add(stationsList);
+
+		// Direction 2
+		vt.add("");
+		lid.add("");
+		rid.add("");
+		directionsNames.add(translateString(""));
+		stationsList = new ArrayList<StationEntity>();
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.TROLLEY,
+				"", translateString(""), ""));
 		directionsList.add(stationsList);
 
 		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
@@ -400,8 +405,8 @@ public class ScheduleVehicleInfo {
 		vt.add("1");
 		lid.add("208");
 		rid.add("1149");
-		directionsNames
-				.add(translateString("Площад Централна гара - Автостанция Илиянци"));
+		directionsNames.add(
+				translateString("Площад Централна гара - Автостанция Илиянци"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
 				"1328", translateString("Площад Централна гара"), "15026"));
@@ -439,8 +444,8 @@ public class ScheduleVehicleInfo {
 		vt.add("1");
 		lid.add("208");
 		rid.add("1150");
-		directionsNames
-				.add(translateString("Автостанция Илиянци - Площад Централна гара"));
+		directionsNames.add(
+				translateString("Автостанция Илиянци - Площад Централна гара"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
 				"0058", translateString("Автостанция Илиянци"), "7868"));
@@ -565,51 +570,89 @@ public class ScheduleVehicleInfo {
 		// Direction 1
 		vt.add("1");
 		lid.add("204");
-		rid.add("2184");
-		directionsNames
-				.add(translateString("Кв. Градоман - Стопанство Михайлово"));
+		rid.add("1698");
+		directionsNames.add(
+				translateString("Автостанция Банкя - Метростанция Сливница"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0832", translateString("Кв. Градоман"), "23665"));
+				"0050", translateString("Автостанция Банкя"), "22111"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"6374", translateString("Ул.Топлика-временна"), "28966"));
+				"1618", translateString("Стадиона Банкя"), "21910"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"6351", translateString("Края на кв.Михайлово"), "22013"));
+				"0107", translateString("Гробищен парк Банкя"), "19928"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1991", translateString("Ул. Китката"), "22008"));
+				"0454", translateString("Гара Иваняне"), "19942"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0869", translateString("Ул. Топлика"), "22016"));
+				"0996", translateString("Къмпинга"), "21945"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1920", translateString("Ул. Даме Груев"), "22020"));
+				"1024", translateString("Махала Иваняне"), "21949"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0445", translateString("Ул. А. Константинов"), "22028"));
+				"0790", translateString("Кантона"), "21957"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1673", translateString("Стопанство Михайлово"), "22034"));
+				"2307", translateString("Хиподрума Банкя"), "21928"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"2307", translateString("Разклона за с. Гурмазово"), "21973"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"2520", translateString("Екобулсорт"), "21981"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"1685", translateString("Промишлена зона"), "21985"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"0771", translateString("Институт Пушкаров"), "21993"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"0895", translateString("Кв. Република"), "10864"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"1751", translateString("ПП Успех"), "10583"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"1140", translateString("НЕСТЛЕ София"), "10595"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"1061", translateString("Метростанция Сливница"), "21873"));
 		directionsList.add(stationsList);
 
 		// Direction 2
 		vt.add("1");
 		lid.add("204");
-		rid.add("2183");
-		directionsNames
-				.add(translateString("Стопанство Михайлово - Кв. Градоман"));
+		rid.add("1705");
+		directionsNames.add(
+				translateString("Метростанция Сливница - Автостанция Банкя"));
 		stationsList = new ArrayList<StationEntity>();
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1674", translateString("Стопанство Михайлово"), "22033"));
+				"1063", translateString("Метростанция Сливница"), "10770"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0446", translateString("Ул. Алеко Константинов"), "22027"));
+				"1141", translateString("Нестле София"), "10590"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1921", translateString("Ул. Даме Груев"), "22019"));
+				"1752", translateString("ПП Успех"), "10580"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0870", translateString("Ул. Топлика"), "22015"));
+				"0896", translateString("Кв. Република"), "22002"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"1992", translateString("Ул. Китката"), "22007"));
+				"0772", translateString("Институт Пушкаров"), "21992"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0982", translateString("Края на кв.Михайлово"), "22006"));
+				"1686", translateString("Промишлена зона"), "21984"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"6375", translateString("Ул.Топлика-временна"), "28919"));
+				"2521", translateString("Екобулсорт"), "21980"));
 		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
-				"0832", translateString("Кв. Градоман"), "23665"));
+				"1431", translateString("Разклона за с. Гурмазово"), "21972"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"2308", translateString("Хиподрума Банкя"), "21874"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"0789", translateString("Кантона"), "21956"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"1027", translateString("Махала Иваняне"), "21948"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"0997", translateString("Къмпинга"), "21944"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"0453", translateString("Гара Иваняне"), "19939"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"0106", translateString("Гробищен парк Банкя"), "19925"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"1617", translateString("Стадиона Банкя"), "21911"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"1403", translateString("Ул. Хисаря"), "21908"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"0503", translateString("Центъра Банкя"), "21906"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"0502", translateString("Центъра Банкя"), "21907"));
+		stationsList.add(createPublicTransportStation(VehicleTypeEnum.BUS,
+				"0051", translateString("Автостанция Банкя"), "22109"));
 		directionsList.add(stationsList);
 
 		return new DirectionsEntity(vehicle, 0, 0, vt, lid, rid,
