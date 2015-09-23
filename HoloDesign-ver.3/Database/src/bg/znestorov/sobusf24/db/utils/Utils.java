@@ -266,6 +266,13 @@ public class Utils {
 					"ж.к. Младост 1 /бл.70/ - Кокалянско ханче");
 		}
 
+		// BUS #7
+		if (directionName.contains("ЧИТАЛИЩЕ СВЕТЛИНА - Гара Искър")) {
+			directionName = directionName.replaceAll(
+					"ЧИТАЛИЩЕ СВЕТЛИНА - Гара Искър",
+					"Читалище Светлина - Гара Искър");
+		}
+
 		// BUS #9
 		if (directionName.contains("кв. Д.Миленков - кв. Бусманци")) {
 			directionName = directionName.replaceAll(
