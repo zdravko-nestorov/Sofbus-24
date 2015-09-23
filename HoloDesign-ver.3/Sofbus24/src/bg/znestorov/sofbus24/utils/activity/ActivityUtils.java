@@ -82,17 +82,16 @@ import bg.znestorov.sofbus24.utils.Utils;
 
 /**
  * The class contains only a static methods, helping with Activity interactions
- *
+ * 
  * @author Zdravko Nestorov
  * @version 1.0
  */
-@SuppressWarnings("deprecation")
 @SuppressLint("InlinedApi")
 public class ActivityUtils {
 
 	/**
 	 * Request the focus and show a keyboard on EditText field
-	 *
+	 * 
 	 * @param context
 	 *            Context of the current activity
 	 * @param editText
@@ -110,7 +109,7 @@ public class ActivityUtils {
 
 	/**
 	 * Request the focus and hide the keyboard on EditText field
-	 *
+	 * 
 	 * @param context
 	 *            Context of the current activity
 	 * @param editText
@@ -128,7 +127,7 @@ public class ActivityUtils {
 
 	/**
 	 * Request the focus and hide the keyboard
-	 *
+	 * 
 	 * @param context
 	 *            Context of the current activity
 	 */
@@ -138,14 +137,14 @@ public class ActivityUtils {
 
 		View view = context.getCurrentFocus();
 		if (view != null) {
-			inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(),
-					0);
+			inputMethodManager
+					.hideSoftInputFromWindow(view.getWindowToken(), 0);
 		}
 	}
 
 	/**
 	 * Init the UIL image loader
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @return current ImageLoaderConfiguration
@@ -159,34 +158,36 @@ public class ActivityUtils {
 			config = new ImageLoaderConfiguration.Builder(context)
 					.taskExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
 					.taskExecutorForCachedImages(AsyncTask.THREAD_POOL_EXECUTOR)
-					.threadPoolSize(3).threadPriority(Thread.NORM_PRIORITY - 1)
+					.threadPoolSize(3)
+					.threadPriority(Thread.NORM_PRIORITY - 1)
 					.tasksProcessingOrder(QueueProcessingType.FIFO)
 					.denyCacheImageMultipleSizesInMemory()
 					.memoryCache(
 							new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
 					.memoryCacheSize(2 * 1024 * 1024)
 					.discCache(new UnlimitedDiscCache(cacheDir))
-					.discCacheSize(50 * 1024 * 1024).discCacheFileCount(100)
+					.discCacheSize(50 * 1024 * 1024)
+					.discCacheFileCount(100)
 					.discCacheFileNameGenerator(new HashCodeFileNameGenerator())
 					.imageDownloader(new BaseImageDownloader(context))
 					.defaultDisplayImageOptions(
-							DisplayImageOptions.createSimple())
-					.build();
+							DisplayImageOptions.createSimple()).build();
 		} else {
 			config = new ImageLoaderConfiguration.Builder(context)
-					.threadPoolSize(3).threadPriority(Thread.NORM_PRIORITY - 1)
+					.threadPoolSize(3)
+					.threadPriority(Thread.NORM_PRIORITY - 1)
 					.tasksProcessingOrder(QueueProcessingType.FIFO)
 					.denyCacheImageMultipleSizesInMemory()
 					.memoryCache(
 							new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
 					.memoryCacheSize(2 * 1024 * 1024)
 					.discCache(new UnlimitedDiscCache(cacheDir))
-					.discCacheSize(50 * 1024 * 1024).discCacheFileCount(100)
+					.discCacheSize(50 * 1024 * 1024)
+					.discCacheFileCount(100)
 					.discCacheFileNameGenerator(new HashCodeFileNameGenerator())
 					.imageDownloader(new BaseImageDownloader(context))
 					.defaultDisplayImageOptions(
-							DisplayImageOptions.createSimple())
-					.build();
+							DisplayImageOptions.createSimple()).build();
 		}
 
 		return config;
@@ -195,7 +196,7 @@ public class ActivityUtils {
 	/**
 	 * Create the display image options according via the Universal Image Loader
 	 * options
-	 *
+	 * 
 	 * @return the configured display image options
 	 */
 	public static DisplayImageOptions displayImageOptions() {
@@ -208,7 +209,7 @@ public class ActivityUtils {
 
 	/**
 	 * Show no station coordinates alert dialog
-	 *
+	 * 
 	 * @param context
 	 *            current Activity context
 	 */
@@ -220,7 +221,7 @@ public class ActivityUtils {
 
 	/**
 	 * Show no Internet alert dialog
-	 *
+	 * 
 	 * @param context
 	 *            current Activity context
 	 */
@@ -231,7 +232,7 @@ public class ActivityUtils {
 
 	/**
 	 * Show no Info alert dialog
-	 *
+	 * 
 	 * @param context
 	 *            current Activity context
 	 * @param msg
@@ -243,7 +244,7 @@ public class ActivityUtils {
 
 	/**
 	 * Show no Internet or Schedule alert dialog
-	 *
+	 * 
 	 * @param context
 	 *            current Activity context
 	 */
@@ -255,7 +256,7 @@ public class ActivityUtils {
 
 	/**
 	 * Close the application
-	 *
+	 * 
 	 * @param context
 	 *            the current Activity context
 	 */
@@ -267,7 +268,7 @@ public class ActivityUtils {
 	/**
 	 * Restart the application (using PendingIntent to setup launching the
 	 * activity in future and than close the application)
-	 *
+	 * 
 	 * @param context
 	 *            the current Activity context
 	 */
@@ -285,8 +286,8 @@ public class ActivityUtils {
 
 					// Create the intent with the default start activity for
 					// your application
-					Intent mStartActivity = pm.getLaunchIntentForPackage(
-							context.getPackageName());
+					Intent mStartActivity = pm
+							.getLaunchIntentForPackage(context.getPackageName());
 					if (mStartActivity != null) {
 						mStartActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						mStartActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -317,7 +318,7 @@ public class ActivityUtils {
 	 * Check if the stations already exists in the favorites database and
 	 * add/remove it to/from there. If a favorites imageView is given as a
 	 * parameter, change it icon accordingly.
-	 *
+	 * 
 	 * @param context
 	 *            the current Activity context
 	 * @param favouritesDatasource
@@ -333,8 +334,7 @@ public class ActivityUtils {
 			ImageView favouritesImageView) {
 		// Check if the station is added to the favorites database
 		favouritesDatasource.open();
-		boolean isStationFavoruite = favouritesDatasource
-				.getStation(station) != null;
+		boolean isStationFavoruite = favouritesDatasource.getStation(station) != null;
 		favouritesDatasource.close();
 
 		if (!isStationFavoruite) {
@@ -355,7 +355,7 @@ public class ActivityUtils {
 	/**
 	 * Add the station to the favorites database and indicates that the home
 	 * screen favorites section is changed.
-	 *
+	 * 
 	 * @param context
 	 *            the current Activity context
 	 * @param favouritesDatasource
@@ -380,7 +380,8 @@ public class ActivityUtils {
 
 		// Show a toast message to inform the user that the station is added to
 		// the favorites section
-		Toast.makeText(context,
+		Toast.makeText(
+				context,
 				Html.fromHtml(String.format(
 						context.getString(R.string.app_toast_add_favourites),
 						station.getName(), station.getNumber())),
@@ -390,7 +391,7 @@ public class ActivityUtils {
 	/**
 	 * Delete the station from the favorites database and indicates that the
 	 * home screen favorites section is changed.
-	 *
+	 * 
 	 * @param context
 	 *            the current Activity context
 	 * @param favouritesDatasource
@@ -415,7 +416,8 @@ public class ActivityUtils {
 
 		// Show a toast message to inform the user that the station is deleted
 		// from the favorites section
-		Toast.makeText(context,
+		Toast.makeText(
+				context,
 				Html.fromHtml(String.format(
 						context.getString(R.string.app_toast_remove_favourites),
 						station.getName(), station.getNumber())),
@@ -424,7 +426,7 @@ public class ActivityUtils {
 
 	/**
 	 * Update the station info in the favourites DB
-	 *
+	 * 
 	 * @param context
 	 *            the current Activity context
 	 * @param station
@@ -441,7 +443,7 @@ public class ActivityUtils {
 
 	/**
 	 * Check if the station changed is not METRO
-	 *
+	 * 
 	 * @param station
 	 *            the current station
 	 * @return if the station changed is not metro one
@@ -466,7 +468,7 @@ public class ActivityUtils {
 
 	/**
 	 * Create an input filter to limit characters in an EditText
-	 *
+	 * 
 	 * @return an input filter
 	 */
 	public static InputFilter createInputFilter() {
@@ -506,7 +508,7 @@ public class ActivityUtils {
 
 	/**
 	 * Check if a charecter is allowed (if it is a valid input)
-	 *
+	 * 
 	 * @param currentChar
 	 *            the entered char
 	 * @return if it is allowed or not
@@ -525,36 +527,32 @@ public class ActivityUtils {
 
 	/**
 	 * Lock the device in the current device orientation
-	 *
+	 * 
 	 * @param context
 	 *            the current Activity context
 	 */
 	public static void lockScreenOrientation(Activity context) {
-		int currentOrientation = context.getResources()
-				.getConfiguration().orientation;
+		int currentOrientation = context.getResources().getConfiguration().orientation;
 		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
-			context.setRequestedOrientation(
-					ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+			context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 		} else {
-			context.setRequestedOrientation(
-					ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+			context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 		}
 	}
 
 	/**
 	 * Unlock the orientation of the device
-	 *
+	 * 
 	 * @param context
 	 *            the current Activity context
 	 */
 	public static void unlockScreenOrientation(Activity context) {
-		context.setRequestedOrientation(
-				ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 	}
 
 	/**
 	 * Check if there is an Internet connection or not
-	 *
+	 * 
 	 * @param context
 	 *            the current Activity context
 	 * @return if there is an Internet connection
@@ -594,7 +592,7 @@ public class ActivityUtils {
 
 	/**
 	 * Convert dp to pixels
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @param dp
@@ -610,7 +608,7 @@ public class ActivityUtils {
 	 * Show activity as a Dialog window (to show activity as dialog and dim the
 	 * background, you need to declare <b>android:theme="@style/PopupTheme"</b>
 	 * on for the chosen activity on the manifest)
-	 *
+	 * 
 	 * @param activity
 	 *            the activity
 	 * @param isInvisible
@@ -656,15 +654,14 @@ public class ActivityUtils {
 
 	/**
 	 * Set finish on touch outside to be activated only on pre Honecomb devices
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @param finish
 	 *            if the activity has to be finished
 	 */
 	@SuppressLint("NewApi")
-	public static void setFinishOnTouchOutside(Activity context,
-			boolean finish) {
+	public static void setFinishOnTouchOutside(Activity context, boolean finish) {
 
 		int sdkVersion = Build.VERSION.SDK_INT;
 		if (sdkVersion >= Build.VERSION_CODES.HONEYCOMB) {
@@ -674,7 +671,7 @@ public class ActivityUtils {
 
 	/**
 	 * Check where the touch event is triggered
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @param event
@@ -688,13 +685,14 @@ public class ActivityUtils {
 		final int slop = ViewConfiguration.get(context)
 				.getScaledWindowTouchSlop();
 		final View decorView = context.getWindow().getDecorView();
-		return (x < -slop) || (y < -slop) || (x > (decorView.getWidth() + slop))
+		return (x < -slop) || (y < -slop)
+				|| (x > (decorView.getWidth() + slop))
 				|| (y > (decorView.getHeight() + slop));
 	}
 
 	/**
 	 * Force the tabs not to be embaded in the ActionBar
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 */
@@ -713,7 +711,7 @@ public class ActivityUtils {
 
 	/**
 	 * Show a GooglePlayErrorDialog
-	 *
+	 * 
 	 * @param fragment
 	 *            the current fragment
 	 */
@@ -726,7 +724,7 @@ public class ActivityUtils {
 
 	/**
 	 * Show a GooglePlayErrorDialog
-	 *
+	 * 
 	 * @param fragmentActivity
 	 *            the current activity
 	 */
@@ -742,7 +740,7 @@ public class ActivityUtils {
 
 	/**
 	 * Show a GoogleStreetViewErrorDialog
-	 *
+	 * 
 	 * @param fragment
 	 *            the current fragment
 	 */
@@ -754,7 +752,7 @@ public class ActivityUtils {
 
 	/**
 	 * Show a GoogleStreetViewErrorDialog
-	 *
+	 * 
 	 * @param fragmentActivity
 	 *            the current activity
 	 */
@@ -775,7 +773,7 @@ public class ActivityUtils {
 	 * <li>TRUE - light background</li>
 	 * <li>FALSE - dark background</li>
 	 * </ul>
-	 *
+	 * 
 	 * @param context
 	 *            the current activirty context
 	 * @param dialogBuilder
@@ -794,7 +792,7 @@ public class ActivityUtils {
 	/**
 	 * Workaround to set the subtitle of the first started tab (in android
 	 * version lower than HONEYCOMB its in different language)
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @param actionBar
@@ -814,7 +812,7 @@ public class ActivityUtils {
 
 	/**
 	 * Show a long toast
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @param message
@@ -833,7 +831,7 @@ public class ActivityUtils {
 
 	/**
 	 * Show a long toast which is two times Toast.LENGTH_LONG
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @param message
@@ -846,7 +844,7 @@ public class ActivityUtils {
 
 	/**
 	 * Show a long toast
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @param message
@@ -876,7 +874,7 @@ public class ActivityUtils {
 
 	/**
 	 * Start the ClosestStationsMap activity and checking if this is possible
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @param fragmentManager
@@ -893,8 +891,8 @@ public class ActivityUtils {
 
 		if (!globalContext.areServicesAvailable()) {
 			GooglePlayServicesErrorDialog googlePlayServicesErrorDialog = GooglePlayServicesErrorDialog
-					.newInstance(
-							context.getString(R.string.app_google_play_msg));
+					.newInstance(context
+							.getString(R.string.app_google_play_msg));
 			googlePlayServicesErrorDialog.show(fragmentManager,
 					"GooglePlayServicesErrorDialog");
 		} else {
@@ -927,7 +925,7 @@ public class ActivityUtils {
 
 	/**
 	 * Start the DroidTrans activity
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @param fragmentManager
@@ -952,8 +950,8 @@ public class ActivityUtils {
 			retrieveCurrentLocationType = RetrieveCurrentLocationTypeEnum.DT_INIT;
 
 			progressDialog = new ProgressDialog(context);
-			progressDialog.setMessage(
-					context.getString(R.string.app_loading_closest_station));
+			progressDialog.setMessage(context
+					.getString(R.string.app_loading_closest_station));
 		}
 
 		RetrieveCurrentLocation retrieveCurrentLocation = new RetrieveCurrentLocation(
@@ -968,7 +966,7 @@ public class ActivityUtils {
 
 	/**
 	 * Start the WebPage activity and check if there is an Internet connection
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @param vehicle
@@ -991,7 +989,7 @@ public class ActivityUtils {
 
 	/**
 	 * Show a toast that the home screen has changed
-	 *
+	 * 
 	 * @param context
 	 *            the activity context
 	 * @param homeScreenName
@@ -1005,12 +1003,9 @@ public class ActivityUtils {
 
 		if (globalContext.isHomeActivityChanged()) {
 			globalContext.setHomeActivityChanged(false);
-			ActivityUtils.showLongToast(context,
-					String.format(
-							context.getString(
-									R.string.navigation_drawer_home_screen_changed),
-							homeScreenName),
-					2000, 1000);
+			ActivityUtils.showLongToast(context, String.format(context
+					.getString(R.string.navigation_drawer_home_screen_changed),
+					homeScreenName), 2000, 1000);
 		}
 	}
 
@@ -1032,7 +1027,7 @@ public class ActivityUtils {
 	 * be ISO-8859-1, and it can't be configured. So a new ResponseHandler
 	 * should be created that falls back to another default encoding (in our
 	 * case UTF-8).
-	 *
+	 * 
 	 * @return new ResponseHandler that falls back to UTF-8 encoding
 	 */
 	public static ResponseHandler<String> getUtfResponseHandler() {
@@ -1050,15 +1045,15 @@ public class ActivityUtils {
 				}
 
 				HttpEntity entity = response.getEntity();
-				return entity == null ? null
-						: EntityUtils.toString(entity, "UTF-8");
+				return entity == null ? null : EntityUtils.toString(entity,
+						"UTF-8");
 			}
 		};
 	}
 
 	/**
 	 * Set a transperant backgroun to a WebView
-	 *
+	 * 
 	 * @param webView
 	 *            the WebView with a default background
 	 */
@@ -1073,7 +1068,7 @@ public class ActivityUtils {
 
 	/**
 	 * Create a vehicle title in format - [VehicleType] №[VehicleNumber]
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @param vehicleType
@@ -1085,21 +1080,20 @@ public class ActivityUtils {
 	public static String getVehicleTitle(Activity context,
 			VehicleTypeEnum vehicleType, String vehicleNumber) {
 
-		return getVehicleTitle(context,
-				new VehicleEntity(vehicleNumber, vehicleType, null));
+		return getVehicleTitle(context, new VehicleEntity(vehicleNumber,
+				vehicleType, null));
 	}
 
 	/**
 	 * Create a vehicle title in format - [VehicleType] №[VehicleNumber]
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 * @param vehicle
 	 *            the selected vehicle
 	 * @return title in format - [VehicleType] №[VehicleNumber]
 	 */
-	public static String getVehicleTitle(Activity context,
-			VehicleEntity vehicle) {
+	public static String getVehicleTitle(Activity context, VehicleEntity vehicle) {
 
 		String vehicleTitle;
 
@@ -1109,8 +1103,9 @@ public class ActivityUtils {
 					vehicle.getNumber());
 			break;
 		case TROLLEY:
-			vehicleTitle = String.format(context.getString(R.string.pt_trolley),
-					vehicle.getNumber());
+			vehicleTitle = String
+					.format(context.getString(R.string.pt_trolley),
+							vehicle.getNumber());
 			break;
 		case TRAM:
 			vehicleTitle = String.format(context.getString(R.string.pt_tram),
@@ -1127,7 +1122,7 @@ public class ActivityUtils {
 
 	/**
 	 * Create a station title in format - [Station name] ([Station number])
-	 *
+	 * 
 	 * @param station
 	 *            the choosen station
 	 * @return title in format - [Station name] ([Station number])
@@ -1142,7 +1137,7 @@ public class ActivityUtils {
 
 	/**
 	 * Start the PreferencesHidden activity (just to show the info dialog)
-	 *
+	 * 
 	 * @param context
 	 *            the current activity context
 	 */

@@ -1,5 +1,31 @@
 package bg.znestorov.sofbus24.virtualboards;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreProtocolPNames;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,33 +52,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.CoreProtocolPNames;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import bg.znestorov.sofbus24.databases.FavouritesDataSource;
 import bg.znestorov.sofbus24.databases.StationsDataSource;
 import bg.znestorov.sofbus24.entity.GlobalEntity;
@@ -73,11 +72,10 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 /**
  * It is used to retrieve the information from the SKGT site and transform it in
  * an appropriate form, according to the activity called it
- *
+ * 
  * @author Zdravko Nestorov
  * @version 1.0
  */
-@SuppressWarnings("deprecation")
 @SuppressLint("DefaultLocale")
 public class RetrieveVirtualBoards {
 
@@ -144,8 +142,8 @@ public class RetrieveVirtualBoards {
 		// Create the appropriate progress dialog message (if searched by
 		// HomeScreen - show only the searched string, otherwise - the station
 		// caption)
-		Spanned progressDialogMsg = getToastMsg(
-				context.getString(R.string.vb_time_retrieve_info));
+		Spanned progressDialogMsg = getToastMsg(context
+				.getString(R.string.vb_time_retrieve_info));
 
 		// Making HttpRequest and showing a progress dialog if needed
 		ProgressDialog progressDialog = createProgressDialog(progressDialogMsg);
@@ -196,18 +194,18 @@ public class RetrieveVirtualBoards {
 				Context.MODE_PRIVATE);
 
 		int i = 0;
-		while (sharedPreferences
-				.contains(Constants.VB_PREFERENCES_COOKIE_NAME + i)) {
-			final String name = sharedPreferences
-					.getString(Constants.VB_PREFERENCES_COOKIE_NAME + i, null);
-			final String value = sharedPreferences
-					.getString(Constants.VB_PREFERENCES_COOKIE_VALUE + i, null);
+		while (sharedPreferences.contains(Constants.VB_PREFERENCES_COOKIE_NAME
+				+ i)) {
+			final String name = sharedPreferences.getString(
+					Constants.VB_PREFERENCES_COOKIE_NAME + i, null);
+			final String value = sharedPreferences.getString(
+					Constants.VB_PREFERENCES_COOKIE_VALUE + i, null);
 			final BasicClientCookie result = new BasicClientCookie(name, value);
 
 			result.setDomain(sharedPreferences.getString(
 					Constants.VB_PREFERENCES_COOKIE_DOMAIN + i, null));
-			result.setPath(sharedPreferences
-					.getString(Constants.VB_PREFERENCES_COOKIE_PATH + i, null));
+			result.setPath(sharedPreferences.getString(
+					Constants.VB_PREFERENCES_COOKIE_PATH + i, null));
 			cookieStore.addCookie(result);
 			i++;
 		}
@@ -217,7 +215,7 @@ public class RetrieveVirtualBoards {
 	 * Getting the key and the value for the hidden variables and put them in a
 	 * SharedPreferences file - containing the information in key=value format.
 	 * It is saved on the internal memory of the device.
-	 *
+	 * 
 	 * @param htmlSourceCode
 	 *            the html source code
 	 */
@@ -266,10 +264,10 @@ public class RetrieveVirtualBoards {
 				Context.MODE_PRIVATE);
 		ArrayList<BasicNameValuePair> hiddenVariablesList = new ArrayList<BasicNameValuePair>();
 
-		String key = sharedPreferences
-				.getString(Constants.VB_PREFERENCES_SUMC_HIDDEN_KEY, null);
-		String value = sharedPreferences
-				.getString(Constants.VB_PREFERENCES_SUMC_HIDDEN_VALUE, null);
+		String key = sharedPreferences.getString(
+				Constants.VB_PREFERENCES_SUMC_HIDDEN_KEY, null);
+		String value = sharedPreferences.getString(
+				Constants.VB_PREFERENCES_SUMC_HIDDEN_VALUE, null);
 
 		if (key != null && value != null) {
 			hiddenVariablesList.add(new BasicNameValuePair(key, value));
@@ -280,7 +278,7 @@ public class RetrieveVirtualBoards {
 
 	/**
 	 * Adding the User-Agent, the Referrer and the parameters to the HttpPost
-	 *
+	 * 
 	 * @param station
 	 *            station used to create the request
 	 * @param vehicleTypeId
@@ -326,7 +324,7 @@ public class RetrieveVirtualBoards {
 	/**
 	 * Creating a list with BasicNameValuePair parameters, used for preparing
 	 * the HTTP POST request
-	 *
+	 * 
 	 * @param station
 	 *            station used to create the request
 	 * @param vehicleTypeId
@@ -347,19 +345,17 @@ public class RetrieveVirtualBoards {
 	 */
 	private List<BasicNameValuePair> assignHttpPostParameters(
 			StationEntity station, String vehicleTypeId, String captchaText,
-			String captchaId,
-			ArrayList<BasicNameValuePair> hiddenVariablesList) {
+			String captchaId, ArrayList<BasicNameValuePair> hiddenVariablesList) {
 
 		// Create the BasinNameValuePairs
 		List<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>();
 		result.addAll(Arrays.asList(
 				new BasicNameValuePair(Constants.VB_URL_STOP_CODE,
 						TranslatorLatinToCyrillic.translate(context,
-								station.getNumber())),
-				new BasicNameValuePair(Constants.VB_URL_GO, "1"),
-				new BasicNameValuePair(Constants.VB_URL_SEC, "5"),
-				new BasicNameValuePair(Constants.VB_URL_O,
-						station.getCustomField()),
+								station.getNumber())), new BasicNameValuePair(
+						Constants.VB_URL_GO, "1"), new BasicNameValuePair(
+						Constants.VB_URL_SEC, "5"), new BasicNameValuePair(
+						Constants.VB_URL_O, station.getCustomField()),
 				new BasicNameValuePair(Constants.VB_URL_SUBMIT, "Провери")));
 
 		// Add the vehicle type into the request (if needed)
@@ -387,7 +383,7 @@ public class RetrieveVirtualBoards {
 	/**
 	 * Create a list with all unique station numbers, so check the way to
 	 * proceed with the HTML result
-	 *
+	 * 
 	 * @param htmlSourceCode
 	 *            the HTML source returned by the standard HTML request (without
 	 *            vehicleTypeId parameter)
@@ -417,7 +413,7 @@ public class RetrieveVirtualBoards {
 	 * <li>1 - for BUSSES</li>
 	 * <li>2 - for TROLLEYS</li>
 	 * </ul>
-	 *
+	 * 
 	 * @param htmlResult
 	 *            the response HTML code
 	 * @return an ArrayList with the different types of vehicles passing through
@@ -436,8 +432,7 @@ public class RetrieveVirtualBoards {
 
 				if (vehicleName.contains(Constants.VB_VEHICLE_TYPE_TROLLEY)) {
 					vehicleType = "2";
-				} else
-					if (vehicleName.contains(Constants.VB_VEHICLE_TYPE_TRAM)) {
+				} else if (vehicleName.contains(Constants.VB_VEHICLE_TYPE_TRAM)) {
 					vehicleType = "0";
 				} else {
 					vehicleType = "1";
@@ -454,7 +449,7 @@ public class RetrieveVirtualBoards {
 	/**
 	 * Create the HTML source by combining only the needed information from each
 	 * of the 3 requests (bus, trolley, tram)
-	 *
+	 * 
 	 * @param htmlSourceCode
 	 *            the global HTML source code
 	 * @param tempHtmlSourceCode
@@ -466,21 +461,21 @@ public class RetrieveVirtualBoards {
 
 		// Check if the global source code is empty or there is no
 		// available information
-		if (htmlSourceCode == null || "".equals(htmlSourceCode)
-				|| (htmlSourceCode != null && !"".equals(htmlSourceCode)
-						&& !htmlSourceCode
-								.contains(Constants.VB_REGEX_SCHEDULE_START))) {
+		if (htmlSourceCode == null
+				|| "".equals(htmlSourceCode)
+				|| (htmlSourceCode != null && !"".equals(htmlSourceCode) && !htmlSourceCode
+						.contains(Constants.VB_REGEX_SCHEDULE_START))) {
 			htmlSourceCode = "";
 		}
 
 		// Check if the current source code is not empty
 		if (tempHtmlSourceCode != null && !"".equals(tempHtmlSourceCode)) {
 			// Check if the current source code contains schedule info
-			if (tempHtmlSourceCode
-					.contains(Constants.VB_REGEX_SCHEDULE_START)) {
+			if (tempHtmlSourceCode.contains(Constants.VB_REGEX_SCHEDULE_START)) {
 				htmlSourceCode = appendArrivals(htmlSourceCode,
 						tempHtmlSourceCode);
-			} else if (htmlSourceCode == null || "".equals(htmlSourceCode)
+			} else if (htmlSourceCode == null
+					|| "".equals(htmlSourceCode)
 					|| tempHtmlSourceCode
 							.contains(Constants.VB_CAPTCHA_REQUIRED)) {
 				htmlSourceCode = tempHtmlSourceCode;
@@ -492,7 +487,7 @@ public class RetrieveVirtualBoards {
 
 	/**
 	 * Append the arrivals from the global and current HTML source codes
-	 *
+	 * 
 	 * @param htmlSourceCode
 	 *            the global HTML source code
 	 * @param tempHtmlSourceCode
@@ -531,7 +526,7 @@ public class RetrieveVirtualBoards {
 
 	/**
 	 * Checking if a captcha image has to be showed to the user
-	 *
+	 * 
 	 * @param htmlResult
 	 *            The response text, prepared from the HTTP request to the SUMC
 	 *            server
@@ -550,7 +545,7 @@ public class RetrieveVirtualBoards {
 
 	/**
 	 * Get the captcha id (poleicngi) from the HTML source file
-	 *
+	 * 
 	 * @param htmlResult
 	 *            The response text, prepared from the HTTP request to the SUMC
 	 *            server
@@ -571,7 +566,7 @@ public class RetrieveVirtualBoards {
 
 	/**
 	 * Create a captcha HTTP get request
-	 *
+	 * 
 	 * @param captchaId
 	 *            The id of the captcha image, token from the source file
 	 * @return a HTTP get request to the SUMC server
@@ -579,8 +574,8 @@ public class RetrieveVirtualBoards {
 	 * @throws IOException
 	 */
 	private HttpGet createCaptchaRequest(String captchaId) {
-		final HttpGet request = new HttpGet(
-				String.format(Constants.VB_CAPTCHA_URL, captchaId));
+		final HttpGet request = new HttpGet(String.format(
+				Constants.VB_CAPTCHA_URL, captchaId));
 
 		request.addHeader("User-Agent", Constants.VB_URL_USER_AGENT);
 		request.addHeader("Referer", Constants.VB_URL_REFERER);
@@ -592,7 +587,7 @@ public class RetrieveVirtualBoards {
 
 	/**
 	 * Getting the image as a Bitmap image from the source file
-	 *
+	 * 
 	 * @param httpGet
 	 *            the newly created HTTP get request
 	 * @param captchaId
@@ -627,7 +622,7 @@ public class RetrieveVirtualBoards {
 
 	/**
 	 * Processing the CAPTCHA text, after clicking OK button
-	 *
+	 * 
 	 * @param captchaId
 	 *            The Id of the CAPTCHA image, token from the source file
 	 * @param captchaText
@@ -640,8 +635,8 @@ public class RetrieveVirtualBoards {
 		// Create the appropriate progress dialog message (if searched by
 		// HomeScreen - show only the searched string, otherwise - the station
 		// caption)
-		Spanned progressDialogMsg = getToastMsg(
-				context.getString(R.string.vb_time_retrieve_info));
+		Spanned progressDialogMsg = getToastMsg(context
+				.getString(R.string.vb_time_retrieve_info));
 
 		// Making HttpRequest and showing a progress dialog if needed
 		ProgressDialog progressDialog = createProgressDialog(progressDialogMsg);
@@ -653,7 +648,7 @@ public class RetrieveVirtualBoards {
 	/**
 	 * Creating an Alert Dialog with the captcha image and sets some settings on
 	 * it (as enlarging the image, set the keyboard input type and so on)
-	 *
+	 * 
 	 * @param captchaId
 	 *            The Id of the CAPTCHA image, token from the source file
 	 * @param captchaImage
@@ -702,7 +697,8 @@ public class RetrieveVirtualBoards {
 			panel.addView(input);
 			view.addView(panel);
 
-			dialogBuilder.setCancelable(true)
+			dialogBuilder
+					.setCancelable(true)
 					.setPositiveButton(R.string.app_button_ok,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
@@ -713,8 +709,7 @@ public class RetrieveVirtualBoards {
 
 									dialog.dismiss();
 								}
-							})
-					.setView(view);
+							}).setView(view);
 
 			dialogBuilder.setOnCancelListener(new OnCancelListener() {
 				public void onCancel(DialogInterface arg0) {
@@ -737,7 +732,7 @@ public class RetrieveVirtualBoards {
 
 	/**
 	 * Fix the size of the image to match the correct dimensions
-	 *
+	 * 
 	 * @param image
 	 *            the image view
 	 */
@@ -761,7 +756,7 @@ public class RetrieveVirtualBoards {
 	/**
 	 * Processing the html result and start new activity if needed (checks for
 	 * all possible errors that can occur)
-	 *
+	 * 
 	 * @param htmlResult
 	 *            The response text, prepared from the HTTP request to the SUMC
 	 *            server
@@ -851,8 +846,8 @@ public class RetrieveVirtualBoards {
 			case MULTIPLE_RESULTS:
 				ArrayList<StationEntity> stationsList = new ArrayList<StationEntity>();
 				stationsList.add(vbTimeStation);
-				((VirtualBoardsFragment) callerInstance)
-						.setAdapterViaSearch(stationsList, null);
+				((VirtualBoardsFragment) callerInstance).setAdapterViaSearch(
+						stationsList, null);
 
 				// If removes the break will directly open the VirtualBoards,
 				// because only one station is found
@@ -908,21 +903,21 @@ public class RetrieveVirtualBoards {
 
 					stationsDatasource.open();
 					if (NDK_GRAFITTI.contains(formattedSearchedText)) {
-						stationsList.add(0,
-								stationsDatasource.getStation(1139));
+						stationsList
+								.add(0, stationsDatasource.getStation(1139));
 					}
 
 					if (NDK_TUNNEL.contains(formattedSearchedText)) {
-						stationsList.add(0,
-								stationsDatasource.getStation(1138));
-						stationsList.add(0,
-								stationsDatasource.getStation(1137));
+						stationsList
+								.add(0, stationsDatasource.getStation(1138));
+						stationsList
+								.add(0, stationsDatasource.getStation(1137));
 					}
 					stationsDatasource.close();
 				}
 
-				((VirtualBoardsFragment) callerInstance)
-						.setAdapterViaSearch(stationsList, null);
+				((VirtualBoardsFragment) callerInstance).setAdapterViaSearch(
+						stationsList, null);
 
 				break;
 			}
@@ -934,7 +929,7 @@ public class RetrieveVirtualBoards {
 
 	/**
 	 * Get the toast message according to the htmlRequestCode
-	 *
+	 * 
 	 * @param msg
 	 *            the unformatted message from strings
 	 * @return the formatted message
@@ -948,12 +943,14 @@ public class RetrieveVirtualBoards {
 		Spanned progressDialogMsg;
 		switch (htmlRequestCode) {
 		case MULTIPLE_RESULTS:
-			progressDialogMsg = Html
-					.fromHtml(String.format(msg, station.getNumber()));
+			progressDialogMsg = Html.fromHtml(String.format(msg,
+					station.getNumber()));
 			break;
 		default:
-			progressDialogMsg = Html.fromHtml(String.format(msg, String
-					.format(station.getName() + " (%s)", station.getNumber())));
+			progressDialogMsg = Html.fromHtml(String.format(
+					msg,
+					String.format(station.getName() + " (%s)",
+							station.getNumber())));
 			break;
 		}
 
@@ -963,7 +960,7 @@ public class RetrieveVirtualBoards {
 	/**
 	 * Form the error message. It is not Spanned type as it can't be added as
 	 * Bundle object.
-	 *
+	 * 
 	 * @return the formatted message
 	 */
 	private String getErrorMsg() {
@@ -1003,7 +1000,7 @@ public class RetrieveVirtualBoards {
 	/**
 	 * Create a progress dialog if needed (if the instance of this class is
 	 * created by the REFRESH - no progress dialog needed)
-	 *
+	 * 
 	 * @param msg
 	 * @return
 	 */
@@ -1025,7 +1022,7 @@ public class RetrieveVirtualBoards {
 
 	/**
 	 * Update the station in the favourites database
-	 *
+	 * 
 	 * @param stationToUpdate
 	 *            the new station (fulfilled with all information)
 	 */
@@ -1039,7 +1036,7 @@ public class RetrieveVirtualBoards {
 	 * Make some adjusmtents in the special cases (([1137, 1138 - НДК-тунел],
 	 * [1139 - НДК-Графити])) - replace the original station numbers with the
 	 * closest ones
-	 *
+	 * 
 	 * @param station
 	 *            the station used for searching
 	 */
@@ -1067,7 +1064,7 @@ public class RetrieveVirtualBoards {
 	 * Revert the adjusmtents in the special cases (([1137, 1138 - НДК-тунел],
 	 * [1139 - НДК-Графити])) - replace the closest station numbers with the
 	 * original ones
-	 *
+	 * 
 	 * @param station
 	 *            the station used for searching
 	 */
@@ -1079,20 +1076,17 @@ public class RetrieveVirtualBoards {
 
 			stationsDatasource.open();
 			if ("0364".equals(stationNumber)) {
-				station.assingStationValues(
-						stationsDatasource.getStation(1137));
+				station.assingStationValues(stationsDatasource.getStation(1137));
 				setCustomField(station);
 			}
 
 			if ("0400".equals(stationNumber)) {
-				station.assingStationValues(
-						stationsDatasource.getStation(1138));
+				station.assingStationValues(stationsDatasource.getStation(1138));
 				setCustomField(station);
 			}
 
 			if ("0363".equals(stationNumber)) {
-				station.assingStationValues(
-						stationsDatasource.getStation(1139));
+				station.assingStationValues(stationsDatasource.getStation(1139));
 				setCustomField(station);
 			}
 			stationsDatasource.close();
@@ -1102,7 +1096,7 @@ public class RetrieveVirtualBoards {
 	/**
 	 * Format the searched word by converting it in cyrillic and make it with
 	 * captital letters. This is used in cases of search by word.
-	 *
+	 * 
 	 * @return the formatted station number
 	 */
 	private String getFormattedSearchedText() {
@@ -1120,7 +1114,7 @@ public class RetrieveVirtualBoards {
 	/**
 	 * Set a default value of the station custom field (in case of empty string
 	 * - put "1")
-	 *
+	 * 
 	 * @param station
 	 *            the selected station
 	 */
@@ -1136,12 +1130,11 @@ public class RetrieveVirtualBoards {
 	/**
 	 * Creating a request to the SUMC server to see if any CAPTCHA is required
 	 * to be entered as a security measure
-	 *
+	 * 
 	 * @author Zdravko Nestorov
 	 * @version 1.0
 	 */
-	private class RetrieveSumcInformation
-			extends AsyncTask<Void, Void, String> {
+	private class RetrieveSumcInformation extends AsyncTask<Void, Void, String> {
 
 		private ProgressDialog progressDialog;
 		private String captchaText;
@@ -1181,12 +1174,10 @@ public class RetrieveVirtualBoards {
 						new BasicResponseHandler());
 
 				// Change the hidden variables list value
-				hiddenVariablesList = saveHiddenVariablesToPreferences(
-						htmlResult);
+				hiddenVariablesList = saveHiddenVariablesToPreferences(htmlResult);
 
 				// Check how many unique station numbers are returned
-				LinkedHashSet<String> stationNumbers = getStationNumbers(
-						htmlResult);
+				LinkedHashSet<String> stationNumbers = getStationNumbers(htmlResult);
 
 				/**
 				 * In case of no captcha needed, requesting multiple results and
@@ -1206,8 +1197,7 @@ public class RetrieveVirtualBoards {
 							new BasicResponseHandler());
 
 					// Change the hidden variables list value
-					hiddenVariablesList = saveHiddenVariablesToPreferences(
-							htmlResult);
+					hiddenVariablesList = saveHiddenVariablesToPreferences(htmlResult);
 
 					/**
 					 * Forming the combined html result as a combination of the
@@ -1251,13 +1241,11 @@ public class RetrieveVirtualBoards {
 					if (stationNumbers.isEmpty()) {
 						htmlResultCode = HtmlResultCodesEnum.NO_INFORMATION;
 					} else if (stationNumbers.size() == 1) {
-						ArrayList<String> stationVehicleTypes = getStationVehicleTypes(
-								htmlResult);
+						ArrayList<String> stationVehicleTypes = getStationVehicleTypes(htmlResult);
 						int vehicleTypesCount = stationVehicleTypes.size();
 
 						/**
-						 * Check what types of vehicles pass through the station
-						 * <br/>
+						 * Check what types of vehicles pass through the station <br/>
 						 * - in case of 1 type - no more requests needed (the
 						 * first requests take the time schedule)<br/>
 						 * - in case of 2 types - make one more requests to get
@@ -1274,22 +1262,21 @@ public class RetrieveVirtualBoards {
 									new BasicResponseHandler());
 
 							// Change the hidden variables list value
-							hiddenVariablesList = saveHiddenVariablesToPreferences(
-									tempHtmlSourceCode);
+							hiddenVariablesList = saveHiddenVariablesToPreferences(tempHtmlSourceCode);
 
 							htmlResult = createHtmlSourceOutput(htmlResult,
 									tempHtmlSourceCode);
 						} else if (vehicleTypesCount == 3) {
 							for (int i = 1; i < 3; i++) {
 								httpPost = createSumcRequest(station,
-										stationVehicleTypes.get(i), captchaText,
-										captchaId, hiddenVariablesList);
+										stationVehicleTypes.get(i),
+										captchaText, captchaId,
+										hiddenVariablesList);
 								tempHtmlSourceCode = httpClient.execute(
 										httpPost, new BasicResponseHandler());
 
 								// Change the hidden variables list value
-								hiddenVariablesList = saveHiddenVariablesToPreferences(
-										tempHtmlSourceCode);
+								hiddenVariablesList = saveHiddenVariablesToPreferences(tempHtmlSourceCode);
 
 								htmlResult = createHtmlSourceOutput(htmlResult,
 										tempHtmlSourceCode);
@@ -1359,8 +1346,8 @@ public class RetrieveVirtualBoards {
 				if (progressDialog != null) {
 					progressDialog.setIndeterminate(true);
 					progressDialog.setCancelable(true);
-					progressDialog.setOnCancelListener(
-							new DialogInterface.OnCancelListener() {
+					progressDialog
+							.setOnCancelListener(new DialogInterface.OnCancelListener() {
 								public void onCancel(DialogInterface dialog) {
 									cancel(true);
 								}
@@ -1372,7 +1359,7 @@ public class RetrieveVirtualBoards {
 				 * Fixing a strange error that is happening sometimes when the
 				 * dialog is created. I guess sometimes activity gets finished
 				 * before the dialog successfully shows.
-				 *
+				 * 
 				 * android.view.WindowManager$BadTokenException: Unable to add
 				 * window -- token android.os.BinderProxy@433e17f8 is not valid;
 				 * is your activity running?
@@ -1393,7 +1380,7 @@ public class RetrieveVirtualBoards {
 				 * Fixing a strange error that is happening sometimes when the
 				 * dialog is dismissed. I guess sometimes activity gets finished
 				 * before the dialog successfully dismisses.
-				 *
+				 * 
 				 * java.lang.IllegalArgumentException: View not attached to
 				 * window manager
 				 */
@@ -1405,12 +1392,12 @@ public class RetrieveVirtualBoards {
 
 	/**
 	 * Class responsible for loading the captcha image from the server
-	 *
+	 * 
 	 * @author Zdravko Nestorov
 	 * @version 1.0
 	 */
-	private class RetrieveCaptchaInformation
-			extends AsyncTask<Void, Void, Bitmap> {
+	private class RetrieveCaptchaInformation extends
+			AsyncTask<Void, Void, Bitmap> {
 
 		private ProgressDialog progressDialog;
 		private String captchaId;
@@ -1476,8 +1463,8 @@ public class RetrieveVirtualBoards {
 				if (progressDialog != null) {
 					progressDialog.setIndeterminate(true);
 					progressDialog.setCancelable(true);
-					progressDialog.setOnCancelListener(
-							new DialogInterface.OnCancelListener() {
+					progressDialog
+							.setOnCancelListener(new DialogInterface.OnCancelListener() {
 								public void onCancel(DialogInterface dialog) {
 									cancel(true);
 								}
@@ -1489,7 +1476,7 @@ public class RetrieveVirtualBoards {
 				 * Fixing a strange error that is happening sometimes when the
 				 * dialog is created. I guess sometimes activity gets finished
 				 * before the dialog successfully shows.
-				 *
+				 * 
 				 * android.view.WindowManager$BadTokenException: Unable to add
 				 * window -- token android.os.BinderProxy@433e17f8 is not valid;
 				 * is your activity running?
@@ -1510,7 +1497,7 @@ public class RetrieveVirtualBoards {
 				 * Fixing a strange error that is happening sometimes when the
 				 * dialog is dismissed. I guess sometimes activity gets finished
 				 * before the dialog successfully dismisses.
-				 *
+				 * 
 				 * java.lang.IllegalArgumentException: View not attached to
 				 * window manager
 				 */

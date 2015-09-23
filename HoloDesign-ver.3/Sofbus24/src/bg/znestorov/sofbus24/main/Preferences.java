@@ -17,8 +17,8 @@ import bg.znestorov.sofbus24.preferences.RestartApplicationDialog;
 import bg.znestorov.sofbus24.utils.LanguageChange;
 import bg.znestorov.sofbus24.utils.ThemeChange;
 
-public class Preferences extends FragmentActivity
-		implements OnResetSettingsListener {
+public class Preferences extends FragmentActivity implements
+		OnResetSettingsListener {
 
 	private Activity context;
 	private GlobalEntity globalContext;
@@ -27,7 +27,6 @@ public class Preferences extends FragmentActivity
 	private PreferencesFragment preferencesFragment = new PreferencesFragment();
 
 	@Override
-	@SuppressWarnings("deprecation")
 	protected void onCreate(Bundle savedInstanceState) {
 		ThemeChange.selectTheme(this);
 		super.onCreate(savedInstanceState);
@@ -98,7 +97,7 @@ public class Preferences extends FragmentActivity
 
 	/**
 	 * Restart the application after showing an AlertDialog
-	 *
+	 * 
 	 * @param isResetted
 	 *            indicates if the method is invoked in case of settings reset.
 	 *            If so, and no restart is wanted at this point, leave at the

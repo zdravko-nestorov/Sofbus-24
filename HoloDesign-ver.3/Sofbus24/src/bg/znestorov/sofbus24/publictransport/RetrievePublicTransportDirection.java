@@ -1,13 +1,9 @@
 package bg.znestorov.sofbus24.publictransport;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.text.Html;
-import android.widget.Toast;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpGet;
@@ -16,11 +12,14 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.text.Html;
+import android.widget.Toast;
 import bg.znestorov.sofbus24.databases.ScheduleDatabaseUtils;
 import bg.znestorov.sofbus24.entity.DirectionsEntity;
 import bg.znestorov.sofbus24.entity.ScheduleCacheEntity;
@@ -36,13 +35,12 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 /**
  * Async class used to retrieve the public transport directions from the SKGT
  * site (directions' names and stations)
- *
+ * 
  * @author Zdravko Nestorov
  * @version 1.0
  */
-@SuppressWarnings("deprecation")
-public class RetrievePublicTransportDirection
-		extends AsyncTask<Void, Void, DirectionsEntity> {
+public class RetrievePublicTransportDirection extends
+		AsyncTask<Void, Void, DirectionsEntity> {
 
 	private Activity context;
 	private Object callerInstance;
@@ -98,8 +96,8 @@ public class RetrievePublicTransportDirection
 
 				if (scheduleCache != null) {
 					ptDirectionsEntity = scheduleCache.getDirectionsEntity();
-					ptDirectionsEntity.setScheduleCacheTimestamp(
-							scheduleCache.getTimestamp());
+					ptDirectionsEntity.setScheduleCacheTimestamp(scheduleCache
+							.getTimestamp());
 				} else {
 					ptDirectionsEntity = new DirectionsEntity();
 				}
@@ -151,15 +149,15 @@ public class RetrievePublicTransportDirection
 			if (ptDirectionsEntity.isScheduleCacheLoaded()) {
 				ActivityTracker.queriedLocalScheduleCache(context);
 
-				if (ScheduleCachePreferences
-						.isScheduleCacheToastShown(context)) {
+				if (ScheduleCachePreferences.isScheduleCacheToastShown(context)) {
 
-					String vehicleTitle = ActivityUtils.getVehicleTitle(context,
-							ptDirectionsEntity.getVehicle());
+					String vehicleTitle = ActivityUtils.getVehicleTitle(
+							context, ptDirectionsEntity.getVehicle());
 					String timestamp = ptDirectionsEntity
 							.getScheduleCacheTimestamp();
 
-					Toast.makeText(context,
+					Toast.makeText(
+							context,
 							Html.fromHtml(context.getString(
 									R.string.pt_schedule_cache_loaded,
 									vehicleTitle, timestamp)),
@@ -182,7 +180,7 @@ public class RetrievePublicTransportDirection
 	/**
 	 * Create HttpGet request to retrieve the information about the selected
 	 * vehicle
-	 *
+	 * 
 	 * @return a HttpGet request for the selected vehicle
 	 * @throws URISyntaxException
 	 */
@@ -195,7 +193,7 @@ public class RetrievePublicTransportDirection
 
 	/**
 	 * Create the direction URL address
-	 *
+	 * 
 	 * @return the URL address of the directions for the selected vehicle
 	 */
 	private String createDirectionUrlAddress() {
@@ -207,11 +205,11 @@ public class RetrievePublicTransportDirection
 		result.add(new BasicNameValuePair(
 				Constants.SCHECULE_URL_DIRECTION_BUS_TYPE,
 				getVehicleType(vehicle)));
-		result.add(new BasicNameValuePair(Constants.SCHECULE_URL_DIRECTION_LINE,
-				vehicleNumber));
-		result.add(
-				new BasicNameValuePair(Constants.SCHECULE_URL_DIRECTION_SEARCH,
-						Constants.SCHECULE_URL_DIRECTION_SEARCH_VALUE));
+		result.add(new BasicNameValuePair(
+				Constants.SCHECULE_URL_DIRECTION_LINE, vehicleNumber));
+		result.add(new BasicNameValuePair(
+				Constants.SCHECULE_URL_DIRECTION_SEARCH,
+				Constants.SCHECULE_URL_DIRECTION_SEARCH_VALUE));
 
 		String returnURL = Constants.SCHECULE_URL_DIRECTION
 				+ URLEncodedUtils.format(result, "UTF-8");
@@ -226,7 +224,7 @@ public class RetrievePublicTransportDirection
 	 * <li>TROLLEY - vehicle type code "2"</li>
 	 * <li>TRAM - vehicle type code "0"</li>
 	 * </ul>
-	 *
+	 * 
 	 * @param vehicle
 	 *            the selected vehicle
 	 * @return the corresponding vehicle type code
@@ -279,7 +277,7 @@ public class RetrievePublicTransportDirection
 			 * Fixing a strange error that is happening sometimes when the
 			 * dialog is dismissed. I guess sometimes activity gets finished
 			 * before the dialog successfully dismisses.
-			 *
+			 * 
 			 * java.lang.IllegalArgumentException: View not attached to window
 			 * manager
 			 */

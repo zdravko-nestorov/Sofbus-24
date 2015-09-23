@@ -18,7 +18,7 @@ import bg.znestorov.sofbus24.main.R;
  * are installed on its device
  * <p/>
  * {@link https://code.google.com/p/android/issues/detail?id=42543}
- *
+ * 
  * @author Zdravko Nestorov
  * @version 1.0
  */
@@ -40,30 +40,30 @@ public class GoogleStreetViewErrorDialog extends DialogFragment {
 		positiveBtn = getString(R.string.app_button_install);
 
 		positiveOnClickListener = new OnClickListener() {
-			@SuppressWarnings("deprecation")
 			public void onClick(DialogInterface dialog, int i) {
 				// Try the new HTTP method
 				try {
-					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(
-							"http://play.google.com/store/apps/details?id=com.google.android.street"));
+					Intent intent = new Intent(
+							Intent.ACTION_VIEW,
+							Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.street"));
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 					intent.setPackage("com.android.vending");
 					startActivity(intent);
 				} catch (ActivityNotFoundException e) {
 					// Try the market method
 					try {
-						Intent intent = new Intent(Intent.ACTION_VIEW, Uri
-								.parse("market://details?id=com.google.android.street"));
-						intent.addFlags(
-								Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+						Intent intent = new Intent(
+								Intent.ACTION_VIEW,
+								Uri.parse("market://details?id=com.google.android.street"));
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 						intent.setPackage("com.android.vending");
 						startActivity(intent);
 					} catch (ActivityNotFoundException f) {
 						// Show the website
-						Intent intent = new Intent(Intent.ACTION_VIEW, Uri
-								.parse("http://play.google.com/store/apps/details?id=com.google.android.street"));
-						intent.addFlags(
-								Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+						Intent intent = new Intent(
+								Intent.ACTION_VIEW,
+								Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.street"));
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 						startActivity(intent);
 					}
 				}

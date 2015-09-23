@@ -23,11 +23,10 @@ import bg.znestorov.sofbus24.utils.activity.ActivityUtils;
 /**
  * Retrieving the information about a route change news (starting the
  * RouteChangesRoute)
- *
+ * 
  * @author Zdravko Nestorov
  * @version 1.0
  */
-@SuppressWarnings("deprecation")
 public class RetrieveRouteChangesNews extends AsyncTask<Void, Void, String> {
 
 	private Activity context;
@@ -60,8 +59,8 @@ public class RetrieveRouteChangesNews extends AsyncTask<Void, Void, String> {
 
 		try {
 			HttpGet routeChangesHttpRequest = createRouteChangesNewsRequest();
-			htmlResult = routeChangesNewsHttpClient
-					.execute(routeChangesHttpRequest, responseHandler);
+			htmlResult = routeChangesNewsHttpClient.execute(
+					routeChangesHttpRequest, responseHandler);
 		} catch (Exception e) {
 			htmlResult = null;
 		} finally {
@@ -108,7 +107,7 @@ public class RetrieveRouteChangesNews extends AsyncTask<Void, Void, String> {
 
 	/**
 	 * Create HttpGet request to retrieve the route changes news
-	 *
+	 * 
 	 * @return a HttpGet request for the route changes news
 	 * @throws URISyntaxException
 	 */
@@ -121,7 +120,7 @@ public class RetrieveRouteChangesNews extends AsyncTask<Void, Void, String> {
 
 	/**
 	 * Get the body of the article
-	 *
+	 * 
 	 * @param htmlResult
 	 *            the html response
 	 * @return the body of the article
@@ -171,8 +170,8 @@ public class RetrieveRouteChangesNews extends AsyncTask<Void, Void, String> {
 		if (progressDialog != null) {
 			progressDialog.setIndeterminate(true);
 			progressDialog.setCancelable(true);
-			progressDialog.setOnCancelListener(
-					new DialogInterface.OnCancelListener() {
+			progressDialog
+					.setOnCancelListener(new DialogInterface.OnCancelListener() {
 						public void onCancel(DialogInterface dialog) {
 							cancel(true);
 						}
@@ -194,7 +193,7 @@ public class RetrieveRouteChangesNews extends AsyncTask<Void, Void, String> {
 			 * Fixing a strange error that is happening sometimes when the
 			 * dialog is dismissed. I guess sometimes activity gets finished
 			 * before the dialog successfully dismisses.
-			 *
+			 * 
 			 * java.lang.IllegalArgumentException: View not attached to window
 			 * manager
 			 */
