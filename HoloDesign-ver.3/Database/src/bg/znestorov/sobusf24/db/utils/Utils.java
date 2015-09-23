@@ -206,7 +206,7 @@ public class Utils {
 		directionName = directionName.replaceAll(" ухо", " ж\\.к\\. Люлин 3");
 		directionName = directionName.replaceAll("ДепоИскър", "Депо Искър");
 		directionName = directionName.replaceAll("Ж\\.к\\.Люлин 1,2",
-				"ж\\.к\\. Люлин 1,2 - бул. Илиянци (подлеза)");
+				"ж\\.к\\. Люлин 1,2");
 		directionName = directionName.replaceAll("Ж\\.К\\.", "Ж\\.к\\.");
 		directionName = directionName.replaceAll("Ж\\.К\\. ", "Ж\\.к\\.");
 		directionName = directionName.replaceAll("Ж\\.к\\. ", "Ж\\.к\\.");
@@ -245,6 +245,9 @@ public class Utils {
 		directionName = directionName.replaceAll(
 				"ЧИТАЛИЩЕ СВЕТЛИНА Гара Искър",
 				"ЧИТАЛИЩЕ СВЕТЛИНА - Гара Искър");
+		directionName = directionName.replaceAll("жк.Младост 4",
+				"ж.к. Младост 4");
+
 		if ("ж.к. Младост 1".equals(directionName)) {
 			directionName = directionName.replaceAll("ж\\.к\\. Младост 1",
 					"ж\\.к\\. Младост 1 - ж\\.к\\. Люлин 1,2");
@@ -262,44 +265,84 @@ public class Utils {
 		// BUS #4
 		if (directionName.contains("ж.к. Младост 1/бл.70/ - Кокалянско ханче")) {
 			directionName = directionName.replaceAll(
-					"ж.к. Младост 1/бл.70/ - Кокалянско ханче",
-					"ж.к. Младост 1 /бл.70/ - Кокалянско ханче");
+					"ж.к. Младост 1/бл\\.70/ - Кокалянско ханче",
+					"ж.к. Младост 1 /бл\\.70/ - Кокалянско ханче");
+		}
+		if (directionName.contains("Кокалянско ханче - ж.к. Младост 1")) {
+			directionName = directionName.replaceAll(
+					"Кокалянско ханче - ж\\.к\\. Младост 1",
+					"Кокалянско ханче - ж\\.к\\. Младост 1 /бл\\.70/");
 		}
 
 		// BUS #7
-		if (directionName.contains("ЧИТАЛИЩЕ СВЕТЛИНА - Гара Искър")) {
-			directionName = directionName.replaceAll(
-					"ЧИТАЛИЩЕ СВЕТЛИНА - Гара Искър",
-					"Читалище Светлина - Гара Искър");
+		if (directionName.contains("ЧИТАЛИЩЕ СВЕТЛИНА")) {
+			directionName = directionName.replaceAll("ЧИТАЛИЩЕ СВЕТЛИНА",
+					"Читалище Светлина");
 		}
 
 		// BUS #9
-		if (directionName.contains("кв. Д.Миленков - кв. Бусманци")) {
-			directionName = directionName.replaceAll(
-					"кв. Д.Миленков - кв. Бусманци",
-					"кв. Д. Миленков - кв. Бусманци");
+		if (directionName.contains("АВТОБАЗА ИСКЪР")) {
+			directionName = directionName.replaceAll("АВТОБАЗА ИСКЪР",
+					"Автобаза Искър");
+		}
+		if (directionName.contains("УЛ. ГЕН. ГУРКО")) {
+			directionName = directionName.replaceAll("УЛ\\. ГЕН\\. ГУРКО",
+					"ул\\. Генерал Гурко");
 		}
 
 		// BUS #23
-		if (directionName.contains("Автостанция Орландовци - ГАРА КУРИЛО")) {
-			directionName = directionName.replaceAll(
-					"Автостанция Орландовци - ГАРА КУРИЛО",
-					"Автостанция Орландовци - Гара Курило");
+		if (directionName.contains("ГАРА КУРИЛО")) {
+			directionName = directionName.replaceAll("ГАРА КУРИЛО",
+					"Гара Курило");
 		}
 
-		// BUS #48
-		if (directionName.contains("ж.к. Гоце Делчев - жк.Младост 4")) {
+		// BUS #27
+		if (directionName.contains("Село Кътина Гара София север")) {
 			directionName = directionName.replaceAll(
-					"ж.к. Гоце Делчев - жк.Младост 4",
-					"ж.к. Гоце Делчев - ж.к. Младост 4");
+					"Село Кътина Гара София север",
+					"Село Кътина - Гара София север");
 		}
 
 		// BUS #59
-		if (directionName
-				.contains("АВТОСТАНЦИЯ КНЯЖЕВО - село Мърчаево Толумска махала")) {
+		if (directionName.contains("АВТОСТАНЦИЯ КНЯЖЕВО")) {
+			directionName = directionName.replaceAll("АВТОСТАНЦИЯ КНЯЖЕВО",
+					"Автостанция Княжево");
+		}
+		if (directionName.contains("село Мърчаево Толумска махала")) {
 			directionName = directionName.replaceAll(
-					"АВТОСТАНЦИЯ КНЯЖЕВО - село Мърчаево Толумска махала",
-					"Автостанция Княжево - село Мърчаево Толумска махала");
+					"село Мърчаево Толумска махала",
+					"село Мърчаево (Толумска махала)");
+		}
+
+		// BUS #76
+		if (directionName.contains("жк.Младост 4")) {
+			directionName = directionName.replaceAll("жк\\.Младост 4",
+					"ж\\.к\\. Младост 4");
+		}
+
+		// BUS #84
+		if (directionName.contains("ул. Ген Гурко")) {
+			directionName = directionName.replaceAll("ул\\. Ген Гурко",
+					"ул\\. Генерал Гурко");
+		}
+
+		// BUS #82, #108 and #310
+		if (directionName.contains("ж.к. Люлин - 5")) {
+			directionName = directionName.replaceAll("ж\\.к\\. Люлин - 5",
+					"ж\\.к\\. Люлин 5");
+		}
+
+		// BUS #94
+		if (directionName.contains("СУ СВ.КЛИМЕНТ ОХРИДСКИ")) {
+			directionName = directionName.replaceAll(
+					"СУ СВ\\.КЛИМЕНТ ОХРИДСКИ", "СУ Свети Климент Охридски");
+		}
+
+		// BUS #117
+		if (directionName.contains("Автостанция Изток Град Бухово")) {
+			directionName = directionName.replaceAll(
+					"Автостанция Изток Град Бухово",
+					"Автостанция Изток - Град Бухово");
 		}
 
 		// BUS #280 and #306
@@ -309,18 +352,43 @@ public class Utils {
 		}
 
 		// BUS #309
+		if ("ж.к. Люлин 1,2".equals(directionName)) {
+			directionName = "ж.к. Люлин 1,2 - бул. Илиянци (подлеза)";
+		}
 		if ("бул. Илиянци - подлеза".equals(directionName)) {
 			directionName = "бул. Илиянци (подлеза) - ж.к. Люлин 1,2";
 		}
 
+		// BUS #413
+		if (directionName.contains("Технополис ж.к.Младост")) {
+			directionName = directionName.replaceAll(
+					"Технополис ж\\.к\\.Младост",
+					"Технополис ж\\.к\\. Младост 4");
+		}
+
 		// TROLLEY #1
 		if ("ж.к. Левски Г".equals(directionName)) {
-			directionName = "ж.к. Левски Г - ВМА";
+			directionName = "ж\\.к\\. Левски Г - ВМА";
+		}
+
+		// TROLLEY #8
+		if (directionName
+				.contains("ж.к. Гоце Делчев - МБАЛ Света Анна - ж.к. Люлин 3")) {
+			directionName = directionName
+					.replaceAll(
+							"ж\\.к\\. Гоце Делчев - МБАЛ Света Анна - ж\\.к\\. Люлин 3",
+							"ж\\.к\\. Гоце Делчев - МБАЛ Света Анна");
+		}
+
+		// TROLLEY #9
+		if (directionName.contains("ж. к. Борово")) {
+			directionName = directionName.replaceAll("ж\\. к\\. Борово",
+					"ж\\.к\\. Борово");
 		}
 
 		// TRAM #19
 		if ("кв. Княжево Гара София север".equals(directionName)) {
-			directionName = "кв. Княжево - Гара София север";
+			directionName = "кв\\. Княжево - Гара София север";
 		}
 
 		return directionName;
