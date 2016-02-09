@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
-	<NewVersionCode>29</NewVersionCode>
-	<NewVersionName>2.5.3</NewVersionName>
-	<NewSofbus24DBVersion>10</NewSofbus24DBVersion>
+	<NewVersionCode>30</NewVersionCode>
+	<NewVersionName>2.6</NewVersionName>
+	<NewSofbus24DBVersion>11</NewSofbus24DBVersion>
 	<!-- Keep them just for the users that use the old versions of Sofbus 24 -->
 	<NewStationsDBVersion>1</NewStationsDBVersion>
 	<NewVehiclesDBVersion>1</NewVehiclesDBVersion>
