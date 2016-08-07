@@ -15,7 +15,8 @@ public class HtmlRequestVehiclesNumbers {
 		String htmlResponse = "";
 
 		try {
-			logger.info("Start retrieving information about Vehicles numbers...");
+			logger.info(
+					"Start retrieving information about Vehicles numbers...");
 			long startTime = System.currentTimeMillis();
 
 			URL url = new URL(Constants.DB_VEHICLES_NUMBERS_URL);
@@ -25,11 +26,12 @@ public class HtmlRequestVehiclesNumbers {
 			con.setRequestProperty("User-Agent",
 					Constants.DB_VEHICLES_USER_AGENT);
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					con.getInputStream(), "UTF-8"));
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(con.getInputStream(), "UTF-8"));
 			long endTime = System.currentTimeMillis();
-			logger.info("Server sent a response, which is transformed in UTF-8, for "
-					+ ((endTime - startTime) / 1000) + " seconds");
+			logger.info(
+					"Server sent a response, which is transformed in UTF-8, for "
+							+ ((endTime - startTime) / 1000) + " seconds");
 
 			String inputLine;
 			StringBuffer response = new StringBuffer();
@@ -41,7 +43,7 @@ public class HtmlRequestVehiclesNumbers {
 
 			htmlResponse = response.toString();
 		} catch (Exception e) {
-			logger.warning(e.toString());
+			logger.severe(e.toString());
 		}
 
 		return htmlResponse;

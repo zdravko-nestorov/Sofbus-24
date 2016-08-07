@@ -1,14 +1,15 @@
+DATE: Sun August 07 15:00:00 GMT+2 2016
+
 DB Records:
- * Stations - 2723
- * Vehicles - 121
- * Stations/Vehicles - 5581
+ * Stations - 2693 (SKGT) + 70 (METRO) = 2763
+ * Vehicles - 122
+ * Stations/Vehicles - 5453
 
 Only WEEKDAY:
- * BUS - 7, 26, 65, 100, 294
+ * BUS - 7, 100, 294
 
 Only WEEKEND:
  * BUS - 66, 103, 505
 
 Special:
- * BUS - 10-าฬ, 44-ม
- * TROLLEY - 11-ภ
+ * BUS - 1-าม, 4-าฬ, 6า1, 6า2, 44-ม

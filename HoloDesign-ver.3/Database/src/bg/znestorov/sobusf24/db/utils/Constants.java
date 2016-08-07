@@ -6,6 +6,8 @@ public class Constants {
 	 * MAIN CONSTANTS
 	 */
 	public static final String DB_LOG_FILE = "log/MyLogFile.log";
+	public static final String METRO_STATIONS_FILE = "data/metro_stations.txt";
+	public static final String SKGT_STATIONS_FILE = "data/skgt_stations.xml";
 
 	/**
 	 * VEHICLES NUMBERS CONSTANTS

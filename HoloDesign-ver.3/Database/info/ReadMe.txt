@@ -1,0 +1,3 @@
+DATE: Sun August 07 15:00:00 GMT+2 2016
+
+IMPORTANT: Run only on WEEKDAYS

@@ -87,8 +87,8 @@ public class RetrieveDatabaseInfoMain {
 				logger.info("Retrieving information for vehicle[Type=" + type
 						+ ", Number=" + number + "]");
 
-				HashMap<String, Object> info = InformationMain.getInformation(
-						logger, type, number);
+				HashMap<String, Object> info = InformationMain
+						.getInformation(logger, type, number);
 				if (info != null) {
 					Vehicle vehicle = (Vehicle) info.get("vehicle");
 					ArrayList<Station> stations = (ArrayList<Station>) info
@@ -96,7 +96,7 @@ public class RetrieveDatabaseInfoMain {
 					ArrayList<VehicleStation> vehicleStations = (ArrayList<VehicleStation>) info
 							.get("vehice_stations");
 
-					// Bus 20-TM is only a temporary station
+					// Bus 20-TM is only a temporary vehicle
 					if (!"20-“Ã".equals(vehicle.getNumber())) {
 						vehiclesList.add(vehicle);
 						stationsSet.addAll(stations);
@@ -164,9 +164,11 @@ public class RetrieveDatabaseInfoMain {
 		ArrayList<Station> metroStations = new ArrayList<Station>();
 		BufferedReader inputBufferedReader = null;
 		try {
-			inputBufferedReader = new BufferedReader(new InputStreamReader(
-					new FileInputStream(new File("data/metro_stations.txt")),
-					"UTF8"));
+			inputBufferedReader = new BufferedReader(
+					new InputStreamReader(
+							new FileInputStream(
+									new File(Constants.METRO_STATIONS_FILE)),
+							"UTF8"));
 
 			while (inputBufferedReader.ready()) {
 				Station station = new Station(inputBufferedReader.readLine());
@@ -176,13 +178,15 @@ public class RetrieveDatabaseInfoMain {
 				}
 			}
 		} catch (Exception e) {
-			logger.info("Problem with reading the file with metro stations...");
+			logger.severe(
+					"Problem with reading the file with metro stations...");
 		} finally {
 			if (inputBufferedReader != null) {
 				try {
 					inputBufferedReader.close();
 				} catch (IOException e) {
-					logger.info("Problem with closing the file with metro stations...");
+					logger.info(
+							"Problem with closing the file with metro stations...");
 				}
 			}
 		}
@@ -202,8 +206,8 @@ public class RetrieveDatabaseInfoMain {
 		for (int i = 0; i < metroStations.size(); i++) {
 			Station metroStation = metroStations.get(i);
 
-			Integer metroStationNumber = Integer.parseInt(metroStation
-					.getNumber());
+			Integer metroStationNumber = Integer
+					.parseInt(metroStation.getNumber());
 			VehicleType metroVenicleType = metroStation.getType();
 
 			// Fix the bug with the insertion of the STAT_TYPE column in the
@@ -218,10 +222,10 @@ public class RetrieveDatabaseInfoMain {
 				}
 			}
 
-			String metroVehicleNumber = metroVenicleType == VehicleType.METRO1 ? "1033"
-					: "1034";
-			Integer metroDirectionNumber = metroVenicleType == VehicleType.METRO1 ? 1
-					: 2;
+			String metroVehicleNumber = metroVenicleType == VehicleType.METRO1
+					? "1033" : "1034";
+			Integer metroDirectionNumber = metroVenicleType == VehicleType.METRO1
+					? 1 : 2;
 
 			vehicleStationsList.add(new VehicleStation(metroVenicleType,
 					metroVehicleNumber, metroStation.getNumber(), "-1", "-1",

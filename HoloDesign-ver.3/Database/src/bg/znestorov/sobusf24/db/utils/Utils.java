@@ -157,8 +157,8 @@ public class Utils {
 		directionName = directionName.replaceAll("Ц\\.гара", "Централна гара");
 		directionName = directionName.replaceAll("Ц\\. Гара", "Централна гара");
 		directionName = directionName.replaceAll("Ц\\.Гара", "Централна гара");
-		directionName = directionName
-				.replaceAll("Ст\\.Град", "Студентски Град");
+		directionName = directionName.replaceAll("Ст\\.Град",
+				"Студентски Град");
 		directionName = directionName.replaceAll("БУЛ\\. НИКОЛА ПЕТКОВ",
 				"бул\\. Никола Петков");
 		directionName = directionName.replaceAll("УЛ\\. ДОБРОТИЧ",
@@ -242,8 +242,7 @@ public class Utils {
 				"АП Малашевци - Град Бухово");
 		directionName = directionName.replaceAll("УМБАЛСМ Пирогов Гара Искър",
 				"УМБАЛСМ Пирогов - Гара Искър");
-		directionName = directionName.replaceAll(
-				"ЧИТАЛИЩЕ СВЕТЛИНА Гара Искър",
+		directionName = directionName.replaceAll("ЧИТАЛИЩЕ СВЕТЛИНА Гара Искър",
 				"ЧИТАЛИЩЕ СВЕТЛИНА - Гара Искър");
 		directionName = directionName.replaceAll("жк.Младост 4",
 				"ж.к. Младост 4");
@@ -258,12 +257,13 @@ public class Utils {
 
 		// Special cases
 		if (directionName.contains(" - временна")) {
-			directionName = directionName
-					.replaceAll(" - временна", "-временна");
+			directionName = directionName.replaceAll(" - временна",
+					"-временна");
 		}
 
 		// BUS #4
-		if (directionName.contains("ж.к. Младост 1/бл.70/ - Кокалянско ханче")) {
+		if (directionName
+				.contains("ж.к. Младост 1/бл.70/ - Кокалянско ханче")) {
 			directionName = directionName.replaceAll(
 					"ж.к. Младост 1/бл\\.70/ - Кокалянско ханче",
 					"ж.к. Младост 1 /бл\\.70/ - Кокалянско ханче");
@@ -334,8 +334,8 @@ public class Utils {
 
 		// BUS #94
 		if (directionName.contains("СУ СВ.КЛИМЕНТ ОХРИДСКИ")) {
-			directionName = directionName.replaceAll(
-					"СУ СВ\\.КЛИМЕНТ ОХРИДСКИ", "СУ Свети Климент Охридски");
+			directionName = directionName.replaceAll("СУ СВ\\.КЛИМЕНТ ОХРИДСКИ",
+					"СУ Свети Климент Охридски");
 		}
 
 		// BUS #117
@@ -368,16 +368,15 @@ public class Utils {
 
 		// TROLLEY #1
 		if ("ж.к. Левски Г".equals(directionName)) {
-			directionName = "ж\\.к\\. Левски Г - ВМА";
+			directionName = "ж.к. Левски Г - ВМА";
 		}
 
 		// TROLLEY #8
-		if (directionName
-				.contains("ж.к. Гоце Делчев - МБАЛ Света Анна - ж.к. Люлин 3")) {
-			directionName = directionName
-					.replaceAll(
-							"ж\\.к\\. Гоце Делчев - МБАЛ Света Анна - ж\\.к\\. Люлин 3",
-							"ж\\.к\\. Гоце Делчев - МБАЛ Света Анна");
+		if (directionName.contains(
+				"ж.к. Гоце Делчев - МБАЛ Света Анна - ж.к. Люлин 3")) {
+			directionName = directionName.replaceAll(
+					"ж\\.к\\. Гоце Делчев - МБАЛ Света Анна - ж\\.к\\. Люлин 3",
+					"ж\\.к\\. Гоце Делчев - МБАЛ Света Анна");
 		}
 
 		// TROLLEY #9
@@ -386,9 +385,14 @@ public class Utils {
 					"ж\\.к\\. Борово");
 		}
 
+		// TRAM #18
+		if ("пл. Журналист - н - з Надежда".equals(directionName)) {
+			directionName = "пл. Журналист - н-з Надежда";
+		}
+
 		// TRAM #19
 		if ("кв. Княжево Гара София север".equals(directionName)) {
-			directionName = "кв\\. Княжево - Гара София север";
+			directionName = "кв. Княжево - Гара София север";
 		}
 
 		return directionName;

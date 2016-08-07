@@ -6,12 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import bg.znestorov.sobusf24.db.utils.Utils;
+import bg.znestorov.sofbus24.db.coordinates.StationCoordinates;
 import bg.znestorov.sofbus24.db.entity.Station;
 import bg.znestorov.sofbus24.db.entity.Vehicle;
 import bg.znestorov.sofbus24.db.entity.VehicleStation;
@@ -68,7 +70,7 @@ public class SQLiteJDBC {
 					+ ((endTime - startTime) / 1000) + " seconds...\n");
 
 		} catch (Exception e) {
-			logger.info(e.getClass().getName() + ": " + e.getMessage());
+			logger.severe(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		} finally {
 			try {
@@ -76,7 +78,7 @@ public class SQLiteJDBC {
 				c.commit();
 				c.close();
 			} catch (SQLException e) {
-				logger.info(e.getClass().getName() + ": " + e.getMessage());
+				logger.severe(e.getClass().getName() + ": " + e.getMessage());
 			}
 		}
 	}
@@ -151,6 +153,7 @@ public class SQLiteJDBC {
 		int totalStationsDB = 0;
 		int insertedStations = 0;
 		int updatedStations = 0;
+		int updatedStationsCoordinates = 0;
 		int deletedStations = 0;
 
 		List<String> deletedStationsList = new ArrayList<String>();
@@ -182,14 +185,14 @@ public class SQLiteJDBC {
 				}
 			} catch (Exception e1) {
 				sql = "UPDATE SOF_STAT SET STAT_NAME = '%s' WHERE STAT_NUMBER = %s;";
-				sql = String
-						.format(sql, station.getName(), station.getNumber());
+				sql = String.format(sql, station.getName(),
+						station.getNumber());
 
 				try {
 					stmt.executeUpdate(sql);
 					updatedStations++;
 				} catch (Exception e2) {
-					logger.info("Problem with updating a station with number="
+					logger.severe("Problem with updating a station with number="
 							+ station.getNumber());
 				}
 			}
@@ -227,14 +230,59 @@ public class SQLiteJDBC {
 							deletedStations++;
 							deletedStationsList.add(station.getName() + " ("
 									+ station.getNumber() + ")");
-						} catch (Exception e2) {
-							logger.info("Problem with deleting a station with number="
-									+ station.getNumber());
+						} catch (Exception e1) {
+							logger.severe(
+									"Problem with deleting a station with number="
+											+ station.getNumber());
 						}
 					}
 				}
-			} catch (Exception e2) {
-				logger.info("Problem with retrieving all stations from the database.");
+			} catch (Exception e1) {
+				logger.severe(
+						"Problem with retrieving all stations from the database.");
+			}
+		}
+
+		/*
+		 * IMPORTANT: Update the coordinates of the stations in case they exist
+		 * in the xml file (skt_stations.xml). This is needed only when a new
+		 * version of the file is sent by Nikolay Alexandrov. Otherwise set to
+		 * FALSE to make the database initialization process faster
+		 */
+		boolean isUpdateStationsCoordintesNeeded = true;
+		if (isUpdateStationsCoordintesNeeded) {
+			try {
+				sql = "SELECT * FROM SOF_STAT;";
+
+				ResultSet stationsResultSet = stmt.executeQuery(sql);
+				stationsList.clear();
+				stationsList.addAll(getAllStationsFromDb(stationsResultSet));
+
+				StationCoordinates stationCoordinates = new StationCoordinates(
+						logger);
+
+				for (Station station : stationsList) {
+					station = stationCoordinates.getStationFromXml(station);
+
+					if (station != null) {
+						sql = "UPDATE SOF_STAT SET STAT_NAME = '%s' WHERE STAT_NUMBER = %s;";
+						sql = String.format(sql, station.getName(),
+								station.getNumber());
+
+						try {
+							stmt.executeUpdate(sql);
+							updatedStationsCoordinates++;
+						} catch (Exception e1) {
+							logger.severe(
+									"Problem with updating the coordinates of a station with number="
+											+ station.getNumber());
+						}
+					}
+				}
+
+			} catch (Exception e1) {
+				logger.severe(
+						"Problem with retrieving all stations from the database.");
 			}
 		}
 
@@ -243,8 +291,9 @@ public class SQLiteJDBC {
 				+ ", Total stations (from DB) = " + totalStationsDB
 				+ ", Inserted stations (in DB) = " + insertedStations
 				+ ", Updated stations (in DB) = " + updatedStations
-				+ ", Deleted stations (from DB) = " + deletedStations
-				+ ", Not found stations (in DB) = "
+				+ ", Updated stations coordinates (in DB) = "
+				+ updatedStationsCoordinates + ", Deleted stations (from DB) = "
+				+ deletedStations + ", Not found stations (in DB) = "
 				+ (totalStationsSKGT - insertedStations - updatedStations));
 
 		if (deletedStationsList.size() > 0) {
@@ -258,8 +307,8 @@ public class SQLiteJDBC {
 		List<Station> stationsList = new ArrayList<Station>();
 
 		while (stationsResultSet.next()) {
-			stationsList.add(new Station(VehicleType.BTT, Utils
-					.formatNumberOfDigits(
+			stationsList.add(new Station(VehicleType.BTT,
+					Utils.formatNumberOfDigits(
 							stationsResultSet.getString("STAT_NUMBER"), 4),
 					stationsResultSet.getString("STAT_NAME"), "", -1));
 		}
@@ -319,12 +368,26 @@ public class SQLiteJDBC {
 
 	private void initVehicleStationsTable() throws Exception {
 
-		int totalVehicleStations = vehicleStationsList != null ? vehicleStationsList
-				.size() : 0;
+		int totalVehicleStations = vehicleStationsList != null
+				? vehicleStationsList.size() : 0;
 		int insertedVehicleStations = 0;
 
 		stmt.executeUpdate("DELETE FROM SOF_VEST;");
 		c.commit();
+
+		// Sort the VehicleStations list (via Vehicle ID)
+		vehicleStationsList.sort(new Comparator<VehicleStation>() {
+
+			@Override
+			public int compare(VehicleStation vs1, VehicleStation vs2) {
+				try {
+					return Integer.valueOf(getVehicleId(vs1))
+							.compareTo(Integer.valueOf(getVehicleId(vs2)));
+				} catch (SQLException e) {
+					return 0;
+				}
+			}
+		});
 
 		for (VehicleStation vehicleStation : vehicleStationsList) {
 
@@ -350,14 +413,14 @@ public class SQLiteJDBC {
 		}
 
 		logger.info("Total vehicleStations (from SKGT) = "
-				+ totalVehicleStations
-				+ ", Inserted vehicleStations (in DB) = "
+				+ totalVehicleStations + ", Inserted vehicleStations (in DB) = "
 				+ insertedVehicleStations
 				+ ", Duplicated vehicleStations (in DB) = "
 				+ (totalVehicleStations - insertedVehicleStations));
 	}
 
-	private int getVehicleId(VehicleStation vehicleStation) throws SQLException {
+	private int getVehicleId(VehicleStation vehicleStation)
+			throws SQLException {
 
 		int vehicleId = 0;
 
@@ -381,7 +444,8 @@ public class SQLiteJDBC {
 		return vehicleId;
 	}
 
-	private int getStationId(VehicleStation vehicleStation) throws SQLException {
+	private int getStationId(VehicleStation vehicleStation)
+			throws SQLException {
 
 		int stationId = 0;
 
