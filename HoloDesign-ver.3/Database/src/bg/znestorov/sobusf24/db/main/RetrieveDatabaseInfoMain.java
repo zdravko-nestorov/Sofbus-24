@@ -154,9 +154,9 @@ public class RetrieveDatabaseInfoMain {
 
 	private static void addMetroVehicles(ArrayList<Vehicle> vehiclesList) {
 		vehiclesList.add(new Vehicle(VehicleType.METRO1, "1033",
-				"м.Джеймс Баучер-м.Обеля-м.Цариградско шосе"));
+				"м.Джеймс Баучер-м.Обеля-м.Младост 1"));
 		vehiclesList.add(new Vehicle(VehicleType.METRO2, "1034",
-				"м.Цариградско шосе-м.Обеля-м.Джеймс Баучер"));
+				"м.Младост 1-м.Обеля-м.Джеймс Баучер"));
 	}
 
 	private static ArrayList<Station> getMetroStations() {
