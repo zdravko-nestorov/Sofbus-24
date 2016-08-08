@@ -60,7 +60,7 @@ public class WriteScheduleToXMLFile {
 				// Create Direction element
 				Element direction = doc.createElement("Direction");
 				direction.appendChild(doc.createTextNode(
-						formatDirectionName(ms.getDirection())));
+						ms.getDirection().replaceAll("-", " - ")));
 				station.appendChild(direction);
 
 				// Create Coordinates element
@@ -123,17 +123,6 @@ public class WriteScheduleToXMLFile {
 				logger.warning("TransformerException: " + tfe.toString());
 			}
 		}
-	}
-
-	private static String formatDirectionName(String directionName) {
-
-		if (Utils.isEmpty(directionName)) {
-			return directionName;
-		}
-
-		directionName = directionName.replaceAll("-", " - ");
-
-		return directionName;
 	}
 
 }

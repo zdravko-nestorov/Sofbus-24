@@ -73,12 +73,12 @@ public class Utils {
 	public static String formatDirection(String name) {
 
 		String formattedName;
-		if ("м.Летище София-м.Обеля-м.Джеймс Баучер".equals(name)
-				|| "м.Бизнес Парк-м.Обеля-м.Джеймс Баучер".equals(name)) {
-			formattedName = "м.Младост 1-м.Обеля-м.Джеймс Баучер";
-		} else if ("м.Джеймс Баучер-м.Обеля-м.Летище София".equals(name)
-				|| "м.Джеймс Баучер-м.Обеля-м.Бизнес Парк".equals(name)) {
-			formattedName = "м.Джеймс Баучер-м.Обеля-м.Младост 1";
+		if ("м.Летище София-м.Обеля-м.Витоша".equals(name)
+				|| "м.Бизнес Парк-м.Обеля-м.Витоша".equals(name)) {
+			formattedName = "м.Младост 1-м.Обеля-м.Витоша";
+		} else if ("м.Витоша-м.Обеля-м.Летище София".equals(name)
+				|| "м.Витоша-м.Обеля-м.Бизнес Парк".equals(name)) {
+			formattedName = "м.Витоша-м.Обеля-м.Младост 1";
 		} else {
 			formattedName = name;
 		}
