@@ -11,26 +11,18 @@ import bg.znestorov.sobusf24.metro.utils.Utils;
 
 public class MetroStationsScheduleMain {
 
-	public static MetroStation retrieveStationsSchedule(Logger logger,
-			String directionId, String directionName,
-			Map.Entry<String, String> station) {
+	public static MetroStation retrieveStationsSchedule(Logger logger, String directionId, String directionName, Map.Entry<String, String> station) {
 
-		String weekdayHtmlResponse = HtmlRequestStationSchedule
-				.retrieveStationsInfo(logger, directionId, station,
-						Constants.STATION_WEEKDAY_SCHEDULE_URL);
-		String holidayHtmlResponse = HtmlRequestStationSchedule
-				.retrieveStationsInfo(logger, directionId, station,
-						Constants.STATION_HOLIDAY_SCHEDULE_URL);
+		String weekdayHtmlResponse = HtmlRequestStationSchedule.retrieveStationsInfo(logger, directionId, station, Constants.STATION_WEEKDAY_SCHEDULE_URL);
+		String holidayHtmlResponse = HtmlRequestStationSchedule.retrieveStationsInfo(logger, directionId, station, Constants.STATION_HOLIDAY_SCHEDULE_URL);
 
 		if ("".equals(weekdayHtmlResponse) || "".equals(holidayHtmlResponse)) {
-			logger.warning("Problem with retrieving information about station name = "
-					+ station.getValue() + " and number = " + station.getKey());
+			logger.warning("Problem with retrieving information about station name = " + station.getValue() + " and number = " + station.getKey());
 			return null;
 		}
 
-		MetroStation ms = HtmlResultStationSchedule.getMetroDirections(logger,
-				weekdayHtmlResponse, holidayHtmlResponse, new MetroStation(
-						station.getKey(), station.getValue(), directionName));
+		MetroStation ms = HtmlResultStationSchedule.getMetroDirections(logger, weekdayHtmlResponse, holidayHtmlResponse,
+				new MetroStation(station.getKey(), station.getValue(), directionName));
 
 		if (ms == null) {
 			logger.warning("Problem with parsing the schedule information from SGKT...");
@@ -40,9 +32,7 @@ public class MetroStationsScheduleMain {
 		return ms;
 	}
 
-	public static void saveStationsScheduleToAFile(Logger logger,
-			ArrayList<ArrayList<MetroStation>> metroDirectionsStations,
-			Properties coordinatesProp) {
+	public static void saveStationsScheduleToAFile(Logger logger, ArrayList<ArrayList<MetroStation>> metroDirectionsStations, Properties coordinatesProp) {
 
 		// Check if there are four metro directions
 		if (metroDirectionsStations.size() == 4) {
@@ -51,12 +41,9 @@ public class MetroStationsScheduleMain {
 			// same stations
 			for (int i = 0; i < 2; i++) {
 
-				ArrayList<MetroStation> metroStations1 = metroDirectionsStations
-						.get(i);
-				ArrayList<MetroStation> metroStations2 = metroDirectionsStations
-						.get(i + 2);
-				int count = metroStations1.size() > metroStations2.size() ? metroStations1
-						.size() : metroStations2.size();
+				ArrayList<MetroStation> metroStations1 = metroDirectionsStations.get(i);
+				ArrayList<MetroStation> metroStations2 = metroDirectionsStations.get(i + 2);
+				int count = metroStations1.size() > metroStations2.size() ? metroStations1.size() : metroStations2.size();
 
 				// In case of second direction (and fourth one) - reverse the
 				// order of the stations, so match the same ones
@@ -92,22 +79,16 @@ public class MetroStationsScheduleMain {
 							// If the station number is the same - change the
 							// direction number (because the train can go to
 							// Bussines Park or Airport)
-							ms1.setDirection(Utils.formatDirection(ms1
-									.getDirection()));
-							WriteScheduleToXMLFile.saveToXMLFile(logger,
-									ms1.merge(ms2), coordinatesProp);
+							ms1.setDirection(Utils.formatDirection(ms1.getDirection()));
+							WriteScheduleToXMLFile.saveToXMLFile(logger, ms1.merge(ms2), coordinatesProp);
 						} else {
-							WriteScheduleToXMLFile.saveToXMLFile(logger, ms1,
-									coordinatesProp);
-							WriteScheduleToXMLFile.saveToXMLFile(logger, ms2,
-									coordinatesProp);
+							WriteScheduleToXMLFile.saveToXMLFile(logger, ms1, coordinatesProp);
+							WriteScheduleToXMLFile.saveToXMLFile(logger, ms2, coordinatesProp);
 						}
 					} else if (ms1 != null) {
-						WriteScheduleToXMLFile.saveToXMLFile(logger, ms1,
-								coordinatesProp);
+						WriteScheduleToXMLFile.saveToXMLFile(logger, ms1, coordinatesProp);
 					} else {
-						WriteScheduleToXMLFile.saveToXMLFile(logger, ms2,
-								coordinatesProp);
+						WriteScheduleToXMLFile.saveToXMLFile(logger, ms2, coordinatesProp);
 					}
 				}
 			}

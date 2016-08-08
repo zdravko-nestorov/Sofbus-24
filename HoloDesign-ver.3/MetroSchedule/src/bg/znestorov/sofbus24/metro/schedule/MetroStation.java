@@ -61,8 +61,7 @@ public class MetroStation {
 		return holidaySchedule;
 	}
 
-	public void setHolidaySchedule(
-			HashMap<Integer, ArrayList<String>> holidaySchedule) {
+	public void setHolidaySchedule(HashMap<Integer, ArrayList<String>> holidaySchedule) {
 		this.holidaySchedule = holidaySchedule;
 	}
 
@@ -70,8 +69,7 @@ public class MetroStation {
 		return weekdaySchedule;
 	}
 
-	public void setWeekdaySchedule(
-			HashMap<Integer, ArrayList<String>> weekdaySchedule) {
+	public void setWeekdaySchedule(HashMap<Integer, ArrayList<String>> weekdaySchedule) {
 		this.weekdaySchedule = weekdaySchedule;
 	}
 
@@ -79,8 +77,7 @@ public class MetroStation {
 		boolean result = false;
 
 		for (int i = 4; i <= 24; i++) {
-			if (!this.holidaySchedule.get(i).isEmpty()
-					|| !this.weekdaySchedule.get(i).isEmpty()) {
+			if (!this.holidaySchedule.get(i).isEmpty() || !this.weekdaySchedule.get(i).isEmpty()) {
 				result = true;
 				break;
 			}
@@ -97,8 +94,7 @@ public class MetroStation {
 			@Override
 			public int compare(String time1, String time2) {
 				try {
-					return dateFormat.parse(time1)
-							.compareTo(dateFormat.parse(time2));
+					return dateFormat.parse(time1).compareTo(dateFormat.parse(time2));
 				} catch (ParseException e) {
 					throw new IllegalArgumentException(e);
 				}
@@ -118,10 +114,8 @@ public class MetroStation {
 
 	@Override
 	public String toString() {
-		return getClass().getName() + " {\n\tnumber: " + number + "\n\tname: "
-				+ name + "\n\tdirection: " + direction + "\n\tholidaySchedule: "
-				+ holidaySchedule + "\n\tweekdaySchedule: " + weekdaySchedule
-				+ "\n}";
+		return getClass().getName() + " {\n\tnumber: " + number + "\n\tname: " + name + "\n\tdirection: " + direction + "\n\tholidaySchedule: "
+				+ holidaySchedule + "\n\tweekdaySchedule: " + weekdaySchedule + "\n}";
 	}
 
 }

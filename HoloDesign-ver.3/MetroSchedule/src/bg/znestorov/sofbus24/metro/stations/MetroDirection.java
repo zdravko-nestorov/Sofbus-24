@@ -18,8 +18,7 @@ public class MetroDirection {
 	public MetroDirection() {
 	}
 
-	public MetroDirection(String id, String name,
-			HashMap<String, String> stations) {
+	public MetroDirection(String id, String name, HashMap<String, String> stations) {
 		this.id = id;
 		this.name = name;
 		this.stations = stations;
@@ -51,8 +50,7 @@ public class MetroDirection {
 
 	@Override
 	public String toString() {
-		return "MetroDirection [id=" + id + ", name=" + name + ", stations="
-				+ stations + "]";
+		return "MetroDirection [id=" + id + ", name=" + name + ", stations=" + stations + "]";
 	}
 
 }

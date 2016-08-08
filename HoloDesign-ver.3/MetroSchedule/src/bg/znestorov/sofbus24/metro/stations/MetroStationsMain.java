@@ -12,8 +12,7 @@ public class MetroStationsMain {
 			return null;
 		}
 
-		MetroDirectionTransfer mdt = HtmlResult.getMetroDirections(logger,
-				htmlResponse);
+		MetroDirectionTransfer mdt = HtmlResult.getMetroDirections(logger, htmlResponse);
 
 		if (mdt == null) {
 			logger.warning("Problem with parsing the information from SGKT...");
@@ -24,8 +23,7 @@ public class MetroStationsMain {
 		WriteDirectionToXMLFile.saveToXMLFile(logger, mdt);
 		long endTime = System.currentTimeMillis();
 
-		logger.info("The information is saved to XML file for "
-				+ ((endTime - startTime) / 1000) + " seconds\n");
+		logger.info("The information is saved to XML file for " + ((endTime - startTime) / 1000) + " seconds\n");
 
 		return mdt;
 	}

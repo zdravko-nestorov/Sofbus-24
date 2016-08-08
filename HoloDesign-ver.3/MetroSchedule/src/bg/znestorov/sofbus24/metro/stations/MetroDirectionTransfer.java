@@ -62,8 +62,7 @@ public class MetroDirectionTransfer implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MetroDirectionTransfer [choice=" + choice + ", directionsList="
-				+ directionsList + "]";
+		return "MetroDirectionTransfer [choice=" + choice + ", directionsList=" + directionsList + "]";
 	}
 
 }

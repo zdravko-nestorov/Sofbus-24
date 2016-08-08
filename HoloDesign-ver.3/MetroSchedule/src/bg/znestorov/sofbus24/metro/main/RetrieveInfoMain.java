@@ -21,8 +21,7 @@ import bg.znestorov.sofbus24.metro.stations.MetroStationsMain;
 
 public class RetrieveInfoMain {
 
-	private static Logger logger = Logger
-			.getLogger("***RETRIEVE METRO SCHEDULE***");
+	private static Logger logger = Logger.getLogger("***RETRIEVE METRO SCHEDULE***");
 	private static FileHandler fh;
 
 	public static void main(String[] args) {
@@ -47,8 +46,7 @@ public class RetrieveInfoMain {
 			prop.load(input);
 
 			logger.info("Start creating the MAIN FILE with the METRO DIRECTIONS and STATIONS");
-			MetroDirectionTransfer mdt = MetroStationsMain
-					.saveStationsInfoToAFile(logger);
+			MetroDirectionTransfer mdt = MetroStationsMain.saveStationsInfoToAFile(logger);
 
 			if (mdt == null) {
 				return;
@@ -64,27 +62,19 @@ public class RetrieveInfoMain {
 			// Iterate over all metro directions and retrieve the information
 			// for each station
 			for (MetroDirection md : mdt.getDirectionsList()) {
-				Iterator<Entry<String, String>> iterator = md.getStations()
-						.entrySet().iterator();
+				Iterator<Entry<String, String>> iterator = md.getStations().entrySet().iterator();
 
 				// Contains all metro stations for the choosen direction
 				ArrayList<MetroStation> metroStations = new ArrayList<MetroStation>();
 
-				logger.info("RETRIEVE and PARSE information about direction: "
-						+ md.getName());
+				logger.info("RETRIEVE and PARSE information about direction: " + md.getName());
 				while (iterator.hasNext()) {
-					Map.Entry<String, String> mapEntry = (Map.Entry<String, String>) iterator
-							.next();
+					Map.Entry<String, String> mapEntry = (Map.Entry<String, String>) iterator.next();
 
-					logger.info("Start retrieving/parsing information about station name = "
-							+ mapEntry.getValue()
-							+ " and number = "
-							+ mapEntry.getKey());
+					logger.info("Start retrieving/parsing information about station name = " + mapEntry.getValue() + " and number = " + mapEntry.getKey());
 
 					// Retrieve the information (schedule) for each station
-					MetroStation ms = MetroStationsScheduleMain
-							.retrieveStationsSchedule(logger, md.getId(),
-									md.getName(), mapEntry);
+					MetroStation ms = MetroStationsScheduleMain.retrieveStationsSchedule(logger, md.getId(), md.getName(), mapEntry);
 					if (ms != null) {
 						metroStations.add(ms);
 					}
@@ -96,12 +86,10 @@ public class RetrieveInfoMain {
 
 			// Manipulate the results, so merge the information from different
 			// stations with a same number
-			MetroStationsScheduleMain.saveStationsScheduleToAFile(logger,
-					metroDirectionsStations, prop);
+			MetroStationsScheduleMain.saveStationsScheduleToAFile(logger, metroDirectionsStations, prop);
 
 			long endTime = System.currentTimeMillis();
-			logger.info("The information is saved to XML files for "
-					+ ((endTime - startTime) / 1000) + " seconds");
+			logger.info("The information is saved to XML files for " + ((endTime - startTime) / 1000) + " seconds");
 		} catch (IOException ex) {
 			logger.warning("Problem with loading the properties file!");
 		} finally {

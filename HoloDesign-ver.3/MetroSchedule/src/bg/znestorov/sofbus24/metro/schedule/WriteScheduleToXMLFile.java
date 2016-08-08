@@ -60,7 +60,7 @@ public class WriteScheduleToXMLFile {
 
 				// Create Direction element
 				Element direction = doc.createElement("Direction");
-				direction.appendChild(doc.createTextNode(ms.getDirection().replaceAll("-", " - ")));
+				direction.appendChild(doc.createTextNode(formatDirectionName(ms.getDirection())));
 				station.appendChild(direction);
 
 				// Create Coordinates element
@@ -118,4 +118,20 @@ public class WriteScheduleToXMLFile {
 			}
 		}
 	}
+
+	private static String formatDirectionName(String directionName) {
+
+		if (Utils.isEmpty(directionName)) {
+			return directionName;
+		}
+
+		if ("м.Витоша-м.Обеля-м.Летище София".equals(directionName) || "м.Витоша-м.Обеля-м.Бизнес Парк".equals(directionName)) {
+			directionName = "м.Витоша-м.Обеля-м.Младост 1";
+		}
+
+		directionName = directionName.replaceAll("-", " - ");
+
+		return directionName;
+	}
+
 }
