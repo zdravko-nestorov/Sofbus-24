@@ -3,7 +3,7 @@ DATE: Sun August 07 15:00:00 GMT+2 2016
 DB Records:
  * Stations - 2690 (SKGT) + 70 (METRO) = 2760
  * Vehicles - 122
- * Stations/Vehicles - 5453
+ * Stations/Vehicles - 5564
 
 Only WEEKDAY:
  * BUS - 7, 100, 294

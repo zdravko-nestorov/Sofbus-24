@@ -338,6 +338,11 @@ public class Utils {
 					"СУ Свети Климент Охридски");
 		}
 
+        // BUS #111
+        if ("Жк. Младост 1".equals(directionName)) {
+            directionName = "ж.к. Младост -1 - ж.к. Люлин 1,2";
+        }
+
 		// BUS #117
 		if (directionName.contains("Автостанция Изток Град Бухово")) {
 			directionName = directionName.replaceAll(
@@ -388,6 +393,11 @@ public class Utils {
 		// TRAM #18
 		if ("пл. Журналист - н - з Надежда".equals(directionName)) {
 			directionName = "пл. Журналист - н-з Надежда";
+		}
+
+		// TRAM #3
+		if ("Площад Централна гара Гара Захарна фабрика".equals(directionName)) {
+			directionName = "Площад Централна гара - Гара Захарна фабрика";
 		}
 
 		// TRAM #19
