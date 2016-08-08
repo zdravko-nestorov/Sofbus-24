@@ -25,9 +25,11 @@ public class HtmlResult {
 	 * @return a MetroDirectionTransfer object with all needed information about
 	 *         the directions and the stations
 	 */
-	public static MetroDirectionTransfer getMetroDirections(Logger logger, String htmlSrc) {
+	public static MetroDirectionTransfer getMetroDirections(Logger logger,
+			String htmlSrc) {
 
-		logger.info("Start parsing the information about the Metro directions and schedule...");
+		logger.info(
+				"Start parsing the information about the Metro directions and schedule...");
 		long startTime = System.currentTimeMillis();
 
 		MetroDirectionTransfer mdt = new MetroDirectionTransfer();
@@ -35,8 +37,10 @@ public class HtmlResult {
 
 		if (htmlSrcParts.length >= 9) {
 			// Find the ID and the NAME of each direction
-			Pattern directionPattern = Pattern.compile(Constants.METRO_REGEX_DIRECTIONS);
-			Matcher directionMatcher = directionPattern.matcher(htmlSrcParts[0]);
+			Pattern directionPattern = Pattern
+					.compile(Constants.METRO_REGEX_DIRECTIONS);
+			Matcher directionMatcher = directionPattern
+					.matcher(htmlSrcParts[0]);
 
 			while (directionMatcher.find()) {
 				MetroDirection md = new MetroDirection();
@@ -56,7 +60,8 @@ public class HtmlResult {
 			for (int i = 0; i < mdt.getDirectionsListSize(); i++) {
 
 				if (htmlSrcParts.length >= i + 1) {
-					String[] htmlSrcStationParts = htmlSrcParts[i + 1].split(Constants.METRO_REGEX_STATION_PARTS);
+					String[] htmlSrcStationParts = htmlSrcParts[i + 1]
+							.split(Constants.METRO_REGEX_STATION_PARTS);
 
 					if (htmlSrcStationParts.length > 0) {
 						setStations(mdt, i, htmlSrcStationParts[0]);
@@ -65,14 +70,16 @@ public class HtmlResult {
 			}
 
 			try {
-				logger.info(mdt.getDirectionsList().get(0).getStations().size() + " stations per direction found.");
+				logger.info(mdt.getDirectionsList().get(0).getStations().size()
+						+ " stations per direction found.");
 			} catch (Exception e) {
 				logger.info("0 stations found.");
 			}
 		}
 
 		long endTime = System.currentTimeMillis();
-		logger.info("The HTTP response information is processed for " + ((endTime - startTime) / 1000) + " seconds");
+		logger.info("The HTTP response information is processed for "
+				+ ((endTime - startTime) / 1000) + " seconds");
 
 		if (mdt.getDirectionsListSize() >= 4) {
 			return mdt;
@@ -93,12 +100,16 @@ public class HtmlResult {
 	 *            the part of the HTML code, which is containing the stations
 	 *            info
 	 */
-	private static void setStations(MetroDirectionTransfer mdt, int directionNumber, String htmlSrcPart) {
-		Pattern stationPattern = Pattern.compile(Constants.METRO_REGEX_STATIONS);
+	private static void setStations(MetroDirectionTransfer mdt,
+			int directionNumber, String htmlSrcPart) {
+		Pattern stationPattern = Pattern
+				.compile(Constants.METRO_REGEX_STATIONS);
 		Matcher stationMatcher = stationPattern.matcher(htmlSrcPart);
 
 		while (stationMatcher.find()) {
-			mdt.getDirectionsList().get(directionNumber).getStations().put(stationMatcher.group(1), Utils.formatName(stationMatcher.group(2)));
+			mdt.getDirectionsList().get(directionNumber).getStations().put(
+					stationMatcher.group(1),
+					Utils.formatName(stationMatcher.group(2)));
 		}
 	}
 

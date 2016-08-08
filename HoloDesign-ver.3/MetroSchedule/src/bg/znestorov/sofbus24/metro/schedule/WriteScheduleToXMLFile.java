@@ -21,19 +21,18 @@ import bg.znestorov.sobusf24.metro.utils.Utils;
 
 /**
  * Write the MetroDirectionTransfer object to a XML file
- * 
- * @author zanio
- * 
  */
 public class WriteScheduleToXMLFile {
 
-	public static void saveToXMLFile(Logger logger, MetroStation ms, Properties coordinatesProp) {
+	public static void saveToXMLFile(Logger logger, MetroStation ms,
+			Properties coordinatesProp) {
 
 		logger.info("Saving the METRO station to an XML file");
 
 		if (!"XXXX".equals(ms.getNumber())) {
 			try {
-				DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilderFactory docFactory = DocumentBuilderFactory
+						.newInstance();
 				DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
 				logger.info("Creating the XML structure...");
@@ -60,13 +59,15 @@ public class WriteScheduleToXMLFile {
 
 				// Create Direction element
 				Element direction = doc.createElement("Direction");
-				direction.appendChild(doc.createTextNode(formatDirectionName(ms.getDirection())));
+				direction.appendChild(doc.createTextNode(
+						formatDirectionName(ms.getDirection())));
 				station.appendChild(direction);
 
 				// Create Coordinates element
 				Element coordinates = doc.createElement("Coordinates");
 				station.appendChild(coordinates);
-				String[] coordinatesArray = coordinatesProp.getProperty(ms.getNumber()).split(",");
+				String[] coordinatesArray = coordinatesProp
+						.getProperty(ms.getNumber()).split(",");
 				Element latitude = doc.createElement("Latitude");
 				latitude.appendChild(doc.createTextNode(coordinatesArray[0]));
 				coordinates.appendChild(latitude);
@@ -83,7 +84,8 @@ public class WriteScheduleToXMLFile {
 				for (int i = 4; i <= 24; i++) {
 					Element time = doc.createElement("Time");
 					time.setAttribute("hour", i + "");
-					time.appendChild(doc.createTextNode(Utils.listToString(ms.getWeekdaySchedule().get(i))));
+					time.appendChild(doc.createTextNode(Utils
+							.listToString(ms.getWeekdaySchedule().get(i))));
 					scheduleWeekday.appendChild(time);
 				}
 
@@ -96,23 +98,27 @@ public class WriteScheduleToXMLFile {
 				for (int i = 4; i <= 24; i++) {
 					Element time = doc.createElement("Time");
 					time.setAttribute("hour", i + "");
-					time.appendChild(doc.createTextNode(Utils.listToString(ms.getHolidaySchedule().get(i))));
+					time.appendChild(doc.createTextNode(Utils
+							.listToString(ms.getHolidaySchedule().get(i))));
 					scheduleHoliday.appendChild(time);
 				}
 
 				logger.info("Saving the XML structure to a file...");
 
 				// Write the content into XML file
-				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				TransformerFactory transformerFactory = TransformerFactory
+						.newInstance();
 				Transformer transformer = transformerFactory.newTransformer();
 				DOMSource source = new DOMSource(doc);
 
-				String file = String.format(Constants.METRO_STATION_FILE, ms.getNumber());
+				String file = String.format(Constants.METRO_STATION_FILE,
+						ms.getNumber());
 				StreamResult result = new StreamResult(new File(file));
 
 				transformer.transform(source, result);
 			} catch (ParserConfigurationException pce) {
-				logger.warning("ParserConfigurationException: " + pce.toString());
+				logger.warning(
+						"ParserConfigurationException: " + pce.toString());
 			} catch (TransformerException tfe) {
 				logger.warning("TransformerException: " + tfe.toString());
 			}
@@ -123,10 +129,6 @@ public class WriteScheduleToXMLFile {
 
 		if (Utils.isEmpty(directionName)) {
 			return directionName;
-		}
-
-		if ("м.Витоша-м.Обеля-м.Летище София".equals(directionName) || "м.Витоша-м.Обеля-м.Бизнес Парк".equals(directionName)) {
-			directionName = "м.Витоша-м.Обеля-м.Младост 1";
 		}
 
 		directionName = directionName.replaceAll("-", " - ");

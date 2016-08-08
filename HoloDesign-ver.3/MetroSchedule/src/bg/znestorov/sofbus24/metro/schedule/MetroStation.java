@@ -115,7 +115,8 @@ public class MetroStation {
 	@Override
 	public String toString() {
 		return getClass().getName() + " {\n\tnumber: " + number + "\n\tname: " + name + "\n\tdirection: " + direction + "\n\tholidaySchedule: "
-				+ holidaySchedule + "\n\tweekdaySchedule: " + weekdaySchedule + "\n}";
+				+ holidaySchedule + "\n\tweekdaySchedule: " + weekdaySchedule
+				+ "\n}";
 	}
 
 }

@@ -22,7 +22,9 @@ import bg.znestorov.sobusf24.metro.utils.Utils;
  */
 public class HtmlResultStationSchedule {
 
-	public static MetroStation getMetroDirections(Logger logger, String weekdayHtmlResponse, String holidayHtmlResponse, MetroStation ms) {
+	public static MetroStation getMetroDirections(Logger logger,
+			String weekdayHtmlResponse, String holidayHtmlResponse,
+			MetroStation ms) {
 
 		logger.info("Start parsing the information...");
 
@@ -34,19 +36,25 @@ public class HtmlResultStationSchedule {
 				htmlResponse = holidayHtmlResponse;
 			}
 
-			Pattern stationPattern = Pattern.compile(Constants.METRO_REGEX_TIME);
+			Pattern stationPattern = Pattern
+					.compile(Constants.METRO_REGEX_TIME);
 			Matcher stationMatcher = stationPattern.matcher(htmlResponse);
 
 			while (stationMatcher.find()) {
-				boolean isIncompleteCourse = !Utils.isEmpty(stationMatcher.group(1));
+				boolean isIncompleteCourse = !Utils
+						.isEmpty(stationMatcher.group(1));
 				String hour = getHour(stationMatcher.group(2));
 
 				if (hour != null) {
 					// Check if it is a WEEKDAY or HOLIDAY
 					if (i == 1) {
-						ms.getWeekdaySchedule().get(Integer.parseInt(hour)).add(stationMatcher.group(2) + getHints(isIncompleteCourse, ms.getDirection()));
+						ms.getWeekdaySchedule().get(Integer.parseInt(hour))
+								.add(stationMatcher.group(2) + getHints(
+										isIncompleteCourse, ms.getDirection()));
 					} else {
-						ms.getHolidaySchedule().get(Integer.parseInt(hour)).add(stationMatcher.group(2) + getHints(isIncompleteCourse, ms.getDirection()));
+						ms.getHolidaySchedule().get(Integer.parseInt(hour))
+								.add(stationMatcher.group(2) + getHints(
+										isIncompleteCourse, ms.getDirection()));
 					}
 				}
 			}
@@ -69,7 +77,8 @@ public class HtmlResultStationSchedule {
 		return hour;
 	}
 
-	private static String getHints(boolean isIncompleteCourse, String directionName) {
+	private static String getHints(boolean isIncompleteCourse,
+			String directionName) {
 
 		StringBuilder incopleteCourse = new StringBuilder("");
 

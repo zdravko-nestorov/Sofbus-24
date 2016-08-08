@@ -7,9 +7,6 @@ import java.util.List;
 /**
  * Storing the results of both directions, so can be transfered from one
  * activity to another (this is why it is implementing Serializable interface)
- * 
- * @author zanio
- * 
  */
 public class MetroDirectionTransfer implements Serializable {
 
@@ -62,7 +59,8 @@ public class MetroDirectionTransfer implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MetroDirectionTransfer [choice=" + choice + ", directionsList=" + directionsList + "]";
+		return "MetroDirectionTransfer [choice=" + choice + ", directionsList="
+				+ directionsList + "]";
 	}
 
 }

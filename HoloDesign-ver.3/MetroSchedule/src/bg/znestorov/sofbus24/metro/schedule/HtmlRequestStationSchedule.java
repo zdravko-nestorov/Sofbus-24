@@ -19,14 +19,16 @@ public class HtmlRequestStationSchedule {
 	 *            of the program
 	 * @return the HTTP response with all needed information
 	 */
-	public static String retrieveStationsInfo(Logger logger, String directionId, Map.Entry<String, String> station, String urlLink) {
+	public static String retrieveStationsInfo(Logger logger, String directionId,
+			Map.Entry<String, String> station, String urlLink) {
 
 		String htmlResponse = "";
 
 		try {
 			logger.info("Start retrieving schedule...");
 
-			URL url = new URL(String.format(urlLink, directionId, station.getKey()));
+			URL url = new URL(
+					String.format(urlLink, directionId, station.getKey()));
 			logger.info("Station URL address = " + url.toString());
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -34,7 +36,8 @@ public class HtmlRequestStationSchedule {
 			con.setRequestMethod("GET");
 			con.setRequestProperty("User-Agent", Constants.METRO_USER_AGENT);
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(con.getInputStream(), "UTF-8"));
 
 			String inputLine;
 			StringBuffer response = new StringBuffer();

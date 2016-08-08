@@ -11,9 +11,6 @@ import bg.znestorov.sobusf24.metro.utils.Constants;
 /**
  * Responsible for sending a HTTP GET request to the SKGT site and retrieve
  * information about the DIRECTIONs and STATIONs of the METRO
- * 
- * @author zanio
- * 
  */
 public class HtmlRequest {
 
@@ -30,7 +27,8 @@ public class HtmlRequest {
 		String htmlResponse = "";
 
 		try {
-			logger.info("Start retrieving information about Metro directions and schedule...");
+			logger.info(
+					"Start retrieving information about Metro directions and schedule...");
 			long startTime = System.currentTimeMillis();
 
 			URL url = new URL(Constants.METRO_SCHEDULE_URL);
@@ -39,9 +37,12 @@ public class HtmlRequest {
 			con.setRequestMethod("GET");
 			con.setRequestProperty("User-Agent", Constants.METRO_USER_AGENT);
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(con.getInputStream(), "UTF-8"));
 			long endTime = System.currentTimeMillis();
-			logger.info("Server sent a response, which is transformed in UTF-8, for " + ((endTime - startTime) / 1000) + " seconds");
+			logger.info(
+					"Server sent a response, which is transformed in UTF-8, for "
+							+ ((endTime - startTime) / 1000) + " seconds");
 
 			String inputLine;
 			StringBuffer response = new StringBuffer();
