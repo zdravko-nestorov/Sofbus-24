@@ -32,9 +32,42 @@ public class SQLiteJDBC {
 	private long startTime;
 	private long endTime;
 
+	/**
+	 * List with stations which coordinates are updated by me. If a station
+	 * number is included in this list means that the station coordinates won't
+	 * be updated with the ones from the "skgt_stations.xml" The varible doesn't
+	 * need to contains the METRO stations numbers - they are not reflected in
+	 * the xml file.<br/>
+	 * 
+	 * This Set has to be updated only if I decide to update the coordinates of
+	 * an already inserted station (the newly inserted are firstly updated by
+	 * the script and after that I insert the coordinates of the rest manually -
+	 * it means that they don't exist in the xml file).
+	 */
+	private static final Set<String> STATIONS_UPDATED_BY_ME = new HashSet<String>();
+
+	static {
+		/*
+		 * The stations are location in "Students City"
+		 */
+		STATIONS_UPDATED_BY_ME.add("1396");
+		STATIONS_UPDATED_BY_ME.add("1397");
+		STATIONS_UPDATED_BY_ME.add("524");
+		STATIONS_UPDATED_BY_ME.add("530");
+		STATIONS_UPDATED_BY_ME.add("1691");
+		STATIONS_UPDATED_BY_ME.add("1692");
+		STATIONS_UPDATED_BY_ME.add("1610");
+		STATIONS_UPDATED_BY_ME.add("1611");
+		STATIONS_UPDATED_BY_ME.add("533");
+		STATIONS_UPDATED_BY_ME.add("534");
+		STATIONS_UPDATED_BY_ME.add("741");
+		STATIONS_UPDATED_BY_ME.add("742");
+	}
+
 	public SQLiteJDBC(Logger logger, ArrayList<Station> stationsList,
 			ArrayList<Vehicle> vehiclesList,
 			ArrayList<VehicleStation> vehicleStationsList) {
+
 		this.logger = logger;
 		this.stationsList = stationsList;
 		this.vehiclesList = vehiclesList;
@@ -159,7 +192,15 @@ public class SQLiteJDBC {
 		List<String> deletedStationsList = new ArrayList<String>();
 		Set<String> skgtStationsNumbersList = new HashSet<String>();
 
-		// Insert or update the stations in the database
+		/*
+		 * IMPORTANT: A big part of the stations already exist in the DB. So if
+		 * a station already exists in the DB, just update the station name,
+		 * because from time to time, SKGT changes the names of station with a
+		 * fency new ones. In case the station is a new one, insert it - just
+		 * the number and the name, the coordinates will be populated lately
+		 * (automatically - in case the station exists in the
+		 * "skgt_stations.xml" file, or manually - in all other cases)
+		 */
 		for (Station station : stationsList) {
 
 			sql = "SELECT * FROM SOF_STAT WHERE STAT_NUMBER = %s;";
@@ -198,7 +239,14 @@ public class SQLiteJDBC {
 			}
 		}
 
-		// Add all exceptions to the list
+		/*
+		 * IMPORTANT: In case we create the DB from a scratch (no records
+		 * inside), we should add some special stations (which are found in the
+		 * SKGT site in very rare cases or at very specific moments). To prevent
+		 * this, we just add them manually to the list of stations. If we are
+		 * making just an update (done in most of the cases), it is not a
+		 * problem to add this stations again - nothing will change
+		 */
 		skgtStationsNumbersList.addAll(getAllExceptionStationNumbers());
 
 		/*
@@ -262,20 +310,26 @@ public class SQLiteJDBC {
 						logger);
 
 				for (Station station : stationsList) {
-					station = stationCoordinates.getStationFromXml(station);
 
-					if (station != null) {
-						sql = "UPDATE SOF_STAT SET STAT_NAME = '%s' WHERE STAT_NUMBER = %s;";
-						sql = String.format(sql, station.getName(),
-								station.getNumber());
+					// Check if the station is already updated by me (see above)
+					if (!isStationUpdatedByMe(station)) {
+						station = stationCoordinates.getStationFromXml(station);
 
-						try {
-							stmt.executeUpdate(sql);
-							updatedStationsCoordinates++;
-						} catch (Exception e1) {
-							logger.severe(
-									"Problem with updating the coordinates of a station with number="
-											+ station.getNumber());
+						// Check if the station exists in the xml file
+						if (station != null) {
+							sql = "UPDATE SOF_STAT SET STAT_LATITUDE = '%s', STAT_LONGITUDE = '%s' WHERE STAT_NUMBER = %s;";
+							sql = String.format(sql, station.getLatitude(),
+									station.getLongitude(),
+									station.getNumber());
+
+							try {
+								stmt.executeUpdate(sql);
+								updatedStationsCoordinates++;
+							} catch (Exception e1) {
+								logger.severe(
+										"Problem with updating the coordinates of a station with number="
+												+ station.getNumber());
+							}
 						}
 					}
 				}
@@ -302,8 +356,13 @@ public class SQLiteJDBC {
 		}
 	}
 
-	private static List<Station> getAllStationsFromDb(
-			ResultSet stationsResultSet) throws SQLException {
+	private boolean isStationUpdatedByMe(Station station) {
+		return STATIONS_UPDATED_BY_ME
+				.contains(Utils.removeLeadingZeros(station.getNumber()));
+	}
+
+	private List<Station> getAllStationsFromDb(ResultSet stationsResultSet)
+			throws SQLException {
 		List<Station> stationsList = new ArrayList<Station>();
 
 		while (stationsResultSet.next()) {
@@ -316,7 +375,7 @@ public class SQLiteJDBC {
 		return stationsList;
 	}
 
-	private static Set<String> getAllExceptionStationNumbers() {
+	private Set<String> getAllExceptionStationNumbers() {
 		Set<String> skgtExceptionStationsNumbersList = new HashSet<String>();
 
 		skgtExceptionStationsNumbersList.add("0012");
@@ -459,4 +518,5 @@ public class SQLiteJDBC {
 
 		return stationId;
 	}
+
 }

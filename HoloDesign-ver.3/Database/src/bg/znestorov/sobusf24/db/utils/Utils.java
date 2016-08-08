@@ -14,6 +14,23 @@ public class Utils {
 		return value;
 	}
 
+	/**
+	 * Removes leading zeroes, but leaves one if necessary (i.e. it wouldn't
+	 * just turn "0" to a blank string)
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String removeLeadingZeros(String value) {
+		if (value != null && !"".equals(value)) {
+			value = value.replaceFirst("^0+(?!$)", "");
+		} else {
+			value = "";
+		}
+
+		return value;
+	}
+
 	public static String getValueBefore(String value, String regex) {
 		if (value.contains(regex)) {
 			return value.substring(0, value.indexOf(regex));
@@ -338,10 +355,10 @@ public class Utils {
 					"СУ Свети Климент Охридски");
 		}
 
-        // BUS #111
-        if ("Жк. Младост 1".equals(directionName)) {
-            directionName = "ж.к. Младост -1 - ж.к. Люлин 1,2";
-        }
+		// BUS #111
+		if ("Жк. Младост 1".equals(directionName)) {
+			directionName = "ж.к. Младост -1 - ж.к. Люлин 1,2";
+		}
 
 		// BUS #117
 		if (directionName.contains("Автостанция Изток Град Бухово")) {
@@ -396,7 +413,8 @@ public class Utils {
 		}
 
 		// TRAM #3
-		if ("Площад Централна гара Гара Захарна фабрика".equals(directionName)) {
+		if ("Площад Централна гара Гара Захарна фабрика"
+				.equals(directionName)) {
 			directionName = "Площад Централна гара - Гара Захарна фабрика";
 		}
 

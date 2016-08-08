@@ -15,6 +15,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import bg.znestorov.sobusf24.db.utils.Constants;
+import bg.znestorov.sobusf24.db.utils.Utils;
 import bg.znestorov.sofbus24.db.entity.Station;
 
 public class StationCoordinates {
@@ -30,12 +31,10 @@ public class StationCoordinates {
 	public Station getStationFromXml(Station station) {
 
 		BufferedReader inputBufferedReader = null;
-		try {
 
-			// Removes leading zeroes, but leaves one if necessary (i.e. it
-			// wouldn't just turn "0" to a blank string)
-			String formattedStationNumber = station.getNumber()
-					.replaceFirst("^0+(?!$)", "");
+		try {
+			String formattedStationNumber = Utils
+					.removeLeadingZeros(station.getNumber());
 
 			// Get the Document from the "skt_stations.xml" file
 			DocumentBuilderFactory factory = DocumentBuilderFactory
