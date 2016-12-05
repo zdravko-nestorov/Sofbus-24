@@ -1,5 +1,7 @@
 package bg.znestorov.sobusf24.db.information;
 
+import static bg.znestorov.sobusf24.db.utils.Utils.isNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -29,13 +31,13 @@ public class HtmlResult {
 			direction = Utils.formatDirectionName(direction);
 		}
 
-		direction = proceedSpecialTypeOfDirection(number, direction);
+		direction = proceedSpecialTypeOfDirection(type, number, direction);
 
 		return new Vehicle(type, number, direction);
 	}
 
-	private static String proceedSpecialTypeOfDirection(String number,
-			String direction) {
+	private static String proceedSpecialTypeOfDirection(String type,
+			String number, String direction) {
 
 		/*
 		 * SPECIAL CASES Public Transport
@@ -73,17 +75,28 @@ public class HtmlResult {
 		}
 
 		/*
-		 * WEEKEND Public Transport
+		 * Depending on the day that we are running the script, some of the
+		 * vehicles will be missing - in case of WEEKDAY, the weekend vehicnles
+		 * will be missing, in case of WEEKEND - the weekday vehicles will be
+		 * missing. As the WEEKEND vehicles are less, we MUST run the script
+		 * only on WEEKDAYs, so have full set of information recorded in the
+		 * database.
+		 * 
+		 * We can add the WEEKDAY vehicles, too, but will be too complicated to
+		 * maintain them both, because we should add the stations for each of
+		 * the vehicles below (as separate methods)
+		 * 
+		 * /* WEEKEND Public Transport
 		 */
-		if ("66".equals(number)) {
+		if (isNullOrEmpty(direction) && isBus(type) && "66".equals(number)) {
 			direction = "Хотел Морени - ж.к. Гоце Делчев";
 		}
 
-		if ("103".equals(number)) {
+		if (isNullOrEmpty(direction) && isBus(type) && "103".equals(number)) {
 			direction = "Автостанция Овча купел - в.з. Бонсови поляни";
 		}
 
-		if ("505".equals(number)) {
+		if (isNullOrEmpty(direction) && isBus(type) && "505".equals(number)) {
 			direction = "Площад Орлов мост - парк музей Врана";
 		}
 
@@ -829,4 +842,9 @@ public class HtmlResult {
 
 		return hiddenParam;
 	}
+
+	private static boolean isBus(String type) {
+		return !isNullOrEmpty(type) && "1".equals(type.trim());
+	}
+
 }

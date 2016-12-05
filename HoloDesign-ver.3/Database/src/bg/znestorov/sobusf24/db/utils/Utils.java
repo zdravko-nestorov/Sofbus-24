@@ -149,6 +149,7 @@ public class Utils {
 		}
 
 		// Special cases
+		directionName = directionName.replaceAll("&quot;", "");
 		directionName = directionName.replaceAll(" - 1 - ", "-1 - ");
 		directionName = directionName.replaceAll(" - 1", " 1");
 		directionName = directionName.replaceAll("-1", " 1");
@@ -215,11 +216,11 @@ public class Utils {
 		directionName = directionName.replaceAll("СУ Св\\. Климент Охридски",
 				"СУ Свети Климент Охридски");
 		directionName = directionName.replaceAll(
-				"МБАЛ Св\\.Анна - ухо - Ж\\.к\\. Гоце Делчев",
-				"МБАЛ Св\\.Анна - Ж\\.к\\. Гоце Делчев");
+				"УМБАЛ Света Анна - ухо - ж\\.к\\. Гоце Делчев",
+				"УМБАЛ Света Анна - ж\\.к\\. Гоце Делчев");
 		directionName = directionName.replaceAll(
-				"Ж\\.к\\. Гоце Делчев - МБАЛ Св\\.Анна - ухо",
-				"Ж\\.к\\. Гоце Делчев - МБАЛ Св\\.Анна");
+				"ж\\.к\\. Гоце Делчев - УМБАЛ Света Анна - ухо",
+				"ж\\.к\\. Гоце Делчев - УМБАЛ Света Анна");
 		directionName = directionName.replaceAll(" ухо", " ж\\.к\\. Люлин 3");
 		directionName = directionName.replaceAll("ДепоИскър", "Депо Искър");
 		directionName = directionName.replaceAll("Ж\\.к\\.Люлин 1,2",
@@ -356,8 +357,11 @@ public class Utils {
 		}
 
 		// BUS #111
+		if ("ж.к. Люлин 1,2 - бул. Илиянци (подлеза)".equals(directionName)) {
+			directionName = "ж.к. Люлин 1,2 - ж.к. Младост 1";
+		}
 		if ("Жк. Младост 1".equals(directionName)) {
-			directionName = "ж.к. Младост -1 - ж.к. Люлин 1,2";
+			directionName = "ж.к. Младост 1 - ж.к. Люлин 1,2";
 		}
 
 		// BUS #117
@@ -393,12 +397,25 @@ public class Utils {
 			directionName = "ж.к. Левски Г - ВМА";
 		}
 
+		// TROLLEY #6, 7
+		if (directionName.contains("ж.к. Люлин 3 - ж.к. Люлин 3")) {
+			directionName = directionName.replaceAll(
+					"ж\\.к\\. Люлин 3 - ж\\.к\\. Люлин 3", "ж\\.к\\. Люлин 3");
+		}
+
 		// TROLLEY #8
 		if (directionName.contains(
-				"ж.к. Гоце Делчев - МБАЛ Света Анна - ж.к. Люлин 3")) {
+				"ж.к. Гоце Делчев - УМБАЛ Света Анна - ж.к. Люлин 3")) {
 			directionName = directionName.replaceAll(
-					"ж\\.к\\. Гоце Делчев - МБАЛ Света Анна - ж\\.к\\. Люлин 3",
-					"ж\\.к\\. Гоце Делчев - МБАЛ Света Анна");
+					"ж\\.к\\. Гоце Делчев - УМБАЛ Света Анна - ж\\.к\\. Люлин 3",
+					"ж\\.к\\. Гоце Делчев - УМБАЛ Света Анна");
+		}
+
+		if (directionName.contains(
+				"УМБАЛ Света Анна - ж.к. Люлин 3 - ж.к. Гоце Делчев")) {
+			directionName = directionName.replaceAll(
+					"УМБАЛ Света Анна - ж\\.к\\. Люлин 3 - ж\\.к\\. Гоце Делчев",
+					"УМБАЛ Света Анна - ж\\.к\\. Гоце Делчев");
 		}
 
 		// TROLLEY #9
@@ -428,5 +445,9 @@ public class Utils {
 
 	public static long getTime() {
 		return System.currentTimeMillis();
+	}
+
+	public static boolean isNullOrEmpty(String input) {
+		return input == null || input.trim().isEmpty();
 	}
 }
