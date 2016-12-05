@@ -1,4 +1,4 @@
-DATE: Sun November 27 15:00:00 GMT+2 2016
+DATE: Sun December 05 08:00:00 GMT+2 2016
 
 DB Records:
  * Stations - 2692 (SKGT) + 70 (METRO) = 2762
