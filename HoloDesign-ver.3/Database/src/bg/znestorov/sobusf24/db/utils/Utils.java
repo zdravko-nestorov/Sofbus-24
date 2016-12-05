@@ -87,6 +87,26 @@ public class Utils {
 
 	public static String formatDirectionName(String directionName) {
 		if (directionName != null && !"".equals(directionName)) {
+
+			/*
+			 * Here is the place to put all formatting for vehicle directions
+			 * when there is a chance after the split to produce equal results
+			 * for different vehicles
+			 */
+			// Problem with 111 and 309
+			if (directionName.contains("Бул.Илиянци-подлеза")) {
+				directionName = directionName.replaceAll(
+						"Бул\\.Илиянци-подлеза", "бул\\. Илиянци (подлеза)");
+			}
+			if (directionName.contains("Ж.к.Люлин-1,2")) {
+				directionName = directionName.replaceAll("Ж\\.к\\.Люлин-1,2",
+						"ж\\.к\\. Люлин 1,2");
+			}
+			if (directionName.contains("Ж.к. Младост-1")) {
+				directionName = directionName.replaceAll("Ж\\.к\\. Младост-1",
+						"ж\\.к\\. Младост 1");
+			}
+
 			String[] directionNameParts = directionName.trim().split("-");
 
 			switch (directionNameParts.length) {
@@ -356,14 +376,6 @@ public class Utils {
 					"СУ Свети Климент Охридски");
 		}
 
-		// BUS #111
-		if ("ж.к. Люлин 1,2 - бул. Илиянци (подлеза)".equals(directionName)) {
-			directionName = "ж.к. Люлин 1,2 - ж.к. Младост 1";
-		}
-		if ("Жк. Младост 1".equals(directionName)) {
-			directionName = "ж.к. Младост 1 - ж.к. Люлин 1,2";
-		}
-
 		// BUS #117
 		if (directionName.contains("Автостанция Изток Град Бухово")) {
 			directionName = directionName.replaceAll(
@@ -375,14 +387,6 @@ public class Utils {
 		if (directionName.contains("СУ Света Климент Охридски")) {
 			directionName = directionName.replaceAll(
 					"СУ Света Климент Охридски", "СУ Свети Климент Охридски");
-		}
-
-		// BUS #309
-		if ("ж.к. Люлин 1,2".equals(directionName)) {
-			directionName = "ж.к. Люлин 1,2 - бул. Илиянци (подлеза)";
-		}
-		if ("бул. Илиянци - подлеза".equals(directionName)) {
-			directionName = "бул. Илиянци (подлеза) - ж.к. Люлин 1,2";
 		}
 
 		// BUS #413
