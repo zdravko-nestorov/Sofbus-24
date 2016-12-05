@@ -93,10 +93,13 @@ public class Utils {
 			 * when there is a chance after the split to produce equal results
 			 * for different vehicles
 			 */
+			directionName = directionName.trim();
+
 			// Problem with 111 and 309
 			if (directionName.contains("Бул.Илиянци-подлеза")) {
 				directionName = directionName.replaceAll(
-						"Бул\\.Илиянци-подлеза", "бул\\. Илиянци (подлеза)");
+						"Бул\\.Илиянци-подлеза",
+						"бул\\. Илиянци \\(подлеза\\)");
 			}
 			if (directionName.contains("Ж.к.Люлин-1,2")) {
 				directionName = directionName.replaceAll("Ж\\.к\\.Люлин-1,2",
@@ -299,23 +302,15 @@ public class Utils {
 					"-временна");
 		}
 
-		// BUS #4
-		if (directionName
-				.contains("ж.к. Младост 1/бл.70/ - Кокалянско ханче")) {
-			directionName = directionName.replaceAll(
-					"ж.к. Младост 1/бл\\.70/ - Кокалянско ханче",
-					"ж.к. Младост 1 /бл\\.70/ - Кокалянско ханче");
-		}
-		if (directionName.contains("Кокалянско ханче - ж.к. Младост 1")) {
-			directionName = directionName.replaceAll(
-					"Кокалянско ханче - ж\\.к\\. Младост 1",
-					"Кокалянско ханче - ж\\.к\\. Младост 1 /бл\\.70/");
-		}
-
 		// BUS #7
 		if (directionName.contains("ЧИТАЛИЩЕ СВЕТЛИНА")) {
 			directionName = directionName.replaceAll("ЧИТАЛИЩЕ СВЕТЛИНА",
 					"Читалище Светлина");
+		}
+
+		// BUS #8
+		if (directionName.contains("Село Герман - село Кривина")) {
+			directionName = "Село Герман - Село Кривина";
 		}
 
 		// BUS #9
@@ -389,6 +384,12 @@ public class Utils {
 					"СУ Света Климент Охридски", "СУ Свети Климент Охридски");
 		}
 
+		// BUS #309
+		if (directionName.contains("ж.к. Люлин 1,2 - бул. Илиянци")) {
+			directionName = directionName.replaceAll("бул\\. Илиянци",
+					"бул\\. Илиянци (подлеза)");
+		}
+
 		// BUS #413
 		if (directionName.contains("Технополис ж.к.Младост")) {
 			directionName = directionName.replaceAll(
@@ -439,9 +440,24 @@ public class Utils {
 			directionName = "Площад Централна гара - Гара Захарна фабрика";
 		}
 
+		// TRAM #6
+		if ("Ж. к. Обеля - 2 - ж.к. Иван Вазов".equals(directionName)) {
+			directionName = "ж.к. Обеля 2 - ж.к. Иван Вазов";
+		}
+
+		// TRAM #10
+		if ("Метростанция Витоша - Жк. Западен парк".equals(directionName)) {
+			directionName = "Метростанция Витоша - ж.к. Западен парк";
+		}
+
 		// TRAM #19
 		if ("кв. Княжево Гара София север".equals(directionName)) {
 			directionName = "кв. Княжево - Гара София север";
+		}
+
+		// TRAM #23
+		if ("Младежки театър - ж.к. Дружба 2".equals(directionName)) {
+			directionName = "Младежки театър - ж.к. Дружба 2 (ул. Обиколна)";
 		}
 
 		return directionName;
