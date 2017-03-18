@@ -76,7 +76,7 @@ public class HtmlResult {
 
 		/*
 		 * Depending on the day that we are running the script, some of the
-		 * vehicles will be missing - in case of WEEKDAY, the weekend vehicnles
+		 * vehicles will be missing - in case of WEEKDAY, the weekend vehicles
 		 * will be missing, in case of WEEKEND - the weekday vehicles will be
 		 * missing. As the WEEKEND vehicles are less, we MUST run the script
 		 * only on WEEKDAYs, so have full set of information recorded in the
@@ -89,11 +89,11 @@ public class HtmlResult {
 		 * /* WEEKEND Public Transport
 		 */
 		if (isNullOrEmpty(direction) && isBus(type) && "66".equals(number)) {
-			direction = "Хотел Морени - ж.к. Гоце Делчев";
+			direction = "Хотел Морени - Зоопарка";
 		}
 
 		if (isNullOrEmpty(direction) && isBus(type) && "103".equals(number)) {
-			direction = "Автостанция Овча купел - в.з. Бонсови поляни";
+			direction = "Автостанция Овча купел - в.з. Люлин";
 		}
 
 		if (isNullOrEmpty(direction) && isBus(type) && "505".equals(number)) {
@@ -702,13 +702,17 @@ public class HtmlResult {
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(),
 				vehicle.getNumber(), "0837", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(),
-				vehicle.getNumber(), "1456", 1));
+				vehicle.getNumber(), "2780", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(),
-				vehicle.getNumber(), "0599", 1));
+				vehicle.getNumber(), "0912", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(),
-				vehicle.getNumber(), "0600", 2));
+				vehicle.getNumber(), "0749", 1));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(),
-				vehicle.getNumber(), "2597", 2));
+				vehicle.getNumber(), "2764", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(),
+				vehicle.getNumber(), "0909", 2));
+		vehicleStationsList.add(new VehicleStation(vehicle.getType(),
+				vehicle.getNumber(), "2756", 2));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(),
 				vehicle.getNumber(), "0834", 2));
 		vehicleStationsList.add(new VehicleStation(vehicle.getType(),

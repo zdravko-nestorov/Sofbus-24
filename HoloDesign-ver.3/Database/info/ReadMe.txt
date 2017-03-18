@@ -1,3 +1,6 @@
-DATE: Sun August 07 15:00:00 GMT+2 2016
+DATE: Sun March 20 08:00:00 GMT+2 2017
 
-IMPORTANT: Run only on WEEKDAYS
+IMPORTANT:
+1. First - run on WEEKENDS to retrieve the stations from these lines
+   (needed only to retrieve the stations)
+2. Second - run on WEEKDAYS to retrieve all other needed information

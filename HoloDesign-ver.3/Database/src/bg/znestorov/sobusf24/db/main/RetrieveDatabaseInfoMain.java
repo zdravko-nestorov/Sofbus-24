@@ -14,7 +14,9 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import bg.znestorov.sobusf24.db.databases.SQLiteJDBC;
@@ -33,6 +35,7 @@ public class RetrieveDatabaseInfoMain {
 
 	private static Logger logger;
 	private static FileHandler fh;
+	private static ConsoleHandler ch;
 
 	private static long startTime;
 	private static long endTime;
@@ -41,10 +44,21 @@ public class RetrieveDatabaseInfoMain {
 		try {
 			logger = Logger.getLogger("VEHICLES AND STATION INFORMATION");
 			logger.setUseParentHandlers(false);
-			fh = new FileHandler(Constants.DB_LOG_FILE);
-			logger.addHandler(fh);
+			
 			LogFormatter formatter = new LogFormatter();
+			
+			// Create the FileHandler and set its params
+			fh = new FileHandler(Constants.DB_LOG_FILE);
+			fh.setLevel(Level.ALL);
 			fh.setFormatter(formatter);
+			logger.addHandler(fh);
+			
+			// Create the FileHandler and set its params
+			ch = new ConsoleHandler();
+			ch.setLevel(Level.ALL);
+			ch.setFormatter(formatter);
+			logger.addHandler(ch);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

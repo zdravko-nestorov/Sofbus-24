@@ -1,12 +1,12 @@
 DATE: Sun December 05 22:00:00 GMT+2 2016
 
 DB Records:
- * Stations - 2692 (SKGT) + 70 (METRO) = 2762
- * Vehicles - 119
- * Stations/Vehicles - 5562
+ * Stations - 2696 (SKGT) + 70 (METRO) = 2766
+ * Vehicles - 120
+ * Stations/Vehicles - 5537
 
 Only WEEKDAY:
- * BUS - 7, 58, 100, 294
+ * BUS - 7, 58, 294, 304
 
 Only WEEKEND:
  * BUS - 66, 103
