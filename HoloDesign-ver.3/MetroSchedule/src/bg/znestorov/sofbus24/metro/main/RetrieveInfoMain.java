@@ -8,7 +8,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import bg.znestorov.sobusf24.metro.utils.Constants;
@@ -21,17 +23,28 @@ import bg.znestorov.sofbus24.metro.stations.MetroStationsMain;
 
 public class RetrieveInfoMain {
 
-	private static Logger logger = Logger
-			.getLogger("***RETRIEVE METRO SCHEDULE***");
+	private static Logger logger;
 	private static FileHandler fh;
+	private static ConsoleHandler ch;
 
 	public static void main(String[] args) {
 		try {
+			logger = Logger.getLogger("***RETRIEVE METRO SCHEDULE***");
 			logger.setUseParentHandlers(false);
-			fh = new FileHandler(Constants.METRO_LOG_FILE);
-			logger.addHandler(fh);
+
 			LogFormatter formatter = new LogFormatter();
+
+			// Create the FileHandler and set its params
+			fh = new FileHandler(Constants.METRO_LOG_FILE);
+			fh.setLevel(Level.ALL);
 			fh.setFormatter(formatter);
+			logger.addHandler(fh);
+
+			// Create the FileHandler and set its params
+			ch = new ConsoleHandler();
+			ch.setLevel(Level.ALL);
+			ch.setFormatter(formatter);
+			logger.addHandler(ch);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
