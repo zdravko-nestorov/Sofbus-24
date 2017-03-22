@@ -1,7 +1,7 @@
-DATE: Tue Mar 21 15:00:00 GMT+2 2017
+DATE: Tue Mar 22 11:00:00 GMT+2 2017
 
 DB Records:
- * Stations - 2698 (SKGT) + 70 (METRO) = 2768
+ * Stations - 2697 (SKGT) + 70 (METRO) = 2767
  * Vehicles - 119
  * Stations/Vehicles - 5598
 
