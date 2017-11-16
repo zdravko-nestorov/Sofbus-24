@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import bg.znestorov.sobusf24.db.utils.Constants;
-import bg.znestorov.sobusf24.db.utils.Utils;
+import bg.znestorov.sofbus24.db.utils.Constants;
+import bg.znestorov.sofbus24.db.utils.Utils;
 
 public class HtmlResultVehiclesNumbers {
 

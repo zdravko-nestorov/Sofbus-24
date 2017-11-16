@@ -14,8 +14,8 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import bg.znestorov.sobusf24.db.utils.Constants;
-import bg.znestorov.sobusf24.db.utils.Utils;
+import bg.znestorov.sofbus24.db.utils.Constants;
+import bg.znestorov.sofbus24.db.utils.Utils;
 import bg.znestorov.sofbus24.db.entity.Station;
 
 public class StationCoordinates {

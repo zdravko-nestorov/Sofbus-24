@@ -6,7 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import bg.znestorov.sobusf24.db.utils.Constants;
+import bg.znestorov.sofbus24.db.utils.Constants;
 
 public class HtmlRequestVehiclesNumbers {
 
