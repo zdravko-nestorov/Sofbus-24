@@ -26,7 +26,7 @@ public class Constants {
     static final File DB_FULL_DEST_FILE = new File("original\\api\\backups\\sofbus24-" + getDate() + ".db");
 
     public static final String DB_INFORMATION_PATH = "info\\api\\Information.txt";
-    public static final String DB_INFORMATION_TITLE = "Database Information";
+    public static final String DB_INFORMATION_TITLE = "Database Information:";
     public static final String DB_INFORMATION_STATIONS = " * Stations - %s (BTT) + %s (METRO) = %s";
     public static final String DB_INFORMATION_VEHICLES = " * Vehicles - %s";
     public static final String DB_INFORMATION_STATIONS_VEHICLES = " * Stations/Vehicles - %s";
