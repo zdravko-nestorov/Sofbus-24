@@ -19,6 +19,8 @@ public class RetrieveDatabaseInfoMain {
 
     public static void main(String[] args) {
 
+        long globalStart = getTime();
+
         long startTime = getTime();
         logInfo("*** COPY EMPTY DATABASE ***");
         if (!Utils.copyEmptyDatabase()) {
@@ -56,6 +58,9 @@ public class RetrieveDatabaseInfoMain {
         logInfo("*** WRITE DATABASE INFORMATION TO A FILE ***");
         DatabaseInfo.getInstance().writeInformation();
         logDuration("Backup of the full database took ", startTime);
+
+        logInfo("-----------------------\n");
+        logDuration("Database retrieval took ", globalStart);
     }
 
 }

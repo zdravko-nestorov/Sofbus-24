@@ -7,10 +7,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Type;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -51,8 +48,11 @@ public class RetrieveStationsMain {
             }
         });
 
+        List<Station> stationList = new ArrayList<>(stationSet);
+        stationList.sort(Comparator.comparing(Station::getCode));
+
         // Transform a Set of Stations to a Map of stations with the CODE as a key
-        return stationSet.stream().collect(Collectors.toMap(Station::getCode, Function.identity()));
+        return stationList.stream().collect(Collectors.toMap(Station::getCode, Function.identity()));
     }
 
 }
