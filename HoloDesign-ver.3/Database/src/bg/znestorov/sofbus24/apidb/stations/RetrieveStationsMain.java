@@ -51,8 +51,11 @@ public class RetrieveStationsMain {
         List<Station> stationList = new ArrayList<>(stationSet);
         stationList.sort(Comparator.comparing(Station::getCode));
 
-        // Transform a Set of Stations to a Map of stations with the CODE as a key
-        return stationList.stream().collect(Collectors.toMap(Station::getCode, Function.identity()));
+        // Transform a Set of Stations to a LinkedHashMap of stations with the CODE as a key
+        return stationList.stream().collect(Collectors.toMap(Station::getCode, Function.identity(),
+                (u, v) -> {
+                    throw new IllegalStateException(String.format("Duplicate key %s", u));
+                }, LinkedHashMap::new));
     }
 
 }

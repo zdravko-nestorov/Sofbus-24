@@ -51,7 +51,7 @@ public class Constants {
     // Metro #1 (Code: 1033)
     public static final String VEHICLE_METRO1_ID = "METRO_1";
     public static final String VEHICLE_METRO1_NAME = "1033";
-    public static final String VEHICLE_METRO1_DIRECTION = "м.Джеймс Баучер-м.Обеля-м.Младост 1";
+    public static final String VEHICLE_METRO1_DIRECTION = "М.ДЖЕЙМС БАУЧЕР - М.ОБЕЛЯ - М.МЛАДОСТ-1";
     private static final String[] VEHICLE_METRO1_ROUTE1 = {"2975", "2977", "2979", "2981", "2983", "2985", "2987", "2989", "2991", "2993", "2995", "2997", "2999"};
     private static final String[] VEHICLE_METRO1_ROUTE2 = {"3001", "3003", "3005", "3007", "3009", "3011", "3013", "3015", "3017", "3019", "3021", "3023", "3025", "3027", "3029", "3031", "3033", "3035", "3037", "3039", "3041", "3043"};
     public static final String[][] VEHICLE_METRO1_ROUTES = {VEHICLE_METRO1_ROUTE1, VEHICLE_METRO1_ROUTE2};
@@ -59,7 +59,7 @@ public class Constants {
     // Metro #2 (Code: 1034)
     public static final String VEHICLE_METRO2_ID = "METRO_2";
     public static final String VEHICLE_METRO2_NAME = "1034";
-    public static final String VEHICLE_METRO2_DIRECTION = "м.Младост 1-м.Обеля-м.Джеймс Баучер";
+    public static final String VEHICLE_METRO2_DIRECTION = "М.МЛАДОСТ-1 - М.ОБЕЛЯ - М.ДЖЕЙМС БАУЧЕР";
     private static final String[] VEHICLE_METRO2_ROUTE1 = {"3044", "3042", "3040", "3038", "3036", "3034", "3032", "3030", "3028", "3026", "3024", "3022", "3020", "3018", "3016", "3014", "3012", "3010", "3008", "3006", "3004", "3002"};
     private static final String[] VEHICLE_METRO2_ROUTE2 = {"3000", "2998", "2996", "2994", "2992", "2990", "2988", "2986", "2984", "2982", "2980", "2978", "2976"};
     public static final String[][] VEHICLE_METRO2_ROUTES = {VEHICLE_METRO2_ROUTE1, VEHICLE_METRO2_ROUTE2};
