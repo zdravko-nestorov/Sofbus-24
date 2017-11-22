@@ -49,14 +49,14 @@ public class RetrieveDatabaseInfoMain {
 
         startTime = getTime();
         logInfo("-----------------------\n");
-        logInfo("*** BACKUP FULL DATABASE ***");
-        Utils.backupDatabase();
-        logDuration("Backup of the full database took ", startTime);
+        logInfo("*** WRITE DATABASE INFORMATION TO A FILE ***");
+        DatabaseInfo.getInstance().writeInformation();
+        logDuration("Write the database information took ", startTime);
 
         startTime = getTime();
         logInfo("-----------------------\n");
-        logInfo("*** WRITE DATABASE INFORMATION TO A FILE ***");
-        DatabaseInfo.getInstance().writeInformation();
+        logInfo("*** BACKUP FULL DATABASE ***");
+        Utils.backupDatabase();
         logDuration("Backup of the full database took ", startTime);
 
         logInfo("-----------------------\n");

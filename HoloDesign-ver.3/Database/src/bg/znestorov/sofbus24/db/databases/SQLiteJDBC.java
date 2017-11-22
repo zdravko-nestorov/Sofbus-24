@@ -78,7 +78,7 @@ public class SQLiteJDBC {
 
 		try {
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:database/sofbus24.db");
+			c = DriverManager.getConnection("jdbc:sqlite:database/html/sofbus24.db");
 			c.setAutoCommit(false);
 			logger.info("Opened sofbus24.db database successfully!\n");
 

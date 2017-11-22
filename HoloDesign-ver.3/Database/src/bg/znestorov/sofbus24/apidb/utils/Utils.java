@@ -15,19 +15,16 @@ import bg.znestorov.sofbus24.apidb.entity.Station;
 
 import static bg.znestorov.sofbus24.apidb.logger.DBLogger.logDuration;
 import static bg.znestorov.sofbus24.apidb.logger.DBLogger.logSevere;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_EMPTY_DEST_FILE;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_EMPTY_SOURCE_FILE;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_FULL_DEST_FILE;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_JOURNAL_EMPTY_DEST_FILE;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.*;
 import static bg.znestorov.sofbus24.apidb.utils.UtilsDuration.getTime;
 
 public class Utils {
 
     public static boolean copyEmptyDatabase() {
         try {
-            FileUtils.deleteQuietly(DB_EMPTY_DEST_FILE);
-            FileUtils.deleteQuietly(DB_JOURNAL_EMPTY_DEST_FILE);
-            FileUtils.copyFile(DB_EMPTY_SOURCE_FILE, DB_EMPTY_DEST_FILE);
+            FileUtils.deleteQuietly(DB_CURRENT_FULL_FILE);
+            FileUtils.deleteQuietly(DB_CURRENT_JOURNAL_FULL_FILE);
+            FileUtils.copyFile(DB_ORIGINAL_EMPTY_FILE, DB_CURRENT_FULL_FILE);
             return true;
         } catch (IOException e) {
             logSevere("Copying of the DB was not successful - " + e.getClass().getName() + ": " + e.getMessage());
@@ -37,8 +34,11 @@ public class Utils {
 
     public static void backupDatabase() {
         try {
-            FileUtils.deleteQuietly(DB_FULL_DEST_FILE);
-            FileUtils.copyFile(DB_EMPTY_DEST_FILE, DB_FULL_DEST_FILE);
+            FileUtils.deleteQuietly(DB_BACKUP_FULL_FILE);
+            FileUtils.copyFile(DB_CURRENT_FULL_FILE, DB_BACKUP_FULL_FILE);
+
+            FileUtils.deleteQuietly(DB_INFORMATION_BACKUP_FILE);
+            FileUtils.copyFile(DB_INFORMATION_FILE, DB_INFORMATION_BACKUP_FILE);
         } catch (IOException e) {
             logSevere("Copying of the DB was not successful - " + e.getClass().getName() + ": " + e.getMessage());
         }
@@ -62,7 +62,7 @@ public class Utils {
     }
 
     public static String toCamelCase(String input) {
-        return WordUtils.capitalizeFully(input, ' ');
+        return WordUtils.capitalizeFully(input, ' ').replace('³', '²');
     }
 
     public static String formDirection(Map<Integer, List<Station>> routes) {

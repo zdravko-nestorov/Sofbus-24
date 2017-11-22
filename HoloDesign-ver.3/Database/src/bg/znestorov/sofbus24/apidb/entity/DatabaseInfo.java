@@ -49,8 +49,8 @@ public class DatabaseInfo {
 
     public void writeInformation() {
         try {
-            FileUtils.deleteQuietly(new File(DB_INFORMATION_PATH));
-            Files.write(Paths.get(DB_INFORMATION_PATH), info.toString().getBytes());
+            FileUtils.deleteQuietly(DB_INFORMATION_FILE);
+            Files.write(Paths.get(DB_INFORMATION_FILE.getPath()), info.toString().getBytes());
         } catch (IOException e) {
             logSevere("There is a problem writing the DB information - " + e.getClass().getName() + ": " + e.getMessage());
         }

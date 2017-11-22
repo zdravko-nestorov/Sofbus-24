@@ -20,12 +20,18 @@ public class Constants {
     /**
      * DATABASE CONSTANTS
      */
-    static final File DB_EMPTY_SOURCE_FILE = new File("original\\api\\sofbus24-empty.db");
-    static final File DB_EMPTY_DEST_FILE = new File("database\\api\\sofbus24.db");
-    static final File DB_JOURNAL_EMPTY_DEST_FILE = new File("database\\api\\sofbus24.db-journal");
-    static final File DB_FULL_DEST_FILE = new File("original\\api\\backups\\sofbus24-" + getDate() + ".db");
+    private static final String DB_PATH = "database\\api\\";
+    private static final String DB_BACKUP_PATH = DB_PATH + "backups\\";
+    static final File DB_ORIGINAL_EMPTY_FILE = new File(DB_PATH + "sofbus24-empty.db");
+    static final File DB_CURRENT_FULL_FILE = new File(DB_PATH + "sofbus24.db");
+    static final File DB_CURRENT_JOURNAL_FULL_FILE = new File(DB_PATH + "sofbus24.db-journal");
+    static final File DB_BACKUP_FULL_FILE = new File(DB_BACKUP_PATH + "sofbus24-" + getDate() + ".db");
 
-    public static final String DB_INFORMATION_PATH = "info\\api\\Information.txt";
+    private static final String DB_INFO_CURRENT_PATH = "info\\api\\";
+    private static final String DB_INFO_BACKUP_PATH = DB_INFO_CURRENT_PATH + "backups\\";
+    public static final File DB_INFORMATION_FILE = new File(DB_INFO_CURRENT_PATH + "Information.txt");
+    public static final File DB_INFORMATION_BACKUP_FILE = new File(DB_INFO_BACKUP_PATH + "Information-" + getDate() + ".txt");
+
     public static final String DB_INFORMATION_TITLE = "Database Information:";
     public static final String DB_INFORMATION_STATIONS = " * Stations - %s (BTT) + %s (METRO) = %s";
     public static final String DB_INFORMATION_VEHICLES = " * Vehicles - %s";
