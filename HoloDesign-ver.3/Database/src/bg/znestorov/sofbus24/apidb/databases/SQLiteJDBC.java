@@ -1,12 +1,17 @@
 package bg.znestorov.sofbus24.apidb.databases;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import bg.znestorov.sofbus24.apidb.entity.DatabaseInfo;
+import bg.znestorov.sofbus24.apidb.entity.MetroStationsInfo;
 import bg.znestorov.sofbus24.apidb.entity.Station;
 import bg.znestorov.sofbus24.apidb.entity.Vehicle;
 import bg.znestorov.sofbus24.apidb.entity.VehicleType;
@@ -16,6 +21,7 @@ import static bg.znestorov.sofbus24.apidb.logger.DBLogger.logDuration;
 import static bg.znestorov.sofbus24.apidb.logger.DBLogger.logInfo;
 import static bg.znestorov.sofbus24.apidb.logger.DBLogger.logSevere;
 import static bg.znestorov.sofbus24.apidb.logger.DBLogger.logWarning;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.LINE_SEPARATOR;
 
 public class SQLiteJDBC {
 
@@ -51,6 +57,10 @@ public class SQLiteJDBC {
             startTime = Utils.getTime();
             initVehicleStationsTable();
             logDuration("The 'SOF_VEST' table is initialized for ", startTime);
+
+            startTime = Utils.getTime();
+            initMetroStationsInfo();
+            logDuration("The 'METRO STATIONS' are retrieved for ", startTime);
 
         } catch (Exception e) {
             logSevere(e.getClass().getName() + ": " + e.getMessage());
@@ -210,6 +220,25 @@ public class SQLiteJDBC {
         }
 
         return vehicleId;
+    }
+
+    private void initMetroStationsInfo() {
+
+        StringBuilder metroStationsProps = new StringBuilder();
+
+        try {
+            String sql = "SELECT STAT_NUMBER || '=' || STAT_LATITUDE || ',' || STAT_LONGITUDE FROM SOF_STAT WHERE STAT_TYPE LIKE 'METRO%';";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                metroStationsProps.append(rs.getString(1)).append(LINE_SEPARATOR);
+            }
+
+        } catch (SQLException sqle) {
+            logWarning("There was a problem finding the metro stations coordinates...");
+        }
+
+        MetroStationsInfo.getInstance().appendMetroStationsInfo(metroStationsProps.toString().trim());
     }
 
 }

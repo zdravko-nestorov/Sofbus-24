@@ -2,13 +2,17 @@ package bg.znestorov.sofbus24.apidb.entity;
 
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static bg.znestorov.sofbus24.apidb.logger.DBLogger.logSevere;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.*;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_INFORMATION_FILE;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_INFORMATION_STATIONS;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_INFORMATION_STATIONS_VEHICLES;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_INFORMATION_TITLE;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_INFORMATION_VEHICLES;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.LINE_SEPARATOR;
 import static bg.znestorov.sofbus24.apidb.utils.UtilsDuration.getFullDate;
 
 public class DatabaseInfo {

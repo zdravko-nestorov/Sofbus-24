@@ -7,7 +7,12 @@ import com.google.gson.JsonParser;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.IntStream;
 
@@ -17,7 +22,21 @@ import bg.znestorov.sofbus24.apidb.entity.VehicleType;
 import bg.znestorov.sofbus24.apidb.logger.DBLogger;
 import bg.znestorov.sofbus24.apidb.utils.Utils;
 
-import static bg.znestorov.sofbus24.apidb.utils.Constants.*;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.URL_VEHICLES_CODES;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_CODE;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_ID;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_LINES;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO1_DIRECTION;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO1_ID;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO1_NAME;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO1_ROUTES;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO2_DIRECTION;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO2_ID;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO2_NAME;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO2_ROUTES;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_NAME;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_ROUTES;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_TYPE;
 
 public class RetrieveVehiclesMain {
 
@@ -141,7 +160,12 @@ public class RetrieveVehiclesMain {
         // multi-dimensional array is not empty (passed as a constant)
         if (ArrayUtils.isNotEmpty(vehicleRoute)) {
             for (String stationCode : vehicleRoute) {
-                vehicleMetroStations.add(stationMap.get(stationCode));
+
+                // Only in case the station is found, add it to the vehicle route
+                Station station = stationMap.get(stationCode);
+                if (station != null) {
+                    vehicleMetroStations.add(station);
+                }
             }
         }
 

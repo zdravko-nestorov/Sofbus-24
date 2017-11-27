@@ -5,6 +5,7 @@ import java.util.Set;
 
 import bg.znestorov.sofbus24.apidb.databases.SQLiteJDBC;
 import bg.znestorov.sofbus24.apidb.entity.DatabaseInfo;
+import bg.znestorov.sofbus24.apidb.entity.MetroStationsInfo;
 import bg.znestorov.sofbus24.apidb.entity.Station;
 import bg.znestorov.sofbus24.apidb.entity.Vehicle;
 import bg.znestorov.sofbus24.apidb.stations.RetrieveStationsMain;
@@ -52,6 +53,12 @@ public class RetrieveDatabaseInfoMain {
         logInfo("*** WRITE DATABASE INFORMATION TO A FILE ***");
         DatabaseInfo.getInstance().writeInformation();
         logDuration("Write the database information took ", startTime);
+
+        startTime = getTime();
+        logInfo("-----------------------\n");
+        logInfo("*** WRITE METRO STATIONS COORDINATES TO A FILE (METRO SCHEDULE PROJECT) ***");
+        MetroStationsInfo.getInstance().writeInformation();
+        logDuration("Write the metro stations coordinates took ", startTime);
 
         startTime = getTime();
         logInfo("-----------------------\n");

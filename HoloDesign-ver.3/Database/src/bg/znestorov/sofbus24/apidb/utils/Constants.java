@@ -27,15 +27,19 @@ public class Constants {
     static final File DB_CURRENT_JOURNAL_FULL_FILE = new File(DB_PATH + "sofbus24.db-journal");
     static final File DB_BACKUP_FULL_FILE = new File(DB_BACKUP_PATH + "sofbus24-" + getDate() + ".db");
 
+    // Full DB information
     private static final String DB_INFO_CURRENT_PATH = "info\\api\\";
     private static final String DB_INFO_BACKUP_PATH = DB_INFO_CURRENT_PATH + "backups\\";
     public static final File DB_INFORMATION_FILE = new File(DB_INFO_CURRENT_PATH + "Information.txt");
     public static final File DB_INFORMATION_BACKUP_FILE = new File(DB_INFO_BACKUP_PATH + "Information-" + getDate() + ".txt");
 
+    // Metro stations DB information
     public static final String DB_INFORMATION_TITLE = "Database Information:";
     public static final String DB_INFORMATION_STATIONS = " * Stations - %s (BTT) + %s (METRO) = %s";
     public static final String DB_INFORMATION_VEHICLES = " * Vehicles - %s";
     public static final String DB_INFORMATION_STATIONS_VEHICLES = " * Stations/Vehicles - %s";
+
+    public static final File DB_METRO_INFO_FILE = new File("../MetroSchedule/properties/metro_coordinates.properties");
 
     /**
      * STATIONS AND VEHICLES CODES CONSTANTS
