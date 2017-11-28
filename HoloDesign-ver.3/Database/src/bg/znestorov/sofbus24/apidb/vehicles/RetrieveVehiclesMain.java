@@ -165,6 +165,8 @@ public class RetrieveVehiclesMain {
                 Station station = stationMap.get(stationCode);
                 if (station != null) {
                     vehicleMetroStations.add(station);
+                } else {
+                    DBLogger.log(Level.WARNING, "Couldn't find station number #" + stationCode);
                 }
             }
         }
