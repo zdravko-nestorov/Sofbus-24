@@ -37,6 +37,9 @@ public class Utils {
             FileUtils.deleteQuietly(DB_BACKUP_FULL_FILE);
             FileUtils.copyFile(DB_CURRENT_FULL_FILE, DB_BACKUP_FULL_FILE);
 
+            FileUtils.deleteQuietly(DB_CONFIG_FULL_FILE);
+            FileUtils.copyFile(DB_CURRENT_FULL_FILE, DB_CONFIG_FULL_FILE);
+
             FileUtils.deleteQuietly(DB_INFORMATION_BACKUP_FILE);
             FileUtils.copyFile(DB_INFORMATION_FILE, DB_INFORMATION_BACKUP_FILE);
         } catch (IOException e) {

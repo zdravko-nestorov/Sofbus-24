@@ -26,6 +26,7 @@ public class Constants {
     static final File DB_CURRENT_FULL_FILE = new File(DB_PATH + "sofbus24.db");
     static final File DB_CURRENT_JOURNAL_FULL_FILE = new File(DB_PATH + "sofbus24.db-journal");
     static final File DB_BACKUP_FULL_FILE = new File(DB_BACKUP_PATH + "sofbus24-" + getDate() + ".db");
+    static final File DB_CONFIG_FULL_FILE = new File("../ConfigData/Databases/sofbus24.db");
 
     // Full DB information
     private static final String DB_INFO_CURRENT_PATH = "info\\api\\";
