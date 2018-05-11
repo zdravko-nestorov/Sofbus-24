@@ -46,6 +46,12 @@ public class HtmlResultStationSchedule {
 				String hour = getHour(stationMatcher.group(2));
 
 				if (hour != null) {
+
+					// If the time is 00:xx, change to 24:xx
+					if (Integer.parseInt(hour) == 0) {
+						hour = "24";
+					}
+
 					// Check if it is a WEEKDAY or HOLIDAY
 					if (i == 1) {
 						ms.getWeekdaySchedule().get(Integer.parseInt(hour))
