@@ -86,19 +86,19 @@ public class HtmlResultStationSchedule {
 	private static String getHints(boolean isIncompleteCourse,
 			String directionName) {
 
-		StringBuilder incopleteCourse = new StringBuilder("");
+		StringBuilder incompleteCourse = new StringBuilder("");
 
 		if (isIncompleteCourse) {
-			incopleteCourse.append("|IC");
+			incompleteCourse.append("|IC");
 		}
 
 		if ("м.Витоша-м.Обеля-м.Летище София".equals(directionName)) {
-			incopleteCourse.append("|SA");
+			incompleteCourse.append("|SA");
 		} else if ("м.Витоша-м.Обеля-м.Бизнес Парк".equals(directionName)) {
-			incopleteCourse.append("|BP");
+			incompleteCourse.append("|BP");
 		}
 
-		return incopleteCourse.toString();
+		return incompleteCourse.toString();
 	}
 
 }
