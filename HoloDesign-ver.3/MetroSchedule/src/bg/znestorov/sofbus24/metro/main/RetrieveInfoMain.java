@@ -13,8 +13,8 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import bg.znestorov.sobusf24.metro.utils.Constants;
-import bg.znestorov.sobusf24.metro.utils.LogFormatter;
+import bg.znestorov.sofbus24.metro.utils.Constants;
+import bg.znestorov.sofbus24.metro.utils.LogFormatter;
 import bg.znestorov.sofbus24.metro.schedule.MetroStation;
 import bg.znestorov.sofbus24.metro.schedule.MetroStationsScheduleMain;
 import bg.znestorov.sofbus24.metro.stations.MetroDirection;

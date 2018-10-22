@@ -4,8 +4,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import bg.znestorov.sobusf24.metro.utils.Constants;
-import bg.znestorov.sobusf24.metro.utils.Utils;
+import bg.znestorov.sofbus24.metro.utils.Constants;
+import bg.znestorov.sofbus24.metro.utils.Utils;
 
 /**
  * Process the HTML response for a station. The format of the HTML soruce is as

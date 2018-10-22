@@ -7,7 +7,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import bg.znestorov.sobusf24.metro.utils.Constants;
+import bg.znestorov.sofbus24.metro.utils.Constants;
 
 public class HtmlRequestStationSchedule {
 

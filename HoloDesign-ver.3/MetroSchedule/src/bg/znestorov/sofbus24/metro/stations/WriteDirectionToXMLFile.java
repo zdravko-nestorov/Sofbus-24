@@ -18,7 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import bg.znestorov.sobusf24.metro.utils.Constants;
+import bg.znestorov.sofbus24.metro.utils.Constants;
 
 /**
  * Write the MetroDirectionTransfer object to a XML file
