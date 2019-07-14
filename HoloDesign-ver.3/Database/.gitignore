@@ -1,0 +1,9 @@
+# Log file
+/log
+
+# Backups
+/info/api/backups
+/database/api/backups
+
+# IntelliJ configuration files
+Database.iml
