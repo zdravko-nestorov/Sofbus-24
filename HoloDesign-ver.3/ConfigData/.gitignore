@@ -1,3 +1,4 @@
 # IntelliJ configuration files
 /.idea
+/out
 ConfigData.iml
