@@ -1,6 +1,6 @@
-Fri, 10 Jan 2020 22:33:29 +0200
+Mon, 27 Jan 2020 22:19:05 +0200
 
 Database Information:
- * Stations - 2649 (BTT) + 70 (METRO) = 2719
+ * Stations - 2644 (BTT) + 70 (METRO) = 2714
  * Vehicles - 121
- * Stations/Vehicles - 6069
+ * Stations/Vehicles - 6075
