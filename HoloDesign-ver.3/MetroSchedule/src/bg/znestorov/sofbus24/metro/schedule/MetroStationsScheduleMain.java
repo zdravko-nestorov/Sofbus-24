@@ -49,7 +49,7 @@ public class MetroStationsScheduleMain {
 			Properties coordinatesProp) {
 
 		// Check if there are four metro directions
-		if (metroDirectionsStations.size() == 4) {
+		if (metroDirectionsStations.size() == 6) {
 
 			// Iterate over the first two directions and compare and merge the
 			// same stations
@@ -59,13 +59,16 @@ public class MetroStationsScheduleMain {
 						.get(i);
 				ArrayList<MetroStation> metroStations2 = metroDirectionsStations
 						.get(i + 2);
-				int count = Math.max(metroStations1.size(), metroStations2.size());
+				ArrayList<MetroStation> metroStations3 = metroDirectionsStations
+						.get(i + 4);
+				int count = Math.max(Math.max(metroStations1.size(), metroStations2.size()), metroStations3.size());
 
-				// In case of second direction (and fourth one) - reverse the
+				// In case of second direction (and fourth-sixth one) - reverse the
 				// order of the stations, so match the same ones
 				if (i == 1) {
 					Collections.reverse(metroStations1);
 					Collections.reverse(metroStations2);
+					Collections.reverse(metroStations3);
 				}
 
 				// Iterate over the stations for the current direction and save
@@ -80,6 +83,11 @@ public class MetroStationsScheduleMain {
 					MetroStation ms2 = null;
 					if (metroStations2.size() > j) {
 						ms2 = metroStations2.get(j);
+					}
+
+					MetroStation ms3 = null;
+					if (metroStations3.size() > j) {
+						ms3 = metroStations3.get(j);
 					}
 
 					// Check if both stations are found - merge them and save to
@@ -110,6 +118,12 @@ public class MetroStationsScheduleMain {
 								coordinatesProp);
 					} else {
 						WriteScheduleToXMLFile.saveToXMLFile(logger, ms2,
+								coordinatesProp);
+					}
+
+					// Save station from M3 to a file (no relation to stations from M1-M2)
+					if (ms3 != null) {
+						WriteScheduleToXMLFile.saveToXMLFile(logger, ms3,
 								coordinatesProp);
 					}
 				}
