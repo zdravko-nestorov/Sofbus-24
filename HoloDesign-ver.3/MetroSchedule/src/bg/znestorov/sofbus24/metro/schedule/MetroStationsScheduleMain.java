@@ -15,12 +15,13 @@ public class MetroStationsScheduleMain {
 			String directionId, String directionName,
 			Map.Entry<String, String> station) {
 
+		int scheduleNumber = Integer.parseInt(station.getKey()) > 3250 ? 1 : 0;
 		String weekdayHtmlResponse = HtmlRequestStationSchedule
 				.retrieveStationsInfo(logger, directionId, station,
-						Constants.STATION_WEEKDAY_SCHEDULE_URL);
+						Constants.STATION_WEEKDAY_SCHEDULE_URL[scheduleNumber]);
 		String holidayHtmlResponse = HtmlRequestStationSchedule
 				.retrieveStationsInfo(logger, directionId, station,
-						Constants.STATION_HOLIDAY_SCHEDULE_URL);
+						Constants.STATION_HOLIDAY_SCHEDULE_URL[scheduleNumber]);
 
 		if ("".equals(weekdayHtmlResponse) || "".equals(holidayHtmlResponse)) {
 			logger.warning(
@@ -58,8 +59,7 @@ public class MetroStationsScheduleMain {
 						.get(i);
 				ArrayList<MetroStation> metroStations2 = metroDirectionsStations
 						.get(i + 2);
-				int count = metroStations1.size() > metroStations2.size()
-						? metroStations1.size() : metroStations2.size();
+				int count = Math.max(metroStations1.size(), metroStations2.size());
 
 				// In case of second direction (and fourth one) - reverse the
 				// order of the stations, so match the same ones

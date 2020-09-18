@@ -1,21 +1,28 @@
 package bg.znestorov.sofbus24.metro.stations;
 
+import bg.znestorov.sofbus24.metro.utils.Constants;
+
 import java.util.logging.Logger;
 
 public class MetroStationsMain {
 
 	public static MetroDirectionTransfer saveStationsInfoToAFile(
 			Logger logger) {
-		String htmlResponse = HtmlRequest.retrieveStationsInfo(logger);
+		MetroDirectionTransfer mdt = new MetroDirectionTransfer();
 
-		if ("".equals(htmlResponse)) {
-			logger.warning(
-					"Problem with retrieving information about the METRO directions...");
-			return null;
+		for (int lineNo = 0; lineNo < Constants.METRO_SCHEDULE_URL.length; lineNo++) {
+			String htmlResponse = HtmlRequest.retrieveStationsInfo(logger, lineNo);
+
+			if ("".equals(htmlResponse)) {
+				logger.warning(
+						"Problem with retrieving information about the METRO directions...");
+				return null;
+			}
+
+			MetroDirectionTransfer mdtPerLine = HtmlResult.getMetroDirections(logger,
+					htmlResponse, lineNo);
+			mdt.getDirectionsList().addAll(mdtPerLine.getDirectionsList());
 		}
-
-		MetroDirectionTransfer mdt = HtmlResult.getMetroDirections(logger,
-				htmlResponse);
 
 		if (mdt == null) {
 			logger.warning("Problem with parsing the information from SGKT...");

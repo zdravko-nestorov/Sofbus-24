@@ -22,11 +22,12 @@ public class HtmlResult {
 	 * 
 	 * @param htmlSrc
 	 *            the HTML response
+	 * @param lineNo the metro line (M1-M2 or M3)
 	 * @return a MetroDirectionTransfer object with all needed information about
 	 *         the directions and the stations
 	 */
 	public static MetroDirectionTransfer getMetroDirections(Logger logger,
-			String htmlSrc) {
+			String htmlSrc, int lineNo) {
 
 		logger.info(
 				"Start parsing the information about the Metro directions and schedule...");
@@ -34,8 +35,9 @@ public class HtmlResult {
 
 		MetroDirectionTransfer mdt = new MetroDirectionTransfer();
 		String[] htmlSrcParts = htmlSrc.split(Constants.METRO_REGEX_PARTS);
+		int htmlSrcPartsCount = (lineNo == 0 ? 9 : 5);
 
-		if (htmlSrcParts.length >= 9) {
+		if (htmlSrcParts.length >= htmlSrcPartsCount) {
 			// Find the ID and the NAME of each direction
 			Pattern directionPattern = Pattern
 					.compile(Constants.METRO_REGEX_DIRECTIONS);
@@ -44,8 +46,8 @@ public class HtmlResult {
 
 			while (directionMatcher.find()) {
 				MetroDirection md = new MetroDirection();
-				md.setId(directionMatcher.group(1));
-				md.setName(directionMatcher.group(2));
+				md.setId(directionMatcher.group(2));
+				md.setName(directionMatcher.group(3));
 
 				mdt.getDirectionsList().add(md);
 			}
@@ -81,7 +83,8 @@ public class HtmlResult {
 		logger.info("The HTTP response information is processed for "
 				+ ((endTime - startTime) / 1000) + " seconds");
 
-		if (mdt.getDirectionsListSize() >= 4) {
+		int mdtSize = lineNo == 0 ? 4 : 2;
+		if (mdt.getDirectionsListSize() >= mdtSize) {
 			return mdt;
 		} else {
 			return null;

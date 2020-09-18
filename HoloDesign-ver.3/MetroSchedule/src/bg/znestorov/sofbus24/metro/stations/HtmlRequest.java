@@ -20,9 +20,10 @@ public class HtmlRequest {
 	 * @param logger
 	 *            the logger, which is creating a stack trace about the progress
 	 *            of the program
+	 * @param lineNo the metro line (M1-M2 or M3)
 	 * @return the HTTP response with all needed information
 	 */
-	public static String retrieveStationsInfo(Logger logger) {
+	public static String retrieveStationsInfo(Logger logger, int lineNo) {
 
 		String htmlResponse = "";
 
@@ -31,7 +32,7 @@ public class HtmlRequest {
 					"Start retrieving information about Metro directions and schedule...");
 			long startTime = System.currentTimeMillis();
 
-			URL url = new URL(Constants.METRO_SCHEDULE_URL);
+			URL url = new URL(Constants.METRO_SCHEDULE_URL[lineNo]);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
 			con.setRequestMethod("GET");
