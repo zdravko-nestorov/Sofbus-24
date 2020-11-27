@@ -20,8 +20,8 @@ public class Constants {
     /**
      * DATABASE CONSTANTS
      */
-    private static final String DB_PATH = "database\\api\\";
-    private static final String DB_BACKUP_PATH = DB_PATH + "backups\\";
+    private static final String DB_PATH = "database/api/";
+    private static final String DB_BACKUP_PATH = DB_PATH + "backups/";
     static final File DB_ORIGINAL_EMPTY_FILE = new File(DB_PATH + "sofbus24-empty.db");
     static final File DB_CURRENT_FULL_FILE = new File(DB_PATH + "sofbus24.db");
     static final File DB_CURRENT_JOURNAL_FULL_FILE = new File(DB_PATH + "sofbus24.db-journal");
@@ -29,8 +29,8 @@ public class Constants {
     static final File DB_CONFIG_FULL_FILE = new File("../ConfigData/Databases/sofbus24.db");
 
     // Full DB information
-    private static final String DB_INFO_CURRENT_PATH = "info\\api\\";
-    private static final String DB_INFO_BACKUP_PATH = DB_INFO_CURRENT_PATH + "backups\\";
+    private static final String DB_INFO_CURRENT_PATH = "info/api/";
+    private static final String DB_INFO_BACKUP_PATH = DB_INFO_CURRENT_PATH + "backups/";
     public static final File DB_INFORMATION_FILE = new File(DB_INFO_CURRENT_PATH + "Information.txt");
     public static final File DB_INFORMATION_BACKUP_FILE = new File(DB_INFO_BACKUP_PATH + "Information-" + getDate() + ".txt");
 
