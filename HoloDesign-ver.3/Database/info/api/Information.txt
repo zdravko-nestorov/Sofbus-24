@@ -1,6 +1,6 @@
-Thu, 7 Jan 2021 09:52:49 +0200
+Thu, 25 Feb 2021 00:13:41 +0200
 
 Database Information:
- * Stations - 2618 (BTT) + 86 (METRO) = 2704
- * Vehicles - 119
- * Stations/Vehicles - 5856
+ * Stations - 2624 (BTT) + 84 (METRO) = 2708
+ * Vehicles - 120
+ * Stations/Vehicles - 5868
