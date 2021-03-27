@@ -6,4 +6,8 @@
 /database/api/backups
 
 # IntelliJ configuration files
+/.gradle
+/.idea
+/classes
+/out
 Database.iml

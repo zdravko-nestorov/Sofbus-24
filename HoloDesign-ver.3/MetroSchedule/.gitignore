@@ -2,4 +2,7 @@
 /log
 
 # IntelliJ configuration files
+/.gradle
+/.idea
+/out
 MetroSchedule.iml
