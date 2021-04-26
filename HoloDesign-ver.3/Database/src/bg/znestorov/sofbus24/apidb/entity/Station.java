@@ -1,5 +1,7 @@
 package bg.znestorov.sofbus24.apidb.entity;
 
+import java.util.Objects;
+
 import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO1_ROUTES;
 import static bg.znestorov.sofbus24.apidb.utils.Utils.transformMultiDimArrIntoSet;
 
@@ -84,6 +86,23 @@ public class Station {
         } else {
             return VehicleType.METRO1;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Station station = (Station) o;
+        return Objects.equals(code, station.code) && Objects.equals(id, station.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, id);
     }
 
     @Override
