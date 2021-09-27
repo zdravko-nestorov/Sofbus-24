@@ -30,12 +30,12 @@ public class Constants {
 	 * METRO SCHEDULE CONSTANTS
 	 */
 	public static final String[] STATION_WEEKDAY_SCHEDULE_URL = {
-			"https://schedules.sofiatraffic.bg/server/html/schedule_load/6620/%s/%s",
-			"https://schedules.sofiatraffic.bg/server/html/schedule_load/10375/%s/%s"
+			"https://schedules.sofiatraffic.bg/server/html/schedule_load/8451/%s/%s",
+			"https://schedules.sofiatraffic.bg/server/html/schedule_load/10757/%s/%s"
 	};
 	public static final String[] STATION_HOLIDAY_SCHEDULE_URL = {
 			"https://schedules.sofiatraffic.bg/server/html/schedule_load/6621/%s/%s",
-			"https://schedules.sofiatraffic.bg/server/html/schedule_load/10376/%s/%s"
+			"https://schedules.sofiatraffic.bg/server/html/schedule_load/10758/%s/%s"
 	};
 
 	public static final String METRO_REGEX_TIME = ".*?<a href=\"#\"( class=\"incomplete_course)?[^^]*?onclick=\"Raz.exec[^^]*?'show_course',.*?return false;\">(.*?)</a>";
