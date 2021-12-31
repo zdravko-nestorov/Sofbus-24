@@ -34,7 +34,7 @@ public class Constants {
 			"https://schedules.sofiatraffic.bg/server/html/schedule_load/10757/%s/%s"
 	};
 	public static final String[] STATION_HOLIDAY_SCHEDULE_URL = {
-			"https://schedules.sofiatraffic.bg/server/html/schedule_load/6621/%s/%s",
+			"https://schedules.sofiatraffic.bg/server/html/schedule_load/10874/%s/%s",
 			"https://schedules.sofiatraffic.bg/server/html/schedule_load/10758/%s/%s"
 	};
 
