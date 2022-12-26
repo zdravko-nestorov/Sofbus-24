@@ -136,39 +136,21 @@ public class SQLiteJDBC {
 			VehicleType vehicleType = vehicle.getType();
 			String vehicleDirection = vehicle.getDirection();
 
-			// Do not insert the BUS with number 21 (such vehicle does not
-			// exist). Bus 5-TM is changing each weekend its directions
-			if (!"5-“Ã".equals(vehicleNumber) && !"21".equals(vehicleNumber)) {
+			String sql = "SELECT * FROM SOF_VEHI WHERE VEHI_NUMBER = '%s' AND VEHI_TYPE = '%s';";
+			sql = String.format(sql, vehicle.getNumber(), vehicle.getType());
 
-				String sql = "SELECT * FROM SOF_VEHI WHERE VEHI_NUMBER = '%s' AND VEHI_TYPE = '%s';";
+			try {
 
-				// Change the number of the vehicle in case of BUS 22 (it has to
-				// became 21-22)
-				if (vehicleType == VehicleType.BUS
-						&& "22".equals(vehicleNumber)) {
-					sql = String.format(sql, "21-22", VehicleType.BUS);
-				} else {
-					sql = String.format(sql, vehicle.getNumber(),
-							vehicle.getType());
+				if (!stmt.executeQuery(sql).next()) {
+
+					sql = "INSERT INTO SOF_VEHI (VEHI_NUMBER, VEHI_TYPE, VEHI_DIRECTION) "
+							+ "VALUES ('%s', '%s', '%s');";
+					sql = String.format(sql, vehicleNumber, vehicleType,
+							vehicleDirection);
+					stmt.executeUpdate(sql);
+					insertedVehicles++;
 				}
-
-				try {
-
-					if (!stmt.executeQuery(sql).next()) {
-						if (vehicleType == VehicleType.BUS
-								&& "22".equals(vehicleNumber)) {
-							vehicleNumber = "21-22";
-						}
-
-						sql = "INSERT INTO SOF_VEHI (VEHI_NUMBER, VEHI_TYPE, VEHI_DIRECTION) "
-								+ "VALUES ('%s', '%s', '%s');";
-						sql = String.format(sql, vehicleNumber, vehicleType,
-								vehicleDirection);
-						stmt.executeUpdate(sql);
-						insertedVehicles++;
-					}
-				} catch (Exception e) {
-				}
+			} catch (Exception e) {
 			}
 		}
 
@@ -450,24 +432,17 @@ public class SQLiteJDBC {
 
 		for (VehicleStation vehicleStation : vehicleStationsList) {
 
-			String vehicleNumber = vehicleStation.getVehicleNumber();
+			String sql = "INSERT INTO SOF_VEST (FK_VEST_VEHI_ID, FK_VEST_STAT_ID, VEST_DIRECTION) "
+					+ "VALUES (%s, %s, %s);";
+			sql = String.format(sql, getVehicleId(vehicleStation),
+					getStationId(vehicleStation),
+					vehicleStation.getDirection());
 
-			// Do not insert the BUS with number 21 (such vehicle does not
-			// exist). Bus 5-TM is changing each weekend its directions
-			if (!"5-“Ã".equals(vehicleNumber) && !"21".equals(vehicleNumber)) {
+			try {
+				stmt.executeUpdate(sql);
 
-				String sql = "INSERT INTO SOF_VEST (FK_VEST_VEHI_ID, FK_VEST_STAT_ID, VEST_DIRECTION) "
-						+ "VALUES (%s, %s, %s);";
-				sql = String.format(sql, getVehicleId(vehicleStation),
-						getStationId(vehicleStation),
-						vehicleStation.getDirection());
-
-				try {
-					stmt.executeUpdate(sql);
-
-					insertedVehicleStations++;
-				} catch (Exception e) {
-				}
+				insertedVehicleStations++;
+			} catch (Exception e) {
 			}
 		}
 
@@ -487,14 +462,7 @@ public class SQLiteJDBC {
 		VehicleType vehicleType = vehicleStation.getVehicleType();
 		String vehicleNumber = vehicleStation.getVehicleNumber();
 
-		// Change the number of the vehicle in case of BUS 22 (it has to
-		// became 21-22)
-		if (vehicleType == VehicleType.BUS && "22".equals(vehicleNumber)) {
-			sql = String.format(sql, "21-22", vehicleType);
-		} else {
-			sql = String.format(sql, vehicleNumber, vehicleType);
-		}
-
+		sql = String.format(sql, vehicleNumber, vehicleType);
 		ResultSet rs = stmt.executeQuery(sql);
 		while (rs.next()) {
 			vehicleId = rs.getInt("PK_VEHI_ID");
