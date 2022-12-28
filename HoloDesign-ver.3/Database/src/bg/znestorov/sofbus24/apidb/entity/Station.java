@@ -2,9 +2,6 @@ package bg.znestorov.sofbus24.apidb.entity;
 
 import java.util.Objects;
 
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO1_ROUTES;
-import static bg.znestorov.sofbus24.apidb.utils.Utils.transformMultiDimArrIntoSet;
-
 public class Station {
 
     private String lon;
@@ -79,10 +76,6 @@ public class Station {
 
         if (!this.metro) {
             return VehicleType.BTT;
-        }
-
-        if (transformMultiDimArrIntoSet(VEHICLE_METRO1_ROUTES).contains(this.code)) {
-            return VehicleType.METRO1;
         } else {
             return VehicleType.METRO1;
         }

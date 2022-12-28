@@ -1,5 +1,6 @@
 package bg.znestorov.sofbus24.apidb.vehicles;
 
+import bg.znestorov.sofbus24.apidb.utils.Constants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -7,12 +8,7 @@ import com.google.gson.JsonParser;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.IntStream;
 
@@ -64,7 +60,12 @@ public class RetrieveVehiclesMain {
         vehicleSet = parseVehiclesList(vehicleJsonArray, stationMap);
         vehicleSet.addAll(getMetroVehicles(stationMap));
 
-        return vehicleSet;
+        // Sort the set of vehicles
+        List<Vehicle> vehiclesList = new ArrayList<>(vehicleSet);
+        Collections.sort(vehiclesList);
+
+        // Transform a list of Vehicles to a LinkedHashSet
+        return new LinkedHashSet<>(vehiclesList);
     }
 
     @SuppressWarnings("unchecked")
@@ -92,7 +93,7 @@ public class RetrieveVehiclesMain {
                 Vehicle vehicle = new Vehicle();
                 vehicle.setId(vehicleLinesJsonObject.get(VEHICLE_ID).getAsString());
                 vehicle.setName(vehicleLinesJsonObject.get(VEHICLE_NAME).getAsString());
-                vehicle.setType(vehicleType);
+                vehicle.setType(isElectrobusVehicle(vehicle.getName()) ? VehicleType.BUS : vehicleType);
 
                 JsonArray vehicleStationJsonArray = vehicleLinesJsonObject.getAsJsonArray(VEHICLE_ROUTES);
                 String[][] vehicleRoutes = new String[vehicleStationJsonArray.size()][];
@@ -174,4 +175,7 @@ public class RetrieveVehiclesMain {
         return vehicleMetroStations;
     }
 
+    private static boolean isElectrobusVehicle(String name) {
+        return name != null && name.matches(Constants.ELECTROBUS_CODES);
+    }
 }

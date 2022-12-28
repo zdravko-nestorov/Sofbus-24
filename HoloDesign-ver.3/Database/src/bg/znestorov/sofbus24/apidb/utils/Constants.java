@@ -47,6 +47,7 @@ public class Constants {
      */
     public static final String URL_STATIONS_CODES = "https://routes.sofiatraffic.bg/resources/stops.json";
     public static final String URL_VEHICLES_CODES = "https://routes.sofiatraffic.bg/resources/routes.json";
+    public static final String ELECTROBUS_CODES = "е.*?|9|309";
 
     /**
      * METRO JSON, STATIONS AND VEHICLES CONSTANTS
@@ -65,14 +66,15 @@ public class Constants {
     public static final String VEHICLE_METRO1_DIRECTION = "л.дфеиля аюсвеп - л.наекъ - л.лкюдняр-1";
     private static final String[] VEHICLE_METRO1_ROUTE1 = {"2975", "2977", "2979", "2981", "2983", "2985", "2987", "2989", "2991", "2993", "2995", "2997", "2999"};
     private static final String[] VEHICLE_METRO1_ROUTE2 = {"3001", "3003", "3005", "3007", "3009", "3011", "3013", "3015", "3017", "3019", "3021", "3023", "3025", "3027", "3029", "3031", "3033", "3035", "3037", "3039", "3041", "3043"};
-    public static final String[][] VEHICLE_METRO1_ROUTES = {VEHICLE_METRO1_ROUTE1, VEHICLE_METRO1_ROUTE2};
+    private static final String[] VEHICLE_METRO1_ROUTE3 = {"3309", "3311", "3315", "3317", "3319", "3321", "3323", "3327", "3329", "3331", "3333", "3335"};
+    public static final String[][] VEHICLE_METRO1_ROUTES = {VEHICLE_METRO1_ROUTE1, VEHICLE_METRO1_ROUTE2, VEHICLE_METRO1_ROUTE3};
 
     // Metro #2 (Code: 1034)
     public static final String VEHICLE_METRO2_ID = "METRO_2";
     public static final String VEHICLE_METRO2_NAME = "1034";
     public static final String VEHICLE_METRO2_DIRECTION = "л.лкюдняр-1 - л.наекъ - л.дфеиля аюсвеп";
-    private static final String[] VEHICLE_METRO2_ROUTE1 = {"3044", "3042", "3040", "3038", "3036", "3034", "3032", "3030", "3028", "3026", "3024", "3022", "3020", "3018", "3016", "3014", "3012", "3010", "3008", "3006", "3004", "3002"};
-    private static final String[] VEHICLE_METRO2_ROUTE2 = {"3000", "2998", "2996", "2994", "2992", "2990", "2988", "2986", "2984", "2982", "2980", "2978", "2976"};
-    public static final String[][] VEHICLE_METRO2_ROUTES = {VEHICLE_METRO2_ROUTE1, VEHICLE_METRO2_ROUTE2};
-
+    private static final String[] VEHICLE_METRO2_ROUTE1 = {"3336", "3334", "3332", "3330", "3328", "3324", "3322", "3320", "3318", "3316", "3312", "3310"};
+    private static final String[] VEHICLE_METRO2_ROUTE2 = {"3044", "3042", "3040", "3038", "3036", "3034", "3032", "3030", "3028", "3026", "3024", "3022", "3020", "3018", "3016", "3014", "3012", "3010", "3008", "3006", "3004", "3002"};
+    private static final String[] VEHICLE_METRO2_ROUTE3 = {"3000", "2998", "2996", "2994", "2992", "2990", "2988", "2986", "2984", "2982", "2980", "2978", "2976"};
+    public static final String[][] VEHICLE_METRO2_ROUTES = {VEHICLE_METRO2_ROUTE1, VEHICLE_METRO2_ROUTE2, VEHICLE_METRO2_ROUTE3};
 }

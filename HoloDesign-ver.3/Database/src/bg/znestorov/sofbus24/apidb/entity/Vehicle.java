@@ -1,11 +1,12 @@
 package bg.znestorov.sofbus24.apidb.entity;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import bg.znestorov.sofbus24.apidb.utils.Utils;
 
-public class Vehicle {
+public class Vehicle implements Comparable<Vehicle> {
 
     private VehicleType type;
     private String id;
@@ -44,6 +45,30 @@ public class Vehicle {
         return name;
     }
 
+    public int getNameLeadingDigits() {
+        try {
+            return Integer.parseInt(name.split("(?=\\D)")[0]);
+        } catch (Exception e) {
+            return Integer.MAX_VALUE;
+        }
+    }
+
+    public int getNameDigits() {
+        try {
+            return Integer.parseInt(name.replaceAll("[^0-9]", ""));
+        } catch (Exception e) {
+            return Integer.MAX_VALUE;
+        }
+    }
+
+    public String getNameChars() {
+        try {
+            return name.replaceAll("[0-9]", "");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -73,6 +98,19 @@ public class Vehicle {
     }
 
     @Override
+    public int compareTo(Vehicle vehicle) {
+        return Comparator.comparing(Vehicle::getType)
+                // FIRST compare by the vehicle name leading digits (leading digits)
+                .thenComparingInt(Vehicle::getNameLeadingDigits)
+                // SECOND compare by the vehicle name chars (non-digits)
+                .thenComparing(Vehicle::getNameChars)
+                // THIRD compare by the vehicle name digits (all digits)
+                .thenComparingInt(Vehicle::getNameDigits)
+                // LAST compare the vehicle hashes
+                .compare(this, vehicle);
+    }
+
+    @Override
     public String toString() {
         return "Vehicle{" +
                 "type=" + type +
@@ -82,5 +120,4 @@ public class Vehicle {
                 ", routes=" + routes +
                 '}';
     }
-
 }

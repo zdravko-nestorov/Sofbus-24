@@ -40,14 +40,6 @@ public class RetrieveStationsMain {
             return stationMap;
         }
 
-        // Make all Station names in Camel Case format
-        stationSet.forEach(station -> {
-            if (!station.isMetro()) {
-                station.setPublicName(Utils.toCamelCase(station.getPublicName()));
-                station.setPublicNameEN(Utils.toCamelCase(station.getPublicNameEN()));
-            }
-        });
-
         List<Station> stationList = new ArrayList<>(stationSet);
         stationList.sort(Comparator.comparing(Station::getCode));
 
