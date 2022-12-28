@@ -93,7 +93,7 @@ public class RetrieveVehiclesMain {
                 Vehicle vehicle = new Vehicle();
                 vehicle.setId(vehicleLinesJsonObject.get(VEHICLE_ID).getAsString());
                 vehicle.setName(vehicleLinesJsonObject.get(VEHICLE_NAME).getAsString());
-                vehicle.setType(isElectrobusVehicle(vehicle.getName()) ? VehicleType.BUS : vehicleType);
+                vehicle.setType(vehicleType);
 
                 JsonArray vehicleStationJsonArray = vehicleLinesJsonObject.getAsJsonArray(VEHICLE_ROUTES);
                 String[][] vehicleRoutes = new String[vehicleStationJsonArray.size()][];
