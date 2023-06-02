@@ -80,7 +80,7 @@ public class RetrieveVehiclesMain {
             JsonObject vehicleTypeJsonObject = vehicleTypeJsonElement.getAsJsonObject();
 
             // Retrieve the Vehicle TYPE
-            VehicleType vehicleType = VehicleType.valueOf(
+            VehicleType vehicleType = VehicleType.parseVehicleType(
                     vehicleTypeJsonObject.get(VEHICLE_TYPE).getAsString().toUpperCase());
 
             // Iterate Vehicle information for this TYPE
