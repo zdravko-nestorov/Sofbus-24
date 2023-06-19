@@ -30,8 +30,8 @@ public class Constants {
 	 * METRO SCHEDULE CONSTANTS
 	 */
 	public static final String[] STATION_WEEKDAY_SCHEDULE_URL = {
-			"https://schedules.sofiatraffic.bg/server/html/schedule_load/8451/%s/%s",
-			"https://schedules.sofiatraffic.bg/server/html/schedule_load/10757/%s/%s"
+			"https://schedules.sofiatraffic.bg/server/html/schedule_load/6620/%s/%s",
+			"https://schedules.sofiatraffic.bg/server/html/schedule_load/11218/%s/%s"
 	};
 	public static final String[] STATION_HOLIDAY_SCHEDULE_URL = {
 			"https://schedules.sofiatraffic.bg/server/html/schedule_load/11349/%s/%s",
