@@ -1,6 +1,6 @@
-Tue, 26 Dec 2023 01:18:51 +0200
+Sat, 27 Jan 2024 21:47:40 +0200
 
 Database Information:
- * Stations - 2723 (BTT) + 94 (METRO) = 2817
+ * Stations - 2724 (BTT) + 94 (METRO) = 2818
  * Vehicles - 125
- * Stations/Vehicles - 6341
+ * Stations/Vehicles - 6358
