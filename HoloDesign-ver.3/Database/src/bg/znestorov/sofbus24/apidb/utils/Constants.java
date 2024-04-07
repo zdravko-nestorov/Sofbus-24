@@ -46,8 +46,10 @@ public class Constants {
      * STATIONS AND VEHICLES CODES CONSTANTS
      */
     public static final String URL_STATIONS_CODES = "https://routes.sofiatraffic.bg/resources/stops.json";
+    public static final String URL_STATIONS_SKGT_IDS = "https://www.sofiatraffic.bg/interactivecard/search_all?term=%s";
     public static final String URL_VEHICLES_CODES = "https://routes.sofiatraffic.bg/resources/routes.json";
     public static final String ELECTROBUS_CODES = "Å.*?|9|309";
+    public static final String STATION_SKGT_ID_DEFAULT = "-1";
 
     /**
      * METRO JSON, STATIONS AND VEHICLES CONSTANTS

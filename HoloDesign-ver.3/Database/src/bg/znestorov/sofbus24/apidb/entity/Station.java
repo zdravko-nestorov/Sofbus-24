@@ -8,6 +8,7 @@ public class Station {
     private String code;
     private String publicNameEN;
     private String id;
+    private String skgtId;
     private String lat;
     private String publicName;
     private boolean metro;
@@ -42,6 +43,14 @@ public class Station {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getSkgtId() {
+        return skgtId;
+    }
+
+    public void setSkgtId(String skgtId) {
+        this.skgtId = skgtId;
     }
 
     public String getLat() {
@@ -90,7 +99,9 @@ public class Station {
             return false;
         }
         Station station = (Station) o;
-        return Objects.equals(code, station.code) && Objects.equals(id, station.id);
+        return Objects.equals(code, station.code)
+            && Objects.equals(id, station.id)
+            && Objects.equals(skgtId, station.skgtId);
     }
 
     @Override
@@ -105,6 +116,7 @@ public class Station {
                 ", code='" + code + '\'' +
                 ", publicNameEN='" + publicNameEN + '\'' +
                 ", id='" + id + '\'' +
+                ", skgtId='" + skgtId + '\'' +
                 ", lat='" + lat + '\'' +
                 ", publicName='" + publicName + '\'' +
                 ", metro=" + metro +

@@ -101,4 +101,10 @@ public class Utils {
         return set;
     }
 
+    public static boolean equalsStringNumbers(String str1, String str2) {
+        if (str1 == null || str2 == null) {
+            return Objects.equals(str1, str2);
+        }
+        return str1.replaceAll("^0+", "").equals(str2.replaceAll("^0+", ""));
+    }
 }

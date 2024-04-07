@@ -84,6 +84,7 @@ public class SQLiteJDBC {
 
         stationSet.forEach(station -> {
 
+            String stationSkgtId = station.getSkgtId();
             String stationNumber = station.getCode();
             String stationName = station.getPublicName();
             String stationLat = station.getLat();
@@ -91,9 +92,9 @@ public class SQLiteJDBC {
             VehicleType stationType = station.getType();
 
             try {
-                String sql = "INSERT INTO SOF_STAT (STAT_NUMBER, STAT_NAME, STAT_LATITUDE, STAT_LONGITUDE, STAT_TYPE)\n"
-                        + "VALUES ('%s', '%s', '%s', '%s', '%s');";
-                sql = String.format(sql, stationNumber, stationName, stationLat, stationLon, stationType);
+                String sql = "INSERT INTO SOF_STAT (STAT_SKGT_ID, STAT_NUMBER, STAT_NAME, STAT_LATITUDE, STAT_LONGITUDE, STAT_TYPE)\n"
+                        + "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');";
+                sql = String.format(sql, stationSkgtId, stationNumber, stationName, stationLat, stationLon, stationType);
 
                 stmt.executeUpdate(sql);
                 insertedStations.incrementAndGet();
