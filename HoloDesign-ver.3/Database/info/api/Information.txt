@@ -1,6 +1,6 @@
-Fri, 5 Apr 2024 14:27:21 +0300
+Tue, 9 Apr 2024 14:43:54 +0300
 
 Database Information:
  * Stations - 2723 (BTT) + 94 (METRO) = 2817
  * Vehicles - 127
- * Stations/Vehicles - 6434
+ * Stations/Vehicles - 6432
