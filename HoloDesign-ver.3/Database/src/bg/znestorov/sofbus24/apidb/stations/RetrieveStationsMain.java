@@ -44,9 +44,9 @@ public class RetrieveStationsMain {
             return stationMap;
         }
 
-        // Retrieve the unique station SKGT IDs
+        // Retrieve the unique station SKGT IDs (deprecated code required because of the SKGT changes)
         for (Station station : stationSet) {
-            enrichStationSkgtId(station);
+            station.setSkgtId(station.getId());
         }
 
         // Order the stations by CODE
@@ -58,46 +58,5 @@ public class RetrieveStationsMain {
                 (u, v) -> {
                     throw new IllegalStateException(String.format("Duplicate key %s", u));
                 }, LinkedHashMap::new));
-    }
-
-    private static void enrichStationSkgtId(Station station) {
-        // Search for the current station via the new SKGT API
-        String searchResultUrl = String.format(URL_STATIONS_SKGT_IDS, station.getCode());
-        String searchResultGson = Utils.readUrl(searchResultUrl);
-        if (StringUtils.isEmpty(searchResultGson)) {
-            DBLogger.log(Level.WARNING, "Problem to reach the search URL: " + searchResultUrl);
-            station.setSkgtId(STATION_SKGT_ID_DEFAULT);
-            return;
-        }
-
-        // Check if the search result is empty
-        JsonArray searchResultGsonArr = new Gson().fromJson(searchResultGson, JsonArray.class);
-        if (searchResultGsonArr == null || searchResultGsonArr.size() <= 0) {
-            DBLogger.log(Level.WARNING, "Empty result from search URL: " + searchResultUrl);
-            station.setSkgtId(STATION_SKGT_ID_DEFAULT);
-            return;
-        }
-
-        // Iterate all the search results and check if the current station is a stop with the same code
-        for (int i = 0; i < searchResultGsonArr.size(); i++) {
-            JsonObject stationGsonObj = searchResultGsonArr.get(i).getAsJsonObject();
-
-            // Check if the current result is a stop and if the code is the same
-            boolean isStop = stationGsonObj.get("is_stop").getAsBoolean();
-            String code = stationGsonObj.get("code").getAsString();
-            String skgtId = stationGsonObj.get("id").getAsString();
-
-            // If the current station is a stop with the same code, set the SKGT ID
-            if (isStop && Utils.equalsStringNumbers(station.getCode(), code)) {
-                station.setSkgtId(skgtId);
-                break;
-            }
-        }
-
-        // If the SKGT ID is still empty, set the default value
-        if (station.getSkgtId() == null) {
-            DBLogger.log(Level.WARNING, "Non-matching result from search URL: " + searchResultUrl);
-            station.setSkgtId(STATION_SKGT_ID_DEFAULT);
-        }
     }
 }
