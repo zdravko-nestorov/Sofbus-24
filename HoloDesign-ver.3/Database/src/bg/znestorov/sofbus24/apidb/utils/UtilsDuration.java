@@ -13,7 +13,7 @@ public class UtilsDuration {
 
   static String getDate() {
     Date date = new Date();
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMYYYY");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 
     return simpleDateFormat.format(date);
   }
