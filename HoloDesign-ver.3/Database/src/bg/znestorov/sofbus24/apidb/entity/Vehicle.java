@@ -1,123 +1,169 @@
 package bg.znestorov.sofbus24.apidb.entity;
 
+import bg.znestorov.sofbus24.apidb.utils.Utils;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-
-import bg.znestorov.sofbus24.apidb.utils.Utils;
+import java.util.Objects;
 
 public class Vehicle implements Comparable<Vehicle> {
 
-    private VehicleType type;
-    private String id;
-    private String name;
-    private String direction;
-    private Map<Integer, List<Station>> routes;
+  @SerializedName("line_id")
+  private int lineId;
+  private String name;
+  @SerializedName("ext_id")
+  private String extId;
+  private int type;
 
-    public Vehicle() {
-    }
+  private String direction;
+  private Map<Integer, List<Station>> routes;
 
-    public Vehicle(VehicleType type, String id, String name, String direction, Map<Integer, List<Station>> routes) {
-        this.type = type;
-        this.id = id;
-        this.name = name;
-        this.direction = direction;
-        this.routes = routes;
-    }
+  // -------------------------- //
+  // SOFBUS 24 DATABASE FIELDS  //
+  // -------------------------- //
+  public String getSofbusNumber() {
+    return name;
+  }
 
-    public VehicleType getType() {
-        return type;
-    }
+  public VehicleType getSofbusType() {
+    return VehicleType.getVehicleType(type, extId);
+  }
 
-    public void setType(VehicleType type) {
-        this.type = type;
-    }
+  public String getSofbusDirection() {
+    return direction;
+  }
 
-    public String getId() {
-        return id;
-    }
+  // -------------------------- //
+  // SOFBUS 24 COMMON FIELDS    //
+  // -------------------------- //
+  public String getSofbusLabel() {
+    return getSofbusType() + " #" + getSofbusNumber();
+  }
 
-    public void setId(String id) {
-        this.id = id;
+  public int getSofbusNameLeadingDigits() {
+    try {
+      return Integer.parseInt(name.split("(?=\\D)")[0]);
+    } catch (Exception e) {
+      return Integer.MAX_VALUE;
     }
+  }
 
-    public String getName() {
-        return name;
+  public String getSofbusNameChars() {
+    try {
+      return name.replaceAll("[0-9]", "");
+    } catch (Exception e) {
+      return null;
     }
+  }
 
-    public int getNameLeadingDigits() {
-        try {
-            return Integer.parseInt(name.split("(?=\\D)")[0]);
-        } catch (Exception e) {
-            return Integer.MAX_VALUE;
-        }
+  public int getSofbusNameDigits() {
+    try {
+      return Integer.parseInt(name.replaceAll("[^0-9]", ""));
+    } catch (Exception e) {
+      return Integer.MAX_VALUE;
     }
+  }
 
-    public int getNameDigits() {
-        try {
-            return Integer.parseInt(name.replaceAll("[^0-9]", ""));
-        } catch (Exception e) {
-            return Integer.MAX_VALUE;
-        }
-    }
+  // -------------------------- //
+  // SGKT FIELDS                //
+  // -------------------------- //
+  public int getLineId() {
+    return lineId;
+  }
 
-    public String getNameChars() {
-        try {
-            return name.replaceAll("[0-9]", "");
-        } catch (Exception e) {
-            return null;
-        }
-    }
+  public void setLineId(int lineId) {
+    this.lineId = lineId;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getDirection() {
-        return direction.toUpperCase();
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setDirection(String direction) {
-        this.direction = direction;
-    }
+  public String getExtId() {
+    return extId;
+  }
 
-    public void setDirection() {
-        this.direction = Utils.formDirection(this.routes);
-    }
+  public void setExtId(String extId) {
+    this.extId = extId;
+  }
 
-    public Map<Integer, List<Station>> getRoutes() {
-        return routes;
-    }
+  public int getType() {
+    return type;
+  }
 
-    public void setRoutes(Map<Integer, List<Station>> routes) {
-        this.routes = routes;
-    }
+  public void setType(int type) {
+    this.type = type;
+  }
 
-    public String getLabel() {
-        return this.type + " #" + this.name;
-    }
+  public String getDirection() {
+    return direction;
+  }
 
-    @Override
-    public int compareTo(Vehicle vehicle) {
-        return Comparator.comparing(Vehicle::getType)
-                // FIRST compare by the vehicle name leading digits (leading digits)
-                .thenComparingInt(Vehicle::getNameLeadingDigits)
-                // SECOND compare by the vehicle name chars (non-digits)
-                .thenComparing(Vehicle::getNameChars)
-                // THIRD compare by the vehicle name digits (all digits)
-                .thenComparingInt(Vehicle::getNameDigits)
-                // LAST compare the vehicle hashes
-                .compare(this, vehicle);
-    }
+  public void setDirection(String direction) {
+    this.direction = direction;
+  }
 
-    @Override
-    public String toString() {
-        return "Vehicle{" +
-                "type=" + type +
-                ", id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", direction='" + direction + '\'' +
-                ", routes=" + routes +
-                '}';
+  public void setDirection() {
+    this.direction = Utils.formDirection(this.routes);
+  }
+
+  public Map<Integer, List<Station>> getRoutes() {
+    return routes;
+  }
+
+  public void setRoutes(Map<Integer, List<Station>> routes) {
+    this.routes = routes;
+  }
+
+  @Override
+  public int compareTo(Vehicle vehicle) {
+    return
+        // FIRST compare by the vehicle type
+        Comparator.comparing(Vehicle::getSofbusType)
+            // SECOND compare by the vehicle name leading digits (leading digits)
+            .thenComparingInt(Vehicle::getSofbusNameLeadingDigits)
+            // THIRD compare by the vehicle name chars (non-digits)
+            .thenComparing(Vehicle::getSofbusNameChars)
+            // FOURTH compare by the vehicle name digits (all digits)
+            .thenComparingInt(Vehicle::getSofbusNameDigits)
+            // LAST compare the vehicle hashes
+            .compare(this, vehicle);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Vehicle vehicle = (Vehicle) o;
+    return Objects.equals(lineId, vehicle.lineId)
+        && Objects.equals(extId, vehicle.extId)
+        && Objects.equals(type, vehicle.type);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(lineId, extId, type);
+  }
+
+  @Override
+  public String toString() {
+    return "Vehicle{" +
+        "lineId=" + lineId +
+        ", name='" + name + '\'' +
+        ", extId='" + extId + '\'' +
+        ", type=" + type +
+        ", direction='" + direction + '\'' +
+        ", routes=" + routes +
+        '}';
+  }
 }

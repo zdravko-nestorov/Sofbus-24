@@ -1,110 +1,206 @@
 package bg.znestorov.sofbus24.apidb.utils;
 
+import static bg.znestorov.sofbus24.apidb.logger.DBLogger.logDuration;
+import static bg.znestorov.sofbus24.apidb.logger.DBLogger.logSevere;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_BACKUP_FULL_FILE;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_CONFIG_FULL_FILE;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_CURRENT_FULL_FILE;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_CURRENT_JOURNAL_FULL_FILE;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_INFORMATION_BACKUP_FILE;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_INFORMATION_FILE;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.DB_ORIGINAL_EMPTY_FILE;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.PT_PROPERTIES;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.PT_ROUTES;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.URL_PUBLIC_TRANSPORT_API;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.URL_SCHEDULE_API;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.URL_SCHEDULE_API_SOFIA_TRAFFIC_SESSION;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.URL_SCHEDULE_API_XSRF_TOKEN;
+import static bg.znestorov.sofbus24.apidb.utils.UtilsDuration.getTime;
+
+import bg.znestorov.sofbus24.apidb.entity.Station;
+import bg.znestorov.sofbus24.apidb.entity.Vehicle;
+import bg.znestorov.sofbus24.apidb.logger.DBLogger;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
-import java.util.stream.IntStream;
-
-import bg.znestorov.sofbus24.apidb.entity.Station;
-
-import static bg.znestorov.sofbus24.apidb.logger.DBLogger.logDuration;
-import static bg.znestorov.sofbus24.apidb.logger.DBLogger.logSevere;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.*;
-import static bg.znestorov.sofbus24.apidb.utils.UtilsDuration.getTime;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
 
-    public static boolean copyEmptyDatabase() {
-        try {
-            FileUtils.deleteQuietly(DB_CURRENT_FULL_FILE);
-            FileUtils.deleteQuietly(DB_CURRENT_JOURNAL_FULL_FILE);
-            FileUtils.copyFile(DB_ORIGINAL_EMPTY_FILE, DB_CURRENT_FULL_FILE);
-            return true;
-        } catch (IOException e) {
-            logSevere("Copying of the DB was not successful - " + e.getClass().getName() + ": " + e.getMessage());
-            return false;
-        }
+  public static boolean copyEmptyDatabase() {
+    try {
+      FileUtils.deleteQuietly(DB_CURRENT_FULL_FILE);
+      FileUtils.deleteQuietly(DB_CURRENT_JOURNAL_FULL_FILE);
+      FileUtils.copyFile(DB_ORIGINAL_EMPTY_FILE, DB_CURRENT_FULL_FILE);
+      return true;
+
+    } catch (IOException e) {
+      logSevere("Copying of the DB was not successful - " + e.getClass().getName() + ": " + e.getMessage());
+      return false;
+    }
+  }
+
+  public static void backupDatabase() {
+    try {
+      FileUtils.deleteQuietly(DB_BACKUP_FULL_FILE);
+      FileUtils.copyFile(DB_CURRENT_FULL_FILE, DB_BACKUP_FULL_FILE);
+
+      FileUtils.deleteQuietly(DB_CONFIG_FULL_FILE);
+      FileUtils.copyFile(DB_CURRENT_FULL_FILE, DB_CONFIG_FULL_FILE);
+
+      FileUtils.deleteQuietly(DB_INFORMATION_BACKUP_FILE);
+      FileUtils.copyFile(DB_INFORMATION_FILE, DB_INFORMATION_BACKUP_FILE);
+
+    } catch (IOException e) {
+      logSevere("Copying of the DB was not successful - " + e.getClass().getName() + ": " + e.getMessage());
+    }
+  }
+
+  public static String readPublicTransportUrl(String propertyKey) {
+
+    long startTime = getTime();
+    String url = URL_PUBLIC_TRANSPORT_API;
+
+    // Create a new scanner to download the URL content
+    try (Scanner scanner = new Scanner(openPublicTransportUrlConnection(url).getInputStream(), "UTF-8")) {
+      // Format the URL content
+      String content = formatUrlContent(scanner);
+
+      // Extract the public transport data from the content
+      Pattern pattern = Pattern.compile(".*<div id=\"app\" data-page=\"(.*)\"></div>.*");
+      Matcher matcher = pattern.matcher(content);
+      content = matcher.matches() ? matcher.group(1) : null;
+
+      // Return the property value
+      return new Gson().fromJson(content, JsonObject.class)
+          .get(PT_PROPERTIES).getAsJsonObject()
+          .get(propertyKey).getAsJsonArray()
+          .toString();
+
+    } catch (Exception e) {
+      DBLogger.log(Level.WARNING, "Problem to reach the URL: " + url);
+      return null;
+
+    } finally {
+      logDuration("The content for URL: " + url + "/" + propertyKey + ", is retrieved for ", startTime);
+    }
+  }
+
+  public static HttpURLConnection openPublicTransportUrlConnection(String url) throws Exception {
+    HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+    connection.setRequestMethod("GET");
+
+    return connection;
+  }
+
+  public static String readScheduleUrl(Vehicle vehicle) {
+
+    long startTime = getTime();
+    String url = URL_SCHEDULE_API;
+
+    // Create a new scanner to download the URL content
+    try (Scanner scanner = new Scanner(openScheduleUrlConnection(url, vehicle).getInputStream(), "UTF-8")) {
+      // Format the URL content
+      String content = formatUrlContent(scanner);
+
+      // Return the property value
+      return new Gson().fromJson(content, JsonObject.class)
+          .get(PT_ROUTES).getAsJsonArray()
+          .toString();
+
+    } catch (Exception e) {
+      DBLogger.log(Level.WARNING, "Problem to reach the URL: " + url);
+      return null;
+
+    } finally {
+      logDuration("The content for URL: " + url + "/" + vehicle.getExtId() + ", is retrieved for ", startTime);
+    }
+  }
+
+  public static HttpURLConnection openScheduleUrlConnection(String url, Vehicle vehicle) throws Exception {
+    HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+    connection.setRequestMethod("POST");
+    connection.setRequestProperty("content-type", "application/json");
+
+    String cookie = String.format("XSRF-TOKEN=%s; sofia_traffic_session=%s",
+        URL_SCHEDULE_API_XSRF_TOKEN,
+        URL_SCHEDULE_API_SOFIA_TRAFFIC_SESSION);
+    connection.setRequestProperty("cookie", cookie);
+
+    String xsrfToken = String.format("%s",
+        URLDecoder.decode(URL_SCHEDULE_API_XSRF_TOKEN, StandardCharsets.UTF_8.name()));
+    connection.setRequestProperty("x-xsrf-token", xsrfToken);
+
+    // Writing the data to the output stream
+    connection.setDoOutput(true);
+    String requestBody = String.format("{\"ext_id\":\"%s\"}",
+        vehicle.getExtId());
+    try (OutputStream os = connection.getOutputStream()) {
+      byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
+      os.write(input, 0, input.length);
     }
 
-    public static void backupDatabase() {
-        try {
-            FileUtils.deleteQuietly(DB_BACKUP_FULL_FILE);
-            FileUtils.copyFile(DB_CURRENT_FULL_FILE, DB_BACKUP_FULL_FILE);
+    return connection;
+  }
 
-            FileUtils.deleteQuietly(DB_CONFIG_FULL_FILE);
-            FileUtils.copyFile(DB_CURRENT_FULL_FILE, DB_CONFIG_FULL_FILE);
+  public static String formatUrlContent(Scanner scanner) {
+    // The regular expression "\\A" matches the beginning of input. This tells Scanner
+    // to tokenize the entire stream, from beginning to (illogical) next beginning
+    String content = scanner.useDelimiter("\\A").next();
 
-            FileUtils.deleteQuietly(DB_INFORMATION_BACKUP_FILE);
-            FileUtils.copyFile(DB_INFORMATION_FILE, DB_INFORMATION_BACKUP_FILE);
-        } catch (IOException e) {
-            logSevere("Copying of the DB was not successful - " + e.getClass().getName() + ": " + e.getMessage());
-        }
+    // Remove the new lines and carriage returns
+    content = content.replace("\n", "").replace("\r", "");
+
+    // Unescape the HTML content
+    return StringEscapeUtils.unescapeHtml4(content);
+  }
+
+  public static String formDirection(Map<Integer, List<Station>> routes) {
+
+    String direction = null;
+
+    // For the direction name using the first and last station of the first route
+    if (!MapUtils.isEmpty(routes) && !CollectionUtils.isEmpty(routes.get(1))) {
+      List<Station> firstRoute = routes.get(1);
+      direction = firstRoute.get(0).getName() + " - "
+          + firstRoute.get(firstRoute.size() - 1).getName();
     }
 
-    public static String readUrl(String urlString) {
+    return direction;
+  }
 
-        Long startTime = getTime();
-
-        // Create a new scanner to download the URL content
-        try (Scanner scanner = new Scanner(new URL(urlString).openStream(), "UTF-8")) {
-
-            // The regular expression "\\A" matches the beginning of input. This tells Scanner
-            // to tokenize the entire stream, from beginning to (illogical) next beginning
-            return scanner.useDelimiter("\\A").next();
-        } catch (Exception e) {
-            return null;
-        } finally {
-            logDuration("The content for URL - " + urlString + ", is retrieved for ", startTime);
-        }
+  public static String getOnlyDigits(String value) {
+    if (value != null && !value.isEmpty()) {
+      value = value.replaceAll("\\D+", "");
+    } else {
+      value = "";
     }
 
-    public static String toCamelCase(String input) {
-        return WordUtils.capitalizeFully(input, ' ').replace('³', '²');
+    return value;
+  }
+
+  public static String getOnlyChars(String value) {
+    if (value != null && !value.isEmpty()) {
+      value = value.replaceAll("\\d+", "");
+    } else {
+      value = "";
     }
 
-    public static String formDirection(Map<Integer, List<Station>> routes) {
-
-        String direction = null;
-
-        // For the direction name using the first and last station of the first route
-        if (!MapUtils.isEmpty(routes) && !CollectionUtils.isEmpty(routes.get(1))) {
-            List<Station> firstRoute = routes.get(1);
-            direction = firstRoute.get(0).getPublicName() + " - "
-                    + firstRoute.get(firstRoute.size() - 1).getPublicName();
-        }
-
-        return direction;
-    }
-
-    public static Set<String> transformMultiDimArrIntoSet(String[][] multiDimArr) {
-
-        Set<String> set = new LinkedHashSet<>();
-
-        // Check if we have any routes available
-        if (ArrayUtils.isNotEmpty(multiDimArr)) {
-            IntStream.range(0, multiDimArr.length).forEach(i -> {
-
-                // Check if we have any stations for the current route
-                if (ArrayUtils.isNotEmpty(multiDimArr[i])) {
-                    IntStream.range(0, multiDimArr[i].length).forEach(j ->
-                            set.add(multiDimArr[i][j]));
-                }
-            });
-        }
-
-        return set;
-    }
-
-    public static boolean equalsStringNumbers(String str1, String str2) {
-        if (str1 == null || str2 == null) {
-            return Objects.equals(str1, str2);
-        }
-        return str1.replaceAll("^0+", "").equals(str2.replaceAll("^0+", ""));
-    }
+    return value;
+  }
 }

@@ -1,6 +1,6 @@
-Fri, 5 Jul 2024 00:04:31 +0300
+Sun, 22 Sep 2024 01:21:33 +0300
 
 Database Information:
- * Stations - 2720 (BTT) + 94 (METRO) = 2814
- * Vehicles - 129
- * Stations/Vehicles - 6492
+ * Stations: 2098 (BUS) + 0 (NIGHT BUS) + 282 (TROLLEYBUS) + 291 (TRAM) + 47 (METRO) = 2718
+ * Vehicles: 101 (BUS) + 4 (NIGHT BUS) + 10 (TROLLEYBUS) + 17 (TRAM) + 4 (METRO) = 136
+ * Stations/Vehicles - 6747

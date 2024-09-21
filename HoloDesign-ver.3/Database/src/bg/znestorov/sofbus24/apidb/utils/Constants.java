@@ -1,82 +1,64 @@
 package bg.znestorov.sofbus24.apidb.utils;
 
-import java.io.File;
-
 import static bg.znestorov.sofbus24.apidb.utils.UtilsDuration.getDate;
+
+import java.io.File;
 
 public class Constants {
 
-    /**
-     * APPLICATION CONSTANTS
-     */
-    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+  /**
+   * APPLICATION CONSTANTS
+   */
+  public static final String LINE_SEPARATOR = System.lineSeparator();
 
-    /**
-     * LOGGER CONSTANTS
-     */
-    public static final String SOFBUS_LOGGER = "STATIONS AND VEHICLES DATABASE INFORMATION";
-    public static final String DB_LOG_FILE = "log/MyLogFile.log";
-
-    /**
-     * DATABASE CONSTANTS
-     */
-    private static final String DB_PATH = "database/api/";
-    private static final String DB_BACKUP_PATH = DB_PATH + "backups/";
-    static final File DB_ORIGINAL_EMPTY_FILE = new File(DB_PATH + "sofbus24-empty.db");
-    static final File DB_CURRENT_FULL_FILE = new File(DB_PATH + "sofbus24.db");
-    static final File DB_CURRENT_JOURNAL_FULL_FILE = new File(DB_PATH + "sofbus24.db-journal");
-    static final File DB_BACKUP_FULL_FILE = new File(DB_BACKUP_PATH + "sofbus24-" + getDate() + ".db");
-    static final File DB_CONFIG_FULL_FILE = new File("../ConfigData/Databases/sofbus24.db");
-
-    // Full DB information
-    private static final String DB_INFO_CURRENT_PATH = "info/api/";
-    private static final String DB_INFO_BACKUP_PATH = DB_INFO_CURRENT_PATH + "backups/";
-    public static final File DB_INFORMATION_FILE = new File(DB_INFO_CURRENT_PATH + "Information.txt");
-    public static final File DB_INFORMATION_BACKUP_FILE = new File(DB_INFO_BACKUP_PATH + "Information-" + getDate() + ".txt");
-
-    // Metro stations DB information
-    public static final String DB_INFORMATION_TITLE = "Database Information:";
-    public static final String DB_INFORMATION_STATIONS = " * Stations - %s (BTT) + %s (METRO) = %s";
-    public static final String DB_INFORMATION_VEHICLES = " * Vehicles - %s";
-    public static final String DB_INFORMATION_STATIONS_VEHICLES = " * Stations/Vehicles - %s";
-
-    public static final File DB_METRO_INFO_FILE = new File("../MetroSchedule/properties/metro_coordinates.properties");
-
-    /**
-     * STATIONS AND VEHICLES CODES CONSTANTS
-     */
-    public static final String URL_STATIONS_CODES = "https://routes.sofiatraffic.bg/resources/stops.json";
-    public static final String URL_STATIONS_SKGT_IDS = "https://www.sofiatraffic.bg/interactivecard/search_all?term=%s";
-    public static final String URL_VEHICLES_CODES = "https://routes.sofiatraffic.bg/resources/routes.json";
-    public static final String ELECTROBUS_CODES = "е.*?|9|309";
-    public static final String STATION_SKGT_ID_DEFAULT = "-1";
-
-    /**
-     * METRO JSON, STATIONS AND VEHICLES CONSTANTS
-     */
-    // JSON codes (used to retrieve the information)
-    public static final String VEHICLE_TYPE = "type";
-    public static final String VEHICLE_LINES = "lines";
-    public static final String VEHICLE_ID = "id";
-    public static final String VEHICLE_NAME = "name";
-    public static final String VEHICLE_ROUTES = "routes";
-    public static final String VEHICLE_CODE = "codes";
-
-    // Metro #1 (Code: 1033)
-    public static final String VEHICLE_METRO1_ID = "METRO_1";
-    public static final String VEHICLE_METRO1_NAME = "1033";
-    public static final String VEHICLE_METRO1_DIRECTION = "л.дфеиля аюсвеп - л.наекъ - л.лкюдняр-1";
-    private static final String[] VEHICLE_METRO1_ROUTE1 = {"2975", "2977", "2979", "2981", "2983", "2985", "2987", "2989", "2991", "2993", "2995", "2997", "2999"};
-    private static final String[] VEHICLE_METRO1_ROUTE2 = {"3001", "3003", "3005", "3007", "3009", "3011", "3013", "3015", "3017", "3019", "3021", "3023", "3025", "3027", "3029", "3031", "3033", "3035", "3037", "3039", "3041", "3043"};
-    private static final String[] VEHICLE_METRO1_ROUTE3 = {"3309", "3311", "3315", "3317", "3319", "3321", "3323", "3327", "3329", "3331", "3333", "3335"};
-    public static final String[][] VEHICLE_METRO1_ROUTES = {VEHICLE_METRO1_ROUTE1, VEHICLE_METRO1_ROUTE2, VEHICLE_METRO1_ROUTE3};
-
-    // Metro #2 (Code: 1034)
-    public static final String VEHICLE_METRO2_ID = "METRO_2";
-    public static final String VEHICLE_METRO2_NAME = "1034";
-    public static final String VEHICLE_METRO2_DIRECTION = "л.лкюдняр-1 - л.наекъ - л.дфеиля аюсвеп";
-    private static final String[] VEHICLE_METRO2_ROUTE1 = {"3336", "3334", "3332", "3330", "3328", "3324", "3322", "3320", "3318", "3316", "3312", "3310"};
-    private static final String[] VEHICLE_METRO2_ROUTE2 = {"3044", "3042", "3040", "3038", "3036", "3034", "3032", "3030", "3028", "3026", "3024", "3022", "3020", "3018", "3016", "3014", "3012", "3010", "3008", "3006", "3004", "3002"};
-    private static final String[] VEHICLE_METRO2_ROUTE3 = {"3000", "2998", "2996", "2994", "2992", "2990", "2988", "2986", "2984", "2982", "2980", "2978", "2976"};
-    public static final String[][] VEHICLE_METRO2_ROUTES = {VEHICLE_METRO2_ROUTE1, VEHICLE_METRO2_ROUTE2, VEHICLE_METRO2_ROUTE3};
+  /**
+   * LOGGER CONSTANTS
+   */
+  public static final String SOFBUS_LOGGER = "STATIONS AND VEHICLES DATABASE INFORMATION";
+  public static final String DB_LOG_FILE = "log/MyLogFile.log";
+  // Metro stations DB information
+  public static final String DB_INFORMATION_TITLE = "Database Information:";
+  public static final String DB_INFORMATION_STATIONS =
+      " * Stations: %s (BUS) + %s (NIGHT BUS) + %s (TROLLEYBUS) + %s (TRAM) + %s (METRO) = %s";
+  public static final String DB_INFORMATION_VEHICLES =
+      " * Vehicles: %s (BUS) + %s (NIGHT BUS) + %s (TROLLEYBUS) + %s (TRAM) + %s (METRO) = %s";
+  public static final String DB_INFORMATION_STATIONS_VEHICLES = " * Stations/Vehicles - %s";
+  public static final File DB_METRO_INFO_FILE = new File("../MetroSchedule/properties/metro_coordinates.properties");
+  /**
+   * PUBLIC TRANSPORTATION API CONSTANTS
+   */
+  public static final String URL_PUBLIC_TRANSPORT_API = "https://www.sofiatraffic.bg/bg/public-transport";
+  // JSON codes (properties)
+  public static final String PT_PROPERTIES = "props";
+  public static final String PT_PROPERTIES_STOPS = "stops";
+  public static final String PT_PROPERTIES_LINES = "lines";
+  /**
+   * SCHEDULE API CONSTANTS
+   */
+  public static final String URL_SCHEDULE_API = "https://www.sofiatraffic.bg/bg/trip/getSchedule";
+  public static final String URL_SCHEDULE_API_XSRF_TOKEN =
+      "eyJpdiI6IlBZRGJaSHplZnhJd05tWllmTEd2Qnc9PSIsInZhbHVlIjoiZGllTy9VRzZjZGxPQ0JERitvNWllOGFNc0JVQkduQjBxbVZtd0tMeDFFakZpcTlwN3VyZitIK3ZyT0NZVlR2OHkvejZmUFNBK0xCTG1abnV3QkYzM3NTSGdaT1FKbmJOc2o0bDQ1ZW5PRXQ5TFdkUDVELys5TGpxVUpKUkVxWFciLCJtYWMiOiJiYmI2ZWE1NjEyMmE3YmE0MWQxYmQxZDNmZjcyOGE4MDNhMWY0NjQyNzgxYTdhMzNhY2U2ZWUwNDhmZDc4YWI0IiwidGFnIjoiIn0%3D";
+  public static final String URL_SCHEDULE_API_SOFIA_TRAFFIC_SESSION =
+      "eyJpdiI6Ik5yM1VHV0VGb3lpMnE1a3VpZklaSGc9PSIsInZhbHVlIjoiU0NKbHNGTTF3KzFXMmkzeHVscnRIeG1JTko3SDcwN0U3Q0xiK0JhQW1tejlBYzErd3QrRlU0bUVENmh6dW9QQmY0eXNBTkhoT1Zsb2w1RStheTd5UUNmaUZ3NmZJRGtYVmx2Z1RMS0ludElPdmZEY3BLNERUWHQ5Y0dmYWs4dGkiLCJtYWMiOiI0NzdhZDFlNTJkZGEyZTRhMWYwNGRmZjIwMmJiOTUyNGY3NmFiYjJmYTA4YTVmYzZlOTdhMWY4NjE0YTcxYWZmIiwidGFnIjoiIn0%3D";
+  // JSON codes (routes)
+  public static final String PT_ROUTES = "routes";
+  public static final String PT_ROUTES_SEGMENTS = "segments";
+  public static final String PT_ROUTES_SEGMENTS_STOP = "stop";
+  public static final String PT_ROUTES_SEGMENTS_STOP_CODE = "code";
+  static final File DB_CONFIG_FULL_FILE = new File("../ConfigData/Databases/sofbus24.db");
+  /**
+   * DATABASE CONSTANTS
+   */
+  private static final String DB_PATH = "database/api/";
+  static final File DB_ORIGINAL_EMPTY_FILE = new File(DB_PATH + "sofbus24-empty.db");
+  static final File DB_CURRENT_FULL_FILE = new File(DB_PATH + "sofbus24.db");
+  static final File DB_CURRENT_JOURNAL_FULL_FILE = new File(DB_PATH + "sofbus24.db-journal");
+  private static final String DB_BACKUP_PATH = DB_PATH + "backups/";
+  static final File DB_BACKUP_FULL_FILE = new File(DB_BACKUP_PATH + "sofbus24-" + getDate() + ".db");
+  // Full DB information
+  private static final String DB_INFO_CURRENT_PATH = "info/api/";
+  public static final File DB_INFORMATION_FILE = new File(DB_INFO_CURRENT_PATH + "Information.txt");
+  private static final String DB_INFO_BACKUP_PATH = DB_INFO_CURRENT_PATH + "backups/";
+  public static final File DB_INFORMATION_BACKUP_FILE =
+      new File(DB_INFO_BACKUP_PATH + "Information-" + getDate() + ".txt");
 }

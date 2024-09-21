@@ -1,181 +1,140 @@
 package bg.znestorov.sofbus24.apidb.vehicles;
 
-import bg.znestorov.sofbus24.apidb.utils.Constants;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.*;
-import java.util.logging.Level;
-import java.util.stream.IntStream;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.PT_PROPERTIES_LINES;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.PT_ROUTES_SEGMENTS;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.PT_ROUTES_SEGMENTS_STOP;
+import static bg.znestorov.sofbus24.apidb.utils.Constants.PT_ROUTES_SEGMENTS_STOP_CODE;
+import static bg.znestorov.sofbus24.apidb.utils.Utils.readPublicTransportUrl;
+import static bg.znestorov.sofbus24.apidb.utils.Utils.readScheduleUrl;
 
 import bg.znestorov.sofbus24.apidb.entity.Station;
 import bg.znestorov.sofbus24.apidb.entity.Vehicle;
-import bg.znestorov.sofbus24.apidb.entity.VehicleType;
 import bg.znestorov.sofbus24.apidb.logger.DBLogger;
 import bg.znestorov.sofbus24.apidb.utils.Utils;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import static bg.znestorov.sofbus24.apidb.utils.Constants.URL_VEHICLES_CODES;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_CODE;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_ID;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_LINES;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO1_DIRECTION;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO1_ID;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO1_NAME;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO1_ROUTES;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO2_DIRECTION;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO2_ID;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO2_NAME;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_METRO2_ROUTES;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_NAME;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_ROUTES;
-import static bg.znestorov.sofbus24.apidb.utils.Constants.VEHICLE_TYPE;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.stream.IntStream;
 
 public class RetrieveVehiclesMain {
 
-    public static Set<Vehicle> getVehicles(Map<String, Station> stationMap) {
+  public static Set<Vehicle> getVehicles(Map<String, Station> stationMap) {
 
-        Set<Vehicle> vehicleSet = new LinkedHashSet<>();
+    // Retrieve the Vehicles JSON from "Sofia Traffic API"
+    String vehiclesGson = readPublicTransportUrl(PT_PROPERTIES_LINES);
 
-        // Retrieve the Vehicles JSON from "Sofia Traffic API v1"
-        String vehicleGson = Utils.readUrl(URL_VEHICLES_CODES);
-        if (StringUtils.isEmpty(vehicleGson)) {
-            DBLogger.log(Level.WARNING, "Problem to reach the Vehicles URL: " + URL_VEHICLES_CODES);
-            return vehicleSet;
-        }
-
-        // Convert the GSON Vehicle objects to a nested Java structure
-        JsonArray vehicleJsonArray;
-        try {
-            vehicleJsonArray = new JsonParser().parse(vehicleGson).getAsJsonArray();
-        } catch (Exception e) {
-            DBLogger.log(Level.WARNING, "Problem to parse the Vehicles GSON...");
-            return vehicleSet;
-        }
-
-        // Transform a Set of Stations to a Map of stations with the CODE as a key
-        vehicleSet = parseVehiclesList(vehicleJsonArray, stationMap);
-        vehicleSet.addAll(getMetroVehicles(stationMap));
-
-        // Sort the set of vehicles
-        List<Vehicle> vehiclesList = new ArrayList<>(vehicleSet);
-        Collections.sort(vehiclesList);
-
-        // Transform a list of Vehicles to a LinkedHashSet
-        return new LinkedHashSet<>(vehiclesList);
+    // Convert the GSON Vehicle objects to a set of Vehicles
+    Type listType = new TypeToken<LinkedHashSet<Vehicle>>() {
+    }.getType();
+    Set<Vehicle> vehicleSet = new Gson().fromJson(vehiclesGson, listType);
+    if (CollectionUtils.isEmpty(vehicleSet)) {
+      DBLogger.log(Level.WARNING, "Problem to parse the Vehicles GSON...");
+      return vehicleSet;
     }
 
-    @SuppressWarnings("unchecked")
-    private static Set<Vehicle> parseVehiclesList(JsonArray vehicleJsonArray,
-                                                  Map<String, Station> stationMap) {
+    // Add the Vehicle routes to the Vehicle set
+    addVehicleRoutes(vehicleSet, stationMap);
 
-        Set<Vehicle> vehiclesSet = new LinkedHashSet<>();
+    // Sort the set of vehicles
+    List<Vehicle> vehiclesList = new ArrayList<>(vehicleSet);
+    Collections.sort(vehiclesList);
 
-        vehicleJsonArray.forEach(vehicleTypeJsonElement -> {
+    // Transform a list of Vehicles to a LinkedHashSet
+    return new LinkedHashSet<>(vehiclesList);
+  }
 
-            // Transform the JsonElement to a JsonObject, so can easily interact with its values
-            JsonObject vehicleTypeJsonObject = vehicleTypeJsonElement.getAsJsonObject();
+  private static void addVehicleRoutes(Set<Vehicle> vehicleSet, Map<String, Station> stationMap) {
+    // Iterate the Vehicle set
+    vehicleSet.forEach(vehicle -> {
 
-            // Retrieve the Vehicle TYPE
-            VehicleType vehicleType = VehicleType.parseVehicleType(
-                    vehicleTypeJsonObject.get(VEHICLE_TYPE).getAsString().toUpperCase());
+      // Retrieve the Routes JSON from "Sofia Traffic API"
+      String vehicleRoutesGson = readScheduleUrl(vehicle);
+      if (StringUtils.isBlank(vehicleRoutesGson)) {
+        return;
+      }
 
-            // Iterate Vehicle information for this TYPE
-            vehicleTypeJsonObject.getAsJsonArray(VEHICLE_LINES).forEach(vehicleLinesJsonElement -> {
+      // Convert the GSON Vehicle routes to a set of JsonObjects
+      Type listType = new TypeToken<LinkedList<JsonObject>>() {
+      }.getType();
+      List<JsonObject> vehicleRoutesList = new Gson().fromJson(vehicleRoutesGson, listType);
+      String[][] vehicleRoutesArr = new String[vehicleRoutesList.size()][];
 
-                // Transform the JsonElement to a JsonObject, so can easily interact with its values
-                JsonObject vehicleLinesJsonObject = vehicleLinesJsonElement.getAsJsonObject();
+      // Iterate the vehicle routes (routes)
+      IntStream.range(0, vehicleRoutesList.size()).forEach(i -> {
 
-                // Set the Vehicle ID, NAME and TYPE
-                Vehicle vehicle = new Vehicle();
-                vehicle.setId(vehicleLinesJsonObject.get(VEHICLE_ID).getAsString());
-                vehicle.setName(vehicleLinesJsonObject.get(VEHICLE_NAME).getAsString());
-                vehicle.setType(vehicleType);
+        // Retrieve the next route from the set
+        JsonObject vehicleRouteJsonElement = vehicleRoutesList.get(i);
+        JsonArray vehicleRouteSegmentsJsonArray = vehicleRouteJsonElement.getAsJsonArray(PT_ROUTES_SEGMENTS);
+        vehicleRoutesArr[i] = new String[vehicleRouteSegmentsJsonArray.size()];
 
-                JsonArray vehicleStationJsonArray = vehicleLinesJsonObject.getAsJsonArray(VEHICLE_ROUTES);
-                String[][] vehicleRoutes = new String[vehicleStationJsonArray.size()][];
+        // Iterate the vehicle route segments (routes.segments)
+        IntStream.range(0, vehicleRouteSegmentsJsonArray.size()).forEach(j -> {
 
-                // Iterate Vehicle routes for this NUMBER and TYPE
-                IntStream.range(0, vehicleStationJsonArray.size()).forEach(i -> {
-
-                    // Transform the JsonElement to a JsonObject
-                    JsonArray vehicleStationCodesJsonArray = vehicleStationJsonArray
-                            .get(i).getAsJsonObject()               // Get the current route (1, 2, ...)
-                            .get(VEHICLE_CODE).getAsJsonArray();    // Get the list of Station codes
-
-                    // Iterate Vehicle routes station codes for this NUMBER and TYPE
-                    vehicleRoutes[i] = new String[vehicleStationCodesJsonArray.size()];
-                    IntStream.range(0, vehicleStationCodesJsonArray.size()).forEach(j ->
-                            vehicleRoutes[i][j] = vehicleStationCodesJsonArray.get(j).getAsString()
-                    );
-                });
-
-                // Set the Vehicle DIRECTION and ROUTES
-                vehicle.setRoutes(getVehicleRoutes(stationMap, vehicleRoutes));
-                vehicle.setDirection();
-
-                // Add the vehicle to the Vehicle list
-                vehiclesSet.add(vehicle);
-            });
+          // Retrieve the next route segment from the array
+          String stationCode = vehicleRouteSegmentsJsonArray.get(j)
+              .getAsJsonObject()
+              .getAsJsonObject(PT_ROUTES_SEGMENTS_STOP)
+              .getAsJsonPrimitive(PT_ROUTES_SEGMENTS_STOP_CODE)
+              .getAsString();
+          vehicleRoutesArr[i][j] = stationCode;
         });
+      });
 
-        return vehiclesSet;
+      // Set the Vehicle ROUTES & DIRECTION
+      Map<Integer, List<Station>> vehicleRoutesMap = getVehicleRoutes(stationMap, vehicleRoutesArr);
+      vehicle.setRoutes(vehicleRoutesMap);
+      vehicle.setDirection(Utils.formDirection(vehicleRoutesMap));
+    });
+  }
+
+  private static Map<Integer, List<Station>> getVehicleRoutes(Map<String, Station> stationMap,
+      String[][] vehicleArrRoutes) {
+    Map<Integer, List<Station>> vehicleMapRoutes = new LinkedHashMap<>();
+
+    // Create the routes only in case the ROUTES multi-dimensional array is not
+    // empty (passed as a constant)
+    if (ArrayUtils.isNotEmpty(vehicleArrRoutes)) {
+      for (int i = 0; i < vehicleArrRoutes.length; i++) {
+        vehicleMapRoutes.put((i + 1), getVehicleRoute(stationMap, vehicleArrRoutes[i]));
+      }
     }
 
-    private static Set<Vehicle> getMetroVehicles(Map<String, Station> stationMap) {
+    return vehicleMapRoutes;
+  }
 
-        Set<Vehicle> vehiclesSet = new LinkedHashSet<>();
-        vehiclesSet.add(new Vehicle(VehicleType.METRO1, VEHICLE_METRO1_ID, VEHICLE_METRO1_NAME,
-                VEHICLE_METRO1_DIRECTION, getVehicleRoutes(stationMap, VEHICLE_METRO1_ROUTES)));
-        vehiclesSet.add(new Vehicle(VehicleType.METRO2, VEHICLE_METRO2_ID, VEHICLE_METRO2_NAME,
-                VEHICLE_METRO2_DIRECTION, getVehicleRoutes(stationMap, VEHICLE_METRO2_ROUTES)));
+  private static List<Station> getVehicleRoute(Map<String, Station> stationMap, String[] vehicleRoute) {
+    List<Station> vehicleStations = new ArrayList<>();
 
-        return vehiclesSet;
-    }
+    // Create the route (fill it with Station objects) only in case the ROUTES
+    // multi-dimensional array is not empty (passed as a constant)
+    if (ArrayUtils.isNotEmpty(vehicleRoute)) {
+      for (String stationCode : vehicleRoute) {
 
-    private static Map<Integer, List<Station>> getVehicleRoutes(Map<String, Station> stationMap,
-                                                                String[][] vehicleRoutes) {
-
-        Map<Integer, List<Station>> vehicleMetro1Routes = new LinkedHashMap<>();
-
-        // Create the routes only in case the ROUTES multi-dimensional array is not
-        // empty (passed as a constant)
-        if (ArrayUtils.isNotEmpty(vehicleRoutes)) {
-            for (int i = 0; i < vehicleRoutes.length; i++) {
-                vehicleMetro1Routes.put((i + 1), getVehicleRoute(stationMap, vehicleRoutes[i]));
-            }
+        // Only in case the station is found, add it to the vehicle route
+        Station station = stationMap.get(stationCode);
+        if (station != null) {
+          vehicleStations.add(station);
+        } else {
+          DBLogger.log(Level.WARNING, "Couldn't find station number #" + stationCode);
         }
-
-        return vehicleMetro1Routes;
+      }
     }
 
-    private static List<Station> getVehicleRoute(Map<String, Station> stationMap,
-                                                 String[] vehicleRoute) {
-
-        List<Station> vehicleMetroStations = new ArrayList<>();
-
-        // Create the route (fill it with Station objects) only in case the ROUTES
-        // multi-dimensional array is not empty (passed as a constant)
-        if (ArrayUtils.isNotEmpty(vehicleRoute)) {
-            for (String stationCode : vehicleRoute) {
-
-                // Only in case the station is found, add it to the vehicle route
-                Station station = stationMap.get(stationCode);
-                if (station != null) {
-                    vehicleMetroStations.add(station);
-                } else {
-                    DBLogger.log(Level.WARNING, "Couldn't find station number #" + stationCode);
-                }
-            }
-        }
-
-        return vehicleMetroStations;
-    }
-
-    private static boolean isElectrobusVehicle(String name) {
-        return name != null && name.matches(Constants.ELECTROBUS_CODES);
-    }
+    return vehicleStations;
+  }
 }
