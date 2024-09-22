@@ -21,7 +21,7 @@ public class Station implements Comparable<Station> {
   // SOFBUS 24 DATABASE FIELDS  //
   // -------------------------- //
   public int getSofbusNumber() {
-    return Integer.parseInt(code);
+    return Integer.parseInt(code) + (getSofbusType() == StationType.METRO ? 100000 : 0);
   }
 
   public String getSofbusName() {

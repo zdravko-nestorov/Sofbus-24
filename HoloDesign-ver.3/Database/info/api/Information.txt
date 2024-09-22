@@ -1,4 +1,4 @@
-Sun, 22 Sep 2024 15:50:48 +0300
+Sun, 22 Sep 2024 21:12:01 +0300
 
 Database Information:
  * Stations: 2079 (BUS) + 0 (NIGHT BUS) + 296 (TROLLEYBUS) + 298 (TRAM) + 47 (METRO) = 2720

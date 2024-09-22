@@ -11,7 +11,6 @@ import bg.znestorov.sofbus24.apidb.entity.Station;
 import bg.znestorov.sofbus24.apidb.entity.Vehicle;
 import bg.znestorov.sofbus24.apidb.entity.VehicleRoute;
 import bg.znestorov.sofbus24.apidb.logger.DBLogger;
-import bg.znestorov.sofbus24.apidb.utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -109,7 +108,7 @@ public class RetrieveVehiclesMain {
 
       // Set the Vehicle ROUTES & DIRECTION
       vehicle.setRoutes(vehicleRoutesMap);
-      vehicle.setDirection(Utils.formDirection(vehicleRoutesMap));
+      vehicle.setDirection(getDirection(vehicle));
     });
   }
 
@@ -121,5 +120,14 @@ public class RetrieveVehiclesMain {
 
     DBLogger.log(Level.WARNING, "Couldn't find station number #" + stationCode);
     return null;
+  }
+
+  private static String getDirection(Vehicle vehicle) {
+    if (vehicle.getType() == 3) {
+      List<Station> stations = vehicle.getRoutes().entrySet().iterator().next().getValue();
+      return String.format("%s - %s", stations.get(0).getName(), stations.get(stations.size() - 1).getName());
+    } else {
+      return vehicle.getRoutes().entrySet().iterator().next().getKey().getName();
+    }
   }
 }

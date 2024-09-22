@@ -144,7 +144,9 @@ public class Utils {
 
     // Writing the data to the output stream
     connection.setDoOutput(true);
-    String requestBody = String.format("{\"ext_id\":\"%s\"}", vehicle.getExtId());
+    String requestBody = vehicle.getType() == 3
+        ? String.format("{\"ext_id\":\"%s\",\"type\":3}", vehicle.getExtId())
+        : String.format("{\"ext_id\":\"%s\"}", vehicle.getExtId());
     try (OutputStream os = connection.getOutputStream()) {
       byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
       os.write(input, 0, input.length);
@@ -163,19 +165,6 @@ public class Utils {
 
     // Unescape the HTML content
     return StringEscapeUtils.unescapeHtml4(content);
-  }
-
-  public static String formDirection(Map<VehicleRoute, List<Station>> routes) {
-    if (MapUtils.isEmpty(routes)) {
-      return "---";
-    }
-
-    Iterator<Map.Entry<VehicleRoute, List<Station>>> vehicleRoutesIterator = routes.entrySet().iterator();
-    if (!vehicleRoutesIterator.hasNext()) {
-      return "---";
-    }
-
-    return vehicleRoutesIterator.next().getKey().getName();
   }
 
   public static String getOnlyDigits(String value) {
