@@ -265,8 +265,8 @@ public class SQLiteJDBC {
     int stationId = 0;
 
     try {
-      String sql = "SELECT PK_STAT_ID FROM SOF_STAT WHERE STAT_NUMBER = '%s';";
-      sql = String.format(sql, station.getSofbusNumber());
+      String sql = "SELECT PK_STAT_ID FROM SOF_STAT WHERE STAT_NUMBER = '%s' AND STAT_TYPE = '%s';";
+      sql = String.format(sql, station.getSofbusNumber(), station.getSofbusType());
       ResultSet rs = stmt.executeQuery(sql);
 
       if (rs.next()) {
