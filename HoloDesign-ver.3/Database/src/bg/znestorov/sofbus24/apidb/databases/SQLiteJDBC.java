@@ -105,8 +105,8 @@ public class SQLiteJDBC {
 
       try {
         String sql =
-            "INSERT INTO SOF_STAT (STAT_NUMBER, STAT_NAME, STAT_LATITUDE, STAT_LONGITUDE, STAT_TYPE, STAT_SKGT_ID, STAT_SKGT_TITLE, STAT_SKGT_NAME, STAT_SKGT_CODE, STAT_SKGT_POSITION, STAT_SKGT_TYPE, STAT_SKGT_EXT_ID)\n"
-                + "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
+            "INSERT INTO SOF_STAT (STAT_NUMBER, STAT_NAME, STAT_LATITUDE, STAT_LONGITUDE, STAT_TYPE, STAT_SKGT_ID, STAT_SKGT_TITLE, STAT_SKGT_NAME, STAT_SKGT_CODE, STAT_SKGT_POSITION, STAT_SKGT_TYPE, STAT_SKGT_EXT_ID)\n" +
+                "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');";
         sql = String.format(sql, stationSofbusNumber, stationSofbusName, stationSofbusLat, stationSofbusLon,
             stationSofbusType, stationSkgtId, stationSkgtTitle, stationSkgtName, stationSkgtCode, stationSkgtPosition,
             stationSkgtType, stationSkgtExtId);
@@ -141,13 +141,10 @@ public class SQLiteJDBC {
     DatabaseInfo.getInstance()
         .appendStationsInfo(busStations, nightbusStations, trolleybusStations, tramStations, subwayStations,
             insertedStations);
-    logInfo("Total stations (from SKGT) = " + totalStations
-        + ", BUS stations (in DB) = " + busStations
-        + ", NIGHT BUS stations (in DB) = " + nightbusStations
-        + ", TROLLEYBUS stations (in DB) = " + trolleybusStations
-        + ", TRAM stations (in DB) = " + tramStations
-        + ", METRO stations (in DB) = " + subwayStations
-        + ", Inserted stations (in DB) = " + insertedStations);
+    logInfo("Total stations (from SKGT) = " + totalStations + ", BUS stations (in DB) = " + busStations +
+        ", NIGHT BUS stations (in DB) = " + nightbusStations + ", TROLLEYBUS stations (in DB) = " + trolleybusStations +
+        ", TRAM stations (in DB) = " + tramStations + ", METRO stations (in DB) = " + subwayStations +
+        ", Inserted stations (in DB) = " + insertedStations);
   }
 
   private void initVehiclesTable() {
@@ -174,8 +171,8 @@ public class SQLiteJDBC {
 
       try {
         String sql =
-            "INSERT INTO SOF_VEHI (VEHI_NUMBER, VEHI_TYPE, VEHI_DIRECTION, VEHI_SKGT_LINE_ID, VEHI_SKGT_NAME, VEHI_SKGT_EXT_ID, VEHI_SKGT_TYPE)\n"
-                + "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');";
+            "INSERT INTO SOF_VEHI (VEHI_NUMBER, VEHI_TYPE, VEHI_DIRECTION, VEHI_SKGT_LINE_ID, VEHI_SKGT_NAME, VEHI_SKGT_EXT_ID, VEHI_SKGT_TYPE)\n" +
+                "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');";
         sql = String.format(sql, vehicleSofbusNumber, vehicleSofbusType, vehicleSofbusDirection, vehicleSkgtLineId,
             vehicleSkgtName, vehicleSkgtExtId, vehicleSkgtType);
 
@@ -209,13 +206,10 @@ public class SQLiteJDBC {
     DatabaseInfo.getInstance()
         .appendVehiclesInfo(busVehicles, nightbusVehicles, trolleybusVehicles, tramVehicles, subwayVehicles,
             insertedVehicles);
-    logInfo("Total vehicles (from SKGT) = " + totalVehicles
-        + ", BUS vehicles (in DB) = " + busVehicles
-        + ", NIGHT BUS vehicles (in DB) = " + nightbusVehicles
-        + ", TROLLEYBUS vehicles (in DB) = " + trolleybusVehicles
-        + ", TRAM vehicles (in DB) = " + tramVehicles
-        + ", METRO vehicles (in DB) = " + subwayVehicles
-        + ", Inserted vehicles (in DB) = " + insertedVehicles);
+    logInfo("Total vehicles (from SKGT) = " + totalVehicles + ", BUS vehicles (in DB) = " + busVehicles +
+        ", NIGHT BUS vehicles (in DB) = " + nightbusVehicles + ", TROLLEYBUS vehicles (in DB) = " + trolleybusVehicles +
+        ", TRAM vehicles (in DB) = " + tramVehicles + ", METRO vehicles (in DB) = " + subwayVehicles +
+        ", Inserted vehicles (in DB) = " + insertedVehicles);
   }
 
   private void initVehicleStationsTable() {
@@ -225,39 +219,48 @@ public class SQLiteJDBC {
 
     vehicleSet.forEach(vehicle -> {
 
-      int vehicleId = getVehicleId(vehicle);
-      vehicle.getRoutes().forEach((vehicleDirection, stations) -> stations.forEach(station -> {
+      vehicle.getRoutes().forEach((vehicleRoute, stations) -> stations.forEach(station -> {
+
+        int vehicleRouteVehiclePkId = getVehiclePkId(vehicle);
+        int vehicleRouteStationPkId = getStationPkId(station);
+        int vehicleRouteRouteId = vehicleRoute.getSofbusRouteId();
+
+        int vehicleRouteSkgtRouteId = vehicleRoute.getRouteId();
+        int vehicleRouteSkgtLineId = vehicleRoute.getLineId();
+        String vehicleRouteSkgtName = vehicleRoute.getName();
+        int vehicleRouteSkgtRouteRef = vehicleRoute.getRouteRef();
 
         try {
-          String sql = "INSERT INTO SOF_VEST (FK_VEST_VEHI_ID, FK_VEST_STAT_ID, VEST_DIRECTION) "
-              + "VALUES (%s, %s, %s);";
-          sql = String.format(sql, vehicleId, getStationId(station), vehicleDirection);
+          String sql =
+              "INSERT INTO SOF_VEST (FK_VEST_VEHI_ID, FK_VEST_STAT_ID, VEST_DIRECTION, VEST_SKGT_ROUTE_ID, VEST_SKGT_LINE_ID, VEST_SKGT_NAME, VEST_SKGT_ROUTE_REF)\n" +
+                  "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');";
+          sql = String.format(sql, vehicleRouteVehiclePkId, vehicleRouteStationPkId, vehicleRouteRouteId,
+              vehicleRouteSkgtRouteId, vehicleRouteSkgtLineId, vehicleRouteSkgtName, vehicleRouteSkgtRouteRef);
 
           stmt.executeUpdate(sql);
           insertedVehicleStations.incrementAndGet();
         } catch (Exception e) {
-          logWarning("There was a problem inserting VehicleStation: "
-              + vehicle.getSofbusLabel() + ", " + station.getTitle());
+          logWarning(
+              "There was a problem inserting VehicleStation: " + vehicle.getSofbusLabel() + ", " + station.getTitle());
         }
       }));
     });
 
     DatabaseInfo.getInstance().appendVehiclesStationsInfo(insertedVehicleStations);
-    logInfo("Total VehiclesStations (from SKGT) = " + totalVehicleStations
-        + ", Inserted VehiclesStations (in DB) = " + insertedVehicleStations);
+    logInfo("Total VehiclesStations (from SKGT) = " + totalVehicleStations + ", Inserted VehiclesStations (in DB) = " +
+        insertedVehicleStations);
   }
 
   private int getTotalVehicleStations() {
 
     AtomicInteger totalVehicleStations = new AtomicInteger(0);
-    vehicleSet.forEach(vehicle -> vehicle.getRoutes().values().forEach(stations ->
-        totalVehicleStations.addAndGet(stations.size())
-    ));
+    vehicleSet.forEach(
+        vehicle -> vehicle.getRoutes().values().forEach(stations -> totalVehicleStations.addAndGet(stations.size())));
 
     return totalVehicleStations.intValue();
   }
 
-  private int getStationId(Station station) {
+  private int getStationPkId(Station station) {
 
     int stationId = 0;
 
@@ -276,7 +279,7 @@ public class SQLiteJDBC {
     return stationId;
   }
 
-  private int getVehicleId(Vehicle vehicle) {
+  private int getVehiclePkId(Vehicle vehicle) {
 
     int vehicleId = 0;
 

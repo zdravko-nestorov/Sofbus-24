@@ -9,6 +9,7 @@ import static bg.znestorov.sofbus24.apidb.utils.Utils.readScheduleUrl;
 
 import bg.znestorov.sofbus24.apidb.entity.Station;
 import bg.znestorov.sofbus24.apidb.entity.Vehicle;
+import bg.znestorov.sofbus24.apidb.entity.VehicleRoute;
 import bg.znestorov.sofbus24.apidb.logger.DBLogger;
 import bg.znestorov.sofbus24.apidb.utils.Utils;
 import com.google.gson.Gson;
@@ -16,7 +17,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Type;
@@ -68,73 +68,58 @@ public class RetrieveVehiclesMain {
         return;
       }
 
-      // Convert the GSON Vehicle routes to a set of JsonObjects
-      Type listType = new TypeToken<LinkedList<JsonObject>>() {
+      // Convert the GSON Vehicle routes to a set of JsonObjects (JSON: routes)
+      Type listTypeJsonObject = new TypeToken<LinkedList<JsonObject>>() {
       }.getType();
-      List<JsonObject> vehicleRoutesList = new Gson().fromJson(vehicleRoutesGson, listType);
-      String[][] vehicleRoutesArr = new String[vehicleRoutesList.size()][];
+      List<JsonObject> vehicleRoutesList = new Gson().fromJson(vehicleRoutesGson, listTypeJsonObject);
 
-      // Iterate the vehicle routes (routes)
+      // Create an empty vehicle routes map
+      Map<VehicleRoute, List<Station>> vehicleRoutesMap = new LinkedHashMap<>();
+
+      // Iterate the vehicle routes (JSON: routes)
       IntStream.range(0, vehicleRoutesList.size()).forEach(i -> {
 
         // Retrieve the next route from the set
         JsonObject vehicleRouteJsonElement = vehicleRoutesList.get(i);
-        JsonArray vehicleRouteSegmentsJsonArray = vehicleRouteJsonElement.getAsJsonArray(PT_ROUTES_SEGMENTS);
-        vehicleRoutesArr[i] = new String[vehicleRouteSegmentsJsonArray.size()];
+        Type listTypeRoute = new TypeToken<VehicleRoute>() {
+        }.getType();
 
-        // Iterate the vehicle route segments (routes.segments)
-        IntStream.range(0, vehicleRouteSegmentsJsonArray.size()).forEach(j -> {
+        VehicleRoute vehicleRoute = new Gson().fromJson(vehicleRouteJsonElement, listTypeRoute);
+        vehicleRoute.setSofbusRouteId(i + 1);
+        vehicleRoutesMap.put(vehicleRoute, new ArrayList<>());
+
+        // Retrieve the vehicle route segments (JSON: routes.segments)
+        JsonArray vehicleRouteSegmentsJsonArray = vehicleRouteJsonElement.getAsJsonArray(PT_ROUTES_SEGMENTS);
+
+        // Iterate the vehicle route segments (JSON: routes.segments)
+        vehicleRouteSegmentsJsonArray.forEach(vehicleRouteSegmentsJsonElement -> {
 
           // Retrieve the next route segment from the array
-          String stationCode = vehicleRouteSegmentsJsonArray.get(j)
-              .getAsJsonObject()
-              .getAsJsonObject(PT_ROUTES_SEGMENTS_STOP)
-              .getAsJsonPrimitive(PT_ROUTES_SEGMENTS_STOP_CODE)
-              .getAsString();
-          vehicleRoutesArr[i][j] = stationCode;
+          String stationCode =
+              vehicleRouteSegmentsJsonElement.getAsJsonObject().getAsJsonObject(PT_ROUTES_SEGMENTS_STOP)
+                  .getAsJsonPrimitive(PT_ROUTES_SEGMENTS_STOP_CODE).getAsString();
+
+          // Add the station to the vehicle route map
+          Station station = getStation(stationMap, stationCode);
+          if (station != null) {
+            vehicleRoutesMap.get(vehicleRoute).add(station);
+          }
         });
       });
 
       // Set the Vehicle ROUTES & DIRECTION
-      Map<Integer, List<Station>> vehicleRoutesMap = getVehicleRoutes(stationMap, vehicleRoutesArr);
       vehicle.setRoutes(vehicleRoutesMap);
       vehicle.setDirection(Utils.formDirection(vehicleRoutesMap));
     });
   }
 
-  private static Map<Integer, List<Station>> getVehicleRoutes(Map<String, Station> stationMap,
-      String[][] vehicleArrRoutes) {
-    Map<Integer, List<Station>> vehicleMapRoutes = new LinkedHashMap<>();
-
-    // Create the routes only in case the ROUTES multi-dimensional array is not
-    // empty (passed as a constant)
-    if (ArrayUtils.isNotEmpty(vehicleArrRoutes)) {
-      for (int i = 0; i < vehicleArrRoutes.length; i++) {
-        vehicleMapRoutes.put((i + 1), getVehicleRoute(stationMap, vehicleArrRoutes[i]));
-      }
+  private static Station getStation(Map<String, Station> stationMap, String stationCode) {
+    Station station = stationMap.get(stationCode);
+    if (station != null) {
+      return station;
     }
 
-    return vehicleMapRoutes;
-  }
-
-  private static List<Station> getVehicleRoute(Map<String, Station> stationMap, String[] vehicleRoute) {
-    List<Station> vehicleStations = new ArrayList<>();
-
-    // Create the route (fill it with Station objects) only in case the ROUTES
-    // multi-dimensional array is not empty (passed as a constant)
-    if (ArrayUtils.isNotEmpty(vehicleRoute)) {
-      for (String stationCode : vehicleRoute) {
-
-        // Only in case the station is found, add it to the vehicle route
-        Station station = stationMap.get(stationCode);
-        if (station != null) {
-          vehicleStations.add(station);
-        } else {
-          DBLogger.log(Level.WARNING, "Couldn't find station number #" + stationCode);
-        }
-      }
-    }
-
-    return vehicleStations;
+    DBLogger.log(Level.WARNING, "Couldn't find station number #" + stationCode);
+    return null;
   }
 }

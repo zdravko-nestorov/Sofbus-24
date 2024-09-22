@@ -18,7 +18,7 @@ public class Vehicle implements Comparable<Vehicle> {
   private int type;
 
   private String direction;
-  private Map<Integer, List<Station>> routes;
+  private Map<VehicleRoute, List<Station>> routes;
 
   // -------------------------- //
   // SOFBUS 24 DATABASE FIELDS  //
@@ -109,15 +109,11 @@ public class Vehicle implements Comparable<Vehicle> {
     this.direction = direction;
   }
 
-  public void setDirection() {
-    this.direction = Utils.formDirection(this.routes);
-  }
-
-  public Map<Integer, List<Station>> getRoutes() {
+  public Map<VehicleRoute, List<Station>> getRoutes() {
     return routes;
   }
 
-  public void setRoutes(Map<Integer, List<Station>> routes) {
+  public void setRoutes(Map<VehicleRoute, List<Station>> routes) {
     this.routes = routes;
   }
 

@@ -19,10 +19,10 @@ import static bg.znestorov.sofbus24.apidb.utils.UtilsDuration.getTime;
 
 import bg.znestorov.sofbus24.apidb.entity.Station;
 import bg.znestorov.sofbus24.apidb.entity.Vehicle;
+import bg.znestorov.sofbus24.apidb.entity.VehicleRoute;
 import bg.znestorov.sofbus24.apidb.logger.DBLogger;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -33,6 +33,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -87,13 +88,11 @@ public class Utils {
       content = matcher.matches() ? matcher.group(1) : null;
 
       // Return the property value
-      return new Gson().fromJson(content, JsonObject.class)
-          .get(PT_PROPERTIES).getAsJsonObject()
-          .get(propertyKey).getAsJsonArray()
-          .toString();
+      return new Gson().fromJson(content, JsonObject.class).get(PT_PROPERTIES).getAsJsonObject().get(propertyKey)
+          .getAsJsonArray().toString();
 
     } catch (Exception e) {
-      DBLogger.log(Level.WARNING, "Problem to reach the URL: " + url);
+      DBLogger.log(Level.WARNING, "Problem to reach the URL: " + url + "/" + propertyKey);
       return null;
 
     } finally {
@@ -119,12 +118,10 @@ public class Utils {
       String content = formatUrlContent(scanner);
 
       // Return the property value
-      return new Gson().fromJson(content, JsonObject.class)
-          .get(PT_ROUTES).getAsJsonArray()
-          .toString();
+      return new Gson().fromJson(content, JsonObject.class).get(PT_ROUTES).getAsJsonArray().toString();
 
     } catch (Exception e) {
-      DBLogger.log(Level.WARNING, "Problem to reach the URL: " + url);
+      DBLogger.log(Level.WARNING, "Problem to reach the URL: " + url + "/" + vehicle.getExtId());
       return null;
 
     } finally {
@@ -137,19 +134,17 @@ public class Utils {
     connection.setRequestMethod("POST");
     connection.setRequestProperty("content-type", "application/json");
 
-    String cookie = String.format("XSRF-TOKEN=%s; sofia_traffic_session=%s",
-        URL_SCHEDULE_API_XSRF_TOKEN,
+    String cookie = String.format("XSRF-TOKEN=%s; sofia_traffic_session=%s", URL_SCHEDULE_API_XSRF_TOKEN,
         URL_SCHEDULE_API_SOFIA_TRAFFIC_SESSION);
     connection.setRequestProperty("cookie", cookie);
 
-    String xsrfToken = String.format("%s",
-        URLDecoder.decode(URL_SCHEDULE_API_XSRF_TOKEN, StandardCharsets.UTF_8.name()));
+    String xsrfToken =
+        String.format("%s", URLDecoder.decode(URL_SCHEDULE_API_XSRF_TOKEN, StandardCharsets.UTF_8.name()));
     connection.setRequestProperty("x-xsrf-token", xsrfToken);
 
     // Writing the data to the output stream
     connection.setDoOutput(true);
-    String requestBody = String.format("{\"ext_id\":\"%s\"}",
-        vehicle.getExtId());
+    String requestBody = String.format("{\"ext_id\":\"%s\"}", vehicle.getExtId());
     try (OutputStream os = connection.getOutputStream()) {
       byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
       os.write(input, 0, input.length);
@@ -170,18 +165,17 @@ public class Utils {
     return StringEscapeUtils.unescapeHtml4(content);
   }
 
-  public static String formDirection(Map<Integer, List<Station>> routes) {
-
-    String direction = null;
-
-    // For the direction name using the first and last station of the first route
-    if (!MapUtils.isEmpty(routes) && !CollectionUtils.isEmpty(routes.get(1))) {
-      List<Station> firstRoute = routes.get(1);
-      direction = firstRoute.get(0).getName() + " - "
-          + firstRoute.get(firstRoute.size() - 1).getName();
+  public static String formDirection(Map<VehicleRoute, List<Station>> routes) {
+    if (MapUtils.isEmpty(routes)) {
+      return "---";
     }
 
-    return direction;
+    Iterator<Map.Entry<VehicleRoute, List<Station>>> vehicleRoutesIterator = routes.entrySet().iterator();
+    if (!vehicleRoutesIterator.hasNext()) {
+      return "---";
+    }
+
+    return vehicleRoutesIterator.next().getKey().getName();
   }
 
   public static String getOnlyDigits(String value) {
