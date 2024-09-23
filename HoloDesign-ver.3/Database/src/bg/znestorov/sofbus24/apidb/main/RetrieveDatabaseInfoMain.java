@@ -31,6 +31,12 @@ public class RetrieveDatabaseInfoMain {
 
     startTime = getTime();
     logInfo("-----------------------\n");
+    logInfo("*** RETRIEVE SKGT COOKIES ***");
+    Utils.initPublicTransportUrlCookies();
+    logDuration("The SKGT COOKIES are retrieved and parsed for ", startTime);
+
+    startTime = getTime();
+    logInfo("-----------------------\n");
     logInfo("*** RETRIEVE STATIONS ***");
     Map<String, Station> stationMap = RetrieveStationsMain.getStations();
     logDuration("The STATIONS are retrieved and parsed for ", startTime);
