@@ -1,6 +1,6 @@
-Mon, 3 Feb 2025 07:41:05 +0200
+Wed, 12 Feb 2025 11:26:47 +0200
 
 Database Information:
- * Stations: 2128 (BUS) + 0 (NIGHT BUS) + 298 (TROLLEYBUS) + 294 (TRAM) + 47 (METRO) = 2767
+ * Stations: 2108 (BUS) + 0 (NIGHT BUS) + 302 (TROLLEYBUS) + 301 (TRAM) + 47 (METRO) = 2758
  * Vehicles: 99 (BUS) + 4 (NIGHT BUS) + 10 (TROLLEYBUS) + 17 (TRAM) + 4 (METRO) = 134
- * Stations/Vehicles - 6648
+ * Stations/Vehicles - 6632
